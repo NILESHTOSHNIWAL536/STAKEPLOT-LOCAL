@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
-import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -13,7 +11,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
@@ -73,7 +70,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Container(
-          // padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: SingleChildScrollView(
@@ -94,7 +90,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                           Text(userName.value,
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w600,
-                                  //fontSize: MediaQuery.of(context).size.width * 0.04,
                                   color: AppColors.primaryColor)),
                           Container(
                             width: MediaQuery.of(context).size.width/2.1,
@@ -102,14 +97,12 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             child: Text(email.value,
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.w400,
-                                    //fontSize: MediaQuery.of(context).size.width * 0.04,
                                     fontSize: 10,
                                     color: AppColors.bg1),overflow: TextOverflow.ellipsis,),
                           ),
-                          Text(number.value,
+                       number.value=="0"?SizedBox.shrink():Text(number.value,
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400,
-                                  //fontSize: MediaQuery.of(context).size.width * 0.04,
                                   fontSize: 10,
                                   color: AppColors.bg1)),
                         ],
@@ -130,8 +123,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Row(
-                            //mainAxisSize: MainAxisSize.min,
-                            //mainAxisAlignment: MainAxisAlignment.start,
+                          
                             children: [
                               AvatarProfileImage(
                                 url: ProfileIcons.edit,
@@ -157,7 +149,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               Padding(
                 padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
                 child: Column(children: [
-                  // First Container for Community profile and Friends list
                   Container(
                     decoration: BoxDecoration(
                         color: AppColors.mt,
@@ -167,20 +158,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                       padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
                       child: Column(
                         children: [
-      //                         _buildOption(
-      //                           ProfileImage(url: ProfileIcons.communityProf),
-      //                  cls         ProfileScreenStrings().communityProfileLabel, // Direct access
-      //                           ProfileScreenStrings().communityProfileSubLabel, // Direct access
-      //                           onTap: () {
-      //                             // navigatorToMyOwnPage(context);
-      //                              Navigator.push(
-      //    context,
-      //    MaterialPageRoute(
-      //        builder: (context) =>CommunityProfileScreen( id: currentId.value,)));
-      // //  );
-      //                           },
-      //                         ),
-      //                         Divider(),
+     
                               _buildOption(
                                 ProfileImage(url: ProfileIcons.friends),
                                 ProfileScreenStrings().friendsListLabel, // Direct access
@@ -189,31 +167,12 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                   Navigator.pushNamed(context, '/Friends');
                                 },
                               ),
-                              // Divider(),
-                              // _buildOption(
-                              //   ProfileImage(url: ProfileIcons.friends),
-                              //   ProfileScreenStrings().friendsListLabelMasked, // Direct access
-                              //   ProfileScreenStrings().friendsListSubLabelMasked, // Direct access
-                              //   onTap: () {
-
-                              //     Navigator.push(
-                              //       context,
-                              //       MaterialPageRoute(
-                              //         builder: (context) =>Friends(isMasked: true,),
-                              //       ),
-                              //     );
-
-                              //   },
-                              // ),
+                        
                             ],
                       ),
                     ),
                   ),
-                  // SizedBox(height: 10),
-                  // Second Container for Support, Terms & conditions, and Privacy policy
-            
                   SizedBox(height: 10),
-                  // Second Container for Support, Terms & conditions, and Privacy policy
                   Container(
                     decoration: BoxDecoration(
                         color: AppColors.mt,
@@ -267,25 +226,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                 ),
                           ),
             
-                          // InkWell(
-                          //   onTap: () {
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //         builder: (context) =>
-                          //             OnboardingScreen(),
-                          //       ),
-                          //     );
-                          //   },
-                          //   child: _buildOption(
-                          //       ProfileImage(
-                          //         url: ProfileIcons.support,
-                          //         // height: 20,
-                          //         // width: 20,
-                          //       ),
-                          //       'History archives ',
-                          //       'Find your hidden history here'),
-                          // ),
+                    
                         ],
                       ),
                     ),
@@ -359,22 +300,19 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
         child: SizedBox(
           height: 20,
           width: 20,
-          child: icon, // Use the passed widget directly
+          child: icon,
         ),
       ),
       title: Text(title,
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w500,
-              //fontSize: MediaQuery.of(context).size.width * 0.04,
               fontSize: h / 52,
               color: AppColors.bg1)),
       subtitle: Text(subtitle,
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w400,
-              //fontSize: MediaQuery.of(context).size.width * 0.04,
               fontSize: h / 72,
               color: AppColors.bg1)),
-      //trailing: isLogout ? Icon(Icons.logout, color: Colors.red) : null,
       onTap: onTap,
     );
   }
