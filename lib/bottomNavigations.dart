@@ -142,12 +142,12 @@ class _BottomNavigationsState extends State<BottomNavigations> {
           
           : SvgPicture.asset(
               iconPath,
-              width: MediaQuery.of(context).size.width /34, // Adjust the multiplier as needed
-              height: MediaQuery.of(context).size.height /34, // Adjust the multiplier as needed
-              colorFilter: isSelected
-                  ? ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn)
-                  : ColorFilter.mode(
-                      AppColors.accentColor, BlendMode.srcIn),
+              width: MediaQuery.of(context).size.width /30, // Adjust the multiplier as needed
+              height: MediaQuery.of(context).size.height /30, // Adjust the multiplier as needed
+              // colorFilter: isSelected
+              //     ? ColorFilter.mode(AppColors.finSpaceColor, BlendMode.srcIn)
+              //     : ColorFilter.mode(
+              //         AppColors.bg1, BlendMode.srcIn),
             ),
     );
   }

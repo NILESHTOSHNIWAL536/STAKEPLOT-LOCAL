@@ -56,6 +56,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     getDis();
     getStatus();
     checkName(widget.data);
+   
   }
 
   void getDis() async {
@@ -172,11 +173,13 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                       data['avatarBackGround'] ?? defaultBackGround.value,
                   flag: true,
                 ),
-          widget.isMasked?Text(widget.data['maskedName'].toString(),
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w600, color: AppColors.bg1)):Text(widget.data['name'].toString(),
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w600, color: AppColors.bg1)),
+          widget.isMasked
+              ? Text(widget.data['maskedName'].toString(),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w600, color: AppColors.bg1))
+              : Text(widget.data['name'].toString(),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w600, color: AppColors.bg1)),
           SizedBox(
             height: 10,
           ),
