@@ -179,28 +179,30 @@ class _TribeSearchState extends State<TribeSearch> {
     return Scaffold(
       bottomNavigationBar: BottomNavigations(data: widget.isMasked ? 2 : 1),
       extendBody: true,
-      body: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-        child: ListView(
-         
-          children: [
-            Hero(
-                tag: "TribeSearc",
-                child: InputDate("Search", TextInputType.name, search)),
-            const SizedBox(
-              height: 20,
-            ),
-            !frdsThere
-                ? Loader()
-                : frdsList.isEmpty
-                    ? Text(search.text.isEmpty?"":"No Users Found!")
-                    : Column(
-                        children: frdsList
-                            .map((data) => profileContainer(data))
-                            .toList(),
-                      )
-          ],
+      body: SafeArea(
+        child: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+          child: ListView(
+           
+            children: [
+              Hero(
+                  tag: "TribeSearc",
+                  child: InputDate("Search", TextInputType.name, search)),
+              const SizedBox(
+                height: 20,
+              ),
+              !frdsThere
+                  ? Loader()
+                  : frdsList.isEmpty
+                      ? Text(search.text.isEmpty?"":"No Users Found!")
+                      : Column(
+                          children: frdsList
+                              .map((data) => profileContainer(data))
+                              .toList(),
+                        )
+            ],
+          ),
         ),
       ),
     );
