@@ -21,8 +21,6 @@ Future<void> initializeOneSignal(BuildContext context) async {
   if(pref.containsKey(key)){
      json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
   }
- print("json");
- print(json);
   
   if (!pref.containsKey(key) || json["deviceId"]=="deviceData.value")
   {
@@ -102,12 +100,14 @@ void navigateScreens(context,screen){
 Future<void> oneSignalInit() async {
   try {
     // 66bc1852-d40b-4ad0-8a11-5e3d0da698a2
+   // 66bc1852-d40b-4ad0-8a11-5e3d0da698a2
     String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
     OneSignal.initialize(appId);
     // OneSignal.Notifications.requestPermission(true);
   } catch (e)
   {
+    print(e);
   }
 
 }

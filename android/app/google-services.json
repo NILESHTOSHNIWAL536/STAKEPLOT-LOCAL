@@ -37,6 +37,13 @@
             {
               "client_id": "437443695891-0mduobetutbqpl1a7cqgcd1pce7s6v4u.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "437443695891-m14tpii5cje8ql2up3avtso1d1dhf108.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.stakeplot.pfa"
+              }
             }
           ]
         }
