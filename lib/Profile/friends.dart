@@ -164,7 +164,7 @@ class _FriendsState extends State<Friends> {
                       lWeight: FontWeight.w500,
                       fontSize: 18,
                       color: Colors.black)),
-              const Spacer(),
+             
              
             ],
           ),

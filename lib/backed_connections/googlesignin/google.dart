@@ -10,7 +10,7 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     clientId: Platform.isAndroid
         ? '907682114982-g9ke4hcp10mpfb53hnbejg5q4btjpsam.apps.googleusercontent.com'
-        : "442849932576-3u02sono33ouamo2cn9mpnrp8i4k53v8.apps.googleusercontent.com",
+        : "907682114982-3nr2b1vgipnq5348u4fieeemr74vmuol.apps.googleusercontent.com",
     serverClientId:
         '907682114982-ja3qjtdj38f1p16q1hq9c868ga6sfn8b.apps.googleusercontent.com', // For iOS, optional for Android
     scopes: [
