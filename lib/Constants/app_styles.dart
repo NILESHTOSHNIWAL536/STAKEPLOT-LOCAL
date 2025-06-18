@@ -254,6 +254,7 @@ class Sign {
   static String comm = "assets/icons/Signup/Comm.svg";
   static String management = "assets/icons/Signup/Management.svg";
   static String finvu = "assets/icons/Signup/finvu.svg";
+  static String googleIcon = "assets/icons/Signup/gIcon.svg";
 }
 
 class Finance {

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/pollDisplay.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/pop-up-menu.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -44,6 +45,8 @@ class PostCard extends StatelessWidget {
     bool isImage = dataObj['postType'] == "image";
     print("type of image $dataObj['isSquareImage']");
     var extractdata = dataObj;
+    String idData = dataObj["_id"];
+  String likeKey = "liked" + dataObj["_id"];
     double getImageHeight(BuildContext context) {
       double width = MediaQuery.of(context).size.width;
       bool isSquare = dataObj['isSquareImage'] ?? false; // Default to Rectangle
@@ -55,6 +58,31 @@ class PostCard extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
+            onDoubleTap: (){
+              if (maskedName.value.trim().isEmpty) {
+                        MaskedNameDialogBox.showMaskedNameDialog(context);
+                      } else {
+                        String likeKey = "liked" + dataObj["_id"];
+                        bool isLiked = likedList.contains(likeKey);
+
+                        // Toggle like status
+                        if (isLiked) {
+                          likedList.remove(likeKey);
+                          postCount[idData] = postCount[idData]! - 1;
+                          if (postCount[idData]! < 0) {
+                            postCount[idData] = 0;
+                          }
+                        } else {
+                          likedList.add(likeKey);
+                          postCount[idData] = postCount[idData]! + 1;
+                        }
+
+                        // Update the server with new vote status
+                        upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
+                        reRender.value = !reRender.value;
+                      }
+            },
+            
             onTap: flag
                 ? null
                 : () {

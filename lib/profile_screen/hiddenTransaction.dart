@@ -97,6 +97,8 @@ Widget historyTransactions(
   final formattedDate = date != null
       ? formatWhatsAppDate4(convertStringToDateTime(date))
       : 'Date';
+      final formattedDateManual =
+      date != null ? formatWhatsAppDate(convertStringToDateTime(date)) : 'Date';
   final narration = transaction['narration'] ?? 'Unnamed Group';
   final type = transaction['type']?.toString() ?? '0';
   final amtColor = type == 'CREDIT'
@@ -210,7 +212,9 @@ Widget historyTransactions(
                             SizedBox(height: 4 * scaleFactor),
                             textStyle(
                               context: context,
-                              text: formattedDate,
+                              text: isManual
+                                            ? formattedDateManual
+                                            : formattedDate,
                               c: AppColors.primaryColor.withOpacity(0.7),
                               fontsize: fontSizeSmall,
                               fontWeight: FontWeight.w400,
