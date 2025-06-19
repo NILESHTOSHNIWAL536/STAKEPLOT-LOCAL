@@ -31,7 +31,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   void initState() {
     super.initState();
     // Autofill fields with Google Sign-In data
-    usernameController.text = widget.data['data']['name'] ?? 'Google User';
+    usernameController.text = widget.data['data']['name'].replaceAll(' ', '').toString().trim();
     dobController.text = widget.data['data']['dob'] ?? '1970-01-01';
     // Add listener for real-time username validation
     usernameController.addListener(validateUsername);

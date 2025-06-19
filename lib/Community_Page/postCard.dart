@@ -27,9 +27,13 @@ class PostCard extends StatelessWidget {
   var data;
   bool flag = false;
   int index;
-  bool isTribeOne=false;
+  bool isTribeOne = false;
   PostCard(
-      {Key? key, required this.data, this.flag = false, required this.index,this.isTribeOne=false})
+      {Key? key,
+      required this.data,
+      this.flag = false,
+      required this.index,
+      this.isTribeOne = false})
       : super(key: key);
 
   @override
@@ -43,7 +47,6 @@ class PostCard extends StatelessWidget {
     bool isPoll = dataObj['postType'] == "poll";
     bool isWrite = dataObj['postType'] == "write";
     bool isImage = dataObj['postType'] == "image";
-    print("type of image $dataObj['isSquareImage']");
     var extractdata = dataObj;
     String idData = dataObj["_id"];
   String likeKey = "liked" + dataObj["_id"];
@@ -134,19 +137,6 @@ class PostCard extends StatelessWidget {
                                   url: dataObj["author"]['avatarType'],
                                   width: 20,
                                   height: 20),
-                              // Container(
-                              //   //  color: Colors.green,
-                              //   child: AvatarProfile(
-                              //     name: (dataObj["author"]['maskedName'] ??
-                              //         dataObj["author"]['name']),
-                              //     width: 11,
-                              //     height: 21,
-                              //     background: dataObj["author"]
-                              //             ['avatarBackGround'] ??
-                              //         defaultBackGround.value,
-                              //     flag: true,
-                              //   ),
-                              // ),
                               const SizedBox(width: 3),
                               Text(
                                 (dataObj["author"]['maskedName'] ??
@@ -167,8 +157,7 @@ class PostCard extends StatelessWidget {
                                 dataObj["author"]['name'],
                                 index,
                                 flag,
-                                isTribeOne
-                              ),
+                                isTribeOne),
                       ],
                     ),
                   ),
@@ -218,16 +207,12 @@ class PostCard extends StatelessWidget {
                               child: Center(
                                 child: GFImageOverlay(
                                   width: MediaQuery.of(context).size.width,
-                                  // height: MediaQuery.of(context).size.width *
-                                  //     214 /
-                                  //     402,
+
                                   height: getImageHeight(context),
                                   boxFit: BoxFit.fill,
-                                  // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
                                   image: NetworkImage(dataObj['image']),
                                   colorFilter: null, // Disable any color tint
                                   color: Colors.transparent,
-                                  // border: Border.all(color: App),
                                 ),
                               ),
                             )
@@ -240,13 +225,8 @@ class PostCard extends StatelessWidget {
                                   child: Center(
                                     child: GFImageOverlay(
                                       width: MediaQuery.of(context).size.width,
-                                      // height:
-                                      //     MediaQuery.of(context).size.width *
-                                      //         214 /
-                                      //         402,
                                       height: getImageHeight(context),
                                       boxFit: BoxFit.fill,
-
                                       image: NetworkImage(
                                           dataObj['backGroundPicture']),
                                       child: Container(

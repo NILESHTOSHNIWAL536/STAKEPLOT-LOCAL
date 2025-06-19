@@ -144,7 +144,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       children: [
         textStyle(context: context,text: 'Create Account',fontWeight: FontWeight.bold,fontsize: 32,c: Colorcodes.white),
         const SizedBox(height: 8),
-        textStyle(context: context,text: 'to get started now!',fontWeight: FontWeight.w300,fontsize: 18,c: Colorcodes.white),
+        textStyle(context: context,text: 'to get started now',fontWeight: FontWeight.w300,fontsize: 18,c: Colorcodes.white),
       ],
     );
   }

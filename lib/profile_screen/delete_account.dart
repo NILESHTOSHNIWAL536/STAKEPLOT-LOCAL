@@ -237,7 +237,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                     elevation: 0,
                   ),
                   child: Text(
-                     !isGoogleUser.value ? 'Delete':'Continue',
+                     isGoogleUser.value ? 'Delete':'Continue',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

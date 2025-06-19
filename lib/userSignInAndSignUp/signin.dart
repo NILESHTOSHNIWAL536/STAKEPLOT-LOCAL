@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
@@ -121,23 +122,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildWelcomeText() {
     return Column(
       children: [
-        const Text(
-          'Welcome.',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 32,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
+        textStyle(context: context,text: 'Welcome',fontWeight: FontWeight.bold,fontsize: 32,c: Colorcodes.white),
         const SizedBox(height: 8),
-        const Text(
-          'Glad to see you!',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
+        textStyle(context: context,text:'Glad to see you',fontWeight: FontWeight.w300,fontsize: 18,c: Colorcodes.white),
+        
       ],
     );
   }
