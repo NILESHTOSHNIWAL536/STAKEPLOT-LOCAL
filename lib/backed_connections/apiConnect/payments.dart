@@ -53,7 +53,6 @@ void getBudget() async {
     var responce = await getDataApiCall(urlPath);
     if (getFlagOfResponse(responce)) {
       var his = jsonDecode(responce.body);
-      print("body for get budget $his");
       var obj = his['data'];
       budgetList.clear();
       budgetList.addAll(obj);

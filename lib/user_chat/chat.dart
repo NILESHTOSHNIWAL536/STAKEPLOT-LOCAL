@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';

@@ -78,10 +78,10 @@ void getdebts() async {
   }
 }
 
-Future<bool> deleteUserAccount(BuildContext context,String password,String msg) async {
+Future<bool> deleteUserAccount(BuildContext context,String msg) async {
   try {
     var body={
-      'password':password,
+      // 'password':password,
       'reason':msg,
     };
     var response = await deleteDataApiCallBody("${url}/user",body);

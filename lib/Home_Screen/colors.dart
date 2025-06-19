@@ -33,6 +33,8 @@ class AppColors {
   static const Color commentbg = Color(0xFFF8F8F8);
   static const Color commentColor = Color(0xFF7B7B7B);
    static const Color textBgColor = Color(0xFFEEEEEE);
+   static const Color welcomeBack = Color(0xFF454545);
+   static const Color now = Color(0xFFACACAC);
 
  
 }

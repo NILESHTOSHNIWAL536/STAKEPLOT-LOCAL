@@ -102,7 +102,6 @@ void getuserPost(id) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    print("response for tab user : $obj");
 
     myPostList.clear();
     myPostList.addAll(obj);

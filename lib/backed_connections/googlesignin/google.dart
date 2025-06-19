@@ -6,9 +6,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     clientId: Platform.isAndroid
+    
         ? '907682114982-g9ke4hcp10mpfb53hnbejg5q4btjpsam.apps.googleusercontent.com'
         : "907682114982-3nr2b1vgipnq5348u4fieeemr74vmuol.apps.googleusercontent.com",
     serverClientId:
@@ -49,6 +52,57 @@ class AuthService {
         } else {}
       } else {}
     } catch (e) {}
+    return null;
+  }
+
+  // Apple Sign-In (new method)
+  Future<Map<String, dynamic>?> signInWithApple(context) async {
+    try {
+      // Trigger Sign in with Apple
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      // Extract data
+      final String? idToken = credential.identityToken;
+      final String? authCode = credential.authorizationCode;
+      final String? email = credential.email;
+      final String? fullName = credential.givenName != null
+          ? '${credential.givenName} ${credential.familyName ?? ''}'
+          : null;
+      final String? userId = credential.userIdentifier;
+
+      if (idToken == null) {
+        print("Apple sign-in: No idToken received");
+        return null;
+      }
+
+      // Send to backend (similar to Google)
+      final response = await http.post(
+        Uri.parse('$url/user/apple-auth'), // Your backend endpoint
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'idToken': idToken,
+          'authorizationCode': authCode,
+          'email': email, // May be null on subsequent sign-ins
+          'fullName': fullName,
+          'userId': userId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print("Apple sign-in response: ${response.body}");
+        loginCalledData(response, context); // Reuse your login logic
+        return json.decode(response.body);
+      } else {
+        print("Apple backend error: ${response.body}");
+      }
+    } catch (e) {
+      print("Apple sign-in error: $e");
+    }
     return null;
   }
 }

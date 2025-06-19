@@ -245,7 +245,7 @@ class _CommunityState extends State<Community> {
                   fontsize: !isTrending.value ? 20 : 14,
                   fontWeight:
                       !isTrending.value ? FontWeight.w700 : FontWeight.w400,
-                  c: isTrending.value?AppColors.accentColor:AppColors.finSpaceColor)),
+                  c: isTrending.value?AppColors.now:AppColors.finSpaceColor)),
         ),
         GestureDetector(
             onTap: () {
@@ -257,7 +257,7 @@ class _CommunityState extends State<Community> {
                 fontsize: isTrending.value ? 20 : 14,
                 fontWeight:
                     isTrending.value ? FontWeight.w700 : FontWeight.w400,
-                c: !isTrending.value?AppColors.accentColor:AppColors.finSpaceColor)),
+                c: !isTrending.value?AppColors.now:AppColors.finSpaceColor)),
       ]),
     );
   }
@@ -353,7 +353,7 @@ class _CommunityState extends State<Community> {
                                     });
                                   },
                                 ),
-                              ),
+                              )
                             );
                           },
                           child: Padding(

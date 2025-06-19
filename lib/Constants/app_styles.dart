@@ -18,29 +18,30 @@ class NavBarIcons {
   static String home = "assets/icons/Navigation_bar/navfilled.svg";
   //Home page icons
 }
+
 class FinSpaceIcons {
   static String welcome = "assets/icons/finSpaceIcons/finspaceWelcome.svg";
-   static String bgMarks = "assets/icons/finSpaceIcons/finspaceBg.svg";
- static String empty = "assets/icons/finSpaceIcons/emptyChats.svg";
- static String square = "assets/icons/finSpaceIcons/squareIcon.svg";
- static String custom = "assets/icons/finSpaceIcons/customIcon.svg";
-  
-  
+  static String bgMarks = "assets/icons/finSpaceIcons/finspaceBg.svg";
+  static String empty = "assets/icons/finSpaceIcons/emptyChats.svg";
+  static String square = "assets/icons/finSpaceIcons/squareIcon.svg";
+  static String custom = "assets/icons/finSpaceIcons/customIcon.svg";
 }
-
 
 class HomePageIcons {
   static String history = "assets/icons/Home-page/TransactionHistoryBtn.svg";
-  static String manualTransaction = "assets/icons/Home-page/manual_transaction.svg";
+  static String manualTransaction =
+      "assets/icons/Home-page/manual_transaction.svg";
   static String notification = "assets/icons/Home-page/notification.svg";
   static String refresh = "assets/icons/Home-page/Refresh.svg";
   static String fetch = "assets/icons/Home-page/fetch.svg";
   static String none = "assets/icons/Home-page/none.svg";
   static String isSplit = "assets/icons/Home-page/isSplit.svg";
-  static String transactionSplit = "assets/icons/Home-page/TransactionSplitIcon.svg";
+  static String transactionSplit =
+      "assets/icons/Home-page/TransactionSplitIcon.svg";
   static String cashIn = "assets/icons/Home-page/cashIn.svg";
   static String cashOut = "assets/icons/Home-page/cashOut.svg";
-  static String transactionHistoryIcon = "assets/icons/Home-page/historyIcon.svg";
+  static String transactionHistoryIcon =
+      "assets/icons/Home-page/historyIcon.svg";
   static String noAccLink = "assets/icons/Home-page/noAccLink.svg";
 }
 
@@ -206,7 +207,8 @@ class SubCategories {
 
 // images
 class Pictures {
-  static String manualTransactionImage = "assets/icons/Home-page/manualTransaction.svg";
+  static String manualTransactionImage =
+      "assets/icons/Home-page/manualTransaction.svg";
 }
 
 class LikeComment {
@@ -218,13 +220,13 @@ class LikeComment {
   static String message = "assets/icons/likeComment/Messagecircle.svg";
   static String likeIcon = "assets/icons/likeComment/likeIcon.svg";
   static String likeIcon2 = "assets/icons/likeComment/likeIcon2.svg";
-   static String chatMessage = "assets/icons/likeComment/chatMessage.svg";
-    static String likeBulb = "assets/icons/likeComment/likeBulb.svg";
-      static String likedBulb = "assets/icons/likeComment/likedBulb.svg";
-        static String savePost = "assets/icons/likeComment/savePost.svg";
-          static String commentPost = "assets/icons/likeComment/commentPost.svg";
-            static String sharePost = "assets/icons/likeComment/sharePost.svg";
-             static String savedPost = "assets/icons/likeComment/savedPost.svg";
+  static String chatMessage = "assets/icons/likeComment/chatMessage.svg";
+  static String likeBulb = "assets/icons/likeComment/likeBulb.svg";
+  static String likedBulb = "assets/icons/likeComment/likedBulb.svg";
+  static String savePost = "assets/icons/likeComment/savePost.svg";
+  static String commentPost = "assets/icons/likeComment/commentPost.svg";
+  static String sharePost = "assets/icons/likeComment/sharePost.svg";
+  static String savedPost = "assets/icons/likeComment/savedPost.svg";
 
   static String manualTransaction =
       "assets/icons/likeComment/manualTransaction.svg";
@@ -697,7 +699,7 @@ final Map<String, List<String>> categories = {
     "irctc",
     "Other"
   ],
-  "Health": ["Medical", "Pharmacy", "Hospital", "Medplus","Other"],
+  "Health": ["Medical", "Pharmacy", "Hospital", "Medplus", "Other"],
   "Bills": [
     "Electricity",
     "Water",
@@ -712,7 +714,7 @@ final Map<String, List<String>> categories = {
     "godaddy",
     "hostinger",
     "bpcl",
-     "Other"
+    "Other"
   ],
   "Subscriptions": [
     "Netflix",
@@ -721,7 +723,7 @@ final Map<String, List<String>> categories = {
     "Jio Hotstar",
     "appleServices",
     "disney",
-     "Other"
+    "Other"
   ],
   "Events": [
     "Weddings",
@@ -733,7 +735,7 @@ final Map<String, List<String>> categories = {
     "Gift",
     "Other"
   ],
-  "Personal Care": ["Salon", "Spa", "Haircare", "Skincare","Other"],
+  "Personal Care": ["Salon", "Spa", "Haircare", "Skincare", "Other"],
   "Services": [
     "Housemaid",
     "Carpenter",
@@ -751,11 +753,11 @@ final Map<String, List<String>> categories = {
     "traders",
     "Enterprises",
     "solutions",
-     "Other"
+    "Other"
   ],
   "Emi": ["Eazypay", "slice", "postpaid", "Other"],
   "Investments": ["MutualFund", "Stocks", "Gold", "Other"],
-  "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR","Other"],
+  "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR", "Other"],
   "Support": ["Charity", "Other"],
   "Current": ["TDS", "Other"],
   "Children": [
@@ -766,10 +768,17 @@ final Map<String, List<String>> categories = {
     "uniforms",
     "baby care",
     "children",
-     "Other"
+    "Other"
   ],
-  "Pet Care": ["Pet","Other"],
-  "Sports": ["Gym Membership", "Sports Equipment", "Snooker", "cricket", "box", "Other"],
+  "Pet Care": ["Pet", "Other"],
+  "Sports": [
+    "Gym Membership",
+    "Sports Equipment",
+    "Snooker",
+    "cricket",
+    "box",
+    "Other"
+  ],
   "Alcohol": ["Liquor", "Wine", "Cigarettes", "Other"],
   "Hobbies": ["Photography", "Gardening", "Other"],
   "Education": ["Stationary", "Fees", "institute", "college", "Other"],
@@ -782,7 +791,7 @@ final Map<String, List<String>> categories = {
     "zepto",
     "Grofers",
     "Bluedart",
-    "ekart", 
+    "ekart",
     "Other"
   ],
   "snacks": [
@@ -802,7 +811,7 @@ final Map<String, List<String>> categories = {
     "chips",
     "confectioners",
     "cool drink",
-     "Other"
+    "Other"
   ],
   "Entertainment": [
     "Bookmyshow",
@@ -815,7 +824,7 @@ final Map<String, List<String>> categories = {
     "imax",
     "Escape",
     "Adventures",
-     "Other"
+    "Other"
   ],
   "Groceries": [
     "SUPRDAILY",
@@ -828,7 +837,7 @@ final Map<String, List<String>> categories = {
     "kirana",
     "General Store",
     "milk",
-     "Other"
+    "Other"
   ],
   "Income": [
     "NEFT",
@@ -840,13 +849,10 @@ final Map<String, List<String>> categories = {
     "INF",
     "zerodhabroking",
     "credit",
-     "Other"
+    "Other"
   ],
   "Personal Transfer": ["POS", "CASH WDL", "ATM", " To:", "Other"],
-  "Personal Transfer Received": [
-    "UPI-CR",
-    "Other"
-  ]
+  "Personal Transfer Received": ["UPI-CR", "Other"]
 };
 
 class OnboardingImages {
@@ -877,6 +883,13 @@ class OnboardingImages {
   static String page44 = "assets/onboarding/page44.svg";
   static String page45 = "assets/onboarding/page45.svg";
   static String page46 = "assets/onboarding/page46.svg";
+  static String animate1 = "assets/onboarding/animate1.svg";
+  static String animate2 = "assets/onboarding/animate2.svg";
+  static String animate3 = "assets/onboarding/animate3.svg";
+  static String animate4 = "assets/onboarding/animate4.svg";
+  static String animate5 = "assets/onboarding/animate5.svg";
+  static String animate6 = "assets/onboarding/animate6.svg";
+  static String animate7 = "assets/onboarding/animate7.svg";
 
   static String manualTransaction =
       "assets/icons/likeComment/manualTransaction.svg";
@@ -893,8 +906,6 @@ class UniversalColors {
     Color(0xFFF0FDFA), // Teal
   ];
 }
-
-
 
 class FontSizeFactor {
   final double scaleFactor;
@@ -919,7 +930,6 @@ class FontSizeFactor {
         badgeSize = 20.0 * MediaQuery.of(context).size.width / 360;
 }
 
-
 class MaskedAvatars {
   // static String profileIcon1 = "assets/onboarding/Avatar1.png";
   // static String profileIcon2 = "assets/onboarding/Avatar2.png";
@@ -937,7 +947,16 @@ class MaskedAvatars {
   static String profileIcon8 = "assets/icons/maskAvatars/mask8.png";
   static String profileIcon9 = "assets/icons/maskAvatars/mask9.png";
   static String profileIcon10 = "assets/icons/maskAvatars/mask10.png";
-  static String profileIcon11= "assets/icons/maskAvatars/mask11.png";
+  static String profileIcon11 = "assets/icons/maskAvatars/mask11.png";
   static String profileIcon12 = "assets/icons/maskAvatars/mask12.png";
- 
+}
+
+class AnimatedAppLoaders {
+  static String animate1 = "assets/icons/appScreenLoader/animate1.svg";
+  static String animate2 = "assets/icons/appScreenLoader/animate2.svg";
+  static String animate3 = "assets/icons/appScreenLoader/animate3.svg";
+  static String animate4 = "assets/icons/appScreenLoader/animate4.svg";
+  static String animate5 = "assets/icons/appScreenLoader/animate5.svg";
+  static String animate6 = "assets/icons/appScreenLoader/animate6.svg";
+  static String animate7 = "assets/icons/appScreenLoader/animate7.svg";
 }

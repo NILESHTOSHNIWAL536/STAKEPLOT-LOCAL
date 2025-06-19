@@ -23,7 +23,6 @@ import '../../Utils/snackBar.dart';
 Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
-    
   try {
     var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
       'email': emailController.text.toString(),
@@ -102,7 +101,8 @@ void loginCalledData(response, context) async {
   isBankAccountLink.value = body['data']['isBankAccountLinked'];
   acceptReset.value = false;
   getPhoneNo(body);
-  Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+  Navigator.of(context)
+      .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
 }
 
 void getPhoneNo(body) {
@@ -126,6 +126,46 @@ void getOTP(context, String name, String email) async {
     snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
   } else {
     snackBarCalled(context, SnackbarData().cantSendOtp, Colors.red);
+  }
+}
+
+Future<bool> getOTPDeleteCall(
+    BuildContext context, String name, String email) async {
+  try {
+    var response = await postDataApiCallwithOutSharedPref('${url}/otp/resend-otp',
+        {'email': email, 'name': name, 'type': "deleteAccount"});
+        print("response for otp :${response.body}");
+    if (getFlagOfResponse(response)) {
+      
+      snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
+      return true;
+    } else {
+      snackBarCalled(context, SnackbarData().cantSendOtp, Colors.red);
+      return false;
+    }
+  } catch (e) {
+    snackBarCalled(context, 'Failed to send OTP: $e', Colors.red);
+    return false;
+  }
+}
+
+Future<bool> verifyDeleteOTP(
+    BuildContext context, String email, String deleteOtp) async {
+  try {
+    var response = await postDataApiCallwithOutSharedPref(
+        '${url}/otp/verify-otp', {'email': email, 'otp': deleteOtp});
+    if (getFlagOfResponse(response)) {
+      snackBarCalled(context, 'OTP verified successfully',
+          Colors.black); // Adjusted message for clarity
+      return true;
+    } else {
+      snackBarCalled(
+          context, 'Invalid OTP', Colors.red); // Adjusted message for clarity
+      return false;
+    }
+  } catch (e) {
+    snackBarCalled(context, 'Failed to verify OTP: $e', Colors.red);
+    return false;
   }
 }
 
@@ -168,8 +208,7 @@ void getforgotPassword(context, String name, String email) async {
         ),
       ),
     );
-  } else 
-  {
+  } else {
     snackBarCalled(context, SnackbarData().emailIdNotValid, Colors.red);
   }
 }
@@ -180,16 +219,14 @@ void addThisDeviceToBackendDevice(SharedPreferences pref, context) async {
 }
 
 Future<void> addThisDeviceToBackend(deviceData, context) async {
-  try{
-
-    var response= await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
+  try {
+    var response =
+        await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
     printData(response);
-    if(getFlagOfResponse(response)){
+    if (getFlagOfResponse(response)) {
       print("object");
-    
     }
-  }catch(e)
-  {
+  } catch (e) {
     print(e);
     print("error");
   }

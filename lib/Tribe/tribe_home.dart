@@ -224,10 +224,36 @@ Widget vote(context, dataObj, data) {
               ),
             ),
             Container(
+              // color: Colors.green,
+              width: MediaQuery.sizeOf(context).width/5,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Obx(() {
+                 
+                 
+                  Container(
+                    child: InkWell(
+                      onTap: () {
+                        if (maskedName.value.trim().isEmpty) {
+                          MaskedNameDialogBox.showMaskedNameDialog(context);
+                        } else {
+                          showModalBottomSheet(
+                            context: context,
+                            backgroundColor: AppColors.unSelectedOption,
+                            builder: (context) {
+                              return TribeShare(data: data, dataObj: dataObj);
+                            },
+                          );
+                        }
+                      },
+                      child: SvgPicture.asset(
+                        LikeComment.sharePost,
+                        height: 24,
+                      ),
+                    ),
+                  ),
+                  
+                   Obx(() {
                     bool isSaved = savedPostIds.contains(dataObj['_id']);
                     return GestureDetector(
                         onTap: () {
@@ -253,28 +279,6 @@ Widget vote(context, dataObj, data) {
                           height: 24,
                         ));
                   }),
-                  const SizedBox(width: 10),
-                  Container(
-                    child: InkWell(
-                      onTap: () {
-                        if (maskedName.value.trim().isEmpty) {
-                          MaskedNameDialogBox.showMaskedNameDialog(context);
-                        } else {
-                          showModalBottomSheet(
-                            context: context,
-                            backgroundColor: AppColors.unSelectedOption,
-                            builder: (context) {
-                              return TribeShare(data: data, dataObj: dataObj);
-                            },
-                          );
-                        }
-                      },
-                      child: SvgPicture.asset(
-                        LikeComment.sharePost,
-                        height: 24,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             )
