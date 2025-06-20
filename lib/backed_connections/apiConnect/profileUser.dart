@@ -1,14 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
@@ -17,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 void approveBill(context, id, type, notifyId) async {
-  // /acceptBill/:id/:accept/:notificationsId
   String urlPath = "${url}/bill/acceptBill/${id}/${type}/${notifyId}";
 
   var responce = await getDataApiCall(urlPath);
@@ -66,7 +61,6 @@ void getNotifications(context) async {
   var accessToken = _pref.getString("accessToken");
   final response = await http.get(
     Uri.parse('${url}/user/myNotifications'),
-    // Uri.parse('https://stakeplot.in/api/v1/post/all'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
@@ -147,8 +141,7 @@ void getSaved() async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-
-    UserController userController=ControllerManagement.userController;
+  
     userController.savedList.clear();
     userController.savedList.addAll(obj);
     userController.savedList.forEach((element){
@@ -157,78 +150,6 @@ void getSaved() async {
     });
   } else {}
 }
-
-void getUserInfomations() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.get(
-    Uri.parse('${url}/user/info'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-
-    likedList.clear();
-    likedProducts.clear();
-    likedList.addAll(obj["likedPosts"]);
-    likedList.addAll(obj["likedComments"]);
-    likedProducts.addAll(obj["likedProducts"]);
-
-    // frdsList.clear();
-    // frdsListOrigin.clear();
-    // frdsList.addAll(obj['friendsList']);
-    // frdsListOrigin.addAll(frdsList);
-
-    aboutMe.value = (obj['aboutMe'] == "Hello");
-    // aboutUS.value = obj['aboutMe'];
-    selectedBank.value = obj['selectedBank'] ?? "";
-    AttemptCount.value = obj['cupertinoAttemptCount'] != null
-        ? obj['cupertinoAttemptCount'] > 5
-        : false;
-    // userAvatarBackGround.value = obj['avatarBackGround'] ?? "#FA7070";
-    // interestedTags.value = obj['interestedTags'] ?? [];
-    // maskedName.value = obj['maskedName'] ?? "";
-    isGoogleUser.value = obj['isGoogleUser'] ?? false;
-
-    var data = obj;
-
-    getuserPost(data['_id']);
-    getSaved();
-    getMaskendUsers(true);
-    getMaskendUsers(false);
-    currentId.value = data['_id'];
-    // userName.value = data['name'];
-    // avatar.value = data['avatarType']; // avaterUrlPath(userName.value);
-    // userAvatar = avatar.value;
-    // email.value = data['email'];
-    currency.value = data['currency'];
-    score.value = data['score'].toString();
-    // coin = data['coins'].toString();
-    // dob.value = data['dob'].toString().substring(0, 10);
-    // expenses.value = data['expense'].toString();
-    isBankAccountLink.value = data['isBankAccountLinked'] ?? false;
-    isFected.value = data['fetchInProgress'] ?? false;
-    cupertinoPin.value = data['cupertino_pin'];
-    canMessageUser.value = data['canMaskMessage'] ?? false;
-    getPhoneNo(his);
-    savedPostIds.clear();
-    savedPostIds.addAll((data['saved'] as List).whereType<String>());
-    // friendsList.clear();
-    // friendsList.addAll(obj['friendsList']);
-    // // MaskedFriendsList.addAll(obj['maskedConnections']);
-    // friendsList.forEach((element) {
-    //   friendsListDetails[element['_id']] = {
-    //     'name': element['name'],
-    //     'avatar': element['avatarBackGround'],
-    //   };
-    // });
-  } else {}
-}
-
 
 String getCurrentFormattedDate() {
   DateTime now = DateTime.now();
@@ -316,12 +237,12 @@ void editUserDetails(
     }
     if (response.statusCode == 200 || response.statusCode == 201) {
       snackBarCalled(context, SnackbarData().userInfoUpdated, Colors.black);
-      // getUserInfomations();
+
       userController.avatar.value = changeAvater.value;
       userController.userName.value = controller['name']!.text.toString();
       userController.phone.value = controller['Number']!.text.toString();
       number.value = controller['Number']!.text.toString();
-     userController.dob.value = controller['dob']!.text.toString();
+      userController.dob.value = controller['dob']!.text.toString();
     } else {}
   } catch (e) {}
 }

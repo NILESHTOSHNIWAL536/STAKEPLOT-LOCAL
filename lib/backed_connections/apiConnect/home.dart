@@ -31,7 +31,7 @@ void setPasswordApiCalled(context, String password) async {
 
   if (getFlagOfResponse(response))
   {
-    cupertinoPin.value = password;
+    userController.cupertinoPin.value = password;
     hideBackAccountPassword.value=false;
 
     snackBarCalled(context, SnackbarData().pinSetSuccess, Colors.black);
@@ -85,8 +85,8 @@ void pinPasswordVerify(
      {
       var errorResponse = jsonDecode(response.body);
       
-      AttemptCount.value = (errorResponse['count'] ?? 0) >4;
-      if(AttemptCount.value)
+       userController.cupertinoAttemptCount.value = (errorResponse['count'] ?? 0) >4;
+      if( userController.cupertinoAttemptCount.value)
       {
         snackBarCalledfail(context, SnackbarData().maxLimitSetFail, Colors.red);
       } 
@@ -99,22 +99,7 @@ void pinPasswordVerify(
   }
 }
 
-// void PinPasswordVerify2(password, context, Function setBack) async {
-//   var response = await getDataApiCall("${url}/user/cupertino/${password}");
 
-//   if (response.statusCode == 200 || response.statusCode == 200) {
-//     hideBackAccountPassword.value = true;
-//     Timer(Duration(seconds: 5), () {
-//       hideBackAccountPassword.value = false;
-//       firstDigit.value = 0;
-//       secondDigit.value = 0;
-//       digitLoad.value = !digitLoad.value;
-//       setBack();
-//     });
-//   } else {
-//     hideBackAccountPassword.value = false;
-//   }
-// }
 
 void seletedBankUpdateInfo(id, context) async {
   var response = await getDataApiCall("${url}/user/selectedBank/${id}");

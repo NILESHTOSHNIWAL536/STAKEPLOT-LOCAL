@@ -53,7 +53,7 @@ class _EditDetailsState extends State<EditDetails> {
     super.initState();
     changeAvater.value = userController.avatar.value;
     checkBiometricsStatus();
-    getUserInfomations();
+     userController.fetchUserInfo();    
   }
 
   @override
@@ -162,7 +162,7 @@ class _EditDetailsState extends State<EditDetails> {
                 ),
                 Obx(() => (bankAccountLinkedList.isEmpty ||
                         (hideBackAccountPassword.value ||
-                            cupertinoPin.value == "0" || cupertinoPin.value == "00"))
+                           userController.cupertinoPin.value == "0" ||userController.cupertinoPin.value == "00"))
                     ? SizedBox.shrink()
                     : InkWell(
                         onTap: () {

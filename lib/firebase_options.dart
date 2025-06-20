@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '437443695891',
     projectId: 'stakeplot-9f34b',
     storageBucket: 'stakeplot-9f34b.firebasestorage.app',
-    androidClientId: '437443695891-nqfnov7duvd3j5olorsuab5kv7mbuqgb.apps.googleusercontent.com',
+    androidClientId: '437443695891-25ip6du0dnr12u3lhvu8lqmheoqd4ls5.apps.googleusercontent.com',
     iosClientId: '437443695891-m14tpii5cje8ql2up3avtso1d1dhf108.apps.googleusercontent.com',
     iosBundleId: 'com.stakeplot.pfa',
   );

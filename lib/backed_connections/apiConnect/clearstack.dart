@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
@@ -18,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
@@ -203,7 +203,6 @@ void clearGetX() {
   addedMembers.clear();
   addedUser.clear();
   isBankAccountLink.value = false;
-  cupertinoPin.value = '0';
   balance.value = "";
   accountName.value = "";
   transactionChatGraph.clear();
@@ -228,6 +227,7 @@ void clearGetX() {
   isBankLinked.value=false;
   clearGraph();
   loadBanks.value=true;
+  Get.delete<UserController>();
 }
 
 

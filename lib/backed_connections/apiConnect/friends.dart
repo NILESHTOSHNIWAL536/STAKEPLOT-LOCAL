@@ -25,7 +25,7 @@ void addUserAsFrd(id,context,[type="friend"])async
             }
             
             snackBarCalled(context,SnackbarData().addingFriend,Colors.black);  
-            getUserInfomations();    
+           userController.fetchUserInfo();    
       }else{
            snackBarCalled(context,SnackbarData().addFriendFail,Colors.red);
       }
@@ -88,7 +88,7 @@ void  removeRequest(id,name,context)async
       if(getFlagOfResponse(response))
       {
                   snackBarCalled(context,SnackbarData().friendRemoved,Colors.black);
-                  getUserInfomations();  
+                   userController.fetchUserInfo();  
       }
 }
 

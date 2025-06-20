@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "437443695891-25ip6du0dnr12u3lhvu8lqmheoqd4ls5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stakeplot.pfa",
+            "certificate_hash": "78e086f5d54f1622494691709c2388e8016c0eb6"
+          }
+        },
+        {
           "client_id": "437443695891-8bgi4mf5222ittamqhvl6p6841lqtbd2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

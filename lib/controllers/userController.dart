@@ -32,11 +32,13 @@ class UserController extends GetxController {
   RxBool isBankAccountLinked = false.obs;
   RxBool fetchInProgress = false.obs;
   RxString cupertinoPin = ''.obs;
-  RxInt cupertinoAttemptCount = 0.obs;
+  RxBool cupertinoAttemptCount = false.obs;
   RxString selectedBank = ''.obs;
 
   // Lists of maps
   RxList savedList = [].obs;
+  RxSet<String> savedPostIds = <String>{}.obs;
+
   RxList myPostList = [].obs;
   RxList friendsList = [].obs;
   RxList frdsListOrigin = [].obs;
@@ -85,14 +87,15 @@ class UserController extends GetxController {
         isBankAccountLinked.value = obj['isBankAccountLinked'] ?? false;
         fetchInProgress.value = obj['fetchInProgress'] ?? false;
         cupertinoPin.value = obj['cupertino_pin'].toString() ;
-        cupertinoAttemptCount.value = obj['cupertinoAttemptCount'] ?? 0;
+        cupertinoAttemptCount.value = obj['cupertinoAttemptCount'] != null ? obj['cupertinoAttemptCount'] > 5 : false;
         selectedBank.value = obj['selectedBank'] ?? '';
+        
       
         interestedTags.assignAll(List<String>.from(obj['interestedTags'] ?? []));
         likedPosts.assignAll(List<String>.from(obj['likedPosts'] ?? []));
         likedComments.assignAll(List<String>.from(obj['likedComments'] ?? []));
         likedProducts.assignAll(List<String>.from(obj['likedProducts'] ?? []));        
-       
+        savedPostIds.assignAll(List<String>.from(obj['saved'] ?? []));
         // Friends
         friendsList.assignAll(List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
         frdsListOrigin.assignAll(List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
@@ -110,9 +113,7 @@ class UserController extends GetxController {
        getMaskendUsers(false);
        getSaved();
        getuserPost(obj['_id']);
-        // maskedConnected.assignAll(List<String>.from(obj['maskedConnected'] ?? []));
-        // maskedConnections.assignAll(List<String>.from(obj['maskedConnections'] ?? []));
-
+      
       }
     } catch (e)
     {

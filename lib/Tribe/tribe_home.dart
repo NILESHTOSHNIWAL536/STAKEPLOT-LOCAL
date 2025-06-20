@@ -231,7 +231,7 @@ Widget vote(context, dataObj, data) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Obx(() {
-                    bool isSaved = savedPostIds.contains(dataObj['_id']);
+                    bool isSaved = userController.savedPostIds.contains(dataObj['_id']);
                     return GestureDetector(
                         onTap: () {
                            if (userController.maskedName.value.trim().isEmpty) {
@@ -239,10 +239,10 @@ Widget vote(context, dataObj, data) {
                         }
                           else {
                             if (isSaved) {
-                            savedPostIds.remove(dataObj['_id']);
+                           userController.savedPostIds.remove(dataObj['_id']);
                           } else
                           {
-                            savedPostIds.add(dataObj['_id']);
+                            userController.savedPostIds.add(dataObj['_id']);
                           }
                             savePostData(context, data);
 

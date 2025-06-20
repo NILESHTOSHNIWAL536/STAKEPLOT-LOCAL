@@ -137,7 +137,7 @@ void exitRoom(context, String id) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
-    getUserInfomations();
+    userController.fetchUserInfo();    
     snackBarCalled(context, "You have exited the room.", Colors.black);
   } else {
     snackBarCalled(

@@ -140,7 +140,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                Obx(()=> Text(
-                  '\u{20B9} ${(hideBackAccountPassword.value || cupertinoPin.value == "0" || cupertinoPin.value == "00") ? formatMoneyIndian(data['currentBalance'] ?? "null") : lock[randomIndex]}',
+                  '\u{20B9} ${(hideBackAccountPassword.value || userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00") ? formatMoneyIndian(data['currentBalance'] ?? "null") : lock[randomIndex]}',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 20,
@@ -212,14 +212,14 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   }
 Widget setPinForAccountHide(context) {
   return Obx(() {
-    if (cupertinoPin.value == "0" || cupertinoPin.value == "00" || cupertinoPin.value.isEmpty || AttemptCount.value) { // Handle empty case too
+    if (userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00" || userController.cupertinoPin.value.isEmpty ||  userController.cupertinoAttemptCount.value) { // Handle empty case too
      
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: InkWell(
           onTap: () {
 
-            if(AttemptCount.value)
+            if( userController.cupertinoAttemptCount.value)
             {
               resetCupertinoPin(context);
               return;
@@ -241,7 +241,7 @@ Widget setPinForAccountHide(context) {
             ),
             child: Center(
               child: Obx(()=>  Text(
-               ! AttemptCount.value?  HomepageStringsDart().setPinButton: HomepageStringsDart().resetCupertinoPin,
+               !  userController.cupertinoAttemptCount.value?  HomepageStringsDart().setPinButton: HomepageStringsDart().resetCupertinoPin,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.normal,

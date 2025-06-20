@@ -21,7 +21,6 @@ import '../../controllers/userController.dart';
 
 void callApi(context)async
   {
-    // getUserInfomations();
     await Get.find<UserController>().fetchUserInfo();
     getBankAccounts();
     getPost();
