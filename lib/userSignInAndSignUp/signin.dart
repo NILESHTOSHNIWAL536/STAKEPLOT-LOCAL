@@ -136,7 +136,6 @@ class _LoginScreenState extends State<LoginScreen> {
         textStyle(context: context,text: 'Welcome',fontWeight: FontWeight.bold,fontsize: 32,c: Colorcodes.white),
         const SizedBox(height: 8),
         textStyle(context: context,text:'Glad to see you',fontWeight: FontWeight.w300,fontsize: 18,c: Colorcodes.white),
-        
       ],
     );
   }
