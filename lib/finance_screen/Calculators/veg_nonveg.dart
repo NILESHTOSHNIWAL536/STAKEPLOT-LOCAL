@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -28,7 +29,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   Map<String, List<String>> selectedOptions = {};
   TextEditingController Textcontroller = TextEditingController();
   List<Map<dynamic, dynamic>> get friends =>
-      frdsList.map((e) => e as Map<dynamic, dynamic>).toList();
+      userController.friendsList.map((e) => e as Map<dynamic, dynamic>).toList();
 
   List<String> options = [
     PlotFinanceStaticData().vegLabel, // Updated
@@ -63,8 +64,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
   void _addCurrentUserToMembers() {
     String currentUserId = currentId.value;
-    String currentUserName = userName.value;
-    String? currentUserAvatar = avatar.value;
+    String currentUserName = ControllerManagement.userController.userName.value;
+    String? currentUserAvatar =ControllerManagement.userController. avatar.value;
 
     if (!addedMembers.any((member) => member['id'] == currentUserId)) {
       setState(() {
@@ -313,7 +314,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     }
 
                     // Check if userName is null
-                    if (userName.value == null || userName.value.isEmpty) {
+                    String name=ControllerManagement.userController.userName.value;
+                    if ( name.isEmpty) {
                       snackBarCalledfail(
                           context, SnackbarData().userNameNotAvailable);
                       return;
@@ -360,7 +362,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                             sendNotificationsToDevice(
                               key,
                               context,
-                              "${userName.value} has shared the foodie expense of ₹${(value['Total'] as num).toStringAsFixed(2)}",
+                              "${name} has shared the foodie expense of ₹${(value['Total'] as num).toStringAsFixed(2)}",
                               "/remainders",
                               "",
                               "",
@@ -558,7 +560,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   }
 
   Widget commentedData() {
-    List limitedFriends = frdsList.take(4).toList();
+    List limitedFriends = userController.friendsList.take(4).toList();
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
@@ -701,9 +703,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               List filtered = [];
 
               if (v.trim().isEmpty) {
-                filtered = frdsListOrigin;
+                filtered = userController.frdsListOrigin;
               } else {
-                filtered = frdsListOrigin.where((element) {
+                filtered =  userController.frdsListOrigin.where((element) {
                   String name = element['name'].toString().toLowerCase();
                   return name.contains(v.toLowerCase());
                 }).toList();
@@ -712,8 +714,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               List limited = filtered.take(4).toList();
 
               setState(() {
-                frdsList.clear();
-                frdsList.addAll(limited);
+               userController.friendsList.clear();
+                 userController.friendsList.addAll(limited);
               });
             },
             decoration: InputDecoration(
@@ -783,8 +785,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     if (addedUser.isEmpty) return;
 
     addedUser.forEach((rec) {
-      String room1 = rec['name'] + userName.value;
-      String room2 = userName.value + rec['name'];
+      String room1 = rec['name'] +  userController.userName.value;
+      String room2 = userController. userName.value + rec['name'];
       String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
 
       var jsonData = {
@@ -870,7 +872,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             sendNotificationsToDevice(
                 e['id'],
                 context,
-                "${userName.value} has sent you a ${name} Of ${e['amount']}",
+                "${ userController.userName.value} has sent you a ${name} Of ${e['amount']}",
                 "/chat");
           }
         }

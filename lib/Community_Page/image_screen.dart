@@ -211,7 +211,6 @@ class _ImageScreenState extends State<ImageScreen> {
                                                 url: FinSpaceIcons.square,
                                                 width: 20,
                                                 height: 20,
-                                                // background: userAvatarBackGround.value ?? defaultBackGround.value,
                                                
                                               ),
                             ),
@@ -225,7 +224,6 @@ class _ImageScreenState extends State<ImageScreen> {
                                                 url: FinSpaceIcons.custom,
                                                 width: 20,
                                                 height: 20,
-                                                // background: userAvatarBackGround.value ?? defaultBackGround.value,
                                                
                                               ),
                             ),

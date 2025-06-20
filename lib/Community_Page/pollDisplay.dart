@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:get/get.dart';
 
 Widget poll(e, context) {
@@ -147,7 +148,7 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                       myvote.value
                                     ? null
                                     : () {
-                                       if (maskedName.value.trim().isEmpty) {
+                  if (ControllerManagement.userController.maskedName.value.trim().isEmpty) {
                         MaskedNameDialogBox.showMaskedNameDialog(context);
                       }
                       else{

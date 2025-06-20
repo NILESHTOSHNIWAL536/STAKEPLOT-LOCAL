@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/message.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';

@@ -6,15 +6,11 @@ import 'package:flutter_application_code_stakeplot/animated/userLoginedAlready.d
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/opt_email.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/create_new_password.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/forgot.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -115,7 +111,7 @@ void getPhoneNo(body) {
       phone = phoneList[1];
     }
   }
-  Phone.value = phone;
+  ControllerManagement.userController.phone.value = phone;
   number.value = phone;
 }
 

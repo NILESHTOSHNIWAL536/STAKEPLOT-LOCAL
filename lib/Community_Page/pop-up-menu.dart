@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
 Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribeOne) {
@@ -20,7 +21,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
         color: AppColors.finSpaceColor,
       )),
       onSelected: (value) {
-        if (value == 0 && userId == userName.value)
+        if (value == 0 && userId == ControllerManagement.userController. userName.value)
         {
           deletePost(id, context);
            if(isTribeOne)
@@ -53,7 +54,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
     
       },
       itemBuilder: (context) {
-        return userId == userName.value
+        return userId == ControllerManagement.userController. userName.value
             ? [
                 PopupMenuItem(
                   value: 0,

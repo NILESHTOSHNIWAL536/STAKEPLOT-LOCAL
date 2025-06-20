@@ -16,6 +16,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.d
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:flutter_application_code_stakeplot/Constants/search.dart';
+
 
 // Reactive variables (unchanged)
 RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded = <String, List<FinvuDiscoveredAccountInfo>>{}.obs;

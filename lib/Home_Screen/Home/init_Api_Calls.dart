@@ -15,10 +15,14 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
+import 'package:get/get.dart';
+
+import '../../controllers/userController.dart';
 
 void callApi(context)async
   {
-    getUserInfomations();
+    // getUserInfomations();
+    await Get.find<UserController>().fetchUserInfo();
     getBankAccounts();
     getPost();
     getTranding();

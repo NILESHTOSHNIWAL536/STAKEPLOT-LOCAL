@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
@@ -9,12 +10,16 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
 
 
 PreferredSizeWidget getAppBar(context){
+   final userController = ControllerManagement.userController;
+
     return  PreferredSize(
       preferredSize: const Size.fromHeight(60),
       child: AppBar(
@@ -33,12 +38,11 @@ PreferredSizeWidget getAppBar(context){
                     onTap: (){
                       //  navigatorToMyOwnPage(context);
                     },
-                    child: Obx(()=> AvatarProfile(name: userName.value, width: 30, height: 13,background: userAvatarBackGround.value,))),
+                    child: Obx(()=> AvatarProfile(name: userController.userName.value, width: 30, height: 13,background: userController.avatarBackGround.value,))),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       textStyle(
                           context: context,
                           text: getTimeBasedGreeting(),
@@ -48,7 +52,8 @@ PreferredSizeWidget getAppBar(context){
 
                       Obx(() => textStyle(
                           context: context,
-                          text: toUpperCase(userName.value),
+                          text: toUpperCase(userController.userName.value),
+                          // text: toUpperCase(userName.value),
                           fontWeight: FontWeight.bold,
                           fontsize: 15)),
                       
@@ -58,9 +63,7 @@ PreferredSizeWidget getAppBar(context){
               ),
             ),
             Spacer(),
-            NotificationsBudget(
-              child: Text(""),
-            ),
+            NotificationsBudget(child: Text(""),),
           ],
         ),
     );

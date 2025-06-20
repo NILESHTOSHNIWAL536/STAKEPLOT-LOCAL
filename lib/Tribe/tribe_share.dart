@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -54,10 +55,10 @@ class _TribeHomeState extends State<TribeShare> {
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
-      frdsList.clear();
-      frdsListOrigin.clear();
-      frdsList.addAll(obj['friendsList']);
-      frdsListOrigin.addAll(frdsList);
+      userController.friendsList.clear();
+      userController.frdsListOrigin.clear();
+      userController.friendsList.addAll(obj['friendsList']);
+      userController.frdsListOrigin.addAll(userController.friendsList);
       frdsThere = false.obs;
     } else {}
   }
@@ -96,7 +97,7 @@ class _TribeHomeState extends State<TribeShare> {
           InputDate('Search', TextInputType.name, Textcontroller),
           frdsThere.value
               ? Container(height: height, child: Center(child: Loader()))
-              : frdsList.isEmpty
+              : userController.friendsList.isEmpty
                   ? Container(
                       height:  height/1.1,
                       child: Center(child: Text("No Friend Found")))
@@ -113,7 +114,7 @@ class _TribeHomeState extends State<TribeShare> {
       children: [
         InkWell(
           onTap: () {
-            if (frdsList.isEmpty) {
+            if (userController.friendsList.isEmpty) {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/TribeSearch');
               return;
@@ -126,8 +127,8 @@ class _TribeHomeState extends State<TribeShare> {
 
             int index = 0;
             addedUser.forEach((rec) {
-              String room1 = nameList[index] + userName.value;
-              String room2 = userName.value + nameList[index];
+              String room1 = nameList[index] +userController. userName.value;
+              String room2 =userController. userName.value + nameList[index];
 
               String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
 
@@ -161,7 +162,7 @@ class _TribeHomeState extends State<TribeShare> {
               sendNotificationsToDevice(
                   rec,
                   context,
-                  "Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ",
+                  "Hey there! 👋, ${userController.userName.value} has shared a post 📩. Please check it out 🛒 ",
                   "/chat/${currentId.value}",
                    "New Post",
                   img);
@@ -175,7 +176,7 @@ class _TribeHomeState extends State<TribeShare> {
             color:addedUser.isEmpty ? AppColors.bg6 : AppColors.finSpaceColor,
             borderRadius: BorderRadius.circular(8)),
             child: Center(
-              child: Text((frdsList.isEmpty ? "Add Friends" : "Continue"),
+              child: Text((userController.friendsList.isEmpty ? "Add Friends" : "Continue"),
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w400,
                       fontSize: 18,
@@ -214,10 +215,10 @@ class _TribeHomeState extends State<TribeShare> {
     child: SizedBox(
       height: height/1.1,
       child: GridView.builder(
-        itemCount: frdsList.length, // +1 for loading more indicator
+        itemCount: userController.friendsList.length, // +1 for loading more indicator
         itemBuilder: (context,index) {
-          String values = frdsList[index]['_id'];
-          String name = frdsList[index]['name'];
+          String values = userController.friendsList[index]['_id'];
+          String name = userController.friendsList[index]['name'];
           return InkWell(
             onTap: () {},
             child: GestureDetector(
@@ -249,14 +250,14 @@ class _TribeHomeState extends State<TribeShare> {
                 child: Column(
                   children: [
                     AvatarProfile(
-                      name: frdsList[index]['name'],
+                      name: userController.friendsList[index]['name'],
                       width: 21,
                       height: height,
-                      background: frdsList[index]['avatarBackGround'] ??
+                      background: userController.friendsList[index]['avatarBackGround'] ??
                           defaultBackGround.value,
                     ),
                     Text(
-                      frdsList[index]['name'],
+                      userController.friendsList[index]['name'],
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w400,
@@ -302,8 +303,8 @@ class _TribeHomeState extends State<TribeShare> {
             controller: Textcontroller,
             onChanged: (value) {
               //  setState((){
-              frdsList.clear();
-              frdsList.addAll(getSearchDataRx(value, frdsListOrigin));
+              userController.friendsList.clear();
+              userController.friendsList.addAll(getSearchDataRx(value,userController.frdsListOrigin));
               //  });
             },
             decoration: InputDecoration(

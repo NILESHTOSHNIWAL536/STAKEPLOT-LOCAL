@@ -30,7 +30,7 @@ void addLendUserAmount(context, String amount, List members, String name,
     if (getFlagOfResponse(response)) 
     {
       members.forEach((e) {
-        sendNotificationsToDevice(e['id'], context,"${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
+        sendNotificationsToDevice(e['id'], context,"${ userController.userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
       snackBarCalled(context,SnackbarData().lendAmountSuccess, Colors.black);
       addTransaction(amount, "Lend Bill (${subCategories})", name, context, 'cash', false,false);

@@ -1,6 +1,6 @@
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:get/get.dart';

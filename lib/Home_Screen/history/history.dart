@@ -16,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart'
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart'; // For haptic feedback
+import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
 // Reactive variables
 
@@ -689,8 +690,8 @@ Future<dynamic> showCustomFriendsModalTransactionHistory(BuildContext context,
       return NewFriendsUi(
         totalAmount: amount.toDouble(),
         userId: currentId.value,
-        userName: userName.value,
-        userAvatar: avatar.value,
+        userName: userController.userName.value,
+        userAvatar:userController.avatar.value,
         isLendMode: isLendMode,
         category: category,
         subcategory: subcategory,

@@ -288,7 +288,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
               child: SizedBox(
                 height: 70,
                 width: MediaQuery.of(context).size.width,
-                child: frdsList.isEmpty
+                child:userController.friendsList.isEmpty
                     ? Center(
                         child: Text(
                           HomepageStringsDart().noFriendsAvailable,
@@ -300,9 +300,9 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                       )
                     : ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: frdsList.length,
+                        itemCount: userController.friendsList.length,
                         itemBuilder: (context, index) {
-                          String values = frdsList[index]['_id'];
+                          String values = userController.friendsList[index]['_id'];
                           return InkWell(
                             onTap: () {},
                             child: Column(
@@ -321,10 +321,10 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                         addedMembers.clear();
                                         addedUser.add(values);
                                         addedMembers.add({
-                                          "name": frdsList[index]['name'],
+                                          "name": userController.friendsList[index]['name'],
                                           "id": values,
-                                          'avatar': frdsList[index]['avatar'],
-                                          'avatarBackGround': frdsList[index]
+                                          'avatar': userController.friendsList[index]['avatar'],
+                                          'avatarBackGround': userController.friendsList[index]
                                                   ['avatarBackGround'] ??
                                               defaultBackGround.value,
                                           "balance": 200,
@@ -332,10 +332,10 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                       } else {
                                         addedUser.add(values);
                                         addedMembers.add({
-                                          "name": frdsList[index]['name'],
+                                          "name": userController.friendsList[index]['name'],
                                           "id": values,
-                                          'avatar': frdsList[index]['avatar'],
-                                          'avatarBackGround': frdsList[index]
+                                          'avatar': userController.friendsList[index]['avatar'],
+                                          'avatarBackGround': userController.friendsList[index]
                                                   ['avatarBackGround'] ??
                                               defaultBackGround.value,
                                           "balance": 200,
@@ -351,10 +351,10 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                       children: [
                                         Center(
                                           child: AvatarProfile(
-                                              name: frdsList[index]['name'],
+                                              name: userController.friendsList[index]['name'],
                                               width: 12,
                                               height: 12,
-                                              background: frdsList[index]
+                                              background: userController.friendsList[index]
                                                       ['avatarBackGround'] ??
                                                   defaultBackGround.value),
                                         ),
@@ -374,7 +374,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                   ),
                                 ),
                                 Text(
-                                  frdsList[index]['name'],
+                                  userController.friendsList[index]['name'],
                                   style: FontManager().getTextStyle(
                                     context,
                                     lWeight: FontWeight.w400,
@@ -407,10 +407,10 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
           onChanged: (value) {
             var filteredList = [];
             if (value.isEmpty) {
-              frdsList.clear();
-              frdsList.addAll(frdsListOrigin);
+              userController.friendsList.clear();
+              userController.friendsList.addAll( userController.frdsListOrigin);
             } else {
-              frdsListOrigin.forEach((element) {
+              userController.frdsListOrigin.forEach((element) {
                 if (element['name']
                     .toString()
                     .toLowerCase()
@@ -419,8 +419,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                 }
               });
               setState(() {
-                frdsList.clear();
-                frdsList.addAll(filteredList);
+                userController.friendsList.clear();
+                userController.friendsList.addAll(filteredList);
               });
             }
           },

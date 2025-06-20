@@ -25,7 +25,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
     final categoriesMap = FinspaceStrings().categories;
     selectedCategories.clear();
     selectedSubCategories.clear();
-    for (String tag in interestedTags) {
+    for (String tag in userController.interestedTags) {
       // Check if tag is a main category
       if (categoriesMap.containsKey(tag)) {
         selectedCategories.add(tag);

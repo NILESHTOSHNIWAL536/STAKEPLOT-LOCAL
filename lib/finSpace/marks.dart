@@ -202,9 +202,9 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
   @override
   void initState() {
     super.initState();
-    if (!maskedAvatarsList.contains(avatar.value))
+    if (!maskedAvatarsList.contains(userController.avatar.value))
     {
-      avatar.value = maskedAvatarsList[0];
+      userController.avatar.value = maskedAvatarsList[0];
     }
   }
 
@@ -245,13 +245,13 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                         "assets/icons/maskAvatars/mask${index + 1}.png";
                     return GestureDetector(
                       onTap: () {
-                        avatar.value = avatarv;
+                        userController.avatar.value = avatarv;
                         Navigator.pop(context); // Close bottom sheet
                       },
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: avatar.value == avatarv
+                            color:userController.avatar.value == avatarv
                                 ? Colors.blue
                                 : Colors.transparent,
                             width: 1,
@@ -320,7 +320,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                   radius: 40,
                   backgroundColor: AppColors.backgroundColor,
                   child: Obx(()=>AvatarProfileImagePng(
-                      url:avatar.value,
+                      url:userController.avatar.value,
                       width: 4,
                       height: 4)),
                 ),
@@ -445,7 +445,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
 
                 var body = {
                   "maskedName": maskNameController.text,
-                  "avatarType": avatar.value
+                  "avatarType": userController.avatar.value
                 };
                 addMyIntreastAndName(context, body, true, widget.flag);
               },

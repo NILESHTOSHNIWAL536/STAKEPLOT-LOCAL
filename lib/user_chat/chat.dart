@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -13,8 +12,11 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/fullScreen.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/message.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:page_transition/page_transition.dart';
@@ -68,11 +70,12 @@ class _ChatState extends State<Chat> {
   void initState() {
     super.initState();
     data = widget.data;
-    String room1 = userName.value + data['name'];
-    String room2 = data['name'] + userName.value;
+    UserController userController=ControllerManagement.userController;
+    String room1 = userController.userName.value + data['name'];
+    String room2 = data['name'] +userController.userName.value;
 
-    String room3 = maskedName.value + data['name'];
-    String room4 = data['name'] + maskedName.value;
+    String room3 = userController.maskedName.value + data['name'];
+    String room4 = data['name'] + userController.maskedName.value;
 
     roomId.value = ismaskedUsers.value
         ? (room3.compareTo(room4) <= 0)
@@ -83,7 +86,7 @@ class _ChatState extends State<Chat> {
             : room2;
 
     getChats(data);
-    path = avatar.value;
+    path = userController.avatar.value;
 
     socket = IO.io(urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
@@ -613,7 +616,7 @@ class _ChatState extends State<Chat> {
       name: data['name'],
       width: 1,
       height: 1,
-      background: userAvatarBackGround.value,
+      background: userController.avatarBackGround.value,
     );
     // return chatAvatartImage(
     //     url: boolFlag ? path : avaterUrlPath(data['name']),

@@ -3,9 +3,6 @@ import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart'
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 
-final ScrollController scrollControllerPost = ScrollController();
-final RxList displayedData = [].obs;
-final int itemsPerLoad = 10;
 
 class LazyLoadingList extends StatefulWidget {
   @override
@@ -16,28 +13,7 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
   @override
   void initState() {
     super.initState();
-    // displayedData.clear();
-    // loadInitialData();
-    // scrollControllerPost.addListener(_onScroll);
   }
-
-  // void _onScroll() {
-  //   if (scrollControllerPost.position.pixels >=
-  //       scrollControllerPost.position.maxScrollExtent * 0.9) {
-  //     _loadMoreData();
-  //   }
-  // }
-
-  // void _loadMoreData() {
-  //   // if (displayedData.length < getTrendingData.length) {
-  //   //   int nextItems = (displayedData.length + itemsPerLoad).clamp(0, getTrendingData.length);
-  //   //   displayedData.addAll(getTrendingData.sublist(displayedData.length, nextItems));
-  //   // }
-  //   if(getTrendingData.length>5){
-  //          displayedData.addAll(getTrendingData);
-  //   }
-
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +40,3 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
   }
 }
 
-void loadInitialData() 
-{
-  // displayedData.addAll(getTrendingData.take(itemsPerLoad).toList()); // Load first batch
-}
-
-void resetAndLoadData() {
-  // displayedData.clear();
-  // loadInitialData();
-  
-}

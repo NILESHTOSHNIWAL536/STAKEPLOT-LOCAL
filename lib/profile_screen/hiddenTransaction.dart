@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_spli
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_details.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -519,8 +520,8 @@ Future<dynamic> showCustomFriendsModal(
         return NewFriendsUi(
           totalAmount: amount.toDouble(),
           userId: currentId.value,
-          userName: userName.value,
-          userAvatar: avatar.value,
+          userName: ControllerManagement.userController.userName.value,
+          userAvatar: ControllerManagement.userController.avatar.value,
           isLendMode: isLendMode,
           category: category,
           subcategory: subcategory,

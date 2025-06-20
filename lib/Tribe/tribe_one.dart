@@ -86,9 +86,9 @@ class _TribeHomeState extends State<TribeUnique> {
     PostDetails post = PostDetails();
 
     // auth.id = authorId;
-    auth.name = maskedName.value;
-    auth.avatar = avatar.value;
-    auth.avatarBackGround = userAvatarBackGround.value;
+    auth.name = userController.maskedName.value;
+    auth.avatar =userController. avatar.value;
+    auth.avatarBackGround = userController.avatarBackGround.value;
 
     obj.replies = [];
     obj.author = auth;
@@ -177,7 +177,7 @@ class _TribeHomeState extends State<TribeUnique> {
         fill.value = postList.contains(widget.id);
         name = obj['name'];
         userId = obj['_id'];
-        avatar.value = obj['avatarType'];
+        userController.avatar.value = obj['avatarType'];
       });
     } else {}
   }
@@ -453,7 +453,7 @@ class _TribeHomeState extends State<TribeUnique> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          if (maskedName.value.trim().isEmpty) {
+                                          if (userController.maskedName.value.trim().isEmpty) {
                                             MaskedNameDialogBox
                                                 .showMaskedNameDialog(context);
                                           } else {
@@ -596,7 +596,7 @@ class _TribeHomeState extends State<TribeUnique> {
             autofocus: true,
             controller: Textcontroller,
             onSubmitted: (value) {
-              if (maskedName.value.trim().isEmpty) {
+              if (userController.maskedName.value.trim().isEmpty) {
                 MaskedNameDialogBox.showMaskedNameDialog(context);
               } else {
                 addComment(context, value, postId);
@@ -645,7 +645,7 @@ class _TribeHomeState extends State<TribeUnique> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 AvatarProfileImagePng(
-                  url: avatar.value, // Use the user's name from state
+                  url:userController. avatar.value, // Use the user's name from state
                   width: 10,
                   height: 23,
                 ),
@@ -707,7 +707,7 @@ class _TribeHomeState extends State<TribeUnique> {
   Widget suffixcomment(TextEditingController Textcontroller, postId) {
     return GestureDetector(
       onTap: () {
-        if (maskedName.value.trim().isEmpty) {
+        if (userController.maskedName.value.trim().isEmpty) {
           MaskedNameDialogBox.showMaskedNameDialog(context);
         } else {
           String value = Textcontroller.text;
@@ -842,7 +842,7 @@ class _TribeHomeState extends State<TribeUnique> {
   }
 
   void reply(value, commentId, Textcontroller) {
-    if (maskedName.value.trim().isEmpty) {
+    if (userController.maskedName.value.trim().isEmpty) {
       MaskedNameDialogBox.showMaskedNameDialog(context);
     } else {
       if (value == "") {
@@ -859,12 +859,12 @@ class _TribeHomeState extends State<TribeUnique> {
       rep.commentId = replyid;
       rep.replyText = value;
       Author author = Author();
-      author.name = maskedName.value;
+      author.name = userController.maskedName.value;
       author.id = name;
-      author.avatar = userAvatar;
-      author.name = maskedName.value;
-      author.avatar = avatar.value;
-      author.avatarBackGround = userAvatarBackGround.value;
+      author.avatar = userController.avatar.value;
+      author.name = userController.maskedName.value;
+      author.avatar =userController. avatar.value;
+      author.avatarBackGround = userController.avatarBackGround.value;
       //  author.avatar=avatar;
       rep.author = author;
       commentObj.replies!.insert(0,rep);

@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 
 Widget buildOptionButton({
@@ -119,7 +120,7 @@ Widget buildWelcomeRow(context) {
                           navigatorToMyOwnPage(context);
                         },
                         child: AvatarProfile2 (
-                          url: avatar.value,
+                          url: ControllerManagement.userController.avatar.value,
                           width: 9,
                           height: 14,
                         ),

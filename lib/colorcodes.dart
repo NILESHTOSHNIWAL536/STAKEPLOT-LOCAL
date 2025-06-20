@@ -275,19 +275,18 @@ int getSteps(max, div) {
 
 class BankText
 {
-  
     static  String text1="No bank account found";
     static  String text2="It could be due to any of the following reasons";
     static  String text3="The bank accounts aren't connected to your primary number,";
     static  String text4="Joint accounts are currently not supported";
     static  String text5="Bank Servers are not responding at the moment, you can try later";
     static  String text6="Bank Accounts are either dormant or deactivated";
-    
     static String linkNow="Please tap on 'Link Now' to link your bank account";
     static String linkNowproceeding= "Your selected bank is not yet linked. Before proceeding, ensure that the specified bank is linked";
     static String checkNow="No account selected";
     static String checkNowproceeding= "Please select atleast one account to proceed";
     static String nextFetchTime= "Hang tight! Fetching will take ~10 minutes.";
 }
+
 
 

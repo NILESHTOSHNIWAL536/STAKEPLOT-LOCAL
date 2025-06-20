@@ -81,7 +81,7 @@ class _FriendsUiState extends State<FriendsUi> {
                                       padding: EdgeInsets.all(0.0),
                                       child: Center(
                                           child:  AvatarProfileImage(
-                                              url: element['avatar'] ?? userAvatar,
+                                              url: element['avatar'] ?? userController.avatar,
                                               width: 10,
                                               height: 20)),
                                     ),
@@ -181,9 +181,9 @@ class _FriendsUiState extends State<FriendsUi> {
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: frdsList.length, // +1 for loading more indicator
+                  itemCount:  userController.friendsList.length, // +1 for loading more indicator
                   itemBuilder: (context, index) {
-                    String values = frdsList[index]['_id'];
+                    String values =  userController.friendsList[index]['_id'];
                     return InkWell(
                       onTap: () {},
                       child: Column(
@@ -201,9 +201,9 @@ class _FriendsUiState extends State<FriendsUi> {
                                 if (addedUser.contains(values)) {
                                   addedMembers.add(
                                     {
-                                      "name": frdsList[index]['name'],
+                                      "name": userController.friendsList[index]['name'],
                                       "id": values,
-                                      'avatar': frdsList[index]['avatar'],
+                                      'avatar': userController.friendsList[index]['avatar'],
                                       "balance": 200,
                                       
                                     },
@@ -232,8 +232,8 @@ class _FriendsUiState extends State<FriendsUi> {
                                 children: [
                                   Center(
                                       child: AvatarProfileImage(
-                                          url: frdsList[index]['avatar'] ??
-                                              userAvatar,
+                                          url: userController.friendsList[index]['avatar'] ??
+                                          userController.avatar,
                                           width: 8,
                                           height: 18)),
 
@@ -259,7 +259,7 @@ class _FriendsUiState extends State<FriendsUi> {
                               ),
                             ),
                           ),
-                          Text((frdsList[index]['name']),
+                          Text((userController.friendsList[index]['name']),
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400,
                                   fontSize: 14,
@@ -292,19 +292,19 @@ class _FriendsUiState extends State<FriendsUi> {
               var frdsList2 = [];
 
               if (v == "") {
-                frdsList.clear();
-                frdsList.addAll(frdsListOrigin);
+                userController.friendsList.clear();
+                userController.friendsList.addAll(userController.frdsListOrigin);
               }
 
-              frdsListOrigin.forEach((element) {
+             userController.frdsListOrigin.forEach((element) {
                 if (element['name'].toString().contains(v)) {
                   frdsList2.add(element);
                 }
               });
 
               setState(() {
-                frdsList.clear();
-                frdsList.addAll(frdsList2);
+                userController.friendsList.clear();
+                userController.friendsList.addAll(frdsList2);
               });
             },
             decoration: InputDecoration(

@@ -4,6 +4,8 @@ import "package:flutter/widgets.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/community_screen.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
+import "package:flutter_application_code_stakeplot/controllers/controllerManagement.dart";
+import "package:flutter_application_code_stakeplot/controllers/userController.dart";
 import "package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
@@ -92,6 +94,8 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   @override
   Widget build(BuildContext context) {
     //int selectedIndex = 0;
+       final userController = ControllerManagement.userController;
+
     return Container(
       height: Colorcodes.paddingSize * 2.5,
       color:AppColors.backgroundColor,
@@ -122,7 +126,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   Widget imageurl(String url, int index) {
     bool isSelected = widget.data == index;
     String iconPath = url; // Default to the passed url
-
+   UserController userController=ControllerManagement.userController;
     // Toggle icons based on selection
     if (url == NavBarIcons.home) {
       iconPath = isSelected ? NavBarIcons.home : NavBarIcons.home1;
@@ -133,12 +137,12 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     } else if (url == 'assets/images/room.svg') {
       iconPath = url;
     } else if (url == svgIconPath.bottom4) {
-      iconPath = avaterUrlPath(userName.value);
+      iconPath = avaterUrlPath(userController.userName.value);
     }
     bool ifAvatar = index == 3 || index == 4;
 
     return Center(
-      child: ifAvatar? Obx(()=> AvatarProfile(name: userName.value, width: 5, height: 14,background: userAvatarBackGround.value))
+      child: ifAvatar? Obx(()=> AvatarProfile(name:userController. userName.value, width: 5, height: 14,background: userController.avatarBackGround.value))
           
           : SvgPicture.asset(
               iconPath,
@@ -175,7 +179,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             pushName(HomePage());
           else if (i == 1) pushName(PlotFinance());
         
-           else if (i == 2) pushName(interestedTags.isEmpty? WelcomeScreen():Community());
+           else if (i == 2) pushName(ControllerManagement.userController.interestedTags.isEmpty? WelcomeScreen():Community());
            else if (i == 3) pushName(ProfileScreenDart());
 
           setState(() {
@@ -205,13 +209,14 @@ void pushName(Widget widgetName, [bool flag = false]) {
 }
 
 
-Widget showUserData(BuildContext context) {
+Widget showUserData(BuildContext context){
   double width = MediaQuery.of(context).size.width;
   double height = MediaQuery.of(context).size.height;
+  UserController userController=ControllerManagement.userController;
 
   List<String> loginUsers = loginUsersList.keys.toList();
-  loginUsers.remove(userName.value);
-  loginUsers.insert(0, userName.value);
+  loginUsers.remove(userController.userName.value);
+  loginUsers.insert(0, userController.userName.value);
 
   return Container(
     width: width,
@@ -290,7 +295,7 @@ Widget showUserData(BuildContext context) {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Obx(() => user['name'] == userName.value
+                            Obx(() => user['name'] ==userController.userName.value
                                 ? Container(
                                     alignment: Alignment.centerRight,
                                     child: Icon(

@@ -9,6 +9,8 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart";
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
+import "package:flutter_application_code_stakeplot/controllers/controllerManagement.dart";
+import "package:flutter_application_code_stakeplot/controllers/userController.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
 import "package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
@@ -21,6 +23,8 @@ import "package:shared_preferences/shared_preferences.dart";
 import 'package:http/http.dart' as http;
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
+import 'package:flutter_application_code_stakeplot/Constants/search.dart';
+
 
 List ids = [];
 
@@ -113,12 +117,9 @@ class _TribeSearchState extends State<TribeSearch> {
   void getStatus(data) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
-    print(widget.isMasked);
+    UserController userController =ControllerManagement.userController;
     if(widget.isMasked){
-      print('-----------------------');
-      print(MaskedFriendsList);
-
-         bool isMasked = MaskedFriendsList.any((friend) => friend['_id'] == data['_id']);
+         bool isMasked = userController.maskedConnections.any((friend) => friend['_id'] == data['_id']);
           if(!isMasked) buttonValue.value="Add";
           else  buttonValue.value="Remove";
 
@@ -380,7 +381,7 @@ void showmodalWidget(data){
 
   Widget getScreen(data){
      String avatar= data['avatarType'] !=null ? data['avatarType']
-    :data['avatar']!=null?data['avatar']:userAvatar;
+    :data['avatar']!=null?data['avatar']:ControllerManagement.userController.avatar;
 
       String name =widget.isMasked? (data['maskedName'] ?? ""):(data['name'] ?? "Unknown User");
 
@@ -434,7 +435,7 @@ void showmodalWidget(data){
                  buttonValue.value="Add";
             } else if (buttonValue.value=="Add"){
                 if(widget.isMasked){
-                   if(maskedName.value.trim().isEmpty)MaskedNameDialogBox.showMaskedNameDialog(context);
+                   if(ControllerManagement.userController.maskedName.value.trim().isEmpty)MaskedNameDialogBox.showMaskedNameDialog(context);
                    else{
                       buttonValue.value="Remove";
                       addUserAsFrd(data['_id'], context,"Masked");

@@ -165,8 +165,7 @@ void checkFirebaseAndValidUser() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-  
-  print('✔ Connected successfully');
+
   mainPageWebSocket = IO.io(urlWithLocallHost,
         IO.OptionBuilder()
             .setTransports(['websocket'])

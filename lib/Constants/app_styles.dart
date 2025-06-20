@@ -941,3 +941,5 @@ class MaskedAvatars {
   static String profileIcon12 = "assets/icons/maskAvatars/mask12.png";
  
 }
+
+ List avatarBackGroundList = ["#FA7070", "#FFB07A", "#4C8BF5", "#68B2A0"];

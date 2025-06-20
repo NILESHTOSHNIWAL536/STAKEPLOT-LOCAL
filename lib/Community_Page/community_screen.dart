@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
@@ -62,7 +63,8 @@ class _CommunityState extends State<Community> {
     scrollController.addListener(_onScroll);
   }
 
-  void _onScroll() {
+  void _onScroll()
+  {
     scrollController.addListener(() async {
       if (scrollController.position.pixels >=
               scrollController.position.maxScrollExtent - 50 &&
@@ -156,9 +158,10 @@ class _CommunityState extends State<Community> {
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
           onTap: () async {
-            maskedName.value.isEmpty ||
-                    maskedName.value == "" ||
-                    maskedName.value == Null
+            String maskedName= ControllerManagement.userController.maskedName.value;
+            maskedName.isEmpty ||
+                    maskedName == "" ||
+                    maskedName == Null
                 ? MaskedNameDialogBox.showMaskedNameDialog(context)
                 : await showModal({});
           },

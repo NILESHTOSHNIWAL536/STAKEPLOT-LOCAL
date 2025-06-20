@@ -18,12 +18,9 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
 
-
-// class NumberPickerController extends GetxController {
 RxInt firstDigit = 0.obs;
 RxInt secondDigit = 0.obs;
 RxBool digitLoad = false.obs;
-// }
 
 class NumberPickerScreen extends StatefulWidget {
   @override

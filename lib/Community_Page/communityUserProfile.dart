@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 
 import 'package:flutter_application_code_stakeplot/finSpace/updateInterestScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
@@ -62,10 +63,9 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
               right: 0,
               child: Center(
                 child: AvatarProfile2(
-                  url: avatar.value,
+                  url: ControllerManagement.userController.avatar.value,
                   width: 7,
                   height: 8,
-                  // background: userAvatarBackGround.value ?? defaultBackGround.value,
                   flag: true,
                 ),
               ),

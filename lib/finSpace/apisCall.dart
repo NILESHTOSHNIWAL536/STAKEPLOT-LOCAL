@@ -32,7 +32,7 @@ Future<void> addMyIntreastAndName(BuildContext context, var body,
     printData(response);
     if (getFlagOfResponse(response)) {
       if (falg) {
-        maskedName.value = maskedNameLocal.value;
+        userController.maskedName.value = maskedNameLocal.value;
         if (ifFromUpdate) {
           Navigator.pop(context);
           Navigator.pop(context);
@@ -40,9 +40,8 @@ Future<void> addMyIntreastAndName(BuildContext context, var body,
           Navigator.pushNamed(context, '/interestScreen');
         return;
       } else {
-        interestedTags.clear();
-        interestedTags
-            .addAll([...selectedSubCategories, ...selectedCategories]);
+        userController.interestedTags.clear();
+        userController.interestedTags.addAll([...selectedSubCategories, ...selectedCategories]);
         selectedSubCategories.clear();
         selectedCategories.clear();
       }

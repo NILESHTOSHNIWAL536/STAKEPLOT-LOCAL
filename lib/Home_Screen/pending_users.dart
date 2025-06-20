@@ -224,8 +224,8 @@ class _UserListScreenState extends State<UserListScreen> {
                                         data['payerId'] ?? data['receiverId'],
                                         context,
                                         isDue
-                                            ? 'Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}.'
-                                            : 'You need to pay ${data['amount'] ?? "0000"} to ${userName.value}.',
+                                            ? 'Successfully paid your bill of ${data['amount'] ?? "0000"} to ${ userController.userName.value}.'
+                                            : 'You need to pay ${data['amount'] ?? "0000"} to ${ userController.userName.value}.',
                                         "/remainder",
                                         "",
                                         "",
