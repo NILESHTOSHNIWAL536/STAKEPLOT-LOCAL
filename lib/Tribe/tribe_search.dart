@@ -165,10 +165,10 @@ class _TribeSearchState extends State<TribeSearch> {
       var his = jsonDecode(response.body);
       var obj = his['data'];
       setState(() {
-        frdsList = obj;
+        // frdsList = obj;
         frdsListOrigin = obj;
         frdsThere = true;
-        // frdsList =[]; 
+        frdsList =[]; 
       });
     } else {}
   }
@@ -222,7 +222,7 @@ class _TribeSearchState extends State<TribeSearch> {
             {
               setState(() {
                 if(value=="")frdsList=[];
-                else frdsList = getLastTenUsers(getSearchData(value, frdsListOrigin));
+                else frdsList = getLastTenUsers(getSearchData(value, frdsListOrigin,widget.isMasked));
               });
               
             },

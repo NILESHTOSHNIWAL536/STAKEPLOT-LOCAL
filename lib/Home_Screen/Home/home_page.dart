@@ -8,7 +8,6 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
-import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:get/get.dart';
 
 RxBool sectionReached = false.obs;
