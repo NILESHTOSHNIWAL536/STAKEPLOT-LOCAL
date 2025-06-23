@@ -14,23 +14,18 @@ RxString balance = "0".obs;
 RxString accountName = "Bank Name : ".obs;
 RxString accountNo = "XXXXXXXX".obs;
 RxString selectedBank = "".obs;
-
 void getCategoryData() async {
   var res = await getDataApiCall("${url}/transactionauto/categorize");
   if (getFlagOfResponse(res)) {
     try {
       var data = jsonDecode(res.body);
-
       categoriesList.clear();
       frequentPayments.clear();
       moreDrasticChange.clear();
-
       categoriesListWeek.clear();
       frequentPaymentsWeek.clear();
       moreDrasticChangeWeek.clear();
-
       //month
-
       categoriesList.addAll(data["data"]['categorized']);
       frequentPayments.addAll(data["data"]['frequentPayments']);
       moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
@@ -78,10 +73,10 @@ void getdebts() async {
   }
 }
 
-Future<bool> deleteUserAccount(BuildContext context,String password,String msg) async {
+Future<bool> deleteUserAccount(BuildContext context,String msg) async {
   try {
     var body={
-      'password':password,
+      // 'password':password,
       'reason':msg,
     };
     var response = await deleteDataApiCallBody("${url}/user",body);

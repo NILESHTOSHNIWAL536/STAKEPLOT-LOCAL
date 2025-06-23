@@ -136,7 +136,7 @@ class _TribeHomeState extends State<TribeShare> {
               var jsonData = {
                 "messageType": "post",
                 "receiver": rec,
-                "sender": currentId.value,
+                "sender": userController.userId.value,
                 "message": null,
                 "image": null,
                 "poll": null,
@@ -163,7 +163,7 @@ class _TribeHomeState extends State<TribeShare> {
                   rec,
                   context,
                   "Hey there! 👋, ${userController.userName.value} has shared a post 📩. Please check it out 🛒 ",
-                  "/chat/${currentId.value}",
+                  "/chat/${userController.userId.value}",
                    "New Post",
                   img);
             });

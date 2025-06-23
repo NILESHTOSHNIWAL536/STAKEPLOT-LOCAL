@@ -399,7 +399,7 @@ void getChatLoader(bool flag) async {
                 element['chats']['details']['name'] == "null")
             ? ""
             : element['chats']['details']['name'];
-        String key = userInfo['sender'] == currentId.value
+        String key = userInfo['sender'] == userController.userId.value
             ? userInfo['receiver']
             : userInfo['sender'];
         var typed = element['chats']['details']['messageType'];
@@ -480,7 +480,7 @@ void addChatSplitAmount(
     var jsonData = {
       "messageType": "split",
       "receiver": id,
-      "sender": currentId.value,
+      "sender": userController.userId.value,
       "message": null,
       "image": null,
       "poll": null,

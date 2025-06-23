@@ -786,7 +786,7 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
       var jsonData = {
         "messageType": "split",
         "receiver": rec['id'],
-        "sender": currentId.value,
+        "sender": userController.userId.value,
         "message": null,
         "image": null,
         "poll": null,
@@ -825,7 +825,7 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
         return SafeArea(
           child: NewFriendsUi(
             totalAmount: totalAmount,
-            userId: currentId.value,
+            userId: userController.userId.value,
             userName: userController.userName.value,
             userAvatar: userController.avatar.value,
             isLendMode: isLendMode,
@@ -874,7 +874,7 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
         });
       });
       nameList.add({
-        'member': currentId.value,
+        'member': userController.userId.value,
         'markAsComplete': false,
         'amount': amountPerPerson,
       });

@@ -198,9 +198,9 @@ class _EditDetailsState extends State<EditDetails> {
                   Divider(),
                   _buildNonEditableField(Icons.person,
                       ProfileScreenStrings().nameLabel, userController.userName.value),
-                  number.value=="0"?SizedBox.shrink() :  Divider(),
-                  number.value=="0"?SizedBox.shrink():  _buildNonEditableField(Icons.phone,
-                      ProfileScreenStrings().numberLabel, number.value),
+                 userController.phone.value=="0"?SizedBox.shrink() :  Divider(),
+                   userController.phone.value=="0"?SizedBox.shrink():  _buildNonEditableField(Icons.phone,
+                      ProfileScreenStrings().numberLabel,  userController.phone.value),
                   Divider(),
                   _buildNonEditableField(Icons.calendar_today,
                       ProfileScreenStrings().dobLabel, userController.dob.value),
@@ -261,7 +261,6 @@ class _EditDetailsState extends State<EditDetails> {
         children: [
         Obx(()=>  Column(
             children: bankAccountLinkedList.map((e) {
-            
               return _buildAccountDetails(e['bankName'], e['maskedAccNumber'], e,e['bankLogo']);
             }).toList(),
           )),

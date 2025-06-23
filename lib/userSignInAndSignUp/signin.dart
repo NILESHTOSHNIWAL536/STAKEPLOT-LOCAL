@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
@@ -16,6 +17,7 @@ import 'dart:math' as math;
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -28,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController(text:"nileshtoshniwal743@gmail.com");
   final TextEditingController passwordController = TextEditingController(text:"Nilesh@1234");
   bool _isPasswordVisible = false;
+  final AuthService authService = AuthService();
   @override
   void initState() {
     super.initState();
@@ -91,15 +94,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 40),
 
                       // Or login with
-                      _buildDivider(),
+                    _buildDivider(),
 
                       const SizedBox(height: 20),
-
                       // Google Sign In
                       containerIconSiginWith(
                           FontAwesomeIcons.google, Colorcodes.white, context),
                       // buildGoogleSignIn(),
-
+                      SignInWithAppleButton(
+              onPressed: () async {
+                final result = await authService.signInWithApple(context);
+                if (result != null) {
+                  print("Apple login success: $result");
+                }
+              },
+            ),
                       const SizedBox(height: 20),
 
                       // const Spacer(),
@@ -125,7 +134,6 @@ class _LoginScreenState extends State<LoginScreen> {
         textStyle(context: context,text: 'Welcome',fontWeight: FontWeight.bold,fontsize: 32,c: Colorcodes.white),
         const SizedBox(height: 8),
         textStyle(context: context,text:'Glad to see you',fontWeight: FontWeight.w300,fontsize: 18,c: Colorcodes.white),
-        
       ],
     );
   }

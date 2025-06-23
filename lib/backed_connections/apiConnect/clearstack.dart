@@ -189,7 +189,7 @@ void clearGetX() {
   notificationList.clear();
   hasGetNewNotifications.value = false;
   // userName = "Loading...".obs;
-  currentId = "Loading...".obs;
+  // currentId = "Loading...".obs;
   // Phone = "Loading...".obs;
   currency = "Loading...".obs;
   score = "Loading...".obs;
@@ -302,3 +302,9 @@ void clearInterest() {
   selectedSubCategories.clear();
   isListEnabled.value = false;
 }
+
+
+ void initGetControllers()
+  {
+       Get.put(UserController());
+  }

@@ -103,7 +103,7 @@ void _onScroll() {
                                     child: filterTransaction(context)
                                     ),
                                  ));
-                              }, 
+                              },
                              child:  Icon(Icons.filter_alt_outlined, 
                              size:  MediaQuery.of(context).size.height/20,
                              color: AppColors.accentColor),) 
@@ -209,3 +209,4 @@ void _onScroll() {
   }
 
 }
+

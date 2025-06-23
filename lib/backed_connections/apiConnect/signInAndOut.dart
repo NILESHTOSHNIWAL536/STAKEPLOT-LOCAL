@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/animated/userLoginedAlready.d
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -19,7 +20,6 @@ import '../../Utils/snackBar.dart';
 Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
-    
   try {
     var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
       'email': emailController.text.toString(),
@@ -96,10 +96,11 @@ void loginCalledData(response, context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   final body = json.decode(response.body);
   String accessToken = body['data']['accessToken'];
+  initGetControllers();
   pref.setString("accessToken", "Bearer " + accessToken);
   await getBankAccounts();
   await initializeOneSignal(context);
-  currentId.value = body['data']['_id'];
+  userController.userId.value = body['data']['_id'];
   isBankAccountLink.value = body['data']['isBankAccountLinked'];
   acceptReset.value = false;
   getPhoneNo(body);
@@ -130,6 +131,46 @@ void getOTP(context, String name, String email) async {
   }
 }
 
+Future<bool> getOTPDeleteCall(
+    BuildContext context, String name, String email) async {
+  try {
+    var response = await postDataApiCallwithOutSharedPref('${url}/otp/resend-otp',
+        {'email': email, 'name': name, 'type': "deleteAccount"});
+        print("response for otp :${response.body}");
+    if (getFlagOfResponse(response)) {
+      
+      snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
+      return true;
+    } else {
+      snackBarCalled(context, SnackbarData().cantSendOtp, Colors.red);
+      return false;
+    }
+  } catch (e) {
+    snackBarCalled(context, 'Failed to send OTP: $e', Colors.red);
+    return false;
+  }
+}
+
+Future<bool> verifyDeleteOTP(
+    BuildContext context, String email, String deleteOtp) async {
+  try {
+    var response = await postDataApiCallwithOutSharedPref(
+        '${url}/otp/verify-otp', {'email': email, 'otp': deleteOtp});
+    if (getFlagOfResponse(response)) {
+      snackBarCalled(context, 'OTP verified successfully',
+          Colors.black); // Adjusted message for clarity
+      return true;
+    } else {
+      snackBarCalled(
+          context, 'Invalid OTP', Colors.red); // Adjusted message for clarity
+      return false;
+    }
+  } catch (e) {
+    snackBarCalled(context, 'Failed to verify OTP: $e', Colors.red);
+    return false;
+  }
+}
+
 void forceLogoutUser(
     sessionId, email, userpassword, context, id, deviceName) async {
   try {
@@ -144,8 +185,7 @@ void forceLogoutUser(
     if (getFlagOfResponse(response)) {
       final body = json.decode(response.body);
       loginCalledData(response, context);
-      sendNotificationsToDevice(body['data']['_id'], context,
-          "You have been logged out from StakePlot!");
+      sendNotificationsToDevice(body['data']['_id'], context, "You have been logged out from StakePlot!");
     } else {
       snackBarCalled(context, SnackbarData().cantLogoutUser, Colors.red);
     }
@@ -173,8 +213,7 @@ void getforgotPassword(context, String name, String email) async {
         ),
       ),
     );
-  } else 
-  {
+  } else {
     snackBarCalled(context, SnackbarData().emailIdNotValid, Colors.red);
   }
 }
@@ -185,16 +224,14 @@ void addThisDeviceToBackendDevice(SharedPreferences pref, context) async {
 }
 
 Future<void> addThisDeviceToBackend(deviceData, context) async {
-  try{
-
-    var response= await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
+  try {
+    var response =
+        await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
     printData(response);
-    if(getFlagOfResponse(response)){
+    if (getFlagOfResponse(response)) {
       print("object");
-    
     }
-  }catch(e)
-  {
+  } catch (e) {
     print(e);
     print("error");
   }

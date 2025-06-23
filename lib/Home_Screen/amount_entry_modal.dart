@@ -417,7 +417,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       var jsonData = {
         "messageType": "split",
         "receiver": rec['id'],
-        "sender": currentId.value,
+        "sender": userController.userId.value,
         "message": null,
         "image": null,
         "poll": null,
@@ -481,10 +481,10 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     
       });
       // Include the user's amount if present
-      if (amounts.containsKey(currentId.value)) {
-        double userAmount = amounts[currentId.value]!;
+      if (amounts.containsKey(userController.userId.value)) {
+        double userAmount = amounts[userController.userId.value]!;
         nameList.add({
-          'member': currentId.value,
+          'member': userController.userId.value,
           'markAsComplete': false,
           'amount': userAmount,
         });
@@ -503,7 +503,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       
       });
       nameList.add({
-        'member': currentId.value,
+        'member': userController.userId.value,
         'markAsComplete': false,
         'amount': amountPerPerson,
         'avatarBackGround' : userController.avatarBackGround.value

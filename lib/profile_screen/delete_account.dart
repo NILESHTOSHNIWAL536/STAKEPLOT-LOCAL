@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
-import 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/emailVerifyDeletion.dart';
 
 
 class DeleteAccountScreen extends StatefulWidget {
@@ -212,18 +211,42 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 width: double.infinity,
                 margin: EdgeInsets.only(bottom: 24),
                 child: ElevatedButton(
-                  onPressed: selectedReason != null
-                      ? () {
-                        isGoogleUser.value ? showDeleteConfirmationDialog(context,"",selectedReason.toString()):
-                        // !isGoogleUser.value ? deleteUserAccount(context,"",selectedReason.toString()):
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ConfirmDeleteScreen(
-                                selectedReason: selectedReason!,
+                  // onPressed: selectedReason != null
+                  //     ? () {
+                  //       isGoogleUser.value ? showDeleteConfirmationDialog(context,"",selectedReason.toString()):
+                  //       // !isGoogleUser.value ? deleteUserAccount(context,"",selectedReason.toString()):
+                  //         Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //             builder: (context) => ConfirmDeleteScreen(
+                  //               selectedReason: selectedReason!,
+                  //             ),
+                  //           ),
+                  //         );
+                  //       }
+                  //     : null,
+                   onPressed: selectedReason != null
+                      ? () async {
+                         // Fetch user email
+                          if (userController.email.value != null && userController.userName.value != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VerifyOtpScreen(
+                                  name: userController.userName.value,
+                                  email: userController.email.value,
+                                  selectedReason: selectedReason!,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error: Unable to fetch user email'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
@@ -419,7 +442,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                 margin: EdgeInsets.only(bottom: 32),
                 child: ElevatedButton(
                   onPressed: _passwordController.text.isNotEmpty
-                      ? () => showDeleteConfirmationDialog(context,_passwordController.text,widget.selectedReason)
+                      ? () => showDeleteConfirmationDialog(context,widget.selectedReason)
                       : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _passwordController.text.isNotEmpty
@@ -462,7 +485,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
 
 
 
- void showDeleteConfirmationDialog(context2,passwordText,selectedReason) {
+ void showDeleteConfirmationDialog(context2,selectedReason) {
     showDialog(
       context: context2,
       barrierDismissible: false,
@@ -516,7 +539,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
             TextButton(
               onPressed: () async{
                 Navigator.pop(context); 
-                bool accountDeleted= await deleteUserAccount(context2,passwordText,selectedReason);
+                bool accountDeleted= await deleteUserAccount(context2,selectedReason);
                 if(accountDeleted)performAccountDeletion(context2);
                },
               child: Text(

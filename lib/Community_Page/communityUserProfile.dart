@@ -121,7 +121,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                   Navigator.push(
          context,
          MaterialPageRoute(
-             builder: (context) =>CommunityProfileScreen( id: currentId.value,)),
+             builder: (context) =>CommunityProfileScreen( id: userController.userId.value,)),
        );
 
               },

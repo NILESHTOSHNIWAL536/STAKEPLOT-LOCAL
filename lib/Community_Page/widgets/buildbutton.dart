@@ -87,7 +87,7 @@ Widget buildWelcomeRow(context) {
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: AppColors.accentColor),
+                        color: AppColors.welcomeBack),
                   ),
                   Text(
                     strings.finspace,

@@ -77,7 +77,7 @@ Widget poll(e, context) {
 }
 
 Widget getQuestionsAndOptions(e, context, flag, PostId) {
-  String id = currentId.value;
+  String id = userController.userId.value;
   List options = e['options'];
 
   int index = -1;

@@ -63,7 +63,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   }
 
   void _addCurrentUserToMembers() {
-    String currentUserId = currentId.value;
+    String currentUserId = userController.userId.value;
     String currentUserName = ControllerManagement.userController.userName.value;
     String? currentUserAvatar =ControllerManagement.userController. avatar.value;
 
@@ -285,7 +285,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                 GestureDetector(
                   // onTap: () {
                   //   friendShares.forEach((key, value) {
-                  //     if (key != currentId.value) {
+                  //     if (key != userController.userId.value) {
                   //       // added this line for excluding current user in notify
                   //       sendNotificationsToDevice(
                   //           key,
@@ -307,7 +307,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     }
 
                     // Check if currentId is null
-                    if (currentId.value == null) {
+                    if (userController.userId.value == null) {
                       snackBarCalledfail(
                           context, SnackbarData().userIdNotAvailable);
                       return;
@@ -323,7 +323,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
                     // Check if there are valid recipients other than the current user
                     bool hasValidRecipients =
-                        friendShares.keys.any((key) => key != currentId.value);
+                        friendShares.keys.any((key) => key != userController.userId.value);
 
                     if (!hasValidRecipients) {
                       snackBarCalledfail(
@@ -336,7 +336,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                       String? key = entry.key;
                       var value = entry.value;
                       return key != null &&
-                          key != currentId.value &&
+                          key != userController.userId.value &&
                           value != null &&
                           value['Total'] != null &&
                           (value['Total'] is double || value['Total'] is int) &&
@@ -352,7 +352,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     // Proceed with sending notifications
                     bool atLeastOneNotificationSent = false;
                     friendShares.forEach((key, value) {
-                      if (key != null && key != currentId.value) {
+                      if (key != null && key != userController.userId.value) {
                         // Ensure value and total are valid
                         if (value != null &&
                             value['Total'] != null &&
@@ -434,7 +434,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       itemBuilder: (context, index) {
         var friend = addedMembers[index];
         String? friendId = friend['id'];
-        bool isCurrentUser = friendId == currentId.value;
+        bool isCurrentUser = friendId == userController.userId.value;
 
         return ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -792,7 +792,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       var jsonData = {
         "messageType": "split",
         "receiver": rec['id'],
-        "sender": currentId.value,
+        "sender": userController.userId.value,
         "message": null,
         "image": null,
         "poll": null,
@@ -866,7 +866,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
       uniqueNameList.forEach((e) {
         for (var e in nameList) {
-          if (e['id'] != currentId.value) {
+          if (e['id'] != userController.userId.value) {
             // Log notification details
 
             sendNotificationsToDevice(

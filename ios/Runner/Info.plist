@@ -44,6 +44,16 @@
 				<string>com.googleusercontent.apps.907682114982-3nr2b1vgipnq5348u4fieeemr74vmuol</string>
 			</array>
 		</dict>
+		<dict>
+            <key>CFBundleTypeRole</key> 
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>com.apple.signin</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>appleauth</string>
+            </array>
+        </dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>

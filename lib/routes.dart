@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
+import 'package:flutter_application_code_stakeplot/animated/appScreenAnimation.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
@@ -19,8 +20,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/forgot.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
+
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/forgot.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signin.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signup.dart';
@@ -60,6 +60,7 @@ var routes =
       '/editDetails':(context) => EditDetails() ,
       '/post':(context) => Community() ,
       '/interestScreen':(context) => InterestSelectionScreen() ,
+      '/animatedAppScreen':(context)=>AppScreenAnimation()
 };
 
 

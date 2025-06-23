@@ -696,7 +696,7 @@ Future<dynamic> showCustomFriendsModalTransactionHistory(BuildContext context,
     builder: (BuildContext context) {
       return NewFriendsUi(
         totalAmount: amount.toDouble(),
-        userId: currentId.value,
+        userId: userController.userId.value,
         userName: userController.userName.value,
         userAvatar:userController.avatar.value,
         isLendMode: isLendMode,

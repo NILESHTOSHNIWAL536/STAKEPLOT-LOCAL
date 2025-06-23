@@ -43,7 +43,7 @@ void callApi(context)async
     clearAllFlags();
     await getRemainders(context);
     await updateWidget();
-    lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID
+    lifecycleHandler = AppLifecycleHandler(userController.userId.value); // Replace with actual user ID
     WidgetsBinding.instance.addObserver(lifecycleHandler);
   }
 

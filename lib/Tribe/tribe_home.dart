@@ -227,6 +227,8 @@ Widget vote(context, dataObj, data) {
               ),
             ),
             Container(
+              // color: Colors.green,
+              width: MediaQuery.sizeOf(context).width/5,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

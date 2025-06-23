@@ -81,7 +81,7 @@ void resentCodeLocaldata()
 void setUpSocketListenerMainPage(BuildContext context) {
   try {
 
-    if (currentId.value == "") return;
+    if (userController.userId.value == "") return;
   
     // Initialize socket connection
     mainPageWebSocket = IO.io(
@@ -96,7 +96,7 @@ void setUpSocketListenerMainPage(BuildContext context) {
     mainPageWebSocket.connect();
     mainPageWebSocket.onConnect((_) {
     try {
-      mainPageWebSocket.emit("addUserToSocket", currentId.value);
+      mainPageWebSocket.emit("addUserToSocket", userController.userId.value);
     } catch (e) {
     }
   });

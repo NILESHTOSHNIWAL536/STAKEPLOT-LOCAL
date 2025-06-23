@@ -27,7 +27,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController usernameController = TextEditingController();
-  final TextEditingController dobController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString());
+  final TextEditingController dobController = TextEditingController(text: '');
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
@@ -464,7 +464,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     String password = passwordController.text;
     String conform = confirmPasswordController.text;
     String phone = "0";
-    String dob = dobController.text;
+    // String dob = dobController.text;
 
 
     if (name.isEmpty) {
@@ -526,11 +526,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
-    if (dob.isEmpty) {
-      print("Error: Date of birth is empty"); // Debugging statement
-      snackBarCalledfail(context, SignupData().emptyDob, Colors.red);
-      return;
-    }
+   
 
     flag.value = true;
     final response = await http.post(
