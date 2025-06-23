@@ -97,7 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildDivider(),
 
                       const SizedBox(height: 20),
-
                       // Google Sign In
                       containerIconSiginWith(
                           FontAwesomeIcons.google, Colorcodes.white, context),
@@ -110,7 +109,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
             ),
-
                       const SizedBox(height: 20),
 
                       // const Spacer(),

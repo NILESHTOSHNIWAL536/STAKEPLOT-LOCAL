@@ -8,14 +8,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
-
 RxList bankAccountLinkedList = [].obs;
 RxList consentAndHandleDetails = [].obs;
 RxMap bankImagemap = {}.obs;
 
-Future<void> getBankAccounts() async
-{
-  var response =await getDataApiCall("${url}/transactionauto/get-banks-linked/");
+Future<void> getBankAccounts() async {
+  var response =
+      await getDataApiCall("${url}/transactionauto/get-banks-linked/");
   printData(response);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
@@ -57,63 +56,54 @@ Future<void> getBankAccounts() async
       });
     });
   }
-         if(bankAccountLinkedList.isNotEmpty)
-         {
-              LastFetchDate.value =  bankAccountLinkedList[0]['lastFetch'].toString() ;
-              nextFecthDate.value =  bankAccountLinkedList[0]['nextFetch'].toString() ;
-              fetchCount.value =  bankAccountLinkedList[0]['fetchCount'].toString();
-              BankName.value =  bankAccountLinkedList[0]['bankName'].toString();
-              BankUrl.value =  bankAccountLinkedList[0]['bankLogo'].toString();
-              isBankLinked.value=true;
-         }
+  if (bankAccountLinkedList.isNotEmpty) {
+    LastFetchDate.value = bankAccountLinkedList[0]['lastFetch'].toString();
+    nextFecthDate.value = bankAccountLinkedList[0]['nextFetch'].toString();
+    fetchCount.value = bankAccountLinkedList[0]['fetchCount'].toString();
+    BankName.value = bankAccountLinkedList[0]['bankName'].toString();
+    BankUrl.value = bankAccountLinkedList[0]['bankLogo'].toString();
+    isBankLinked.value = true;
+  }
 
   loadBanks.value = false;
-  loadBalance.value =! loadBalance.value;
+  loadBalance.value = !loadBalance.value;
 }
 
 void getWeeklyfetchData(
     consentId, consendHandleId, sessionId, custId, last) async {
-
   final String apiUrl = "${url}/finvu/fetchWeekly";
   final String userUrl = "${url}/user/updateFetchStatus";
-  var body={
-      'handleId': consendHandleId,
-      'custId': custId,
-      'consentId': consentId,
-      'sessionId': sessionId,
-      'userId': currentId.value,
-      'isCron': false,
-      'FROM': last,
-    };
-  
-  var userBody={
-    "fetchInProgress":true,
+  var body = {
+    'handleId': consendHandleId,
+    'custId': custId,
+    'consentId': consentId,
+    'sessionId': sessionId,
+    'userId': currentId.value,
+    'isCron': false,
+    'FROM': last,
   };
 
-   try
-   {
-     await updateDataApiCall2(userUrl,userBody);
-     await postDataApiCall(apiUrl,body);
-   }catch(e){
-   }
+  var userBody = {
+    "fetchInProgress": true,
+  };
+
+  try {
+    await updateDataApiCall2(userUrl, userBody);
+    await postDataApiCall(apiUrl, body);
+  } catch (e) {}
 }
 
-
-
 void calledFunctionToFetchData(context) async {
-  if (accountId.value.isEmpty)
-   {
+  if (accountId.value.isEmpty) {
     getGraphData.value = false;
     await getBankAccounts();
   }
-  
-  
-  if (selectedButton.value == "Month") 
-  {
+
+  if (selectedButton.value == "Month") {
     getAutoMationsTransactionsCustom(getFormattedDate(), context);
   } else if (selectedButton.value == "Week") {
     getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
   } else {
-    getAutoMationsTransactionsCustom(getFormattedDate(), context,'Custom');
+    getAutoMationsTransactionsCustom(getFormattedDate(), context, 'Custom');
   }
 }
