@@ -13,7 +13,6 @@ late IO.Socket mainPageWebSocket;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main()async {
-  Get.put(UserController());
   checkFirebaseAndValidUser();
 }
 

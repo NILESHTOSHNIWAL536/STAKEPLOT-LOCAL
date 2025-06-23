@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget
 }
 
 class _HomePageState extends State<HomePage> {
-  final UserController userController = Get.find<UserController>();
+  
  
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
       onWillPop: () async {
           exit(0);
       },
-      child: Scaffold(
+      child: Scaffold(  
         bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
         backgroundColor: AppColors.backgroundColor,
         appBar:getAppBar(context),

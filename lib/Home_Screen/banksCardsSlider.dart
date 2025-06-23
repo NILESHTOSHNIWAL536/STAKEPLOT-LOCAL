@@ -213,13 +213,12 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
 Widget setPinForAccountHide(context) {
   return Obx(() {
     if (userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00" || userController.cupertinoPin.value.isEmpty ||  userController.cupertinoAttemptCount.value) { // Handle empty case too
-     
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: InkWell(
           onTap: () {
 
-            if( userController.cupertinoAttemptCount.value)
+            if(userController.cupertinoAttemptCount.value)
             {
               resetCupertinoPin(context);
               return;

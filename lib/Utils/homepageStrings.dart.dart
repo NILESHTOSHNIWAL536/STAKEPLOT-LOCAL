@@ -102,6 +102,7 @@ class HomepageStringsDart {
   // New strings from InsightsTransactionHistory (historyTransactions)
   String reviewLabel = "Review";
   String hideTransactionPrompt = "Do you want to hide this transaction?";
+  String unhideTransactionPrompt = "Do you want to unhide this transaction?";
   String noButton = "No";
   String yesButton = "Yes";
   String hideTooltip = "Hide";

@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
 void getAck() async {
   var response = await getDataApiCall('${url}/user/newNotifications');
@@ -144,7 +145,8 @@ void getHiddenTransactions(context) async {
     var her = jsonDecode(response.body);
     var obj = her['data'];
     hiddentrasactionsHistory.clear();
-    hiddentrasactionsHistory.addAll(obj);
+    List<TransactionModel> modalObj=TransactionModel.listFromJson(obj);
+    hiddentrasactionsHistory.addAll(modalObj);
     getHiddenHistory.value = !getHiddenHistory.value;
   } else {}
 }
@@ -171,13 +173,14 @@ Future<void> getAllTransactionHistory(
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       var obj = data['data'];
-
+     
       if (obj != null && obj is List<dynamic>) {
         if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh
         }
+       List<TransactionModel>  transactions = TransactionModel.listFromJson(obj);
 
-        transactionsHistory.addAll(obj);
+        transactionsHistory.addAll(transactions);
 
         // Stop loading indicator if no more transactions exist
         if (obj.isEmpty || obj.length < 20) {

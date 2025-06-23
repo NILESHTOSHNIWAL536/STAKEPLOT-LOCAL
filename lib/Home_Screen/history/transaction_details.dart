@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
 class TransactionDetailsPage extends StatelessWidget {
-  final Map<String, dynamic> transaction;
+  final TransactionModel transaction;
 
   const TransactionDetailsPage({Key? key, required this.transaction})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = transaction['transactionTimestamp'] != null
+    final formattedDate = transaction.transactionTimestamp != null
         ? formatWhatsAppDate4(convertStringToDateTime(
-            transaction['transactionTimestamp'].toString()))
+            transaction.transactionTimestamp.toString()))
         : 'N/A'; 
 
     return Scaffold(
@@ -41,17 +42,17 @@ class TransactionDetailsPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      '₹${formatMoneyIndian(transaction['amount'].toString())}',
+                      '₹${formatMoneyIndian(transaction.amount.toString())}',
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.bold,
                           fontSize: 36,
-                          color: transaction['type'] == 'DEBIT'
+                          color: transaction.type == 'DEBIT'
                               ? const Color.fromARGB(255, 207, 118, 113)
                               : Colors.green),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      transaction['type'],
+                      transaction.type,
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w500,
                           fontSize: 16,
@@ -83,7 +84,7 @@ class TransactionDetailsPage extends StatelessWidget {
                     _buildDetailRow(
                       context: context,
                       label: 'Transaction ID',
-                      value: transaction['txnId'],
+                      value: transaction.txnId.toString(),
                     ),
                     const Divider(height: 24),
                     _buildDetailRow(
@@ -95,17 +96,17 @@ class TransactionDetailsPage extends StatelessWidget {
                     _buildDetailRow(
                       context: context,
                       label: 'Narration',
-                      value: transaction['narration'] ?? 'N/A',
+                      value: transaction.narration,
                     ),
                     // Only show Category row if tagged
                     if (_isCategoryTagged(
-                        transaction['category'], transaction['subcategory'])) ...[
+                        transaction.category, transaction.subcategory)) ...[
                       const Divider(height: 24),
                       _buildDetailRow(
                         context: context,
                         label: 'Category',
                         value: _formatCategory(
-                            transaction['category'], transaction['subcategory']),
+                            transaction.category, transaction.subcategory),
                       ),
                     ],
                   ],

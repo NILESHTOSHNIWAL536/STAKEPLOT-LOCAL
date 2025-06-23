@@ -27,16 +27,22 @@ Future<void> loginUser(TextEditingController emailController,
       'deviceInfo': deviceData,
     });
 
-    if (response.statusCode == 409) {
-      forceLoginShowModal(
-          context, response, emailController, passwordController);
-    } else if (response.statusCode == 500) {
+    if (response.statusCode == 409)
+    {
+      forceLoginShowModal(context, response, emailController, passwordController);
+    }
+    else if (response.statusCode == 500)
+    {
       snackBarCalled(context, SnackbarData().serverError, Colors.red);
-    } else if (getFlagOfResponse(response)) {
+    }
+    else if (getFlagOfResponse(response)) 
+    {
       loginCalledData(response, context);
       await screenDataLocalStorage();
       Navigator.pushReplacementNamed(context, '/home');
-    } else {
+    } 
+    else
+    {
       acceptReset.value = false;
       snackBarCalledfail(context, SnackbarData().invalidCredentials);
     }
@@ -88,7 +94,6 @@ void forceLoginShowModal(
 
 void loginCalledData(response, context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  print(response);
   final body = json.decode(response.body);
   String accessToken = body['data']['accessToken'];
   pref.setString("accessToken", "Bearer " + accessToken);
@@ -135,6 +140,7 @@ void forceLogoutUser(
       "userpassword": userpassword,
       "deviceInfo": deviceData
     });
+    printData(response);
     if (getFlagOfResponse(response)) {
       final body = json.decode(response.body);
       loginCalledData(response, context);
@@ -143,7 +149,10 @@ void forceLogoutUser(
     } else {
       snackBarCalled(context, SnackbarData().cantLogoutUser, Colors.red);
     }
-  } catch (e) {}
+  } catch (e) {
+    print(e);
+     
+  }
 }
 
 void getforgotPassword(context, String name, String email) async {
