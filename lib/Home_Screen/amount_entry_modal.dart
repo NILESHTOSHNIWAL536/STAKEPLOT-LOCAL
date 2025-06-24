@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
+import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;

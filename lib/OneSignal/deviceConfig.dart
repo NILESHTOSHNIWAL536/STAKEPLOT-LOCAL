@@ -139,11 +139,11 @@ void onPostReactLikeAndCommentWebSocket(updatedPost,context)
 {
     
     String id=updatedPost['_id'];   
-    if(postData.containsKey(id)) postData[id] = ! (postData[id]??false);
-    postCount[id] = updatedPost['upvotes'];
-    postCommentCount[id] = updatedPost['comments'];
-    uniquePostDeatils=updatedPost;
-    reloadUniquePost.value = !reloadUniquePost.value;
+    if( postController.postData.containsKey(id))  postController.postData[id] = ! ( postController.postData[id]??false);
+     postController.postCount[id] = updatedPost['upvotes'];
+     postController.postCommentCount[id] = updatedPost['comments'];
+     postController.uniquePostDeatils=updatedPost;
+     postController.reloadUniquePost.value = ! postController.reloadUniquePost.value;
 
 }
 

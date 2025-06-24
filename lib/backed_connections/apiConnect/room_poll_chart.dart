@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoadFeed.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/message.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:http/http.dart' as http;
@@ -283,13 +284,13 @@ final TagList = [...selectedSubCategories, ...selectedCategories];
   }
 }
 
-void uploadRefreshCall(postData, BuildContext context) {
-  getTrendingData.insert(0, postData);
-  postCount[postData["_id"]] = 0;
-  postCommentCount[postData["_id"]] = 0;
-  posting.value = false;
-  postDis.value = false;
-  getPosted.value = !getPosted.value;
+void uploadRefreshCall(PostModel postData, BuildContext context) {
+ postController.feedPostList.insert(0, postData);
+ postController.postCount[postData.id] = 0;
+ postController.postCommentCount[postData.id] = 0;
+ postController.posting.value = false;
+ postController.postDis.value = false;
+ postController.getPosted.value = !postController.getPosted.value;
   // resetAndLoadData();
 }
 
@@ -341,10 +342,12 @@ void votePollInPost(context, String id, int index) async {
     final body = json.decode(response.body);
 
     var data = body['data'];
-    for (int i = 0; i < getTrendingData.length; i++) {
-      if (getTrendingData[i]['_id'] == data['_id']) {
-        getTrendingData[i] ={...data,'author':getTrendingData[i]['author']};
-        getPosted.value = !getPosted.value;
+    for (int i = 0; i < postController.feedPostList.length; i++) {
+      if (postController.feedPostList[i].id == data['_id'])
+      {
+        PostModel post = postController.feedPostList[i];
+        postController.feedPostList[i]= PostModel.fromJson({...data,'author':post.author});
+        postController.getPosted.value = !postController.getPosted.value;
         return; // Stops loop after update
       }
     }

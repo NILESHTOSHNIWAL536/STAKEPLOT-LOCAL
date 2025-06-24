@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoadFeed.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
@@ -467,12 +468,12 @@ class _ExploreModalState extends State<ExploreModal> {
         var postData = jsonDecode(response.body);
 
         // Update local state
-        getTrendingData.insert(0, postData);
-        getPosted.value = !getPosted.value;
-        postCount[postData["_id"]] = 0;
-        postCommentCount[postData["_id"]] = 0;
-        posting.value = false;
-        postDis.value = false;
+         postController.feedPostList.insert(0, PostModel.fromJson(postData));
+         postController.getPosted.value = ! postController.getPosted.value;
+         postController.postCount[postData["_id"]] = 0;
+         postController.postCommentCount[postData["_id"]] = 0;
+         postController.posting.value = false;
+         postController.postDis.value = false;
         widget.onPostCreated(jsonDecode(response.body));
         Navigator.pop(context);
       } else {

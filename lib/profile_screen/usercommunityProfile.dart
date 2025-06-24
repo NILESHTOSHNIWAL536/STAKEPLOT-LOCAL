@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
+import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
 import 'package:get/get.dart';
@@ -76,7 +76,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
       getuerPost.clear();
       getuerPost.addAll(obj);
       getTrendingData.forEach((element) {
-        postCount[element["_id"]] =
+        postController.postCount[element["_id"]] =
             element['upvotes'] < 0 ? 0 : element['upvotes'];
       });
     } else {}

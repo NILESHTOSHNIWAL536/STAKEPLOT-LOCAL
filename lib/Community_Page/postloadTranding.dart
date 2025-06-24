@@ -24,9 +24,9 @@ class _LazyLoadingListState extends State<LazyLoadingTranding> {
       child: ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: getAllPostData.length,
+              itemCount:  postController.trandingPostList.length,
               itemBuilder: (context, index) {
-                return   Obx(()=> ( postData[getAllPostData[index]['_id']] ??false) ?   PostCard(data: getAllPostData[index],index: index,) :PostCard(data: getAllPostData[index],index: index,));
+                return   Obx(()=> (  postController.postData[ postController.trandingPostList[index].id] ??false) ?   PostCard(data: postController.trandingPostList[index],index: index,) :PostCard(data:  postController.trandingPostList[index],index: index,));
               },
             ),
     ));

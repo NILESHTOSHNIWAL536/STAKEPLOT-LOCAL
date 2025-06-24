@@ -22,15 +22,15 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
           child: ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: getTrendingData.length,
+            itemCount:  postController.feedPostList.length,
             itemBuilder: (context, index) {
-              return Obx(() => (postData[getTrendingData[index]['_id']] ?? false)
+              return Obx(() => (postController.postData[postController.feedPostList[index].id] ?? false)
                   ? PostCard(
-                      data: getTrendingData[index],
+                      data:  postController.feedPostList[index],
                       index: index,
                     )
                   : PostCard(
-                      data: getTrendingData[index],
+                      data:  postController.feedPostList[index],
                       index: index,
                       
                     ));

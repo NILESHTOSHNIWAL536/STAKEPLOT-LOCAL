@@ -1,6 +1,6 @@
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
+import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:get/get.dart';
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
         scaffoldBackgroundColor: AppColors.backgroundColor,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/splash', 
+      initialRoute: '/animatedAppScreen', 
       routes: routes
     );
   }

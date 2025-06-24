@@ -6,79 +6,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:get/get.dart';
 
-Widget poll(e, context) {
-  List options = e['options'];
-  int index = e['selectedOption'];
-  int s = -1;
 
-  return Padding(
-    padding: const EdgeInsets.only(right: 0.0, top: 5),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(e['question'] + "?",
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: AppColors.bg1)),
-        ),
-        Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: options.map((op) {
-              s++;
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 13, horizontal: 10),
-                    width: MediaQuery.of(context).size.width / 1.5,
-                    decoration: BoxDecoration(
-                      color: index == s ? null : Colorcodes.white,
-                      borderRadius:
-                          BorderRadius.circular(Colorcodes.borderRadius),
-                      gradient: index == s
-                          ? LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                AppColors.pollSelected,
-                                AppColors.pollSelected,
-                              ],
-                            )
-                          : null,
-                      border: index == s
-                          ? Border.all(color: AppColors.button)
-                          : null,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(op,
-                            overflow: TextOverflow.visible,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: index == s
-                                    ? AppColors.bg1
-                                    : AppColors.bg1)),
-                      ],
-                    )),
-              );
-            }).toList()),
-      ],
-    ),
-    //),
-  );
-}
-
-Widget getQuestionsAndOptions(e, context, flag, PostId) {
+Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
   String id = userController.userId.value;
-  List options = e['options'];
+  List options = e!.options;
 
   int index = -1;
   String s = "";
@@ -164,9 +98,7 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                                         len++;
 
                                         myvote.value = true;
-                                        e['options'][options.indexOf(op)]
-                                                ['votes']
-                                            .add(id);
+                                        e.options[options.indexOf(op)].votes.add(id);
 
                                         //  if(flag){
                                         //     questionRoom.removeAt(place);

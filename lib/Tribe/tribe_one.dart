@@ -10,6 +10,7 @@ import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart";
 import "package:flutter_application_code_stakeplot/model/comment.dart";
+import "package:flutter_application_code_stakeplot/model/post_model.dart";
 import "package:flutter_svg/svg.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -21,7 +22,7 @@ RxBool toggle = false.obs;
 
 class TribeUnique extends StatefulWidget {
   final String id;
-  Map<dynamic, dynamic> dataObj;
+ PostModel dataObj;
   RxBool popBox;
   TribeUnique(
       {Key? key, required this.id, required this.dataObj, required this.popBox})
@@ -51,7 +52,7 @@ class _TribeHomeState extends State<TribeUnique> {
   String replyid = "";
   String name = "";
   String userId = "";
-  var dataObj = {};
+  late PostModel dataObj ;
 
   List<RxInt> countLikes = [];
   int i = 0;
@@ -119,7 +120,7 @@ class _TribeHomeState extends State<TribeUnique> {
 
       var id = body['data']['_id'];
       obj.sId = id;
-      postCount[id] = 0;
+       postController.postCount[id] = 0;
       snackBarCalled(
           context, SnackbarData().commentAddedSuccessfully, Colors.black);
     } else {
@@ -131,7 +132,7 @@ class _TribeHomeState extends State<TribeUnique> {
   void initState() {
     super.initState();
     dataObj = widget.dataObj;
-    uniquePostDeatils = widget.dataObj;
+    postController.uniquePostDeatils = widget.dataObj;
     getpost(widget.id);
     getTransactionComments();
     getInfo();
@@ -204,7 +205,7 @@ class _TribeHomeState extends State<TribeUnique> {
       historyListData.forEach((e) {
         // Comments obj=Comments();
         //  historyListData.forEach((element) {
-        postCount[e["_id"]] = e['upvotes'];
+         postController.postCount[e["_id"]] = e['upvotes'];
         //  });
 
         Comments obj = Comments.fromJson(e);
@@ -268,16 +269,16 @@ class _TribeHomeState extends State<TribeUnique> {
                      padding: const EdgeInsets.symmetric(vertical: 10),
                    ),
                   Obx(() =>  PostCard(
-                          data: reloadUniquePost.value
-                              ? uniquePostDeatils
-                              : uniquePostDeatils,
+                          data: postController.reloadUniquePost.value
+                              ?  postController.uniquePostDeatils
+                              :  postController.uniquePostDeatils,
                           flag: true,
                           index: -1,
                           isTribeOne: true,
                         )
                       ),
                   
-                       uploadData(uniquePostDeatils)
+                       uploadData( postController.uniquePostDeatils)
                      
                 ],
               ),
@@ -301,7 +302,7 @@ class _TribeHomeState extends State<TribeUnique> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Obx(() => widget.popBox.value
-                      ? uploadData(uniquePostDeatils)
+                      ? uploadData( postController.uniquePostDeatils)
                       : SizedBox.shrink()),
                 ],
               ),
@@ -319,7 +320,7 @@ class _TribeHomeState extends State<TribeUnique> {
     );
   }
 
-  Widget uploadData(dataObj) {
+  Widget uploadData(PostModel dataObj) {
     return Padding(
       padding:  widget.popBox.value?const EdgeInsets.only(bottom: 15, top: 10):const EdgeInsets.only(bottom: 0, top: 0),
       child: Container(
@@ -466,29 +467,29 @@ class _TribeHomeState extends State<TribeUnique> {
                                                 data,
                                                 index);
                                             String l1 = "liked" + idData;
-                                            bool liked = likedList.contains(l1);
+                                            bool liked =  postController.likedList.contains(l1);
                                             String l2 = "disliked" + idData;
                                             bool disliked =
-                                                likedList.contains(l2);
+                                                 postController.likedList.contains(l2);
                                             if (liked) {
-                                              likedList.remove(l1);
-                                              postCount[idData] =
-                                                  postCount[idData]! - 1;
-                                              if (postCount[idData]! < 0) {
-                                                postCount[idData] = 0;
+                                               postController.likedList.remove(l1);
+                                               postController.postCount[idData] =
+                                                   postController.postCount[idData]! - 1;
+                                              if ( postController.postCount[idData]! < 0) {
+                                                 postController.postCount[idData] = 0;
                                               }
                                             } else {
-                                              likedList.add(l1);
-                                              postCount[idData] =
-                                                  postCount[idData]! + 1;
+                                               postController.likedList.add(l1);
+                                               postController.postCount[idData] =
+                                                   postController.postCount[idData]! + 1;
                                             }
-                                            likedList.remove(l2);
+                                             postController.likedList.remove(l2);
                                             reRender.value = !reRender.value;
                                           }
                                         },
                                         child: likeIcon(
                                             context,
-                                            likedList.contains(
+                                             postController.likedList.contains(
                                                 "liked" + data.sId.toString())),
                                       ),
                                       Padding(
@@ -498,13 +499,13 @@ class _TribeHomeState extends State<TribeUnique> {
                                           data.sId == null
                                               ? '0'
                                               : (reRender.value
-                                                  ? postCount[data.sId]! < 0
-                                                      ? postCount[
-                                                              dataObj['_id']]
+                                                  ?  postController.postCount[data.sId]! < 0
+                                                      ?  postController.postCount[
+                                                              dataObj.id]
                                                           .toString()
-                                                      : (postCount[data.sId]
+                                                      : ( postController.postCount[data.sId]
                                                           .toString())
-                                                  : (postCount[data.sId]
+                                                  : ( postController.postCount[data.sId]
                                                       .toString())),
                                           style: FontManager().getTextStyle(
                                               context,
@@ -600,9 +601,9 @@ class _TribeHomeState extends State<TribeUnique> {
                 MaskedNameDialogBox.showMaskedNameDialog(context);
               } else {
                 addComment(context, value, postId);
-                postCommentCount.putIfAbsent(
-                    postId, () => widget.dataObj["comments"] ?? 0);
-                postCommentCount.update(postId, (value) => value + 1);
+                 postController.postCommentCount.putIfAbsent(
+                    postId, () => widget.dataObj.comments);
+                 postController.postCommentCount.update(postId, (value) => value + 1);
                 Textcontroller.clear();
               }
             },
@@ -718,9 +719,9 @@ class _TribeHomeState extends State<TribeUnique> {
             value,
             postId,
           );
-          postCommentCount.putIfAbsent(
-              postId, () => widget.dataObj["comments"] ?? 0);
-          postCommentCount.update(postId, (value) => value + 1);
+          postController.postCommentCount.putIfAbsent(
+              postId, () => widget.dataObj.comments ?? 0);
+           postController.postCommentCount.update(postId, (value) => value + 1);
           Textcontroller.clear();
         }
       },

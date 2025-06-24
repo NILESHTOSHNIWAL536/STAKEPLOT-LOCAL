@@ -6,7 +6,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
+import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,8 +104,8 @@ void getuserPost(id) async {
    userController.myPostList.clear();
    userController.myPostList.addAll(obj);
    userController.myPostList.forEach((element) {
-      postCount[element["_id"]] = element['upvotes'];
-      postCommentCount[element["_id"]] = element['comments'];
+     postController.postCount[element["_id"]] = element['upvotes'];
+      postController.postCommentCount[element["_id"]] = element['comments'];
     });
   } else {}
 }
@@ -143,10 +144,10 @@ void getSaved() async {
     var obj = his['data'];
   
     userController.savedList.clear();
-    userController.savedList.addAll(obj);
+    userController.savedList.addAll(PostModel.listFromJson(obj));
     userController.savedList.forEach((element){
-      postCount[element["_id"]] = element['upvotes'];
-      postCommentCount[element["_id"]] = element['comments'];
+      postController.postCount[element.id] = element.upvotes;
+      postController.postCommentCount[element.id] = element.comments;
     });
   } else {}
 }

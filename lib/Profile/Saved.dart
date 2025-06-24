@@ -6,7 +6,7 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/controllers/controllerManagement.dart";
-import "package:flutter_application_code_stakeplot/controllers/userController.dart";
+import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 import "package:flutter_application_code_stakeplot/headersList/userProfileHeader.dart";
 import "package:get/get.dart";
 

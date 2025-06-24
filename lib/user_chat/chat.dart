@@ -13,7 +13,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
+import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 import 'package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/fullScreen.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/message.dart';
