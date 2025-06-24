@@ -27,16 +27,17 @@ RxList<String> addManually = <String>[].obs;
 RxBool showCheckBox =
     false.obs; // Initialize as false to avoid showing checkboxes by default
 
-Widget historyTransactions(TransactionModel transaction, String? date,
-    int index, BuildContext context,
-    [bool hideReview = false, bool isexpanded = false,bool hide=false]) {
+Widget historyTransactions(
+    TransactionModel transaction, String? date, int index, BuildContext context,
+    [bool hideReview = false, bool isexpanded = false, bool hide = false]) {
+  
   String logo = transaction.bankLogo ?? "";
 
   final category = transaction.category;
   final subcategory = transaction.subcategory;
   final double amount =
-      double.parse(doubleToFixed((transaction.amount ).toString()));
-  final isManual = transaction.manualTransaction ;
+      double.parse(doubleToFixed((transaction.amount).toString()));
+  final isManual = transaction.manualTransaction;
   final isSplit = transaction.isSplit;
 
   final formattedDate = date != null
@@ -46,7 +47,7 @@ Widget historyTransactions(TransactionModel transaction, String? date,
       date != null ? formatWhatsAppDate(convertStringToDateTime(date)) : 'Date';
   final type = transaction.type;
   final narration = transaction.narration;
-  final id = transaction.id ;
+  final id = transaction.id;
   bool isReview = transaction.needsReview ?? false;
 
   if (hideReview && isReview) return SizedBox.shrink();
@@ -56,7 +57,15 @@ Widget historyTransactions(TransactionModel transaction, String? date,
   if (parts.isEmpty || parts.length == 1) parts = narration.split('&');
   if (parts.isEmpty || parts.length == 1) parts = narration.split(' ');
 
-  String nameOfUser =  transaction.title !=null ?  transaction.title:  parts.length >= 4? parts[3]: parts.length >= 3? parts[2]: parts.length >= 2? parts[1]: parts[0];
+  String nameOfUser = transaction.title != null
+      ? transaction.title
+      : parts.length >= 4
+          ? parts[3]
+          : parts.length >= 3
+              ? parts[2]
+              : parts.length >= 2
+                  ? parts[1]
+                  : parts[0];
 
   final amtColor = type == 'CREDIT'
       ? Colors.green.shade700
@@ -64,7 +73,6 @@ Widget historyTransactions(TransactionModel transaction, String? date,
   final formatAmount = type == 'CREDIT'
       ? "₹${formatMoneyIndian(amount.toString())}"
       : "₹${formatMoneyIndian(amount.toString())}";
-
 
   final fontSizes = FontSizeFactor(context);
 
@@ -95,7 +103,7 @@ Widget historyTransactions(TransactionModel transaction, String? date,
         }
       },
       onLongPress: () {
-        if(hide)return;
+        if (hide) return;
         if (!isexpanded) showCheckBox.value = true;
         HapticFeedback.mediumImpact(); // Haptic feedback on long press
       },
@@ -140,18 +148,17 @@ Widget historyTransactions(TransactionModel transaction, String? date,
                         (Widget child, Animation<double> animation) {
                       return ScaleTransition(scale: animation, child: child);
                     },
-                    child: (showCheckBox.value &&  !hide)
+                    child: (showCheckBox.value && !hide)
                         ? Container(
                             key: ValueKey('checkbox'),
                             height: 30,
                             width: 30,
                             child: Checkbox(
-                              value: redioButton
-                                  .containsKey('${transaction.id}'),
+                              value:
+                                  redioButton.containsKey('${transaction.id}'),
                               onChanged: (bool? isChecked) {
                                 String id = '${transaction.id}';
-                                bool ismanual =
-                                    transaction.manualTransaction;
+                                bool ismanual = transaction.manualTransaction;
                                 if (isChecked == true) {
                                   redioButton[id] = id;
                                   redioButtonIndex[id] = index;
@@ -179,7 +186,7 @@ Widget historyTransactions(TransactionModel transaction, String? date,
                   GestureDetector(
                     onTap: () {
                       if (!showCheckBox.value) return;
-                      if(hide)return;
+                      if (hide) return;
                       String id = '${transaction.id}';
                       bool isChecked = redioButton.containsKey(id);
 
@@ -295,8 +302,7 @@ Widget historyTransactions(TransactionModel transaction, String? date,
                                 isReview,
                                 id,
                                 isManual,
-                                hide
-                                ),
+                                hide),
                           ),
                           (isManual || isReview)
                               ? SizedBox(height: 0)
@@ -377,13 +383,12 @@ Widget getIconsForHideUpdateSplit(
     bool isReview,
     String id,
     bool isManual,
-    bool hide
-  ) {
+    bool hide) {
   // Responsive scaling with MediaQuery
   final screenWidth = MediaQuery.of(context).size.width;
   final scaleFactor = screenWidth / 360; // Base width: 360px
   final fontSizeMedium = 12.0 * scaleFactor;
-  
+
   bool isValidUrl(String? url) {
     return url != null &&
         url.isNotEmpty &&
@@ -466,7 +471,8 @@ Widget getIconsForHideUpdateSplit(
                                 backgroundColor:
                                     Colors.transparent, // For custom container
                                 child: Container(
-                                  width:screenWidth * 0.95, // 85% of screen width
+                                  width:
+                                      screenWidth * 0.95, // 85% of screen width
                                   padding: EdgeInsets.all(screenWidth * 0.05),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -499,9 +505,11 @@ Widget getIconsForHideUpdateSplit(
                                             vertical: screenWidth * 0.02),
                                         child: textStyleOnly2(
                                           context: context,
-                                          text: hide? HomepageStringsDart()
-                                              .unhideTransactionPrompt :HomepageStringsDart()
-                                              .hideTransactionPrompt,
+                                          text: hide
+                                              ? HomepageStringsDart()
+                                                  .unhideTransactionPrompt
+                                              : HomepageStringsDart()
+                                                  .hideTransactionPrompt,
                                           fontsize: screenWidth < 400 ? 14 : 16,
                                           color: AppColors.bg1,
                                           fontWeight: FontWeight.w500,
@@ -549,15 +557,18 @@ Widget getIconsForHideUpdateSplit(
                                             color: Colors.grey[200],
                                           ),
                                           TextButton(
-                                            onPressed: ()async {
-                                              await hideTransaction(index, !hide,
-                                                  context, transaction.id);
-    
+                                            onPressed: () async {
+                                              await hideTransaction(
+                                                  index,
+                                                  !hide,
+                                                  context,
+                                                  transaction.id);
+
                                               if (context.mounted) {
-                                                  Navigator.of(context).pop(); // Pop the dialog after hiding
-                                                }
+                                                Navigator.of(context)
+                                                    .pop(); // Pop the dialog after hiding
+                                              }
                                               //                                           //Navigator.of(context).pop();
-                                             
                                             },
                                             style: TextButton.styleFrom(
                                               padding: EdgeInsets.symmetric(
@@ -599,7 +610,9 @@ Widget getIconsForHideUpdateSplit(
                                 BorderRadius.circular(8 * scaleFactor),
                           ),
                           child: Icon(
-                          hide? Icons.visibility_outlined: Icons.visibility_off_rounded,
+                            hide
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_rounded,
                             color: AppColors.primaryColor,
                             size: iconSize,
                           ),
@@ -698,7 +711,7 @@ Future<dynamic> showCustomFriendsModalTransactionHistory(BuildContext context,
         totalAmount: amount.toDouble(),
         userId: userController.userId.value,
         userName: userController.userName.value,
-        userAvatar:userController.avatar.value,
+        userAvatar: userController.avatar.value,
         isLendMode: isLendMode,
         category: category,
         subcategory: subcategory,
@@ -709,8 +722,8 @@ Future<dynamic> showCustomFriendsModalTransactionHistory(BuildContext context,
   );
 }
 
-Widget getTagButton(TransactionModel transaction, int index,
-    String category, BuildContext context, String narration_id) {
+Widget getTagButton(TransactionModel transaction, int index, String category,
+    BuildContext context, String narration_id) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [

@@ -150,7 +150,7 @@ void getHiddenTransactions(context) async {
 Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
   var response =
       await getDataApiCall("${url}/transactionauto/get-day-wise-transactions");
-  
+
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
@@ -163,14 +163,11 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
 
 Future<List<Map<String, dynamic>>> getDayWiseTransactionsForDate(
     context, String date) async {
-  print("here ");
   var response = await getDataApiCall(
       "${url}/transactionauto/get-day-wise-transactions/$date");
-  print("api here :${url}/get-day-wise-transactions/$date");
-  print("response here :${response.body}");
+
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
-    print("her body $her");
     var obj = her['data'];
     if (obj is List) {
       return List<Map<String, dynamic>>.from(obj);
@@ -198,10 +195,13 @@ Future<void> getAllTransactionHistory(
         : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${accountIdPdf.value.isEmpty ? "-" : accountIdPdf.value}";
 
     var response = await getDataApiCall(urlPath);
+    printData(response);
     if (response.statusCode == 200) {
+      print("urlPath");
+      print(urlPath);
       var data = jsonDecode(response.body);
       var obj = data['data'];
-
+      print(obj);
       if (obj != null && obj is List<dynamic>) {
         if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh

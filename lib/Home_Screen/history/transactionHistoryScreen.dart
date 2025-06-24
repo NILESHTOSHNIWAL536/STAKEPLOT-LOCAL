@@ -219,11 +219,13 @@
 //     );
 //   }
 // }
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/dayWiseTransactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_AppBar.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/tagandhidebutton.dart';
@@ -239,6 +241,7 @@ import 'package:get/get.dart';
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
 
+
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
 
@@ -253,7 +256,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   final ScrollController scrollController = ScrollController();
   final RxList<Map<String, dynamic>> dayWiseTransactions =
       RxList<Map<String, dynamic>>([]);
-  final RxBool isDateSummaryView = false.obs; // State to toggle views
+      final RxBool isDateSummaryView = false.obs;
+  // State to toggle views
 
   @override
   void initState() {
@@ -264,7 +268,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     getDayWiseTransactions(context).then((data) {
       dayWiseTransactions.assignAll(data);
     });
+  
     // getDayWiseTransactionsForDate(context);
+
     scrollController.addListener(_onScroll);
   }
 
@@ -330,7 +336,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                 child: Icon(Icons.filter_alt_outlined,
                                     size:
                                         MediaQuery.of(context).size.height / 20,
-                                    color: AppColors.accentColor),
+                                    color: AppColors.finSpaceColor),
                               ),
                               InkWell(
                                 onTap: () {
@@ -339,10 +345,15 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                         .value; // Toggle state
                                   });
                                 },
-                                child: Icon(Icons.calendar_today,
-                                    size:
-                                        MediaQuery.of(context).size.height / 20,
-                                    color: AppColors.accentColor),
+                                child: Icon(
+                                  isDateSummaryView.value
+                                      ? Icons
+                                          .calendar_today // Icon when collapsed
+                                      : Icons
+                                          .calendar_view_month, // Icon when expanded
+                                  size: MediaQuery.of(context).size.height / 24,
+                                  color: AppColors.finSpaceColor,
+                                ),
                               ),
                             ],
                           ),
@@ -397,7 +408,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
   Widget getTextFeild() {
     return Container(
-      width: MediaQuery.of(context).size.width / 2,
+      width: MediaQuery.of(context).size.width / 1.4,
       height: MediaQuery.of(context).size.width / 8,
       child: TextField(
         controller: searchController,
@@ -441,114 +452,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         ),
         style: const TextStyle(color: AppColors.accentColor),
       ),
-    );
-  }
-}
-
-// New DateSummaryView Widget
-class DateSummaryView extends StatelessWidget {
-  final RxList<Map<String, dynamic>> dayWiseTransactions;
-  final VoidCallback onBack;
-
-  const DateSummaryView({
-    required this.dayWiseTransactions,
-    required this.onBack,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Custom Header with Back Button
-        Container(
-          padding: const EdgeInsets.all(8.0),
-          color: AppColors.backgroundColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
-                onPressed: onBack,
-              ),
-              Text(
-                'Date Summary',
-                style: FontManager().getTextStyle(
-                  context,
-                  fontSize: 18,
-                  color: AppColors.accentColor,
-                ),
-              ),
-              SizedBox(width: 48), // Placeholder for symmetry
-            ],
-          ),
-        ),
-        Expanded(
-          child: Obx(() => ListView.builder(
-                shrinkWrap: true,
-                itemCount: dayWiseTransactions.length,
-                itemBuilder: (context, index) {
-                  final data = dayWiseTransactions[index];
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: ExpansionTile(
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            data['date'],
-                            style: FontManager().getTextStyle(
-                              context,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(
-                            'Credit: ₹${data['creditAmount'].toStringAsFixed(0)} | Debit: ₹${data['debitAmount'].toStringAsFixed(0)}',
-                            style: FontManager().getTextStyle(
-                              context,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                      children: [
-                       FutureBuilder<List<Map<String, dynamic>>>(
-                          future: getDayWiseTransactionsForDate(context, data['date']),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            }
-                            if (snapshot.hasError || !snapshot.hasData) {
-                              return Center(child: Text('Error loading transactions'));
-                            }
-                            final transactions = snapshot.data!;
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: transactions.length,
-                              itemBuilder: (context, txIndex) {
-                                final transactionData = transactions[txIndex];
-                                final transaction = TransactionModel.fromJson(transactionData);
-                                // Ensure transactionTimestamp is used for date and bankId or logo is mapped
-                                return historyTransactions(
-                                  transaction,
-                                  transaction.transactionTimestamp.toString() ?? data['date'], // Use transaction timestamp if available
-                                  txIndex,
-                                  context,
-                                  true, 
-                                  true,
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              )),
-        ),
-      ],
     );
   }
 }
