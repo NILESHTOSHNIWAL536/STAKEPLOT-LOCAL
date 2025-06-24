@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
 import 'package:get/get.dart';
 import 'dart:io';
@@ -37,10 +38,9 @@ class CommunityUserProfile extends StatefulWidget {
 class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   TextEditingController about = TextEditingController();
   String dataReport = "";
-  List getTrendingData = [];
-  RxList getuerPost = [].obs;
+  RxList<PostModel> getTrendingData = <PostModel>[].obs;
+  RxList<PostModel> getuerPost = <PostModel>[].obs;
   List frds = [];
-  bool findData = true;
   RxBool finduserPost = true.obs;
   bool already = false;
   RxInt count = 0.obs;
@@ -62,24 +62,31 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   }
 
   void getDis() async {
+    try{
     var response = await getDataApiCall(
         '${url}/post/userDiscussions/${widget.data['_id']}');
 
     if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
-
-      setState(() {
-        getTrendingData = obj;
-        findData = false;
-      });
+  
+      // getTrendingData =  obj;
       getuerPost.clear();
-      getuerPost.addAll(obj);
+      getTrendingData.clear();
+      getuerPost.addAll(PostModel.listFromJson(obj));
+      getTrendingData.addAll(PostModel.listFromJson(obj));
       getTrendingData.forEach((element) {
-        postController.postCount[element["_id"]] =
-            element['upvotes'] < 0 ? 0 : element['upvotes'];
+        postController.postCount[element.id] =
+            element.upvotes < 0 ? 0 : element.upvotes;
       });
+
+      reload.value =!reload.value;
+
     } else {}
+    } catch (e) {
+      print("Error fetching discussions: ");
+      print(e);
+    }
   }
 
   void getConnections() async {
@@ -135,7 +142,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
               Column(
                 children: [
                   const SizedBox(height: 10),
-                  TabBarUser(userPostList: getTrendingData)
+                  Obx(()=>reload.value? TabBarUser(userPostList: getTrendingData): TabBarUser(userPostList: getTrendingData)),
                 ],
               ),
             ],

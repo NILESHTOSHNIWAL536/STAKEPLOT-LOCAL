@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
@@ -225,14 +226,15 @@ void getTranding() async {
   }
 }
 
-void savePostData(context, data) async {
-  var urlPath = "${url}/post/save/${data['_id']}";
-  var body = {"postId": data['_id']};
+void savePostData(context,PostModel data) async {
+  var urlPath = "${url}/post/save/${data.id}";
+  var body = {"postId": data.id};
   var response = await postDataApiCall(urlPath, body);
   var decodedResponse = json.decode(response.body);
 
   if (getFlagOfResponse(response) ) {
     snackBarCalled(context, decodedResponse['data'].toString());
+    getSaved();
   } else {
     snackBarCalled(context, SnackbarData().failedToSavePost, Colors.red);
   }
@@ -255,3 +257,15 @@ Future<List<dynamic>> savePostGetData(context) async {
     return [];
   }
 }
+
+
+  void getpost(id) async
+  {
+    var response=await getDataApiCall('${url}/post/${id}');
+    if (getFlagOfResponse(response))
+     {
+      var his = jsonDecode(response.body);
+      var obj = his['data'];
+       postController.uniquePostDeatils = PostModel.fromJson(obj[0]);
+    } else {}   
+  }

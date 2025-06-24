@@ -284,14 +284,13 @@ final TagList = [...selectedSubCategories, ...selectedCategories];
   }
 }
 
-void uploadRefreshCall(PostModel postData, BuildContext context) {
- postController.feedPostList.insert(0, postData);
- postController.postCount[postData.id] = 0;
- postController.postCommentCount[postData.id] = 0;
+void uploadRefreshCall(var postData, BuildContext context) {
+ postController.feedPostList.insert(0, PostModel.fromJson(postData));
+ postController.postCount[postData['_id']] = 0;
+ postController.postCommentCount[postData['_id']] = 0;
  postController.posting.value = false;
  postController.postDis.value = false;
  postController.getPosted.value = !postController.getPosted.value;
-  // resetAndLoadData();
 }
 
 void votePoll(context, String id, int index) async {
@@ -346,7 +345,7 @@ void votePollInPost(context, String id, int index) async {
       if (postController.feedPostList[i].id == data['_id'])
       {
         PostModel post = postController.feedPostList[i];
-        postController.feedPostList[i]= PostModel.fromJson({...data,'author':post.author});
+        postController.feedPostList[i]= PostModel.fromJson({...data,'author': post.author});
         postController.getPosted.value = !postController.getPosted.value;
         return; // Stops loop after update
       }

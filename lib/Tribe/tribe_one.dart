@@ -8,6 +8,7 @@ import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart";
 import "package:flutter_application_code_stakeplot/model/comment.dart";
 import "package:flutter_application_code_stakeplot/model/post_model.dart";
@@ -138,26 +139,7 @@ class _TribeHomeState extends State<TribeUnique> {
     getInfo();
   }
 
-  void getpost(id) async {
-    ;
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/post/${widget.id}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
-    if (response.statusCode == 200) {
-      var his = jsonDecode(response.body);
-      var obj = his['data'];
 
-      setState(() {
-        dataObj = obj.length>0? obj[0]:dataObj;
-      });
-    } else {}
-  }
 
   void getInfo() async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();

@@ -40,7 +40,7 @@ class UserController extends GetxController {
   RxList<PostModel> savedList = <PostModel>[].obs;
   RxSet<String> savedPostIds = <String>{}.obs;
 
-  RxList myPostList = [].obs;
+  RxList<PostModel> myPostList = <PostModel>[].obs;
   RxList friendsList = [].obs;
   RxList frdsListOrigin = [].obs;
 

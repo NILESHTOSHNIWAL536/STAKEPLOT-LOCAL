@@ -9,11 +9,13 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/fullScreen.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/message.dart';
@@ -1034,24 +1036,25 @@ class _ChatState extends State<Chat> {
 
 
  Widget uploadData(String dataObj2, Message message) {
-  var dataObj = jsonDecode(dataObj2);
-  print("data for share posts $dataObj");
-  bool isExploria = dataObj['postType'] == "exploria";
-  bool isPoll = dataObj['postType'] == "poll";
-  bool isImage = dataObj['postType'] == "image";
-  bool isWrite = dataObj['postType'] == "write";
+  PostModel dataObj = PostModel.fromJson(jsonDecode(dataObj2));
+  bool isExploria =dataObj.postType.name == "exploria";
+  bool isPoll =  dataObj.postType.name == "poll";
+  bool isImage = dataObj.postType.name == "image";
+  bool isWrite = dataObj.postType.name == "write";
 
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
     child: GestureDetector(
-      onTap: () {
+      onTap: () async{
+        getpost(dataObj.id);
+        await Future.delayed(const Duration(milliseconds: 100));
         Navigator.push(
           context,
           PageTransition(
             type: PageTransitionType.fade,
             duration: Durations.long1,
             child: TribeUnique(
-              id: dataObj["_id"],
+              id: dataObj.id,
               dataObj: dataObj,
               popBox: false.obs,
             ),
@@ -1088,7 +1091,7 @@ class _ChatState extends State<Chat> {
                
                 Expanded(
                   child: Text(
-                    (dataObj["author"]['maskedName'] ?? dataObj["author"]['name']),
+                    (dataObj.author.maskedName==''?  dataObj.author.name: dataObj.author.maskedName),
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w600,
@@ -1103,9 +1106,9 @@ class _ChatState extends State<Chat> {
             ),
             const SizedBox(height: 10),
             // Content Preview
-            if (isPoll && dataObj['pollData'] != null && dataObj['pollData']['question'] != null)
+            if (isPoll && dataObj.pollData != null && dataObj.pollData!.question!= null)
               Text(
-                "${dataObj['pollData']['question']}?",
+                "${dataObj.pollData!.question}?",
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w600,
@@ -1119,9 +1122,9 @@ class _ChatState extends State<Chat> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (dataObj['title'] != null && dataObj['title'].isNotEmpty)
+                  if (dataObj.title.isNotEmpty)
                     Text(
-                      dataObj['title'],
+                      dataObj.title,
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w600,
@@ -1131,9 +1134,9 @@ class _ChatState extends State<Chat> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  if (dataObj['title'] != null && dataObj['title'].isNotEmpty) const SizedBox(height: 6),
+                  if (dataObj.title.isNotEmpty) const SizedBox(height: 6),
                   Text(
-                    (dataObj['description'] is Map ? dataObj['description']['message'] : dataObj['description']) ?? '',
+                    (dataObj.description is Map ? dataObj.description.message : dataObj.description),
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w400,
@@ -1147,7 +1150,7 @@ class _ChatState extends State<Chat> {
               ),
             if (isImage)
               Text(
-                (dataObj['description'] is Map ? dataObj['description']['message'] : dataObj['description']) ?? '',
+                (dataObj.description is Map ? dataObj.description.message : dataObj.description) ?? '',
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w400,
@@ -1159,7 +1162,7 @@ class _ChatState extends State<Chat> {
               ),
             if (isExploria)
               Text(
-                (dataObj['description'] is Map ? dataObj['description']['message'] : dataObj['description']) ?? '',
+                (dataObj.description is Map ? dataObj.description.message : dataObj.description) ?? '',
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w400,
@@ -1170,13 +1173,13 @@ class _ChatState extends State<Chat> {
                 overflow: TextOverflow.ellipsis,
               ),
             // Image Thumbnail (if applicable)
-            if (isImage && dataObj['image'] != null && dataObj['image'] != "none" && dataObj['image'] != "")
+            if (isImage &&  dataObj.image != "none" && dataObj.image != "")
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    dataObj['image'],
+                   dataObj.image,
                     width: MediaQuery.of(context).size.width / 1.6,
                     height: 120,
                     fit: BoxFit.cover,
@@ -1189,13 +1192,13 @@ class _ChatState extends State<Chat> {
                   ),
                 ),
               ),
-            if (isExploria && dataObj['images'] != null && dataObj['images'].isNotEmpty && dataObj['images'][0] != "none" && dataObj['images'][0] != "")
+            if (isExploria && dataObj.images != null && dataObj.images.isNotEmpty && dataObj.images[0] != "none" && dataObj.images[0] != "")
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    dataObj['images'][0],
+                    dataObj.images[0],
                     width: MediaQuery.of(context).size.width / 1.6,
                     height: 120,
                     fit: BoxFit.cover,
@@ -1209,7 +1212,7 @@ class _ChatState extends State<Chat> {
                 ),
               ),
             // Tags (Show only one or hint)
-            if (dataObj['tags'] != null && dataObj['tags'].isNotEmpty)
+            if (dataObj.tag.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Container(
@@ -1219,7 +1222,7 @@ class _ChatState extends State<Chat> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    "#${dataObj['tags'][0]}",
+                    "#${dataObj.tag[0]}",
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w500,
@@ -1230,11 +1233,11 @@ class _ChatState extends State<Chat> {
                 ),
               ),
             // Timestamp
-            if (dataObj['createdAt'] != null)
+            if (dataObj.createdAt.toString().isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  formatDateToIST(dataObj['createdAt']),
+                  formatDateToIST(dataObj.createdAt.toString()),
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w400,

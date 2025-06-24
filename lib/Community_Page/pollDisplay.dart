@@ -12,16 +12,16 @@ import 'package:get/get.dart';
 
 Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
   String id = userController.userId.value;
-  List options = e!.options;
+  List<PollOptionModel>  options = e!.options;
 
   int index = -1;
   String s = "";
   for (int i = 0; i < options.length; i++) {
-    List votesArray = options[i]['votes'];
+    List votesArray = options[i].votes;
     bool vote = votesArray.contains(id);
     if (vote) {
       index = i;
-      s = options[i]['option'];
+      s = options[i].option;
       break;
     }
   }
@@ -30,11 +30,11 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
   int len = 0;
 
   options.forEach((element) {
-    List ll = element['votes'];
+    List ll = element.votes;
     len = len + ll.length;
   });
 
-  RxList optionsList = [].obs;
+  RxList<PollOptionModel> optionsList = <PollOptionModel>[].obs;
 
   optionsList.addAll(options);
   int indexVal = -1;
@@ -58,7 +58,7 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: optionsList.map((op) {
-                        List ll = op['votes'];
+                        List ll = op.votes;
                         indexVal++;
 
                         String cal = len != 0
@@ -68,8 +68,8 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
                         // if(!flag){
                         //       cal =  s == op['option'] ? "100" :"0";
                         // }
-                        bool isSe = op['option'] == s;
-                        String formattedText = op['option'].replaceAllMapped(
+                        bool isSe = op.option == s;
+                        String formattedText = op.option.replaceAllMapped(
                             RegExp(r'.{6}'),
                             (match) => '${match.group(0)}\u200B');
 
@@ -86,13 +86,11 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
                         MaskedNameDialogBox.showMaskedNameDialog(context);
                       }
                       else{
-                                        s = op['option'];
+                                        s = op.option;
                                         //  if(!flag)cal =  s == op['option'] ? "100" :"0";
 
                                         int place = options.indexOf(op);
-                                        optionsList[options.indexOf(op)]
-                                                ['votes']
-                                            .add(id);
+                                        optionsList[options.indexOf(op)].votes.add(id);
                                         votePollInPost(context, PostId,
                                             options.indexOf(op));
                                         len++;
@@ -110,12 +108,12 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
                                         vertical: 13, horizontal: 10),
                                     //width: MediaQuery.of(context).size.width,
                                     decoration: BoxDecoration(
-                                        color: op['option'] == s
+                                        color: op.option == s
                                             ? null
                                             : AppColors.unSelectedOption,
                                         borderRadius: BorderRadius.circular(
                                             Colorcodes.borderRadius/2),
-                                        gradient: op['option'] == s
+                                        gradient: op.option == s
                                             ? LinearGradient(
                                                 begin: Alignment.centerLeft,
                                                 end: Alignment.centerRight,
@@ -135,7 +133,7 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
                                       children: [
                                         Expanded(
                                           // width: MediaQuery.of(context).size.width/2,
-                                          child: Text(op['option'],
+                                          child: Text(op.option,
                                               //child: Text(formattedText,
                                               maxLines: null,
                                               softWrap: true,

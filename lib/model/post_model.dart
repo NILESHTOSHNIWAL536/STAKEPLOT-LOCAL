@@ -128,6 +128,7 @@ class PostModel {
   final String id;
   final AuthorModel author;
   final String title;
+  final String place;
   final dynamic description;
   final String image;
   final PostType postType;
@@ -146,10 +147,17 @@ class PostModel {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  final String location;
+  final List<BudgetModel> budget;
+  final int rating;
+  final List<String> tripHighlights;
+  final List<String> images;
+
   PostModel({
     required this.id,
     required this.author,
     required this.title,
+    required this.place,
     required this.description,
     required this.image,
     required this.postType,
@@ -167,6 +175,11 @@ class PostModel {
     required this.tag,
     required this.createdAt,
     required this.updatedAt,
+    required this.location,
+    required this.budget,
+    required this.rating,
+    required this.tripHighlights,
+    required this.images,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -177,6 +190,7 @@ class PostModel {
       id: json['_id'] ?? '',
       author: AuthorModel.fromJson(json['author'] ?? {}),
       title: json['title'] ?? '',
+      place: json['name'] ?? '',
       description: json['description'],
       image: json['image'] ?? 'none',
       postType: postType,
@@ -194,6 +208,14 @@ class PostModel {
       tag: List<String>.from(json['tags'] ?? []),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
+       location: json['location'] ?? '',
+      budget: (json['budget'] as List<dynamic>?)
+              ?.map((e) => BudgetModel.fromJson(e))
+              .toList() ??
+          [],
+      rating: json['rating'] ?? 0,
+      tripHighlights: List<String>.from(json['tripHighlights'] ?? []),
+      images: List<String>.from(json['images'] ?? []),
     );
   }
 
@@ -203,6 +225,7 @@ class PostModel {
       'author': author,
       'title': title,
       'description': description,
+      'name': place,
       'image': image,
       'postType': postType.name,
       'isItenary': isItenary,
@@ -219,6 +242,11 @@ class PostModel {
       'tag': tag,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'location': location,
+      'budget': budget.map((e) => e.toJson()).toList(),
+      'rating': rating,
+      'tripHighlights': tripHighlights,
+      'images': images,
     };
   }
 
@@ -230,4 +258,42 @@ static List<PostModel> listFromJson(List<dynamic> jsonList) {
 // static List<PostModel> filterPollPosts(List<PostModel> allPosts) {
 //   return allPosts.where((post) => post.postType == PostType.poll).toList();
 // }
+}
+
+String parseId(dynamic idField) {
+  if (idField is String) {
+    return idField;
+  } else if (idField is Map && idField.containsKey('\$oid')) {
+    return idField['\$oid'] ?? '';
+  }
+  return '';
+}
+
+
+class BudgetModel {
+  final String id;
+  final String category;
+  final int amount;
+
+  BudgetModel({
+    required this.id,
+    required this.category,
+    required this.amount,
+  });
+
+  factory BudgetModel.fromJson(Map<String, dynamic> json) {
+    return BudgetModel(
+      id: parseId(json['_id']), 
+      category: json['category'] ?? '',
+      amount: json['amount'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': {'\$oid': id},
+      'category': category,
+      'amount': amount,
+    };
+  }
 }

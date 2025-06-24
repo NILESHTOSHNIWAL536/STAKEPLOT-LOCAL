@@ -4,12 +4,30 @@ import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart'
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
-class TabBarUser extends StatelessWidget {
-  final List userPostList;
-  const TabBarUser({Key? key, required this.userPostList}) : super(key: key);
+class TabBarUser extends StatefulWidget {
+  final List<PostModel> userPostList;
+   TabBarUser({Key? key, required this.userPostList}) : super(key: key);
+
+  @override
+  State<TabBarUser> createState() => _TabBarUserState();
+}
+
+class _TabBarUserState extends State<TabBarUser> {
+    RxBool isLoading = true.obs;
+
+  @override
+  void initState() {
+    super.initState();
+    // Show spinner for 2 seconds
+    Future.delayed(const Duration(seconds: 1), () {
+        isLoading.value = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,11 +83,11 @@ class TabBarUser extends StatelessWidget {
             height: MediaQuery.of(context).size.height / 1.49,
             child: TabBarView(
               children: [
-                Padding(
+                Obx(()=>isLoading.value?Spinner(size: 40,): Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: pollWidgets(),
-                ),
-                feedWidgets(),
+                  child:      pollWidgets(),
+                )),
+                 Obx(()=>isLoading.value?Spinner(size: 50,): feedWidgets()),
               ],
             ),
           ),
@@ -80,8 +98,8 @@ class TabBarUser extends StatelessWidget {
 
   Widget feedWidgets() {
     // Filter posts with postType other than "write" or "poll" (media posts)
-    final validPosts = userPostList
-        .where((item) => item['postType'] != 'write' && item['postType'] != 'poll')
+    final validPosts = widget.userPostList
+        .where((item) => item.postType.name != 'write' && item.postType.name != 'poll')
         .toList();
     final hasPosts = validPosts.isNotEmpty;
 
@@ -104,18 +122,14 @@ class TabBarUser extends StatelessWidget {
         var item = validPosts[index];
         // Check if image exists; otherwise, use placeholder
         String? imageUrl;
-        if (item['images'] != null && item['images'] is List && item['images'].isNotEmpty) {
+        if (item.images.isNotEmpty) {
           // Select the first valid URL from the images list
-          imageUrl = (item['images'] as List)
-              .firstWhere(
-                (url) => url != null && url != 'none' && url is String,
-                orElse: () => null,
-              );
+          imageUrl = item.images.first;
         }
+
+       
         // Fallback to image field if images list is invalid or empty
-        imageUrl ??= item['image'] != null && item['image'] != 'none' && item['image'] is String
-            ? item['image']
-            : null;
+        imageUrl ??=  item.image != 'none' ? item.image: null;
 
 
         return GestureDetector(
@@ -124,7 +138,7 @@ class TabBarUser extends StatelessWidget {
               context,
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) => TribeUnique(
-                  id: item['_id'],
+                  id: item.id,
                   dataObj: item,
                   popBox: false.obs,
                 ),
@@ -165,8 +179,8 @@ class TabBarUser extends StatelessWidget {
 
   Widget pollWidgets() {
     // Filter posts with postType "write" or "poll"
-    final validPosts = userPostList
-        .where((item) => item['postType'] == 'write' || item['postType'] == 'poll')
+    final validPosts = widget.userPostList
+        .where((PostModel item) => item.postType.name == 'write' || item.postType.name == 'poll')
         .toList();
     final hasPosts = validPosts.isNotEmpty;
 

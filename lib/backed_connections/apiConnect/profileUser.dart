@@ -86,26 +86,17 @@ void getNotifications(context) async {
 }
 
 void getuserPost(id) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.get(
-    Uri.parse('${url}/post/myDiscussions'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200) {
+  String urlPath = '${url}/post/myDiscussions';
+  var response = await getDataApiCall(urlPath);
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    print("response for tab user : $obj");
     UserController userController=ControllerManagement.userController;
    userController.myPostList.clear();
-   userController.myPostList.addAll(obj);
+   userController.myPostList.addAll(PostModel.listFromJson(obj));
    userController.myPostList.forEach((element) {
-     postController.postCount[element["_id"]] = element['upvotes'];
-      postController.postCommentCount[element["_id"]] = element['comments'];
+     postController.postCount[element.id] = element.upvotes;
+      postController.postCommentCount[element.id] = element.comments;
     });
   } else {}
 }
