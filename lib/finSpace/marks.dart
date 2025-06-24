@@ -215,57 +215,59 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (context) {
-        return Container(
-          padding: EdgeInsets.all(16),
-           height: MediaQuery.sizeOf(context).height/2.5, // Adjust height as needed
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Select an Avatar',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-              SizedBox(height: 16),
-              Container(
-                height: MediaQuery.sizeOf(context).height/3.3,
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4, // 4 avatars per row
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 1,
+        return SafeArea(
+          child: Container(
+            padding: EdgeInsets.all(16),
+             height: MediaQuery.sizeOf(context).height/2.5, // Adjust height as needed
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Select an Avatar',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
-                  itemCount: 12,
-                  itemBuilder: (context, index) {
-                    final avatarv =
-                        "assets/icons/maskAvatars/mask${index + 1}.png";
-                    return GestureDetector(
-                      onTap: () {
-                        avatar.value = avatarv;
-                        Navigator.pop(context); // Close bottom sheet
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: avatar.value == avatarv
-                                ? Colors.blue
-                                : Colors.transparent,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: AvatarProfileImagePng(
-                            url: avatarv, width: 6, height: 6),
-                      ),
-                    );
-                  },
                 ),
-              ),
-            ],
+                SizedBox(height: 16),
+                Container(
+                  height: MediaQuery.sizeOf(context).height/3.3,
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4, // 4 avatars per row
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 1,
+                    ),
+                    itemCount: 12,
+                    itemBuilder: (context, index) {
+                      final avatarv =
+                          "assets/icons/maskAvatars/mask${index + 1}.png";
+                      return GestureDetector(
+                        onTap: () {
+                          avatar.value = avatarv;
+                          Navigator.pop(context); // Close bottom sheet
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: avatar.value == avatarv
+                                  ? Colors.blue
+                                  : Colors.transparent,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: AvatarProfileImagePng(
+                              url: avatarv, width: 6, height: 6),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

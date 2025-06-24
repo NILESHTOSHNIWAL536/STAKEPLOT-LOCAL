@@ -250,6 +250,7 @@ class _CommunityState extends State<Community> {
         GestureDetector(
             onTap: () {
               isTrending.value = true;
+              isPostloading.value = false;
             },
             child: textStyleImage(
                 context: context,
