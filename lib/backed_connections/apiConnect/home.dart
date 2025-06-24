@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -164,10 +166,10 @@ Future<void> getAllTransactionHistory(
             "-" +
             selectedMonth.value.toString().padLeft(2, '0');
     String text =
-        searchController.text.trim() == "" ? "empty" : searchController.text;
+        searchController.text.trim() == "" ? "empty" :( searchController.text == "cash"? "Cash" :searchController.text);
     String urlPath = flag
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
-        : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${accountIdPdf.value.isEmpty ? "-" : accountIdPdf.value}";
+        : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${(accountSelected.value.isEmpty ||   bankAccountLinkedList.length == 1 || text.toLowerCase()=="cash") ? (text.toLowerCase()=="cash"? "Cash": "-") : accountSelected.value}";
 
     var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200) {
@@ -178,6 +180,7 @@ Future<void> getAllTransactionHistory(
         if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh
         }
+
        List<TransactionModel>  transactions = TransactionModel.listFromJson(obj);
 
         transactionsHistory.addAll(transactions);
@@ -202,7 +205,9 @@ Future<void> getAllTransactionHistory(
         snackBarCalled(context, SnackbarData().noTransactionData);
       }
     }
-  } catch (e) {}
+  } catch (e) {
+       snackBarCalledfail(context, e.toString());
+  }
 
   loadingDelay.value = false;
 }

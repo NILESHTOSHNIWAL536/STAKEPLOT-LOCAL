@@ -104,6 +104,7 @@ RxBool allOrGroupTransactions = true.obs;
 RxString accountId = "".obs;
 RxString searchAccountId = "".obs;
 RxString accountIdPdf = "".obs;
+RxString accountSelected = "".obs;
 
 // RxString maskedName = "".obs;
 RxString maskedNameLocal = "".obs;

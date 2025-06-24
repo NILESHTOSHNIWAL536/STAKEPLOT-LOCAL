@@ -82,7 +82,7 @@ class _MobileNumberState extends State<MobileNumber> {
       }
     } catch (e) {}
     if (widget.flag) {
-      _phoneController.text = number.value.toString();
+      _phoneController.text = number.value.toString()=="0"?"":number.value.toString();
     }
   }
 

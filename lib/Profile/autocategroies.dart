@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 
@@ -56,10 +58,10 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
       child: Column(
         children: autoTransactionList.asMap().entries.map((entry) {
           int index = entry.key;
-          var transaction = entry.value;
+          TransactionModel transaction = TransactionModel.fromJson( entry.value);
           return historyTransactions(
               transaction,
-              transaction['transactionTimestamp']?.toString(),
+              transaction.transactionTimestamp.toString(),
               index,context,true
             );
         }).toList(),
