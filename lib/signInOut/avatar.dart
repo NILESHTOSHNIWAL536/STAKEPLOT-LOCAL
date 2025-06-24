@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:http/http.dart' as http;
@@ -19,7 +21,7 @@ import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-RxString changeAvater = avatar.value.obs;
+RxString changeAvater =  ControllerManagement.userController.avatar.value.obs;
 
 class Avatar extends StatefulWidget {
   var data;
@@ -167,9 +169,10 @@ class _SigninState extends State<Avatar> {
                 InkWell(
                   onTap: () {
                   
-                    if (widget.isEdit) {
+                    if (widget.isEdit)
+                    {
                       changeAvater.value = images[activePage];
-                      avatar.value = changeAvater.value;
+                      ControllerManagement.userController.avatar.value = changeAvater.value;
                       Navigator.pop(context);
                       return;
                     }

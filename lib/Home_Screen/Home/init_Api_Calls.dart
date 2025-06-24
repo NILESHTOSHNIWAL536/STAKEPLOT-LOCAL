@@ -15,10 +15,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
+import 'package:get/get.dart';
+
+import '../../controllers/userController.dart';
 
 void callApi(context)async
   {
-    getUserInfomations();
+    await Get.find<UserController>().fetchUserInfo();
     getBankAccounts();
     getPost();
     getTranding();
@@ -40,7 +43,7 @@ void callApi(context)async
     clearAllFlags();
     await getRemainders(context);
     await updateWidget();
-    lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID
+    lifecycleHandler = AppLifecycleHandler(userController.userId.value); // Replace with actual user ID
     WidgetsBinding.instance.addObserver(lifecycleHandler);
   }
 

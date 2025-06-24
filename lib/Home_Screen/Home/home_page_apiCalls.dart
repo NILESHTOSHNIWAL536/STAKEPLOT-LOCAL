@@ -425,12 +425,7 @@ Future<void> hideTransaction (
     int index, bool hidden, BuildContext context, String id) async {
   
   final transaction = transactionsHistory[index];
-  final transactionId = transaction['_id']?.toString();
   
-  if (transactionId == null) {
-  
-    return;
-  }
   final apiUrl = "$url/transactionauto/updateTransaction/$id";
  
   try {
@@ -438,7 +433,9 @@ Future<void> hideTransaction (
    // Debug print
     if (getFlagOfResponse(response)) {
       if (hidden) {
+
         hiddenTransactions.add(transaction);
+        // hiddenTransactions.add(transaction);
         transactionsHistory.removeAt(index);
         transactionsHistory.refresh();
        
@@ -448,7 +445,6 @@ Future<void> hideTransaction (
         hideTransactionReload.value = !hideTransactionReload.value;
         hiddentrasactionsHistory.refresh();
         
-      
       }
     } else {
      

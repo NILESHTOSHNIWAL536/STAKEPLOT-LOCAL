@@ -118,3 +118,10 @@ bool getFlagOfResponse(response) {
   if (response.statusCode == 200 || response.statusCode == 201) return true;
   return false;
 }
+
+void printData(response, [context = ""]) {
+  print("response");
+  print(response);
+  print(response.statusCode);
+  print(response.body);
+}

@@ -277,10 +277,10 @@ String getTimeBasedGreeting() {
 Widget getProfile() {
   return AvatarProfile(
     fontsize: 18,
-    name: userName.value,
+    name: userController.userName.value,
     width: 8,
     height: 10,
-    background: userAvatarBackGround.value,
+    background: userController.avatarBackGround.value,
     flag: true,
   );
 }

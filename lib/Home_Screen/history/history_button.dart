@@ -24,17 +24,7 @@ void navToHistory(context){
 Widget historyButton(double fontSizeFactor,BuildContext context) {
     return InkWell(
       onTap: (){
-                    // HapticFeedback.selectionClick();
-                    // isLoadingMore.value=false;
-                    // clearTransactions(context: context,f: false);
-                    //  Navigator.push(
-                    //   context,  
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const TransactionHistoryScreen(),
-                    //   ),
-                    // );
                     navToHistory(context);
-
       },
       child:Container(
          width: MediaQuery.of(context).size.width / 4,

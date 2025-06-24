@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
 void getAck() async {
   var response = await getDataApiCall('${url}/user/newNotifications');
@@ -29,10 +30,9 @@ void setPasswordApiCalled(context, String password) async {
     'pin': password.toString(),
   });
 
-  if (getFlagOfResponse(response))
-  {
-    cupertinoPin.value = password;
-    hideBackAccountPassword.value=false;
+  if (getFlagOfResponse(response)) {
+    userController.cupertinoPin.value = password;
+    hideBackAccountPassword.value = false;
 
     snackBarCalled(context, SnackbarData().pinSetSuccess, Colors.black);
   } else {
@@ -81,15 +81,14 @@ void pinPasswordVerify(
         setBack(); // Callback
       });
       return;
-    } else
-     {
+    } else {
       var errorResponse = jsonDecode(response.body);
-      
-      AttemptCount.value = (errorResponse['count'] ?? 0) >4;
-      if(AttemptCount.value)
-      {
+
+      userController.cupertinoAttemptCount.value =
+          (errorResponse['count'] ?? 0) > 4;
+      if (userController.cupertinoAttemptCount.value) {
         snackBarCalledfail(context, SnackbarData().maxLimitSetFail, Colors.red);
-      } 
+      }
       hideBackAccountPassword.value = false;
     }
   } catch (e) {
@@ -98,23 +97,6 @@ void pinPasswordVerify(
     _isVerifyingPin = false;
   }
 }
-
-// void PinPasswordVerify2(password, context, Function setBack) async {
-//   var response = await getDataApiCall("${url}/user/cupertino/${password}");
-
-//   if (response.statusCode == 200 || response.statusCode == 200) {
-//     hideBackAccountPassword.value = true;
-//     Timer(Duration(seconds: 5), () {
-//       hideBackAccountPassword.value = false;
-//       firstDigit.value = 0;
-//       secondDigit.value = 0;
-//       digitLoad.value = !digitLoad.value;
-//       setBack();
-//     });
-//   } else {
-//     hideBackAccountPassword.value = false;
-//   }
-// }
 
 void seletedBankUpdateInfo(id, context) async {
   var response = await getDataApiCall("${url}/user/selectedBank/${id}");
@@ -159,9 +141,42 @@ void getHiddenTransactions(context) async {
     var her = jsonDecode(response.body);
     var obj = her['data'];
     hiddentrasactionsHistory.clear();
-    hiddentrasactionsHistory.addAll(obj);
+    List<TransactionModel> modalObj = TransactionModel.listFromJson(obj);
+    hiddentrasactionsHistory.addAll(modalObj);
     getHiddenHistory.value = !getHiddenHistory.value;
   } else {}
+}
+
+Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
+  var response =
+      await getDataApiCall("${url}/transactionauto/get-day-wise-transactions");
+  
+  if (response.statusCode == 200) {
+    var her = jsonDecode(response.body);
+    var obj = her['data'];
+    if (obj is List) {
+      return List<Map<String, dynamic>>.from(obj);
+    }
+  }
+  return [];
+}
+
+Future<List<Map<String, dynamic>>> getDayWiseTransactionsForDate(
+    context, String date) async {
+  print("here ");
+  var response = await getDataApiCall(
+      "${url}/transactionauto/get-day-wise-transactions/$date");
+  print("api here :${url}/get-day-wise-transactions");
+  print("response here :${response.body}");
+  if (response.statusCode == 200) {
+    var her = jsonDecode(response.body);
+    print("her body $her");
+    var obj = her['data'];
+    if (obj is List) {
+      return List<Map<String, dynamic>>.from(obj);
+    }
+  }
+  return [];
 }
 
 Future<void> getAllTransactionHistory(
@@ -191,8 +206,10 @@ Future<void> getAllTransactionHistory(
         if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh
         }
+        List<TransactionModel> transactions =
+            TransactionModel.listFromJson(obj);
 
-        transactionsHistory.addAll(obj);
+        transactionsHistory.addAll(transactions);
 
         // Stop loading indicator if no more transactions exist
         if (obj.isEmpty || obj.length < 20) {

@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
 import 'package:get/get.dart';
@@ -274,8 +276,9 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
 
   void checkName(data) {
     if (widget.isMasked) {
+      UserController userController=ControllerManagement.userController;
       String _id = data['_id'];
-      bool exists = MaskedFriendsList.any((item) => item['_id'] == _id);
+      bool exists =userController.maskedConnections.any((item) => item['_id'] == _id);
       if (exists) {
         connect.value = "Remove";
       }

@@ -109,14 +109,12 @@ Widget tabItem(String text,BuildContext context) {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 builder: (context) {
-                  return TagShowmodal(
-                    data: transactionsHistory.isNotEmpty &&
-                            redioButtonIndex.isNotEmpty
-                        ? transactionsHistory[redioButtonIndex.values.first]
-                        : {},
+                  return transactionsHistory.isNotEmpty &&
+                            redioButtonIndex.isNotEmpty? TagShowmodal(
+                    data:  transactionsHistory[redioButtonIndex.values.first],  
                     index: 0,
                     isTag: true,
-                  );
+                  ):SizedBox.shrink( child: Text("No grounp Found"));
                 },
               );
             },

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/apicalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:confetti/confetti.dart';
@@ -778,14 +779,14 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
 
     // int index=0;
     addedUser.forEach((rec) {
-      String room1 = rec['name'] + userName.value;
-      String room2 = userName.value + rec['name'];
+      String room1 = rec['name'] + userController.userName.value;
+      String room2 = userController.userName.value + rec['name'];
       String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
 
       var jsonData = {
         "messageType": "split",
         "receiver": rec['id'],
-        "sender": currentId.value,
+        "sender": userController.userId.value,
         "message": null,
         "image": null,
         "poll": null,
@@ -824,9 +825,9 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
         return SafeArea(
           child: NewFriendsUi(
             totalAmount: totalAmount,
-            userId: currentId.value,
-            userName: userName.value,
-            userAvatar: avatar.value,
+            userId: userController.userId.value,
+            userName: userController.userName.value,
+            userAvatar: userController.avatar.value,
             isLendMode: isLendMode,
           ),
         );
@@ -873,7 +874,7 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
         });
       });
       nameList.add({
-        'member': currentId.value,
+        'member': userController.userId.value,
         'markAsComplete': false,
         'amount': amountPerPerson,
       });
@@ -905,7 +906,7 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
         sendNotificationsToDevice(
             member['id'],
             context,
-            "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
+            "${userController.userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
             "/chat");
       }
 

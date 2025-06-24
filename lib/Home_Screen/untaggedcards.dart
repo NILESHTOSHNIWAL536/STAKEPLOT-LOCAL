@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
-
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-
 import 'package:card_swiper/card_swiper.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class UntaggedTransactionScreen extends StatefulWidget {
   const UntaggedTransactionScreen({
@@ -32,39 +27,28 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
   @override
   void initState() {
     super.initState();
-    print('UntaggedTransactionScreen: initState called');
     _filterUntaggedTransactionsForCurrentMonth();
   }
 
   void _filterUntaggedTransactionsForCurrentMonth() {
-  print('Filtering untagged transactions...');
-  print('Total transactions in transactionsHistory: ${transactionsHistory.length}');
 
   try {
     untaggedTransactions.value = transactionsHistory.where((transaction) {
-      // Log transaction details for debugging
-      print('Processing transaction: ${transaction['_id']}');
-      print('  Category: ${transaction['category']}');
-      print('  TransactionTimestamp: ${transaction['transactionTimestamp']}');
+     
 
       // Only include transactions with category 'Untagged' (case-insensitive)
-      final category = transaction['category']?.toString().toLowerCase().trim();
+      final category = transaction.category.toString().toLowerCase().trim();
       final isUntagged = category == 'untagged';
-      print('  IsUntagged: $isUntagged');
-
+     
       if (!isUntagged) {
-        print('  Transaction filtered out due to category not being "untagged"');
         return false;
       }
 
       // Validate transactionTimestamp (optional, for sorting)
-      final transactionDate = DateTime.tryParse(transaction['transactionTimestamp']?.toString() ?? '');
+      final transactionDate = DateTime.tryParse(transaction.transactionTimestamp.toString());
       if (transactionDate == null) {
-        print('  Invalid transaction date for transaction: ${transaction['_id']}');
         return false; // Skip transactions with invalid dates
       }
-
-      print('  Transaction ${transaction['_id']} is untagged');
       return true;
     }).toList().cast<Map<String, dynamic>>()
       ..sort((a, b) {
@@ -73,13 +57,6 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
         return dateB.compareTo(dateA); // Sort by date descending
       });
 
-    print('Filtered transactions: ${untaggedTransactions.length} found');
-    if (untaggedTransactions.isNotEmpty) {
-      print('Filtered transactions:');
-      for (var tx in untaggedTransactions) {
-        print('  ${tx['_id']}: ${tx['title']}, ${tx['category']}, ${tx['transactionTimestamp']}');
-      }
-    }
   } catch (e, stackTrace) {
     print('Error filtering transactions: $e');
     print('Stack trace: $stackTrace');
@@ -95,12 +72,12 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
     transaction['needsReview'] = false;
 
     int globalIndex =
-        transactionsHistory.indexWhere((t) => t['_id'] == transaction['_id']);
+        transactionsHistory.indexWhere((t) => t.id == transaction['_id']);
     if (globalIndex != -1) {
       print('Updating global transaction at index $globalIndex');
-      transactionsHistory[globalIndex]['category'] = category;
-      transactionsHistory[globalIndex]['subcategory'] = subcategory;
-      transactionsHistory[globalIndex]['needsReview'] = false;
+      transactionsHistory[globalIndex].category = category;
+      transactionsHistory[globalIndex].subcategory = subcategory;
+      transactionsHistory[globalIndex].needsReview = false;
       transactionsHistory.refresh();
     }
 

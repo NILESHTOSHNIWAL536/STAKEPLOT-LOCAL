@@ -10,6 +10,8 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_share.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -28,9 +30,10 @@ RxBool isPostTranding = false.obs;
 RxBool isTrending = false.obs;
 
 Widget noFriend(context,[text = "",bool isMasked=false,]) {
+  UserController userController=ControllerManagement.userController;
   return GestureDetector(
     onTap: () {
-                if( friendsList.isEmpty)
+                if( userController.friendsList.isEmpty)
                         {
                           if(isMasked){
                              Navigator.push(
@@ -115,7 +118,7 @@ Widget vote(context, dataObj, data) {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      if (maskedName.value.trim().isEmpty) {
+                      if (userController.maskedName.value.trim().isEmpty) {
                         MaskedNameDialogBox.showMaskedNameDialog(context);
                       } else {
                         String likeKey = "liked" + dataObj["_id"];
@@ -166,7 +169,7 @@ Widget vote(context, dataObj, data) {
 
                   InkWell(
                     onTap: () {
-                      if (maskedName.value.trim().isEmpty) {
+                      if (userController.maskedName.value.trim().isEmpty) {
                         MaskedNameDialogBox.showMaskedNameDialog(context);
                       } else {
                         showModalBottomSheet(
@@ -229,12 +232,37 @@ Widget vote(context, dataObj, data) {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                 
-                 
+                  Obx(() {
+                    bool isSaved = userController.savedPostIds.contains(dataObj['_id']);
+                    return GestureDetector(
+                        onTap: () {
+                           if (userController.maskedName.value.trim().isEmpty) {
+                          MaskedNameDialogBox.showMaskedNameDialog(context);
+                        }
+                          else {
+                            if (isSaved) {
+                           userController.savedPostIds.remove(dataObj['_id']);
+                          } else
+                          {
+                            userController.savedPostIds.add(dataObj['_id']);
+                          }
+                            savePostData(context, data);
+
+                          }
+                          
+                        },
+                        child: SvgPicture.asset(
+                          isSaved
+                              ? LikeComment.savedPost
+                              : LikeComment.savePost,
+                          height: 24,
+                        ));
+                  }),
+                  const SizedBox(width: 10),
                   Container(
                     child: InkWell(
                       onTap: () {
-                        if (maskedName.value.trim().isEmpty) {
+                        if (userController.maskedName.value.trim().isEmpty) {
                           MaskedNameDialogBox.showMaskedNameDialog(context);
                         } else {
                           showModalBottomSheet(
@@ -252,33 +280,6 @@ Widget vote(context, dataObj, data) {
                       ),
                     ),
                   ),
-                  
-                   Obx(() {
-                    bool isSaved = savedPostIds.contains(dataObj['_id']);
-                    return GestureDetector(
-                        onTap: () {
-                           if (maskedName.value.trim().isEmpty) {
-                          MaskedNameDialogBox.showMaskedNameDialog(context);
-                        }
-                          else {
-                            if (isSaved) {
-                            savedPostIds.remove(dataObj['_id']);
-                          } else
-                          {
-                            savedPostIds.add(dataObj['_id']);
-                          }
-                            savePostData(context, data);
-
-                          }
-                          
-                        },
-                        child: SvgPicture.asset(
-                          isSaved
-                              ? LikeComment.savedPost
-                              : LikeComment.savePost,
-                          height: 24,
-                        ));
-                  }),
                 ],
               ),
             )

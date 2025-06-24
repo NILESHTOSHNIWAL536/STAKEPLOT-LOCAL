@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -198,7 +200,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                 children: [
                   Row(
                     children: [
-                       AvatarProfile(name: widget.userName, width: 12, height: 12, background: userAvatarBackGround.value ),
+                       AvatarProfile(name: widget.userName, width: 12, height: 12, background: userController.avatarBackGround.value ),
                      
                       const SizedBox(width: 10),
                       Text(
@@ -406,16 +408,16 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     if (addedUser.isEmpty) {
       return;
     }
-
+    UserController controller =ControllerManagement.userController;
     for (var rec in addedUser) {
-      String room1 = rec['name'] + userName.value;
-      String room2 = userName.value + rec['name'];
+      String room1 = rec['name'] + controller.userName.value;
+      String room2 = controller.userName.value + rec['name'];
       String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
 
       var jsonData = {
         "messageType": "split",
         "receiver": rec['id'],
-        "sender": currentId.value,
+        "sender": userController.userId.value,
         "message": null,
         "image": null,
         "poll": null,
@@ -449,7 +451,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     Map<String, double>? amounts, 
     bool ismanual = true,
   }) async {
-   
+       UserController controller =ControllerManagement.userController;
     double? parsedTotalAmount = double.tryParse(totalAmount);
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
     
@@ -479,10 +481,10 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     
       });
       // Include the user's amount if present
-      if (amounts.containsKey(currentId.value)) {
-        double userAmount = amounts[currentId.value]!;
+      if (amounts.containsKey(userController.userId.value)) {
+        double userAmount = amounts[userController.userId.value]!;
         nameList.add({
-          'member': currentId.value,
+          'member': userController.userId.value,
           'markAsComplete': false,
           'amount': userAmount,
         });
@@ -501,10 +503,10 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       
       });
       nameList.add({
-        'member': currentId.value,
+        'member': userController.userId.value,
         'markAsComplete': false,
         'amount': amountPerPerson,
-        'avatarBackGround' : userAvatarBackGround.value
+        'avatarBackGround' : userController.avatarBackGround.value
       });
       calculatedTotal += amountPerPerson;
     
@@ -556,7 +558,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         sendNotificationsToDevice(
           member['id'],
           context,
-          "${userName.value} has sent you a Split Bill of $category ($subcategory) for ₹$formattedAmount","/chat"
+          "${controller.userName.value} has sent you a Split Bill of $category ($subcategory) for ₹$formattedAmount","/chat"
         );
         addSocketMessage(
           [member],

@@ -6,15 +6,12 @@ import 'package:flutter_application_code_stakeplot/animated/userLoginedAlready.d
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/opt_email.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/create_new_password.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/forgot.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,16 +27,22 @@ Future<void> loginUser(TextEditingController emailController,
       'deviceInfo': deviceData,
     });
 
-    if (response.statusCode == 409) {
-      forceLoginShowModal(
-          context, response, emailController, passwordController);
-    } else if (response.statusCode == 500) {
+    if (response.statusCode == 409)
+    {
+      forceLoginShowModal(context, response, emailController, passwordController);
+    }
+    else if (response.statusCode == 500)
+    {
       snackBarCalled(context, SnackbarData().serverError, Colors.red);
-    } else if (getFlagOfResponse(response)) {
+    }
+    else if (getFlagOfResponse(response)) 
+    {
       loginCalledData(response, context);
       await screenDataLocalStorage();
       Navigator.pushReplacementNamed(context, '/home');
-    } else {
+    } 
+    else
+    {
       acceptReset.value = false;
       snackBarCalledfail(context, SnackbarData().invalidCredentials);
     }
@@ -91,18 +94,17 @@ void forceLoginShowModal(
 
 void loginCalledData(response, context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  print(response);
   final body = json.decode(response.body);
   String accessToken = body['data']['accessToken'];
+  initGetControllers();
   pref.setString("accessToken", "Bearer " + accessToken);
   await getBankAccounts();
   await initializeOneSignal(context);
-  currentId.value = body['data']['_id'];
+  userController.userId.value = body['data']['_id'];
   isBankAccountLink.value = body['data']['isBankAccountLinked'];
   acceptReset.value = false;
   getPhoneNo(body);
-  Navigator.of(context)
-      .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+  Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
 }
 
 void getPhoneNo(body) {
@@ -115,7 +117,7 @@ void getPhoneNo(body) {
       phone = phoneList[1];
     }
   }
-  Phone.value = phone;
+  ControllerManagement.userController.phone.value = phone;
   number.value = phone;
 }
 
@@ -179,15 +181,18 @@ void forceLogoutUser(
       "userpassword": userpassword,
       "deviceInfo": deviceData
     });
+    printData(response);
     if (getFlagOfResponse(response)) {
       final body = json.decode(response.body);
       loginCalledData(response, context);
-      sendNotificationsToDevice(body['data']['_id'], context,
-          "You have been logged out from StakePlot!");
+      sendNotificationsToDevice(body['data']['_id'], context, "You have been logged out from StakePlot!");
     } else {
       snackBarCalled(context, SnackbarData().cantLogoutUser, Colors.red);
     }
-  } catch (e) {}
+  } catch (e) {
+    print(e);
+     
+  }
 }
 
 void getforgotPassword(context, String name, String email) async {

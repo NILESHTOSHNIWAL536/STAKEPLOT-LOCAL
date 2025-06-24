@@ -10,10 +10,12 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
-import "package:flutter_application_code_stakeplot/controller.dart/userController.dart";
+import "package:flutter_application_code_stakeplot/controllers/userController.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
 import "package:get/get.dart";
+import 'package:flutter_application_code_stakeplot/Constants/search.dart';
+
 
 class Friends extends StatefulWidget {
   bool isMasked=false;
@@ -29,17 +31,17 @@ class _FriendsState extends State<Friends> {
   RxList frdsList = [].obs;
   bool frdsThere = true;
   final TextEditingController _searchController = TextEditingController();
+   final UserController userController = Get.find<UserController>();
 
   @override
   void initState() {
     super.initState();
     frdsList.clear();
-    frdsList.addAll(widget.isMasked ? widget.isMaskedConnect?maskedConnected :MaskedFriendsList:friendsList);
+    frdsList.addAll(widget.isMasked ? widget.isMaskedConnect?userController.maskedConnected :userController.maskedConnections: userController.friendsList);
   }
 
   @override
   Widget build(BuildContext context) {
-    final UserController userController = Get.find<UserController>();
 
     return Scaffold(
         extendBody: true,
@@ -66,7 +68,7 @@ class _FriendsState extends State<Friends> {
                     tag: "TribeSearch",
                     child: GestureDetector(
                       onTap: () {
-                        if( friendsList.isEmpty)
+                        if(userController.friendsList.isEmpty)
                         {
                           if(widget.isMasked){
                              Navigator.push(
@@ -87,13 +89,13 @@ class _FriendsState extends State<Friends> {
                             controller: _searchController,
                             onChanged: (value) {
                                 frdsList.clear();
-                                frdsList.addAll(getLastTenUsers(getSearchData(value,friendsList )));
+                                frdsList.addAll(getLastTenUsers(getSearchData(value,userController.friendsList )));
                             },
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 0),
                               filled: true,
-                              enabled: !friendsList.isEmpty,
+                              enabled: userController.friendsList.isEmpty,
                               hintText:  ProfileScreenStrings().searchHint,
                               fillColor: AppColors.button,
                               hintStyle: FontManager().getTextStyle(context,
@@ -180,7 +182,7 @@ class _FriendsState extends State<Friends> {
         onTap: () {
           if (str == "Remove") {
             getRemoveFrds(context, data['_id']);
-            getUserInfomations();
+            userController.fetchUserInfo();    
           }
           Navigator.pop(context);
         },

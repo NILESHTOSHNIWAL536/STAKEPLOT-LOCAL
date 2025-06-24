@@ -78,7 +78,7 @@ void getWeeklyfetchData(
     'custId': custId,
     'consentId': consentId,
     'sessionId': sessionId,
-    'userId': currentId.value,
+    'userId': userController.userId.value,
     'isCron': false,
     'FROM': last,
   };

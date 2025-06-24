@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/readmore.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
@@ -62,7 +63,7 @@ class PostCard extends StatelessWidget {
         children: [
           GestureDetector(
             onDoubleTap: (){
-              if (maskedName.value.trim().isEmpty) {
+              if (ControllerManagement.userController.maskedName.value.trim().isEmpty) {
                         MaskedNameDialogBox.showMaskedNameDialog(context);
                       } else {
                         String likeKey = "liked" + dataObj["_id"];
@@ -149,7 +150,7 @@ class PostCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        maskedName.value.trim().isEmpty
+                      ControllerManagement.userController. maskedName.value.trim().isEmpty
                             ? SizedBox.shrink()
                             : popUpBoxHideDelete(
                                 dataObj['_id'],

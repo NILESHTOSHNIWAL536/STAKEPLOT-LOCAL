@@ -16,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/openShowModal.dart';
 import 'package:get/get.dart';
 
@@ -23,7 +24,7 @@ RxString tagName = "".obs;
 RxBool loadAgain = false.obs;
 
 class TagShowmodal extends StatefulWidget {
-  var data;
+  TransactionModel data;
   int index;
   String id;
   bool isGroupTransaction = false;
@@ -57,7 +58,7 @@ class _TagShowmodalState extends State<TagShowmodal>
   void initState() {
     super.initState();
 
-    UrlPathImage.value = getIconPath(widget.data['category'].toLowerCase());
+    UrlPathImage.value = getIconPath(widget.data.category.toLowerCase());
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
@@ -125,8 +126,8 @@ class _TagShowmodalState extends State<TagShowmodal>
   }
 
   void callBack(e) {
-    widget.data['category'] = e['name'];
-    widget.data['subcategory'] = "Other";
+    widget.data.category = e['name'];
+    widget.data.subcategory = "Other";
     tagName.value = e['name'];
     UrlPathImage.value = e['imageUrl'];
     loadAgain.value = !loadAgain.value;
@@ -165,8 +166,8 @@ class _TagShowmodalState extends State<TagShowmodal>
                       groupValue: tagName.value,
                       activeColor: AppColors.primaryColor,
                       onChanged: (value) {
-                        widget.data['category'] = e['name'];
-                        widget.data['subcategory'] = "Other";
+                        widget.data.category = e['name'];
+                        widget.data.subcategory = "Other";
                         tagName.value = e['name'];
                         UrlPathImage.value = e['imageUrl'];
                         loadAgain.value = !loadAgain.value;
@@ -186,7 +187,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                         text: e['name'],
                         fontsize: 13,
                         fontWeight: FontWeight.bold,
-                        c: widget.data['category'] == e['name']
+                        c: widget.data.category == e['name']
                             ? AppColors.bg2
                             : AppColors.primaryColor,
                       ),
@@ -231,7 +232,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                   openShowModalCate(
                       context,
                       nameController,
-                      transactionsHistory[widget.index]['narration'] ?? "",
+                      transactionsHistory[widget.index].narration ,
                       callBack);
                 },
                 child: Icon(
@@ -248,8 +249,8 @@ class _TagShowmodalState extends State<TagShowmodal>
                   //  Change Tag
 
                   if (widget.isTag) {
-                    if (widget.data['category'] == null &&
-                        widget.data['subcategory'] == null) {
+                    if (widget.data.category == '' &&
+                        widget.data.subcategory == '') {
                       snackBarCalledSignup(
                           context,
                           SnackbarData().selectCategoryAndSubcategory,
@@ -259,21 +260,19 @@ class _TagShowmodalState extends State<TagShowmodal>
                     redioButton.forEach((key, id) {
                       // final index = redioButtonIndex[id];
                       final index =
-                          transactionsHistory.indexWhere((t) => t['_id'] == id);
+                          transactionsHistory.indexWhere((t) => t.id == id);
 
                       if (index != null) {
                         updateTheTagOfTarnsactions(
-                          widget.data['category'],
-                          widget.data['subcategory'],
+                          widget.data.category,
+                          widget.data.subcategory,
                           id,
                           context,
                           index,
                         );
-                        transactionsHistory[index]['category'] =
-                            widget.data['category'];
-                        transactionsHistory[index]['subcategory'] =
-                            widget.data['subcategory'];
-                        transactionsHistory[index]['needsReview'] = false;
+                        transactionsHistory[index].category =widget.data.category;
+                        transactionsHistory[index].subcategory =widget.data.subcategory;
+                        transactionsHistory[index].needsReview = false;
                       }
                     });
                     // getAllTransaction(context);
@@ -286,20 +285,18 @@ class _TagShowmodalState extends State<TagShowmodal>
                     Navigator.pop(context);
                   } else if (!widget.isGroupTransaction) {
                     updateTheTagOfTarnsactions(
-                        widget.data['category'],
-                        widget.data['subcategory'],
-                        widget.data['_id'],
+                        widget.data.category,
+                        widget.data.subcategory,
+                        widget.data.id,
                         context,
                         widget.index);
-                    transactionsHistory[widget.index]['category'] =
-                        widget.data['category'];
-                    transactionsHistory[widget.index]['subcategory'] =
-                        widget.data['subcategory'];
-                    transactionsHistory[widget.index]['needsReview'] = false;
+                    (transactionsHistory[widget.index]).category =widget.data.category;
+                    (transactionsHistory[widget.index]).subcategory =widget.data.subcategory;
+                    (transactionsHistory[widget.index]).needsReview = false;
                     transactionsHistory.refresh();
                   } else {
-                    if (widget.data['category'] == null &&
-                        widget.data['subcategory'] == Null) {
+                    if (widget.data.category == '' &&
+                        widget.data.subcategory == '') {
                       snackBarCalledSignup(
                           context,
                           SnackbarData().selectCategoryAndSubcategory,
@@ -307,8 +304,8 @@ class _TagShowmodalState extends State<TagShowmodal>
                       return;
                     }
                     updateTheTagOfTarnsactionsGroup(
-                        widget.data['category'],
-                        widget.data['subcategory'],
+                        widget.data.category,
+                        widget.data.subcategory,
                         widget.id,
                         context,
                         widget.index);
@@ -405,11 +402,11 @@ class _TagShowmodalState extends State<TagShowmodal>
               activeColor: AppColors.primaryColor,
               onChanged: (value) {
                 UrlPathImage.value =
-                    getIconPath(widget.data['category'].toLowerCase());
+                    getIconPath(widget.data.category.toLowerCase());
                 customSelections.value = false;
                 tagName.value = value!;
-                widget.data['category'] = value;
-                widget.data['subcategory'] = "Other";
+                widget.data.category = value;
+                widget.data.category = "Other";
                 loadAgain.value = !loadAgain.value;
               },
             )),
@@ -438,7 +435,7 @@ class _TagShowmodalState extends State<TagShowmodal>
         opacity: opacity,
         child: Container(
           child: historyTransactions(
-              widget.data, widget.data['transactionTimestamp'], context),
+              widget.data, widget.data.transactionTimestamp.toString(), context),
         ),
       ),
     );
@@ -465,11 +462,11 @@ class _TagShowmodalState extends State<TagShowmodal>
 
     return InkWell(
       onTap: () {
-        widget.data['category'] = main;
-        widget.data['subcategory'] = s;
+        widget.data.category = main;
+        widget.data.subcategory = s;
         tagName.value = main!;
         customSelections.value = false;
-        UrlPathImage.value = getIconPath(widget.data['category'].toLowerCase());
+        UrlPathImage.value = getIconPath(widget.data.category.toLowerCase());
         loadAgain.value = !loadAgain.value;
       },
       child: Padding(
@@ -493,25 +490,25 @@ class _TagShowmodalState extends State<TagShowmodal>
                 ? textStyle(
                     context: context,
                     text: s,
-                    fontsize: (widget.data['subcategory'] == s &&
-                            widget.data['category'] == main)
+                    fontsize: (widget.data.subcategory == s &&
+                            widget.data.category == main)
                         ? 13
                         : 11,
                     fontWeight: FontWeight.bold,
-                    c: (widget.data['subcategory'] == s &&
-                            widget.data['category'] == main)
+                    c: (widget.data.subcategory == s &&
+                            widget.data.category == main)
                         ? AppColors.bg2
                         : AppColors.primaryColor)
                 : textStyle(
                     context: context,
                     text: s,
-                    fontsize: (widget.data['subcategory'] == s &&
-                            widget.data['category'] == main)
+                    fontsize: (widget.data.subcategory == s &&
+                            widget.data.category == main)
                         ? 13
                         : 11,
                     fontWeight: FontWeight.bold,
-                    c: (widget.data['subcategory'] == s &&
-                            widget.data['category'] == main)
+                    c: (widget.data.subcategory == s &&
+                            widget.data.category == main)
                         ? AppColors.bg2
                         : AppColors.primaryColor)),
             const SizedBox(
@@ -524,13 +521,10 @@ class _TagShowmodalState extends State<TagShowmodal>
   }
 
   Widget historyTransactions(
-      Map<String, dynamic> transaction, String? date, context) {
-    final category = transaction['category']?.toString() ?? 'Uncategorized';
-    final subcategory = transaction['subcategory']?.toString() ?? 'General';
-    final amount =
-        transaction[!widget.isGroupTransaction ? 'amount' : 'totalAmount']
-                ?.toString() ??
-            '0';
+      TransactionModel transaction, String? date, context) {
+    final category = transaction.category.toString();
+    final subcategory = transaction.subcategory;
+    final amount = !widget.isGroupTransaction? transaction.amount: transaction.amount.toString();
     final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
 
     return Container(

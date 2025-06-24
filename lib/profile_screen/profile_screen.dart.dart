@@ -10,6 +10,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
@@ -65,6 +67,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
   Widget build(
     BuildContext context,
   ) {
+    UserController userController =ControllerManagement.userController;
     return Scaffold(
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 3)),
       backgroundColor: AppColors.backgroundColor,
@@ -81,26 +84,26 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AvatarProfile(name: userName.value, width: 8, height: 10,background:userAvatarBackGround.value,flag: false,),
+                    AvatarProfile(name:userController.userName.value, width: 8, height: 10,background:userController.avatarBackGround.value,flag: false,),
                     const SizedBox(width: 3,),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(userName.value,
+                          Text(userController.userName.value,
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w600,
                                   color: AppColors.primaryColor)),
                           Container(
                             width: MediaQuery.of(context).size.width/2.1,
                             padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Text(email.value,
+                            child: Text(userController.email.value,
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.w400,
                                     fontSize: 10,
                                     color: AppColors.bg1),overflow: TextOverflow.ellipsis,),
                           ),
-                       number.value=="0"?SizedBox.shrink():Text(number.value,
+                      userController.phone.value=="0"?SizedBox.shrink():Text(userController.phone.value,
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400,
                                   fontSize: 10,

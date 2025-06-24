@@ -276,19 +276,19 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                   onTap: lengthOfTransactions.value
                       ? null
                       : () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.vertical(top: Radius.circular(20)),
-                            ),
-                            builder: (context) => TagShowmodal(
-                              data: transaction,
-                              index: index,
-                              isGroupTransaction: true,
-                            ),
-                          );
+                          // showModalBottomSheet(
+                          //   context: context,
+                          //   isScrollControlled: true,
+                          //   shape: const RoundedRectangleBorder(
+                          //     borderRadius:
+                          //         BorderRadius.vertical(top: Radius.circular(20)),
+                          //   ),
+                          //   builder: (context) => TagShowmodal(
+                          //     data: transaction,
+                          //     index: index,
+                          //     isGroupTransaction: true,
+                          //   ),
+                          // );
                         },
                   child: Container(
                     padding: const EdgeInsets.symmetric(

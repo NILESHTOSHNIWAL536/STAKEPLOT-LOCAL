@@ -228,13 +228,13 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                    onPressed: selectedReason != null
                       ? () async {
                          // Fetch user email
-                          if (email.value != null && userName.value != null) {
+                          if (userController.email.value != null && userController.userName.value != null) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => VerifyOtpScreen(
-                                  name: userName.value,
-                                  email: email.value,
+                                  name: userController.userName.value,
+                                  email: userController.email.value,
                                   selectedReason: selectedReason!,
                                 ),
                               ),

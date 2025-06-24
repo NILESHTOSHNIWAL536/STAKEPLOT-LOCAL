@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
@@ -18,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
@@ -74,8 +74,6 @@ void expire(response, BuildContext context) {
 }
 
   void clearPostReportHide(int index,[bool f=true]){
-        // if(f && index !=-1) getTrendingData.removeAt(index);
-        resetAndLoadData();
         currentPageTranding.value = 1;
         currentPageFeed.value = 1;
         isPostloading.value = false;
@@ -165,17 +163,14 @@ void clearGraph() {
 
 }
 void clearGetX() {
-  income = 0.obs;
   messages.clear();
   messagesTemp.clear();
   roomBills.clear();
   questionRoom.clear();
   productList.clear();
   userPostList.clear();
-  savedList.clear();
-  myPostList.clear();
-  friendsList.clear();
-  frdsListOrigin.clear();
+  // friendsList.clear();
+  // frdsListOrigin.clear();
   chatList.clear();
   chatListOriginal.clear();
   friendsListDetails.clear();
@@ -193,14 +188,14 @@ void clearGetX() {
   account = [];
   notificationList.clear();
   hasGetNewNotifications.value = false;
-  userName = "Loading...".obs;
-  currentId = "Loading...".obs;
-  Phone = "Loading...".obs;
+  // userName = "Loading...".obs;
+  // currentId = "Loading...".obs;
+  // Phone = "Loading...".obs;
   currency = "Loading...".obs;
   score = "Loading...".obs;
-  email = "Loading...".obs;
+  // email = "Loading...".obs;
   changeAvater = "Loading...".obs;
-  userId = "";
+  // userId = "";
   targetString = "".obs;
   //  listOfCater =<Plot> [].obs;
   isBankAccountLink.value = true;
@@ -208,7 +203,6 @@ void clearGetX() {
   addedMembers.clear();
   addedUser.clear();
   isBankAccountLink.value = false;
-  cupertinoPin.value = '0';
   balance.value = "";
   accountName.value = "";
   transactionChatGraph.clear();
@@ -222,7 +216,6 @@ void clearGetX() {
   balance.value = "0";
   selectedBank.value = "";
   accountId.value = "";
-  displayedData.clear();
   bankAccountLinkedList.clear();
   FipIdsConnected.clear();
   transactionsHistory.clear();
@@ -234,6 +227,7 @@ void clearGetX() {
   isBankLinked.value=false;
   clearGraph();
   loadBanks.value=true;
+  Get.delete<UserController>();
 }
 
 
@@ -296,8 +290,8 @@ void clearStackLocalInfo() {
   directFetch.value = false;
   fetchedData.value = false;
   count.value = 0;
-   maskedName.value="";
-   interestedTags.clear();
+  //  maskedName.value="";
+  //  interestedTags.clear();
    clearInterest();
    
 }
@@ -308,3 +302,9 @@ void clearInterest() {
   selectedSubCategories.clear();
   isListEnabled.value = false;
 }
+
+
+ void initGetControllers()
+  {
+       Get.put(UserController());
+  }

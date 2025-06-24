@@ -4,11 +4,11 @@ import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
+import "package:flutter_application_code_stakeplot/controllers/controllerManagement.dart";
+import "package:flutter_application_code_stakeplot/controllers/userController.dart";
 import "package:flutter_application_code_stakeplot/headersList/userProfileHeader.dart";
 import "package:get/get.dart";
-import 'package:http/http.dart' as http;
 
 
 
@@ -36,6 +36,7 @@ class _FriendsState extends State<Saved> {
 
   @override
   Widget build(BuildContext context) {
+       UserController userController=ControllerManagement.userController;
 
     return Scaffold(
        extendBody: true,
@@ -73,11 +74,11 @@ class _FriendsState extends State<Saved> {
                           children: [
                     
                 
-                                Obx(() =>   savedList.isEmpty? Center(child: Text("No Post Saved",style: FontManager().getTextStyle(context))):Container(
+                                Obx(() => userController.savedList.isEmpty? Center(child: Text("No Post Saved",style: FontManager().getTextStyle(context))):Container(
                                     height: MediaQuery.of(context).size.height,
                                     padding:const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
                                     child: SingleChildScrollView(
-                                          child: feed(),
+                                          child: feed(userController),
                                     ),
                                     )),
                                   
@@ -102,14 +103,14 @@ class _FriendsState extends State<Saved> {
 
 
 
-Widget feed(){
+Widget feed(UserController userController){
 
-    return  savedList.isEmpty?Text("No Post yet"):
+    return  userController.savedList.isEmpty?Text("No Post yet"):
             Column(
                     children: [
                       Container(
                         child: Column(
-                          children: savedList.asMap().entries.map((entry) {
+                          children: userController.savedList.asMap().entries.map((entry) {
                             int index = entry.key;
                             var dataObj = entry.value;
                             return PostCard(data: dataObj, index: index);

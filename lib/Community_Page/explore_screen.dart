@@ -126,7 +126,6 @@ class _ExploreModalState extends State<ExploreModal> {
                                                 url: FinSpaceIcons.square,
                                                 width: 20,
                                                 height: 20,
-                                                // background: userAvatarBackGround.value ?? defaultBackGround.value,
                                                
                                               ),
                             ),
@@ -140,7 +139,6 @@ class _ExploreModalState extends State<ExploreModal> {
                                                 url: FinSpaceIcons.custom,
                                                 width: 20,
                                                 height: 20,
-                                                // background: userAvatarBackGround.value ?? defaultBackGround.value,
                                                
                                               ),
                             ),
@@ -473,7 +471,6 @@ class _ExploreModalState extends State<ExploreModal> {
         getPosted.value = !getPosted.value;
         postCount[postData["_id"]] = 0;
         postCommentCount[postData["_id"]] = 0;
-        resetAndLoadData();
         posting.value = false;
         postDis.value = false;
         widget.onPostCreated(jsonDecode(response.body));

@@ -1,17 +1,15 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-
 import 'package:get/get.dart';
 
-class SavedPostsScreen extends StatefulWidget {
+class SavedPostsScreen extends StatefulWidget
+{
   const SavedPostsScreen({Key? key}) : super(key: key);
 
   @override

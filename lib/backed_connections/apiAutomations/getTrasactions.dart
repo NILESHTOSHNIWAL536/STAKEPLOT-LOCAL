@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
+import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -402,7 +403,7 @@ void addTransaction(String amount, String subCategory, String categories,
     if (!isSplit && snackBar) {
       snackBarCalled(context,  SnackbarData().transactionSuccess,AppColors.primaryColor);
     }
-    transactionsHistory.insert(0, body['data'][0]);
+    transactionsHistory.insert(0,TransactionModel.fromJson(body['data'][0]));
     reloadHistory.value = !reloadHistory.value;
     getCategoryData();
     setDonectChat.value = !setDonectChat.value;

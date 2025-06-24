@@ -944,7 +944,11 @@ class MaskedAvatars {
   static String profileIcon10 = "assets/icons/maskAvatars/mask10.png";
   static String profileIcon11 = "assets/icons/maskAvatars/mask11.png";
   static String profileIcon12 = "assets/icons/maskAvatars/mask12.png";
+ 
+
 }
+
+ List avatarBackGroundList = ["#FA7070", "#FFB07A", "#4C8BF5", "#68B2A0"];
 
 class AnimatedAppLoaders {
   static String animate1 = "assets/icons/appScreenLoader/animate1.svg";

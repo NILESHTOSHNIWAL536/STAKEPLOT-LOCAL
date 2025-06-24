@@ -8,7 +8,6 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
-import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:get/get.dart';
 
 RxBool sectionReached = false.obs;
@@ -22,7 +21,7 @@ class HomePage extends StatefulWidget
 }
 
 class _HomePageState extends State<HomePage> {
-  final UserController userController = Get.find<UserController>();
+  
  
   @override
   void initState() {
@@ -37,7 +36,7 @@ class _HomePageState extends State<HomePage> {
       onWillPop: () async {
           exit(0);
       },
-      child: Scaffold(
+      child: Scaffold(  
         bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
         backgroundColor: AppColors.backgroundColor,
         appBar:getAppBar(context),

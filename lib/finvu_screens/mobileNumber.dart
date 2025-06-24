@@ -21,7 +21,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
-import 'package:uuid/uuid.dart';
 
 RxBool loadConsentId=false.obs;
 RxBool isOtpWrong = false.obs;

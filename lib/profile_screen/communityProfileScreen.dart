@@ -6,6 +6,8 @@ import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.da
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
 
@@ -18,6 +20,8 @@ class CommunityProfileScreen extends StatefulWidget {
 }
 
 class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
+   UserController userController=ControllerManagement.userController;
+
   @override
   void initState() {
     getuserPost(widget.id);
@@ -25,6 +29,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+  
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -32,11 +37,11 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
-              topUserProfile(),
+              topUserProfile(userController),
               Column(
                 children: [
                   // const SizedBox(height: 10),
-                  TabBarUser(userPostList: myPostList)
+                  TabBarUser(userPostList:  userController.myPostList)
                 ],
               ),
             ],
@@ -46,19 +51,19 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
     );
   }
 
-  Widget topUserProfile() {
+  Widget topUserProfile(UserController userController) {
     return Container(
       height: MediaQuery.of(context).size.height / 5.7,
       // height: 200,
       child: Column(
         children: [
           AvatarProfile2(
-            url: avatar.value,
+            url: userController.avatar.value,
             width: 4.4,
             height: 10,
             flag: true,
           ),
-          Text(maskedName.value.toString(),
+          Text(userController.maskedName.value.toString(),
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.w600, color: AppColors.bg1)),
           SizedBox(
@@ -70,7 +75,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 networkFriends(ProfileScreenStrings().postsLabel,
-                    myPostList.length.toString(), Icons.post_add),
+                    userController.myPostList.length.toString(), Icons.post_add),
                 InkWell(
                   onTap: () {
                     Navigator.push(
@@ -85,7 +90,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                   },
                   child: networkFriends(
                       ProfileScreenStrings().networkLabel,
-                      MaskedFriendsList.length.toString(),
+                     userController.maskedConnections.length.toString(),
                       Icons.person_2_outlined),
                 ),
                 InkWell(
@@ -102,7 +107,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                   },
                   child: networkFriends(
                       ProfileScreenStrings().networkLabelConnected,
-                      maskedConnected.length.toString(),
+                      userController.maskedConnected.length.toString(),
                       Icons.person_2_outlined),
                 ),
               ],

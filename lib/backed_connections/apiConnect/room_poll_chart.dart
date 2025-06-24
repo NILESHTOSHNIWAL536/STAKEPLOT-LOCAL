@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/message.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -136,7 +137,7 @@ void exitRoom(context, String id) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
-    getUserInfomations();
+    userController.fetchUserInfo();    
     snackBarCalled(context, "You have exited the room.", Colors.black);
   } else {
     snackBarCalled(
@@ -398,7 +399,7 @@ void getChatLoader(bool flag) async {
                 element['chats']['details']['name'] == "null")
             ? ""
             : element['chats']['details']['name'];
-        String key = userInfo['sender'] == currentId.value
+        String key = userInfo['sender'] == userController.userId.value
             ? userInfo['receiver']
             : userInfo['sender'];
         var typed = element['chats']['details']['messageType'];
@@ -479,7 +480,7 @@ void addChatSplitAmount(
     var jsonData = {
       "messageType": "split",
       "receiver": id,
-      "sender": currentId.value,
+      "sender": userController.userId.value,
       "message": null,
       "image": null,
       "poll": null,

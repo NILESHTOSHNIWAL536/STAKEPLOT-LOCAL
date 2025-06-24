@@ -3,6 +3,7 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
+import "package:flutter_application_code_stakeplot/Constants/search.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart";
 import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
@@ -12,6 +13,8 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
+import "package:flutter_application_code_stakeplot/controllers/controllerManagement.dart";
+import "package:flutter_application_code_stakeplot/controllers/userController.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
@@ -49,10 +52,11 @@ class _TribeSearchState extends State<TribeChats> {
   List<dynamic> chatSplitAccount = [];
   ValueNotifier<bool> getChatSplit = ValueNotifier<bool>(false);
   final CommunityScreenStrings strings = CommunityScreenStrings();
+  UserController userController=ControllerManagement.userController;
   @override
   void initState() {
     super.initState();
-    getUserInfomations();
+    userController.fetchUserInfo();    
     totalUnopenedMessages.value=0;
     // ismaskedUsers.value = false;
     getChatLoader(ismaskedUsers.value);
@@ -65,8 +69,8 @@ class _TribeSearchState extends State<TribeChats> {
 
   setUpSocketListener() {
     socket.onConnect((_) {
-      socket.emit("joinRoom", userName.value + userName.value);
-      if(maskedName.value!="")socket.emit("joinRoom", maskedName.value + maskedName.value);
+      socket.emit("joinRoom", userController.userName.value + userController.userName.value);
+      if(userController.maskedName.value!="")socket.emit("joinRoom", userController.maskedName.value + userController.maskedName.value);
 
     });
 
@@ -158,7 +162,7 @@ class _TribeSearchState extends State<TribeChats> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Hi, ${userName.value}', // Null check for myprofile and myprofile['name']
+                  'Hi, ${userController.userName.value}', // Null check for myprofile and myprofile['name']
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,

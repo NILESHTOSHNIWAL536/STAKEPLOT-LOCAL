@@ -7,6 +7,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
+import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
+import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
@@ -28,7 +30,7 @@ class EditDetails extends StatefulWidget {
 class _EditDetailsState extends State<EditDetails> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
-
+  UserController userController=ControllerManagement.userController;
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -39,10 +41,9 @@ class _EditDetailsState extends State<EditDetails> {
   }
 
   final Map<String, TextEditingController> _controllers = {
-    ProfileScreenStrings().nameLabel:
-        TextEditingController(text: userName.value),
-    ProfileScreenStrings().emailLabel: TextEditingController(text: email.value),
-    ProfileScreenStrings().dobLabel: TextEditingController(text: dob.value),
+    ProfileScreenStrings().nameLabel:TextEditingController(text: ControllerManagement.userController.userName.value),
+    ProfileScreenStrings().emailLabel: TextEditingController(text: ControllerManagement.userController.email.value),
+    ProfileScreenStrings().dobLabel: TextEditingController(text:ControllerManagement.userController.dob.value),
     ProfileScreenStrings().numberLabel:
         TextEditingController(text: number.value),
   };
@@ -50,9 +51,9 @@ class _EditDetailsState extends State<EditDetails> {
   @override
   void initState() {
     super.initState();
-    changeAvater.value = avatar.value;
+    changeAvater.value = userController.avatar.value;
     checkBiometricsStatus();
-    getUserInfomations();
+     userController.fetchUserInfo();    
   }
 
   @override
@@ -87,46 +88,6 @@ class _EditDetailsState extends State<EditDetails> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
         actions: [
-          IconButton(
-            icon: Icon(Icons.delete, color: Colors.red),
-            onPressed: () {
-              // Show dialog box for confirmation
-               Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => DeleteAccountScreen()),
-                            );
-
-              // showDialog(
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return AlertDialog(
-              //       title: Text('Delete Account'),
-              //       content: Text(
-              //           'Are you sure you want to delete your account? This action cannot be undone.'),
-              //       actions: [
-              //         TextButton(
-              //           onPressed: () {
-              //             Navigator.of(context).pop(); // Close the dialog
-              //           },
-              //           child: Text('Cancel'),
-              //         ),
-              //         TextButton(
-              //           onPressed: () {
-                          
-              //               // DeleteAccountScreen
-                            
-
-              //             // deleteUserAccount(context);
-              //              // Close the dialog
-              //           },
-              //           child: Text('Delete'),
-              //         ),
-              //       ],
-              //     );
-                // },
-              // );
-            },
-          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -138,10 +99,10 @@ class _EditDetailsState extends State<EditDetails> {
             Column(
               children: [
                 Obx(() => AvatarProfile(
-                      name: userName.value,
+                      name: userController.userName.value,
                       width: 5,
                       height: 10,
-                      background: userAvatarBackGround.value,
+                      background: userController.avatarBackGround.value,
                       flag: true,
                     )),
                 // Obx(() => AvatarProfileImage(
@@ -201,7 +162,7 @@ class _EditDetailsState extends State<EditDetails> {
                 ),
                 Obx(() => (bankAccountLinkedList.isEmpty ||
                         (hideBackAccountPassword.value ||
-                            cupertinoPin.value == "0" || cupertinoPin.value == "00"))
+                           userController.cupertinoPin.value == "0" ||userController.cupertinoPin.value == "00"))
                     ? SizedBox.shrink()
                     : InkWell(
                         onTap: () {
@@ -233,16 +194,16 @@ class _EditDetailsState extends State<EditDetails> {
               child: Column(
                 children: [
                   _buildNonEditableField(Icons.email,
-                      ProfileScreenStrings().emailLabel, email.value),
+                      ProfileScreenStrings().emailLabel, userController.email.value),
                   Divider(),
                   _buildNonEditableField(Icons.person,
-                      ProfileScreenStrings().nameLabel, userName.value),
-                  number.value=="0"?SizedBox.shrink() :  Divider(),
-                  number.value=="0"?SizedBox.shrink():  _buildNonEditableField(Icons.phone,
-                      ProfileScreenStrings().numberLabel, number.value),
+                      ProfileScreenStrings().nameLabel, userController.userName.value),
+                 userController.phone.value=="0"?SizedBox.shrink() :  Divider(),
+                   userController.phone.value=="0"?SizedBox.shrink():  _buildNonEditableField(Icons.phone,
+                      ProfileScreenStrings().numberLabel,  userController.phone.value),
                   Divider(),
                   _buildNonEditableField(Icons.calendar_today,
-                      ProfileScreenStrings().dobLabel, dob.value),
+                      ProfileScreenStrings().dobLabel, userController.dob.value),
                 ],
               ),
             ),
@@ -263,7 +224,7 @@ class _EditDetailsState extends State<EditDetails> {
                 ),
                 InkWell(
                     onTap: () {
-                      number.value = Phone.value;
+                      number.value =userController.phone.value;
                       isFromEditDeatils.value = true;
                       Navigator.push(
                         context,
@@ -300,7 +261,6 @@ class _EditDetailsState extends State<EditDetails> {
         children: [
         Obx(()=>  Column(
             children: bankAccountLinkedList.map((e) {
-            
               return _buildAccountDetails(e['bankName'], e['maskedAccNumber'], e,e['bankLogo']);
             }).toList(),
           )),

@@ -16,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -25,7 +26,8 @@ RxString selectedValueType = "days".obs;
 RxBool getPdgLoader = false.obs;
 RxString bankLogo = "".obs;
 RxMap<int, double> swipeOffsets = <int, double>{}.obs;
-RxList<Map<String, dynamic>> hiddenTransactions = <Map<String, dynamic>>[].obs;
+RxList<TransactionModel> hiddenTransactions = <TransactionModel>[].obs;
+// RxList<Map<String, dynamic>> hiddenTransactions = <Map<String, dynamic>>[].obs;
 
 class TransactionHistory extends StatefulWidget {
  
@@ -113,9 +115,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
   Widget getlist() {
     // Group transactions by month and year
-    Map<String, List<Map<String, dynamic>>> groupedTransactions = {};
+    Map<String, List<TransactionModel>> groupedTransactions = {};
     for (var transaction in transactionsHistory) {
-      String? timestamp = transaction['transactionTimestamp']?.toString();
+      String? timestamp = transaction.transactionTimestamp.toString();
+      // String? timestamp = transaction['transactionTimestamp']?.toString();
       if (timestamp != null) {
         try {
           // Parse as UTC and convert to IST
@@ -124,9 +127,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
           // Use only year and month for grouping to avoid day boundary issues
           String monthYearKey =
               DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
-          groupedTransactions
-              .putIfAbsent(monthYearKey, () => [])
-              .add(transaction);
+          groupedTransactions.putIfAbsent(monthYearKey, () => []).add(transaction);
           // Debug: Log the timestamp and its IST conversion
         } catch (e) {
           continue;
@@ -163,7 +164,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
     return ListView.builder(
       itemCount: displayItems.length,
       shrinkWrap: true,
-      
       controller: _scrollController2,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
@@ -191,14 +191,14 @@ class _TransactionHistoryState extends State<TransactionHistory>
         }
 
         // Case 2: Transaction Item
-        else if (item is Map<String, dynamic>) {
+        else if (item is TransactionModel) {
           final transaction = item;
           int transactionIndex = transactionsHistory.indexOf(transaction);
 
           return Container(
             child: historyTransactions(
                   transaction,
-                  transaction['transactionTimestamp']?.toString(),
+                  transaction.transactionTimestamp.toString(),
                   transactionIndex,
                   context,
                   true,
@@ -230,41 +230,41 @@ class _TransactionHistoryState extends State<TransactionHistory>
     );
   }
   
-  void extractTransaction(bool isYearView, List obj) {
+  // void extractTransaction(bool isYearView, List obj) {
     
-    if (isYearView) {
-      getTransactionByYear(obj, selectedYear.value);
-    } else {
-      getTransactionByMonth(obj, selectedMonth.value);
-    }
-  }
+  //   if (isYearView) {
+  //     getTransactionByYear(obj, selectedYear.value);
+  //   } else {
+  //     getTransactionByMonth(obj, selectedMonth.value);
+  //   }
+  // }
 
-  void getTransactionByYear(List obj, int y) {
-    obj.forEach((ele) {
-      if (ele is Map<String, dynamic> &&
-          isCurrentYear(ele['transactionTimestamp']?.toString() ?? '', y)) {
-        transactionsHistory.add(ele);
-      }
-    });
-  }
+  // void getTransactionByYear(List obj, int y) {
+  //   obj.forEach((ele) {
+  //     if (ele is Map<String, dynamic> &&
+  //         isCurrentYear(ele['transactionTimestamp']?.toString() ?? '', y)) {
+  //       transactionsHistory.add(ele);
+  //     }
+  //   });
+  // }
 
-  void getTransactionByMonth(List obj, int m) {
-    obj.forEach((ele) {
-      if (ele is Map<String, dynamic> &&
-          isCurrentMonth(ele['transactionTimestamp']?.toString() ?? '', m)) {
-        transactionsHistory.add(ele);
-      }
-    });
-  }
+  // void getTransactionByMonth(List obj, int m) {
+  //   obj.forEach((ele) {
+  //     if (ele is Map<String, dynamic> &&
+  //         isCurrentMonth(ele['transactionTimestamp']?.toString() ?? '', m)) {
+  //       transactionsHistory.add(ele);
+  //     }
+  //   });
+  // }
 
-  bool isCurrentYear(String date, int y) {
-    try {
-      DateTime parsedDate = DateTime.parse(date); // Parse the date string
-      return parsedDate.year == y; // Compare year
-    } catch (e) {
-      return false; // Return false if parsing fails
-    }
-  }
+  // bool isCurrentYear(String date, int y) {
+  //   try {
+  //     DateTime parsedDate = DateTime.parse(date); // Parse the date string
+  //     return parsedDate.year == y; // Compare year
+  //   } catch (e) {
+  //     return false; // Return false if parsing fails
+  //   }
+  // }
 
   void showModal() {
     getPdgLoader.value = false;
