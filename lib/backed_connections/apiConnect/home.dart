@@ -166,7 +166,7 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactionsForDate(
   print("here ");
   var response = await getDataApiCall(
       "${url}/transactionauto/get-day-wise-transactions/$date");
-  print("api here :${url}/get-day-wise-transactions");
+  print("api here :${url}/get-day-wise-transactions/$date");
   print("response here :${response.body}");
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);

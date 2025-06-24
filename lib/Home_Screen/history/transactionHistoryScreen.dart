@@ -243,13 +243,16 @@ class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
-  State<TransactionHistoryScreen> createState() => _TransactionHistoryScreenState();
+  State<TransactionHistoryScreen> createState() =>
+      _TransactionHistoryScreenState();
 }
 
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
-  final RxList<Map<String, dynamic>> filteredTransactions = RxList<Map<String, dynamic>>([]);
+  final RxList<Map<String, dynamic>> filteredTransactions =
+      RxList<Map<String, dynamic>>([]);
   final ScrollController scrollController = ScrollController();
-  final RxList<Map<String, dynamic>> dayWiseTransactions = RxList<Map<String, dynamic>>([]);
+  final RxList<Map<String, dynamic>> dayWiseTransactions =
+      RxList<Map<String, dynamic>>([]);
   final RxBool isDateSummaryView = false.obs; // State to toggle views
 
   @override
@@ -261,12 +264,14 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     getDayWiseTransactions(context).then((data) {
       dayWiseTransactions.assignAll(data);
     });
+    // getDayWiseTransactionsForDate(context);
     scrollController.addListener(_onScroll);
   }
 
   void _onScroll() {
     scrollController.addListener(() async {
-      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50) {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 50) {
         getAllTransactionHistory(context, false, false);
       }
     });
@@ -308,7 +313,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                     context: context,
                                     builder: (_) => SafeArea(
                                       child: Container(
-                                        width: MediaQuery.of(context).size.width,
+                                        width:
+                                            MediaQuery.of(context).size.width,
                                         decoration: const BoxDecoration(
                                           color: AppColors.bg5,
                                           borderRadius: BorderRadius.only(
@@ -322,24 +328,29 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                   );
                                 },
                                 child: Icon(Icons.filter_alt_outlined,
-                                    size: MediaQuery.of(context).size.height / 20,
+                                    size:
+                                        MediaQuery.of(context).size.height / 20,
                                     color: AppColors.accentColor),
                               ),
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    isDateSummaryView.value = !isDateSummaryView.value; // Toggle state
+                                    isDateSummaryView.value = !isDateSummaryView
+                                        .value; // Toggle state
                                   });
                                 },
                                 child: Icon(Icons.calendar_today,
-                                    size: MediaQuery.of(context).size.height / 20,
+                                    size:
+                                        MediaQuery.of(context).size.height / 20,
                                     color: AppColors.accentColor),
                               ),
                             ],
                           ),
-                          Obx(() => (groupTransactionList.length != 0 || redioButton.isNotEmpty)
+                          Obx(() => (groupTransactionList.length != 0 ||
+                                  redioButton.isNotEmpty)
                               ? Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8),
                                   child: getTab(context),
                                 )
                               : SizedBox.shrink()),
@@ -352,7 +363,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                   Obx(() => Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.sizeOf(context).height /
-                            ((groupTransactionList.length != 0 || redioButton.isNotEmpty)
+                            ((groupTransactionList.length != 0 ||
+                                    redioButton.isNotEmpty)
                                 ? 1.35
                                 : 1.25),
                         child: isDateSummaryView.value
@@ -424,7 +436,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide(color: AppColors.primaryColor),
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         ),
         style: const TextStyle(color: AppColors.accentColor),
       ),
@@ -490,7 +503,7 @@ class DateSummaryView extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Credit: ₹${data['creditAmount']} | Debit: ₹${data['debitAmount']}',
+                            'Credit: ₹${data['creditAmount'].toStringAsFixed(0)} | Debit: ₹${data['debitAmount'].toStringAsFixed(0)}',
                             style: FontManager().getTextStyle(
                               context,
                               fontSize: 16,
@@ -499,7 +512,7 @@ class DateSummaryView extends StatelessWidget {
                         ],
                       ),
                       children: [
-                         FutureBuilder<List<Map<String, dynamic>>>(
+                       FutureBuilder<List<Map<String, dynamic>>>(
                           future: getDayWiseTransactionsForDate(context, data['date']),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -514,14 +527,16 @@ class DateSummaryView extends StatelessWidget {
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: transactions.length,
                               itemBuilder: (context, txIndex) {
-                                final transaction = TransactionModel.fromJson(transactions[txIndex]);
+                                final transactionData = transactions[txIndex];
+                                final transaction = TransactionModel.fromJson(transactionData);
+                                // Ensure transactionTimestamp is used for date and bankId or logo is mapped
                                 return historyTransactions(
                                   transaction,
-                                  data['date'],
+                                  transaction.transactionTimestamp.toString() ?? data['date'], // Use transaction timestamp if available
                                   txIndex,
                                   context,
-                                   true,
-                 
+                                  true, 
+                                  true,
                                 );
                               },
                             );
