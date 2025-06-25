@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>flutter_application_code_stakeplot</string>
+	<string>Stakeplot</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -28,7 +28,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.stakeplot.adnan.dev</string>
+			<string>com.stakeplot.pfa</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>stakeplot</string>
@@ -61,10 +61,8 @@
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>We use Face ID to secure your account</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>We need to save images to your photo library for your Stakeplot content.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to select images for your Stakeplot profile or content.</string>
+    <string>This app requires access to your photo library to allow image selection.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -90,7 +88,7 @@
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.stakeplot.adnan.dev</string>
+		<string>group.com.stakeplot.pfa</string>
 	</array>
 </dict>
 </plist>

@@ -8,15 +8,15 @@ class TransactionModel {
   final String? txnId;
   final String narration;
   final String reference;
-  final String title;
+  String title;
   final bool manualTransaction;
-   String category;
-   String subcategory;
+  String category;
+  String subcategory;
   final bool hidden;
   final bool isBill;
   final bool isDebt;
   final bool isSplit;
-   bool? needsReview;
+  bool? needsReview;
   final bool? isAutoPay;
   final String? autoPayId;
   final String? merchant;
@@ -27,7 +27,6 @@ class TransactionModel {
   final String? bankName;
   final String? bankLogo;
   final int? v;
-
   TransactionModel({
     required this.id,
     required this.type,
@@ -58,7 +57,6 @@ class TransactionModel {
     this.bankLogo,
     this.v,
   });
-
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     final id = json['_id'] is Map ? json['_id']['\$oid'] : json['_id'];
     final accountId = json['accountId'] is Map ? json['accountId']['\$oid'] : json['accountId'];
@@ -97,6 +95,7 @@ class TransactionModel {
     );
   }
 
+  
   Map<String, dynamic> toJson() {
     return {
       "_id": id,
@@ -149,4 +148,8 @@ class TransactionModel {
       .toList();
   }
 
+  @override
+  String toString() {
+    return 'TransactionModel(id: $id, type: $type, amount: $amount, narration: $narration, bankName: $bankName)';
+  }
 }

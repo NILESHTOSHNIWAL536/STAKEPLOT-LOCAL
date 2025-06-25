@@ -24,77 +24,79 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         isDismissible: false,
         enableDrag: false,
         builder: (BuildContext context) {
-          return Container(
-            height: MediaQuery.sizeOf(context).height/4,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: AppColors.finSpaceColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                   Text(
-                    "Finspace",
-                    style: FontManager2().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: AppColors.backgroundColor)
-                  ),
-                   Text(
-                    "A safe and supportive space to share your financial thoughts, questions, and experiences—completely anonymously. No names, no pressure—just open, respectful conversations.",
-                    //  textAlign: TextAlign.center,
-                   style: FontManager2().getTextStyle(context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 14,
-                      lineHeight: 1.3,
-                      color: AppColors.backgroundColor)),
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     getMaskedNumber(context);
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(builder: (context) => MaskNameScreen()),
-                  //     );
-                  //   },
-                  //   child:  Text("Continue",style: FontManager2().getTextStyle(context,
-                  //     lWeight: FontWeight.w600,
-                  //     fontSize: 20,
-                  //     color: AppColors.finSpaceColor)),
-                  // ),
-                   SizedBox(
-            width: MediaQuery.sizeOf(context).width/4,
-            child: ElevatedButton(
-                  onPressed: () {
-                      getMaskedNumber(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MaskNameScreen()),
-                      );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.backgroundColor,
-               
-                padding: EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+          return SafeArea(
+            child: Container(
+              height: MediaQuery.sizeOf(context).height/4,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: AppColors.finSpaceColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0),
                 ),
               ),
-              child: Text('Continue',
-                  style: FontManager2().getTextStyle(context,
-                      lWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: AppColors.finSpaceColor)),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                     Text(
+                      "Finspace",
+                      style: FontManager2().getTextStyle(context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: AppColors.backgroundColor)
+                    ),
+                     Text(
+                      "A safe and supportive space to share your financial thoughts, questions, and experiences—completely anonymously. No names, no pressure—just open, respectful conversations.",
+                      //  textAlign: TextAlign.center,
+                     style: FontManager2().getTextStyle(context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 14,
+                        lineHeight: 1.3,
+                        color: AppColors.backgroundColor)),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     getMaskedNumber(context);
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(builder: (context) => MaskNameScreen()),
+                    //     );
+                    //   },
+                    //   child:  Text("Continue",style: FontManager2().getTextStyle(context,
+                    //     lWeight: FontWeight.w600,
+                    //     fontSize: 20,
+                    //     color: AppColors.finSpaceColor)),
+                    // ),
+                     SizedBox(
+              width: MediaQuery.sizeOf(context).width/4,
+              child: ElevatedButton(
+                    onPressed: () {
+                        getMaskedNumber(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MaskNameScreen()),
+                        );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.backgroundColor,
+                 
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text('Continue',
+                    style: FontManager2().getTextStyle(context,
+                        lWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: AppColors.finSpaceColor)),
+              ),
             ),
-          ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

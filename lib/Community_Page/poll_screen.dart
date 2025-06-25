@@ -250,7 +250,29 @@ class _PollScreenState extends State<PollScreen> {
                           Center(
                             child: GestureDetector(
                                 onTap: (){
-                                   showTagListOfInterestModal(context:  context,onConfirm: callBack);
+                                   int count = 0;
+
+                                  _optionControllers.forEach((e) {
+                                    if (e.text.length
+                                        .toString()
+                                        .trim()
+                                        .isNotEmpty) {
+                                      count++;
+                                    }
+                                  });
+                                  if (count < 2) {
+                                    snackBarCalledfail(context, "Atleast two options must be there");
+                                    return;
+                                  }
+
+                                  _questionController.text.isNotEmpty &&
+                                          _optionControllers.every(
+                                              (controller) =>
+                                                  controller.text.isNotEmpty)
+                                      ? showTagListOfInterestModal(
+                                          context: context, onConfirm: callBack)
+                                      : null;
+                                  //  showTagListOfInterestModal(context:  context,onConfirm: callBack);
                                 },
                                 child: Container(
                                   width: MediaQuery.of(context).size.width / 1.1,

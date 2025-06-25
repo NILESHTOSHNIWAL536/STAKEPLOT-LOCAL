@@ -32,10 +32,9 @@ void setPasswordApiCalled(context, String password) async {
     'pin': password.toString(),
   });
 
-  if (getFlagOfResponse(response))
-  {
+  if (getFlagOfResponse(response)) {
     userController.cupertinoPin.value = password;
-    hideBackAccountPassword.value=false;
+    hideBackAccountPassword.value = false;
 
     snackBarCalled(context, SnackbarData().pinSetSuccess, Colors.black);
   } else {
@@ -84,15 +83,14 @@ void pinPasswordVerify(
         setBack(); // Callback
       });
       return;
-    } else
-     {
+    } else {
       var errorResponse = jsonDecode(response.body);
-      
-       userController.cupertinoAttemptCount.value = (errorResponse['count'] ?? 0) >4;
-      if( userController.cupertinoAttemptCount.value)
-      {
+
+      userController.cupertinoAttemptCount.value =
+          (errorResponse['count'] ?? 0) > 4;
+      if (userController.cupertinoAttemptCount.value) {
         snackBarCalledfail(context, SnackbarData().maxLimitSetFail, Colors.red);
-      } 
+      }
       hideBackAccountPassword.value = false;
     }
   } catch (e) {
@@ -101,8 +99,6 @@ void pinPasswordVerify(
     _isVerifyingPin = false;
   }
 }
-
-
 
 void seletedBankUpdateInfo(id, context) async {
   var response = await getDataApiCall("${url}/user/selectedBank/${id}");
@@ -147,10 +143,39 @@ void getHiddenTransactions(context) async {
     var her = jsonDecode(response.body);
     var obj = her['data'];
     hiddentrasactionsHistory.clear();
-    List<TransactionModel> modalObj=TransactionModel.listFromJson(obj);
+    List<TransactionModel> modalObj = TransactionModel.listFromJson(obj);
     hiddentrasactionsHistory.addAll(modalObj);
     getHiddenHistory.value = !getHiddenHistory.value;
   } else {}
+}
+
+Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
+  var response =
+      await getDataApiCall("${url}/transactionauto/get-day-wise-transactions");
+
+  if (response.statusCode == 200) {
+    var her = jsonDecode(response.body);
+    var obj = her['data'];
+    if (obj is List) {
+      return List<Map<String, dynamic>>.from(obj);
+    }
+  }
+  return [];
+}
+
+Future<List<Map<String, dynamic>>> getDayWiseTransactionsForDate(
+    context, String date) async {
+  var response = await getDataApiCall(
+      "${url}/transactionauto/get-day-wise-transactions/$date");
+
+  if (response.statusCode == 200) {
+    var her = jsonDecode(response.body);
+    var obj = her['data'];
+    if (obj is List) {
+      return List<Map<String, dynamic>>.from(obj);
+    }
+  }
+  return [];
 }
 
 Future<void> getAllTransactionHistory(
@@ -172,10 +197,13 @@ Future<void> getAllTransactionHistory(
         : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${(accountSelected.value.isEmpty ||   bankAccountLinkedList.length == 1 || text.toLowerCase()=="cash") ? (text.toLowerCase()=="cash"? "Cash": "-") : accountSelected.value}";
 
     var response = await getDataApiCall(urlPath);
+    printData(response);
     if (response.statusCode == 200) {
+      print("urlPath");
+      print(urlPath);
       var data = jsonDecode(response.body);
       var obj = data['data'];
-     
+      print(obj);
       if (obj != null && obj is List<dynamic>) {
         if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh

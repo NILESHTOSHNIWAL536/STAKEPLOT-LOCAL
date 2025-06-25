@@ -81,7 +81,6 @@ Future<Map<String, dynamic>> createPost(
   String description,
   File imageFile,
   bool cropShape,
-
 ) async {
   try {
     String urlPath = await addImageToCloud2(imageFile);
@@ -94,15 +93,13 @@ Future<Map<String, dynamic>> createPost(
       'tags': TagList,
       'postType': 'image',
       'isSquareImage': cropShape,
-
     };
 
     String apiCall = '${url}/post';
 
     var response = await postDataApiCall(apiCall, body);
 
-    if (getFlagOfResponse(response)) 
-    {
+    if (getFlagOfResponse(response)) {
       clearInterest();
       var postData = jsonDecode(response.body);
       uploadRefreshCall(postData, context);
@@ -131,7 +128,7 @@ Future<Map<String, dynamic>> createPost(
 void createPostWithOutImage(context, String title, String description) async {
   var urlPath = '${url}/post/';
   final TagList = [...selectedSubCategories, ...selectedCategories];
- 
+
   var body = {
     'title': title,
     'description': description,
@@ -161,7 +158,7 @@ void createPollOfCommunity(context, String title, String description) async {
     'isPoll': true,
     'tags': TagList
   };
- 
+
   var response = await postDataApiCall(urlPath, body);
 
   if (getFlagOfResponse(response)) {
@@ -179,7 +176,7 @@ void getPost() async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-  
+
     historyListData.clear();
     historyListData.addAll(obj);
     // getTrendingData.clear();
@@ -243,7 +240,7 @@ void savePostData(context,PostModel data) async {
 Future<List<dynamic>> savePostGetData(context) async {
   try {
     var urlPath = "${url}/post/saved";
-  
+
     var response = await getDataApiCall(urlPath);
 
     if (getFlagOfResponse(response)) {
