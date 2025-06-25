@@ -9,12 +9,12 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-part  'snackBars.dart';  
+part  'snackBars.dart'; 
 
 RxInt currentPageTranding = 1.obs;
 RxInt currentPageFeed = 1.obs;
 bool flag = true;
-String portNo = flag ? "192.168.1.9" : "localhost";
+String portNo = flag ? "192.168.1.4" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
