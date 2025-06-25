@@ -333,7 +333,7 @@ class _ImageScreenState extends State<ImageScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
-                    child: Obx(() => posting.value
+                    child: Obx(() =>  postController.posting.value
                         ? Spinner(size: 20, color: Colorcodes.white)
                         : Text(
                             strings.continueButton,
@@ -368,14 +368,14 @@ class _ImageScreenState extends State<ImageScreen> {
       return;
     }
 
-    if (posting.value) return;
+    if ( postController.posting.value) return;
 
     try {
-      posting.value = true;
+       postController.posting.value = true;
 
       final croppedImageFile = await _cropAndSaveImage();
       if (croppedImageFile == null) {
-        posting.value = false;
+         postController.posting.value = false;
         return;
       }
 
@@ -398,7 +398,7 @@ class _ImageScreenState extends State<ImageScreen> {
       // Log error instead of showing snackbar
     } finally {
       if (mounted) {
-        posting.value = false;
+        postController.posting.value = false;
       }
     }
   }

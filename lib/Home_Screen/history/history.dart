@@ -30,7 +30,6 @@ RxBool showCheckBox =
 Widget historyTransactions(
     TransactionModel transaction, String? date, int index, BuildContext context,
     [bool hideReview = false, bool isexpanded = false, bool hide = false]) {
-  
   String logo = transaction.bankLogo ?? "";
 
   final category = transaction.category;
@@ -92,7 +91,31 @@ Widget historyTransactions(
       return true; // Allow popping the screen
     },
     child: GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
+        // uncomment this 
+        // if (showCheckBox.value) {
+        //   String id = '${transaction.id}';
+        //   bool isChecked = redioButton.containsKey(id);
+        //   if (!isChecked) {
+        //     redioButton[id] = id;
+        //     redioButtonIndex[id] = index;
+        //     if (isManual) addManually.add(id);
+        //     HapticFeedback.selectionClick();
+        //   } else {
+        //     redioButton.remove(id);
+        //     redioButtonIndex.remove(id);
+        //     if (isManual) addManually.remove(id);
+        //     HapticFeedback.selectionClick();
+        //   }
+        // } else if (!isManual && !hide) {
+        //   showModalBottomSheet(
+        //     context: context,
+        //     builder: (BuildContext context) {
+        //       return TransactionDetailsPage(transaction: transaction);
+        //     },
+        //   );
+        // }
         if (!isManual && !showCheckBox.value) {
           showModalBottomSheet(
             context: context,
@@ -183,6 +206,8 @@ Widget historyTransactions(
                         : SizedBox.shrink(key: ValueKey('no-checkbox')),
                   ),
                   // Main Transaction Content
+
+                  // remove gesture detector here
                   GestureDetector(
                     onTap: () {
                       if (!showCheckBox.value) return;
@@ -239,24 +264,21 @@ Widget historyTransactions(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Tooltip(
-                                            message: narration,
-                                            child: Container(
-                                              // color: Colorcodes.red,
-                                              width: MediaQuery.sizeOf(context)
-                                                      .width /
-                                                  2.4,
-                                              child: textStyle(
-                                                context: context,
-                                                text: !isManual
-                                                    ? nameOfUser
-                                                    : subcategory,
-                                                c: AppColors.accentColor,
-                                                fontsize:
-                                                    fontSizes.fontSizeMedium,
-                                                fontWeight: FontWeight.w600,
-                                                lineHeight: 1.5,
-                                              ),
+                                          Container(
+                                            // color: Colorcodes.red,
+                                            width: MediaQuery.sizeOf(context)
+                                                    .width /
+                                                2.4,
+                                            child: textStyle(
+                                              context: context,
+                                              text: !isManual
+                                                  ? nameOfUser
+                                                  : subcategory,
+                                              c: AppColors.accentColor,
+                                              fontsize:
+                                                  fontSizes.fontSizeMedium,
+                                              fontWeight: FontWeight.w600,
+                                              lineHeight: 1.5,
                                             ),
                                           ),
                                           Container(
@@ -311,6 +333,7 @@ Widget historyTransactions(
                       ),
                     ),
                   ),
+               
                 ],
               ),
             )),

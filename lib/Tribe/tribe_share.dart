@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
@@ -19,7 +20,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class TribeShare extends StatefulWidget {
   var data;
-  var dataObj;
+  PostModel dataObj;
   TribeShare({Key? key, required this.data, required this.dataObj})
       : super(key: key);
 
@@ -141,10 +142,10 @@ class _TribeHomeState extends State<TribeShare> {
                 "image": null,
                 "poll": null,
                 "post": {
-                  "postTitle": widget.dataObj['title'],
-                  "postDescription": widget.dataObj['description'].toString(),
-                  "postImage": widget.dataObj['image'],
-                  "postId": widget.dataObj['_id'],
+                  "postTitle": widget.dataObj.title,
+                  "postDescription": widget.dataObj.description.toString(),
+                  "postImage": widget.dataObj.image,
+                  "postId": widget.dataObj.id,
                   "postLocation": jsonEncode(widget.dataObj),
                 },
                 "split": null,
@@ -158,7 +159,7 @@ class _TribeHomeState extends State<TribeShare> {
                 "roomId": userToSend,
               });
               index++;
-              String  img= widget.dataObj['postType']=="image"?  widget.dataObj['image']:"";
+              String  img= widget.dataObj.postType.name=="image"?  widget.dataObj.image:"";
               sendNotificationsToDevice(
                   rec,
                   context,

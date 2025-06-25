@@ -6,9 +6,11 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:http/http.dart' as http;
 
 void addReply(context, String data, String commentId, String postId) async {
@@ -165,12 +167,12 @@ void createPollOfCommunity(context, String title, String description) async {
   } else {}
 
   clearInterest();
-  postDis.value = false;
+  postController.postDis.value = false;
 }
 
 void getPost() async {
   var response =
-      await getDataApiCall('${url}/post/feed/${currentPageFeed.value}');
+      await getDataApiCall('${url}/post/feed/${postController.currentPageFeed.value}');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -178,53 +180,58 @@ void getPost() async {
     historyListData.clear();
     historyListData.addAll(obj);
     // getTrendingData.clear();
-    getTrendingData.addAll(obj);
-    print(historyListData[0]);
+    // postController.getTrendingData.addAll(obj);
+    List<PostModel> postList= PostModel.listFromJson(historyListData);
+    postController.feedPostList.addAll(postList);
+
     if (historyListData.length < 5) {
-      hasMorePostFeed.value = false;
+      postController.hasMorePostFeed.value = false;
     }
-    currentPageFeed.value++;
+    postController.currentPageFeed.value++;
     historyListData.forEach((element) {
-      postData[element["_id"]] = true;
-      postCount[element["_id"]] = element['upvotes'];
-      postCommentCount[element["_id"]] = element['comments'];
+      postController.postData[element["_id"]] = true;
+      postController.postCount[element["_id"]] = element['upvotes'];
+      postController.postCommentCount[element["_id"]] = element['comments'];
     });
-    isPostloading.value = false;
-    isPost.value = true;
+    postController.isPostloading.value = false;
+    postController.isPost.value = true;
   } else {}
 }
 
 void getTranding() async {
   var response =
-      await getDataApiCall('${url}/post/trending/${currentPageTranding.value}');
+      await getDataApiCall('${url}/post/trending/${postController.currentPageTranding.value}');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     historyListData.clear();
     historyListData.addAll(obj);
-    getAllPostData.addAll(obj);
+    List<PostModel> postList= PostModel.listFromJson(historyListData);
+    postController.trandingPostList.addAll(postList);
+
     if (historyListData.length < 5) {
-      hasMorePostTranding.value = false;
+      postController.hasMorePostTranding.value = false;
     }
-    currentPageTranding.value++;
+    postController.currentPageTranding.value++;
     historyListData.forEach((element) {
-      postData[element["_id"]] = true;
-      postCount[element["_id"]] = element['upvotes'];
-      postCommentCount[element["_id"]] = element['comments'];
+      postController.postData[element["_id"]] = true;
+      postController.postCount[element["_id"]] = element['upvotes'];
+      postController.postCommentCount[element["_id"]] = element['comments'];
     });
-    isPostloading.value = false;
-    isPostTranding.value = true;
+    postController.isPostloading.value = false;
+    postController.isPostTranding.value = true;
   }
 }
 
-void savePostData(context, data) async {
-  var urlPath = "${url}/post/save/${data['_id']}";
-  var body = {"postId": data['_id']};
+void savePostData(context,PostModel data) async {
+  var urlPath = "${url}/post/save/${data.id}";
+  var body = {"postId": data.id};
   var response = await postDataApiCall(urlPath, body);
   var decodedResponse = json.decode(response.body);
 
-  if (getFlagOfResponse(response)) {
+  if (getFlagOfResponse(response) ) {
     snackBarCalled(context, decodedResponse['data'].toString());
+    getSaved();
   } else {
     snackBarCalled(context, SnackbarData().failedToSavePost, Colors.red);
   }
@@ -247,3 +254,15 @@ Future<List<dynamic>> savePostGetData(context) async {
     return [];
   }
 }
+
+
+  void getpost(id) async
+  {
+    var response=await getDataApiCall('${url}/post/${id}');
+    if (getFlagOfResponse(response))
+     {
+      var his = jsonDecode(response.body);
+      var obj = his['data'];
+       postController.uniquePostDeatils = PostModel.fromJson(obj[0]);
+    } else {}   
+  }

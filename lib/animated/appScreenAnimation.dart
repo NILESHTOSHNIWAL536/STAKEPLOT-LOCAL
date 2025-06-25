@@ -119,6 +119,7 @@ import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.da
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -179,7 +180,8 @@ class _AppScreenAnimationState extends State<AppScreenAnimation>
       );
     }).toList();
 
-    callApis(); // Start API calls
+     callApis();
+     initGetControllers();
     _startAnimation();
   }
 

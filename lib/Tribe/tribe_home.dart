@@ -11,8 +11,9 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_share.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
+import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,9 +26,9 @@ List postListIds = [];
 bool findData = true;
 bool findTranding = true;
 RxInt indexFlag = 0.obs;
-RxBool isPost = false.obs;
-RxBool isPostTranding = false.obs;
-RxBool isTrending = false.obs;
+// RxBool isPost = false.obs;
+// RxBool isPostTranding = false.obs;
+// RxBool isTrending = false.obs;
 
 Widget noFriend(context,[text = "",bool isMasked=false,]) {
   UserController userController=ControllerManagement.userController;
@@ -103,10 +104,10 @@ Widget popUpBox(id, context) {
   );
 }
 
-Widget vote(context, dataObj, data) {
-  String idData = dataObj["_id"];
-  String likeKey = "liked" + dataObj["_id"];
-  bool isLiked = likedList.contains(likeKey);
+Widget vote(context,PostModel dataObj, data) {
+  String idData = dataObj.id;
+  String likeKey = "liked" + dataObj.id;
+  bool isLiked =  postController.likedList.contains(likeKey);
   return Obx(() => Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 23.0),
         child: Row(
@@ -121,37 +122,37 @@ Widget vote(context, dataObj, data) {
                       if (userController.maskedName.value.trim().isEmpty) {
                         MaskedNameDialogBox.showMaskedNameDialog(context);
                       } else {
-                        String likeKey = "liked" + dataObj["_id"];
-                        bool isLiked = likedList.contains(likeKey);
+                        String likeKey = "liked" + dataObj.id;
+                        bool isLiked =  postController.likedList.contains(likeKey);
 
                         // Toggle like status
                         if (isLiked) {
-                          likedList.remove(likeKey);
-                          postCount[idData] = postCount[idData]! - 1;
-                          if (postCount[idData]! < 0) {
-                            postCount[idData] = 0;
+                           postController.likedList.remove(likeKey);
+                           postController.postCount[idData] =  postController.postCount[idData]! - 1;
+                          if ( postController.postCount[idData]! < 0) {
+                             postController.postCount[idData] = 0;
                           }
                         } else {
-                          likedList.add(likeKey);
-                          postCount[idData] = postCount[idData]! + 1;
+                           postController.likedList.add(likeKey);
+                           postController.postCount[idData] =  postController.postCount[idData]! + 1;
                         }
 
                         // Update the server with new vote status
-                        upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
+                        upvoteGlobal(context, "Post", dataObj.id, dataObj);
                         reRender.value = !reRender.value;
                       }
                     },
                     child: likeIcon(
-                        context, likedList.contains("liked" + dataObj["_id"])),
+                        context,  postController.likedList.contains("liked" + dataObj.id)),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: Text(
                       reRender.value
-                          ? postCount[dataObj['_id']]! < 0
+                          ?  postController.postCount[dataObj.id]! < 0
                               ? '0'
-                              : (postCount[dataObj['_id']].toString())
-                          : (postCount[dataObj['_id']].toString()),
+                              : ( postController.postCount[dataObj.id].toString())
+                          : ( postController.postCount[dataObj.id].toString()),
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
                           fontSize: 16,
@@ -186,7 +187,7 @@ Widget vote(context, dataObj, data) {
                                           topLeft: Radius.circular(36),
                                           topRight: Radius.circular(36))),
                               child: TribeUnique(
-                                                          id: dataObj["_id"],
+                                                          id: dataObj.id,
                                                           dataObj: dataObj,
                                                           popBox: true.obs,
                                                           
@@ -211,9 +212,9 @@ Widget vote(context, dataObj, data) {
                             width: 6,
                           ),
                           Text(
-                            postCommentCount[idData].toString() == 'null'
-                                ? dataObj["comments"].toString()
-                                : postCommentCount[idData].toString(),
+                             postController.postCommentCount[idData].toString() == 'null'
+                                ? dataObj.comments.toString()
+                                :  postController.postCommentCount[idData].toString(),
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 fontSize: 16,
@@ -233,7 +234,7 @@ Widget vote(context, dataObj, data) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Obx(() {
-                    bool isSaved = userController.savedPostIds.contains(dataObj['_id']);
+                    bool isSaved = userController.savedPostIds.contains(dataObj.id);
                     return GestureDetector(
                         onTap: () {
                            if (userController.maskedName.value.trim().isEmpty) {
@@ -241,10 +242,10 @@ Widget vote(context, dataObj, data) {
                         }
                           else {
                             if (isSaved) {
-                           userController.savedPostIds.remove(dataObj['_id']);
+                           userController.savedPostIds.remove(dataObj.id);
                           } else
                           {
-                            userController.savedPostIds.add(dataObj['_id']);
+                            userController.savedPostIds.add(dataObj.id);
                           }
                             savePostData(context, data);
 

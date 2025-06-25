@@ -17,7 +17,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
+import 'package:flutter_application_code_stakeplot/controllers/post-controller.dart';
+import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
@@ -74,21 +75,21 @@ void expire(response, BuildContext context) {
 }
 
   void clearPostReportHide(int index,[bool f=true]){
-        currentPageTranding.value = 1;
-        currentPageFeed.value = 1;
-        isPostloading.value = false;
-        getTrendingData.clear();
-        getAllPostData.clear();
-        hasMorePostTranding.value = true;
-        hasMorePostFeed.value = true;
-        isPost.value = false;
-        isPostTranding.value = false;
+        postController.currentPageTranding.value = 1;
+        postController.currentPageFeed.value = 1;
+        postController.isPostloading.value = false;
+        postController.feedPostList.clear();
+        postController.trandingPostList.clear();
+        postController.hasMorePostTranding.value = true;
+        postController.hasMorePostFeed.value = true;
+        postController.isPost.value = false;
+        postController.isPostTranding.value = false;
         getPost();
         getTranding();
-        posting.value = false;
-        postDis.value = false;
-        getPostedTranding.value=!getPostedTranding.value;
-        getPosted.value=!getPosted.value;
+        postController.posting.value = false;
+        postController.postDis.value = false;
+        postController.getPostedTranding.value=!postController.getPostedTranding.value;
+        postController.getPosted.value=!postController.getPosted.value;
 
   }
 
@@ -188,16 +189,8 @@ void clearGetX() {
   account = [];
   notificationList.clear();
   hasGetNewNotifications.value = false;
-  // userName = "Loading...".obs;
-  // currentId = "Loading...".obs;
-  // Phone = "Loading...".obs;
-  currency = "Loading...".obs;
-  score = "Loading...".obs;
-  // email = "Loading...".obs;
   changeAvater = "Loading...".obs;
-  // userId = "";
   targetString = "".obs;
-  //  listOfCater =<Plot> [].obs;
   isBankAccountLink.value = true;
   trasactionsData.clear();
   addedMembers.clear();
@@ -227,7 +220,7 @@ void clearGetX() {
   isBankLinked.value=false;
   clearGraph();
   loadBanks.value=true;
-  Get.delete<UserController>();
+ deleteGetControllers();
 }
 
 
@@ -307,4 +300,11 @@ void clearInterest() {
  void initGetControllers()
   {
        Get.put(UserController());
+       Get.put(PostController());
+  }
+
+ void deleteGetControllers()
+  {
+      Get.delete<UserController>();
+      Get.delete<PostController>();
   }

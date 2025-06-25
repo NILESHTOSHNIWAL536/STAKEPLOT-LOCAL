@@ -5,7 +5,7 @@ import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/community_screen.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/controllers/controllerManagement.dart";
-import "package:flutter_application_code_stakeplot/controllers/userController.dart";
+import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 import "package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";

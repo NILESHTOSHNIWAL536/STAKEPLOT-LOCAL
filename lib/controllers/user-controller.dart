@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,10 +37,10 @@ class UserController extends GetxController {
   RxString selectedBank = ''.obs;
 
   // Lists of maps
-  RxList savedList = [].obs;
+  RxList<PostModel> savedList = <PostModel>[].obs;
   RxSet<String> savedPostIds = <String>{}.obs;
 
-  RxList myPostList = [].obs;
+  RxList<PostModel> myPostList = <PostModel>[].obs;
   RxList friendsList = [].obs;
   RxList frdsListOrigin = [].obs;
 

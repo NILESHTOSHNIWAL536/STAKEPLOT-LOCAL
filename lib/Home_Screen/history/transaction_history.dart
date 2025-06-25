@@ -19,6 +19,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 RxBool reloadHistory = false.obs;
 RxString selectedValue = "30".obs;
@@ -157,7 +158,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
     }
 
     // Add a loading indicator at the end if more data is being fetched
-    if (isLoadingMore.value) {
+    if (isLoadingMore.value)
+    {
       displayItems.add('loader'); // Use a distinct marker to avoid confusion
     }
 
@@ -207,20 +209,26 @@ class _TransactionHistoryState extends State<TransactionHistory>
           );
         }
 
-        // Case 3: Loading Indicator
-        else if (!isLoadingMore.value) {
-          return Obx(()=>!isLoadingMore.value? SizedBox.shrink():Padding(
-            padding: EdgeInsets.symmetric(vertical: 20),
-            child: Center(
-              child: CircularProgressIndicator(
-                color:AppColors.primaryColor,
-              ),
-            ),
-          ));
-        }
+
 
         return  Obx(()=>!isLoadingMore.value? SizedBox.shrink(): loadingDelay.value
-            ? Container(width: 50, height: 50, child: Spinner())
+            ?  transactionsHistory.length-1<=0? Container(
+              height: 50,
+              width: 50,
+              child: Spinner(),
+            ):Skeletonizer(
+              child: Column(
+                children: [1,2,3].map((e)=>
+                  historyTransactions(
+                      transactionsHistory[transactionsHistory.length-1],
+                      transactionsHistory[transactionsHistory.length-1].transactionTimestamp.toString(),
+                     transactionsHistory.length-1,
+                     context,
+                     true,
+                     widget.expandedPage
+                   )).toList(),
+              ),
+            )
             : transactionsHistory.isEmpty
                 ? Container(
                   height:MediaQuery.of(context).size.height / 1.38,
@@ -230,41 +238,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
     );
   }
   
-  // void extractTransaction(bool isYearView, List obj) {
-    
-  //   if (isYearView) {
-  //     getTransactionByYear(obj, selectedYear.value);
-  //   } else {
-  //     getTransactionByMonth(obj, selectedMonth.value);
-  //   }
-  // }
-
-  // void getTransactionByYear(List obj, int y) {
-  //   obj.forEach((ele) {
-  //     if (ele is Map<String, dynamic> &&
-  //         isCurrentYear(ele['transactionTimestamp']?.toString() ?? '', y)) {
-  //       transactionsHistory.add(ele);
-  //     }
-  //   });
-  // }
-
-  // void getTransactionByMonth(List obj, int m) {
-  //   obj.forEach((ele) {
-  //     if (ele is Map<String, dynamic> &&
-  //         isCurrentMonth(ele['transactionTimestamp']?.toString() ?? '', m)) {
-  //       transactionsHistory.add(ele);
-  //     }
-  //   });
-  // }
-
-  // bool isCurrentYear(String date, int y) {
-  //   try {
-  //     DateTime parsedDate = DateTime.parse(date); // Parse the date string
-  //     return parsedDate.year == y; // Compare year
-  //   } catch (e) {
-  //     return false; // Return false if parsing fails
-  //   }
-  // }
 
   void showModal() {
     getPdgLoader.value = false;

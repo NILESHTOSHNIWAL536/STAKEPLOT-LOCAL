@@ -546,7 +546,7 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
   );
 }
 
-Widget getBankAccountList(context) {
+Widget getBankAccountList(context,[fromPdf = true]) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
     child: Column(
@@ -592,13 +592,16 @@ Widget getBankAccountList(context) {
                     ),
                   ),
                   child: Checkbox(
-                    value:
-                        accountIdPdf.value == account["accountId"].toString(),
+                    value:( fromPdf ? accountIdPdf.value:accountSelected.value )== account["accountId"].toString(),
                     onChanged: (isChecked) {
-                      if (isChecked == true) {
-                        accountIdPdf.value = account["accountId"].toString();
-                      } else {
-                        accountIdPdf.value = "-";
+                      if (isChecked == true)
+                      {
+                        if(fromPdf) accountIdPdf.value = account["accountId"].toString();
+                        else accountSelected.value = account["accountId"].toString();
+                      } 
+                      else {
+                        if(fromPdf)accountIdPdf.value = "-";
+                        else  accountSelected.value = "-";
                       }
                     },
                   ),
@@ -741,7 +744,6 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
               onChanged: (isChecked) {
                 if (isChecked == true) {
                   accountIdPdf.value = text;
-
                 } else {
                   accountIdPdf.value = "-";
                 }
@@ -764,7 +766,7 @@ Widget filterTransaction(context) {
           getCheckBoxwithText(context, "Debit"),
           getCheckBoxwithText(context, "Cash"),
           bankAccountLinkedList.length >= 2
-              ? getBankAccountList(context)
+              ? getBankAccountList(context,false)
               : SizedBox.shrink(),
           const SizedBox(height: 10),
           InkWell(

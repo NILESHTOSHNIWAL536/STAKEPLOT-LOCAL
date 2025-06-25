@@ -75,8 +75,8 @@ class _PollScreenState extends State<PollScreen> {
         });
       }).toList();
 
-      if (posting.value) return;
-      posting.value = true;
+      if (postController.posting.value) return;
+     postController.posting.value = true;
       // clearInterest();
       createPollOfCommunityPost(context, question.toString(), options, {}, [], "casual");
     } else {
@@ -287,7 +287,7 @@ class _PollScreenState extends State<PollScreen> {
                                           : AppColors.button,
                                       borderRadius: BorderRadius.circular(8)),
                                   child: Center(
-                                    child: Obx(() => posting.value
+                                    child: Obx(() => postController.posting.value
                                         ? Spinner(
                                             size: 30,
                                             color: Colorcodes.white,

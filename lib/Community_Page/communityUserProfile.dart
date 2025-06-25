@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/savedPosts.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Profile/Saved.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -132,7 +133,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                   Navigator.push(
          context,
          MaterialPageRoute(
-             builder: (context) =>SavedPostsScreen()),
+             builder: (context) =>Saved()),
        );
 
               },

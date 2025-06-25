@@ -5,7 +5,6 @@ class TransactionModel {
   final double amount;
   final double currentBalance;
   final DateTime transactionTimestamp;
-  final DateTime valueDate;
   final String? txnId;
   final String narration;
   final String reference;
@@ -35,7 +34,6 @@ class TransactionModel {
     required this.amount,
     required this.currentBalance,
     required this.transactionTimestamp,
-    required this.valueDate,
     this.txnId,
     required this.narration,
     required this.reference,
@@ -60,51 +58,41 @@ class TransactionModel {
     this.v,
   });
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
-      final id = json['_id'] is Map ? json['_id']['\$oid'] : json['_id'];
-      final accountId = json['accountId'] is Map
-          ? json['accountId']['\$oid']
-          : json['accountId'];
-      final userId =
-          json['userId'] is Map ? json['userId']['\$oid'] : json['userId'];
-      final ts = json['transactionTimestamp'] is Map
-          ? json['transactionTimestamp']['\$date']
-          : json['transactionTimestamp'];
-      final vd = json['valueDate'] is Map
-          ? json['valueDate']['\$date']
-          : json['valueDate'];
+    final id = json['_id'] is Map ? json['_id']['\$oid'] : json['_id'];
+    final accountId = json['accountId'] is Map ? json['accountId']['\$oid'] : json['accountId'];
+    final userId = json['userId'] is Map ? json['userId']['\$oid'] : json['userId'];
+    final ts = json['transactionTimestamp'] is Map ? json['transactionTimestamp']['\$date'] : json['transactionTimestamp'];
 
-      return TransactionModel(
-        id: id,
-        type: json['type'] ?? '',
-        mode: json['mode'] ?? '',
-        amount: (json['amount'] ?? 0).toDouble(),
-        currentBalance: (json['currentBalance'] ?? 0).toDouble(),
-        transactionTimestamp: DateTime.parse(ts),
-        valueDate: DateTime.parse(vd),
-        txnId: json['txnId'],
-        narration: json['narration'] ?? '',
-        reference: json['reference'] ?? '',
-        title: json['title'] ?? '',
-        manualTransaction: json['manualTransaction'] ?? false,
-        category: json['category'] ?? '',
-        subcategory: json['subcategory'] ?? '',
-        hidden: json['Hidden'] ?? false,
-        isBill: json['isBill'] ?? false,
-        isDebt: json['isDebt'] ?? false,
-        isSplit: json['isSplit'] ?? false,
-        needsReview: json['needsReview'],
-        isAutoPay: json['isAutoPay'],
-        autoPayId: json['autoPayId'],
-        merchant: json['merchant'],
-        expectedFrequency: json['expectedFrequency'],
-        userId: userId,
-        accountId: accountId,
-        bankId: json['bankId'],
-        bankName: json['bankName'],
-        bankLogo: json['bankLogo'],
-        v: json['__v'],
-      );
-    
+    return TransactionModel(
+      id: id,
+      type: json['type'] ?? '',
+      mode: json['mode'] ?? '',
+      amount: (json['amount'] ?? 0).toDouble(),
+      currentBalance: (json['currentBalance'] ?? 0).toDouble(),
+      transactionTimestamp: DateTime.parse(ts),
+      txnId: json['txnId'] ?? '',
+      narration: json['narration'] ?? '',
+      reference: json['reference'] ?? '',
+      title: json['title'] ?? '',
+      manualTransaction: json['manualTransaction'] ?? false,
+      category: json['category'] ?? '',
+      subcategory: json['subcategory'] ?? '',
+      hidden: json['Hidden'] ?? false,
+      isBill: json['isBill'] ?? false,
+      isDebt: json['isDebt'] ?? false,
+      isSplit: json['isSplit'] ?? false,
+      needsReview: json['needsReview'] ?? '',
+      isAutoPay: json['isAutoPay'] ?? '',
+      autoPayId: json['autoPayId'] ?? '',
+      merchant: json['merchant'] ?? '',
+      expectedFrequency: json['expectedFrequency']?? '',
+      userId: userId,
+      accountId: accountId,
+      bankId: json['bankId'] ?? '',
+      bankName: json['bankName'] ?? '',
+      bankLogo: json['bankLogo'] ?? '',
+      v: json['__v'],
+    );
   }
 
   
@@ -116,7 +104,6 @@ class TransactionModel {
       "amount": amount,
       "currentBalance": currentBalance,
       "transactionTimestamp": transactionTimestamp.toIso8601String(),
-      "valueDate": valueDate.toIso8601String(),
       "txnId": txnId,
       "narration": narration,
       "reference": reference,
@@ -142,8 +129,23 @@ class TransactionModel {
     };
   }
 
-  static List<TransactionModel> listFromJson(List<dynamic> jsonList) {
-    return jsonList.map((json) => TransactionModel.fromJson(json)).toList();
+  static List<TransactionModel> listFromJson(List<dynamic> jsonList)
+  {
+    // return jsonList.map((json) => TransactionModel.fromJson(json)).toList();
+
+  return jsonList
+      .map((json) {
+        try {
+          if (json == null) return null;
+          return TransactionModel.fromJson(json);
+        } catch (e) {
+          print(e);
+          print('Invalid TransactionModel object ignored: $json');
+          return null;
+        }
+      })
+      .whereType<TransactionModel>() // removes nulls
+      .toList();
   }
 
   @override

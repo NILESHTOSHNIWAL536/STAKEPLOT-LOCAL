@@ -17,7 +17,7 @@ class _ReadmoreState extends State<Readmore> {
 
   @override
   Widget build(BuildContext context) {
-    const int trimLines = 2;
+    const int trimLines = 4;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

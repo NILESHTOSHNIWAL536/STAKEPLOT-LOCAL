@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
 class ExploreCard extends StatefulWidget {
-  final dynamic extractdata;
-  final dynamic dataObj;
+  final PostModel extractdata;
+  final PostModel dataObj;
 
   ExploreCard({
     super.key,
@@ -31,7 +32,7 @@ class _ExploreCardState extends State<ExploreCard> {
 
   double getImageHeight(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    bool isSquare = widget.extractdata['isSquareImage'] ?? false;
+    bool isSquare = widget.extractdata.isSquareImage ;
     return isSquare ? width : width * 214 / 402;
   }
 
@@ -109,7 +110,7 @@ class _ExploreCardState extends State<ExploreCard> {
               ),
             ),
             Text(
-              "${widget.extractdata['rating']}/5",
+              "${widget.extractdata.rating}/5",
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.w400,
@@ -129,8 +130,7 @@ class _ExploreCardState extends State<ExploreCard> {
   }
 
   Widget _buildImageSection(BuildContext context) {
-    bool hasMultipleImages = widget.extractdata['images'] != null &&
-        widget.extractdata['images'].length > 1;
+    bool hasMultipleImages = widget.extractdata.images.length > 1;
 
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.015),
@@ -144,7 +144,7 @@ class _ExploreCardState extends State<ExploreCard> {
                   width: MediaQuery.of(context).size.width,
                   child: PageView.builder(
                     controller: _pageController,
-                    itemCount: widget.extractdata['images'].length,
+                    itemCount: widget.extractdata.images.length,
                     itemBuilder: (context, index) =>
                         _buildImageItem(context, index),
                     onPageChanged: (index) {
@@ -154,7 +154,7 @@ class _ExploreCardState extends State<ExploreCard> {
                     },
                   ),
                 )
-              : _buildSingleImage(context, widget.extractdata['images'][0]),
+              : _buildSingleImage(context, widget.extractdata.images[0]),
           // Show dot indicators only if multiple images exist
           if (hasMultipleImages)
             Positioned(
@@ -162,7 +162,7 @@ class _ExploreCardState extends State<ExploreCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
-                  widget.extractdata['images'].length,
+                  widget.extractdata.images.length,
                   (index) => Container(
                     margin: const EdgeInsets.symmetric(horizontal: 4),
                     width: _currentPage == index ? 10 : 6,
@@ -192,7 +192,7 @@ class _ExploreCardState extends State<ExploreCard> {
       colorFilter: null, // Disable any color tint
       color: Colors.transparent,
       // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-      image: NetworkImage(widget.extractdata['images'][index]),
+      image: NetworkImage(widget.extractdata.images[index]),
     );
   }
 
@@ -226,7 +226,7 @@ class _ExploreCardState extends State<ExploreCard> {
               SizedBox(width: MediaQuery.of(context).size.width * 0.02),
               Expanded(
                 child: Text(
-                  "Place: ${widget.extractdata['name']}",
+                  "Place: ${widget.extractdata.place}",
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w500,
@@ -248,7 +248,7 @@ class _ExploreCardState extends State<ExploreCard> {
               SizedBox(width: MediaQuery.of(context).size.width * 0.02),
               Expanded(
                 child: Text(
-                  "Location: ${widget.extractdata['location']}",
+                  "Location: ${widget.extractdata.location}",
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w400,
@@ -283,7 +283,7 @@ class _ExploreCardState extends State<ExploreCard> {
         Wrap(
           spacing: MediaQuery.of(context).size.width * 0.025,
           runSpacing: MediaQuery.of(context).size.height * 0.015,
-          children: (widget.extractdata['budget'] as List).map((budgetItem) {
+          children: (widget.extractdata.budget as List<BudgetModel>).map((budgetItem) {
             return _buildBudgetItem(context, budgetItem);
           }).toList(),
         ),
@@ -291,7 +291,7 @@ class _ExploreCardState extends State<ExploreCard> {
     );
   }
 
-  Widget _buildBudgetItem(BuildContext context, dynamic budgetItem) {
+  Widget _buildBudgetItem(BuildContext context, BudgetModel budgetItem) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: MediaQuery.of(context).size.width * 0.02,
@@ -308,7 +308,7 @@ class _ExploreCardState extends State<ExploreCard> {
         // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "${budgetItem['category']}:",
+            "${budgetItem.category}:",
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w500,
@@ -317,7 +317,7 @@ class _ExploreCardState extends State<ExploreCard> {
             ),
           ),
           Text(
-            "₹${budgetItem['amount']}",
+            "₹${budgetItem.amount}",
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w400,
@@ -361,7 +361,7 @@ class _ExploreCardState extends State<ExploreCard> {
                 color: AppColors.bg1,
               ),
               Text(
-                "${widget.extractdata['tripHighlights'][0]}",
+                "${widget.extractdata.tripHighlights[0]}",
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w500,
@@ -380,7 +380,7 @@ class _ExploreCardState extends State<ExploreCard> {
     // Check if text exceeds one line
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
-        text: widget.extractdata['description'],
+        text: widget.extractdata.description,
         style: FontManager().getTextStyle(
           context,
           lWeight: FontWeight.w400,
@@ -414,7 +414,7 @@ class _ExploreCardState extends State<ExploreCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.extractdata['description'],
+                widget.extractdata.description,
                 maxLines: _showFullDescription ? null : 2,
                 overflow: _showFullDescription
                     ? TextOverflow.visible

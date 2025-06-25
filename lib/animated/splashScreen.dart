@@ -10,7 +10,7 @@ import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
-import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
+import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';

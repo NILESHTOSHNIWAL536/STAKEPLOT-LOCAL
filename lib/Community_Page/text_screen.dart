@@ -262,7 +262,7 @@ class _TextScreenState extends State<TextScreen> {
                             ),
                             child: Center(
                               child: Obx(
-                                () => posting.value
+                                () =>  postController.posting.value
                                     ? Spinner(size: 30, color: Colorcodes.white)
                                     : Text(
                                         strings.continueButton,
@@ -295,23 +295,23 @@ class _TextScreenState extends State<TextScreen> {
        if (contentController.text.isNotEmpty) {
                           
 
-                          if (posting.value) return;
-                          posting.value = true;
+                          if ( postController.posting.value) return;
+                           postController.posting.value = true;
 
                           if (titleController.text.trim().isEmpty ||
                               contentController.text.trim().isEmpty) {
                             snackBarAllFeilds(context);
-                            posting.value = false;
+                             postController.posting.value = false;
                             return;
                           }
 
                           if (selectedImage != null && showImage) {
                              try {
-                        posting.value = true;
+                         postController.posting.value = true;
 
                         final croppedImageFile = await _cropAndSaveImage();
                         if (croppedImageFile == null) {
-                          posting.value = false;
+                           postController.posting.value = false;
                           return;
                         }
 
@@ -329,7 +329,7 @@ class _TextScreenState extends State<TextScreen> {
               
                       } finally {
                         if (mounted) {
-                          posting.value = false;
+                           postController.posting.value = false;
                         }
                       }
                             

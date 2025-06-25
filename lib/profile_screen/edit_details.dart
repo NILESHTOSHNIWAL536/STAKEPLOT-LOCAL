@@ -8,7 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/controllers/userController.dart';
+import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
@@ -30,7 +30,7 @@ class EditDetails extends StatefulWidget {
 class _EditDetailsState extends State<EditDetails> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
-  UserController userController=ControllerManagement.userController;
+  UserController userController = ControllerManagement.userController;
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -41,9 +41,12 @@ class _EditDetailsState extends State<EditDetails> {
   }
 
   final Map<String, TextEditingController> _controllers = {
-    ProfileScreenStrings().nameLabel:TextEditingController(text: ControllerManagement.userController.userName.value),
-    ProfileScreenStrings().emailLabel: TextEditingController(text: ControllerManagement.userController.email.value),
-    ProfileScreenStrings().dobLabel: TextEditingController(text:ControllerManagement.userController.dob.value),
+    ProfileScreenStrings().nameLabel: TextEditingController(
+        text: ControllerManagement.userController.userName.value),
+    ProfileScreenStrings().emailLabel: TextEditingController(
+        text: ControllerManagement.userController.email.value),
+    ProfileScreenStrings().dobLabel: TextEditingController(
+        text: ControllerManagement.userController.dob.value),
     ProfileScreenStrings().numberLabel:
         TextEditingController(text: number.value),
   };
@@ -53,7 +56,7 @@ class _EditDetailsState extends State<EditDetails> {
     super.initState();
     changeAvater.value = userController.avatar.value;
     checkBiometricsStatus();
-     userController.fetchUserInfo();    
+    userController.fetchUserInfo();
   }
 
   @override
@@ -88,6 +91,16 @@ class _EditDetailsState extends State<EditDetails> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
         actions: [
+          IconButton(
+              icon: Icon(Icons.delete, color: Colors.red),
+              onPressed: () {
+                // Show dialog box for confirmation
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DeleteAccountScreen()),
+                );
+              })
         ],
       ),
       body: SingleChildScrollView(
@@ -162,7 +175,8 @@ class _EditDetailsState extends State<EditDetails> {
                 ),
                 Obx(() => (bankAccountLinkedList.isEmpty ||
                         (hideBackAccountPassword.value ||
-                           userController.cupertinoPin.value == "0" ||userController.cupertinoPin.value == "00"))
+                            userController.cupertinoPin.value == "0" ||
+                            userController.cupertinoPin.value == "00"))
                     ? SizedBox.shrink()
                     : InkWell(
                         onTap: () {
@@ -193,17 +207,31 @@ class _EditDetailsState extends State<EditDetails> {
               ),
               child: Column(
                 children: [
-                  _buildNonEditableField(Icons.email,
-                      ProfileScreenStrings().emailLabel, userController.email.value),
+                  _buildNonEditableField(
+                      Icons.email,
+                      ProfileScreenStrings().emailLabel,
+                      userController.email.value),
                   Divider(),
-                  _buildNonEditableField(Icons.person,
-                      ProfileScreenStrings().nameLabel, userController.userName.value),
-                 userController.phone.value=="0"?SizedBox.shrink() :  Divider(),
-                   userController.phone.value=="0"?SizedBox.shrink():  _buildNonEditableField(Icons.phone,
-                      ProfileScreenStrings().numberLabel,  userController.phone.value),
+                  _buildNonEditableField(
+                      Icons.person,
+                      ProfileScreenStrings().nameLabel,
+                      userController.userName.value),
+                  (userController.phone.value == "0" ||
+                          userController.phone.value == '')
+                      ? SizedBox.shrink()
+                      : Divider(),
+                  (userController.phone.value == "0" ||
+                          userController.phone.value == '')
+                      ? SizedBox.shrink()
+                      : _buildNonEditableField(
+                          Icons.phone,
+                          ProfileScreenStrings().numberLabel,
+                          userController.phone.value),
                   Divider(),
-                  _buildNonEditableField(Icons.calendar_today,
-                      ProfileScreenStrings().dobLabel, userController.dob.value),
+                  _buildNonEditableField(
+                      Icons.calendar_today,
+                      ProfileScreenStrings().dobLabel,
+                      userController.dob.value),
                 ],
               ),
             ),
@@ -224,7 +252,7 @@ class _EditDetailsState extends State<EditDetails> {
                 ),
                 InkWell(
                     onTap: () {
-                      number.value =userController.phone.value;
+                      number.value = userController.phone.value;
                       isFromEditDeatils.value = true;
                       Navigator.push(
                         context,
@@ -247,8 +275,6 @@ class _EditDetailsState extends State<EditDetails> {
             const SizedBox(height: 20),
             getListOfBankConnected(),
             const SizedBox(height: 20),
-
-    
           ],
         ),
       ),
@@ -259,12 +285,12 @@ class _EditDetailsState extends State<EditDetails> {
     return Container(
       child: Column(
         children: [
-        Obx(()=>  Column(
-            children: bankAccountLinkedList.map((e) {
-              return _buildAccountDetails(e['bankName'], e['maskedAccNumber'], e,e['bankLogo']);
-            }).toList(),
-          )),
-         
+          Obx(() => Column(
+                children: bankAccountLinkedList.map((e) {
+                  return _buildAccountDetails(
+                      e['bankName'], e['maskedAccNumber'], e, e['bankLogo']);
+                }).toList(),
+              )),
         ],
       ),
     );
@@ -336,65 +362,63 @@ class _EditDetailsState extends State<EditDetails> {
   Widget _buildAccountDetails(
       String bankName, String accountNumber, var data, String logo) {
     return Card(
-      //shape: ,
-      elevation: 2,
-      color: AppColors.mt,
-      child: ListTile(
-        leading: Image.network(
-          logo,
-          width: 30,
-          height: 30,
-          fit: BoxFit.fitWidth,
-        ),
-        title: textStyleOnly2(
-          context: context,
-          text: bankName,
-          fontsize: 14,
-          color: AppColors.bg2,
-          fontWeight: FontWeight.w600,
-        ),
-        subtitle: textStyleOnly2(
-          context: context,
-          text: accountNumber,
-          fontsize: 14,
-          color: AppColors.bg3,
-          fontWeight: FontWeight.w400,
-        ),
-        trailing: IconButton(
-          icon: Icon(Icons.delete, color: AppColors.debitColor),
-          onPressed: () {
-            // Show dialog box for confirmation
-            showDialog(
+        //shape: ,
+        elevation: 2,
+        color: AppColors.mt,
+        child: ListTile(
+            leading: Image.network(
+              logo,
+              width: 30,
+              height: 30,
+              fit: BoxFit.fitWidth,
+            ),
+            title: textStyleOnly2(
               context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Delete Account'),
-                  content: Text('Are you sure you want to delete this account?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
-                      child: Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Add your delete logic here  jhjbhj 
-                        deleteBankAccount(bankid: data['bankId'],AccountId: data['accountId'],context: context);
-                         // Close the dialog
-                      },
-                      child: Text('Delete'),
-                    ),
-                  ],
-                );
-              },
-            );
-          }
-        )
-      )
-        );
-  
-      
-      }
-        
+              text: bankName,
+              fontsize: 14,
+              color: AppColors.bg2,
+              fontWeight: FontWeight.w600,
+            ),
+            subtitle: textStyleOnly2(
+              context: context,
+              text: accountNumber,
+              fontsize: 14,
+              color: AppColors.bg3,
+              fontWeight: FontWeight.w400,
+            ),
+            trailing: IconButton(
+                icon: Icon(Icons.delete, color: AppColors.debitColor),
+                onPressed: () {
+                  // Show dialog box for confirmation
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Delete Account'),
+                        content: Text(
+                            'Are you sure you want to delete this account?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Add your delete logic here  jhjbhj
+                              deleteBankAccount(
+                                  bankid: data['bankId'],
+                                  AccountId: data['accountId'],
+                                  context: context);
+                              // Close the dialog
+                            },
+                            child: Text('Delete'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                })));
+  }
 }
