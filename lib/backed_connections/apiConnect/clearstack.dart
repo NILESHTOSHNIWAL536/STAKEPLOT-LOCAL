@@ -189,16 +189,8 @@ void clearGetX() {
   account = [];
   notificationList.clear();
   hasGetNewNotifications.value = false;
-  // userName = "Loading...".obs;
-  // currentId = "Loading...".obs;
-  // Phone = "Loading...".obs;
-  currency = "Loading...".obs;
-  score = "Loading...".obs;
-  // email = "Loading...".obs;
   changeAvater = "Loading...".obs;
-  // userId = "";
   targetString = "".obs;
-  //  listOfCater =<Plot> [].obs;
   isBankAccountLink.value = true;
   trasactionsData.clear();
   addedMembers.clear();

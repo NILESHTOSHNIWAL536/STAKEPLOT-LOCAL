@@ -87,6 +87,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   sign_in_with_apple: ^7.0.1
   cupertino_icons: ^1.0.8
+  skeletonizer: ^1.4.3
   
  
   

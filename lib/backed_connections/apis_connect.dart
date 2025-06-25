@@ -15,10 +15,9 @@ part  'snackBars.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.9" : "localhost";
-String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
-
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();
 
@@ -65,7 +64,6 @@ RxMap friendsListDetails = {}.obs;
 RxMap chatOfUserList = {}.obs;
 RxMap chatOfUserListData = {}.obs;
 List<Map<String, dynamic>> custom = [];
-
 RxBool hideTransactionReload = false.obs;
 RxBool aboutMe = false.obs;
 RxBool myNotificationBool = false.obs;
@@ -78,9 +76,6 @@ RxInt budgetLength = 0.obs;
 RxInt billLength = 0.obs;
 RxInt debtLength = 0.obs;
 RxInt paymentLength = 0.obs;
-// RxString currentId = "".obs;
-RxString currency = "".obs;
-RxString score = "0".obs;
 RxString splitID = "".obs;
 RxString openTrasactions = "Bills".obs;
 RxString targetString = "".obs;
@@ -105,11 +100,7 @@ RxString accountId = "".obs;
 RxString searchAccountId = "".obs;
 RxString accountIdPdf = "".obs;
 RxString accountSelected = "".obs;
-
-// RxString maskedName = "".obs;
 RxString maskedNameLocal = "".obs;
-// RxList interestedTags = [].obs;
-
 RxString allOrGroupTransactionsName = "All".obs;
 RxList totalInSights = [].obs;
 RxBool getTotalInsightsHistory = false.obs;
@@ -134,32 +125,14 @@ RxInt listIndex = 0.obs;
 RxBool reRender = false.obs;
 RxBool reGraph = false.obs;
 RxBool setDonectChat = false.obs;
-// RxList likedList = [].obs;
-// late Map<dynamic, dynamic> uniquePostDeatils;
-// RxList likedCommentList = [].obs;
-// RxList likedProducts = [].obs;
-// RxMap<String, int> postCount = <String, int>{}.obs;
-// RxMap<String, int> postCommentCount = <String, int>{}.obs;
-// RxMap<String, int> supportCount = <String, int>{}.obs;
-// RxMap<String, bool> postData = <String, bool>{}.obs;
-
 List room = [];
 List<String> account = [];
-
-// RxBool postInter = false.obs;
-// RxBool reloadUniquePost = false.obs;
-// RxBool postDis = false.obs;
-// RxBool posting = false.obs;
-// RxBool getPosted = false.obs;
-// RxBool getPostedTranding = false.obs;
 RxBool acceptReset = false.obs;
 RxBool LoadTag = false.obs;
 RxList budgetList = [].obs;
 final RxList<Debt> debts = <Debt>[].obs;
 RxList debtsList = [].obs;
 RxList historyListData = [].obs;
-// RxList getTrendingData = [].obs;
-// RxList getAllPostData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
 RxBool getGraphData = false.obs;
 RxBool loadBanks = true.obs;
@@ -181,13 +154,11 @@ RxBool graphTransaction = false.obs;
 List<String> labels = [];
 List<String> labels2 = [];
 RxDouble maxYValue = 0.0.obs;
-// RxList hiddentrasactionsHistory = [].obs;
 RxList<TransactionModel> hiddentrasactionsHistory = <TransactionModel>[].obs;
 RxList<TransactionModel> transactionsHistory = <TransactionModel>[].obs;
 RxBool getHiddenHistory = false.obs;
 RxBool isYearView = false.obs;
 RxBool loadChatdataOnChnage = false.obs;
-// RxList transactionsHistory = <dynamic>[].obs;
 RxBool loadingDelay = false.obs;
 RxDouble totalDebitValue = 0.0.obs;
 RxDouble totalExpandedValue = 0.0.obs;
@@ -196,11 +167,7 @@ RxMap<String, List<double>> transactionChatGraphoverall = new RxMap();
 RxDouble maxYValueoverall = 0.0.obs;
 RxBool getGraphDataoverall = false.obs;
 RxDouble totalDebitValuePercent = 0.0.obs;
-// RxList historyExploriaListData = [].obs;
-// RxList getExploriaTrendingData = [].obs;
-// RxMap<String, int> postExploriaCount = <String, int>{}.obs;
-// RxMap<String, int> postExploriaCommentCount = <String, int>{}.obs;
-// RxMap<String, int> supportExploriaCount = <String, int>{}.obs;
+
 
 final RxList<String> monthLabels = <String>[].obs;
 final Rx<Map<String, List<double>>> currentChartData =

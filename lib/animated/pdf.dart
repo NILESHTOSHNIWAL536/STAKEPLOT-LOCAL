@@ -144,7 +144,7 @@ printDoc(data, context, title) {
 
 pw.Widget buildPDFTable(data, context, start,bool flag) {
   final pdfContainers = <pw.Widget>[];
-  int no = flag? 10: selectedValue.value == "6" ? 22 : 15;
+  int no = flag? 14: selectedValue.value == "6" ? 22 : 20;
   for (var i = start; i < data.length; i += no) {
     List chunk = data.sublist(i, (i + no > data.length) ? data.length : i + no);
     startIndex.value += chunk.length;
