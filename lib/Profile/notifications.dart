@@ -228,13 +228,19 @@ class _NotificationsState extends State<Notifications> {
     switch (type) {
       case "friendRequest":
         if (e['status'] == 'accepted') {
-          print("here check $e['isMaskedConnection']");
-          var msg = e['isMaskedConnection'] ? "connected to you" : "accepted your friend request";
+          var notificationAvatar = e['isMaskedConnection']
+              ? e['avatarType']
+              : e['from_name'] as String?;
+          var msg = e['isMaskedConnection']
+              ? "connected to you"
+              : "accepted your friend request";
+
           return _buildMessageCard(
               "${e['from_name'] ?? 'Someone'} $msg",
               e['from_id'] as String? ?? "",
-              e['from_name'] as String? ?? "",
-              time);
+              notificationAvatar ?? '',
+              time,
+              e['isMaskedConnection']);
         }
         return _buildFriendRequestCard(
             e['from_name'] as String? ?? "Unknown",
@@ -248,25 +254,32 @@ class _NotificationsState extends State<Notifications> {
             "${e['username'] ?? 'Someone'} has shared the bill for ${e['billname'] ?? 'unknown'} of ₹${(double.tryParse(e['amount']?.toString() ?? '400') ?? 400).toStringAsFixed(1)}",
             e['id'] as String? ?? "",
             e['username'] as String? ?? "",
-            time);
+            time,
+            false);
       case "roomBill":
         return _buildMessageCard(
             "${e['from_name'] ?? 'Someone'} has shared the bill in Room",
             e['from_id'] as String? ?? "",
             e['from_name'] as String? ?? "",
-            time);
+            time,
+            false);
       case "room":
         return _buildMessageCard(
             "${e['from_name'] ?? 'Someone'} has added you to the room ${e['roomName'] ?? 'unknown'}",
             e['from_id'] as String? ?? "",
             e['from_name'] as String? ?? "",
-            time);
+            time,
+            false);
       case "comment":
+        var notificationAvatar = e['isMaskedConnection']
+            ? e['avatarType']
+            : e['username'] as String?;
         return _buildMessageCard(
             "${e['username'] ?? 'Someone'} has commented on your post",
             e['id'] as String? ?? "",
-            e['username'] as String? ?? "",
-            time);
+            notificationAvatar ?? "",
+            time,
+            true);
       case "lendRequest":
         return _buildLendRequestCard(
             e['from_name'] as String? ?? "Unknown",
@@ -284,22 +297,25 @@ class _NotificationsState extends State<Notifications> {
             e['from_id'] as String? ?? "",
             //modified here for user avtar from  -----
             e['username'] as String? ?? "", //from_name
-            time);
+            time,
+            false);
       case "lendSettled":
         return _buildMessageCard(
             "${e['from_name'] ?? 'Someone'} has settled your loan of ${e['amount'] ?? '0'} for the item: ${e['name'] ?? 'unknown'}",
             e['id'] as String? ?? "",
             e['from_name'] as String? ?? "",
-            time);
+            time,
+            false);
       case "splitSettled":
         return _buildMessageCard(
             "${e['from_name'] ?? 'Someone'} has settled your Split of ${(double.tryParse(e['amount']?.toString() ?? '0') ?? 0).toStringAsFixed(1)} for the item: ${e['name'] ?? 'unknown'}",
             e['id'] as String? ?? "",
             e['from_name'] as String? ?? "",
-            time);
+            time,
+            false);
       case "FetchedData":
         return _buildMessageCard(
-            "🔥 Data has been successfully fetched!", "", "", time);
+            "🔥 Data has been successfully fetched!", "", "", time, false);
       case "lendApprovalRequest":
         return _buildApprovalCard(
             "${e['from_name'] ?? 'Someone'} has requested approval for settling ${e['name'] ?? 'unknown'} with an amount of ${e['amount'] ?? '00'}",
@@ -315,14 +331,16 @@ class _NotificationsState extends State<Notifications> {
             "${e['from_name'] ?? 'This user'} has deleted their account, but some split amounts are still pending.",
             e['bill_id'] as String? ?? "",
             e['from_name'] as String? ?? "",
-            time);
+            time,
+            false);
 
       case "deleteAccountLend":
         return _buildMessageCard(
             "${e['from_name'] ?? 'This user'} has deleted their account, but some lend amounts are still pending.",
             e['bill_id'] as String? ?? "",
             e['from_name'] as String? ?? "",
-            time);
+            time,
+            false);
 
       case "splitApprovalRequest":
         return _buildApprovalCard(
@@ -342,14 +360,15 @@ class _NotificationsState extends State<Notifications> {
             e['id'] as String? ?? "",
             // modified here from avatarType to from_name
             e['from_name'] as String? ?? "",
-            time);
+            time,
+            false);
       default:
         return const SizedBox(child: Text("Unknown notification type"));
     }
   }
 
   Widget _buildMessageCard(
-      String message, String id, String avatar, String time) {
+      String message, String id, String avatar, String time, bool isMasked) {
     bool isFetchedData =
         message.contains("🔥 Data has been successfully fetched!");
 
@@ -357,7 +376,10 @@ class _NotificationsState extends State<Notifications> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!isFetchedData && avatar.isNotEmpty)
-          AvatarProfile(name: avatar, width: 20, height: 17, background: "")
+          if (!isMasked)
+            AvatarProfile(name: avatar, width: 20, height: 17, background: "")
+          else
+            AvatarProfile2(url: avatar, width: 20, height: 20)
         else if (!isFetchedData)
           SizedBox(width: MediaQuery.of(context).size.width * 0.06),
         if (!isFetchedData)

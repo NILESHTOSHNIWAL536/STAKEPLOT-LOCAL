@@ -69,6 +69,7 @@ void getNotifications(context) async {
   );
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
+    print("notifications from the backend $his");
     notificationList.clear();
     notificationList.addAll(his['data']);
     notificationList.forEach((req) {
@@ -91,11 +92,11 @@ void getuserPost(id) async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    UserController userController=ControllerManagement.userController;
-   userController.myPostList.clear();
-   userController.myPostList.addAll(PostModel.listFromJson(obj));
-   userController.myPostList.forEach((element) {
-     postController.postCount[element.id] = element.upvotes;
+    UserController userController = ControllerManagement.userController;
+    userController.myPostList.clear();
+    userController.myPostList.addAll(PostModel.listFromJson(obj));
+    userController.myPostList.forEach((element) {
+      postController.postCount[element.id] = element.upvotes;
       postController.postCommentCount[element.id] = element.comments;
     });
   } else {}
@@ -107,7 +108,7 @@ void getMaskendUsers(bool flag) async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    UserController userController=ControllerManagement.userController;
+    UserController userController = ControllerManagement.userController;
     if (flag) {
       userController.maskedConnections.clear();
       userController.maskedConnections.addAll(obj);
@@ -133,10 +134,10 @@ void getSaved() async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-  
+
     userController.savedList.clear();
     userController.savedList.addAll(PostModel.listFromJson(obj));
-    userController.savedList.forEach((element){
+    userController.savedList.forEach((element) {
       postController.postCount[element.id] = element.upvotes;
       postController.postCommentCount[element.id] = element.comments;
     });
@@ -200,7 +201,7 @@ void editUserDetails(
     context, Map<String, TextEditingController> controller) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  UserController userController =ControllerManagement.userController;
+  UserController userController = ControllerManagement.userController;
 
   try {
     final response = await http.post(

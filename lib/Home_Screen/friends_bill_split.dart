@@ -183,10 +183,10 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                 SnackbarData().selectOnlyOneFriendLend,
                               );
                               return;
-                            }
-                            // Show LendDetailsModal
+                            } // Show LendDetailsModal
                             final Map<String, String?>? lendDetails =
-                                await showModalBottomSheet<Map<String, String?>>(
+                                await showModalBottomSheet<
+                                    Map<String, String?>>(
                               context: context,
                               isScrollControlled: true,
                               shape: const RoundedRectangleBorder(
@@ -203,7 +203,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                 );
                               },
                             );
-      
+
                             if (lendDetails != null) {
                               // Return a map with member details, message, and due date
                               Navigator.pop(context, {
@@ -222,7 +222,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                               widget.category ?? 'Uncategorized',
                               widget.subcategory ?? 'General',
                             );
-      
+                            print("amounts for split $amounts");
+
                             if (amounts != null) {
                               Navigator.pop(context, amounts);
                             }
@@ -288,7 +289,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
               child: SizedBox(
                 height: 70,
                 width: MediaQuery.of(context).size.width,
-                child:userController.friendsList.isEmpty
+                child: userController.friendsList.isEmpty
                     ? Center(
                         child: Text(
                           HomepageStringsDart().noFriendsAvailable,
@@ -302,7 +303,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                         scrollDirection: Axis.horizontal,
                         itemCount: userController.friendsList.length,
                         itemBuilder: (context, index) {
-                          String values = userController.friendsList[index]['_id'];
+                          String values =
+                              userController.friendsList[index]['_id'];
                           return InkWell(
                             onTap: () {},
                             child: Column(
@@ -321,23 +323,29 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                         addedMembers.clear();
                                         addedUser.add(values);
                                         addedMembers.add({
-                                          "name": userController.friendsList[index]['name'],
+                                          "name": userController
+                                              .friendsList[index]['name'],
                                           "id": values,
-                                          'avatar': userController.friendsList[index]['avatar'],
-                                          'avatarBackGround': userController.friendsList[index]
-                                                  ['avatarBackGround'] ??
-                                              defaultBackGround.value,
+                                          'avatar': userController
+                                              .friendsList[index]['avatar'],
+                                          'avatarBackGround':
+                                              userController.friendsList[index]
+                                                      ['avatarBackGround'] ??
+                                                  defaultBackGround.value,
                                           "balance": 200,
                                         });
                                       } else {
                                         addedUser.add(values);
                                         addedMembers.add({
-                                          "name": userController.friendsList[index]['name'],
+                                          "name": userController
+                                              .friendsList[index]['name'],
                                           "id": values,
-                                          'avatar': userController.friendsList[index]['avatar'],
-                                          'avatarBackGround': userController.friendsList[index]
-                                                  ['avatarBackGround'] ??
-                                              defaultBackGround.value,
+                                          'avatar': userController
+                                              .friendsList[index]['avatar'],
+                                          'avatarBackGround':
+                                              userController.friendsList[index]
+                                                      ['avatarBackGround'] ??
+                                                  defaultBackGround.value,
                                           "balance": 200,
                                         });
                                       }
@@ -351,10 +359,12 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                       children: [
                                         Center(
                                           child: AvatarProfile(
-                                              name: userController.friendsList[index]['name'],
+                                              name: userController
+                                                  .friendsList[index]['name'],
                                               width: 12,
                                               height: 12,
-                                              background: userController.friendsList[index]
+                                              background: userController
+                                                          .friendsList[index]
                                                       ['avatarBackGround'] ??
                                                   defaultBackGround.value),
                                         ),
@@ -408,7 +418,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
             var filteredList = [];
             if (value.isEmpty) {
               userController.friendsList.clear();
-              userController.friendsList.addAll( userController.frdsListOrigin);
+              userController.friendsList.addAll(userController.frdsListOrigin);
             } else {
               userController.frdsListOrigin.forEach((element) {
                 if (element['name']

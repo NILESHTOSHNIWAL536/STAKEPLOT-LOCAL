@@ -26,23 +26,17 @@ Future<void> loginUser(TextEditingController emailController,
       'userpassword': passwordController.text.toString(),
       'deviceInfo': deviceData,
     });
-
-    if (response.statusCode == 409)
-    {
-      forceLoginShowModal(context, response, emailController, passwordController);
-    }
-    else if (response.statusCode == 500)
-    {
+    print("response for login ${response.body}");
+    if (response.statusCode == 409) {
+      forceLoginShowModal(
+          context, response, emailController, passwordController);
+    } else if (response.statusCode == 500) {
       snackBarCalled(context, SnackbarData().serverError, Colors.red);
-    }
-    else if (getFlagOfResponse(response)) 
-    {
+    } else if (getFlagOfResponse(response)) {
       loginCalledData(response, context);
       await screenDataLocalStorage();
       Navigator.pushReplacementNamed(context, '/home');
-    } 
-    else
-    {
+    } else {
       acceptReset.value = false;
       snackBarCalledfail(context, SnackbarData().invalidCredentials);
     }
@@ -104,7 +98,8 @@ void loginCalledData(response, context) async {
   isBankAccountLink.value = body['data']['isBankAccountLinked'];
   acceptReset.value = false;
   getPhoneNo(body);
-  Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+  Navigator.of(context)
+      .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
 }
 
 void getPhoneNo(body) {
@@ -134,11 +129,11 @@ void getOTP(context, String name, String email) async {
 Future<bool> getOTPDeleteCall(
     BuildContext context, String name, String email) async {
   try {
-    var response = await postDataApiCallwithOutSharedPref('${url}/otp/resend-otp',
+    var response = await postDataApiCallwithOutSharedPref(
+        '${url}/otp/resend-otp',
         {'email': email, 'name': name, 'type': "deleteAccount"});
-        print("response for otp :${response.body}");
+    print("response for otp :${response.body}");
     if (getFlagOfResponse(response)) {
-      
       snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
       return true;
     } else {
@@ -185,13 +180,13 @@ void forceLogoutUser(
     if (getFlagOfResponse(response)) {
       final body = json.decode(response.body);
       loginCalledData(response, context);
-      sendNotificationsToDevice(body['data']['_id'], context, "You have been logged out from StakePlot!");
+      sendNotificationsToDevice(body['data']['_id'], context,
+          "You have been logged out from StakePlot!");
     } else {
       snackBarCalled(context, SnackbarData().cantLogoutUser, Colors.red);
     }
   } catch (e) {
     print(e);
-     
   }
 }
 

@@ -30,21 +30,27 @@ RxInt indexFlag = 0.obs;
 // RxBool isPostTranding = false.obs;
 // RxBool isTrending = false.obs;
 
-Widget noFriend(context,[text = "",bool isMasked=false,]) {
-  UserController userController=ControllerManagement.userController;
+Widget noFriend(
+  context, [
+  text = "",
+  bool isMasked = false,
+]) {
+  UserController userController = ControllerManagement.userController;
   return GestureDetector(
     onTap: () {
-                if( userController.friendsList.isEmpty)
-                        {
-                          if(isMasked){
-                             Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>TribeSearch(isMasked: true,),
-                            ),
-                          );
-                          }else Navigator.pushNamed(context, '/TribeSearch');
-                        }
+      if (userController.friendsList.isEmpty) {
+        if (isMasked) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TribeSearch(
+                isMasked: true,
+              ),
+            ),
+          );
+        } else
+          Navigator.pushNamed(context, '/TribeSearch');
+      }
     },
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -104,10 +110,8 @@ Widget popUpBox(id, context) {
   );
 }
 
-Widget vote(context,PostModel dataObj, data) {
+Widget vote(context, PostModel dataObj, data) {
   String idData = dataObj.id;
-  String likeKey = "liked" + dataObj.id;
-  bool isLiked =  postController.likedList.contains(likeKey);
   return Obx(() => Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 23.0),
         child: Row(
@@ -117,42 +121,48 @@ Widget vote(context,PostModel dataObj, data) {
             Container(
               child: Row(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (userController.maskedName.value.trim().isEmpty) {
-                        MaskedNameDialogBox.showMaskedNameDialog(context);
-                      } else {
-                        String likeKey = "liked" + dataObj.id;
-                        bool isLiked =  postController.likedList.contains(likeKey);
+                  Obx(() {
+                    String likeKey = "liked" + dataObj.id;
+                    bool isLiked = userController.likedPosts.contains(likeKey);
 
-                        // Toggle like status
-                        if (isLiked) {
-                           postController.likedList.remove(likeKey);
-                           postController.postCount[idData] =  postController.postCount[idData]! - 1;
-                          if ( postController.postCount[idData]! < 0) {
-                             postController.postCount[idData] = 0;
-                          }
+                    print("likekey from the backend: $likeKey");
+
+                    print("is post liked by the user already: $isLiked");
+                    return GestureDetector(
+                      onTap: () {
+                        if (userController.maskedName.value.trim().isEmpty) {
+                          MaskedNameDialogBox.showMaskedNameDialog(context);
                         } else {
-                           postController.likedList.add(likeKey);
-                           postController.postCount[idData] =  postController.postCount[idData]! + 1;
-                        }
+                          if (isLiked) {
+                            userController.likedPosts.remove(likeKey);
+                            postController.postCount[idData] =
+                                postController.postCount[idData]! - 1;
+                            if (postController.postCount[idData]! < 0) {
+                              postController.postCount[idData] = 0;
+                            }
+                          } else {
+                            userController.likedPosts.add(likeKey);
+                            postController.postCount[idData] =
+                                postController.postCount[idData]! + 1;
+                          }
 
-                        // Update the server with new vote status
-                        upvoteGlobal(context, "Post", dataObj.id, dataObj);
-                        reRender.value = !reRender.value;
-                      }
-                    },
-                    child: likeIcon(
-                        context,  postController.likedList.contains("liked" + dataObj.id)),
-                  ),
+                          // Update the server with new vote status
+                          upvoteGlobal(context, "Post", dataObj.id, dataObj);
+                          reRender.value = !reRender.value;
+                        }
+                      },
+                      child: likeIcon(context, isLiked),
+                    );
+                  }),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: Text(
                       reRender.value
-                          ?  postController.postCount[dataObj.id]! < 0
+                          ? postController.postCount[dataObj.id]! < 0
                               ? '0'
-                              : ( postController.postCount[dataObj.id].toString())
-                          : ( postController.postCount[dataObj.id].toString()),
+                              : (postController.postCount[dataObj.id]
+                                  .toString())
+                          : (postController.postCount[dataObj.id].toString()),
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
                           fontSize: 16,
@@ -160,14 +170,6 @@ Widget vote(context,PostModel dataObj, data) {
                     ),
                   ),
                   SizedBox(width: 4),
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     savePostData(context, data);
-                  //   },
-                  //   child: Icon(Icons.save),
-                  // )
-                  // declare this in your StatefulWidget
-
                   InkWell(
                     onTap: () {
                       if (userController.maskedName.value.trim().isEmpty) {
@@ -176,22 +178,21 @@ Widget vote(context,PostModel dataObj, data) {
                         showModalBottomSheet(
                           context: context,
                           backgroundColor: AppColors.commentbg,
-                           isScrollControlled: true,
+                          isScrollControlled: true,
                           builder: (context) {
                             return Container(
-                                padding: const EdgeInsets.symmetric(vertical:16.0),
-                                  width: MediaQuery.sizeOf(context).width,
-                                  decoration: BoxDecoration(
-                                      color: AppColors.commentbg,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(36),
-                                          topRight: Radius.circular(36))),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16.0),
+                              width: MediaQuery.sizeOf(context).width,
+                              decoration: BoxDecoration(
+                                  color: AppColors.commentbg,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(36),
+                                      topRight: Radius.circular(36))),
                               child: TribeUnique(
-                                                          id: dataObj.id,
-                                                          dataObj: dataObj,
-                                                          popBox: true.obs,
-                                                          
-                                                        
+                                id: dataObj.id,
+                                dataObj: dataObj,
+                                popBox: true.obs,
                               ),
                             );
                           },
@@ -212,9 +213,12 @@ Widget vote(context,PostModel dataObj, data) {
                             width: 6,
                           ),
                           Text(
-                             postController.postCommentCount[idData].toString() == 'null'
+                            postController.postCommentCount[idData]
+                                        .toString() ==
+                                    'null'
                                 ? dataObj.comments.toString()
-                                :  postController.postCommentCount[idData].toString(),
+                                : postController.postCommentCount[idData]
+                                    .toString(),
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 fontSize: 16,
@@ -229,28 +233,25 @@ Widget vote(context,PostModel dataObj, data) {
             ),
             Container(
               // color: Colors.green,
-              width: MediaQuery.sizeOf(context).width/5,
+              width: MediaQuery.sizeOf(context).width / 5,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Obx(() {
-                    bool isSaved = userController.savedPostIds.contains(dataObj.id);
+                    bool isSaved =
+                        userController.savedPostIds.contains(dataObj.id);
                     return GestureDetector(
                         onTap: () {
-                           if (userController.maskedName.value.trim().isEmpty) {
-                          MaskedNameDialogBox.showMaskedNameDialog(context);
-                        }
-                          else {
+                          if (userController.maskedName.value.trim().isEmpty) {
+                            MaskedNameDialogBox.showMaskedNameDialog(context);
+                          } else {
                             if (isSaved) {
-                           userController.savedPostIds.remove(dataObj.id);
-                          } else
-                          {
-                            userController.savedPostIds.add(dataObj.id);
-                          }
+                              userController.savedPostIds.remove(dataObj.id);
+                            } else {
+                              userController.savedPostIds.add(dataObj.id);
+                            }
                             savePostData(context, data);
-
                           }
-                          
                         },
                         child: SvgPicture.asset(
                           isSaved
@@ -289,12 +290,10 @@ Widget vote(context,PostModel dataObj, data) {
       ));
 }
 
-// Helper function to get the appropriate icon based on like status
 // Helper function to get the appropriate SVG based on like status
 Widget likeIcon(BuildContext context, bool isLiked) {
   return AnimatedContainer(
       width: 30,
-      // color: Colors.green,
       duration: const Duration(milliseconds: 300), // Animation duration
       curve: Curves.easeInOut, // Animation curve
       height: isLiked ? 28 : 26, // Change height on like

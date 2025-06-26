@@ -94,29 +94,21 @@ Widget historyTransactions(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         // uncomment this 
-        // if (showCheckBox.value) {
-        //   String id = '${transaction.id}';
-        //   bool isChecked = redioButton.containsKey(id);
-        //   if (!isChecked) {
-        //     redioButton[id] = id;
-        //     redioButtonIndex[id] = index;
-        //     if (isManual) addManually.add(id);
-        //     HapticFeedback.selectionClick();
-        //   } else {
-        //     redioButton.remove(id);
-        //     redioButtonIndex.remove(id);
-        //     if (isManual) addManually.remove(id);
-        //     HapticFeedback.selectionClick();
-        //   }
-        // } else if (!isManual && !hide) {
-        //   showModalBottomSheet(
-        //     context: context,
-        //     builder: (BuildContext context) {
-        //       return TransactionDetailsPage(transaction: transaction);
-        //     },
-        //   );
-        // }
-        if (!isManual && !showCheckBox.value) {
+        if (showCheckBox.value) {
+          String id = '${transaction.id}';
+          bool isChecked = redioButton.containsKey(id);
+          if (!isChecked) {
+            redioButton[id] = id;
+            redioButtonIndex[id] = index;
+            if (isManual) addManually.add(id);
+            HapticFeedback.selectionClick();
+          } else {
+            redioButton.remove(id);
+            redioButtonIndex.remove(id);
+            if (isManual) addManually.remove(id);
+            HapticFeedback.selectionClick();
+          }
+        } else if (!isManual && !hide) {
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
@@ -124,6 +116,14 @@ Widget historyTransactions(
             },
           );
         }
+        // if (!isManual && !showCheckBox.value) {
+        //   showModalBottomSheet(
+        //     context: context,
+        //     builder: (BuildContext context) {
+        //       return TransactionDetailsPage(transaction: transaction);
+        //     },
+        //   );
+        // }
       },
       onLongPress: () {
         if (hide) return;
@@ -208,129 +208,110 @@ Widget historyTransactions(
                   // Main Transaction Content
 
                   // remove gesture detector here
-                  GestureDetector(
-                    onTap: () {
-                      if (!showCheckBox.value) return;
-                      if (hide) return;
-                      String id = '${transaction.id}';
-                      bool isChecked = redioButton.containsKey(id);
-
-                      if (!isChecked) {
-                        redioButton[id] = id;
-                        redioButtonIndex[id] = index;
-
-                        HapticFeedback.selectionClick(); // Feedback on check
-                      } else {
-                        redioButton.remove(id);
-                        redioButtonIndex.remove(id);
-                        HapticFeedback.selectionClick();
-                      }
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width /
-                          (showCheckBox.value ? 1.2 : 1.1),
-                      padding: EdgeInsets.only(
-                          top: fontSizes.padding / 6,
-                          bottom: fontSizes.padding / 6),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          (isManual || isReview)
-                              ? reviewTagTransactions(
-                                  isReview,
-                                  fontSizes.scaleFactor,
-                                  isSplit,
-                                  fontSizes.margin,
-                                  fontSizes.badgeSize,
-                                  fontSizes.fontSizeSmall,
-                                  context,
-                                  index,
-                                  id)
-                              : SizedBox(height: fontSizes.padding),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: fontSizes.padding),
-                            child: Row(
-                              children: [
-                                getIconAvtar(fontSizes.avatarSize, category,
-                                    fontSizes.scaleFactor),
-                                SizedBox(width: fontSizes.padding),
-                                Flexible(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            // color: Colorcodes.red,
-                                            width: MediaQuery.sizeOf(context)
-                                                    .width /
-                                                2.4,
-                                            child: textStyle(
-                                              context: context,
-                                              text: !isManual
-                                                  ? nameOfUser
-                                                  : subcategory,
-                                              c: AppColors.accentColor,
-                                              fontsize:
-                                                  fontSizes.fontSizeMedium,
-                                              fontWeight: FontWeight.w600,
-                                              lineHeight: 1.5,
-                                            ),
-                                          ),
-                                          Container(
-                                            // color: Colorcodes.red,
-                                            child: textStyle(
-                                              context: context,
-                                              text: formatAmount,
-                                              c: amtColor,
-                                              fontsize: fontSizes.fontSizeLarge,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      textStyle(
-                                        context: context,
-                                        text: isManual
-                                            ? formattedDateManual
-                                            : formattedDate,
-                                        c: AppColors.primaryColor
-                                            .withOpacity(0.7),
-                                        fontsize: fontSizes.fontSizeSmall,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: getIconsForHideUpdateSplit(
-                                fontSizes.iconSize,
-                                fontSizes.padding,
-                                category,
-                                amount,
-                                logo,
+                  Container(
+                    width: MediaQuery.of(context).size.width /
+                        (showCheckBox.value ? 1.2 : 1.1),
+                    padding: EdgeInsets.only(
+                        top: fontSizes.padding / 6,
+                        bottom: fontSizes.padding / 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        (isManual || isReview)
+                            ? reviewTagTransactions(
+                                isReview,
+                                fontSizes.scaleFactor,
+                                isSplit,
+                                fontSizes.margin,
+                                fontSizes.badgeSize,
+                                fontSizes.fontSizeSmall,
                                 context,
                                 index,
-                                subcategory,
-                                transaction,
-                                isReview,
-                                id,
-                                isManual,
-                                hide),
+                                id)
+                            : SizedBox(height: fontSizes.padding),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: fontSizes.padding),
+                          child: Row(
+                            children: [
+                              getIconAvtar(fontSizes.avatarSize, category,
+                                  fontSizes.scaleFactor),
+                              SizedBox(width: fontSizes.padding),
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          // color: Colorcodes.red,
+                                          width: MediaQuery.sizeOf(context)
+                                                  .width /
+                                              2.4,
+                                          child: textStyle(
+                                            context: context,
+                                            text: !isManual
+                                                ? nameOfUser
+                                                : subcategory,
+                                            c: AppColors.accentColor,
+                                            fontsize:
+                                                fontSizes.fontSizeMedium,
+                                            fontWeight: FontWeight.w600,
+                                            lineHeight: 1.5,
+                                          ),
+                                        ),
+                                        Container(
+                                          // color: Colorcodes.red,
+                                          child: textStyle(
+                                            context: context,
+                                            text: formatAmount,
+                                            c: amtColor,
+                                            fontsize: fontSizes.fontSizeLarge,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    textStyle(
+                                      context: context,
+                                      text: isManual
+                                          ? formattedDateManual
+                                          : formattedDate,
+                                      c: AppColors.primaryColor
+                                          .withOpacity(0.7),
+                                      fontsize: fontSizes.fontSizeSmall,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          (isManual || isReview)
-                              ? SizedBox(height: 0)
-                              : SizedBox(height: fontSizes.padding / 2),
-                        ],
-                      ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: getIconsForHideUpdateSplit(
+                              fontSizes.iconSize,
+                              fontSizes.padding,
+                              category,
+                              amount,
+                              logo,
+                              context,
+                              index,
+                              subcategory,
+                              transaction,
+                              isReview,
+                              id,
+                              isManual,
+                              hide),
+                        ),
+                        (isManual || isReview)
+                            ? SizedBox(height: 0)
+                            : SizedBox(height: fontSizes.padding / 2),
+                      ],
                     ),
                   ),
                

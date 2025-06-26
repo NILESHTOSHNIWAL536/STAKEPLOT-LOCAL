@@ -140,11 +140,11 @@ class _EditDetailsState extends State<EditDetails> {
                     //   },
                     // );
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => UserStatsScreen()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => UserStatsScreen()),
+                    // );
                   },
                   child: Padding(
                     padding: EdgeInsets.only(top: 0.0),

@@ -373,7 +373,6 @@ void getUserLend(context) async {
     getlendUsers.value = !getlendUsers.value;
   }
 }
-
 void sendNotificationsToDevice(id, context, msg,
     [String screen = "/home",
     String title = "",

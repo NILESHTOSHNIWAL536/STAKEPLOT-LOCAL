@@ -35,7 +35,8 @@ class ModalContent extends StatefulWidget {
   _ModalContentState createState() => _ModalContentState();
 }
 
-class _ModalContentState extends State<ModalContent> with TickerProviderStateMixin {
+class _ModalContentState extends State<ModalContent>
+    with TickerProviderStateMixin {
   String? selectedCategory;
   String? selectedSubCategory;
   final TextEditingController _amountController = TextEditingController();
@@ -59,7 +60,7 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-  
+
     getAllTransaction(context);
     getCategoryData();
     filteredCategories = categories.keys.toList();
@@ -69,17 +70,18 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    
+
     socket = IO.io(urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
-     speechService = SpeechToTextService(
+    speechService = SpeechToTextService(
       context: context,
       categories: categories,
       customCategoryList: customCategoryList.cast<Map<String, dynamic>>(),
       isDebit: widget.isDebit,
       tickerProvider: this,
-      onSpeechProcessed: (double parsedAmount, String category, String? subCategory) {
+      onSpeechProcessed:
+          (double parsedAmount, String category, String? subCategory) {
         setState(() {
           amount = parsedAmount;
           _amountController.text = parsedAmount.toString();
@@ -87,7 +89,8 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
           selectedSubCategory = subCategory ?? '';
           selectedCategory2 = selectedCategory;
           selectedSubCategory2 = selectedSubCategory;
-          fin = '$selectedCategory (${selectedSubCategory?.isEmpty == true ? 'None' : selectedSubCategory})';
+          fin =
+              '$selectedCategory (${selectedSubCategory?.isEmpty == true ? 'None' : selectedSubCategory})';
           _isAmountFieldFocused = false;
           isCategoryFieldExpanded = false;
         });
@@ -159,7 +162,7 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
         context,
         "cash",
       );
-        snackBarCalled(context,"Successfully added", Colors.black);
+      snackBarCalled(context, "Successfully added", Colors.black);
       Navigator.pop(context); // Close modal
     } catch (error) {
       snackBarCalled(context, 'Failed to add transaction: $error', Colors.red);
@@ -216,7 +219,6 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
   }
 
   void _showCelebration() {
-
     setState(() {
       _isCelebrationVisible = true;
     });
@@ -263,7 +265,6 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
                             children: [
                               Expanded(child: AmountWidget()),
                               const SizedBox(width: 8),
-                             
                             ],
                           ),
                           const SizedBox(height: 16),
@@ -355,19 +356,19 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
       inputFormatters: allowDecimalInput(),
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
-        // Speech to text for future 
-          //  suffixIcon: widget.isDebit 
-          //   ? IconButton(
-          //       icon: Icon(
-          //         speechService.isListening ? Icons.mic : Icons.mic_none,
-          //         color: AppColors.primaryColor,
-          //       ),
-          //       onPressed: speechService.isListening
-          //           ? speechService.stopListening
-          //           : speechService.startListening,
-          //       tooltip: 'Speech to Text',
-          //     )
-          //   : null,
+        // Speech to text for future
+        //  suffixIcon: widget.isDebit
+        //   ? IconButton(
+        //       icon: Icon(
+        //         speechService.isListening ? Icons.mic : Icons.mic_none,
+        //         color: AppColors.primaryColor,
+        //       ),
+        //       onPressed: speechService.isListening
+        //           ? speechService.stopListening
+        //           : speechService.startListening,
+        //       tooltip: 'Speech to Text',
+        //     )
+        //   : null,
         hintText: HomepageStringsDart().enterAmount,
         fillColor: AppColors.button,
         filled: true,
@@ -631,6 +632,7 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
       children: [
         GestureDetector(
           onTap: () async {
+            Navigator.pop(context);
             FocusScope.of(context).unfocus();
             if (isLend.value) {
               addedUser.clear();
@@ -641,16 +643,20 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
 
             final result =
                 await showCustomFriendsModal(context, amount ?? 0.0, false);
-            if (result != null && addedMembers.isNotEmpty) {
-              splitUserAmountManualTransaction(
-                context,
-                amount.toString(),
-                addedMembers,
-                selectedCategory2.toString(),
-                selectedSubCategory2.toString(),
-                amounts: result as Map<String, double>,
-              );
-            }
+            print("amounts $result");
+
+            // if (result != null && addedMembers.isNotEmpty) {
+            //   print("result $result ");
+
+            //   splitUserAmountManualTransaction(
+            //     context,
+            //     amount.toString(),
+            //     addedMembers,
+            //     selectedCategory2.toString(),
+            //     selectedSubCategory2.toString(),
+            //     amounts: result as Map<String, double>,
+            //   );
+            // }
             setState(() {
               _isAmountFieldFocused = false; // Prevent amount field refocus
             });
@@ -686,6 +692,14 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
             isLend.value = true;
 
             await showCustomFriendsModal(context, amount ?? 0.0, true);
+            addLendUserAmount(
+              context,
+              amount.toString(),
+              addedMembers,
+              selectedCategory2.toString(),
+              selectedSubCategory2.toString(),
+            );
+            Navigator.pop(context);
             setState(() {
               _isAmountFieldFocused = false; // Prevent amount field refocus
             });
@@ -727,26 +741,29 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
                 FocusScope.of(context).unfocus();
                 if (cashInAndOut.value) return;
                 cashInAndOut.value = true;
-                if (isSplit.value && addedMembers.isNotEmpty) {
-                  splitBill(selectedCategory2.toString(), amount.toString(),selectedSubCategory2.toString(), true);
-                } else if (isLend.value && addedMembers.isNotEmpty) {
-                  addLendUserAmount(
-                    context,
-                    amount.toString(),
-                    addedMembers,
-                    selectedCategory2.toString(),
-                    selectedSubCategory2.toString(),
-                  );
-                } else {
-                  addTransaction(
-                    amount.toString(),
-                    selectedSubCategory2.toString(),
-                    selectedCategory2.toString(),
-                    context,
-                    "cash",
-                  );
-                }
+                // if (isSplit.value && addedMembers.isNotEmpty) {
+                //   splitBill(selectedCategory2.toString(), amount.toString(),
+                //       selectedSubCategory2.toString(), true);
+                // }
+                //  else if (isLend.value && addedMembers.isNotEmpty) {
+                //   addLendUserAmount(
+                //     context,
+                //     amount.toString(),
+                //     addedMembers,
+                //     selectedCategory2.toString(),
+                //     selectedSubCategory2.toString(),
+                //   );
+                // }
+                // else {
+                addTransaction(
+                  amount.toString(),
+                  selectedSubCategory2.toString(),
+                  selectedCategory2.toString(),
+                  context,
+                  "cash",
+                );
               },
+              // },
               child: Obx(() => cashInAndOut.value
                   ? getspinner(context)
                   : getButton(context, HomepageStringsDart().addButton)),
@@ -768,7 +785,8 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
     isLend.value = false;
     isSplit.value = false;
 
-    splitUserAmountManualTransaction(context, amount, addedMembers, categories, subCategories);
+    splitUserAmountManualTransaction(
+        context, amount, addedMembers, categories, subCategories);
   }
 
   void addSocketMessage(addedUser, String amount, String splitName,
@@ -829,12 +847,117 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
             userName: userController.userName.value,
             userAvatar: userController.avatar.value,
             isLendMode: isLendMode,
+            category: selectedCategory2,
+            subcategory: selectedSubCategory2,
           ),
         );
       },
     );
   }
 
+  // void splitUserAmountManualTransaction(
+  //   BuildContext context,
+  //   String totalAmount,
+  //   List members,
+  //   String name,
+  //   String subCategories, {
+  //   Map<String, double>? amounts,
+  // }) async {
+  //   double? parsedTotalAmount = double.tryParse(totalAmount);
+  //   if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
+  //     snackBarCalled(context, SnackbarData().invalidAmountEntered, Colors.red);
+  //     return;
+  //   }
+
+  //   if (members.isEmpty) {
+  //     snackBarCalled(context, SnackbarData().noMembersSelected, Colors.red);
+  //     return;
+  //   }
+
+  //   List<Map<String, dynamic>> nameList = [];
+  //   if (amounts != null) {
+  //     members.forEach((element) {
+  //       double memberAmount = amounts[element['id']] ?? 0.0;
+  //       nameList.add({
+  //         'member': element['id'],
+  //         'markAsComplete': false,
+  //         'amount': memberAmount,
+  //       });
+  //     });
+  //   } else {
+  //     double amountPerPerson = parsedTotalAmount / (members.length + 1);
+  //     members.forEach((element) {
+  //       nameList.add({
+  //         'member': element['id'],
+  //         'markAsComplete': false,
+  //         'amount': amountPerPerson,
+  //       });
+  //     });
+  //     nameList.add({
+  //       'member': userController.userId.value,
+  //       'markAsComplete': false,
+  //       'amount': amountPerPerson,
+  //     });
+  //   }
+
+  //   double calculatedTotal =
+  //       nameList.fold(0.0, (sum, item) => sum + item['amount']);
+
+  //   var response = await postDataApiCall(
+  //     '${url}/split',
+  //     {
+  //       "subcategory": subCategories,
+  //       "category": name,
+  //       "amount": calculatedTotal,
+  //       "paymentStatus": nameList,
+  //       "image": '',
+  //       "ismanual": true,
+  //     },
+  //   );
+
+  //   if (getFlagOfResponse(response)) {
+  //     final body = json.decode(response.body);
+  //     splitID.value = body['id']['_id'];
+  //     for (var member in members) {
+  //       double memberAmount = amounts?[member['id']] ??
+  //           (parsedTotalAmount / (members.length + 1));
+  //       String formattedAmount = memberAmount.toStringAsFixed(2);
+
+  //       sendNotificationsToDevice(
+  //           member['id'],
+  //           context,
+  //           "${userController.userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
+  //           "/chat");
+  //     }
+
+  //     if (amounts != null) {
+  //       members.forEach((member) {
+  //         double memberAmount = amounts[member['id']] ?? 0.0;
+  //         addSocketMessage([member], memberAmount.toString(), name,
+  //             splitID.value, parsedTotalAmount);
+  //       });
+  //     } else {
+  //       double amountPerPerson = parsedTotalAmount / (members.length + 1);
+  //       addSocketMessage(members, amountPerPerson.toString(), name,
+  //           splitID.value, parsedTotalAmount);
+  //     }
+  //     currentPage = 1;
+  //     isLoadingMore.value = false;
+  //     searchController.clear();
+  //     getAllTransaction(context);
+
+  //     snackBarCalled(context, SnackbarData().splitAmountSuccess, Colors.black);
+  //     Navigator.pop(context);
+  //     addedMembers.clear();
+  //     addedUser.clear();
+  //     _showCelebration();
+  //   } else {
+  //     snackBarCalled(context, SnackbarData().splitAmountError, Colors.red);
+  //   }
+
+  //   acceptReset.value = false;
+  //   cashInAndOut.value = false;
+  // }
   void splitUserAmountManualTransaction(
     BuildContext context,
     String totalAmount,
@@ -843,21 +966,30 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
     String subCategories, {
     Map<String, double>? amounts,
   }) async {
+    print("---- SPLIT MANUAL TRANSACTION START ----");
+
     double? parsedTotalAmount = double.tryParse(totalAmount);
+    print("Parsed total amount: $parsedTotalAmount");
+
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
+      print("Invalid total amount entered.");
       snackBarCalled(context, SnackbarData().invalidAmountEntered, Colors.red);
       return;
     }
 
     if (members.isEmpty) {
+      print("No members selected for split.");
       snackBarCalled(context, SnackbarData().noMembersSelected, Colors.red);
       return;
     }
 
     List<Map<String, dynamic>> nameList = [];
+
     if (amounts != null) {
+      print("Using custom amounts for members...");
       members.forEach((element) {
         double memberAmount = amounts[element['id']] ?? 0.0;
+        print("Member ${element['id']} - Amount: $memberAmount");
         nameList.add({
           'member': element['id'],
           'markAsComplete': false,
@@ -866,7 +998,10 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
       });
     } else {
       double amountPerPerson = parsedTotalAmount / (members.length + 1);
+      print(
+          "No custom amounts, using equal split: ₹$amountPerPerson per person");
       members.forEach((element) {
+        print("Member ${element['id']} assigned amount: ₹$amountPerPerson");
         nameList.add({
           'member': element['id'],
           'markAsComplete': false,
@@ -878,11 +1013,15 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
         'markAsComplete': false,
         'amount': amountPerPerson,
       });
+      print(
+          "User ${userController.userId.value} assigned amount: ₹$amountPerPerson");
     }
 
     double calculatedTotal =
         nameList.fold(0.0, (sum, item) => sum + item['amount']);
+    print("Calculated total from nameList: ₹$calculatedTotal");
 
+    print("Calling API to split bill...");
     var response = await postDataApiCall(
       '${url}/split',
       {
@@ -895,14 +1034,19 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
       },
     );
 
+    print("API Response status: ${response.statusCode}");
+
     if (getFlagOfResponse(response)) {
+      print("Split request successful");
       final body = json.decode(response.body);
       splitID.value = body['id']['_id'];
+      print("Split ID received: ${splitID.value}");
+
       for (var member in members) {
         double memberAmount = amounts?[member['id']] ??
             (parsedTotalAmount / (members.length + 1));
         String formattedAmount = memberAmount.toStringAsFixed(2);
-
+        print("Sending notification to ${member['id']} for ₹$formattedAmount");
         sendNotificationsToDevice(
             member['id'],
             context,
@@ -911,31 +1055,41 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
       }
 
       if (amounts != null) {
+        print("Sending socket messages using custom amounts...");
         members.forEach((member) {
           double memberAmount = amounts[member['id']] ?? 0.0;
+          print("Socket: Member ${member['id']} - ₹$memberAmount");
           addSocketMessage([member], memberAmount.toString(), name,
               splitID.value, parsedTotalAmount);
         });
       } else {
         double amountPerPerson = parsedTotalAmount / (members.length + 1);
+        print("Sending socket messages using equal split: ₹$amountPerPerson");
         addSocketMessage(members, amountPerPerson.toString(), name,
             splitID.value, parsedTotalAmount);
       }
+
+      print("Resetting UI and values...");
       currentPage = 1;
       isLoadingMore.value = false;
       searchController.clear();
       getAllTransaction(context);
 
+      print("Showing success snackbar and celebration");
       snackBarCalled(context, SnackbarData().splitAmountSuccess, Colors.black);
       Navigator.pop(context);
       addedMembers.clear();
       addedUser.clear();
       _showCelebration();
     } else {
+      print("Split request failed");
       snackBarCalled(context, SnackbarData().splitAmountError, Colors.red);
     }
 
+    print("Resetting flags");
     acceptReset.value = false;
     cashInAndOut.value = false;
+
+    print("---- SPLIT MANUAL TRANSACTION END ----");
   }
 }

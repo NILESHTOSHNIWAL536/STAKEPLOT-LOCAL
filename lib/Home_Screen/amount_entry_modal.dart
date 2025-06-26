@@ -35,8 +35,7 @@ class AmountEntryModal extends StatefulWidget {
       this.flag = true,
       this.ismanual = true,
       this.cate,
-      this.subcate
-      })
+      this.subcate})
       : super(key: key);
 
   @override
@@ -56,8 +55,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     super.initState();
     int totalParticipants = widget.selectedFriends.length + 1;
     initialEqualAmount = widget.totalAmount / totalParticipants;
-
-  
 
     amountControllers[widget.userId] = TextEditingController(
       text: initialEqualAmount.toStringAsFixed(2),
@@ -103,8 +100,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       currentTotal += amount;
     });
     leftoverAmount = widget.totalAmount - currentTotal;
-
-   
 
     setState(() {});
   }
@@ -161,7 +156,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     }
 
     calculateTotal();
-   
   }
 
   @override
@@ -183,7 +177,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              
               'Enter Amounts (Total: ₹${widget.totalAmount.toStringAsFixed(2)})',
               style: FontManager().getTextStyle(
                 context,
@@ -200,8 +193,11 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                 children: [
                   Row(
                     children: [
-                       AvatarProfile(name: widget.userName, width: 12, height: 12, background: userController.avatarBackGround.value ),
-                     
+                      AvatarProfile(
+                          name: widget.userName,
+                          width: 12,
+                          height: 12,
+                          background: userController.avatarBackGround.value),
                       const SizedBox(width: 10),
                       Text(
                         widget.userName,
@@ -258,10 +254,13 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                     children: [
                       Row(
                         children: [
-                          AvatarProfile(name: friend['name'], width: 10, height: 12, background: friend['avatarBackGround']??defaultBackGround.value),
-                          
+                          AvatarProfile(
+                              name: friend['name'],
+                              width: 10,
+                              height: 12,
+                              background: friend['avatarBackGround'] ??
+                                  defaultBackGround.value),
                           const SizedBox(width: 10),
-
                           Text(
                             friend['name'],
                             style: FontManager().getTextStyle(
@@ -270,7 +269,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                               color: AppColors.bg1,
                             ),
                           ),
-
                         ],
                       ),
                       SizedBox(
@@ -356,35 +354,77 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                 ),
                 Center(
                   child: InkWell(
-                    onTap: () {
-                      if (widget.flag) {
-                        if (leftoverAmount != 0) {
-                          return;
-                        }
-                        Map<String, double> amounts = {};
-                        amountControllers.forEach((id, controller) {
-                          amounts[id] = double.tryParse(
-                                  controller.text.replaceAll(',', '')) ??
-                              0.0;
-                        });
-                     
-                        splitUserAmount(
-                          context,
-                          widget.totalAmount.toString(),
-                          widget.selectedFriends,
-                          widget.cate ?? 'Uncategorized',
-                          widget.subcate ?? 'General',
-                          amounts: amounts,
-                          ismanual: widget.ismanual,
-                        );
-                        Navigator.pop(
-                            context); // Pop after processing when flag is true
-                      } 
-                      else {
-                        Navigator.pop(context); // Just pop when flag is false
-                      }
-                    },
-                    child: buttonContainer(context, "Continue"),
+                    onTap: leftoverAmount == 0
+                        ? () {
+                            Map<String, double> amounts = {};
+                            amountControllers.forEach((id, controller) {
+                              amounts[id] = double.tryParse(
+                                      controller.text.replaceAll(',', '')) ??
+                                  0.0;
+                            });
+                            print("amounts in here $amounts}");
+
+                            print("flag is ${widget.flag}");
+
+                            print(" not hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+
+                            splitUserAmount(
+                              context,
+                              widget.totalAmount.toString(),
+                              widget.selectedFriends,
+                              widget.cate ?? 'Uncategorized',
+                              widget.subcate ?? 'General',
+                              amounts: amounts,
+                              ismanual: widget.ismanual,
+                            );
+                            print(" may be hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+                           if(widget.flag){
+                             Navigator.pop(context);
+                             
+                           } 
+                           Navigator.pop(context);
+                          
+                              
+
+                          }
+                        : null,
+                    // onTap: () {
+                    //   if (widget.flag) {
+                    //     if (leftoverAmount != 0) {
+                    //       return;
+                    //     }
+                    //     Map<String, double> amounts = {};
+                    //     amountControllers.forEach((id, controller) {
+                    //       amounts[id] = double.tryParse(
+                    //               controller.text.replaceAll(',', '')) ??
+                    //           0.0;
+                    //     });
+
+                    //     splitUserAmount(
+                    //       context,
+                    //       widget.totalAmount.toString(),
+                    //       widget.selectedFriends,
+                    //       widget.cate ?? 'Uncategorized',
+                    //       widget.subcate ?? 'General',
+                    //       amounts: amounts,
+                    //       ismanual: widget.ismanual,
+                    //     );
+                    //     Navigator.pop(
+                    //         context); // Pop after processing when flag is true
+                    //   }
+                    //   else {
+                    //     Navigator.pop(context); // Just pop when flag is false
+                    //   }
+                    // },
+
+                    child: buttonContainer(
+                      context,
+                      "Continue",
+                      leftoverAmount == 0
+                          ? AppColors.primaryColor
+                          : Colors.grey, // Grey out when disabled
+                      leftoverAmount == 0 ? AppColors.bg5 : Colors.white,
+                    ),
                   ),
                 )
               ],
@@ -408,7 +448,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     if (addedUser.isEmpty) {
       return;
     }
-    UserController controller =ControllerManagement.userController;
+    UserController controller = ControllerManagement.userController;
     for (var rec in addedUser) {
       String room1 = rec['name'] + controller.userName.value;
       String room2 = controller.userName.value + rec['name'];
@@ -448,20 +488,20 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     List members,
     String category,
     String subcategory, {
-    Map<String, double>? amounts, 
+    Map<String, double>? amounts,
     bool ismanual = true,
   }) async {
-       UserController controller =ControllerManagement.userController;
+    UserController controller = ControllerManagement.userController;
     double? parsedTotalAmount = double.tryParse(totalAmount);
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
-    
-      snackBarCalled(context,SnackbarData().invalidAmountEntered, Colors.red);
+      snackBarCalled(context, SnackbarData().invalidAmountEntered, Colors.red);
       return;
     }
-
+    print(" all things $category");
+    print(" all things $subcategory");
+    print(" all things $amounts");
     if (members.isEmpty) {
-    
-      snackBarCalled(context,SnackbarData().noMembersSelected, Colors.red);
+      snackBarCalled(context, SnackbarData().noMembersSelected, Colors.red);
       return;
     }
 
@@ -478,7 +518,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           'amount': memberAmount,
         });
         calculatedTotal += memberAmount;
-    
       });
       // Include the user's amount if present
       if (amounts.containsKey(userController.userId.value)) {
@@ -489,7 +528,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           'amount': userAmount,
         });
         calculatedTotal += userAmount;
-      
       }
     } else {
       double amountPerPerson = parsedTotalAmount / (members.length + 1);
@@ -500,30 +538,27 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           'amount': amountPerPerson,
         });
         calculatedTotal += amountPerPerson;
-      
       });
       nameList.add({
         'member': userController.userId.value,
         'markAsComplete': false,
         'amount': amountPerPerson,
-        'avatarBackGround' : userController.avatarBackGround.value
+        'avatarBackGround': userController.avatarBackGround.value
       });
       calculatedTotal += amountPerPerson;
-    
     }
 
     // Verify total matches
     if ((calculatedTotal - parsedTotalAmount).abs() > 0.01) {
       // Allow small floating-point errors
-     
+
       return;
     }
 
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     if (accessToken == null) {
-     
-      snackBarCalled(context,SnackbarData().authenticationError, Colors.red);
+      snackBarCalled(context, SnackbarData().authenticationError, Colors.red);
       return;
     }
 
@@ -537,29 +572,28 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         "subcategory": subcategory,
         "category": category,
         "amount": calculatedTotal,
-        "ismanual": true ,
-        "transactionId": !ismanual? transactionsId.value:"",
+        "ismanual": true,
+        "transactionId": !ismanual ? transactionsId.value : "",
         "paymentStatus": nameList,
         "image": '',
       }),
     );
 
-  
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       splitID.value = body['id']['_id'];
-      
+
       // Send notifications and socket messages with individual amounts
       for (var member in members) {
         double memberAmount = amounts?[member['id']] ??
             (parsedTotalAmount / (members.length + 1));
         String formattedAmount = memberAmount.toStringAsFixed(2);
-      
+
         sendNotificationsToDevice(
-          member['id'],
-          context,
-          "${controller.userName.value} has sent you a Split Bill of $category ($subcategory) for ₹$formattedAmount","/chat"
-        );
+            member['id'],
+            context,
+            "${controller.userName.value} has sent you a Split Bill of $category ($subcategory) for ₹$formattedAmount",
+            "/chat");
         addSocketMessage(
           [member],
           formattedAmount,
@@ -573,10 +607,9 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         // getAllTransaction(context);
       }
 
-      snackBarCalled(context,SnackbarData().splitAmountSent, Colors.black);
+      snackBarCalled(context, SnackbarData().splitAmountSent, Colors.black);
     } else {
-    
-      snackBarCalled(context,SnackbarData().splitError, Colors.red);
+      snackBarCalled(context, SnackbarData().splitError, Colors.red);
     }
 
     acceptReset.value = false;

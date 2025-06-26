@@ -446,30 +446,36 @@ class _ChatState extends State<Chat> {
                 );
               }),
         ),
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            color: AppColors.backgroundColor,
-            borderRadius:
-                BorderRadius.circular(24), // Specify the border radius
-          ),
-          child: Column(
-            children: [
-              Obx(() => Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      reverse: true,
-                      itemCount: messages.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return _buildMessage(messages[index]);
-                      },
-                    ),
-                  )),
-              Container(
-                child: SafeArea(
-                    child: InputDate("Message", TextInputType.name, search)),
-              ),
-            ],
+        body: GestureDetector(
+           onTap: () {
+          // Dismiss the keyboard when tapping anywhere on the screen
+          FocusScope.of(context).unfocus();
+        },
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              color: AppColors.backgroundColor,
+              borderRadius:
+                  BorderRadius.circular(24), // Specify the border radius
+            ),
+            child: Column(
+              children: [
+                Obx(() => Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        reverse: true,
+                        itemCount: messages.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _buildMessage(messages[index]);
+                        },
+                      ),
+                    )),
+                Container(
+                  child: SafeArea(
+                      child: InputDate("Message", TextInputType.name, search)),
+                ),
+              ],
+            ),
           ),
         ),
       ),
