@@ -285,10 +285,12 @@ void resetCupertinoPin(BuildContext context) async {
     bool isDeviceSupported = await auth.isDeviceSupported();
     print("Can check biometrics: $canCheckBiometrics");
     print("Device supports authentication: $isDeviceSupported");
-
     if (canCheckBiometrics || isDeviceSupported) {
       // Check if any biometrics are enrolled
-      List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
+      List<BiometricType> availableBiometrics =await auth.getAvailableBiometrics();
+          if (availableBiometrics.contains(BiometricType.strong) || availableBiometrics.contains(BiometricType.face)) {
+  // Specific types of biometrics are available. Use checks like this with caution!
+}
       print("Available biometrics: $availableBiometrics");
 
       // Attempt authentication regardless of availableBiometrics to handle face lock
@@ -296,21 +298,24 @@ void resetCupertinoPin(BuildContext context) async {
         localizedReason: ProfileScreenStrings().resetPinAuthReason,
         options: const AuthenticationOptions(
           biometricOnly: false, // Allow PIN/password fallback
-          stickyAuth: true,
+          stickyAuth: false,
           useErrorDialogs: true,
+          sensitiveTransaction: true,
         ),
       );
       print("Authentication result: $isAuthenticated");
     } else {
       // Device does not support biometrics or authentication, bypass authentication
-      print("Device does not support authentication. Bypassing authentication.");
+      print(
+          "Device does not support authentication. Bypassing authentication.");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('No authentication methods available. Proceeding to reset PIN.'),
+          content: Text(
+              'No authentication methods available. Proceeding to reset PIN.'),
           backgroundColor: AppColors.accentColor,
         ),
       );
-      isAuthenticated = true;
+      return;
     }
   } catch (e) {
     // Log the error for debugging and show error message

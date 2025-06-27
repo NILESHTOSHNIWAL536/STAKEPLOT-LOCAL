@@ -301,7 +301,7 @@ void storeData(context, data, String opt, Avatarurl) async {
 
     acceptReset.value = false;
     if (!boolvar) {
-      snackBarCalledSignup(context, data2['error']['explanation'], Colors.red);
+      snackBarCalledfail(context, data2['error']['explanation'], Colors.red);
       return;
     }
     final body = json.decode(response.body);
@@ -312,6 +312,6 @@ void storeData(context, data, String opt, Avatarurl) async {
     clearStack(context);
     Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
   } catch (e) {
-    snackBarCalledSignup(context, SignupData().errorInvalidOtp, Colors.red);
+    snackBarCalledfail(context, SignupData().errorInvalidOtp, Colors.red);
   }
 }

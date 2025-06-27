@@ -28,8 +28,8 @@ class CommunityScreenStrings {
   String postExploria = "Post Exploria";
   // TextScreen and ImageScreen (shared)
   String newPost = "New post";
-  String enterTitle = "Enter";
-  String addThoughts = "Add a caption";
+  String enterTitle = "Enter title ";
+  String addThoughts = "Add description";
   String continueButton = "Continue";
   String postedSuccess = "Posted";
   String trending = "Now";
@@ -60,7 +60,7 @@ class CommunityScreenStrings {
   String rateThisPlace = "Rate this place:";
 // tribechat
   String messagesTitle = "Messages";
-  String messagesReceived = "{count} messages received";
+  String messagesReceived = "{count} message(s) received";
   String noChatsAvailable = "Oops! Inbox is empty";
   String noMessagesYet = "No messages yet";
 

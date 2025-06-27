@@ -6,12 +6,10 @@ import "package:flutter_application_code_stakeplot/Community_Page/community_scre
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/controllers/controllerManagement.dart";
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
-import "package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart";
-import "package:flutter_application_code_stakeplot/finSpace/marks.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart";
@@ -174,6 +172,8 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         try {
           String tabName = _tabNames[i];
           ScreenTimeTracker().switchTab(tabName);
+          // added
+          
          
           if (i == 0)
             pushName(HomePage());

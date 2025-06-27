@@ -291,7 +291,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
   void getBankAccount() {
     if (listOfBankAccount.isEmpty) {
-      snackBarCalled(context,SnackbarData().pickOneBank, Colorcodes.red);
+      snackBarCalledfail(context,SnackbarData().pickOneBank, Colorcodes.red);
       return;
     } else {
     

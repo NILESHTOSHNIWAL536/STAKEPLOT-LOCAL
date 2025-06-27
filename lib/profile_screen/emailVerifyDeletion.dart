@@ -387,7 +387,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     try {
       String? otpInt = otp.toString();
       if (otpInt == null) {
-        snackBarCalled(context, 'Invalid OTP format', Colors.red);
+        snackBarCalledfail(context, 'Invalid OTP format', Colors.red);
         return;
       }
       await verifyDeleteOTP(context, widget.email, otpInt);

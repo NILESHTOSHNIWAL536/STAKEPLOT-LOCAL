@@ -53,7 +53,7 @@ Future<void> getFoodieFundsDetails(BuildContext context, String id) async {
     foodieFundsDetailsRemainders.refresh();
     getFoodieFundsUsers.value = !getFoodieFundsUsers.value;
   } else {
-    snackBarCalled(context, SnackbarData().failedToFetchFoodieFundsDetails);
+    snackBarCalledfail(context, SnackbarData().failedToFetchFoodieFundsDetails);
   }
 }
 
@@ -168,7 +168,7 @@ void aboutuser(context, String about) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, SnackbarData().userInfoUpdated, Colors.black);
   } else {
-    snackBarCalled(context, SnackbarData().errorUpdatingUserInfo, Colors.red);
+    snackBarCalledfail(context, SnackbarData().errorUpdatingUserInfo, Colors.red);
   }
 }
 
@@ -193,7 +193,7 @@ void addAccount(context, String account, String money) async {
         context, SnackbarData().accountAddedSuccessfully, Colors.black);
     Navigator.pushNamed(context, '/home');
   } else {
-    snackBarCalled(context, SnackbarData().errorAddingAccount, Colors.red);
+    snackBarCalledfail(context, SnackbarData().errorAddingAccount, Colors.red);
   }
 }
 
@@ -225,7 +225,7 @@ void editUserDetails(
 
     bool boolvar = responce['success'];
     if (!boolvar) {
-      snackBarCalled(context, responce['error']['explanation'], Colors.red);
+      snackBarCalledfail(context, responce['error']['explanation'], Colors.red);
       return;
     }
     if (response.statusCode == 200 || response.statusCode == 201) {

@@ -415,7 +415,7 @@ class _ExploreCardState extends State<ExploreCard> {
             children: [
               Text(
                 widget.extractdata.description,
-                maxLines: _showFullDescription ? null : 2,
+                maxLines: _showFullDescription ? null : 1,
                 overflow: _showFullDescription
                     ? TextOverflow.visible
                     : TextOverflow.ellipsis,

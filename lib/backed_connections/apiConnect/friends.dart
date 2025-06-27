@@ -27,7 +27,7 @@ void addUserAsFrd(id,context,[type="friend"])async
             snackBarCalled(context,SnackbarData().addingFriend,Colors.black);  
            userController.fetchUserInfo();    
       }else{
-           snackBarCalled(context,SnackbarData().addFriendFail,Colors.red);
+           snackBarCalledfail(context,SnackbarData().addFriendFail,Colors.red);
       }
 }
 
@@ -37,7 +37,7 @@ void  rejectFrdRequest(body,context)async
   var response=await postDataApiCall(urlPath, {});
       if(!getFlagOfResponse(response))
       {
-          snackBarCalled(context,SnackbarData().friendRejected ,Colors.red);
+          snackBarCalledfail(context,SnackbarData().friendRejected ,Colors.red);
       }
 }
 
@@ -58,7 +58,7 @@ void   addUsersendRequest(id,name,context)async
             sendNotificationsToDevice(id,context,"${controller.userName.value} has sent you a friend request");
             snackBarCalled(context,SnackbarData().sendingRequest,Colors.black);
       }else{
-           snackBarCalled(context,SnackbarData().requestAddFail,Colors.red);
+           snackBarCalledfail(context,SnackbarData().requestAddFail,Colors.red);
       }
 }
 
@@ -75,7 +75,7 @@ void  removeRequest(id,name,context)async
       {
             snackBarCalled(context,SnackbarData().requestRemoved,Colors.black);
       }else{
-           snackBarCalled(context,SnackbarData().requestRemoveFail,Colors.red);
+           snackBarCalledfail(context,SnackbarData().requestRemoveFail,Colors.red);
       }
 }
 

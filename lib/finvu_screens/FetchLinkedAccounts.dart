@@ -78,7 +78,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
       //  print('handleId.value');
       // seletedAccountInfomations
       if (seletedAccountIds.isEmpty) {
-        snackBarCalled(
+        snackBarCalledfail(
             context, "No account was selected. Please add an account.");
       }
       fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo) {
@@ -108,7 +108,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
         ),
       );
     } catch (e) {
-      snackBarCalled(context, "Error while approving the consent request.");
+      snackBarCalledfail(context, "Error while approving the consent request.");
       print("d.consentIntentId error");
     }
     debugPrint('approveConsentRequest');

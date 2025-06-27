@@ -360,7 +360,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
         builder: (BuildContext context) => verify(fipId, fipDetails, info, context),
       );
     } catch (e) {
-      snackBarCalledSignup(context, SnackbarData().maxRetries);
+      snackBarCalledfail(context, SnackbarData().maxRetries);
     }
   }
 
@@ -472,7 +472,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
               child: InkWell(
                 onTap: () {
                   if (_otpCode.value.length < 6) {
-                    snackBarCalledSignup(context, SnackbarData().enterValidOtp);
+                    snackBarCalledfail(context, SnackbarData().enterValidOtp);
                   } else {
                     otpCount.value++;
                     linkAccount(_otpCode.value, fid, context, fipDetails);

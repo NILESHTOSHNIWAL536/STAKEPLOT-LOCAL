@@ -124,7 +124,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
       acceptReset.value = false;
       if (!boolvar) {
-        snackBarCalledSignup(
+        snackBarCalledfail(
             context, data2['error']['explanation'], Colors.red);
         return;
       }
@@ -136,7 +136,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       clearStack(context);
       Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
     } catch (e) {
-      snackBarCalledSignup(context, SignupData().errorInvalidOtp, Colors.red);
+      snackBarCalledfail(context, SignupData().errorInvalidOtp, Colors.red);
     }
   }
 

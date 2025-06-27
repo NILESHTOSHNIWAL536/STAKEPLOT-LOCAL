@@ -165,7 +165,7 @@ class _ModalContentState extends State<ModalContent>
       snackBarCalled(context, "Successfully added", Colors.black);
       Navigator.pop(context); // Close modal
     } catch (error) {
-      snackBarCalled(context, 'Failed to add transaction: $error', Colors.red);
+      snackBarCalledfail(context, 'Failed to add transaction: $error', Colors.red);
     } finally {
       cashInAndOut.value = false;
       isProcessing = false;
@@ -973,13 +973,13 @@ class _ModalContentState extends State<ModalContent>
 
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
       print("Invalid total amount entered.");
-      snackBarCalled(context, SnackbarData().invalidAmountEntered, Colors.red);
+      snackBarCalledfail(context, SnackbarData().invalidAmountEntered, Colors.red);
       return;
     }
 
     if (members.isEmpty) {
       print("No members selected for split.");
-      snackBarCalled(context, SnackbarData().noMembersSelected, Colors.red);
+      snackBarCalledfail(context, SnackbarData().noMembersSelected, Colors.red);
       return;
     }
 
@@ -1083,7 +1083,7 @@ class _ModalContentState extends State<ModalContent>
       _showCelebration();
     } else {
       print("Split request failed");
-      snackBarCalled(context, SnackbarData().splitAmountError, Colors.red);
+      snackBarCalledfail(context, SnackbarData().splitAmountError, Colors.red);
     }
 
     print("Resetting flags");

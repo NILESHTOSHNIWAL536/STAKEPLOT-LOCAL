@@ -43,7 +43,7 @@ class SpeechToTextService {
   Future<void> checkInitialPermissions() async {
     var status = await Permission.microphone.status;
     if (status.isPermanentlyDenied) {
-      snackBarCalled(
+      snackBarCalledfail(
         context,
         'Microphone permission denied. Please enable it in settings.',
         Colors.red,
@@ -54,7 +54,7 @@ class SpeechToTextService {
   Future<bool> requestMicrophonePermission() async {
     var status = await Permission.microphone.request();
     if (status.isPermanentlyDenied) {
-      snackBarCalled(
+      snackBarCalledfail(
         context,
         'Microphone permission denied. Please enable it in settings.',
         Colors.red,
@@ -81,7 +81,7 @@ class SpeechToTextService {
         isListening = false;
         isProcessing = false;
         micAnimationController.stop();
-        snackBarCalled(
+        snackBarCalledfail(
           context,
           'Speech recognition failed: ${error.errorMsg}',
           Colors.red,
@@ -110,7 +110,7 @@ class SpeechToTextService {
     } else {
       isListening = false;
       isProcessing = false;
-      snackBarCalled(
+      snackBarCalledfail(
         context,
         'Speech recognition not available. Ensure Google Speech Services are installed.',
         Colors.red,
@@ -337,7 +337,7 @@ class SpeechToTextService {
   void processSpokenText(String text) async {
     Navigator.pop(context);
     if (text.isEmpty) {
-      snackBarCalled(context, 'No speech detected', Colors.red);
+      snackBarCalledfail(context, 'No speech detected', Colors.red);
       isProcessing = false;
       return;
     }
@@ -463,19 +463,19 @@ class SpeechToTextService {
     }
 
     if (parsedAmount == null) {
-      snackBarCalled(context, 'Invalid or missing amount. Please try again.', Colors.red);
+      snackBarCalledfail(context, 'Invalid or missing amount. Please try again.', Colors.red);
       isProcessing = false;
       return;
     }
 
     if (spokenCategory == null) {
-      snackBarCalled(context, 'Category or subcategory not recognized. Please try again.', Colors.red);
+      snackBarCalledfail(context, 'Category or subcategory not recognized. Please try again.', Colors.red);
       isProcessing = false;
       return;
     }
 
     if (!isDebit && spokenCategory != 'Income') {
-      snackBarCalled(context, 'Only Income category allowed for Cash In', Colors.red);
+      snackBarCalledfail(context, 'Only Income category allowed for Cash In', Colors.red);
       isProcessing = false;
       return;
     }

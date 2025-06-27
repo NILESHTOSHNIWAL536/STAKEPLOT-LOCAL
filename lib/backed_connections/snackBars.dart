@@ -10,7 +10,7 @@ void snackBarCalled(BuildContext context, String text,
         height: 40,
         child: CustomSnackBar.success(
           message: text,
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: AppColors.finSpaceColor,
           textStyle: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,

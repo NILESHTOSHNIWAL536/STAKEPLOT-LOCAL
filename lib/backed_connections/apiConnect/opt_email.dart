@@ -32,7 +32,7 @@ void checkEmail(context, email, otp, name) async {
         ));
   } else {
     acceptReset.value = false;
-    snackBarCalled(context,SnackbarData().otpInvalid, Colors.red);
+    snackBarCalledfail(context,SnackbarData().otpInvalid, Colors.red);
   }
 }
 
@@ -45,11 +45,11 @@ void changePassword(context, email, p1, p2) async
       "confirmNewPassword": p2,
     });
   if (getFlagOfResponse(response)) {
-    snackBarCalledSignup(context,SnackbarData().passwordChanged, Colors.black);
+    snackBarCalled(context,SnackbarData().passwordChanged, Colors.black);
     Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     Navigator.pushNamed(context, "/");
   } else {
-    snackBarCalled(context,SnackbarData().passwordChangeFail, Colors.red);
+    snackBarCalledfail(context,SnackbarData().passwordChangeFail, Colors.red);
   }
 }
 
@@ -66,7 +66,7 @@ void resendOptUser(context, email, name) async
     acceptReset.value = false;
     snackBarCalled(context,SnackbarData().otpResent, Colors.black);
   } else {
-    snackBarCalled(context,SnackbarData().otpSendFail1, Colors.red);
+    snackBarCalledfail(context,SnackbarData().otpSendFail1, Colors.red);
   }
 }
 
@@ -83,6 +83,6 @@ void resendOpt(context, email, name) async {
     acceptReset.value = false;
     snackBarCalled(context,SnackbarData().otpResentSuccess, Colors.black);
   } else {
-    snackBarCalled(context,SnackbarData().otpSendFail2, Colors.red);
+    snackBarCalledfail(context,SnackbarData().otpSendFail2, Colors.red);
   }
 }

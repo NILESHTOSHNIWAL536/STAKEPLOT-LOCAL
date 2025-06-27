@@ -884,7 +884,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       snackBarCalled(context, SnackbarData().splitAmountSent);
       Navigator.pop(context);
     } else {
-      snackBarCalled(context, SnackbarData().authenticationError, Colors.red);
+      snackBarCalledfail(context, SnackbarData().authenticationError, Colors.red);
     }
     acceptReset.value = false;
   }

@@ -712,7 +712,7 @@ class _ChatState extends State<Chat> {
           if (value.isNotEmpty) {
             _handleSubmitted(value);
           } else {
-            snackBarCalled(context, SnackbarData().pleaseEnterMessage);
+            snackBarCalledfail(context, SnackbarData().pleaseEnterMessage);
           }
           textController.clear();
           getChatLoader(ismaskedUsers.value);
@@ -745,7 +745,7 @@ class _ChatState extends State<Chat> {
                   if (value.isNotEmpty) {
                     _handleSubmitted(value);
                   } else {
-                    snackBarCalled(
+                    snackBarCalledfail(
                         context, SnackbarData().pleaseEnterValidData);
                   }
                   textController.clear();
@@ -1063,6 +1063,7 @@ class _ChatState extends State<Chat> {
               id: dataObj.id,
               dataObj: dataObj,
               popBox: false.obs,
+
             ),
             isIos: true,
           ),

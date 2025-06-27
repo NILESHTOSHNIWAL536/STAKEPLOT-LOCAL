@@ -202,13 +202,15 @@ class _TextScreenState extends State<TextScreen> {
                         TextField(
                           controller: titleController,
                           focusNode: _titleFocusNode,
+                          maxLines: null,
+                          maxLength: 150,
                           decoration: InputDecoration(
                             hintText: strings.enterTitle,
                              filled:true,
                               fillColor: AppColors.textBgColor,
                             hintStyle: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w500,
-                                fontSize: 18,
+                                fontSize: 14,
                                 color: AppColors.bg1),
                             border: InputBorder.none,
                           ),
@@ -219,7 +221,7 @@ class _TextScreenState extends State<TextScreen> {
                           child: TextField(
                             controller: contentController,
                             focusNode: _contentFocusNode,
-                            maxLines: 6,
+                            maxLines: null,
                             
                             decoration: InputDecoration(
                               filled:true,

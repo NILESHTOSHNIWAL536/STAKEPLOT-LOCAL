@@ -720,6 +720,7 @@ Future<dynamic> showCustomFriendsModalTransactionHistory(BuildContext context,
         category: category,
         subcategory: subcategory,
         flag: true,
+        
         ismanual: false,
       );
     },

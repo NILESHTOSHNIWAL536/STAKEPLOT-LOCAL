@@ -39,7 +39,7 @@ class _NotificationsState extends State<Notifications> {
     String urlPath = '${url}/user/deleteNotifications/$notifyId';
     var response = await getDataApiCall(urlPath);
     if (response.statusCode != 200) {
-      snackBarCalled(context, SnackbarData().deleteNotificationFailed);
+      snackBarCalledfail(context, SnackbarData().deleteNotificationFailed);
     }
   }
 

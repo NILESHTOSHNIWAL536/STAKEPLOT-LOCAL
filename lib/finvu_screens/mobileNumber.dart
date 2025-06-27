@@ -196,7 +196,7 @@ class _MobileNumberState extends State<MobileNumber> {
                         // Handle OTP logic here
                         if(loadConsentId.value)return;
                         if (_phoneController.text.length != 10) {
-                          snackBarCalled(context,SnackbarData().enterValidMobile, Colorcodes.red);
+                          snackBarCalledfail(context,SnackbarData().enterValidMobile, Colorcodes.red);
                           return;
                         }
           

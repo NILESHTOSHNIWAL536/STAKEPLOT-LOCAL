@@ -31,7 +31,7 @@ Future<void> loginUser(TextEditingController emailController,
       forceLoginShowModal(
           context, response, emailController, passwordController);
     } else if (response.statusCode == 500) {
-      snackBarCalled(context, SnackbarData().serverError, Colors.red);
+      snackBarCalledfail(context, SnackbarData().serverError, Colors.red);
     } else if (getFlagOfResponse(response)) {
       loginCalledData(response, context);
       await screenDataLocalStorage();
@@ -122,7 +122,7 @@ void getOTP(context, String name, String email) async {
   if (getFlagOfResponse(response)) {
     snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
   } else {
-    snackBarCalled(context, SnackbarData().cantSendOtp, Colors.red);
+    snackBarCalledfail(context, SnackbarData().cantSendOtp, Colors.red);
   }
 }
 
@@ -137,11 +137,11 @@ Future<bool> getOTPDeleteCall(
       snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
       return true;
     } else {
-      snackBarCalled(context, SnackbarData().cantSendOtp, Colors.red);
+      snackBarCalledfail(context, SnackbarData().cantSendOtp, Colors.red);
       return false;
     }
   } catch (e) {
-    snackBarCalled(context, 'Failed to send OTP: $e', Colors.red);
+    snackBarCalledfail(context, 'Failed to send OTP: $e', Colors.red);
     return false;
   }
 }
@@ -156,12 +156,12 @@ Future<bool> verifyDeleteOTP(
           Colors.black); // Adjusted message for clarity
       return true;
     } else {
-      snackBarCalled(
+      snackBarCalledfail(
           context, 'Invalid OTP', Colors.red); // Adjusted message for clarity
       return false;
     }
   } catch (e) {
-    snackBarCalled(context, 'Failed to verify OTP: $e', Colors.red);
+    snackBarCalledfail(context, 'Failed to verify OTP: $e', Colors.red);
     return false;
   }
 }
@@ -183,7 +183,7 @@ void forceLogoutUser(
       sendNotificationsToDevice(body['data']['_id'], context,
           "You have been logged out from StakePlot!");
     } else {
-      snackBarCalled(context, SnackbarData().cantLogoutUser, Colors.red);
+      snackBarCalledfail(context, SnackbarData().cantLogoutUser, Colors.red);
     }
   } catch (e) {
     print(e);
@@ -209,7 +209,7 @@ void getforgotPassword(context, String name, String email) async {
       ),
     );
   } else {
-    snackBarCalled(context, SnackbarData().emailIdNotValid, Colors.red);
+    snackBarCalledfail(context, SnackbarData().emailIdNotValid, Colors.red);
   }
 }
 

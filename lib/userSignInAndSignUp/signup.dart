@@ -559,8 +559,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (!boolvar) {
       print(
           "Error: ${responce['error']['explanation']}"); // Debugging statement
-      snackBarCalledSignup(
-          context, responce['error']['explanation'], Colors.red);
+      snackBarCalledfail(
+          context, responce['error']['explanation']);
       flag.value = false;
       return;
     }
@@ -598,12 +598,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
   
 
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: const Color(0xFF6B5B95),
-      ),
-    );
-  }
+ 
 }

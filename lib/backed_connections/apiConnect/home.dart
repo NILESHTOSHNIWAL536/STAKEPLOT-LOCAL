@@ -38,7 +38,7 @@ void setPasswordApiCalled(context, String password) async {
 
     snackBarCalled(context, SnackbarData().pinSetSuccess, Colors.black);
   } else {
-    snackBarCalled(context, SnackbarData().pinSetFail, Colors.red);
+    snackBarCalledfail(context, SnackbarData().pinSetFail, Colors.red);
   }
   Navigator.pop(context);
 }

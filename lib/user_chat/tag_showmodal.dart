@@ -251,7 +251,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                   if (widget.isTag) {
                     if (widget.data.category == '' &&
                         widget.data.subcategory == '') {
-                      snackBarCalledSignup(
+                      snackBarCalledfail(
                           context,
                           SnackbarData().selectCategoryAndSubcategory,
                           Colorcodes.red);
@@ -297,7 +297,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                   } else {
                     if (widget.data.category == '' &&
                         widget.data.subcategory == '') {
-                      snackBarCalledSignup(
+                      snackBarCalledfail(
                           context,
                           SnackbarData().selectCategoryAndSubcategory,
                           Colorcodes.red);

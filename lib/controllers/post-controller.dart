@@ -32,4 +32,5 @@ class PostController extends GetxController
   RxBool isPost = false.obs;
   RxBool isPostTranding = false.obs;
   RxBool isTrending = false.obs;
+  
 }

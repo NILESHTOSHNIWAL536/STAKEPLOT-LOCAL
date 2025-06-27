@@ -60,7 +60,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
-	<string>We use Face ID to secure your account</string>
+	<string>Why is my app authenticating using face id?</string>
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>This app requires access to your photo library to allow image selection.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

@@ -362,11 +362,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                                       controller.text.replaceAll(',', '')) ??
                                   0.0;
                             });
-                            print("amounts in here $amounts}");
-
-                            print("flag is ${widget.flag}");
-
-                            print(" not hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 
                             splitUserAmount(
                               context,
@@ -377,15 +372,10 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                               amounts: amounts,
                               ismanual: widget.ismanual,
                             );
-                            print(" may be hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-                           if(widget.flag){
-                             Navigator.pop(context);
-                             
-                           } 
-                           Navigator.pop(context);
-                          
-                              
-
+                            if (widget.flag) {
+                              Navigator.pop(context);
+                            }
+                            Navigator.pop(context);
                           }
                         : null,
                     // onTap: () {
@@ -497,11 +487,9 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       snackBarCalled(context, SnackbarData().invalidAmountEntered, Colors.red);
       return;
     }
-    print(" all things $category");
-    print(" all things $subcategory");
-    print(" all things $amounts");
+
     if (members.isEmpty) {
-      snackBarCalled(context, SnackbarData().noMembersSelected, Colors.red);
+      snackBarCalledfail(context, SnackbarData().noMembersSelected, Colors.red);
       return;
     }
 
@@ -558,7 +546,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     if (accessToken == null) {
-      snackBarCalled(context, SnackbarData().authenticationError, Colors.red);
+      snackBarCalledfail(context, SnackbarData().authenticationError, Colors.red);
       return;
     }
 
@@ -578,6 +566,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         "image": '',
       }),
     );
+    print("response for split ${response.body}");
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
@@ -606,14 +595,15 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         // isLoadingMore.value=false;
         // getAllTransaction(context);
       }
-
-      snackBarCalled(context, SnackbarData().splitAmountSent, Colors.black);
+     if (!context.mounted) return;
+      snackBarCalled(context, SnackbarData().splitAmountSent);
     } else {
-      snackBarCalled(context, SnackbarData().splitError, Colors.red);
+      snackBarCalledfail(context, SnackbarData().splitError, Colors.red);
     }
 
     acceptReset.value = false;
   }
+
 }
 
 Widget buttonContainer(context, str,

@@ -146,7 +146,7 @@ class _PollScreenState extends State<PollScreen> {
                               child: TextField(
                                 controller: _questionController,
                                 maxLines: null,
-                                maxLength: 80,
+                                maxLength: 150,
                                  textInputAction: TextInputAction.next,
                                 decoration: InputDecoration(
                                   filled: true,
@@ -165,7 +165,7 @@ class _PollScreenState extends State<PollScreen> {
                                                   borderRadius: BorderRadius.all(
                                                       Radius.circular(8))),
                                   contentPadding: const EdgeInsets.all(16),
-                                counterText: '',
+                                // counterText: '',
                                 ),
                                 
                               ),
@@ -183,7 +183,7 @@ class _PollScreenState extends State<PollScreen> {
                                     child: TextField(
                                       controller: _optionControllers[index],
                                       maxLines: null,
-                                      maxLength: 50,
+                                      maxLength: 150,
                                       
                                       decoration: InputDecoration(
                                         hintText: "${strings.optionPrefix} ${index + 1}", 
@@ -206,7 +206,7 @@ class _PollScreenState extends State<PollScreen> {
                                         // fillColor: AppColors.button,
                                         // filled: true,
                                          contentPadding: const EdgeInsets.all(12),
-                                    counterText: '',
+                                    // counterText: '',
                                         suffixIcon: _showCross[index]
                                             ? IconButton(
                                                 onPressed: () =>

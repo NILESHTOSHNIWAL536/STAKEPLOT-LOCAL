@@ -672,7 +672,7 @@ class _AccessState extends State<Access> {
       FetchTransactionFromFinvuApi(context);
     } catch (e) {
       skipOrLets.value = "Skip";
-      snackBarCalled(context, SnackbarData().consentApproveError);
+      snackBarCalledfail(context, SnackbarData().consentApproveError);
     }
     debugPrint('approveConsentRequest');
   }
@@ -771,9 +771,9 @@ class _AccessState extends State<Access> {
       Navigator.of(context).pushNamedAndRemoveUntil(
           '/ShareAccountLogin', (Route<dynamic> route) => false);
       Navigator.pushNamed(context, "/ShareAccountLogin");
-      snackBarCalledSignup(context, SnackbarData().consentDeclined);
+      snackBarCalledfail(context, SnackbarData().consentDeclined);
     } catch (e) {
-      snackBarCalledSignup(context, SnackbarData().consentDisapproveError);
+      snackBarCalledfail(context, SnackbarData().consentDisapproveError);
     }
   }
 }

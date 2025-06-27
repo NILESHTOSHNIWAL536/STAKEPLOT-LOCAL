@@ -131,7 +131,7 @@ void addBudget(BuildContext context, String name, String amount,
 
     snackBarCalled(context, SnackbarData().budgetAdded);
   } else {
-    snackBarCalled(context, SnackbarData().budgetAddFailed, Colors.red);
+    snackBarCalledfail(context, SnackbarData().budgetAddFailed, Colors.red);
   }
 
   acceptReset.value = false;
@@ -166,7 +166,7 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     Navigator.pop(context);
     Navigator.pop(context);
   } else {
-    snackBarCalled(context, SnackbarData().budgetUpdateFailed, Colors.red);
+    snackBarCalledfail(context, SnackbarData().budgetUpdateFailed, Colors.red);
   }
 }
 
@@ -198,7 +198,7 @@ void addDebts(context, name, amount, interest, startDate, durations) async {
     getDebts();
     Navigator.pop(context);
   } else {
-    snackBarCalled(context, SnackbarData().debtAddFailed, Colors.red);
+    snackBarCalledfail(context, SnackbarData().debtAddFailed, Colors.red);
   }
   acceptReset.value = false;
 }
@@ -237,7 +237,7 @@ void addBillTranscations(
       getBills();
       Navigator.pop(context);
     } else {
-      snackBarCalled(context, SnackbarData().billAddFailed, Colors.red);
+      snackBarCalledfail(context, SnackbarData().billAddFailed, Colors.red);
     }
     acceptReset.value = false;
   }
@@ -267,7 +267,7 @@ void deleteDebts(context, String id, [flag = false]) async {
     //           ),
     //       );
   } else {
-    snackBarCalled(context, SnackbarData().debtClearError, Colors.red);
+    snackBarCalledfail(context, SnackbarData().debtClearError, Colors.red);
   }
 }
 
@@ -304,7 +304,7 @@ void deleteBudget(context, String id) async {
     snackBarCalled(
         context, SnackbarData().processingBudgetDeletion, Colors.red);
   } else {
-    snackBarCalled(context, SnackbarData().budgetDeletionError, Colors.red);
+    snackBarCalledfail(context, SnackbarData().budgetDeletionError, Colors.red);
   }
 }
 
@@ -335,7 +335,7 @@ void clearDebts(context, String id, String amount, String value) async {
     snackBarCalled(context, SnackbarData().allDebtsCleared, Colors.black);
     //  Navigator.pushReplacementNamed(context, '/home');
   } else {
-    snackBarCalled(context, SnackbarData().debterror, Colors.red);
+    snackBarCalledfail(context, SnackbarData().debterror, Colors.red);
   }
 }
 

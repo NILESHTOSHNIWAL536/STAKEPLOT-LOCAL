@@ -409,7 +409,7 @@ class _SigninState extends State<SignUp> {
     if (!boolvar) {
       print(
           "Error: ${responce['error']['explanation']}"); // Debugging statement
-      snackBarCalledSignup(
+      snackBarCalledfail(
           context, responce['error']['explanation'], Colors.red);
       flag.value = false;
       return;

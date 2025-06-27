@@ -71,7 +71,7 @@ void upvote(context, String str, String objectId) async {
     final body = json.decode(response.body);
     snackBarCalled(context, "You liked this!", Colors.black);
   } else {
-    snackBarCalled(context, "An error occurred while liking!", Colors.red);
+    snackBarCalledfail(context, "An error occurred while liking!", Colors.red);
   }
 }
 
@@ -95,7 +95,7 @@ void downvote(context, String str, String objectId) async {
     final body = json.decode(response.body);
     snackBarCalled(context, "You disliked this!", Colors.black);
   } else {
-    snackBarCalled(context, "An error occurred while disliking!", Colors.red);
+    snackBarCalledfail(context, "An error occurred while disliking!", Colors.red);
   }
 }
 
@@ -118,7 +118,7 @@ void mute(context, String type, String id) async {
     final body = json.decode(response.body);
     snackBarCalled(context, "You have muted this user.", Colors.black);
   } else {
-    snackBarCalled(context, "An error occurred while muting!", Colors.red);
+    snackBarCalledfail(context, "An error occurred while muting!", Colors.red);
   }
 }
 
@@ -141,7 +141,7 @@ void exitRoom(context, String id) async {
     userController.fetchUserInfo();    
     snackBarCalled(context, "You have exited the room.", Colors.black);
   } else {
-    snackBarCalled(
+    snackBarCalledfail(
         context, "An error occurred while exiting the room!", Colors.red);
   }
 }

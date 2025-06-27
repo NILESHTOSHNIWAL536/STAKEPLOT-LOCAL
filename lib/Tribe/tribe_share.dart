@@ -122,7 +122,7 @@ class _TribeHomeState extends State<TribeShare> {
             }
 
             if (addedUser.isEmpty) {
-              snackBarCalled(context, SnackbarData().noFriendsAdded);
+              snackBarCalledfail(context, SnackbarData().noFriendsAdded);
               return;
             }
 
@@ -216,6 +216,7 @@ class _TribeHomeState extends State<TribeShare> {
     child: SizedBox(
       height: height/1.1,
       child: GridView.builder(
+        
         itemCount: userController.friendsList.length, // +1 for loading more indicator
         itemBuilder: (context,index) {
           String values = userController.friendsList[index]['_id'];
@@ -288,7 +289,7 @@ class _TribeHomeState extends State<TribeShare> {
       snackBarCalled(context, SnackbarData().postSentSuccessfully);
       Navigator.pop(context);
     } else {
-      snackBarCalled(context, SnackbarData().cantAdd, Colors.red);
+      snackBarCalledfail(context, SnackbarData().cantAdd, Colors.red);
     }
   }
 

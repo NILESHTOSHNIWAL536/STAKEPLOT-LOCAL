@@ -504,7 +504,7 @@ class _UserListScreenState extends State<UserListScreen> {
       );
     } catch (e) {
       Navigator.pop(context); // Dismiss loading dialog
-      snackBarCalled(context,SnackbarData().fetchingError);
+      snackBarCalledfail(context,SnackbarData().fetchingError);
     }
   }
 

@@ -48,7 +48,7 @@ Future<String> login(context) async {
 
   }catch(e){
   
-      snackBarCalled(context, e.toString());
+      snackBarCalledfail(context, e.toString());
   }
   return otpReference;
 }
@@ -70,7 +70,7 @@ Future<void> getConsentHandleId(context) async
               handleId.value=consentHandleId;
             } 
   } catch (error){
-      snackBarCalled(context, error.toString());
+      snackBarCalledfail(context, error.toString());
   }
 }
 

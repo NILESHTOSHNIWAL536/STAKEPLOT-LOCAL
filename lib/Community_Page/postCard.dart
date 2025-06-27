@@ -73,13 +73,13 @@ class PostCard extends StatelessWidget {
 
                         // Toggle like status
                         if (isLiked) {
-                          postController.likedList.remove(likeKey);
+                          userController.likedPosts.remove(likeKey);
                           postController.postCount[idData] = postController.postCount[idData]! - 1;
                           if (postController.postCount[idData]! < 0) {
                             postController.postCount[idData] = 0;
                           }
                         } else {
-                          postController.likedList.add(likeKey);
+                          userController.likedPosts.add(likeKey);
                           postController.postCount[idData] = postController.postCount[idData]! + 1;
                         }
 
@@ -337,14 +337,14 @@ class PostCard extends StatelessWidget {
         str: item.description['message'].toString(),
         tName: (item.image != 'none' && item.postType.name == "feed")
             ? item.author.maskedName !='' ?item.author.maskedName : item.author.name
-            : "",
+            : "",isImage: item.image != 'none',
       );
     } catch (e) {
       return Readmore(
         str: item.description.toString(),
         tName: (item.image != 'none' && item.postType.name == "feed")
             ?  item.author.maskedName !='' ?item.author.maskedName : item.author.name
-            : "",
+            : "",isImage: item.image != 'none',
       );
     }
   }

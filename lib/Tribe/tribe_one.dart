@@ -75,7 +75,7 @@ class _TribeHomeState extends State<TribeUnique> {
     print("hiiii   $data");
     if (data == "") {
       FocusScope.of(context).requestFocus(_replyFocusNode);
-      snackBarCalled(
+      snackBarCalledfail(
           context, SnackbarData().emptyCommentNotAllowed, Colors.red);
       return;
     }
@@ -125,7 +125,7 @@ class _TribeHomeState extends State<TribeUnique> {
       snackBarCalled(
           context, SnackbarData().commentAddedSuccessfully, Colors.black);
     } else {
-      snackBarCalled(context, SnackbarData().unableToAddComment, Colors.red);
+      snackBarCalledfail(context, SnackbarData().unableToAddComment, Colors.red);
     }
   }
 
@@ -577,6 +577,7 @@ class _TribeHomeState extends State<TribeUnique> {
             focusNode: _replyFocusNode,
             keyboardType: keyBoard,
             autofocus: true,
+            maxLines: null,
             controller: Textcontroller,
             onSubmitted: (value) {
               if (userController.maskedName.value.trim().isEmpty) {
@@ -633,13 +634,14 @@ class _TribeHomeState extends State<TribeUnique> {
                   height: 23,
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height / 20,
+                  // height: MediaQuery.of(context).size.height / 20,
                   width: MediaQuery.of(context).size.width / 1.6,
                   child: Center(
                     child: TextField(
                       focusNode: _replyNode,
                       autofocus: autofocus.value,
                       keyboardType: keyBoard,
+                      maxLines: null,
                       controller: Textcontroller,
                       readOnly: commentId == "",
                       onSubmitted: (value) {
@@ -830,7 +832,7 @@ class _TribeHomeState extends State<TribeUnique> {
     } else {
       if (value == "") {
         FocusScope.of(context).requestFocus(_replyNode);
-        snackBarCalled(
+        snackBarCalledfail(
             context, SnackbarData().emptyReplyNotAllowed, Colors.red);
         return;
       }

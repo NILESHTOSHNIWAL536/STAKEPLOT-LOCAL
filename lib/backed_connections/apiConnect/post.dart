@@ -17,7 +17,7 @@ void addReply(context, String data, String commentId, String postId) async {
   var body = {'comment': commentId, 'reply': data, 'post': postId};
   var response = await postDataApiCall('${url}/reply/', body);
   if (!getFlagOfResponse(response)) {
-    snackBarCalled(context, SnackbarData().unableToAddReply, Colors.red);
+    snackBarCalledfail(context, SnackbarData().unableToAddReply, Colors.red);
   }
 }
 
@@ -27,7 +27,7 @@ void deletePost(id, context) async {
   if (getFlagOfResponse(responce)) {
     snackBarCalled(context, "Deleted Post");
   } else {
-    snackBarCalled(context, SnackbarData().errorWhileDeletingPost);
+    snackBarCalledfail(context, SnackbarData().errorWhileDeletingPost);
   }
 }
 
@@ -42,7 +42,7 @@ Future<String> postImageToCloud(imageFile, context) async {
     final response2 = await request.send();
 
     if (response2.statusCode != 200) {
-      snackBarCalled(context, SnackbarData().imageUploadFailed, Colors.red);
+      snackBarCalledfail(context, SnackbarData().imageUploadFailed, Colors.red);
       return 'Image upload failed';
     }
 
@@ -66,11 +66,11 @@ void reportPost(context, String id, String spam, String type, int index) async {
         spam == "hide post"
             ? SnackbarData().postHidden
             : SnackbarData().reportedSuccessfully,
-        Colors.green);
+        );
 
     clearPostReportHide(index);
   } else {
-    snackBarCalled(context, SnackbarData().errorWhileReporting, Colors.red);
+    snackBarCalledfail(context, SnackbarData().errorWhileReporting, Colors.red);
   }
   // getPost();
 }
@@ -108,8 +108,8 @@ Future<Map<String, dynamic>> createPost(
         'data': postData,
       };
     } else {
-      snackBarCalled(
-          context, "Server error: ${response.statusCode}", Colors.red);
+      snackBarCalledfail(
+          context, SnackbarData().errorCreatingPost, Colors.red);
       return {
         'success': false,
         'error': 'Server error: ${response.statusCode}',
@@ -117,7 +117,7 @@ Future<Map<String, dynamic>> createPost(
     }
   } catch (e) {
     clearInterest();
-    snackBarCalled(context, SnackbarData().errorCreatingPost, Colors.red);
+    snackBarCalledfail(context, SnackbarData().errorCreatingPost, Colors.red);
     return {
       'success': false,
       'error': e.toString(),
@@ -233,7 +233,7 @@ void savePostData(context,PostModel data) async {
     snackBarCalled(context, decodedResponse['data'].toString());
     getSaved();
   } else {
-    snackBarCalled(context, SnackbarData().failedToSavePost, Colors.red);
+    snackBarCalledfail(context, SnackbarData().failedToSavePost, Colors.red);
   }
 }
 

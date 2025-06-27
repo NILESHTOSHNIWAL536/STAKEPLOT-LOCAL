@@ -256,7 +256,7 @@ class _BudgetState extends State<Budget> {
     if (nameController.text == "" ||
         amountController.text == "" ||
         period.value == "") {
-      snackBarCalled(context,SnackbarData().fillAllRequiredFields, Colorcodes.red);
+      snackBarCalledfail(context,SnackbarData().fillAllRequiredFields, Colorcodes.red);
       return;
     }
     Navigator.push(

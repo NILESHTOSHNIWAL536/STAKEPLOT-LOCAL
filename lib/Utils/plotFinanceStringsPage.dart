@@ -37,7 +37,7 @@ class PlotFinanceStaticData {
   String rentVsBuy = "Rent vs Buy";
   String savingsGoal = "Savings goal";
   String autoLoan = "Auto loan";
-  String tripCost = "Cost";
+  String tripCost = "Trip cost";
   String calculatorSubtitle = "Calculator";
   String spent = "spent";
   String remaining = "Remaining";

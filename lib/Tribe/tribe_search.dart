@@ -213,7 +213,8 @@ class _TribeSearchState extends State<TribeSearch> {
     return Center(
       child: Container(
        
-        width: MediaQuery.of(context).size.width / 1.1,
+         width: MediaQuery.sizeOf(context).width/1.07,
+                height: MediaQuery.sizeOf(context).width *(32/348),
         child: Center(
           child: TextFormField(
             keyboardType: keyBoard,
@@ -231,14 +232,11 @@ class _TribeSearchState extends State<TribeSearch> {
               filled: true,
               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
               hintText: lableText,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-              fillColor: AppColors.button,
-              border: InputBorder.none,
+              
+              fillColor: AppColors.backgroundColor,
+              border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
             ),
           ),
         ),

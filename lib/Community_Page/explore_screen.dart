@@ -61,7 +61,7 @@ class _ExploreModalState extends State<ExploreModal> {
 
   Future<void> _pickAndCropImage() async {
     if (selectedImages.length >= maxImages) {
-      snackBarCalled(context, SnackbarData().maxFiveImagesAllowed);
+      snackBarCalledfail(context, SnackbarData().maxFiveImagesAllowed);
       return;
     }
 
@@ -401,7 +401,7 @@ class _ExploreModalState extends State<ExploreModal> {
   Future<void> _submitPost() async {
     if (locationNameController.text.isEmpty ||
         locationAddressController.text.isEmpty) {
-      snackBarCalled(context, SnackbarData().fillAllRequiredFields);
+      snackBarCalledfail(context, SnackbarData().fillAllRequiredFields);
       return;
     }
 
@@ -425,7 +425,7 @@ class _ExploreModalState extends State<ExploreModal> {
         String url = await postImageToCloud(image, context);
         imageUrls.add(url);
       } catch (e) {
-        snackBarCalled(context, SnackbarData().errorUploadingImage);
+        snackBarCalledfail(context, SnackbarData().errorUploadingImage);
         setState(() => _isSubmitting = false);
         return;
       }
@@ -477,11 +477,11 @@ class _ExploreModalState extends State<ExploreModal> {
         widget.onPostCreated(jsonDecode(response.body));
         Navigator.pop(context);
       } else {
-        snackBarCalled(context, SnackbarData().failedToSubmitPost);
+        snackBarCalledfail(context, SnackbarData().failedToSubmitPost);
         setState(() => _isSubmitting = false);
       }
     } catch (e) {
-      snackBarCalled(context, SnackbarData().errorSubmittingPost);
+      snackBarCalledfail(context, SnackbarData().errorSubmittingPost);
       setState(() => _isSubmitting = false);
     }
   }
@@ -815,14 +815,15 @@ class _ExploreModalState extends State<ExploreModal> {
         const SizedBox(height: 10),
         TextField(
           controller: titleController,
+           maxLines: null,
           decoration: _inputDecoration(strings.enterTitle, null), // Updated
         ),
         const SizedBox(height: 10),
         TextField(
           controller: contentController,
           decoration: _inputDecoration(strings.addThoughts, null), // Updated
-          maxLines: 3,
-          maxLength: 150,
+          maxLines: null,
+          maxLength: null,
         ),
       ],
     );

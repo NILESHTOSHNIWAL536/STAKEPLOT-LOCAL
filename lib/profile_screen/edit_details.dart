@@ -19,6 +19,7 @@ import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:intl/intl.dart';
 
 class EditDetails extends StatefulWidget {
   const EditDetails({super.key});
@@ -231,7 +232,8 @@ class _EditDetailsState extends State<EditDetails> {
                   _buildNonEditableField(
                       Icons.calendar_today,
                       ProfileScreenStrings().dobLabel,
-                      userController.dob.value),
+                      DateFormat('dd-MM-yyyy').format(DateTime.parse(userController.dob.value))
+                      ),
                 ],
               ),
             ),
@@ -296,39 +298,6 @@ class _EditDetailsState extends State<EditDetails> {
     );
   }
 
-  Widget _buildEditableField(IconData icon, String label, String value) {
-    final controller =
-        _controllers[label] ?? TextEditingController(text: value);
-
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 0),
-      width: MediaQuery.of(context).size.width / 1.1,
-      child: Center(
-        child: TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            //prefixIcon: Icon(icon, color: Colors.blueGrey),
-            prefixIcon: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.button,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(icon, color: AppColors.primaryColor)),
-            ),
-            hintText: value,
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            suffixIcon: const Icon(Icons.edit, color: AppColors.primaryColor),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildNonEditableField(IconData icon, String label, String value) {
     return Container(

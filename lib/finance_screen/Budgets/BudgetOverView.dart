@@ -246,7 +246,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                               onsubmit(index, value);
                                setState(() {});
                             } else {
-                              snackBarCalled(context, SnackbarData().amountExceed);
+                              snackBarCalledfail(context, SnackbarData().amountExceed);
                             }
                           },
                         ),
@@ -283,7 +283,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
 void onsubmit(int index, String value) async {
   double parsedValue = double.tryParse(value) ?? 0;
   if (!_validateAmount(value, widget.amount)) {
-    snackBarCalled(context, SnackbarData().amountExceed);
+    snackBarCalledfail(context, SnackbarData().amountExceed);
     return;
   }
 

@@ -5,8 +5,8 @@ import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 class Readmore extends StatefulWidget {
   final String str;
   final String tName;
-
-  const Readmore({Key? key, required this.str, required this.tName}) : super(key: key);
+ final bool isImage;
+  const Readmore({Key? key, required this.str, required this.tName, required this.isImage, }) : super(key: key);
 
   @override
   _ReadmoreState createState() => _ReadmoreState();
@@ -17,7 +17,7 @@ class _ReadmoreState extends State<Readmore> {
 
   @override
   Widget build(BuildContext context) {
-    const int trimLines = 4;
+     int trimLines = widget.isImage ? 2 : 5;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
