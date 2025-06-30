@@ -69,8 +69,7 @@ class PostCard extends StatelessWidget {
                         MaskedNameDialogBox.showMaskedNameDialog(context);
                       } else {
                         String likeKey = "liked" + dataObj.id;
-                        bool isLiked = postController.likedList.contains(likeKey);
-
+                        bool isLiked = userController.likedPosts.contains(likeKey);
                         // Toggle like status
                         if (isLiked) {
                           userController.likedPosts.remove(likeKey);
@@ -82,7 +81,6 @@ class PostCard extends StatelessWidget {
                           userController.likedPosts.add(likeKey);
                           postController.postCount[idData] = postController.postCount[idData]! + 1;
                         }
-
                         // Update the server with new vote status
                         upvoteGlobal(context, "Post", dataObj.id, dataObj);
                         reRender.value = !reRender.value;

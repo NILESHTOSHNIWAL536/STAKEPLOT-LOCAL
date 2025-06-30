@@ -78,7 +78,7 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
       body: Obx(
         () => isLoading.value
             ? Center(
-                child: CircularProgressIndicator(color: AppColors.primaryColor))
+                child: CircularProgressIndicator(color: AppColors.finSpaceColor))
             : errorMessage.value.isNotEmpty
                 ? Center(
                     child: Column(
@@ -100,7 +100,7 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
                             });
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryColor,
+                            backgroundColor: AppColors.finSpaceColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                   Colorcodes.borderRadius),
@@ -124,7 +124,7 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(
                             child: CircularProgressIndicator(
-                                color: AppColors.primaryColor));
+                                color: AppColors.finSpaceColor));
                       }
                       if (snapshot.hasError) {
                         return Center(

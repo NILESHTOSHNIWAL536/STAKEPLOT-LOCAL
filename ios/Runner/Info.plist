@@ -48,10 +48,10 @@
             <key>CFBundleTypeRole</key> 
             <string>Editor</string>
             <key>CFBundleURLName</key>
-            <string>com.apple.signin</string>
+            <string>com.stakeplot.pfa</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>appleauth</string>
+                <string>com.stakeplot.pfa</string>
             </array>
         </dict>
 	</array>

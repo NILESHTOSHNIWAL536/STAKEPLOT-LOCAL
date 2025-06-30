@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,9 +8,11 @@ import 'package:flutter_application_code_stakeplot/Community_Page/postLoadFeed.d
 import 'package:flutter_application_code_stakeplot/Community_Page/postloadTranding.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/widgets/buildbutton.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -67,6 +66,7 @@ class CommunityState extends State<Community> {
     //     scrollController.addListener(_onScroll); //uncomment this if anything goes wrong 
     scrollControllerPost.addListener(() {
       // Scroll-to-top visibility
+      
       showScrollToTop.value = scrollControllerPost.offset > 50;
 
       // Pagination logic
@@ -109,8 +109,10 @@ class CommunityState extends State<Community> {
     );
   }
 // 
- 
-  @override         
+
+
+
+  @override
   Widget build(BuildContext context) {
     print('DEBUG: Building Community widget');
     return Scaffold(
@@ -137,11 +139,8 @@ class CommunityState extends State<Community> {
               children: [
                 buildWelcomeRow(context),
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 12.0, right: 12.0, top: 4),
-                  child: Obx(() => postController.isTrending.value
-                      ? getTabs(context)
-                      : getTabs(context)),
+                  padding:const EdgeInsets.only(left: 12.0, right: 12.0, top: 4),
+                  child: Obx(() => postController.isTrending.value ? getTabs(context): getTabs(context)),
                 ),
                 Obx(() => postController.isTrending.value
                     ? getTrandingWidget()
@@ -161,9 +160,29 @@ class CommunityState extends State<Community> {
   Widget getFeed() {
     return postController.feedPostList.isEmpty && !postController.isPost.value
         ? const Loader()
-        : postController.isPost.value && postController.feedPostList.isEmpty
-            ? noFriend(
-                context, "Make friends to see their posts or upload post")
+        : (postController.isPost.value && postController.feedPostList.isEmpty)
+            ? Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: Container(
+                //  color: Colors.amber,
+                height: MediaQuery.sizeOf(context).height/3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                     AvatarProfileImage(
+                                      url: FinSpaceIcons.empty,
+                                      height: 5,
+                                      width: 5,
+                                    ),
+                    Text('Nothing to show based on your interests.',
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: AppColors.accentColor)),
+                  ],
+                ),
+              ),
+            )
             : Obx(() => postController.getPosted.value
                 ? LazyLoadingList()
                 : LazyLoadingList());
@@ -173,10 +192,30 @@ class CommunityState extends State<Community> {
     return postController.trandingPostList.isEmpty &&
             !postController.isPostTranding.value
         ? const Loader()
-        : postController.isPostTranding.value &&
-                postController.trandingPostList.isEmpty
-            ? noFriend(
-                context, "Make friends to see their posts or upload post")
+        : (postController.isPostTranding.value &&
+                postController.trandingPostList.isEmpty)
+            ?  Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: Container(
+                //  color: Colors.amber,
+                height: MediaQuery.sizeOf(context).height/3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                     AvatarProfileImage(
+                                      url: FinSpaceIcons.empty,
+                                      height: 5,
+                                      width: 5,
+                                    ),
+                    Text('Nothing to show .',
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: AppColors.accentColor)),
+                  ],
+                ),
+              ),
+            )
             : Obx(() => postController.getPostedTranding.value
                 ? LazyLoadingTranding()
                 : LazyLoadingTranding());

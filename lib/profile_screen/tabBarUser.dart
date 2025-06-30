@@ -80,7 +80,7 @@ class _TabBarUserState extends State<TabBarUser> {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height / 1.49,
+            height: MediaQuery.of(context).size.height / 1.4,
             child: TabBarView(
               children: [
                 Obx(()=>isLoading.value?Spinner(size: 40,): Padding(

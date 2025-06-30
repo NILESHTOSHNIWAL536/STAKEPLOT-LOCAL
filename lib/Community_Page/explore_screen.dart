@@ -261,7 +261,7 @@ class _ExploreModalState extends State<ExploreModal> {
                         decoration: BoxDecoration(
                           color: isLoading
                               ? Colors.grey[400]
-                              : AppColors.primaryColor,
+                              : AppColors.finSpaceColor,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: isLoading
@@ -590,7 +590,7 @@ class _ExploreModalState extends State<ExploreModal> {
             starSize: 30,
             maxValue: 5,
             starSpacing: 2,
-            starColor: AppColors.primaryColor,
+            starColor: AppColors.finSpaceColor,
             starOffColor: AppColors.button,
             valueLabelVisibility: false,
             valueLabelTextStyle: const TextStyle(color: Colors.black),
@@ -703,7 +703,7 @@ class _ExploreModalState extends State<ExploreModal> {
             onPressed:
                 selectedImages.length < maxImages ? _pickAndCropImage : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
+              backgroundColor: AppColors.finSpaceColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -852,7 +852,7 @@ class _ExploreModalState extends State<ExploreModal> {
               width: MediaQuery.of(context).size.width / 1.1,
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
               decoration: BoxDecoration(
-                  color: isEnabled ? AppColors.primaryColor : Colors.grey,
+                  color: isEnabled ? AppColors.finSpaceColor : Colors.grey,
                   borderRadius: BorderRadius.circular(24)),
               child: Center(
                 child: Text(

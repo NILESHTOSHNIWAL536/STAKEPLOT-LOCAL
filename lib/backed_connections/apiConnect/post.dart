@@ -170,7 +170,7 @@ void createPollOfCommunity(context, String title, String description) async {
   postController.postDis.value = false;
 }
 
-void getPost() async {
+Future<void> getPost() async {
   var response =
       await getDataApiCall('${url}/post/feed/${postController.currentPageFeed.value}');
   if (getFlagOfResponse(response)) {
@@ -198,7 +198,7 @@ void getPost() async {
   } else {}
 }
 
-void getTranding() async {
+Future<void> getTranding() async {
   var response =
       await getDataApiCall('${url}/post/trending/${postController.currentPageTranding.value}');
   if (getFlagOfResponse(response)) {

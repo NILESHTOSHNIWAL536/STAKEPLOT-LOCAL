@@ -328,7 +328,7 @@ class _ImageScreenState extends State<ImageScreen> {
                   decoration: BoxDecoration(
                     color:
                         selectedImage != null && textController.text.isNotEmpty
-                            ? AppColors.primaryColor
+                            ? AppColors.finSpaceColor
                             : AppColors.button,
                     borderRadius: BorderRadius.circular(8),
                   ),

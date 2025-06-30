@@ -7,7 +7,6 @@ import "package:flutter_application_code_stakeplot/Tribe/tribe_search.dart";
 import "package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
@@ -38,6 +37,7 @@ class _FriendsState extends State<Friends> {
     super.initState();
     frdsList.clear();
     frdsList.addAll(widget.isMasked ? widget.isMaskedConnect?userController.maskedConnected :userController.maskedConnections: userController.friendsList);
+  
   }
 
   @override
@@ -57,74 +57,80 @@ class _FriendsState extends State<Friends> {
         //  bottomNavigationBar:logoutWidget(),
 
         body: SafeArea(
-          child: Column(children: [  
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height/1.14,
-             // padding: EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
-              child: ListView(
-                children: [
-                  Hero(
-                    tag: "TribeSearch",
-                    child: GestureDetector(
-                      onTap: () {
-                        if(userController.friendsList.isEmpty)
-                        {
-                          if(widget.isMasked){
-                             Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>TribeSearch(isMasked: true,),
-                            ),
-                          );
-                          }else Navigator.pushNamed(context, '/TribeSearch');
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 18),
-                        child: Container(
-                          width: MediaQuery.sizeOf(context).width / 3,
-                          height: 50,
-                          child: TextField(
-                            controller: _searchController,
-                            onChanged: (value) {
-                                frdsList.clear();
-                                frdsList.addAll(getLastTenUsers(getSearchData(value,userController.friendsList )));
-                            },
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 0),
-                              filled: true,
-                              enabled: userController.friendsList.isEmpty,
-                              hintText:  ProfileScreenStrings().searchHint,
-                              fillColor: AppColors.button,
-                              hintStyle: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 14,
-                                  color: Colors.black),
-                              prefixIcon: Icon(Icons.search),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                            ),
-                          ),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height/1.15,
+           // padding: EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
+          
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    if(userController.friendsList.isEmpty)
+                    {
+                      if(widget.isMasked){
+                         Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>TribeSearch(isMasked: true,),
+                        ),
+                      );
+                      }else Navigator.pushNamed(context, '/TribeSearch');
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width ,
+                      height: 40,
+                      child: TextField(
+                        controller: _searchController,
+                        // onChanged: (value) {
+                        //     frdsList.clear();
+                        //     frdsList.addAll(getLastTenUsers(getSearchData(value,userController.friendsList )));
+                        // },
+                        onChanged: (value) {
+                  frdsList.clear();
+                  final sourceList = widget.isMasked 
+                      ? (widget.isMaskedConnect ? userController.maskedConnected : userController.maskedConnections) 
+                      : userController.friendsList;
+                  final filteredList = getSearchData(value, sourceList, widget.isMasked);
+                  frdsList.addAll(getLastTenUsers(filteredList));
+                },
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 0),
+                          filled: true,
+                          enabled:true,
+                          // enabled: userController.friendsList.isEmpty,
+                          hintText:  ProfileScreenStrings().searchHint,
+                        
+                fillColor: AppColors.backgroundColor,
+                hintStyle: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Colors.black),
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Obx(() => frdsList.isEmpty
-                      ? noFriend(context,"",widget.isMasked)
-                      : Column(
-                          children: frdsList
-                              .map((d) =>
-                                  d == null ? Text("") : profileContainer(d))
-                              .toList(),
-                        )),
-                ],
-              ),
+                ),
+                SizedBox(height: 10),
+                Obx(() => frdsList.isEmpty
+                    ? noFriend(context,"",widget.isMasked)
+                    : Column(
+                        children: frdsList
+                            .map((d) =>
+                                d == null ? Text("") : profileContainer(d))
+                            .toList(),
+                      )),
+              ],
             ),
-          ]),
+          ),
         ));
   }
 

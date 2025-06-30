@@ -283,7 +283,7 @@ class _PollScreenState extends State<PollScreen> {
                                               _optionControllers.every(
                                                   (controller) =>
                                                       controller.text.isNotEmpty)
-                                          ? AppColors.primaryColor
+                                          ? AppColors.finSpaceColor
                                           : AppColors.button,
                                       borderRadius: BorderRadius.circular(8)),
                                   child: Center(

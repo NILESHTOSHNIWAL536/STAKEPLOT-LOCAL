@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-List getSearchData(String val, List data,[bool isMasked=false]) {
+// List getSearchData(String val, List data,[bool isMasked=false]) {
+//   List findOne = [];
+//   data.forEach((element) {
+//     if (element[isMasked?"maskedName":'name'].toString().toLowerCase().contains(val.toLowerCase())) {
+//       findOne.add(element);
+//     }
+//   });
+//   return findOne;
+// }
+List getSearchData(String val, List data, [bool isMasked = false]) {
   List findOne = [];
   data.forEach((element) {
-    if (element[isMasked?"maskedName":'name'].toString().toLowerCase().contains(val.toLowerCase())) {
+    // Use maskedName if available, otherwise fall back to name
+    final nameField = isMasked ? (element['maskedName'] ?? element['name']) : element['name'];
+    final name = (nameField?.toString() ?? '').trim().toLowerCase();
+    final query = val.trim().toLowerCase();
+    if (name.contains(query)) {
       findOne.add(element);
     }
   });
   return findOne;
 }
-
 RxList getSearchDataRx(String val, List data,[bool isMasked=false])
 {
   RxList findOne = [].obs;

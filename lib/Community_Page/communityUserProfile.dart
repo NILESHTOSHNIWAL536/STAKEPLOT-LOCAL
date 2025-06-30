@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/savedPosts.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Profile/Saved.dart';
@@ -45,7 +44,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                 _buildHeader(),
 
                    Container(
-                    height: MediaQuery.sizeOf(context).height/1.3,
+                    height: MediaQuery.sizeOf(context).height/1.22,
                     color: const Color(0xFFC2C3D5),
                     child: Column(
                       children: [
@@ -59,7 +58,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
             ),
             // Position the AvatarProfile to straddle the boundary
             Positioned(
-              top: MediaQuery.sizeOf(context).height/26, // Adjust this value based on your header height
+              top: MediaQuery.sizeOf(context).height/42, // Adjust this value based on your header height
               left: 0,
               right: 0,
               child: Center(
@@ -82,7 +81,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       child: Container(
-         height: MediaQuery.sizeOf(context).height/14,
+         height: MediaQuery.sizeOf(context).height/18,
         child: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Row(

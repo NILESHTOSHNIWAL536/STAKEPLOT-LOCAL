@@ -1,5 +1,6 @@
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
@@ -29,6 +30,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
       super.initState();
       initPlatformState();
+      // adding this for status bar 
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
+
   }
 
   Future<void> initPlatformState() async {
@@ -41,7 +45,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
        navigatorKey: navigatorKey, 
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.finSpaceColor),
         scaffoldBackgroundColor: AppColors.backgroundColor,
       ),
       debugShowCheckedModeBanner: false,

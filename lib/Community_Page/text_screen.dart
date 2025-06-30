@@ -258,7 +258,7 @@ class _TextScreenState extends State<TextScreen> {
                             decoration: BoxDecoration(
                               color: titleController.text.isNotEmpty &&
                                       contentController.text.isNotEmpty
-                                  ? AppColors.primaryColor
+                                  ? AppColors.finSpaceColor
                                   : AppColors.button,
                               borderRadius: BorderRadius.circular(24),
                             ),

@@ -38,12 +38,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
           child: Column(
             children: [
               topUserProfile(userController),
-              Column(
-                children: [
-                  // const SizedBox(height: 10),
-                  TabBarUser(userPostList:  userController.myPostList)
-                ],
-              ),
+              TabBarUser(userPostList:  userController.myPostList),
             ],
           ),
         ),
