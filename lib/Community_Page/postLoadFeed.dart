@@ -20,6 +20,7 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
     return Obx(() => Container(
           width: MediaQuery.of(context).size.width,
           child:ListView.builder(
+            
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount:  postController.feedPostList.length+1,

@@ -1,5 +1,6 @@
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -10,12 +11,12 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-part  'snackBars.dart'; 
-
+part 'snackBars.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.4" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost =
+    flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 UserController get userController => Get.find<UserController>();
@@ -168,7 +169,6 @@ RxDouble maxYValueoverall = 0.0.obs;
 RxBool getGraphDataoverall = false.obs;
 RxDouble totalDebitValuePercent = 0.0.obs;
 
-
 final RxList<String> monthLabels = <String>[].obs;
 final Rx<Map<String, List<double>>> currentChartData =
     Rx<Map<String, List<double>>>({});
@@ -190,7 +190,3 @@ RxBool getChatSplit = false.obs;
 
 DateTime startDateCustom = DateTime.now().subtract(const Duration(days: 7));
 DateTime endDateCustom = DateTime.now();
-
-
-
-

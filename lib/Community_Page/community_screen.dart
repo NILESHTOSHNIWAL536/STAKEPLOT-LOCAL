@@ -1,3 +1,6 @@
+
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -24,16 +27,14 @@ import 'package:flutter_application_code_stakeplot/Community_Page/image_screen.d
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 
-
-
 class Community extends StatefulWidget {
   const Community({Key? key}) : super(key: key);
 
   @override
-  State<Community> createState() => _CommunityState();
+  State<Community> createState() => CommunityState();
 }
 
-class _CommunityState extends State<Community> {
+class CommunityState extends State<Community> {
   final List<Map<String, dynamic>> posts = [];
 
   String? selectedImage;
@@ -43,9 +44,14 @@ class _CommunityState extends State<Community> {
   bool isLiked = false;
   final CommunityScreenStrings strings = CommunityScreenStrings();
   final ScrollController scrollController = ScrollController();
+   final ScrollController scrollControllerPost = ScrollController();
+   final RxBool showScrollToTop = false.obs;
+
+  ScrollController get controller => scrollController;
 
   @override
   void initState() {
+    super.initState();
     postController.currentPageTranding.value = 1;
     postController.currentPageFeed.value = 1;
     postController.isPostloading.value = false;
@@ -54,42 +60,78 @@ class _CommunityState extends State<Community> {
     postController.hasMorePostTranding.value = true;
     postController.hasMorePostFeed.value = true;
     postController.isPost.value = false;
-     postController.isPostTranding.value = false;
+    postController.isPostTranding.value = false;
     getPost();
     getTranding();
     setUpSocketListenerMainPage(context);
-    scrollController.addListener(_onScroll);
-  }
+    //     scrollController.addListener(_onScroll); //uncomment this if anything goes wrong 
+    scrollControllerPost.addListener(() {
+      // Scroll-to-top visibility
+      showScrollToTop.value = scrollControllerPost.offset > 50;
 
-  void _onScroll()
-  {
-    scrollController.addListener(() async {
-      if (scrollController.position.pixels >=
-              scrollController.position.maxScrollExtent - 50 &&
-          ! postController.isPostloading.value) {
-         postController.isPostloading.value = true;
-        if ( postController.isTrending.value) {
-          if ( postController.hasMorePostTranding.value) getTranding();
+      // Pagination logic
+      if (scrollControllerPost.position.pixels >=
+              scrollControllerPost.position.maxScrollExtent - 50 &&
+          !postController.isPostloading.value) {
+        print('DEBUG: Triggering pagination');
+        postController.isPostloading.value = true;
+        if (postController.isTrending.value) {
+          if (postController.hasMorePostTranding.value) getTranding();
         } else {
-          if ( postController.hasMorePostFeed.value) getPost();
+          if (postController.hasMorePostFeed.value) getPost();
         }
       }
     });
+  
   }
-
-  @override
+//   void _onScroll() // uncomment
+//   {
+//     scrollController.addListener(() async {
+//       if (scrollController.position.pixels >=
+//               scrollController.position.maxScrollExtent - 50 &&
+//           ! postController.isPostloading.value) {
+//          postController.isPostloading.value = true;
+//         if ( postController.isTrending.value) {
+//           if ( postController.hasMorePostTranding.value) getTranding();
+//         } else {
+//           if ( postController.hasMorePostFeed.value) getPost();
+//         }
+//       }
+//     });
+//   }
+   // Scroll-to-top callback for BottomNavigations
+  void _scrollToTop() {
+    print('DEBUG: Double-tap on Community tab, scrolling to top');
+    scrollControllerPost.animateTo(
+      0,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+// 
+ 
+  @override         
   Widget build(BuildContext context) {
+    print('DEBUG: Building Community widget');
     return Scaffold(
-      floatingActionButton:
-          Obx(() =>  postController.isTrending.value ? SizedBox.shrink() : PostImage()),
-      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
+      
+      floatingActionButton: Obx(() =>
+          postController.isTrending.value ? SizedBox.shrink() : PostImage()),
+      // bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
+      bottomNavigationBar: SafeArea(
+        child: BottomNavigations(
+          data: 2,
+          onCommunityDoubleTap: _scrollToTop, // Pass callback
+        ),
+      ),
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height / 1.1,
           padding:
               const EdgeInsets.only(left: 0.0, right: 0.0, bottom: 0, top: 8.0),
           child: SingleChildScrollView(
-            controller: scrollController,
+            controller: scrollControllerPost,
+            // controller: scrollController, uncomment this if anythimg goes wrong with pagination
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -97,35 +139,45 @@ class _CommunityState extends State<Community> {
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 12.0, right: 12.0, top: 4),
-                  child: Obx(() =>
-                       postController.isTrending.value ? getTabs(context) : getTabs(context)),
+                  child: Obx(() => postController.isTrending.value
+                      ? getTabs(context)
+                      : getTabs(context)),
                 ),
-                Obx(() =>  postController.isTrending.value ? getTrandingWidget() : getFeed())
+                Obx(() => postController.isTrending.value
+                    ? getTrandingWidget()
+                    : getFeed()),
+                    
               ],
             ),
+            
           ),
         ),
       ),
+    
     );
+    
   }
 
   Widget getFeed() {
-    return  postController.feedPostList.isEmpty && ! postController.isPost.value
+    return postController.feedPostList.isEmpty && !postController.isPost.value
         ? const Loader()
-        :  postController.isPost.value &&  postController.feedPostList.isEmpty
+        : postController.isPost.value && postController.feedPostList.isEmpty
             ? noFriend(
                 context, "Make friends to see their posts or upload post")
-            : Obx(
-                () =>  postController.getPosted.value ? LazyLoadingList() : LazyLoadingList());
+            : Obx(() => postController.getPosted.value
+                ? LazyLoadingList()
+                : LazyLoadingList());
   }
 
   Widget getTrandingWidget() {
-    return  postController.trandingPostList.isEmpty && ! postController.isPostTranding.value
+    return postController.trandingPostList.isEmpty &&
+            !postController.isPostTranding.value
         ? const Loader()
-        :  postController.isPostTranding.value &&  postController.trandingPostList.isEmpty
+        : postController.isPostTranding.value &&
+                postController.trandingPostList.isEmpty
             ? noFriend(
                 context, "Make friends to see their posts or upload post")
-            : Obx(() =>  postController.getPostedTranding.value
+            : Obx(() => postController.getPostedTranding.value
                 ? LazyLoadingTranding()
                 : LazyLoadingTranding());
   }
@@ -156,10 +208,9 @@ class _CommunityState extends State<Community> {
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
           onTap: () async {
-            String maskedName= ControllerManagement.userController.maskedName.value;
-            maskedName.isEmpty ||
-                    maskedName == "" ||
-                    maskedName == Null
+            String maskedName =
+                ControllerManagement.userController.maskedName.value;
+            maskedName.isEmpty || maskedName == "" || maskedName == Null
                 ? MaskedNameDialogBox.showMaskedNameDialog(context)
                 : await showModal({});
           },
@@ -184,11 +235,11 @@ class _CommunityState extends State<Community> {
         // height:  height,
         child: ListView.builder(
           padding: EdgeInsets.zero,
-          itemCount:postController. feedPostList.length,
+          itemCount: postController.feedPostList.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            final dataObj =postController.feedPostList[index];
+            final dataObj = postController.feedPostList[index];
             return PostCard(
               data: dataObj,
               index: index,
@@ -230,37 +281,43 @@ class _CommunityState extends State<Community> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: GestureDetector(
-              onTap: () {
-                postController.isTrending.value = false;
-                postController.isPostloading.value = false;
-              },
-              child: textStyleImage(
-                  context: context,
-                  text: strings.feed,
-                  fontsize: !postController.isTrending.value ? 20 : 14,
-                  fontWeight:
-                      !postController.isTrending.value ? FontWeight.w700 : FontWeight.w400,
-                  c: postController.isTrending.value?AppColors.now:AppColors.finSpaceColor)),
-        ),
-        GestureDetector(
-            onTap: () {
-                postController.isTrending.value = true;
-                postController.isPostloading.value = false;
-            },
-            child: textStyleImage(
-                context: context,
-                text: strings.trending,
-                fontsize: postController.isTrending.value ? 20 : 14,
-                fontWeight:
-                    postController.isTrending.value ? FontWeight.w700 : FontWeight.w400,
-                c: !postController.isTrending.value?AppColors.now:AppColors.finSpaceColor)),
-      ]),
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                  onTap: () {
+                    postController.isTrending.value = false;
+                    postController.isPostloading.value = false;
+                  },
+                  child: textStyleImage(
+                      context: context,
+                      text: strings.feed,
+                      fontsize: !postController.isTrending.value ? 20 : 14,
+                      fontWeight: !postController.isTrending.value
+                          ? FontWeight.w700
+                          : FontWeight.w400,
+                      c: postController.isTrending.value
+                          ? AppColors.now
+                          : AppColors.finSpaceColor)),
+            ),
+            GestureDetector(
+                onTap: () {
+                  postController.isTrending.value = true;
+                  postController.isPostloading.value = false;
+                },
+                child: textStyleImage(
+                    context: context,
+                    text: strings.trending,
+                    fontsize: postController.isTrending.value ? 20 : 14,
+                    fontWeight: postController.isTrending.value
+                        ? FontWeight.w700
+                        : FontWeight.w400,
+                    c: !postController.isTrending.value
+                        ? AppColors.now
+                        : AppColors.finSpaceColor)),
+          ]),
     );
   }
 
@@ -305,7 +362,7 @@ class _CommunityState extends State<Community> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                           postController.posting.value = false;
+                            postController.posting.value = false;
                             Navigator.of(context).pop();
                             Navigator.push(
                               context,
@@ -345,18 +402,17 @@ class _CommunityState extends State<Community> {
                             postController.posting.value = false;
                             Navigator.of(context).pop();
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ImageScreen(
-                                  userInfo: post,
-                                  onPostCreated: (newPost) {
-                                    setState(() {
-                                      posts.add(newPost);
-                                    });
-                                  },
-                                ),
-                              )
-                            );
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ImageScreen(
+                                    userInfo: post,
+                                    onPostCreated: (newPost) {
+                                      setState(() {
+                                        posts.add(newPost);
+                                      });
+                                    },
+                                  ),
+                                ));
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -458,4 +514,5 @@ class _CommunityState extends State<Community> {
       },
     );
   }
+
 }

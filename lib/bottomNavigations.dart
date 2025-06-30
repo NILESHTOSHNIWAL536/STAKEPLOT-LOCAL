@@ -28,7 +28,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomNavigations extends StatefulWidget {
   int data;
-  BottomNavigations({Key? key, required this.data}) : super(key: key);
+  final VoidCallback? onCommunityDoubleTap;
+  BottomNavigations({Key? key, required this.data, this.onCommunityDoubleTap}) : super(key: key);
 
   @override
   _BottomNavigationsState createState() => _BottomNavigationsState();
@@ -157,8 +158,15 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   Widget getContainer(url, i) {
     bool isSelected =
         widget.data == i; // Check if the current index is selected
-
+int communityIndex = sizeRoom ? 3 : 2;
     return GestureDetector(
+      //  onDoubleTap: () {
+      //   if (i == communityIndex && isSelected) {
+      //     // Double-tap on Community tab when active
+      //     print('DEBUG: Double-tap on Community tab');
+      //     widget.onCommunityDoubleTap?.call();
+      //   }
+      // },
       onLongPress: () async {
         if (i == 2 && widget.data != i)
           pushName(TribeChats(), true);
@@ -167,6 +175,13 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         } else if (i == 3 && widget.data != i) {}
       },
       onTap: () {
+         if (i == communityIndex && isSelected) {
+          // Single tap on already selected Community tab
+          print('DEBUG: Single tap on selected Community tab (index $i)');
+          HapticFeedback.lightImpact();
+          widget.onCommunityDoubleTap?.call();
+          return;
+        }
         if (widget.data == i) return;
          HapticFeedback.heavyImpact();
         try {
