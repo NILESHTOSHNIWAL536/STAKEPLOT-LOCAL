@@ -86,7 +86,7 @@ class HomepageStringsDart {
   String retryButton = "Retry";
 
  // New strings from TransactionHistoryScreen
-  String historyTitle = "History";
+  String historyTitle = "Transactions";
   String myStatement = "My Statement";
   String searchTransactions = "Search transactions";
   String noBankAccountLinked = "No Bank Account Linked Please link your bank account to download the statement.";

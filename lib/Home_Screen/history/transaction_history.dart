@@ -321,14 +321,18 @@ final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUr
     width: avatarSize,
     height: avatarSize,
     decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [
-          AppColors.button.withOpacity(0.8),
-          Colors.white.withOpacity(0.6),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
+      // gradient: LinearGradient(
+      //   colors: [
+      //     AppColors.button.withOpacity(0.8),
+      //     Colors.white.withOpacity(0.6),
+      //   ],
+      //   begin: Alignment.topLeft,
+      //   end: Alignment.bottomRight,
+      // ),
+      border: Border.all(
+                  color: Colorcodes.greyLight,
+                  width: 0.3,
+                ),
       borderRadius: BorderRadius.circular(12 * scaleFactor),
     ),
     child: Center(

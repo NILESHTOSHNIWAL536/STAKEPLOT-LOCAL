@@ -56,6 +56,7 @@ class _EditDetailsState extends State<EditDetails> {
   void initState() {
     super.initState();
     changeAvater.value = userController.avatar.value;
+    print("DOB value: ${userController.dob.value}");
     checkBiometricsStatus();
     userController.fetchUserInfo();
   }
@@ -232,8 +233,8 @@ class _EditDetailsState extends State<EditDetails> {
                   _buildNonEditableField(
                       Icons.calendar_today,
                       ProfileScreenStrings().dobLabel,
-                      DateFormat('dd-MM-yyyy').format(DateTime.parse(userController.dob.value))
-                      ),
+                      userController.dob.value.isNotEmpty?
+                      DateFormat('yyyy-MM-dd').format(DateTime.parse(userController.dob.value)):'Not provided'),
                 ],
               ),
             ),
@@ -298,8 +299,8 @@ class _EditDetailsState extends State<EditDetails> {
     );
   }
 
-
   Widget _buildNonEditableField(IconData icon, String label, String value) {
+   
     return Container(
       padding: EdgeInsets.symmetric(vertical: 0),
       width: MediaQuery.of(context).size.width / 1.1,

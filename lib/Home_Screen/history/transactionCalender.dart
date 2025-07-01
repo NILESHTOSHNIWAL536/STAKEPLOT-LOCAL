@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
-import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:intl/intl.dart';
 
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
 
 class CalendarTransactionScreen extends StatefulWidget {
+  
   const CalendarTransactionScreen({super.key});
 
   @override
@@ -44,20 +45,37 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
   void initState() {
     super.initState();
     _fetchDayWiseTransactions();
+    
     scrollController.addListener(_onScroll);
   }
 
-  Future<void> _fetchDayWiseTransactions() async {
+  // Future<void> _fetchDayWiseTransactions() async {
+  //   final transactions = await getDayWiseTransactions(context);
+  //   if (mounted) {
+  //     setState(() {
+  //       dayWiseTransactions.assignAll(transactions);
+  //        _updateCalendarData();
+  //        _calculateMonthlyTotals();
+        
+  //     });
+  //   }
+  // }
+Future<void> _fetchDayWiseTransactions() async {
+     final now = DateTime(currentYear.value,
+      DateFormat('MMMM').parse(currentMonth.value).month, 1);
     final transactions = await getDayWiseTransactions(context);
     if (mounted) {
       setState(() {
-        dayWiseTransactions.assignAll(transactions);
-        _updateCalendarData();
-        _calculateMonthlyTotals();
+       dayWiseTransactions.assignAll(transactions.where((data) {
+        final date = convertStringToDateTime(data['date']);
+        return date.month == now.month && date.year == now.year;
+      }).toList());
+         _updateCalendarData();
+         _calculateMonthlyTotals();
+        
       });
     }
   }
-
   void _updateCalendarData() {
     final now = DateTime(currentYear.value,
         DateFormat('MMMM').parse(currentMonth.value).month, 1);
@@ -117,6 +135,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
             .map((tx) => TransactionModel.fromJson(tx).toJson())
             .toList());
       });
+       _calculateDateTotals();
     }
   }
 
@@ -153,6 +172,8 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
         DateFormat('MMMM').parse(currentMonth.value).month + delta, 1);
     currentMonth.value = DateFormat('MMMM').format(newMonth);
     currentYear.value = newMonth.year;
+    selectedDate.value = ''; // Reset selected date when changing months
+  isDateSummaryView.value = false; 
     _fetchDayWiseTransactionsForMonth(newMonth);
   }
 
@@ -169,25 +190,28 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
       });
     }
   }
-  void _scrollToSelectedDate() {
-    final selectedDay = int.tryParse(selectedDate.value) ?? 1;
-    final now = DateTime(currentYear.value, DateFormat('MMMM').parse(currentMonth.value).month, 1);
-    final index = selectedDay - 1; // 0-based index
-    final totalDays = DateTime(now.year, now.month + 1, 0).day;
+ void _scrollToSelectedDate() {
+  final selectedDay = int.tryParse(selectedDate.value) ?? 1;
+  final now = DateTime(currentYear.value, DateFormat('MMMM').parse(currentMonth.value).month, 1);
+  final index = selectedDay - 1; // 0-based index
+  final totalDays = DateTime(now.year, now.month + 1, 0).day;
 
-    if (index >= 0 && index < totalDays) {
-      final screenWidth = MediaQuery.of(context).size.width;
-      final itemWidth = 58.0; // Approximate width including margin (50 + 8)
-      final maxScrollExtent = (totalDays - 1) * itemWidth;
-      final targetPosition = index * itemWidth;
+  if (index >= 0 && index < totalDays) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final itemWidth = 58.0; // Approximate width including margin (50 + 8)
+    final maxScrollExtent = (totalDays * itemWidth) - screenWidth;
+    final targetPosition = index * itemWidth;
 
-      // Adjust to ensure the date is visible, aiming for the left side of the screen
-      final visibleOffset = targetPosition - (screenWidth * 0.1); // Small offset to keep it left-aligned
-      dateScrollController.jumpTo(
-        visibleOffset.clamp(0.0, maxScrollExtent),
-      );
-    }
+    // Center the selected date in the view
+    final centeredOffset = (targetPosition - (screenWidth / 2) + (itemWidth / 2)).clamp(0.0, maxScrollExtent);
+
+    dateScrollController.animateTo(
+      centeredOffset,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,11 +231,14 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
   }
 
   Widget _buildCalendarView(BuildContext context) {
+     final now = DateTime.now();
+  final isCurrentMonth = currentYear.value == now.year &&
+      currentMonth.value == DateFormat('MMMM').format(now);
     return Column(
       children: [
         // Month Header with Navigation
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -229,9 +256,14 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
                     ),
                   )),
               IconButton(
-                icon: Icon(Icons.chevron_right, color: AppColors.accentColor),
-                onPressed: () => _changeMonth(1),
+              icon: Icon(
+                Icons.chevron_right,
+                color: isCurrentMonth
+                    ? AppColors.grey
+                    : AppColors.accentColor,
               ),
+              onPressed: isCurrentMonth ? null : () => _changeMonth(1),
+            ),
             ],
           ),
         ),
@@ -242,12 +274,13 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
         // Calendar Grid
         Expanded(
           child: Obx(() => GridView.builder(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(12),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 5,
                   childAspectRatio: 1.0,
-                  crossAxisSpacing: 8,
+                  crossAxisSpacing: 10,
                   mainAxisSpacing: 8,
+
                 ),
                 itemCount: calendarData.length,
                 itemBuilder: (context, index) {
@@ -296,6 +329,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
                     : AppColors.likesharecommentCount,
               ),
             ),
+            SizedBox(height: 2),
             if (dateData['date'] != null)
               Text(
                 dateData['dayOfWeek'], // Display day abbreviation
@@ -305,6 +339,9 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
                   color: AppColors.grey,
                 ),
               ),
+              SizedBox(height: 2),
+             if (dateData['date'] != null) _buildDottedDivider(),
+            SizedBox(height: 2),
             if (dateData['date'] != null)
               Text(
                 '${dateData['transactionCount']} tnxs',
@@ -403,7 +440,27 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
 
         // Transaction List
         Expanded(
-          child: Obx(() => ListView.builder(
+          child: Obx(() {
+          if (selectedDateTransactions.isEmpty) {
+              return Center(
+                child:  Column(
+                  children: [
+                    AvatarProfileImage(
+                                          url: "assets/icons/Home-page/nullTransactions.svg",
+                                          height: 5,
+                                          width: 5,
+                                        ),
+                  
+          
+                    Text('No transactions found on this selected date',
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: AppColors.accentColor)),
+                  ])
+              );
+            }
+            return ListView.builder(
                 controller: scrollController,
                 itemCount: selectedDateTransactions.length,
                 itemBuilder: (context, index) {
@@ -419,9 +476,39 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
                     true,
                   );
                 },
-              )),
+              );
+          }
+          ),
         ),
       ],
+    );
+  }
+  Widget _buildDottedDivider() {
+    return Container(
+      height: 1,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final boxWidth = constraints.constrainWidth();
+          final dashWidth = 2.0;
+          final dashHeight = 1.0;
+          final dashCount = (boxWidth / (2 * dashWidth)).floor();
+          return Flex(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            direction: Axis.horizontal,
+            children: List.generate(dashCount, (_) {
+              return SizedBox(
+                width: dashWidth,
+                height: dashHeight,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColors.finSpaceColor.withOpacity(0.4),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
+      ),
     );
   }
 
@@ -431,6 +518,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
       child: Column(
         children: [
           Row(
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Credit',
@@ -440,16 +528,8 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
                   color: AppColors.accentColor,
                 ),
               ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ),
+             
+             
               SizedBox(width: 16),
               Obx(() => Text(
                     '₹ ${totalCredit.value.toStringAsFixed(0)}',
@@ -464,6 +544,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
           ),
           SizedBox(height: 12),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Debit',
@@ -473,16 +554,8 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
                   color: AppColors.accentColor,
                 ),
               ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: Colors.purple.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ),
+             
+             
               SizedBox(width: 16),
               Obx(() => Text(
                     '₹ ${totalDebit.value.toStringAsFixed(0)}',

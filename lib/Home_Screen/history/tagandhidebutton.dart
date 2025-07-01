@@ -54,34 +54,23 @@ Widget tabItem(String text,BuildContext context) {
       height: tabHeight,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primaryColor : AppColors.bg5,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isSelected ? AppColors.primaryColor : AppColors.bg1,
-        ),
-        gradient: isSelected
-            ? LinearGradient(
-                colors: [
-                  AppColors.primaryColor,
-                  AppColors.primaryColor.withOpacity(0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : null,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        
+       
+       
+        border: Border(
+    bottom: BorderSide(
+      color: isSelected ? AppColors.backgroundColor : AppColors.historyAppbar,
+      width: isSelected ? 3.0 : 0.0, // Adjust the width as needed
+    ),
+  ),
+        
+       
       ),
       child: Center(
         child: textStyleImage(
           context: context,
           text: text,
-          c: isSelected ? AppColors.bg5 : AppColors.primaryColor,
+          c: isSelected ? AppColors.bg5 : AppColors.historyAppbarIcon,
           fontsize: 14,
           fontWeight: FontWeight.w600,
         ),

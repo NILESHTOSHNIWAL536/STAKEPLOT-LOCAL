@@ -37,7 +37,7 @@ void getAutoMationsTransactions() async {
 
 void changeTrasactiondata() async {
   List allTransactions = [];
- 
+
   for (var category in trasactionsData) {
     String categoryId = category['_id'];
     String categoryName = category['category'];
@@ -116,7 +116,7 @@ void getAutoMationsTransactionsCustom(date, context,
       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
   var response = await getDataApiCall(urlPath);
-  
+
   trasactionsDataDebitWeekly.clear();
 
   List<String> labelsLocal = [];
@@ -169,7 +169,6 @@ void getAutoMationsTransactionsCustom(date, context,
             }
           }
         });
-
       } else {
         // Keep original logic for non-custom cases
         data.forEach((key, value) {
@@ -180,7 +179,6 @@ void getAutoMationsTransactionsCustom(date, context,
           debitList.add(getDouble(value['debit']));
           creditList.add(getDouble(value['credit']));
         });
-       
       }
     } catch (e) {
       maxYValue.value = 500.0;
@@ -306,10 +304,8 @@ void getUserBankData(context) async {
   String urlPath = "${url}/transactionauto/userDetails/";
   var responce = await getDataApiCall(urlPath);
 
-  if (getFlagOfResponse(responce)) {
-  }
+  if (getFlagOfResponse(responce)) {}
 }
-
 
 void updateTheTagOfTarnsactions(
     category, subCategory, transactionId, context, index) async {
@@ -381,11 +377,78 @@ void getHideTransactions(context) async {
         .addAll(his['allTransactions']['categorized_transactions']);
   }
 }
+// Future<void> addTransaction(
+//   String amount,
+//   String subCategory,
+//   String categories,
+//   BuildContext context,
+//   String dropdownValue, [
+//   bool isSplit = false,
+//   bool snackBar = true,
+// ]) async {
+//   var body = {
+//     'amount': amount.toString(),
+//     'category': categories.toString(),
+//     'label': subCategory.toString(),
+//     'account': dropdownValue.toString(),
+//     'room': {},
+//     'isSplit': isSplit,
+//     'isDebit': isDebit,
+//   };
+//   print("body of transaction $body");
 
-void addTransaction(String amount, String subCategory, String categories,
-    BuildContext context, String dropdownValue,
-    [bool isSplit = false,bool snackBar=true]) async {
+//   try {
+//     final response = await postDataApiCall("${url}/transaction/add", body);
 
+//     if (getFlagOfResponse(response)) {
+//       final body = json.decode(response.body);
+//       print('API response body: $body'); // Debug logging
+//       // Check if the expected data structure exists
+//       if (body['data'] != null && body['data'].isNotEmpty && body['data'][0]['data'] != null) {
+//         final transactionData = body['data'][0]['data'] as Map<String, dynamic>;
+//         transactionsHistory.insert(0, TransactionModel.fromJson(transactionData));
+
+//         if (!isSplit && snackBar) {
+//           snackBarCalled(
+//             context,
+//             SnackbarData().transactionSuccess,
+//             AppColors.primaryColor,
+//           );
+//         }
+
+//         reloadHistory.value = !reloadHistory.value;
+//         getCategoryData();
+//         setDonectChat.value = !setDonectChat.value;
+//         processChartData();
+//         getAutoMationsTransactionsCustom(getFormattedDate(), context);
+//         Navigator.pop(context);
+//       } else {
+//         snackBarCalledfail(
+//           context,
+//           'Invalid API response structure',
+//           Colors.red,
+//         );
+//       }
+//     } else {
+//       snackBarCalledfail(
+//         context,
+//         SnackbarData().transactionAddFail,
+//         Colors.red,
+//       );
+//     }
+//   } catch (e) {
+//     print('Error adding transaction: $e');
+//     snackBarCalledfail(
+//       context,
+//       'Failed to add transaction: $e',
+//       Colors.red,
+//     );
+//   } finally {
+//     cashInAndOut.value = false;
+//   }
+// }
+
+void addTransaction(String amount, String subCategory, String categories,BuildContext context, String dropdownValue,[bool isSplit = false, bool snackBar = true]) async {
   var body = {
     'amount': amount.toString(),
     'category': categories.toString(),
@@ -395,15 +458,16 @@ void addTransaction(String amount, String subCategory, String categories,
     'isSplit': isSplit,
     'isDebit': isDebit
   };
-
+  print("body of transaction $body");
   final response = await postDataApiCall("${url}/transaction/add", body);
-   printData(response);
   if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
     if (!isSplit && snackBar) {
-      snackBarCalled(context,  SnackbarData().transactionSuccess,AppColors.primaryColor);
+      snackBarCalled(
+          context, SnackbarData().transactionSuccess, AppColors.primaryColor);
     }
-    transactionsHistory.insert(0,TransactionModel.fromJson(body['data'][0]));
+    transactionsHistory.insert(0, TransactionModel.fromJson(body['data'][0]['data']));
+    
     reloadHistory.value = !reloadHistory.value;
     getCategoryData();
     setDonectChat.value = !setDonectChat.value;
@@ -414,7 +478,7 @@ void addTransaction(String amount, String subCategory, String categories,
     snackBarCalledfail(context, SnackbarData().transactionAddFail, Colors.red);
   }
 
-   cashInAndOut.value =false;
+  cashInAndOut.value = false;
 }
 
 void processChartData() {

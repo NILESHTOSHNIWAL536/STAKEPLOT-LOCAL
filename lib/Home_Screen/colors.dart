@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primaryColor =  Color(0xFF004856);
+  static const Color primaryColor =  Color(0xFF4B4D73);
+  // static const Color primaryColor =  Color(0xFF004856);
   static const Color accentColor = Color(0xFF1E1E1E);
   static const Color mt = Color(0xFFF4F4F4); // for app bg
   static const Color button = Color(0xFFE6EAEB); // for buttons bg and using for
@@ -35,6 +36,10 @@ class AppColors {
    static const Color textBgColor = Color(0xFFEEEEEE);
    static const Color welcomeBack = Color(0xFF454545);
    static const Color now = Color(0xFFACACAC);
+   static const Color historyAmtColor = Color(0xFF344054);
+   static const Color historyCategory = Color(0xFF547792);
+   static const Color historyAppbar = Color(0xFFBDBFE9);
+   static const Color historyAppbarIcon = Color(0xFF4B4D73);
 
  
 }
