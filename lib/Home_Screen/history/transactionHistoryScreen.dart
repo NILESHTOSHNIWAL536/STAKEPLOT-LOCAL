@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/dayWiseTr
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_AppBar.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/tagandhidebutton.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionCalender.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
@@ -46,8 +47,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     getDayWiseTransactions(context).then((data) {
       dayWiseTransactions.assignAll(data);
     });
-  
-    // getDayWiseTransactionsForDate(context);
+    
 
     scrollController.addListener(_onScroll);
   }
@@ -149,32 +149,51 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                   ),
 
                   // Transaction History or Date Summary View
-                  Obx(() => Container(
-                        width: MediaQuery.of(context).size.width,
+                  // Obx(() => Container(
+                  //       width: MediaQuery.of(context).size.width,
+                  //       height: MediaQuery.sizeOf(context).height /
+                  //           ((groupTransactionList.length != 0 ||
+                  //                   redioButton.isNotEmpty)
+                  //               ? 1.35
+                  //               : 1.25),
+                  //       child: isDateSummaryView.value
+                  //           ? DateSummaryView(
+                  //               dayWiseTransactions: dayWiseTransactions,
+                  //               onBack: () {
+                  //                 setState(() {
+                  //                   isDateSummaryView.value = false;
+                  //                 });
+                  //               },
+                  //             )
+                  //           : SingleChildScrollView(
+                  //               controller: scrollController,
+                  //               child: TransactionHistory(
+                  //                 isYearView: false,
+                  //                 isflag: true,
+                  //                 showIcon: false,
+                  //                 expandedPage: false,
+                  //               ),
+                  //             ),
+                  //     ))
+                Obx(() =>Container(
+                  width: MediaQuery.of(context).size.width,
                         height: MediaQuery.sizeOf(context).height /
                             ((groupTransactionList.length != 0 ||
                                     redioButton.isNotEmpty)
                                 ? 1.35
                                 : 1.25),
-                        child: isDateSummaryView.value
-                            ? DateSummaryView(
-                                dayWiseTransactions: dayWiseTransactions,
-                                onBack: () {
-                                  setState(() {
-                                    isDateSummaryView.value = false;
-                                  });
-                                },
-                              )
-                            : SingleChildScrollView(
-                                controller: scrollController,
-                                child: TransactionHistory(
-                                  isYearView: false,
-                                  isflag: true,
-                                  showIcon: false,
-                                  expandedPage: false,
-                                ),
-                              ),
-                      ))
+            child: isDateSummaryView.value
+                ? CalendarTransactionScreen()
+                : SingleChildScrollView(
+                    controller: scrollController,
+                    child: TransactionHistory(
+                      isYearView: false,
+                      isflag: true,
+                      showIcon: false,
+                      expandedPage: false,
+                    ),
+                  ),
+          )),
                 ],
               ),
             ),
