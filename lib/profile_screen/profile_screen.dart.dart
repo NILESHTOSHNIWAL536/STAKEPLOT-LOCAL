@@ -15,6 +15,7 @@ import "package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -33,41 +34,65 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
     getHiddenTransactions(context);
   }
 
-  Future<bool> authenticateUser(BuildContext context) async {
+  void authenticateUser(BuildContext context) async {
     final LocalAuthentication auth = LocalAuthentication();
     bool isAuthenticated = false;
-
     try {
+      // Check if the device supports biometrics or authentication
       bool canCheckBiometrics = await auth.canCheckBiometrics;
       bool isDeviceSupported = await auth.isDeviceSupported();
-
+     
       if (canCheckBiometrics || isDeviceSupported) {
+        // Check if any biometrics are enrolled
+        List<BiometricType> availableBiometrics =
+            await auth.getAvailableBiometrics();
+        if (availableBiometrics.contains(BiometricType.strong) ||
+            availableBiometrics.contains(BiometricType.face)) {
+          // Specific types of biometrics are available. Use checks like this with caution!
+        }
+       
+        // Attempt authentication regardless of availableBiometrics to handle face lock
         isAuthenticated = await auth.authenticate(
-          localizedReason:  ProfileScreenStrings().historyArchivesSubLabel,
+          localizedReason: ProfileScreenStrings().historyArchivesSubLabel,
           options: const AuthenticationOptions(
-            biometricOnly: false, // Allow PIN fallback
-            stickyAuth: true,
+            biometricOnly: false, // Allow PIN/password fallback
+            stickyAuth: false,
             useErrorDialogs: true,
-            
+            sensitiveTransaction: true,
           ),
         );
+       
       } else {
-        snackBarCalledfail(context,SnackbarData().biometric);
-         isAuthenticated = true;
-        
+        // Device does not support biometrics or authentication, bypass authentication
+       
+       
+        return;
       }
     } catch (e) {
-       isAuthenticated = true;
+      // Log the error for debugging and show error message
+      snackBarCalledfail(
+        context, "Authentication failed or canceled. Please try again.");
+      return;
     }
 
-    return isAuthenticated;
+    // Only proceed if authentication was successful or bypassed
+    if (!isAuthenticated) {
+      return; // Stop execution if not authenticated
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HiddenTransactionsScreen(),
+      ),
+    );
   }
+
 
   @override
   Widget build(
     BuildContext context,
   ) {
-    UserController userController =ControllerManagement.userController;
+    UserController userController = ControllerManagement.userController;
     return Scaffold(
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 3)),
       backgroundColor: AppColors.backgroundColor,
@@ -76,16 +101,23 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, children: [
-             
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Padding(
                 padding: const EdgeInsets.only(top: 5, left: 5, right: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AvatarProfile(name:userController.userName.value, width: 8, height: 10,background:userController.avatarBackGround.value,flag: false,),
-                    const SizedBox(width: 3,),
+                    AvatarProfile(
+                      name: userController.userName.value,
+                      width: 8,
+                      height: 10,
+                      background: userController.avatarBackGround.value,
+                      flag: false,
+                    ),
+                    const SizedBox(
+                      width: 3,
+                    ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,19 +127,24 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                   lWeight: FontWeight.w600,
                                   color: AppColors.primaryColor)),
                           Container(
-                            width: MediaQuery.of(context).size.width/2.1,
+                            width: MediaQuery.of(context).size.width / 2.1,
                             padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Text(userController.email.value,
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 10,
-                                    color: AppColors.bg1),overflow: TextOverflow.ellipsis,),
-                          ),
-                      userController.phone.value=="0"?SizedBox.shrink():Text(userController.phone.value,
+                            child: Text(
+                              userController.email.value,
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400,
                                   fontSize: 10,
-                                  color: AppColors.bg1)),
+                                  color: AppColors.bg1),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          userController.phone.value == "0"
+                              ? SizedBox.shrink()
+                              : Text(userController.phone.value,
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.w400,
+                                      fontSize: 10,
+                                      color: AppColors.bg1)),
                         ],
                       ),
                     ),
@@ -115,7 +152,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => EditDetails()),
+                          MaterialPageRoute(
+                              builder: (context) => EditDetails()),
                         );
                       },
                       child: Container(
@@ -126,7 +164,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Row(
-                          
                             children: [
                               AvatarProfileImage(
                                 url: ProfileIcons.edit,
@@ -161,17 +198,17 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                       padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
                       child: Column(
                         children: [
-     
-                              _buildOption(
-                                ProfileImage(url: ProfileIcons.friends),
-                                ProfileScreenStrings().friendsListLabel, // Direct access
-                                ProfileScreenStrings().friendsListSubLabel, // Direct access
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/Friends');
-                                },
-                              ),
-                        
-                            ],
+                          _buildOption(
+                            ProfileImage(url: ProfileIcons.friends),
+                            ProfileScreenStrings()
+                                .friendsListLabel, // Direct access
+                            ProfileScreenStrings()
+                                .friendsListSubLabel, // Direct access
+                            onTap: () {
+                              Navigator.pushNamed(context, '/Friends');
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -186,26 +223,16 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                       child: Column(
                         children: [
                           InkWell(
-                            onTap: () async {
-                              bool isAuthenticated =
-                                  await authenticateUser(context);
-                              if (isAuthenticated) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        HiddenTransactionsScreen(),
-                                  ),
-                                );
-                              } else {
-                               
-                              }
+                            onTap: () {
+                              authenticateUser(context);
                             },
                             child: _buildOption(
-                                  ProfileImage(url: ProfileIcons.support),
-                                  ProfileScreenStrings().historyArchivesLabel, // Direct access
-                                  ProfileScreenStrings().historyArchivesSubLabel, // Direct access
-                                ),
+                              ProfileImage(url: ProfileIcons.support),
+                              ProfileScreenStrings()
+                                  .historyArchivesLabel, // Direct access
+                              ProfileScreenStrings()
+                                  .historyArchivesSubLabel, // Direct access
+                            ),
                           ),
                           Divider(),
                           InkWell(
@@ -223,18 +250,18 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                               );
                             },
                             child: _buildOption(
-                                  ProfileImage(url: ProfileIcons.terms),
-                                  ProfileScreenStrings().termsConditionsLabel, // Direct access
-                                  ProfileScreenStrings().termsConditionsSubLabel, // Direct access
-                                ),
+                              ProfileImage(url: ProfileIcons.terms),
+                              ProfileScreenStrings()
+                                  .termsConditionsLabel, // Direct access
+                              ProfileScreenStrings()
+                                  .termsConditionsSubLabel, // Direct access
+                            ),
                           ),
-            
-                    
                         ],
                       ),
                     ),
                   ),
-            
+
                   // Third Container for Log ou
                   // t
                   const SizedBox(
@@ -257,8 +284,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       children: [
         InkWell(
           onTap: () async {
-             await storeDeviceInfo();
-             logoutUserFromDevice(context);
+            await storeDeviceInfo();
+            logoutUserFromDevice(context);
           },
           child: Container(
             decoration: BoxDecoration(
@@ -267,7 +294,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                 border: Border.all(color: AppColors.border)),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
-            child: _buildOption(
+              child: _buildOption(
                 ProfileImage(url: ProfileIcons.logout),
                 ProfileScreenStrings().logoutLabel, // Direct access
                 ProfileScreenStrings().logoutSubLabel, // Direct access

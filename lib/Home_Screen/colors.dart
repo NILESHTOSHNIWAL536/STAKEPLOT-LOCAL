@@ -40,6 +40,8 @@ class AppColors {
    static const Color historyCategory = Color(0xFF547792);
    static const Color historyAppbar = Color(0xFFBDBFE9);
    static const Color historyAppbarIcon = Color(0xFF4B4D73);
+   static const Color historyCalenderText = Color(0xFFA1A1A1);
+   static const Color historyCalenderDivider = Color(0xFF7E80A8);
 
  
 }

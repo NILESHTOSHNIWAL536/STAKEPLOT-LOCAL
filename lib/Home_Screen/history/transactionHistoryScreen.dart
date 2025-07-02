@@ -92,6 +92,18 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               getTextFeild(),
+                               InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    isDateSummaryView.value = !isDateSummaryView
+                                        .value; // Toggle state
+                                  });
+                                },
+                                  child:  !isDateSummaryView.value?AvatarProfileImage(
+                url: HomePageIcons.dayWiseIcon1, width: 70, height: 36):Icon(Icons
+                                          .calendar_view_month)
+                               
+                              ),
                               InkWell(
                                 onTap: () {
                                   showModalBottomSheet(
@@ -115,18 +127,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                 child:  AvatarProfileImage(
                 url: HomePageIcons.filterIcon, width: 66, height: 30),
                               ),
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    isDateSummaryView.value = !isDateSummaryView
-                                        .value; // Toggle state
-                                  });
-                                },
-                                  child:  !isDateSummaryView.value?AvatarProfileImage(
-                url: HomePageIcons.dayWiseIcon1, width: 70, height: 36):Icon(Icons
-                                          .calendar_view_month)
-                               
-                              ),
+                             
                             ],
                           ),
                           Obx(() => (groupTransactionList.length != 0 ||

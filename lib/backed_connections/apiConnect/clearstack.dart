@@ -247,6 +247,10 @@ void logoutUserFromDevice(context2)async{
            {
               final SharedPreferences _pref =await SharedPreferences.getInstance();
               clearGetX();
+              // added this for logout to prevent red screen
+               if (!Get.isRegistered<UserController>()) {
+                Get.lazyPut(() => UserController());
+    }
               Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
               Navigator.pushReplacementNamed(context, '/');
               await _pref.remove("token");

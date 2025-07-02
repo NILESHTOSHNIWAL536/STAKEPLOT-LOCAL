@@ -159,7 +159,11 @@ class CommunityState extends State<Community> {
 
   Widget getFeed() {
     return postController.feedPostList.isEmpty && !postController.isPost.value
-        ? const Loader()
+        ? const Center(
+          child:  Loader(
+            
+          ),
+        )
         : (postController.isPost.value && postController.feedPostList.isEmpty)
             ? Padding(
               padding: const EdgeInsets.only(top: 40),
@@ -191,7 +195,7 @@ class CommunityState extends State<Community> {
   Widget getTrandingWidget() {
     return postController.trandingPostList.isEmpty &&
             !postController.isPostTranding.value
-        ? const Loader()
+        ? Center(child: const Loader())
         : (postController.isPostTranding.value &&
                 postController.trandingPostList.isEmpty)
             ?  Padding(

@@ -143,7 +143,16 @@ class _FinancePageState extends State<FinancePage> {
                 ? Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height / 2.6,
-                    child: consentAndHandleDetails.isEmpty? Center(child: textStyleImage(context: context,text: HomepageStringsDart().noSpendingsAvailable, fontsize: fontSizeFactor * 4.0, c: AppColors.accentColor)):Spinner(),
+                    child: consentAndHandleDetails.isEmpty?
+                     Center(
+                      child: textStyleImage(
+                        context: context,
+                        text: HomepageStringsDart().noSpendingsAvailable, 
+                        fontsize: fontSizeFactor * 4.0, c: AppColors.accentColor)):Center(
+                          child: Spinner(
+                                                size: 60,
+                                              ),
+                        ),
                   )
                 : LineChartWidget(
                     chartData: transactionChatGraph,

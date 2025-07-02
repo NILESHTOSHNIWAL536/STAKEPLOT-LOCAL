@@ -343,21 +343,37 @@ class _TribeSearchState extends State<TribeChats> {
                 chatList = getSearchDataRx(value, chatListOriginal);
               });
             },
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              // prefixIconColor: Colorcodes.budgetDarkGreen,
-              filled: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
-              hintText: lableText,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-              fillColor: AppColors.button,
-              border: InputBorder.none,
-            ),
+             decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                    filled: true,
+                    enabled: true,
+                    hintText: lableText,
+                    fillColor: AppColors.backgroundColor,
+                    hintStyle: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: Colors.black),
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+            // decoration: InputDecoration(
+            //   prefixIcon: Icon(Icons.search),
+            //   // prefixIconColor: Colorcodes.budgetDarkGreen,
+            //   filled: true,
+            //   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
+            //   hintText: lableText,
+            //   enabledBorder: OutlineInputBorder(
+            //     borderRadius: BorderRadius.circular(24),
+            //   ),
+            //   focusedBorder: OutlineInputBorder(
+            //     borderRadius: BorderRadius.circular(24),
+            //   ),
+            //   fillColor: AppColors.button,
+            //   border: InputBorder.none,
+            // ),
           ),
         ),
       ),

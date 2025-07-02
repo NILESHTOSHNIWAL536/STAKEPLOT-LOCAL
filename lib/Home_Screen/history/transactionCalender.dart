@@ -190,17 +190,21 @@ Future<void> _fetchDayWiseTransactions() async {
       });
     }
   }
- void _scrollToSelectedDate() {
+void _scrollToSelectedDate() {
   final selectedDay = int.tryParse(selectedDate.value) ?? 1;
   final now = DateTime(currentYear.value, DateFormat('MMMM').parse(currentMonth.value).month, 1);
-  final index = selectedDay - 1; // 0-based index
-  final totalDays = DateTime(now.year, now.month + 1, 0).day;
+  final selectedDateTime = DateTime(now.year, now.month, selectedDay);
+  final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
 
-  if (index >= 0 && index < totalDays) {
+  // Calculate the index in the date list, accounting for previous month's dates
+  final dateList = _generateDateList();
+  final selectedIndex = dateList.indexWhere((date) => date['day'] == selectedDay && date['month'] == now.month);
+
+  if (selectedIndex >= 0) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final itemWidth = 58.0; // Approximate width including margin (50 + 8)
-    final maxScrollExtent = (totalDays * itemWidth) - screenWidth;
-    final targetPosition = index * itemWidth;
+    final itemWidth = 48.0; // Approximate width including margin (50 + 8)
+    final maxScrollExtent = (dateList.length * itemWidth) - screenWidth;
+    final targetPosition = selectedIndex * itemWidth;
 
     // Center the selected date in the view
     final centeredOffset = (targetPosition - (screenWidth / 2) + (itemWidth / 2)).clamp(0.0, maxScrollExtent);
@@ -211,6 +215,191 @@ Future<void> _fetchDayWiseTransactions() async {
       curve: Curves.easeInOut,
     );
   }
+}
+
+// Helper method to generate the date list including previous month's dates
+List<Map<String, dynamic>> _generateDateList() {
+  final now = DateTime(currentYear.value, DateFormat('MMMM').parse(currentMonth.value).month, 1);
+  final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+  final selectedDay = int.tryParse(selectedDate.value) ?? 1;
+  List<Map<String, dynamic>> dateList = [];
+
+  // If selected date is 1st, 2nd, or 3rd, include previous month's dates
+  int daysToShowFromPrevMonth = 0;
+  if (selectedDay <= 3) {
+    daysToShowFromPrevMonth = 5; // Show 5 days from previous month
+    final prevMonth = DateTime(now.year, now.month, 0); // Last day of previous month
+    final daysInPrevMonth = prevMonth.day;
+    for (int i = daysInPrevMonth - daysToShowFromPrevMonth + 1; i <= daysInPrevMonth; i++) {
+      final date = DateTime(now.year, now.month - 1, i);
+      final apiDate = dayWiseTransactions.firstWhere(
+        (data) =>
+            convertStringToDateTime(data['date']).day == i &&
+            convertStringToDateTime(data['date']).month == prevMonth.month,
+        orElse: () => {'count': 0, 'date': date.toIso8601String(), 'creditAmount': 0, 'debitAmount': 0},
+      );
+      dateList.add({
+        'day': i,
+        'month': prevMonth.month,
+        'fullDate': date.toIso8601String(),
+        'transactionCount': apiDate['count'] ?? 0,
+      });
+    }
+  }
+
+  // Add current month's dates
+  for (int i = 1; i <= daysInMonth; i++) {
+    final date = DateTime(now.year, now.month, i);
+    final apiDate = dayWiseTransactions.firstWhere(
+      (data) =>
+          convertStringToDateTime(data['date']).day == i &&
+          convertStringToDateTime(data['date']).month == now.month,
+      orElse: () => {'count': 0, 'date': date.toIso8601String(), 'creditAmount': 0, 'debitAmount': 0},
+    );
+    dateList.add({
+      'day': i,
+      'month': now.month,
+      'fullDate': date.toIso8601String(),
+      'transactionCount': apiDate['count'] ?? 0,
+    });
+  }
+
+  return dateList;
+}
+
+Widget _buildDateBreakdownView(BuildContext context) {
+  final now = DateTime(currentYear.value, DateFormat('MMMM').parse(currentMonth.value).month, 1);
+  final dateList = _generateDateList();
+
+  return Column(
+    children: [
+      // Date Navigation with Back Button
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
+              onPressed: () {
+                isDateSummaryView.value = false;
+                selectedDate.value = '';
+              },
+            ),
+            Obx(() => Text(
+                  '$selectedDate, $currentMonth $currentYear',
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 16,
+                    lWeight: FontWeight.w600,
+                    color: AppColors.accentColor,
+                  ),
+                )),
+            SizedBox.shrink(), // Placeholder for symmetry
+          ],
+        ),
+      ),
+      Container(
+        height: 60,
+        child: ListView.builder(
+          controller: dateScrollController,
+          scrollDirection: Axis.horizontal,
+          itemCount: dateList.length,
+          itemBuilder: (context, index) {
+            final dateData = dateList[index];
+            final day = dateData['day'].toString();
+            final isSelected = selectedDate.value == day && dateData['month'] == now.month;
+            return GestureDetector(
+              onTap: () {
+                selectedDate.value = day;
+                _loadTransactionsForDate(dateData['fullDate']);
+                _scrollToSelectedDate();
+              },
+              child: Container(
+                width: 40,
+                margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundColor,
+                 borderRadius: isSelected?BorderRadius.circular(5):null, // 5px border radius
+                 boxShadow: isSelected
+      ? [
+          BoxShadow(
+            color: Color.fromRGBO(75, 77, 115, 0.25),
+            blurRadius: 2,
+            offset: Offset(0, 2),
+            spreadRadius: 0,
+          ),
+        ]
+      : null,
+          
+                ),
+                
+                child: Center(
+                  child: Text(
+                    day,
+                    style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 16,
+                    lWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    color: isSelected ? AppColors.primaryColor : AppColors.historyCalenderText,
+                  ),
+                     
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+
+      // Credit/Debit Summary
+      _buildCreditDebitSummary(context),
+
+      // Transaction List
+      Expanded(
+        child: Obx(() {
+          if (selectedDateTransactions.isEmpty) {
+            return Center(
+              child: Column(
+                children: [
+                  AvatarProfileImage(
+                    url: "assets/icons/Home-page/nullTransactions.svg",
+                    height: 5,
+                    width: 5,
+                  ),
+                  Text(
+                    'No transactions found on this selected date',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: AppColors.accentColor,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+          return ListView.builder(
+            controller: scrollController,
+            itemCount: selectedDateTransactions.length,
+            itemBuilder: (context, index) {
+              final transactionData = selectedDateTransactions[index];
+              final transaction = TransactionModel.fromJson(transactionData);
+              return historyTransactions(
+                transaction,
+                transaction.transactionTimestamp.toIso8601String(),
+                index,
+                context,
+                true,
+                true,
+              );
+            },
+          );
+        }),
+      ),
+    ],
+  );
 }
   @override
   Widget build(BuildContext context) {
@@ -304,16 +493,17 @@ Future<void> _fetchDayWiseTransactions() async {
               : AppColors.backgroundColor,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(24), topRight: Radius.circular(24)),
-          border: dateData['date'] != null
-              ? Border.all(color: AppColors.accentColor.withOpacity(0.1))
-              : null,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.backgroundColor,
-              blurRadius: 8,
-              offset: Offset(0, 4),
-            ),
-          ],
+          
+          boxShadow:  dateData['date'] != null
+      ? [
+          BoxShadow(
+            color: Color.fromRGBO(75, 77, 115, 0.25),
+            blurRadius: 2,
+            offset: Offset(0, 2),
+            spreadRadius: 0,
+          ),
+        ]
+      : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -335,8 +525,8 @@ Future<void> _fetchDayWiseTransactions() async {
                 dateData['dayOfWeek'], // Display day abbreviation
                 style: FontManager().getTextStyle(
                   context,
-                  fontSize: 14,
-                  color: AppColors.grey,
+                  fontSize: 12,
+                  color: AppColors.historyCalenderText,
                 ),
               ),
               SizedBox(height: 2),
@@ -347,7 +537,7 @@ Future<void> _fetchDayWiseTransactions() async {
                 '${dateData['transactionCount']} tnxs',
                 style: FontManager().getTextStyle(
                   context,
-                  fontSize: 16,
+                  fontSize: 12,
                   color: AppColors.accentColor,
                 ),
               ),
@@ -357,139 +547,140 @@ Future<void> _fetchDayWiseTransactions() async {
     );
   }
 
-  Widget _buildDateBreakdownView(BuildContext context) {
-     final now = DateTime(currentYear.value, DateFormat('MMMM').parse(currentMonth.value).month, 1);
-    final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
-    final totalDays = lastDayOfMonth.day;
-    return Column(
-      children: [
-        // Date Navigation with Back Button
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
-                onPressed: () {
-                  isDateSummaryView.value = false;
-                  selectedDate.value = '';
-                },
-              ),
-              Obx(() => Text(
-                    'Date: $selectedDate, $currentMonth $currentYear',
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 16,
-                      lWeight: FontWeight.w600,
-                      color: AppColors.accentColor,
-                    ),
-                  )),
-              SizedBox.shrink(), // Placeholder for symmetry
-            ],
-          ),
-        ),
-        Container(
-          height: 60,
-          child:  ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: totalDays,
-                itemBuilder: (context, index) {
-              final day = (index + 1).toString();
-              final isSelected = selectedDate.value == day;
-              final date = DateTime(now.year, now.month, index + 1);
-              final apiDate = dayWiseTransactions.firstWhere(
-                (data) => convertStringToDateTime(data['date']).day == (index + 1) && convertStringToDateTime(data['date']).month == now.month,
-                orElse: () => {'count': 0, 'date': date.toIso8601String(), 'creditAmount': 0, 'debitAmount': 0},
-              );
-                  return GestureDetector(
-                    onTap: () {
-                  selectedDate.value = day;
-                  _loadTransactionsForDate(apiDate['date']);
-                  _scrollToSelectedDate();
-                },
-                    child: Container(
-                      width: 50,
-                      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                      decoration: BoxDecoration(
-                        color:
-                            isSelected ? AppColors.primaryColor : AppColors.bg5,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: Center(
-                        child: Text(
-                          day,
-                          style: TextStyle(
-                            color: isSelected
-                                ? Colors.white
-                                : AppColors.accentColor,
-                            fontWeight: isSelected
-                                ? FontWeight.w600
-                                : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-        ),
+  // Widget _buildDateBreakdownView(BuildContext context) {
+  //    final now = DateTime(currentYear.value, DateFormat('MMMM').parse(currentMonth.value).month, 1);
+  //   final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+  //   final totalDays = lastDayOfMonth.day;
+  //   return Column(
+  //     children: [
+  //       // Date Navigation with Back Button
+  //       Container(
+  //         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             IconButton(
+  //               icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
+  //               onPressed: () {
+  //                 isDateSummaryView.value = false;
+  //                 selectedDate.value = '';
+  //               },
+  //             ),
+  //             Obx(() => Text(
+  //                   'Date: $selectedDate, $currentMonth $currentYear',
+  //                   style: FontManager().getTextStyle(
+  //                     context,
+  //                     fontSize: 16,
+  //                     lWeight: FontWeight.w600,
+  //                     color: AppColors.accentColor,
+  //                   ),
+  //                 )),
+  //             SizedBox.shrink(), // Placeholder for symmetry
+  //           ],
+  //         ),
+  //       ),
+  //       Container(
+  //         height: 60,
+  //         child:  ListView.builder(
+  //               scrollDirection: Axis.horizontal,
+  //               itemCount: totalDays,
+  //               itemBuilder: (context, index) {
+  //             final day = (index + 1).toString();
+  //             final isSelected = selectedDate.value == day;
+  //             final date = DateTime(now.year, now.month, index + 1);
+  //             final apiDate = dayWiseTransactions.firstWhere(
+  //               (data) => convertStringToDateTime(data['date']).day == (index + 1) && convertStringToDateTime(data['date']).month == now.month,
+  //               orElse: () => {'count': 0, 'date': date.toIso8601String(), 'creditAmount': 0, 'debitAmount': 0},
+  //             );
+  //                 return GestureDetector(
+  //                   onTap: () {
+  //                 selectedDate.value = day;
+  //                 _loadTransactionsForDate(apiDate['date']);
+  //                 _scrollToSelectedDate();
+  //               },
+  //                   child: Container(
+  //                     width: 50,
+  //                     margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+  //                     decoration: BoxDecoration(
+  //                       color:
+  //                           isSelected ? AppColors.primaryColor : AppColors.bg5,
+  //                       borderRadius: BorderRadius.circular(25),
+  //                     ),
+  //                     child: Center(
+  //                       child: Text(
+  //                         day,
+  //                         style: TextStyle(
+  //                           color: isSelected
+  //                               ? Colors.white
+  //                               : AppColors.accentColor,
+  //                           fontWeight: isSelected
+  //                               ? FontWeight.w600
+  //                               : FontWeight.normal,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 );
+  //               },
+  //             ),
+  //       ),
 
-        // Credit/Debit Summary
-        _buildCreditDebitSummary(context),
+  //       // Credit/Debit Summary
+  //       _buildCreditDebitSummary(context),
 
-        // Transaction List
-        Expanded(
-          child: Obx(() {
-          if (selectedDateTransactions.isEmpty) {
-              return Center(
-                child:  Column(
-                  children: [
-                    AvatarProfileImage(
-                                          url: "assets/icons/Home-page/nullTransactions.svg",
-                                          height: 5,
-                                          width: 5,
-                                        ),
+  //       // Transaction List
+  //       Expanded(
+  //         child: Obx(() {
+  //         if (selectedDateTransactions.isEmpty) {
+  //             return Center(
+  //               child:  Column(
+  //                 children: [
+  //                   AvatarProfileImage(
+  //                                         url: "assets/icons/Home-page/nullTransactions.svg",
+  //                                         height: 5,
+  //                                         width: 5,
+  //                                       ),
                   
           
-                    Text('No transactions found on this selected date',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: AppColors.accentColor)),
-                  ])
-              );
-            }
-            return ListView.builder(
-                controller: scrollController,
-                itemCount: selectedDateTransactions.length,
-                itemBuilder: (context, index) {
-                  final transactionData = selectedDateTransactions[index];
-                  final transaction =
-                      TransactionModel.fromJson(transactionData);
-                  return historyTransactions(
-                    transaction,
-                    transaction.transactionTimestamp.toIso8601String(),
-                    index,
-                    context,
-                    true,
-                    true,
-                  );
-                },
-              );
-          }
-          ),
-        ),
-      ],
-    );
-  }
+  //                   Text('No transactions found on this selected date',
+  //                       style: FontManager().getTextStyle(context,
+  //                           lWeight: FontWeight.w500,
+  //                           fontSize: 14,
+  //                           color: AppColors.accentColor)),
+  //                 ])
+  //             );
+  //           }
+  //           return ListView.builder(
+  //               controller: scrollController,
+  //               itemCount: selectedDateTransactions.length,
+  //               itemBuilder: (context, index) {
+  //                 final transactionData = selectedDateTransactions[index];
+  //                 final transaction =
+  //                     TransactionModel.fromJson(transactionData);
+  //                 return historyTransactions(
+  //                   transaction,
+  //                   transaction.transactionTimestamp.toIso8601String(),
+  //                   index,
+  //                   context,
+  //                   true,
+  //                   true,
+  //                 );
+  //               },
+  //             );
+  //         }
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+  
   Widget _buildDottedDivider() {
     return Container(
       height: 1,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final boxWidth = constraints.constrainWidth();
-          final dashWidth = 2.0;
+          final dashWidth = 1.7;
           final dashHeight = 1.0;
           final dashCount = (boxWidth / (2 * dashWidth)).floor();
           return Flex(
@@ -501,7 +692,7 @@ Future<void> _fetchDayWiseTransactions() async {
                 height: dashHeight,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: AppColors.finSpaceColor.withOpacity(0.4),
+                    color: AppColors.historyCalenderDivider,
                   ),
                 ),
               );
@@ -515,58 +706,63 @@ Future<void> _fetchDayWiseTransactions() async {
   Widget _buildCreditDebitSummary(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Row(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Credit',
-                style: FontManager().getTextStyle(
-                  context,
-                  fontSize: 14,
-                  color: AppColors.accentColor,
+          Container(
+            child: Row(
+              
+              children: [
+                Text(
+                  'Credit',
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 14,
+                    color: AppColors.accentColor,
+                  ),
                 ),
-              ),
-             
-             
-              SizedBox(width: 16),
-              Obx(() => Text(
-                    '₹ ${totalCredit.value.toStringAsFixed(0)}',
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 14,
-                      lWeight: FontWeight.w600,
-                      color: AppColors.accentColor,
-                    ),
-                  )),
-            ],
+               
+               
+                SizedBox(width: 16),
+                Obx(() => Text(
+                      '₹ ${totalCredit.value.toStringAsFixed(0)}',
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 14,
+                        lWeight: FontWeight.w600,
+                        color: AppColors.accentColor,
+                      ),
+                    )),
+              ],
+            ),
           ),
-          SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Debit',
-                style: FontManager().getTextStyle(
-                  context,
-                  fontSize: 14,
-                  color: AppColors.accentColor,
+        
+          Container(
+            child: Row(
+             
+              children: [
+                Text(
+                  'Debit',
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 14,
+                    color: AppColors.accentColor,
+                  ),
                 ),
-              ),
-             
-             
-              SizedBox(width: 16),
-              Obx(() => Text(
-                    '₹ ${totalDebit.value.toStringAsFixed(0)}',
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 14,
-                      lWeight: FontWeight.w600,
-                      color: AppColors.accentColor,
-                    ),
-                  )),
-            ],
+               
+               
+                SizedBox(width: 16),
+                Obx(() => Text(
+                      '₹ ${totalDebit.value.toStringAsFixed(0)}',
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 14,
+                        lWeight: FontWeight.w600,
+                        color: AppColors.accentColor,
+                      ),
+                    )),
+              ],
+            ),
           ),
         ],
       ),

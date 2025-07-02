@@ -831,20 +831,29 @@ class _ExploreModalState extends State<ExploreModal> {
 
   void callBack() async {
     final isEnabled = locationNameController.text.isNotEmpty &&
-        locationAddressController.text.isNotEmpty &&
+        locationAddressController.text.isNotEmpty  &&
         !_isSubmitting;
 
     isEnabled ? _submitPost() : null;
   }
 
   Widget _buildSubmitButton() {
-    final isEnabled = locationNameController.text.isNotEmpty &&
-        locationAddressController.text.isNotEmpty &&
-        !_isSubmitting;
+    final bool isEnabled = locationNameController.text.isNotEmpty &&
+      locationAddressController.text.isNotEmpty &&
+      titleController.text.isNotEmpty &&
+      contentController.text.isNotEmpty &&
+      selectedImages.isNotEmpty && // At least one image
+      _isSubmitting == false &&
+      // Check if at least one budget entry is valid (optional, adjust as needed)
+      _textControllers.asMap().entries.any((entry) {
+        int index = entry.key;
+        return _textControllers[index].text.isNotEmpty &&
+            _amountControllers[index].text.isNotEmpty;
+      });
 
     return GestureDetector(
       onTap: () {
-        showTagListOfInterestModal(context: context, onConfirm: callBack);
+         isEnabled?showTagListOfInterestModal(context: context, onConfirm: callBack):null;
       },
       child: _isSubmitting
           ? Center(child: Spinner())

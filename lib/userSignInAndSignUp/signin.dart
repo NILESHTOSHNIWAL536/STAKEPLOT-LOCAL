@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -101,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       containerIconSiginWith(
                           FontAwesomeIcons.google, Colorcodes.white, context),
                       // buildGoogleSignIn(),
-                      SignInWithAppleButton(
+                        Platform.isAndroid ? Text(''): SignInWithAppleButton(
               onPressed: () async {
                 final result = await authService.signInWithApple(context);
                 if (result != null) {
@@ -146,10 +149,16 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       child: TextField(
         controller: emailController,
+        onChanged: (c){
+             acceptReset.value = false;
+        },
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Email Address',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          hintStyle: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: AppColors.backgroundColor),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -168,11 +177,17 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       child: TextField(
         controller: passwordController,
+         onChanged: (c){
+             acceptReset.value = false;
+        },
         obscureText: !_isPasswordVisible,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Password',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          hintStyle: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: AppColors.backgroundColor),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -204,10 +219,10 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         child: Text(
           'Forgot Password?',
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
-            fontSize: 14,
-          ),
+          style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: AppColors.backgroundColor)
         ),
       ),
     );
@@ -251,10 +266,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   )
                 : Text(
                     'Sign In',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: AppColors.finSpaceColor),
                   ),
           ),
         ));
@@ -289,20 +304,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildGoogleSignIn() {
-    return Container(
-      // width: 60,
-      // height: 50,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: FaIcon(FontAwesomeIcons.google,
-            size: 30, color: AppColors.primaryColor),
-      ),
-    );
-  }
 
   Widget buildSignUpLink() {
     return InkWell(
@@ -314,44 +315,21 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           Text(
             "Don't have an account? ",
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontSize: 14,
-            ),
+            style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: AppColors.backgroundColor),
           ),
-          const Text(
+           Text(
             'Sign Up Now',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
+            style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: AppColors.backgroundColor),
           ),
         ],
       ),
     );
   }
 
-  Widget buildGoogleSignIn() {
-    return GestureDetector(
-      onTap: () {
-        // Handle Google sign in
-      },
-      child: Container(
-        width: 60,
-        height: 50,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        
-        child: AvatarProfileImage(
-                      url: Sign.googleIcon,
-                      width: 5,
-                      height: 10,
-                     
-                    )
-      ),
-    );
-  }
 }

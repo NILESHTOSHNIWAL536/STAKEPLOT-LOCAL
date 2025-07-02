@@ -171,6 +171,7 @@ Widget buildWelcomeRow(context) {
                 ),
               ),
             ),
+          
           ),
         ),
        

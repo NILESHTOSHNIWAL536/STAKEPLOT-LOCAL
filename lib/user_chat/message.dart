@@ -21,4 +21,5 @@ class Message {
   String? text;
   String type; //["image","text","Poll",'post']
   File? url;
+  
 }
