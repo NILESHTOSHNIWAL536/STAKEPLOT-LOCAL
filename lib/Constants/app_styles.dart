@@ -40,6 +40,7 @@ class HomePageIcons {
   static String noAccLink = "assets/icons/Home-page/noAccLink.svg";
   static String filterIcon = "assets/icons/Home-page/filterIcon.svg";
   static String dayWiseIcon1 = "assets/icons/Home-page/dayWiseIcon.svg";
+  static String dayWiseIcon2 = "assets/icons/Home-page/button.svg";
   static String splitIcon = "assets/icons/Home-page/splitICon.svg";
   static String tagIcon = "assets/icons/Home-page/tagIcon.svg";
 }

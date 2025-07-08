@@ -801,7 +801,7 @@ Widget historyTransactions(
   final isSplit = transaction.isSplit;
 
   final formattedDate = date != null
-      ? formatWhatsAppDate4(convertStringToDateTime(date))
+      ? formatWhatsAppDateWithoutTime(convertStringToDateTime(date))
       : 'Date';
   final formattedDateManual =
       date != null ? formatWhatsAppDate(convertStringToDateTime(date)) : 'Date';

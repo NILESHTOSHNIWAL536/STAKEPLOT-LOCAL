@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
@@ -208,11 +209,11 @@ String formatWhatsAppDateWithoutTime(DateTime date) {
   else if (date.year == tomorrow.year &&
       date.month == tomorrow.month &&
       date.day == tomorrow.day) {
-    return "Tomorrow,";
+    return "Tomorrow";
   }
   // Check if the date is within the current week (past or future)
   else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
-    return "${DateFormat('EEE').format(date)},"; // Mon, 10:30 AM
+    return "${DateFormat('EEEE').format(date)}"; // Mon, 10:30 AM
   }
   // Same year, different week
   else if (date.year == now.year) {
@@ -220,7 +221,7 @@ String formatWhatsAppDateWithoutTime(DateTime date) {
   }
   // Different year
   else {
-    return "${DateFormat('d MMM y').format(date)},"; // 7 Apr 2025, 10:30 AM
+    return "${DateFormat('d MMM y').format(date)}"; // 7 Apr 2025, 10:30 AM
   }
 }
 
@@ -716,76 +717,175 @@ Widget getListItemListTile(String no, String MorY, context) {
 
 Widget getCheckBoxwithText(BuildContext context, String text) {
   return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: AppColors.primaryColor, width: 0.2),
-    ),
     margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
-    child: Obx(() => ListTile(
-          leading: const SizedBox(
-            width: 40,
-            height: 40,
-            child: Icon(Icons.credit_card),
-          ),
-          title: textStyle(
-            context: context,
-            text: text,
-            fontsize: 15,
-            fontWeight: FontWeight.w500,
-          ),
-          trailing: Theme(
-            data: Theme.of(context).copyWith(
-              checkboxTheme: CheckboxThemeData(
-                shape: const CircleBorder(), // 👈 Circular shape
+    child: Obx(() {
+      bool isSelected = accountIdPdf.value == text;
+
+      Widget content = Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: textStyle(
+          context: context,
+          text: text,
+          fontsize: 15,
+          fontWeight: FontWeight.w500,
+          c: isSelected?AppColors.backgroundColor:AppColors.bg1
+        ),
+      );
+
+      return GestureDetector(
+        onTap: () {
+          accountIdPdf.value = isSelected ? "-" : text;
+        },
+        child: isSelected
+            ? Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: content,
+              )
+            : DottedBorderBox(
+                dashWidth: 4,
+                space: 3,
+                color: AppColors.primaryColor,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: content,
+                ),
               ),
-            ),
-            child: Checkbox(
-              value: accountIdPdf.value == text,
-              onChanged: (isChecked) {
-                if (isChecked == true) {
-                  accountIdPdf.value = text;
-                } else {
-                  accountIdPdf.value = "-";
-                }
-              },
-            ),
-          ),
-        )),
+      );
+    }),
   );
 }
 
+Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTap) {
+  return Container(
+    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+    child: Obx(() {
+      bool isSelected = accountIdPdf.value == text;
+
+      Widget content = Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: textStyle(
+          context: context,
+          text: text,
+          fontsize: 15,
+          fontWeight: FontWeight.w500,
+          c: isSelected ? AppColors.backgroundColor : AppColors.bg1,
+        ),
+      );
+
+      return GestureDetector(
+       onTap: () {
+  // Toggle selection
+  accountIdPdf.value = isSelected ? "-" : text;
+
+  // Update search text if Credit, Debit, or Cash
+  if (accountIdPdf.value.toLowerCase() == "credit" ||
+      accountIdPdf.value.toLowerCase() == "debit" ||
+      accountIdPdf.value == "Cash") {
+    searchController.text = accountIdPdf.value.toLowerCase();
+  } else if (accountIdPdf.value == "-") {
+    searchController.text = "";
+  }
+
+  // Apply filter and close dialog
+  onChanedAutoTransactionStatus(context);
+ 
+},
+
+        child: isSelected
+            ? Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: content,
+              )
+            : DottedBorderBox(
+                dashWidth: 4,
+                space: 3,
+                color: AppColors.primaryColor,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: content,
+                ),
+              ),
+      );
+    }),
+  );
+}
+
+// Widget getCheckBoxwithText(BuildContext context, String text) {
+//   return Container(
+//     decoration: BoxDecoration(
+//       borderRadius: BorderRadius.circular(12),
+//       border: Border.all(color: AppColors.primaryColor, width: 0.2),
+//     ),
+//     margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+//     child: Obx(() => ListTile(
+//           leading: const SizedBox(
+//             width: 40,
+//             height: 40,
+//             child: Icon(Icons.credit_card),
+//           ),
+//           title: textStyle(
+//             context: context,
+//             text: text,
+//             fontsize: 15,
+//             fontWeight: FontWeight.w500,
+//           ),
+//           trailing: Theme(
+//             data: Theme.of(context).copyWith(
+//               checkboxTheme: CheckboxThemeData(
+//                 shape: const CircleBorder(), 
+//               ),
+//             ),
+//             child: Checkbox(
+//               value: accountIdPdf.value == text,
+//               onChanged: (isChecked) {
+//                 if (isChecked == true) {
+//                   accountIdPdf.value = text;
+//                 } else {
+//                   accountIdPdf.value = "-";
+//                 }
+//               },
+//             ),
+//           ),
+//         )),
+//   );
+// }
+
 Widget filterTransaction(context) {
   return Container(
+    color:AppColors.backgroundColor,
     height: MediaQuery.of(context).size.height /
-        (bankAccountLinkedList.length <= 1 ? 3 : 1.5),
+        (bankAccountLinkedList.length <= 1 ? 14 : 1.5),
     child: SingleChildScrollView(
       child: Column(
         children: [
-          getHeader(context, "Select Filter"),
-          getCheckBoxwithText(context, "Credit"),
-          getCheckBoxwithText(context, "Debit"),
-          getCheckBoxwithText(context, "Cash"),
-          bankAccountLinkedList.length >= 2
-              ? getBankAccountList(context,false)
-              : SizedBox.shrink(),
-          const SizedBox(height: 10),
-          InkWell(
-              onTap: () {
-                if (accountIdPdf.value.toLowerCase().startsWith("credit") ||
-                    accountIdPdf.value.toLowerCase().startsWith("debit") || accountIdPdf.value=="Cash")
-                {
-                  searchController.text = accountIdPdf.value.toLowerCase();
-                }
-                 else if(accountIdPdf.value=="-")
-                 {
-                         searchController.text="";
-                  }
-                     
-                      onChanedAutoTransactionStatus(context);
-                      Navigator.pop(context);
-                    },
-                    child: getButton(context, "Apply Filter")),
-                     SizedBox(height: 10),
+        
+         Row(
+  children: [
+    getCheckBoxwithText2(context, "Credit", () {
+      onChanedAutoTransactionStatus(context);
+      // Navigator.pop(context);
+    }),
+    getCheckBoxwithText2(context, "Debit", () {
+      onChanedAutoTransactionStatus(context);
+      // Navigator.pop(context);
+    }),
+    getCheckBoxwithText2(context, "Cash", () {
+      onChanedAutoTransactionStatus(context);
+      // Navigator.pop(context);
+    }),
+    bankAccountLinkedList.length >= 2
+        ? getBankAccountList(context, false)
+        : SizedBox.shrink(),
+  ],
+),
+
+         
           ],
         ),
       ),

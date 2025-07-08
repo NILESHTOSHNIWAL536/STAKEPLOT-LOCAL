@@ -1,3 +1,1100 @@
+// import 'dart:convert';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_application_code_stakeplot/Constants/search.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/apicalls.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+// import 'package:confetti/confetti.dart';
+// import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+// import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/speechToText.dart';
+// import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+// import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
+// import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
+// import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
+// import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+// import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+// import 'package:flutter_application_code_stakeplot/profile.dart';
+// import 'package:get/get.dart';
+// import 'package:socket_io_client/socket_io_client.dart' as IO;
+
+// bool isDebit = true;
+
+// class ModalContent extends StatefulWidget {
+//   final bool isDebit;
+//   const ModalContent(this.isDebit, {Key? key}) : super(key: key);
+
+//   @override
+//   _ModalContentState createState() => _ModalContentState();
+// }
+
+// class _ModalContentState extends State<ModalContent>
+//     with TickerProviderStateMixin {
+//   String? selectedCategory;
+//   String? selectedSubCategory;
+//   final TextEditingController _amountController = TextEditingController();
+//   double? amount;
+//   String? fin;
+//   final TextEditingController categoryFieldController = TextEditingController();
+//   bool isCategoryFieldExpanded = false;
+//   final TextEditingController searchController = TextEditingController();
+//   List<String> filteredCategories = [];
+//   late ConfettiController _confettiController;
+//   late AnimationController _iconAnimationController;
+//   bool _isCelebrationVisible = false;
+//   String? selectedCategory2;
+//   String? selectedSubCategory2;
+//   // List  addedUser=[];
+//   // List addedMembers=[];
+//   bool _isAmountFieldFocused = true;
+//   late IO.Socket socket;
+
+//   late SpeechToTextService speechService;
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     getAllTransaction(context);
+//     getCategoryData();
+//     filteredCategories = categories.keys.toList();
+//     _confettiController =
+//         ConfettiController(duration: const Duration(seconds: 2));
+//     _iconAnimationController = AnimationController(
+//       vsync: this,
+//       duration: const Duration(milliseconds: 300),
+//     );
+
+//     socket = IO.io(urlWithLocallHost,
+//         IO.OptionBuilder().setTransports(['websocket']).build());
+//     setUpSocketListener();
+//     speechService = SpeechToTextService(
+//       context: context,
+//       categories: categories,
+//       customCategoryList: customCategoryList.cast<Map<String, dynamic>>(),
+//       isDebit: widget.isDebit,
+//       tickerProvider: this,
+//       onSpeechProcessed:
+//           (double parsedAmount, String category, String? subCategory) {
+//         setState(() {
+//           amount = parsedAmount;
+//           _amountController.text = parsedAmount.toString();
+//           selectedCategory = category;
+//           selectedSubCategory = subCategory ?? '';
+//           selectedCategory2 = selectedCategory;
+//           selectedSubCategory2 = selectedSubCategory;
+//           fin =
+//               '$selectedCategory (${selectedSubCategory?.isEmpty == true ? 'None' : selectedSubCategory})';
+//           _isAmountFieldFocused = false;
+//           isCategoryFieldExpanded = false;
+//         });
+//         _showConfirmationDialog(parsedAmount, category, subCategory);
+//       },
+//     );
+//   }
+
+//   void _showConfirmationDialog(
+//       double amount, String category, String? subCategory) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           backgroundColor: AppColors.mt,
+//           shape:
+//               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+//           title: Text(
+//             'Confirm Transaction',
+//             style: FontManager().getTextStyle(context,
+//                 lWeight: FontWeight.bold,
+//                 fontSize: 18,
+//                 color: AppColors.accentColor),
+//           ),
+//           content: Text(
+//             'Add ₹$amount to $category (${subCategory?.isEmpty == true ? 'None' : subCategory})?',
+//             style: FontManager().getTextStyle(context,
+//                 fontSize: 16, color: AppColors.accentColor),
+//           ),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.pop(context);
+//                 setState(() => isProcessing = false);
+//               },
+//               child: Text(
+//                 'No',
+//                 style: FontManager()
+//                     .getTextStyle(context, fontSize: 14, color: Colors.red),
+//               ),
+//             ),
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.pop(context);
+//                 _addTransactionAutomatically();
+//               },
+//               child: Text(
+//                 'Yes',
+//                 style: FontManager().getTextStyle(context,
+//                     fontSize: 14, color: AppColors.primaryColor),
+//               ),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+
+//   // Add transaction
+//   void _addTransactionAutomatically() async {
+//     if (cashInAndOut.value) return;
+//     cashInAndOut.value = true;
+
+//     try {
+//       addTransaction(
+//         amount.toString(),
+//         selectedSubCategory2 ?? '',
+//         selectedCategory2!,
+//         context,
+//         "cash",
+//       );
+//       snackBarCalled(context, "Successfully added", Colors.black);
+//       Navigator.pop(context); // Close modal
+//     } catch (error) {
+//       snackBarCalledfail(context, 'Failed to add transaction: $error', Colors.red);
+//     } finally {
+//       cashInAndOut.value = false;
+//       isProcessing = false;
+//     }
+//   }
+
+//   setUpSocketListener() {
+//     socket.on(
+//         "disconnect",
+//         (data) => {
+//               socket.close(),
+//             });
+//   }
+
+//   void dispose() {
+//     _confettiController.dispose();
+//     _iconAnimationController.dispose();
+//     super.dispose();
+//   }
+
+//   void filterCategories(String query) {
+//     setState(() {
+//       if (query.isEmpty) {
+//         // Show all categories when search is cleared
+//         filteredCategories = categories.keys.toList();
+//       } else {
+//         // Filter categories by search query
+//         filteredCategories = categories.keys
+//             .where((category) =>
+//                 category.toLowerCase().contains(query.toLowerCase()))
+//             .toList();
+//       }
+//     });
+//   }
+
+//   void resetToInitialScreen() {
+//     setState(() {
+//       selectedCategory = null;
+//       selectedSubCategory = null;
+//       isCategoryFieldExpanded = false;
+//       _isAmountFieldFocused = false;
+//     });
+//   }
+
+//   void toggleCategoryField() {
+//     setState(() {
+//       isCategoryFieldExpanded = !isCategoryFieldExpanded;
+//       _isAmountFieldFocused = false;
+//       _isAmountFieldFocused = false;
+//     });
+//   }
+
+//   void _showCelebration() {
+//     setState(() {
+//       _isCelebrationVisible = true;
+//     });
+//     _confettiController.play(); // Start confetti animation
+//     _iconAnimationController.forward();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Directionality(
+//       textDirection: TextDirection.ltr,
+//       child: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: _isCelebrationVisible
+//             ? celebration()
+//             : AnimatedPadding(
+//                 padding: MediaQuery.of(context).viewInsets,
+//                 duration: const Duration(milliseconds: 200),
+//                 curve: Curves.easeOut,
+//                 child: Container(
+//                   color: AppColors.mt,
+//                   child: Padding(
+//                     padding: const EdgeInsets.only(top: 10),
+//                     child: Column(
+//                       mainAxisSize: MainAxisSize.min,
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Text(
+//                           selectedSubCategory == null
+//                               ? selectedCategory == null
+//                                   ? HomepageStringsDart().manualTransaction
+//                                   : ''
+//                               : HomepageStringsDart().manualTransactions,
+//                           style: FontManager().getTextStyle(context,
+//                               lWeight: FontWeight.bold,
+//                               fontSize: 18,
+//                               color: AppColors.accentColor),
+//                         ),
+//                         const SizedBox(height: 16),
+//                         if ((selectedCategory == null &&
+//                                 selectedSubCategory == null) ||
+//                             !widget.isDebit) ...[
+//                           Row(
+//                             children: [
+//                               Expanded(child: AmountWidget()),
+//                               const SizedBox(width: 8),
+//                             ],
+//                           ),
+//                           const SizedBox(height: 16),
+//                         ],
+//                         if (amount != null) ...[
+//                           categoryWidget(),
+//                         ],
+//                         const SizedBox(height: 8),
+//                         if (isCategoryFieldExpanded) ...[
+//                           categoryExpandedWidget(),
+//                           // getListOfCustomCategory(),
+//                         ],
+//                         if (selectedCategory != null &&
+//                             selectedSubCategory == null) ...[
+//                           Text('$selectedCategory',
+//                               style: FontManager().getTextStyle(context,
+//                                   lWeight: FontWeight.normal,
+//                                   fontSize: 16,
+//                                   color: AppColors.accentColor)),
+//                           SizedBox(height: 5),
+//                           subcategoryWidget(),
+//                         ],
+//                         if (fin != null) ...[
+//                           widget.isDebit
+//                               ? SplitLendButton()
+//                               : SizedBox.shrink(),
+//                           continueButton(),
+//                         ],
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//       ),
+//     );
+//   }
+
+//   Widget celebration() {
+//     return Stack(alignment: Alignment.center, children: [
+//       // Confetti blast effect
+//       ConfettiWidget(
+//         confettiController: _confettiController,
+//         blastDirectionality:
+//             BlastDirectionality.explosive, // Blast in all directions
+//         numberOfParticles: 50, // Number of confetti pieces
+//         colors: const [Colors.green, Colors.blue, Colors.orange, Colors.pink],
+//         gravity: 0.3, // Confetti falls slowly
+//       ),
+//       // Animated tick mark
+//       ScaleTransition(
+//         scale: CurvedAnimation(
+//           parent: _iconAnimationController,
+//           curve: Curves.elasticOut,
+//         ),
+//         child: Container(
+//           width: MediaQuery.sizeOf(context).width * 1.1,
+//           height: Colorcodes.paddingSize * 10,
+//           color: AppColors.backgroundColor,
+//           child: Column(
+//             key: const ValueKey('celebration'),
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Icon(
+//                 Icons.check_circle,
+//                 color: Colors.green,
+//                 size: 100,
+//               ),
+//               const SizedBox(height: 16),
+//               Text(
+//                 HomepageStringsDart().successfullyAdded,
+//                 style: TextStyle(
+//                   fontSize: 20,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.green[700],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     ]);
+//   }
+
+//   Widget AmountWidget() {
+//     return TextField(
+//       controller: _amountController,
+//       keyboardType: TextInputType.number,
+//       autofocus: _isAmountFieldFocused,
+//       inputFormatters: allowDecimalInput(),
+//       decoration: InputDecoration(
+//         prefixIcon: const Icon(Icons.currency_rupee),
+//         // Speech to text for future
+//         //  suffixIcon: widget.isDebit
+//         //   ? IconButton(
+//         //       icon: Icon(
+//         //         speechService.isListening ? Icons.mic : Icons.mic_none,
+//         //         color: AppColors.primaryColor,
+//         //       ),
+//         //       onPressed: speechService.isListening
+//         //           ? speechService.stopListening
+//         //           : speechService.startListening,
+//         //       tooltip: 'Speech to Text',
+//         //     )
+//         //   : null,
+//         hintText: HomepageStringsDart().enterAmount,
+//         fillColor: AppColors.button,
+//         filled: true,
+//         hintStyle: FontManager().getTextStyle(context,
+//             lWeight: FontWeight.normal,
+//             fontSize: 16,
+//             color: AppColors.accentColor),
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(12),
+//           borderSide: BorderSide(
+//             color: AppColors.accentColor, // Default border color
+//           ),
+//         ),
+//         enabledBorder: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(12),
+//           borderSide: BorderSide(color: AppColors.accentColor
+//               // When not focused
+
+//               ),
+//         ),
+//         focusedBorder: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(12),
+//           borderSide: BorderSide(
+//             color: AppColors.accentColor, // Color when focused
+//             // Slightly thicker when focused for emphasis
+//           ),
+//         ),
+//       ),
+//       onChanged: (value) {
+//         setState(() {
+//           // Update the amount variable whenever the input changes
+//           amount = double.tryParse(value);
+//           if (!isDebit) {
+//             selectedCategory = "Income";
+//             categoryFieldController.text = "Income";
+//           }
+//           fin = null;
+//           _isAmountFieldFocused = false; // Convert string to double
+//         });
+//       },
+//       onEditingComplete: () {
+//         fin = '$selectedCategory ($selectedSubCategory)';
+//         FocusScope.of(context).unfocus(); // Dismiss keyboard when done
+//       },
+//     );
+//   }
+
+//   Widget categoryWidget() {
+//     return GestureDetector(
+//       onTap: toggleCategoryField,
+//       child: TextField(
+//         controller: categoryFieldController,
+//         readOnly: !isDebit,
+//         decoration: InputDecoration(
+//           hintText: HomepageStringsDart().selectCategory,
+//           fillColor: AppColors.button,
+//           filled: true,
+//           hintStyle: FontManager().getTextStyle(context,
+//               lWeight: FontWeight.normal,
+//               fontSize: 16,
+//               color: AppColors.accentColor),
+//           prefixIcon: const Icon(Icons.search),
+//           border: OutlineInputBorder(
+//             borderRadius: BorderRadius.circular(8),
+//           ),
+//           enabledBorder: OutlineInputBorder(
+//             borderRadius: BorderRadius.circular(12),
+//             borderSide: BorderSide(
+//               color: AppColors.accentColor, // When not focused
+//             ),
+//           ),
+//           focusedBorder: OutlineInputBorder(
+//             borderRadius: BorderRadius.circular(12),
+//             borderSide: BorderSide(
+//               color: AppColors.accentColor, // Color when focused
+//               // Slightly thicker when focused for emphasis
+//             ),
+//           ),
+//         ),
+//         onTap: () {
+//           if (!isCategoryFieldExpanded) {
+//             if (isDebit)
+//               toggleCategoryField();
+//             else {
+//               setState(() {
+//                 selectedCategory = "Income";
+//                 selectedSubCategory = null;
+//                 categoryFieldController.text = "Income";
+//               });
+//             }
+//           }
+//         },
+//         onChanged: (value) {
+//           filterCategories(value); // Filter categories as the user types
+//         },
+//       ),
+//     );
+//   }
+
+//   Widget categoryExpandedWidget() {
+//     return Expanded(
+//       child: ListView.builder(
+//         itemCount: filteredCategories.length + customCategoryList.length,
+//         itemBuilder: (BuildContext context, int index) {
+//           bool f = (index >= filteredCategories.length);
+//           String category = f
+//               ? customCategoryList[index - filteredCategories.length]['name']
+//               : filteredCategories[index];
+//           String urlPath = "";
+
+//           if (!f) {
+//             try {
+//               urlPath = Categories.link +
+//                   BudgetCategories.listofCategories[
+//                       BudgetCategories.listofCategories.keys.elementAt(index)];
+//             } catch (e) {}
+//           } else {
+//             urlPath = customCategoryList[index - filteredCategories.length]
+//                 ['imageUrl'];
+//           }
+
+//           return ListTile(
+//             //leading: const Icon(Icons.category),
+
+//             leading: Container(
+//               height: 40,
+//               width: 40,
+//               child: AvatarProfileImage(
+//                 url: urlPath,
+//                 width: 4,
+//                 height: 4,
+//               ),
+//             ),
+//             title: Text(category,
+//                 style: FontManager().getTextStyle(context,
+//                     lWeight: FontWeight.normal,
+//                     fontSize: 16,
+//                     color: AppColors.accentColor)),
+//             onTap: () {
+//               setState(() {
+//                 if (f) {
+//                   selectedCategory = category;
+//                   selectedSubCategory = "";
+//                   isCategoryFieldExpanded = false;
+//                   _isAmountFieldFocused = false;
+//                   categoryFieldController.text = '$selectedCategory';
+//                   // isSplitbill = true; // Uncomment if needed
+//                   fin = '$selectedCategory ($selectedSubCategory)';
+//                   selectedCategory2 = selectedCategory;
+//                   _isAmountFieldFocused = false; // Prevent amount field refocus
+//                   FocusScope.of(context).unfocus();
+//                   resetToInitialScreen();
+//                 } else {
+//                   selectedCategory = category;
+//                   categoryFieldController.text = category; // Update text field
+//                   isCategoryFieldExpanded = false;
+//                   _isAmountFieldFocused = false; // Prevent amount field refocus
+//                   FocusScope.of(context).unfocus(); // Collapse the list
+//                 }
+//               });
+//             },
+//           );
+//         },
+//       ),
+//     );
+//   }
+
+//   Widget getListOfCustomCategory() {
+//     return Expanded(
+//       child: ListView.builder(
+//         itemCount: customCategoryList.length,
+//         itemBuilder: (BuildContext context, int index) {
+//           final category = customCategoryList[index];
+//           final categoryName = category['name'] ?? '';
+//           final imageUrl = category['imageUrl'] ?? '';
+
+//           return ListTile(
+//             leading: Container(
+//               height: 40,
+//               width: 40,
+//               child: AvatarProfileImage(
+//                 url: imageUrl,
+//                 width: 4,
+//                 height: 4,
+//               ),
+//             ),
+//             title: Text(
+//               categoryName,
+//               style: FontManager().getTextStyle(
+//                 context,
+//                 lWeight: FontWeight.normal,
+//                 fontSize: 16,
+//                 color: AppColors.accentColor,
+//               ),
+//             ),
+//             onTap: () {
+//               setState(() {
+//                 selectedCategory = categoryName;
+//                 categoryFieldController.text = categoryName;
+//                 isCategoryFieldExpanded = false;
+//                 _isAmountFieldFocused = false;
+//                 FocusScope.of(context).unfocus();
+//               });
+//             },
+//           );
+//         },
+//       ),
+//     );
+//   }
+
+//   Widget subcategoryWidget() {
+//     return Wrap(
+//       spacing: 4.0, // Horizontal spacing between chips
+//       runSpacing: 2.0, // Vertical spacing between rows
+//       children: categories[selectedCategory]!.map((subCategory) {
+//         // Get the URL path for the subcategory's icon from BudgetSubCategories
+//         String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??
+//             "assets/icons/subCategoryIcons/default.svg";
+
+//         return GestureDetector(
+//           onTap: () {
+//             setState(() {
+//               selectedSubCategory = subCategory;
+//               selectedSubCategory2 = subCategory;
+//               categoryFieldController.text =
+//                   '$selectedCategory ($selectedSubCategory)';
+//               // isSplitbill = true; // Uncomment if needed
+//               fin = '$selectedCategory ($selectedSubCategory)';
+//               selectedCategory2 = selectedCategory;
+//               _isAmountFieldFocused = false; // Prevent amount field refocus
+//               FocusScope.of(context).unfocus();
+//               resetToInitialScreen();
+//             });
+//           },
+//           child: Chip(
+//             avatar: ProfileImage(
+//               url: urlPath,
+//             ),
+//             label: Text(
+//               toUpperCase(subCategory),
+//               style: FontManager().getTextStyle(
+//                 context,
+//                 lWeight: FontWeight.normal,
+//                 fontSize: 14,
+//                 color: AppColors.accentColor,
+//               ),
+//             ),
+//             backgroundColor: AppColors.button,
+//             shape: RoundedRectangleBorder(
+//               borderRadius: BorderRadius.circular(12),
+//             ),
+//           ),
+//         );
+//       }).toList(),
+//     );
+//   }
+
+//   Widget SplitLendButton() {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         GestureDetector(
+//           onTap: () async {
+//             Navigator.pop(context);
+//             FocusScope.of(context).unfocus();
+//             if (isLend.value) {
+//               addedUser.clear();
+//               addedMembers.clear();
+//             }
+//             isSplit.value = true;
+//             isLend.value = false;
+
+//             final result =
+//                 await showCustomFriendsModal(context, amount ?? 0.0, false);
+//             print("amounts $result");
+
+//             // if (result != null && addedMembers.isNotEmpty) {
+//             //   print("result $result ");
+
+//             //   splitUserAmountManualTransaction(
+//             //     context,
+//             //     amount.toString(),
+//             //     addedMembers,
+//             //     selectedCategory2.toString(),
+//             //     selectedSubCategory2.toString(),
+//             //     amounts: result as Map<String, double>,
+//             //   );
+//             // }
+//             setState(() {
+//               _isAmountFieldFocused = false; // Prevent amount field refocus
+//             });
+//           },
+//           child: Container(
+//             width: MediaQuery.of(context).size.width / 2.4,
+//             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+//             decoration: BoxDecoration(
+//               color: AppColors.button,
+//               borderRadius: BorderRadius.circular(24),
+//             ),
+//             child: Center(
+//               child: Text(
+//                 HomepageStringsDart().billSplit,
+//                 style: FontManager().getTextStyle(
+//                   context,
+//                   lWeight: FontWeight.bold,
+//                   fontSize: 15,
+//                   color: AppColors.primaryColor,
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//         GestureDetector(
+//           onTap: () async {
+//             FocusScope.of(context).unfocus();
+//             if (isSplit.value) {
+//               addedUser.clear();
+//               addedMembers.clear();
+//             }
+//             isSplit.value = false;
+//             isLend.value = true;
+
+//             await showCustomFriendsModal(context, amount ?? 0.0, true);
+//             addLendUserAmount(
+//               context,
+//               amount.toString(),
+//               addedMembers,
+//               selectedCategory2.toString(),
+//               selectedSubCategory2.toString(),
+//             );
+//             Navigator.pop(context);
+//             setState(() {
+//               _isAmountFieldFocused = false; // Prevent amount field refocus
+//             });
+//           },
+//           child: Container(
+//             width: MediaQuery.of(context).size.width / 2.4,
+//             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+//             decoration: BoxDecoration(
+//               color: AppColors.button,
+//               borderRadius: BorderRadius.circular(24),
+//             ),
+//             child: Center(
+//               child: Text(
+//                 HomepageStringsDart().lendMoney,
+//                 style: FontManager().getTextStyle(
+//                   context,
+//                   lWeight: FontWeight.bold,
+//                   fontSize: 15,
+//                   color: AppColors.primaryColor,
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+
+//   Widget continueButton() {
+//     return Stack(
+//       alignment: Alignment.center,
+//       children: [
+//         // Button to trigger celebration
+//         Center(
+//           child: Padding(
+//             padding: const EdgeInsets.only(top: 10),
+//             child: InkWell(
+//               onTap: () {
+//                 FocusScope.of(context).unfocus();
+//                 if (cashInAndOut.value) return;
+//                 cashInAndOut.value = true;
+//                 // if (isSplit.value && addedMembers.isNotEmpty) {
+//                 //   splitBill(selectedCategory2.toString(), amount.toString(),
+//                 //       selectedSubCategory2.toString(), true);
+//                 // }
+//                 //  else if (isLend.value && addedMembers.isNotEmpty) {
+//                 //   addLendUserAmount(
+//                 //     context,
+//                 //     amount.toString(),
+//                 //     addedMembers,
+//                 //     selectedCategory2.toString(),
+//                 //     selectedSubCategory2.toString(),
+//                 //   );
+//                 // }
+//                 // else {
+//                 addTransaction(
+//                   amount.toString(),
+//                   selectedSubCategory2.toString(),
+//                   selectedCategory2.toString(),
+//                   context,
+//                   "cash",
+//                 );
+//               },
+//               // },
+//               child: Obx(() => cashInAndOut.value
+//                   ? getspinner(context)
+//                   : getButton(context, HomepageStringsDart().addButton)),
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+
+//   void splitBill(categories, amount, subCategories, bool isSplitAmount) {
+//     if (categories == "" || amount == "" || subCategories == "") {
+//       snackBarAllFeilds(context);
+//       return;
+//     }
+
+//     if (acceptReset.value) return;
+//     acceptReset.value = true;
+//     isLend.value = false;
+//     isSplit.value = false;
+
+//     splitUserAmountManualTransaction(
+//         context, amount, addedMembers, categories, subCategories);
+//   }
+
+//   void addSocketMessage(addedUser, String amount, String splitName,
+//       String splitID, double parsedTotalAmount) {
+//     if (addedUser.isEmpty) {
+//       return;
+//     }
+
+//     // int index=0;
+//     addedUser.forEach((rec) {
+//       String room1 = rec['name'] + userController.userName.value;
+//       String room2 = userController.userName.value + rec['name'];
+//       String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
+
+//       var jsonData = {
+//         "messageType": "split",
+//         "receiver": rec['id'],
+//         "sender": userController.userId.value,
+//         "message": null,
+//         "image": null,
+//         "poll": null,
+//         "post": null,
+//         "split": {
+//           "BillName": splitName,
+//           "Amount": parsedTotalAmount, // This is now the individual amount
+//           "Share": amount,
+//           "isPaid": false,
+//           "splitId": splitID,
+//         },
+//         "roomId": roomId,
+//       };
+
+//       socket.emit("joinRoom", roomId);
+//       socket.emit("message", jsonData);
+//       String userToSend = rec['name'] + "" + rec['name'];
+//       socket.emit("LoadCharts", {
+//         "roomId": userToSend,
+//       });
+//     });
+//   }
+
+//   Future<dynamic> showCustomFriendsModal(
+//     BuildContext context,
+//     double totalAmount,
+//     bool isLendMode,
+//   ) async {
+//     return await showModalBottomSheet<dynamic>(
+//       context: context,
+//       isScrollControlled: true,
+//       shape: const RoundedRectangleBorder(
+//         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+//       ),
+//       builder: (BuildContext context) {
+//         return SafeArea(
+//           child: NewFriendsUi(
+//             totalAmount: totalAmount,
+//             userId: userController.userId.value,
+//             userName: userController.userName.value,
+//             userAvatar: userController.avatar.value,
+//             isLendMode: isLendMode,
+//             category: selectedCategory2,
+//             subcategory: selectedSubCategory2,
+//           ),
+//         );
+//       },
+//     );
+//   }
+
+//   // void splitUserAmountManualTransaction(
+//   //   BuildContext context,
+//   //   String totalAmount,
+//   //   List members,
+//   //   String name,
+//   //   String subCategories, {
+//   //   Map<String, double>? amounts,
+//   // }) async {
+//   //   double? parsedTotalAmount = double.tryParse(totalAmount);
+//   //   if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
+//   //     snackBarCalled(context, SnackbarData().invalidAmountEntered, Colors.red);
+//   //     return;
+//   //   }
+
+//   //   if (members.isEmpty) {
+//   //     snackBarCalled(context, SnackbarData().noMembersSelected, Colors.red);
+//   //     return;
+//   //   }
+
+//   //   List<Map<String, dynamic>> nameList = [];
+//   //   if (amounts != null) {
+//   //     members.forEach((element) {
+//   //       double memberAmount = amounts[element['id']] ?? 0.0;
+//   //       nameList.add({
+//   //         'member': element['id'],
+//   //         'markAsComplete': false,
+//   //         'amount': memberAmount,
+//   //       });
+//   //     });
+//   //   } else {
+//   //     double amountPerPerson = parsedTotalAmount / (members.length + 1);
+//   //     members.forEach((element) {
+//   //       nameList.add({
+//   //         'member': element['id'],
+//   //         'markAsComplete': false,
+//   //         'amount': amountPerPerson,
+//   //       });
+//   //     });
+//   //     nameList.add({
+//   //       'member': userController.userId.value,
+//   //       'markAsComplete': false,
+//   //       'amount': amountPerPerson,
+//   //     });
+//   //   }
+
+//   //   double calculatedTotal =
+//   //       nameList.fold(0.0, (sum, item) => sum + item['amount']);
+
+//   //   var response = await postDataApiCall(
+//   //     '${url}/split',
+//   //     {
+//   //       "subcategory": subCategories,
+//   //       "category": name,
+//   //       "amount": calculatedTotal,
+//   //       "paymentStatus": nameList,
+//   //       "image": '',
+//   //       "ismanual": true,
+//   //     },
+//   //   );
+
+//   //   if (getFlagOfResponse(response)) {
+//   //     final body = json.decode(response.body);
+//   //     splitID.value = body['id']['_id'];
+//   //     for (var member in members) {
+//   //       double memberAmount = amounts?[member['id']] ??
+//   //           (parsedTotalAmount / (members.length + 1));
+//   //       String formattedAmount = memberAmount.toStringAsFixed(2);
+
+//   //       sendNotificationsToDevice(
+//   //           member['id'],
+//   //           context,
+//   //           "${userController.userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
+//   //           "/chat");
+//   //     }
+
+//   //     if (amounts != null) {
+//   //       members.forEach((member) {
+//   //         double memberAmount = amounts[member['id']] ?? 0.0;
+//   //         addSocketMessage([member], memberAmount.toString(), name,
+//   //             splitID.value, parsedTotalAmount);
+//   //       });
+//   //     } else {
+//   //       double amountPerPerson = parsedTotalAmount / (members.length + 1);
+//   //       addSocketMessage(members, amountPerPerson.toString(), name,
+//   //           splitID.value, parsedTotalAmount);
+//   //     }
+//   //     currentPage = 1;
+//   //     isLoadingMore.value = false;
+//   //     searchController.clear();
+//   //     getAllTransaction(context);
+
+//   //     snackBarCalled(context, SnackbarData().splitAmountSuccess, Colors.black);
+//   //     Navigator.pop(context);
+//   //     addedMembers.clear();
+//   //     addedUser.clear();
+//   //     _showCelebration();
+//   //   } else {
+//   //     snackBarCalled(context, SnackbarData().splitAmountError, Colors.red);
+//   //   }
+
+//   //   acceptReset.value = false;
+//   //   cashInAndOut.value = false;
+//   // }
+//   void splitUserAmountManualTransaction(
+//     BuildContext context,
+//     String totalAmount,
+//     List members,
+//     String name,
+//     String subCategories, {
+//     Map<String, double>? amounts,
+//   }) async {
+//     print("---- SPLIT MANUAL TRANSACTION START ----");
+
+//     double? parsedTotalAmount = double.tryParse(totalAmount);
+//     print("Parsed total amount: $parsedTotalAmount");
+
+//     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
+//       print("Invalid total amount entered.");
+//       snackBarCalledfail(context, SnackbarData().invalidAmountEntered, Colors.red);
+//       return;
+//     }
+
+//     if (members.isEmpty) {
+//       print("No members selected for split.");
+//       snackBarCalledfail(context, SnackbarData().noMembersSelected, Colors.red);
+//       return;
+//     }
+
+//     List<Map<String, dynamic>> nameList = [];
+
+//     if (amounts != null) {
+//       print("Using custom amounts for members...");
+//       members.forEach((element) {
+//         double memberAmount = amounts[element['id']] ?? 0.0;
+//         print("Member ${element['id']} - Amount: $memberAmount");
+//         nameList.add({
+//           'member': element['id'],
+//           'markAsComplete': false,
+//           'amount': memberAmount,
+//         });
+//       });
+//     } else {
+//       double amountPerPerson = parsedTotalAmount / (members.length + 1);
+//       print(
+//           "No custom amounts, using equal split: ₹$amountPerPerson per person");
+//       members.forEach((element) {
+//         print("Member ${element['id']} assigned amount: ₹$amountPerPerson");
+//         nameList.add({
+//           'member': element['id'],
+//           'markAsComplete': false,
+//           'amount': amountPerPerson,
+//         });
+//       });
+//       nameList.add({
+//         'member': userController.userId.value,
+//         'markAsComplete': false,
+//         'amount': amountPerPerson,
+//       });
+//       print(
+//           "User ${userController.userId.value} assigned amount: ₹$amountPerPerson");
+//     }
+
+//     double calculatedTotal =
+//         nameList.fold(0.0, (sum, item) => sum + item['amount']);
+//     print("Calculated total from nameList: ₹$calculatedTotal");
+
+//     print("Calling API to split bill...");
+//     var response = await postDataApiCall(
+//       '${url}/split',
+//       {
+//         "subcategory": subCategories,
+//         "category": name,
+//         "amount": calculatedTotal,
+//         "paymentStatus": nameList,
+//         "image": '',
+//         "ismanual": true,
+//       },
+//     );
+
+//     print("API Response status: ${response.statusCode}");
+
+//     if (getFlagOfResponse(response)) {
+//       print("Split request successful");
+//       final body = json.decode(response.body);
+//       splitID.value = body['id']['_id'];
+//       print("Split ID received: ${splitID.value}");
+
+//       for (var member in members) {
+//         double memberAmount = amounts?[member['id']] ??
+//             (parsedTotalAmount / (members.length + 1));
+//         String formattedAmount = memberAmount.toStringAsFixed(2);
+//         print("Sending notification to ${member['id']} for ₹$formattedAmount");
+//         sendNotificationsToDevice(
+//             member['id'],
+//             context,
+//             "${userController.userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
+//             "/chat");
+//       }
+
+//       if (amounts != null) {
+//         print("Sending socket messages using custom amounts...");
+//         members.forEach((member) {
+//           double memberAmount = amounts[member['id']] ?? 0.0;
+//           print("Socket: Member ${member['id']} - ₹$memberAmount");
+//           addSocketMessage([member], memberAmount.toString(), name,
+//               splitID.value, parsedTotalAmount);
+//         });
+//       } else {
+//         double amountPerPerson = parsedTotalAmount / (members.length + 1);
+//         print("Sending socket messages using equal split: ₹$amountPerPerson");
+//         addSocketMessage(members, amountPerPerson.toString(), name,
+//             splitID.value, parsedTotalAmount);
+//       }
+
+//       print("Resetting UI and values...");
+//       currentPage = 1;
+//       isLoadingMore.value = false;
+//       searchController.clear();
+//       getAllTransaction(context);
+
+//       print("Showing success snackbar and celebration");
+//       snackBarCalled(context, SnackbarData().splitAmountSuccess, Colors.black);
+//       Navigator.pop(context);
+//       addedMembers.clear();
+//       addedUser.clear();
+//       _showCelebration();
+//     } else {
+//       print("Split request failed");
+//       snackBarCalledfail(context, SnackbarData().splitAmountError, Colors.red);
+//     }
+
+//     print("Resetting flags");
+//     acceptReset.value = false;
+//     cashInAndOut.value = false;
+
+//     print("---- SPLIT MANUAL TRANSACTION END ----");
+//   }
+// }
+
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
@@ -45,7 +1142,7 @@ class _ModalContentState extends State<ModalContent>
   final TextEditingController categoryFieldController = TextEditingController();
   bool isCategoryFieldExpanded = false;
   final TextEditingController searchController = TextEditingController();
-  List<String> filteredCategories = [];
+  List<Map<String, dynamic>> filteredCategories = [];
   late ConfettiController _confettiController;
   late AnimationController _iconAnimationController;
   bool _isCelebrationVisible = false;
@@ -63,7 +1160,13 @@ class _ModalContentState extends State<ModalContent>
 
     getAllTransaction(context);
     getCategoryData();
-    filteredCategories = categories.keys.toList();
+   filteredCategories = categories.entries
+      .map((entry) => {
+            'category': entry.key,
+            'subcategories': entry.value,
+            'isCategory': true,
+          })
+      .toList();
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 2));
     _iconAnimationController = AnimationController(
@@ -187,19 +1290,56 @@ class _ModalContentState extends State<ModalContent>
   }
 
   void filterCategories(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        // Show all categories when search is cleared
-        filteredCategories = categories.keys.toList();
-      } else {
-        // Filter categories by search query
-        filteredCategories = categories.keys
-            .where((category) =>
-                category.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      }
-    });
-  }
+  setState(() {
+    if (query.isEmpty) {
+      // Show all categories when search is cleared
+      filteredCategories = categories.entries
+          .map((entry) => {
+                'category': entry.key,
+                'subcategories': entry.value,
+                'isCategory': true,
+              })
+          .toList();
+    } else {
+      filteredCategories = [];
+      categories.forEach((category, subcategories) {
+        // Check if category matches the query
+        if (category.toLowerCase().contains(query.toLowerCase())) {
+          filteredCategories.add({
+            'category': category,
+            'subcategories': subcategories,
+            'isCategory': true,
+          });
+        }
+        // Check if any subcategory matches the query
+        subcategories
+            .where((subcategory) =>
+                subcategory.toLowerCase().contains(query.toLowerCase()))
+            .forEach((subcategory) {
+          filteredCategories.add({
+            'category': category,
+            'subcategory': subcategory,
+            'isCategory': false,
+          });
+        });
+      });
+      // Include custom categories
+      customCategoryList.forEach((customCategory) {
+        if (customCategory['name']
+            .toLowerCase()
+            .contains(query.toLowerCase())) {
+          filteredCategories.add({
+            'category': customCategory['name'],
+            'subcategory': '',
+            'isCategory': true,
+            'isCustom': true,
+            'imageUrl': customCategory['imageUrl'],
+          });
+        }
+      });
+    }
+  });
+}
 
   void resetToInitialScreen() {
     setState(() {
@@ -416,126 +1556,146 @@ class _ModalContentState extends State<ModalContent>
     );
   }
 
-  Widget categoryWidget() {
-    return GestureDetector(
-      onTap: toggleCategoryField,
-      child: TextField(
-        controller: categoryFieldController,
-        readOnly: !isDebit,
-        decoration: InputDecoration(
-          hintText: HomepageStringsDart().selectCategory,
-          fillColor: AppColors.button,
-          filled: true,
-          hintStyle: FontManager().getTextStyle(context,
-              lWeight: FontWeight.normal,
-              fontSize: 16,
-              color: AppColors.accentColor),
-          prefixIcon: const Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: AppColors.accentColor, // When not focused
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: AppColors.accentColor, // Color when focused
-              // Slightly thicker when focused for emphasis
-            ),
+Widget categoryWidget() {
+  return GestureDetector(
+    onTap: toggleCategoryField,
+    child: TextField(
+      controller: categoryFieldController,
+      readOnly: !isDebit,
+      decoration: InputDecoration(
+        hintText: HomepageStringsDart().selectCategory,
+        fillColor: AppColors.button,
+        filled: true,
+        hintStyle: FontManager().getTextStyle(
+          context,
+          lWeight: FontWeight.normal,
+          fontSize: 16,
+          color: AppColors.accentColor,
+        ),
+        prefixIcon: const Icon(Icons.search),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: AppColors.accentColor,
           ),
         ),
-        onTap: () {
-          if (!isCategoryFieldExpanded) {
-            if (isDebit)
-              toggleCategoryField();
-            else {
-              setState(() {
-                selectedCategory = "Income";
-                selectedSubCategory = null;
-                categoryFieldController.text = "Income";
-              });
-            }
-          }
-        },
-        onChanged: (value) {
-          filterCategories(value); // Filter categories as the user types
-        },
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: AppColors.accentColor,
+          ),
+        ),
       ),
-    );
-  }
-
-  Widget categoryExpandedWidget() {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: filteredCategories.length + customCategoryList.length,
-        itemBuilder: (BuildContext context, int index) {
-          bool f = (index >= filteredCategories.length);
-          String category = f
-              ? customCategoryList[index - filteredCategories.length]['name']
-              : filteredCategories[index];
-          String urlPath = "";
-
-          if (!f) {
-            try {
-              urlPath = Categories.link +
-                  BudgetCategories.listofCategories[
-                      BudgetCategories.listofCategories.keys.elementAt(index)];
-            } catch (e) {}
+      onTap: () {
+        if (!isCategoryFieldExpanded) {
+          if (isDebit) {
+            toggleCategoryField();
           } else {
-            urlPath = customCategoryList[index - filteredCategories.length]
-                ['imageUrl'];
+            setState(() {
+              selectedCategory = "Income";
+              selectedSubCategory = null;
+              categoryFieldController.text = "Income";
+            });
           }
+        }
+      },
+      onChanged: (value) {
+        filterCategories(value); // Filter categories and subcategories
+      },
+    ),
+  );
+}
+Widget categoryExpandedWidget() {
+  return Expanded(
+    child: ListView.builder(
+      itemCount: filteredCategories.length,
+      itemBuilder: (BuildContext context, int index) {
+        final item = filteredCategories[index];
+        final isCategory = item['isCategory'] as bool;
+        final category = item['category'] as String;
+        final isCustom = item['isCustom'] ?? false;
+        String urlPath = "";
 
-          return ListTile(
-            //leading: const Icon(Icons.category),
+        if (isCustom) {
+          urlPath = item['imageUrl'] ?? '';
+        } else if (isCategory) {
+          try {
+            urlPath = Categories.link +
+                BudgetCategories.listofCategories[category]!;
+          } catch (e) {
+            urlPath = '';
+          }
+        } else {
+          urlPath = BudgetSubCategories.listofSubCategories[item['subcategory']] ??
+              "assets/icons/subCategoryIcons/default.svg";
+        }
 
-            leading: Container(
-              height: 40,
-              width: 40,
-              child: AvatarProfileImage(
-                url: urlPath,
-                width: 4,
-                height: 4,
-              ),
+        return ListTile(
+          leading: Container(
+            height: 40,
+            width: 40,
+            child: AvatarProfileImage(
+              url: urlPath,
+              width: 4,
+              height: 4,
             ),
-            title: Text(category,
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 16,
-                    color: AppColors.accentColor)),
-            onTap: () {
-              setState(() {
-                if (f) {
+          ),
+          title: Text(
+            isCategory ? category : '${item['subcategory']} ($category)',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.normal,
+              fontSize: 16,
+              color: AppColors.accentColor,
+            ),
+          ),
+          onTap: () {
+            setState(() {
+              if (isCategory) {
+                if (isCustom) {
                   selectedCategory = category;
                   selectedSubCategory = "";
-                  isCategoryFieldExpanded = false;
-                  _isAmountFieldFocused = false;
-                  categoryFieldController.text = '$selectedCategory';
-                  // isSplitbill = true; // Uncomment if needed
-                  fin = '$selectedCategory ($selectedSubCategory)';
                   selectedCategory2 = selectedCategory;
-                  _isAmountFieldFocused = false; // Prevent amount field refocus
+                  selectedSubCategory2 = selectedSubCategory;
+                  isCategoryFieldExpanded = false;
+                  categoryFieldController.text = category;
+                  fin = '$selectedCategory (None)';
+                  _isAmountFieldFocused = false;
                   FocusScope.of(context).unfocus();
                   resetToInitialScreen();
                 } else {
                   selectedCategory = category;
-                  categoryFieldController.text = category; // Update text field
+                  selectedSubCategory = null;
+                  selectedCategory2 = selectedCategory;
+                  selectedSubCategory2 = selectedSubCategory;
+                  categoryFieldController.text = category;
                   isCategoryFieldExpanded = false;
-                  _isAmountFieldFocused = false; // Prevent amount field refocus
-                  FocusScope.of(context).unfocus(); // Collapse the list
+                  _isAmountFieldFocused = false;
+                  FocusScope.of(context).unfocus();
                 }
-              });
-            },
-          );
-        },
-      ),
-    );
-  }
-
+              } else {
+                selectedCategory = item['category'];
+                selectedSubCategory = item['subcategory'];
+                selectedCategory2 = selectedCategory;
+                selectedSubCategory2 = selectedSubCategory;
+                categoryFieldController.text =
+                    '$selectedCategory ($selectedSubCategory)';
+                isCategoryFieldExpanded = false;
+                fin = '$selectedCategory ($selectedSubCategory)';
+                _isAmountFieldFocused = false;
+                FocusScope.of(context).unfocus();
+                resetToInitialScreen();
+              }
+            });
+          },
+        );
+      },
+    ),
+  );
+}
   Widget getListOfCustomCategory() {
     return Expanded(
       child: ListView.builder(

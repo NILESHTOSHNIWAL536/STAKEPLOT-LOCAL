@@ -10,11 +10,13 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/appleSignIn.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
 import 'dart:math' as math;
 
@@ -30,8 +32,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController(text:"krishnanaruto362@gmail.com");
-  final TextEditingController passwordController = TextEditingController(text:"Steve@0987");
+  final TextEditingController emailController =
+      TextEditingController(text: "krishnanaruto362@gmail.com");
+  final TextEditingController passwordController =
+      TextEditingController(text: "Steve@0987");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override
@@ -97,21 +101,40 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 40),
 
                       // Or login with
-                    _buildDivider(),
+                      _buildDivider(),
 
                       const SizedBox(height: 20),
                       // Google Sign In
                       containerIconSiginWith(
                           FontAwesomeIcons.google, Colorcodes.white, context),
                       // buildGoogleSignIn(),
-                        Platform.isAndroid ? Text(''): SignInWithAppleButton(
-              onPressed: () async {
-                final result = await authService.signInWithApple(context);
-                if (result != null) {
-                  print("Apple login success: $result");
-                }
-              },
-            ),
+                      Platform.isAndroid
+                          ? Text('')
+                          : SignInWithAppleButton(
+                            onPressed: () async {
+      if (appleSignInBool.value) return; // Prevent multiple clicks
+      appleSignInBool.value = true; // Set loading state
+      try {
+        final userdataApple =await AppleSignIN()
+                                    .signInWithApple(context);
+        print("User data received: $userdataApple");
+        if (userdataApple != null && userdataApple['data']['accessToken'] != null) {
+          print("Access token is present.");
+        } else if (userdataApple != null) {
+          print("Navigating to UserDetailsPage with userdata: $userdataApple");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserDetailsPage(data: userdataApple)),
+          );
+        } else {
+          print("No user data received.");
+        }
+      } finally {
+        appleSignInBool.value = false; // Reset loading state
+      }
+    },  
+     ),
                       const SizedBox(height: 20),
 
                       // const Spacer(),
@@ -134,9 +157,19 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildWelcomeText() {
     return Column(
       children: [
-        textStyle(context: context,text: 'Welcome',fontWeight: FontWeight.bold,fontsize: 32,c: Colorcodes.white),
+        textStyle(
+            context: context,
+            text: 'Welcome',
+            fontWeight: FontWeight.bold,
+            fontsize: 32,
+            c: Colorcodes.white),
         const SizedBox(height: 8),
-        textStyle(context: context,text:'Glad to see you',fontWeight: FontWeight.w300,fontsize: 18,c: Colorcodes.white),
+        textStyle(
+            context: context,
+            text: 'Glad to see you',
+            fontWeight: FontWeight.w300,
+            fontsize: 18,
+            c: Colorcodes.white),
       ],
     );
   }
@@ -149,16 +182,16 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       child: TextField(
         controller: emailController,
-        onChanged: (c){
-             acceptReset.value = false;
+        onChanged: (c) {
+          acceptReset.value = false;
         },
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Email Address',
           hintStyle: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: AppColors.backgroundColor),
+              lWeight: FontWeight.normal,
+              fontSize: 14,
+              color: AppColors.backgroundColor),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -177,17 +210,17 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       child: TextField(
         controller: passwordController,
-         onChanged: (c){
-             acceptReset.value = false;
+        onChanged: (c) {
+          acceptReset.value = false;
         },
         obscureText: !_isPasswordVisible,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Password',
           hintStyle: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: AppColors.backgroundColor),
+              lWeight: FontWeight.normal,
+              fontSize: 14,
+              color: AppColors.backgroundColor),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -217,13 +250,11 @@ class _LoginScreenState extends State<LoginScreen> {
           // Handle forgot password
           Navigator.pushNamed(context, "/forgot");
         },
-        child: Text(
-          'Forgot Password?',
-          style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: AppColors.backgroundColor)
-        ),
+        child: Text('Forgot Password?',
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.normal,
+                fontSize: 14,
+                color: AppColors.backgroundColor)),
       ),
     );
   }
@@ -304,7 +335,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-
   Widget buildSignUpLink() {
     return InkWell(
       onTap: () {
@@ -316,20 +346,19 @@ class _LoginScreenState extends State<LoginScreen> {
           Text(
             "Don't have an account? ",
             style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: AppColors.backgroundColor),
+                lWeight: FontWeight.normal,
+                fontSize: 14,
+                color: AppColors.backgroundColor),
           ),
-           Text(
+          Text(
             'Sign Up Now',
             style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: AppColors.backgroundColor),
+                lWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.backgroundColor),
           ),
         ],
       ),
     );
   }
-
 }

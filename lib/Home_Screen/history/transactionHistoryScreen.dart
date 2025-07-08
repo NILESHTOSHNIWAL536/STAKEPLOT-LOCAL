@@ -20,8 +20,7 @@ import 'package:get/get.dart';
 
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
-
-
+final RxBool showFilter = false.obs; // NEW
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
 
@@ -36,7 +35,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   final ScrollController scrollController = ScrollController();
   final RxList<Map<String, dynamic>> dayWiseTransactions =
       RxList<Map<String, dynamic>>([]);
-      final RxBool isDateSummaryView = false.obs;
+  final RxBool isDateSummaryView = false.obs;
   // State to toggle views
 
   @override
@@ -48,7 +47,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     getDayWiseTransactions(context).then((data) {
       dayWiseTransactions.assignAll(data);
     });
-    
 
     scrollController.addListener(_onScroll);
   }
@@ -71,7 +69,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         child: Column(
           children: [
             Container(
-              width: MediaQuery.of(context).size.width ,
+              width: MediaQuery.of(context).size.width,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -80,113 +78,131 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     duration: const Duration(milliseconds: 200),
                     decoration: BoxDecoration(
                       color: AppColors.historyAppbar,
-                      
                     ),
-                    child: Padding(
-                       padding: const EdgeInsets.only(left: 10, right: 2),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 4),
-                          Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 4),
+                        Padding(
+                    
+                           padding: const EdgeInsets.only(left: 10, right: 2),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               getTextFeild(),
-                               InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    isDateSummaryView.value = !isDateSummaryView
-                                        .value; // Toggle state
-                                  });
-                                },
-                                  child:  !isDateSummaryView.value?AvatarProfileImage(
-                url: HomePageIcons.dayWiseIcon1, width: 70, height: 36):Icon(Icons
-                                          .calendar_view_month)
-                               
-                              ),
+                              InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isDateSummaryView.value =
+                                          !isDateSummaryView
+                                              .value; // Toggle state
+                                    });
+                                  },
+                                  child: !isDateSummaryView.value
+                                      ? AvatarProfileImage(
+                                          url: HomePageIcons.dayWiseIcon1,
+                                          width: 70,
+                                          height: 36)
+                                      : AvatarProfileImage(
+                                          url: HomePageIcons.dayWiseIcon2,
+                                          width: 70,
+                                          height: 36)),
                               InkWell(
                                 onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (_) => SafeArea(
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: const BoxDecoration(
-                                          color: AppColors.bg5,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20),
-                                            topRight: Radius.circular(20),
-                                          ),
-                                        ),
-                                        child: filterTransaction(context),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child:  AvatarProfileImage(
-                url: HomePageIcons.filterIcon, width: 66, height: 30),
+                              showFilter.value = !showFilter.value; // Toggle the filter visibility
+                            },
+                                child: AvatarProfileImage(
+                                    url: HomePageIcons.filterIcon,
+                                    width: 66,
+                                    height: 30),
                               ),
-                             
+                              //               InkWell(
+                              //                 onTap: () {
+                              //                   showModalBottomSheet(
+                              //                     context: context,
+                              //                     builder: (_) => SafeArea(
+                              //                       child: Container(
+                              //                         width:
+                              //                             MediaQuery.of(context).size.width,
+                              //                         decoration: const BoxDecoration(
+                              //                           color: AppColors.bg5,
+                              //                           borderRadius: BorderRadius.only(
+                              //                             topLeft: Radius.circular(20),
+                              //                             topRight: Radius.circular(20),
+                              //                           ),
+                              //                         ),
+                              //                         child: filterTransaction(context),
+                              //                       ),
+                              //                     ),
+                              //                   );
+                              //                 },
+                              //                 child:  AvatarProfileImage(
+                              // url: HomePageIcons.filterIcon, width: 66, height: 30),
+                              //               ),
                             ],
                           ),
-                          Obx(() => (groupTransactionList.length != 0 ||
+                        ),
+                        Padding(
+                           padding: const EdgeInsets.only(left: 10, right: 2),
+                          child: Obx(() => (groupTransactionList.length != 0 ||
                                   redioButton.isNotEmpty)
                               ? Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 8),
+                                  padding: const EdgeInsets.only(top: 8),
                                   child: getTab(context),
                                 )
                               : SizedBox.shrink()),
-                        ],
-                      ),
+                        ),
+                           Obx(() => (showFilter.value)
+                        ? filterTransaction(context)
+                        : SizedBox.shrink()),
+                    
+                      ],
                     ),
                   ),
 
-                 
-          //       Obx(() =>Container(
-          //         width: MediaQuery.of(context).size.width,
-          //               height: MediaQuery.sizeOf(context).height /
-          //                   ((groupTransactionList.length != 0 ||
-          //                           redioButton.isNotEmpty)
-          //                       ? 1.35
-          //                       : 1.25),
-          //   child: isDateSummaryView.value
-          //       ? CalendarTransactionScreen()
-          //       : SingleChildScrollView(
-          //           controller: scrollController,
-          //           child: TransactionHistory(
-          //             isYearView: false,
-          //             isflag: true,
-          //             showIcon: false,
-          //             expandedPage: false,
-          //           ),
-          //         ),
-          // )),
+                  //       Obx(() =>Container(
+                  //         width: MediaQuery.of(context).size.width,
+                  //               height: MediaQuery.sizeOf(context).height /
+                  //                   ((groupTransactionList.length != 0 ||
+                  //                           redioButton.isNotEmpty)
+                  //                       ? 1.35
+                  //                       : 1.25),
+                  //   child: isDateSummaryView.value
+                  //       ? CalendarTransactionScreen()
+                  //       : SingleChildScrollView(
+                  //           controller: scrollController,
+                  //           child: TransactionHistory(
+                  //             isYearView: false,
+                  //             isflag: true,
+                  //             showIcon: false,
+                  //             expandedPage: false,
+                  //           ),
+                  //         ),
+                  // )),
 
-          Obx(() => Container(
-  width: MediaQuery.of(context).size.width,
-  height: MediaQuery.sizeOf(context).height /
-      ((groupTransactionList.length != 0 || redioButton.isNotEmpty) ? 1.35 : 1.25),
-  child: IndexedStack(
-    index: isDateSummaryView.value ? 0 : 1,
-    children: [
-      CalendarTransactionScreen(
-        
-      ),
-      SingleChildScrollView(
-        controller: scrollController,
-        child: TransactionHistory(
-          isYearView: false,
-          isflag: true,
-          showIcon: false,
-          expandedPage: false,
-        ),
-      ),
-    ],
-  ),
-))
-
+                  Obx(() => Container(
+                        width: MediaQuery.of(context).size.width,
+                        height:showFilter.value? MediaQuery.sizeOf(context).height/1.5: MediaQuery.sizeOf(context).height /
+                            ((groupTransactionList.length != 0 ||
+                                    redioButton.isNotEmpty)
+                                ? 1.35
+                                : 1.25),
+                        child: IndexedStack(
+                          index: isDateSummaryView.value ? 0 : 1,
+                          children: [
+                            CalendarTransactionScreen(),
+                            SingleChildScrollView(
+                              controller: scrollController,
+                              child: TransactionHistory(
+                                isYearView: false,
+                                isflag: true,
+                                showIcon: false,
+                                expandedPage: false,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ))
                 ],
               ),
             ),
@@ -214,10 +230,10 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             fontSize: 14,
             color: AppColors.grey,
           ),
-          prefixIcon:  Icon(Icons.search, color: AppColors.grey),
+          prefixIcon: Icon(Icons.search, color: AppColors.grey),
           suffixIcon: searchController.text.isNotEmpty
               ? IconButton(
-                  icon:  Icon(Icons.clear, color: AppColors.accentColor),
+                  icon: Icon(Icons.clear, color: AppColors.accentColor),
                   onPressed: () {
                     clearTransactions(context: context, f: true);
                   },
@@ -229,7 +245,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide.none,
           ),
-          
           contentPadding:
               const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
         ),
