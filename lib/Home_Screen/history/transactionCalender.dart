@@ -295,7 +295,7 @@ Widget _buildDateBreakdownView(BuildContext context) {
                     color: AppColors.accentColor,
                   ),
                 )),
-            SizedBox.shrink(), // Placeholder for symmetry
+           const SizedBox.shrink(), // Placeholder for symmetry
           ],
         ),
       ),
@@ -317,13 +317,13 @@ Widget _buildDateBreakdownView(BuildContext context) {
               },
               child: Container(
                 width: 40,
-                margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                 decoration: BoxDecoration(
                   color: AppColors.backgroundColor,
                  borderRadius: isSelected?BorderRadius.circular(5):null, // 5px border radius
                  boxShadow: isSelected
       ? [
-          BoxShadow(
+          const BoxShadow(
             color: Color.fromRGBO(75, 77, 115, 0.25),
             blurRadius: 2,
             offset: Offset(0, 2),
@@ -432,7 +432,7 @@ Widget _buildDateBreakdownView(BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                icon: Icon(Icons.chevron_left, color: AppColors.accentColor),
+                icon: const Icon(Icons.chevron_left, color: AppColors.accentColor),
                 onPressed: () => _changeMonth(-1),
               ),
               Obx(() => Text(
@@ -463,8 +463,8 @@ Widget _buildDateBreakdownView(BuildContext context) {
         // Calendar Grid
         Expanded(
           child: Obx(() => GridView.builder(
-                padding: EdgeInsets.all(12),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                padding: const EdgeInsets.all(12),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 5,
                   childAspectRatio: 1.0,
                   crossAxisSpacing: 10,
@@ -491,12 +491,12 @@ Widget _buildDateBreakdownView(BuildContext context) {
           color: dateData['date'] != null
               ? AppColors.backgroundColor
               : AppColors.backgroundColor,
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(24), topRight: Radius.circular(24)),
           
           boxShadow:  dateData['date'] != null
       ? [
-          BoxShadow(
+          const BoxShadow(
             color: Color.fromRGBO(75, 77, 115, 0.25),
             blurRadius: 2,
             offset: Offset(0, 2),
