@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -147,13 +146,14 @@ Widget historyTransactions(
                   width: 0.5,
                 ),
           boxShadow: [
-      BoxShadow(
-        color: Color.fromRGBO(155, 155, 155, 0.25), // rgba(155, 155, 155, 0.25)
-        offset: Offset(0, 0), // 0px 0px
-        blurRadius: 4, // 4px
-        spreadRadius: 0, // 0px
-      ),
-    ],
+            BoxShadow(
+              color: Color.fromRGBO(
+                  155, 155, 155, 0.25), // rgba(155, 155, 155, 0.25)
+              offset: Offset(0, 0), // 0px 0px
+              blurRadius: 4, // 4px
+              spreadRadius: 0, // 0px
+            ),
+          ],
         ),
         child: Obx(() => AnimatedContainer(
               duration:
@@ -301,7 +301,8 @@ Widget historyTransactions(
                               isReview,
                               id,
                               isManual,
-                              hide),
+                              hide,
+                              isSplit),
                         ),
                         (isManual || isReview)
                             ? SizedBox(height: 0)
@@ -329,21 +330,12 @@ Widget reviewTagTransactions(
     String narration_id) {
   return Column(
     children: [
-      if (!isSplit) SizedBox(height: 10),
+      SizedBox(height: 10),
       Row(
         mainAxisAlignment:
-            isSplit ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
+            MainAxisAlignment.end,
         children: [
-          if (isSplit)
-            Container(
-                // width: badgeSize,
-                // height: badgeSize,
-                decoration: BoxDecoration(
-                  // color: AppColors.bg5,
-                  shape: BoxShape.circle,
-                ),
-                child: AvatarProfileImage(
-                    url: HomePageIcons.isSplit, width: 50, height: 50)),
+        
           if (isReview)
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -387,7 +379,8 @@ Widget getIconsForHideUpdateSplit(
     bool isReview,
     String id,
     bool isManual,
-    bool hide) {
+    bool hide,
+    bool isSplit) {
   // Responsive scaling with MediaQuery
   final screenWidth = MediaQuery.of(context).size.width;
   final scaleFactor = screenWidth / 360; // Base width: 360px
@@ -405,16 +398,48 @@ Widget getIconsForHideUpdateSplit(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        // Category
-        Container(
-          width: MediaQuery.sizeOf(context).width / 3,
-          child: textStyle(
-            context: context,
-            text: toUpperCase(category),
-            c: AppColors.primaryColor,
-            fontsize: fontSizeMedium,
-            fontWeight: FontWeight.w600,
-          ),
+        // Category icon
+        Row(
+          children: [
+            Container(
+              // width: MediaQuery.sizeOf(context).width / 6,
+              child: GestureDetector(
+                onTap: category == 'Untagged' ? null :() {
+                  tagName.value = category;
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                    builder: (context) {
+                      return TagShowmodal(
+                        data: transaction,
+                        index: index,
+                      );
+                    },
+                  );
+                },
+                child: textStyle(
+                  context: context,
+                  text: toUpperCase(category),
+                  c: AppColors.primaryColor,
+                  fontsize: fontSizeMedium,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+        
+             if (isSplit)
+          Container(
+            
+             width: MediaQuery.sizeOf(context).width / 11,
+              // width: badgeSize,
+              // height: badgeSize,
+              
+              child: AvatarProfileImage(
+                  url: HomePageIcons.isSplit, width: 50, height: 50)),
+          ],
         ),
         // Action Icons
         isReview
@@ -629,32 +654,34 @@ Widget getIconsForHideUpdateSplit(
                     ),
 
                     // Tag Action
-                    Tooltip(
-                      message: HomepageStringsDart().tagTooltip,
-                      child: GestureDetector(
-                        onTap: () {
-                          tagName.value = category;
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20)),
-                            ),
-                            builder: (context) {
-                              return TagShowmodal(
-                                data: transaction,
-                                index: index,
-                              );
-                            },
-                          );
-                        },
-                        child: AvatarProfileImage(
-                            url: HomePageIcons.tagIcon,
-                            width: 1200,
-                            height: 46),
+                    if (category == 'Untagged') ...[
+                      Tooltip(
+                        message: HomepageStringsDart().tagTooltip,
+                        child: GestureDetector(
+                          onTap: () {
+                            tagName.value = category;
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
+                              ),
+                              builder: (context) {
+                                return TagShowmodal(
+                                  data: transaction,
+                                  index: index,
+                                );
+                              },
+                            );
+                          },
+                          child: AvatarProfileImage(
+                              url: HomePageIcons.tagIcon,
+                              width: 1200,
+                              height: 46),
+                        ),
                       ),
-                    ),
+                    ],
                     SizedBox(width: 8 * scaleFactor),
                     isManual
                         ? Container(

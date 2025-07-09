@@ -15,9 +15,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 Widget getTab(BuildContext context) {
-  return Obx(() => redioButton.isNotEmpty
-      ? getTagHideButtons(context)
-      : allOrGroupTransactionsName.value == StringConstant.allTransactions
+  return Obx(() => allOrGroupTransactionsName.value == StringConstant.allTransactions
           ? getTabsForTransactions(context)
           : getTabsForTransactions(context));
 }
@@ -63,9 +61,9 @@ Widget tabItem(String text, BuildContext context) {
         child: textStyleImage(
           context: context,
           text: text,
-          c: isSelected ? AppColors.bg5 : AppColors.grey,
+          c: isSelected ? AppColors.backgroundColor : AppColors.button,
           fontsize: 14,
-          fontWeight: FontWeight.w600,
+          fontWeight: isSelected ?FontWeight.w700:FontWeight.w500,
         ),
       ),
     ),
@@ -75,80 +73,86 @@ Widget tabItem(String text, BuildContext context) {
 Widget getTagHideButtons(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        actionButton(
-          text: 'Tag',
-          icon: SvgPicture.asset(
-            LikeComment.savedPost,
-            width: 12,
-            height: 20,
-          ),
-          context: context,
-          onTap: () {
-            tagName.value = "Untagged";
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    child: SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        width:MediaQuery.sizeOf(context).width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            actionButton(
+              text: 'Tag',
+              icon: SvgPicture.asset(
+                LikeComment.savedPost,
+                width: 12,
+                height: 20,
               ),
-              builder: (context) {
-                return transactionsHistory.isNotEmpty &&
-                        redioButtonIndex.isNotEmpty
-                    ? TagShowmodal(
-                        data:
-                            transactionsHistory[redioButtonIndex.values.first],
-                        index: 0,
-                        isTag: true,
-                      )
-                    : SizedBox.shrink(child: Text("No group Found"));
+              context: context,
+              onTap: () {
+                tagName.value = "Untagged";
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  builder: (context) {
+                    return transactionsHistory.isNotEmpty &&
+                            redioButtonIndex.isNotEmpty
+                        ? TagShowmodal(
+                            data:
+                                transactionsHistory[redioButtonIndex.values.first],
+                            index: 0,
+                            isTag: true,
+                          )
+                        : SizedBox.shrink(child: Text("No group Found"));
+                  },
+                );
               },
-            );
-          },
-        ),
-        const SizedBox(width: 10), // Spacing between buttons
-        actionButton(
-            text: 'Hide',
-            icon: Icon(
-              Icons.visibility_off_rounded,
-              color: AppColors.primaryColor,
-              size: 20,
             ),
-            onTap: () {
-              hideSelectedTransactions(context, true);
-              showCheckBox.value = false;
-            },
-            context: context),
-        const SizedBox(width: 10), // Spacing between buttons
-        Obx(() => addManually.isEmpty
-            ? SizedBox.shrink()
-            : actionButton(
-                text: 'Delete',
+            const SizedBox(width: 10), // Spacing between buttons
+            actionButton(
+                text: 'Hide',
                 icon: Icon(
-                  Icons.delete,
-                  color: Colors.red,
+                  Icons.visibility_off_rounded,
+                  color: AppColors.primaryColor,
                   size: 20,
                 ),
                 onTap: () {
-                  showModal(context);
+                  hideSelectedTransactions(context, true);
+                  showCheckBox.value = false;
                 },
-                context: context)),
- const SizedBox(width: 10),
-        actionButton(
-            text: 'Not mine',
-            icon: Icon(
-              Icons.close,
-              color: AppColors.primaryColor,
-              size: 20,
-            ),
-            onTap: () {
-              hideSelectedTransactions(context, true);
-              showCheckBox.value = false;
-            },
-            context: context),
-      ],
+                context: context),
+            const SizedBox(width: 10), // Spacing between buttons
+            Obx(() => addManually.isEmpty
+                ? SizedBox.shrink()
+                : actionButton(
+                    text: 'Delete',
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                      size: 20,
+                    ),
+                    onTap: () {
+                      showModal(context);
+                    },
+                    context: context)),
+         const SizedBox(width: 10),
+            actionButton(
+                text: 'Not mine',
+                icon: Icon(
+                  Icons.close,
+                  color: AppColors.primaryColor,
+                  size: 20,
+                ),
+                onTap: () {
+                  hideSelectedTransactions(context, true);
+                  showCheckBox.value = false;
+                },
+                context: context),
+          ],
+        ),
+      ),
     ),
   );
 }
@@ -164,15 +168,17 @@ Widget actionButton(
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.mt, // Match modal background for consistency
-        borderRadius: BorderRadius.circular(10),
+        color: AppColors.backgroundColor, // Match modal background for consistency
+        borderRadius: BorderRadius.circular(2),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.accentColor.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+                              BoxShadow(
+  color: Color.fromRGBO(120, 120, 120, 0.25),
+  offset: Offset(0, 0),
+  blurRadius: 4,
+  spreadRadius: 0,
+),
+
+                            ]
       ),
       child: Row(
         children: [

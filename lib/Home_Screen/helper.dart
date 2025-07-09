@@ -760,18 +760,20 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
 
 Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTap) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+    margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
     child: Obx(() {
       bool isSelected = accountIdPdf.value == text;
 
       Widget content = Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: textStyle(
-          context: context,
-          text: text,
-          fontsize: 15,
-          fontWeight: FontWeight.w500,
-          c: isSelected ? AppColors.backgroundColor : AppColors.bg1,
+        child: Center(
+          child: textStyle(
+            context: context,
+            text: text,
+            fontsize: 15,
+            fontWeight: FontWeight.w500,
+            c: isSelected ? AppColors.backgroundColor : AppColors.bg1,
+          ),
         ),
       );
 
@@ -859,35 +861,32 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
 Widget filterTransaction(context) {
   return Container(
     color:AppColors.backgroundColor,
+    width: MediaQuery.of(context).size.width,
     height: MediaQuery.of(context).size.height /
-        (bankAccountLinkedList.length <= 1 ? 14 : 1.5),
+        (bankAccountLinkedList.length <= 1 ? 16 : 16),
     child: SingleChildScrollView(
-      child: Column(
+      scrollDirection: Axis.horizontal,
+      child: Row(
         children: [
-        
-         Row(
-  children: [
-    getCheckBoxwithText2(context, "Credit", () {
-      onChanedAutoTransactionStatus(context);
-      // Navigator.pop(context);
-    }),
-    getCheckBoxwithText2(context, "Debit", () {
-      onChanedAutoTransactionStatus(context);
-      // Navigator.pop(context);
-    }),
-    getCheckBoxwithText2(context, "Cash", () {
-      onChanedAutoTransactionStatus(context);
-      // Navigator.pop(context);
-    }),
-    bankAccountLinkedList.length >= 2
-        ? getBankAccountList(context, false)
-        : SizedBox.shrink(),
-  ],
-),
-
-         
-          ],
-        ),
+          getCheckBoxwithText2(context, "Credit", () {
+            onChanedAutoTransactionStatus(context);
+            // Navigator.pop(context);
+          }),
+          getCheckBoxwithText2(context, "Debit", () {
+            onChanedAutoTransactionStatus(context);
+            // Navigator.pop(context);
+          }),
+          getCheckBoxwithText2(context, "Cash", () {
+            onChanedAutoTransactionStatus(context);
+            // Navigator.pop(context);
+          }),
+          
+          
+          bankAccountLinkedList.length >= 2
+              ? getBankAccountList(context, false)
+              : SizedBox.shrink(),
+        ],
+      ),
       ),
   );
 }

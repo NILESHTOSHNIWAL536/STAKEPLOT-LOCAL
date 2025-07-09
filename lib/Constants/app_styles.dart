@@ -30,7 +30,7 @@ class HomePageIcons {
   static String refresh = "assets/icons/Home-page/Refresh.svg";
   static String fetch = "assets/icons/Home-page/fetch.svg";
   static String none = "assets/icons/Home-page/none.svg";
-  static String isSplit = "assets/icons/Home-page/isSplit.svg";
+  static String isSplit = "assets/icons/Home-page/splitIcon3.svg";
   static String transactionSplit =
       "assets/icons/Home-page/TransactionSplitIcon.svg";
   static String cashIn = "assets/icons/Home-page/cashIn.svg";
@@ -38,11 +38,11 @@ class HomePageIcons {
   static String transactionHistoryIcon =
       "assets/icons/Home-page/historyIcon.svg";
   static String noAccLink = "assets/icons/Home-page/noAccLink.svg";
-  static String filterIcon = "assets/icons/Home-page/filterIcon.svg";
-  static String dayWiseIcon1 = "assets/icons/Home-page/dayWiseIcon.svg";
-  static String dayWiseIcon2 = "assets/icons/Home-page/button.svg";
-  static String splitIcon = "assets/icons/Home-page/splitICon.svg";
-  static String tagIcon = "assets/icons/Home-page/tagIcon.svg";
+  static String filterIcon = "assets/icons/Home-page/filterIcon2.svg";
+  static String dayWiseIcon1 = "assets/icons/Home-page/dayWiseIcon2.svg";
+  static String dayWiseIcon2 = "assets/icons/Home-page/button2.svg";
+  static String splitIcon = "assets/icons/Home-page/splitIcon2.svg";
+  static String tagIcon = "assets/icons/Home-page/tagIcon2.svg";
 }
 
 class Categories {

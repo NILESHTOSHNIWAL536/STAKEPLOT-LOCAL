@@ -62,6 +62,20 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.sizeOf(context).height;
+
+double calculatedHeight;
+
+if (showFilter.value || redioButton.isNotEmpty) {
+  calculatedHeight = screenHeight / 1.5;
+} else if (showFilter.value && redioButton.isNotEmpty) {
+  calculatedHeight = screenHeight / 1.5;
+} else {
+  calculatedHeight = (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
+      ? screenHeight / 1.35
+      : screenHeight / 1.25;
+}
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: historyAppBar(context),
@@ -77,7 +91,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     decoration: BoxDecoration(
-                      color: AppColors.historyAppbar,
+                      color: AppColors.primaryColor,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,15 +156,31 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                             ],
                           ),
                         ),
-                        Padding(
+                        !isDateSummaryView.value? Padding(
                            padding: const EdgeInsets.only(left: 10, right: 2),
                           child: Obx(() => (groupTransactionList.length != 0 ||
-                                  redioButton.isNotEmpty)
+                                  redioButton.isNotEmpty) 
                               ? Padding(
                                   padding: const EdgeInsets.only(top: 8),
                                   child: getTab(context),
                                 )
                               : SizedBox.shrink()),
+                        ):SizedBox(height:10),
+                       
+                        Container(
+                          
+                          
+                          decoration: BoxDecoration(
+                            color: AppColors.backgroundColor,
+                           
+                          ),
+                          child: Padding(
+                             padding:  redioButton.isNotEmpty?const EdgeInsets.only(left: 10, right: 2,top: 8):const EdgeInsets.only(left: 10, right: 2,top: 0),
+                             
+                            child: Obx(() =>  redioButton.isNotEmpty
+                                ? getTagHideButtons(context)
+                                : SizedBox.shrink()),
+                          ),
                         ),
                            Obx(() => (showFilter.value)
                         ? filterTransaction(context)
@@ -182,11 +212,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
                   Obx(() => Container(
                         width: MediaQuery.of(context).size.width,
-                        height:showFilter.value? MediaQuery.sizeOf(context).height/1.5: MediaQuery.sizeOf(context).height /
-                            ((groupTransactionList.length != 0 ||
-                                    redioButton.isNotEmpty)
-                                ? 1.35
-                                : 1.25),
+                         height: (showFilter.value && redioButton.isNotEmpty)
+    ? MediaQuery.sizeOf(context).height / 1.6
+    : (showFilter.value || redioButton.isNotEmpty)
+        ? MediaQuery.sizeOf(context).height / 1.5
+        : MediaQuery.sizeOf(context).height /
+            ((groupTransactionList.length != 0 || redioButton.isNotEmpty) ? 1.35 : 1.25),
                         child: IndexedStack(
                           index: isDateSummaryView.value ? 0 : 1,
                           children: [
