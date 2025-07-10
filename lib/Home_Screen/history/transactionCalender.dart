@@ -1013,255 +1013,261 @@ void _onDateScroll() {
   //     });
   //   }
   // }
+// Helper method to generate the date list including previous and next month's dates
+List<Map<String, dynamic>> _generateDateList() {
+  final now = DateTime(currentYear.value, DateFormat('MMMM').parse(currentMonth.value).month, 1);
+  final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+  final prevMonth = DateTime(now.year, now.month, 0); // Last day of previous month
+  final daysInPrevMonth = prevMonth.day;
+  final nextMonth = DateTime(now.year, now.month + 1, 1);
+  List<Map<String, dynamic>> dateList = [];
 
- void _scrollToSelectedDate() {
-    final selectedDay = int.tryParse(selectedDate.value) ?? 1;
-    final dateList = _generateDateList();
-    // Find the index of the selected date in the full date list
-    final selectedIndex = dateList.indexWhere((date) =>
-        date['isMonthSeparator'] == false &&
-        date['day'] == selectedDay &&
-        date['month'] == DateFormat('MMMM').parse(currentMonth.value).month &&
-        date['year'] == currentYear.value);
-
-    if (selectedIndex >= 0) {
-      final screenWidth = MediaQuery.of(context).size.width;
-      const itemWidth = 48.0; // Date item width (40px + 8px margin)
-      const separatorWidth = 100.0; // Month separator width
-      double offset = 0.0;
-
-      // Calculate the offset by summing widths of items before the selected index
-      for (int i = 0; i < selectedIndex; i++) {
-        offset += dateList[i]['isMonthSeparator'] == true ? separatorWidth : itemWidth;
-      }
-
-      // Center the selected date
-      final maxScrollExtent = dateScrollController.position.maxScrollExtent;
-      final centeredOffset = (offset - (screenWidth / 2) + (itemWidth / 2)).clamp(0.0, maxScrollExtent);
-
-      dateScrollController.jumpTo(0); // Reset to avoid conflicts
-      dateScrollController.animateTo(
-        centeredOffset,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+  // Add 5 days from the previous month for context
+  for (int i = daysInPrevMonth - 4; i <= daysInPrevMonth; i++) {
+    if (i >= 1) {
+      final date = DateTime(prevMonth.year, prevMonth.month, i);
+      final apiDate = dayWiseTransactions.firstWhere(
+        (data) =>
+            convertStringToDateTime(data['date']).day == i &&
+            convertStringToDateTime(data['date']).month == prevMonth.month &&
+            convertStringToDateTime(data['date']).year == prevMonth.year,
+        orElse: () => {
+          'count': 0,
+          'date': date.toIso8601String(),
+          'creditAmount': 0,
+          'debitAmount': 0
+        },
       );
+      dateList.add({
+        'day': i,
+        'month': prevMonth.month,
+        'year': prevMonth.year,
+        'fullDate': date.toIso8601String(),
+        'transactionCount': apiDate['count'] ?? 0,
+      });
     }
   }
 
-// Helper method to generate the date list including previous month's dates
- List<Map<String, dynamic>> _generateDateList() {
-    List<Map<String, dynamic>> dateList = [];
-    final now = DateTime.now();
-
-    // Generate dates from startYear to endYear
-    for (int year = startYear.value; year <= endYear.value; year++) {
-      int startMonth = year == startYear.value ? 1 : 1;
-      int endMonth = year == endYear.value ? 12 : 12;
-      for (int month = startMonth; month <= endMonth; month++) {
-        final monthStart = DateTime(year, month, 1);
-        final daysInMonth = DateTime(year, month + 1, 0).day;
-
-        // Add month separator
-        dateList.add({
-          'isMonthSeparator': true,
-          'month': DateFormat('MMMM').format(monthStart),
-          'year': year,
-        });
-
-        // Add days for the month
-        for (int i = 1; i <= daysInMonth; i++) {
-          final date = DateTime(year, month, i);
-          final apiDate = dayWiseTransactions.firstWhere(
-            (data) =>
-                convertStringToDateTime(data['date']).day == i &&
-                convertStringToDateTime(data['date']).month == month &&
-                convertStringToDateTime(data['date']).year == year,
-            orElse: () => {
-              'count': 0,
-              'date': date.toIso8601String(),
-              'creditAmount': 0,
-              'debitAmount': 0
-            },
-          );
-          dateList.add({
-            'day': i,
-            'month': month,
-            'year': year,
-            'fullDate': date.toIso8601String(),
-            'transactionCount': apiDate['count'] ?? 0,
-            'isMonthSeparator': false,
-          });
-        }
-      }
-    }
-
-    return dateList;
+  // Add all dates of the current month
+  for (int i = 1; i <= daysInMonth; i++) {
+    final date = DateTime(now.year, now.month, i);
+    final apiDate = dayWiseTransactions.firstWhere(
+      (data) =>
+          convertStringToDateTime(data['date']).day == i &&
+          convertStringToDateTime(data['date']).month == now.month &&
+          convertStringToDateTime(data['date']).year == now.year,
+      orElse: () => {
+        'count': 0,
+        'date': date.toIso8601String(),
+        'creditAmount': 0,
+        'debitAmount': 0
+      },
+    );
+    dateList.add({
+      'day': i,
+      'month': now.month,
+      'year': now.year,
+      'fullDate': date.toIso8601String(),
+      'transactionCount': apiDate['count'] ?? 0,
+    });
   }
- Widget _buildDateBreakdownView(BuildContext context) {
-    final dateList = _generateDateList();
 
-    return Column(
-      children: [
-        // Prominently display selected date
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: AppColors.backgroundColor,
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromRGBO(75, 77, 115, 0.25),
-                blurRadius: 2,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
-                onPressed: () {
-                  isDateSummaryView.value = false;
-                  selectedDate.value = '';
-                },
-              ),
-              Obx(() => Text(
-                    '${selectedDate.value} ${currentMonth.value} ${currentYear.value}',
+  // Add 5 days from the next month for context
+  for (int i = 1; i <= 5; i++) {
+    final date = DateTime(nextMonth.year, nextMonth.month, i);
+    final apiDate = dayWiseTransactions.firstWhere(
+      (data) =>
+          convertStringToDateTime(data['date']).day == i &&
+          convertStringToDateTime(data['date']).month == nextMonth.month &&
+          convertStringToDateTime(data['date']).year == nextMonth.year,
+      orElse: () => {
+        'count': 0,
+        'date': date.toIso8601String(),
+        'creditAmount': 0,
+        'debitAmount': 0
+      },
+    );
+    dateList.add({
+      'day': i,
+      'month': nextMonth.month,
+      'year': nextMonth.year,
+      'fullDate': date.toIso8601String(),
+      'transactionCount': apiDate['count'] ?? 0,
+    });
+  }
+
+  return dateList;
+}
+
+// Updated _scrollToSelectedDate
+void _scrollToSelectedDate() {
+  final selectedDay = int.tryParse(selectedDate.value) ?? 1;
+  final now = DateTime(currentYear.value, DateFormat('MMMM').parse(currentMonth.value).month, 1);
+  final dateList = _generateDateList();
+
+  // Find the index of the selected date in the current month
+  final selectedIndex = dateList.indexWhere((date) =>
+      date['day'] == selectedDay &&
+      date['month'] == now.month &&
+      date['year'] == now.year);
+
+  if (selectedIndex >= 0) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    const itemWidth = 48.0; // 40px width + 8px margin (4px left + 4px right)
+    final maxScrollExtent = (dateList.length * itemWidth) - screenWidth;
+    final targetPosition = selectedIndex * itemWidth;
+
+    // Center the selected date in the view
+    final centeredOffset = (targetPosition - (screenWidth / 2) + (itemWidth / 2)).clamp(0.0, maxScrollExtent);
+
+    dateScrollController.jumpTo(0); // Reset to avoid offset stacking
+    dateScrollController.animateTo(
+      centeredOffset,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  } else {
+    print('No matching date found for day: $selectedDay, month: ${now.month}, year: ${now.year}');
+  }
+}
+
+// Updated _buildDateBreakdownView
+Widget _buildDateBreakdownView(BuildContext context) {
+  final now = DateTime(currentYear.value, DateFormat('MMMM').parse(currentMonth.value).month, 1);
+  final dateList = _generateDateList();
+
+  return Column(
+    children: [
+      // Date Navigation with Back Button
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back, color: AppColors.accentColor),
+              onPressed: () {
+                isDateSummaryView.value = false;
+                selectedDate.value = '';
+              },
+            ),
+            Obx(() => Text(
+                  '$selectedDate, $currentMonth ${currentYear.value}',
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 16,
+                    lWeight: FontWeight.w600,
+                    color: AppColors.accentColor,
+                  ),
+                )),
+            const SizedBox.shrink(), // Placeholder for symmetry
+          ],
+        ),
+      ),
+      Container(
+        height: 60,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: ListView.builder(
+          controller: dateScrollController,
+          scrollDirection: Axis.horizontal,
+          itemCount: dateList.length,
+          itemBuilder: (context, index) {
+            final dateData = dateList[index];
+            final day = dateData['day'].toString();
+            final isSelected = selectedDate.value == day && dateData['month'] == now.month && dateData['year'] == currentYear.value;
+            return GestureDetector(
+              onTap: () {
+                selectedDate.value = day;
+                // Update month and year if selecting a date from prev/next month
+                final selectedDateTime = DateTime.parse(dateData['fullDate']);
+                currentMonth.value = DateFormat('MMMM').format(selectedDateTime);
+                currentYear.value = selectedDateTime.year;
+                _loadTransactionsForDate(dateData['fullDate']);
+                _scrollToSelectedDate();
+              },
+              child: Container(
+                width: 40,
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                decoration: BoxDecoration(
+                  color: isSelected ? AppColors.primaryColor : AppColors.backgroundColor,
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: isSelected
+                      ? [
+                          const BoxShadow(
+                            color: Color.fromRGBO(75, 77, 115, 0.25),
+                            blurRadius: 2,
+                            offset: Offset(0, 2),
+                            spreadRadius: 0,
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Center(
+                  child: Text(
+                    day,
                     style: FontManager().getTextStyle(
                       context,
-                      fontSize: 20, // Larger font for prominence
-                      lWeight: FontWeight.w700,
-                      color: AppColors.primaryColor,
-                    ),
-                  )),
-              SizedBox(width: 48), // Spacer for symmetry
-            ],
-          ),
-        ),
-        // Horizontal date list
-        Container(
-          height: 60,
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: ListView.builder(
-            controller: dateScrollController,
-            scrollDirection: Axis.horizontal,
-            itemCount: dateList.length,
-            itemBuilder: (context, index) {
-              final dateData = dateList[index];
-              if (dateData['isMonthSeparator'] == true) {
-                return Container(
-                  width: 120,
-                  margin: EdgeInsets.symmetric(horizontal: 8),
-                  child: Center(
-                    child: Text(
-                      '${dateData['month']} ${dateData['year']}',
-                      style: FontManager().getTextStyle(
-                        context,
-                        fontSize: 14,
-                        lWeight: FontWeight.w600,
-                        color: AppColors.accentColor,
-                      ),
-                    ),
-                  ),
-                );
-              }
-              final day = dateData['day'].toString();
-              final isSelected = selectedDate.value == day &&
-                  dateData['month'] == DateFormat('MMMM').parse(currentMonth.value).month &&
-                  dateData['year'] == currentYear.value;
-              return GestureDetector(
-                onTap: () {
-                  selectedDate.value = day;
-                  currentMonth.value = DateFormat('MMMM').format(DateTime(dateData['year'], dateData['month'], 1));
-                  currentYear.value = dateData['year'];
-                  _loadTransactionsForDate(dateData['fullDate']);
-                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _scrollToSelectedDate();
-                  });
-                },
-                child: Container(
-                  width: 40,
-                  margin: EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primaryColor : AppColors.backgroundColor,
-                    borderRadius: BorderRadius.circular(5),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: Color.fromRGBO(75, 77, 115, 0.25),
-                              blurRadius: 2,
-                              offset: Offset(0, 2),
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: Center(
-                    child: Text(
-                      day,
-                      style: FontManager().getTextStyle(
-                        context,
-                        fontSize: 16,
-                        lWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                        color: isSelected
-                            ? Colors.white
-                            : AppColors.historyCalenderText,
-                      ),
+                      fontSize: 16,
+                      lWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      color: isSelected ? Colors.white : AppColors.historyCalenderText,
                     ),
                   ),
                 ),
+              ),
+            );
+          },
+        ),
+      ),
+      _buildCreditDebitSummary(context),
+      Expanded(
+        child: Obx(() {
+          if (selectedDateTransactions.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AvatarProfileImage(
+                    url: "assets/icons/Home-page/nullTransactions.svg",
+                    height: 5,
+                    width: 5,
+                  ),
+                  Text(
+                    'No transactions found on this selected date',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: AppColors.accentColor,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+          return ListView.builder(
+            controller: scrollController,
+            itemCount: selectedDateTransactions.length,
+            itemBuilder: (context, index) {
+              final transactionData = selectedDateTransactions[index];
+              final transaction = TransactionModel.fromJson(transactionData);
+              return historyTransactions(
+                transaction,
+                transaction.transactionTimestamp.toIso8601String(),
+                index,
+                context,
+                true,
+                true,
               );
             },
-          ),
-        ),
-        _buildCreditDebitSummary(context),
-        Expanded(
-          child: Obx(() {
-            if (selectedDateTransactions.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AvatarProfileImage(
-                      url: "assets/icons/Home-page/nullTransactions.svg",
-                      height: 5,
-                      width: 5,
-                    ),
-                    Text(
-                      'No transactions found on this selected date',
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: AppColors.accentColor,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-            return ListView.builder(
-              controller: scrollController,
-              itemCount: selectedDateTransactions.length,
-              itemBuilder: (context, index) {
-                final transactionData = selectedDateTransactions[index];
-                final transaction = TransactionModel.fromJson(transactionData);
-                return historyTransactions(
-                  transaction,
-                  transaction.transactionTimestamp.toIso8601String(),
-                  index,
-                  context,
-                  true,
-                  true,
-                );
-              },
-            );
-          }),
-        ),
-      ],
-    );
-  }
-  @override
-  Widget build(BuildContext context) {
+          );
+        }),
+      ),
+    ],
+  );
+}
+ 
+@override
+Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
