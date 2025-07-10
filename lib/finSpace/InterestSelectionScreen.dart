@@ -27,6 +27,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
   void initState() {
     super.initState();
     clearInterest();
+    
   }
 
   @override

@@ -863,31 +863,29 @@ Widget filterTransaction(context) {
     color:AppColors.backgroundColor,
     width: MediaQuery.of(context).size.width,
     height: MediaQuery.of(context).size.height /
-        (bankAccountLinkedList.length <= 1 ? 16 : 16),
-    child: SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          getCheckBoxwithText2(context, "Credit", () {
-            onChanedAutoTransactionStatus(context);
-            // Navigator.pop(context);
-          }),
-          getCheckBoxwithText2(context, "Debit", () {
-            onChanedAutoTransactionStatus(context);
-            // Navigator.pop(context);
-          }),
-          getCheckBoxwithText2(context, "Cash", () {
-            onChanedAutoTransactionStatus(context);
-            // Navigator.pop(context);
-          }),
-          
-          
-          bankAccountLinkedList.length >= 2
-              ? getBankAccountList(context, false)
-              : SizedBox.shrink(),
-        ],
-      ),
-      ),
+        (bankAccountLinkedList.length <= 1 ? 16 : 14),
+    child: ListView(
+    scrollDirection: Axis.horizontal,
+      children: [
+        getCheckBoxwithText2(context, "Credit", () {
+          onChanedAutoTransactionStatus(context);
+          // Navigator.pop(context);
+        }),
+        getCheckBoxwithText2(context, "Debit", () {
+          onChanedAutoTransactionStatus(context);
+          // Navigator.pop(context);
+        }),
+        getCheckBoxwithText2(context, "Cash", () {
+          onChanedAutoTransactionStatus(context);
+          // Navigator.pop(context);
+        }),
+        
+        
+        // bankAccountLinkedList.length >= 2
+        //     ? getBankAccountList(context, false)
+        //     : SizedBox.shrink(),
+      ],
+    ),
   );
 }
 

@@ -30,7 +30,10 @@ void updateTransactionsBalanceOut(context,transactionId,int index,double amount)
 
   if(getFlagOfResponse(res))
   {
-     onChanedAutoTransactionStatus(context);
+              (transactionsHistory[index]).balanceOut = amount;
+              (transactionsHistory[index]).isBalanceOut = true;
+              transactionsHistory.refresh();
+              
   }
 
 }

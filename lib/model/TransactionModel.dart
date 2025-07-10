@@ -29,6 +29,7 @@ class TransactionModel {
   final String? bankName;
   final String? bankLogo;
   final int? v;
+  final bool? isExcluded;
   TransactionModel({
     required this.id,
     required this.type,
@@ -60,6 +61,7 @@ class TransactionModel {
     this.v,
     this.isBalanceOut,
     this.balanceOut,
+    this.isExcluded,
   });
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     final id = json['_id'] is Map ? json['_id']['\$oid'] : json['_id'];
@@ -98,6 +100,7 @@ class TransactionModel {
       v: json['__v'],
       isBalanceOut: json['isBalanceOut'] ?? false,
       balanceOut:( json['balanceOut'] ?? 0.0).toDouble() ,
+      isExcluded: json['isExcluded']
     );
   }
 
@@ -134,6 +137,7 @@ class TransactionModel {
       "balanceOut": bankLogo,
       "isBalanceOut": isBalanceOut,
       "__v": v,
+      "isExcluded":isExcluded
     };
   }
 

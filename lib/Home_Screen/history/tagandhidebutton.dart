@@ -159,8 +159,7 @@ Widget getTagHideButtons(BuildContext context) {
                 size: 20,
               ),
               onTap: () {
-                // updateTheGroupTransactions(context, true);
-                // showCheckBox.value = false;
+                
                 showDialog(
                   context: context,
                   builder: (context) => const BalanceOutDialog(),
@@ -302,18 +301,21 @@ void hideSelectedTransactions(BuildContext context, bool hidden) {
 }
 
 
-void updateTheGroupTransactions(BuildContext context, bool hidden) {
+void updateTheGroupTransactions(BuildContext context, bool hidden,String id,double finalAmount) {
 
-    String id=redioButton.keys.first;
-    double finalAmount=0.0;
-    double amount=redioButtonAmount[redioButtonAmount.keys.first] ?? 0;
 
     updateTransactionsBalanceOut(context,id,redioButtonIndex[id] ?? 0 ,finalAmount);
+
+    redioButton.forEach((txnID, value)
+    {
+      if(txnID!=id)updateTransactionsBalanceOut(context,txnID,redioButtonIndex[txnID] ?? 0 ,-1);
+    });
 
       redioButton.clear();      // Optionally clear selection after hiding
       redioButtonIndex.clear(); // Optionally clear selection after hiding
       redioButtonAmount.clear(); // Optionally clear selection after hiding
       addManually.clear();
+      Navigator.pop(context);
 }
 
 void excludeSelectedTransactions(BuildContext context, bool isExcluded) {

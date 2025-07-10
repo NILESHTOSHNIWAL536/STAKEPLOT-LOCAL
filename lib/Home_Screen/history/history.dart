@@ -36,8 +36,7 @@ Widget historyTransactions(
 
   final category = transaction.category;
   final subcategory = transaction.subcategory;
-  final double amount =
-      double.parse(doubleToFixed(( transaction.isBalanceOut ?? false ? transaction.balanceOut:transaction.amount).toString()));
+  final double amount = double.parse(doubleToFixed((transaction.amount).toString()));
   final isManual = transaction.manualTransaction;
   final isSplit = transaction.isSplit;
 
@@ -50,6 +49,7 @@ Widget historyTransactions(
   final narration = transaction.narration;
   final id = transaction.id;
   bool isReview = transaction.needsReview ?? false;
+  bool isExcluded = transaction.isExcluded ?? false;
 
   if (hideReview && isReview) return SizedBox.shrink();
 
@@ -73,6 +73,9 @@ Widget historyTransactions(
   final formatAmount = type == 'CREDIT'
       ? "+₹${formatMoneyIndian( amount.toString())}"
       : "-₹${formatMoneyIndian( amount.toString())}";
+  String formatAmountBalance = type == 'CREDIT'
+      ? "₹${formatMoneyIndian(transaction.balanceOut.toString())}"
+      : "₹${formatMoneyIndian( transaction.balanceOut.toString())}";
 
   final fontSizes = FontSizeFactor(context);
 
@@ -316,7 +319,10 @@ Widget historyTransactions(
                               id,
                               isManual,
                               hide,
-                              isSplit),
+                              isSplit,
+                              isExcluded,
+                              formatAmountBalance
+                              ),
                         ),
                         (isManual || isReview)
                             ? SizedBox(height: 0)
@@ -394,7 +400,11 @@ Widget getIconsForHideUpdateSplit(
     String id,
     bool isManual,
     bool hide,
-    bool isSplit) {
+    bool isSplit,
+    bool isExcluded,
+    String formatAmountBalance,
+    
+    ) {
   // Responsive scaling with MediaQuery
   final screenWidth = MediaQuery.of(context).size.width;
   final scaleFactor = screenWidth / 360; // Base width: 360px
@@ -434,13 +444,23 @@ Widget getIconsForHideUpdateSplit(
                     },
                   );
                 },
-                child: textStyle(
-                  context: context,
-                  text: toUpperCase(category),
-                  c: AppColors.primaryColor,
-                  fontsize: fontSizeMedium,
-                  fontWeight: FontWeight.w600,
-                ),
+                child: Row(
+                   children: [
+                     
+                      textStyle(
+                      context: context,
+                      text: toUpperCase(category),
+                      c: AppColors.primaryColor,
+                      fontsize: fontSizeMedium,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    ((transaction.isBalanceOut?? false) && formatAmountBalance!="₹-1")? Column(
+                        children: [
+                            SizedBox(width: 10,),
+                            textStyle(context: context,text: " ( "+(formatAmountBalance.toString())+" )",fontsize: 13,fontWeight: FontWeight.w500)
+                        ],
+                    ):SizedBox.shrink()
+                ]),
               ),
             ),
         
@@ -696,18 +716,13 @@ Widget getIconsForHideUpdateSplit(
                         ),
                       ),
                     ],
-                     Tooltip(
+                    isExcluded? Tooltip(
                         message: "Exclude",
-                        child: GestureDetector(
-                          onTap: () {
-                           
-                          },
-                          child: AvatarProfileImage(
-                              url: HomePageIcons.cashIn,
-                              width: 1200,
-                              height: 46),
-                        ),
-                      ),
+                        child: AvatarProfileImage(
+                            url: HomePageIcons.cashIn,
+                            width: 1200,
+                            height: 46),
+                      ):SizedBox.shrink(),
                     SizedBox(width: 8 * scaleFactor),
                     isManual
                         ? Container(

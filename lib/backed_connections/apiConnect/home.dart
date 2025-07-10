@@ -191,26 +191,26 @@ Future<void> getAllTransactionHistory(
         : selectedYear.value.toString() +
             "-" +
             selectedMonth.value.toString().padLeft(2, '0');
-    String text =
-        searchController.text.trim() == "" ? "empty" :( searchController.text == "cash"? "Cash" :searchController.text);
+    String text = searchController.text.trim() == ""
+        ? "empty"
+        : (searchController.text == "cash" ? "Cash" : searchController.text);
     String urlPath = flag
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
-        : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${(accountSelected.value.isEmpty ||   bankAccountLinkedList.length == 1 || text.toLowerCase()=="cash") ? (text.toLowerCase()=="cash"? "Cash": "-") : accountSelected.value}";
+        : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${(accountSelected.value.isEmpty || bankAccountLinkedList.length == 1 || text.toLowerCase() == "cash") ? (text.toLowerCase() == "cash" ? "Cash" : "-") : accountSelected.value}";
 
     var response = await getDataApiCall(urlPath);
-    printData(response);
+
     if (response.statusCode == 200) {
-      print("urlPath");
-      print(urlPath);
       var data = jsonDecode(response.body);
       var obj = data['data'];
-      print(obj);
+      print(" transaction history $obj");
       if (obj != null && obj is List<dynamic>) {
         if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh
         }
 
-       List<TransactionModel>  transactions = TransactionModel.listFromJson(obj);
+        List<TransactionModel> transactions =
+            TransactionModel.listFromJson(obj);
 
         transactionsHistory.addAll(transactions);
 
@@ -235,7 +235,7 @@ Future<void> getAllTransactionHistory(
       }
     }
   } catch (e) {
-       snackBarCalledfail(context, e.toString());
+    snackBarCalledfail(context, e.toString());
   }
 
   loadingDelay.value = false;
