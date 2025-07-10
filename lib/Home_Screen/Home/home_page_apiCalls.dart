@@ -454,21 +454,16 @@ Future<void> excludeCashFlowTransaction (int index, bool isExcluded, BuildContex
     final response = await updateDataApiCall2(apiUrl, {"isExcluded": isExcluded});
    // Debug print
     if (getFlagOfResponse(response)) {
-      if (isExcluded) {
-        // hiddenTransactions.add(transaction);
-        // transactionsHistory.removeAt(index);
-        // transactionsHistory.refresh();
-        snackBarCalled(context, SnackbarData().transactionHiddenSuccess);
-      } else {
-        // hiddentrasactionsHistory.removeAt(index);
-        // hideTransactionReload.value = !hideTransactionReload.value;
-        // hiddentrasactionsHistory.refresh();
-      }
+      
+        (transactionsHistory[index]).isExcluded = isExcluded;
+         transactionsHistory.refresh();
+        // snackBarCalled(context, SnackbarData().transactionHiddenSuccess);
+      
     } else {
-      snackBarCalledfail(context, SnackbarData().transactionHideFailed);
+      // snackBarCalledfail(context, SnackbarData().transactionHideFailed);
     }
   } catch (e) {
   
-    snackBarCalledfail(context, SnackbarData().errorHidingTransaction);
+    // snackBarCalledfail(context, SnackbarData().errorHidingTransaction);
   }
 }
