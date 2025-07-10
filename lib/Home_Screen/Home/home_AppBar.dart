@@ -150,7 +150,7 @@ PreferredSizeWidget historyAppBar1(context) {
 
 PreferredSizeWidget historyAppBar(context) {
   return AppBar(
-    backgroundColor: AppColors.historyAppbar,
+    backgroundColor: AppColors.primaryColor,
     // Flat design for a modern look
     title: Text(
       HomepageStringsDart().historyTitle,
@@ -158,14 +158,14 @@ PreferredSizeWidget historyAppBar(context) {
         context,
         lWeight: FontWeight.w600,
         fontSize: 18, // Slightly larger for better readability
-        color: AppColors.historyAppbarIcon,
+        color: AppColors.backgroundColor,
       ),
     ),
     // Center the title for symmetry
     leading: IconButton(
       icon: Icon(
         Icons.arrow_back_ios, // More refined back icon
-        color: AppColors.historyAppbarIcon,
+        color: AppColors.backgroundColor,
         size: 24, // Slightly smaller for balance
       ),
       onPressed: () {
@@ -196,7 +196,7 @@ PreferredSizeWidget historyAppBar(context) {
           child: Icon(
             Icons.download,
             size: 24,
-            color: AppColors.historyAppbarIcon,
+            color: AppColors.backgroundColor,
           ),
         ),
       ),

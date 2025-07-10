@@ -178,7 +178,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  monthYear,
+                  displayItems.length>0?monthYear:'',
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,

@@ -20,7 +20,6 @@ String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();
-
 RxMap deviceData = {}.obs;
 RxBool isBankAccountLink = false.obs;
 RxInt scrollBankPage = 0.obs;

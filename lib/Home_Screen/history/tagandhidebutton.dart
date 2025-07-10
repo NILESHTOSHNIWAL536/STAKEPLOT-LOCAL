@@ -1,8 +1,7 @@
-
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/balanceout.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -13,38 +12,34 @@ import 'package:flutter_application_code_stakeplot/backed_connections/backServic
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-Widget getTab(BuildContext context){
-  return Obx(() => redioButton.isNotEmpty
-                    ? getTagHideButtons(context)
-                    : allOrGroupTransactionsName.value ==
-                            StringConstant.allTransactions
-                        ? getTabsForTransactions(context)
-                        : getTabsForTransactions(context));
+Widget getTab(BuildContext context) {
+  return Obx(() => allOrGroupTransactionsName.value == StringConstant.allTransactions
+          ? getTabsForTransactions(context)
+          : getTabsForTransactions(context));
 }
 
-
- Widget getTabsForTransactions(BuildContext context) {
+Widget getTabsForTransactions(BuildContext context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      tabItem(StringConstant.allTransactions,context),
+      tabItem(StringConstant.allTransactions, context),
       Padding(
         padding: const EdgeInsets.only(right: 10),
-        child: tabItem(StringConstant.pollTransactions,context),
+        child: tabItem(StringConstant.pollTransactions, context),
       ),
     ],
   );
 }
 
-
-
-Widget tabItem(String text,BuildContext context) {
+Widget tabItem(String text, BuildContext context) {
   bool isSelected = text == allOrGroupTransactionsName.value;
   // Calculate width based on screen size for responsiveness
-  double tabWidth = (MediaQuery.of(context).size.width) / 2.5; 
-  double tabHeight = (MediaQuery.of(context).size.height ) / 20; // 44 = 16*2 padding + 12 spacing
+  double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
+  double tabHeight = (MediaQuery.of(context).size.height) /
+      20; // 44 = 16*2 padding + 12 spacing
   return InkWell(
     onTap: () {
       allOrGroupTransactionsName.value = text;
@@ -54,40 +49,44 @@ Widget tabItem(String text,BuildContext context) {
       height: tabHeight,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        
-       
-       
         border: Border(
-    bottom: BorderSide(
-      color: isSelected ? AppColors.backgroundColor : AppColors.historyAppbar,
-      width: isSelected ? 3.0 : 0.0, // Adjust the width as needed
-    ),
-  ),
-        
-       
+          bottom: BorderSide(
+            color: isSelected
+                ? AppColors.backgroundColor
+                : AppColors.primaryColor,
+            width: isSelected ? 3.0 : 0.0, // Adjust the width as needed
+          ),
+        ),
       ),
       child: Center(
         child: textStyleImage(
           context: context,
           text: text,
-          c: isSelected ? AppColors.bg5 : AppColors.historyAppbarIcon,
+          c: isSelected ? AppColors.backgroundColor : AppColors.button,
           fontsize: 14,
-          fontWeight: FontWeight.w600,
+          fontWeight: isSelected ?FontWeight.w700:FontWeight.w500,
         ),
       ),
     ),
   );
 }
 
-
- Widget getTagHideButtons(BuildContext context) {
-    return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+Widget getTagHideButtons(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+    child: Container(
+      width:MediaQuery.sizeOf(context).width,
+      height: 25,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
         children: [
           actionButton(
             text: 'Tag',
+            icon: SvgPicture.asset(
+              LikeComment.savedPost,
+              width: 12,
+              height: 20,
+            ),
             context: context,
             onTap: () {
               tagName.value = "Untagged";
@@ -99,137 +98,195 @@ Widget tabItem(String text,BuildContext context) {
                 ),
                 builder: (context) {
                   return transactionsHistory.isNotEmpty &&
-                            redioButtonIndex.isNotEmpty? TagShowmodal(
-                    data:  transactionsHistory[redioButtonIndex.values.first],  
-                    index: 0,
-                    isTag: true,
-                  ):SizedBox.shrink( child: Text("No grounp Found"));
+                          redioButtonIndex.isNotEmpty
+                      ? TagShowmodal(
+                          data:
+                              transactionsHistory[redioButtonIndex.values.first],
+                          index: 0,
+                          isTag: true,
+                        )
+                      : SizedBox.shrink(child: Text("No group Found"));
                 },
               );
             },
           ),
           const SizedBox(width: 10), // Spacing between buttons
           actionButton(
-            text: 'Hide',
-            onTap: () {
-              hideSelectedTransactions(context, true);
-              showCheckBox.value = false;
-            },
-            context: context
-          ),
+              text: 'Hide',
+              icon: Icon(
+                Icons.visibility_off_rounded,
+                color: AppColors.primaryColor,
+                size: 20,
+              ),
+              onTap: () {
+                hideSelectedTransactions(context, true);
+                showCheckBox.value = false;
+              },
+              context: context),
           const SizedBox(width: 10), // Spacing between buttons
+          Obx(() => addManually.isEmpty
+              ? SizedBox.shrink()
+              : actionButton(
+                  text: 'Delete',
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                    size: 20,
+                  ),
+                  onTap: () {
+                    showModal(context);
+                  },
+                  context: context)),
+       const SizedBox(width: 10),
           actionButton(
-            text: 'GroupBalaceOut',
-            onTap: () {
-              updateTheGroupTransactions(context, true);
-              showCheckBox.value = false;
-            },
-            context: context
-          ),
-          const SizedBox(width: 10), // Spacing between buttons
-        Obx(()=> addManually.isEmpty?SizedBox.shrink():  actionButton(
-            text: 'Delete',
-            onTap: () {
-              showModal(context);
-            },
-            context: context
-          )),
+              text: 'Not mine',
+              icon: Icon(
+                Icons.close,
+                color: AppColors.primaryColor,
+                size: 20,
+              ),
+              onTap: () {
+                excludeSelectedTransactions(context, true);
+                showCheckBox.value = false;
+              },
+              context: context),
+           const SizedBox(width: 10),
+          actionButton(
+              text: 'balance out',
+              icon: Icon(
+                Icons.close,
+                color: AppColors.primaryColor,
+                size: 20,
+              ),
+              onTap: () {
+                // updateTheGroupTransactions(context, true);
+                // showCheckBox.value = false;
+                showDialog(
+                  context: context,
+                  builder: (context) => const BalanceOutDialog(),
+                );
+              },
+              context: context),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget actionButton({required String text, required VoidCallback onTap,required BuildContext context}) {
-    return InkWell(
-      onTap: onTap,
-      splashColor: AppColors.primaryColor.withOpacity(0.2),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-        decoration: BoxDecoration(
-          color: AppColors.mt, // Match modal background for consistency
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.accentColor.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
+Widget actionButton(
+    {required String text,
+    required VoidCallback onTap,
+    required BuildContext context,
+    dynamic icon}) {
+  return InkWell(
+    onTap: onTap,
+    splashColor: AppColors.primaryColor.withOpacity(0.2),
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor, // Match modal background for consistency
+        borderRadius: BorderRadius.circular(2),
+        boxShadow: [
+                const BoxShadow(
+                  color: Color.fromRGBO(120, 120, 120, 0.25),
+                  offset: Offset(0, 0),
+                  blurRadius: 4,
+                  spreadRadius: 0,
+                )                    ]
+      ),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              icon is IconData
+                  ? Icon(icon, color: AppColors.accentColor, size: 6)
+                  : Container(
+                    // color: Colorcodes.chatBody,
+                    child: icon as Widget
+                  ),
+            ],
+              const SizedBox(width: 6),
+            textStyleImage(
+              context: context,
+              text: text,
+              c: AppColors.accentColor,
+              fontsize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ],
         ),
-        child: textStyle(
-          context: context,
-          text: text,
-          c: AppColors.accentColor,
-          fontsize: 16,
-          fontWeight: FontWeight.w500,
-        ),
       ),
-    );
-  }
+    ),
+  );
+}
 
+void showModal(context2) {
+  showDialog<bool>(
+    context: context2,
+    builder: (context) => AlertDialog(
+      title: textStyleImage(
+          context: context,
+          text: 'Confirm Deletion',
+          c: Colorcodes.red,
+          fontWeight: FontWeight.bold,
+          fontsize: 18),
+      content: Container(
+          // width: MediaQuery.of(context).size.width,
+          child: textStyleImage(
+              context: context,
+              iswrap: true,
+              text:
+                  'Only manual transactions can be deleted. Do you want to proceed?')),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context2).pop(false);
+          },
+          child: textStyleImage(context: context, text: 'Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            deletSelectedTransactions(context);
+          },
+          child: textStyleImage(
+              context: context,
+              text: 'Delete',
+              c: Colors.red,
+              fontsize: 16,
+              fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
+}
 
-  void showModal(context2){
-     showDialog<bool>(
-                      context: context2,
-                      builder: (context) => AlertDialog(
-                      title:  textStyleImage(context: context,text:'Confirm Deletion',c: Colorcodes.red,fontWeight: FontWeight.bold,fontsize: 18),
-                      content: Container(
-                              // width: MediaQuery.of(context).size.width,
-                              child: textStyleImage(context: context,iswrap: true,
-                              text:'Only manual transactions can be deleted. Do you want to proceed?')),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context2).pop(false);
-                            },
-                            child: textStyleImage(context: context,text:'Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              deletSelectedTransactions(context);
-                             
-                            },
-                            child: textStyleImage(context: context,text:'Delete', c: Colors.red,fontsize: 16,fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    );
-  }
+void deletSelectedTransactions(BuildContext context) async {
+  try {
+    var body = {'transactionIds': addManually};
+    var urlPath = "${url}/transactionauto/delete/";
 
+    var response = await postDataApiCall(urlPath, body);
 
-  void deletSelectedTransactions(BuildContext context)async {
-
-
- try{
-  var body={
-      'transactionIds':addManually
-  };
-  var urlPath="${url}/transactionauto/delete/";
-
-  var response= await postDataApiCall(urlPath,body);
-
-  if(getFlagOfResponse(response))
-  {
-      snackBarCalled(context,SnackbarData().selectedTransactionsDeleted);
+    if (getFlagOfResponse(response)) {
+      snackBarCalled(context, SnackbarData().selectedTransactionsDeleted);
       onChanedAutoTransactionStatus(context);
+    }
+  } catch (e) {
+    snackBarCalledfail(
+        context, SnackbarData().selectedTransactionsDeleteFailed);
   }
 
- }catch(e)
- {
-  snackBarCalledfail(context, SnackbarData().selectedTransactionsDeleteFailed);
- }
-
-   showCheckBox.value = false;
-   redioButton.clear(); // Optionally clear selection after hiding
+  showCheckBox.value = false;
+  redioButton.clear(); // Optionally clear selection after hiding
   redioButtonIndex.clear(); // Optionally clear selection after hiding
   addManually.clear();
-    getCategoryData();
+  getCategoryData();
   Navigator.pop(context);
+}
 
-  }
-
-
-  void hideSelectedTransactions(BuildContext context, bool hidden) {
+void hideSelectedTransactions(BuildContext context, bool hidden) {
   int index = 0; // Or get from another list/map if you have matching indexes
 
   redioButton.forEach((id, value) {
@@ -244,7 +301,8 @@ Widget tabItem(String text,BuildContext context) {
   Navigator.pop(context);
 }
 
-  void updateTheGroupTransactions(BuildContext context, bool hidden) {
+
+void updateTheGroupTransactions(BuildContext context, bool hidden) {
 
     String id=redioButton.keys.first;
     double finalAmount=0.0;
@@ -256,4 +314,18 @@ Widget tabItem(String text,BuildContext context) {
       redioButtonIndex.clear(); // Optionally clear selection after hiding
       redioButtonAmount.clear(); // Optionally clear selection after hiding
       addManually.clear();
+}
+
+void excludeSelectedTransactions(BuildContext context, bool isExcluded) {
+  int index = 0; // Or get from another list/map if you have matching indexes
+
+  redioButton.forEach((id, value) {
+    excludeCashFlowTransaction(redioButtonIndex[id] ?? 0, isExcluded, context, id);
+    index++;
+  });
+
+  redioButton.clear(); // Optionally clear selection after hiding
+  redioButtonIndex.clear(); // Optionally clear selection after hiding
+  addManually.clear();
+  Navigator.pop(context);
 }

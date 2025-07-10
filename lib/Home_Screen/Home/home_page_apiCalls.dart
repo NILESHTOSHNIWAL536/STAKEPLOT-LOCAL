@@ -421,33 +421,50 @@ Future<void> getHomePageInsights(context) async {
   } catch (e) {}
 }
 
-Future<void> hideTransaction (
-    int index, bool hidden, BuildContext context, String id) async {
-  
+Future<void> hideTransaction (int index, bool hidden, BuildContext context, String id) async {
   final transaction = transactionsHistory[index];
-  
   final apiUrl = "$url/transactionauto/updateTransaction/$id";
- 
   try {
     final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
    // Debug print
     if (getFlagOfResponse(response)) {
       if (hidden) {
-
         hiddenTransactions.add(transaction);
-        // hiddenTransactions.add(transaction);
         transactionsHistory.removeAt(index);
         transactionsHistory.refresh();
-       
         snackBarCalled(context, SnackbarData().transactionHiddenSuccess);
       } else {
         hiddentrasactionsHistory.removeAt(index);
         hideTransactionReload.value = !hideTransactionReload.value;
         hiddentrasactionsHistory.refresh();
-        
       }
     } else {
-     
+      snackBarCalledfail(context, SnackbarData().transactionHideFailed);
+    }
+  } catch (e) {
+  
+    snackBarCalledfail(context, SnackbarData().errorHidingTransaction);
+  }
+}
+
+Future<void> excludeCashFlowTransaction (int index, bool isExcluded, BuildContext context, String id) async {
+  final transaction = transactionsHistory[index];
+  final apiUrl = "$url/transactionauto/updateTransaction/$id";
+  try {
+    final response = await updateDataApiCall2(apiUrl, {"isExcluded": isExcluded});
+   // Debug print
+    if (getFlagOfResponse(response)) {
+      if (isExcluded) {
+        // hiddenTransactions.add(transaction);
+        // transactionsHistory.removeAt(index);
+        // transactionsHistory.refresh();
+        snackBarCalled(context, SnackbarData().transactionHiddenSuccess);
+      } else {
+        // hiddentrasactionsHistory.removeAt(index);
+        // hideTransactionReload.value = !hideTransactionReload.value;
+        // hiddentrasactionsHistory.refresh();
+      }
+    } else {
       snackBarCalledfail(context, SnackbarData().transactionHideFailed);
     }
   } catch (e) {
