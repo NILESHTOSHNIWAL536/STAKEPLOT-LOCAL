@@ -784,6 +784,7 @@ import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
 RxMap<String, String> redioButton = <String, String>{}.obs;
 RxMap<String, int> redioButtonIndex = <String, int>{}.obs;
+RxMap<String, double> redioButtonAmount = <String, double>{}.obs;
 RxList<String> addManually = <String>[].obs;
 RxBool showCheckBox =
     false.obs; // Initialize as false to avoid showing checkboxes by default
@@ -796,7 +797,7 @@ Widget historyTransactions(
   final category = transaction.category;
   final subcategory = transaction.subcategory;
   final double amount =
-      double.parse(doubleToFixed((transaction.amount).toString()));
+      double.parse(doubleToFixed(( transaction.isBalanceOut ?? false ? transaction.balanceOut:transaction.amount).toString()));
   final isManual = transaction.manualTransaction;
   final isSplit = transaction.isSplit;
 
@@ -831,8 +832,8 @@ Widget historyTransactions(
       ? AppColors.historyAmtColor
       : AppColors.historyAmtColor;
   final formatAmount = type == 'CREDIT'
-      ? "+₹${formatMoneyIndian(amount.toString())}"
-      : "-₹${formatMoneyIndian(amount.toString())}";
+      ? "+₹${formatMoneyIndian( amount.toString())}"
+      : "-₹${formatMoneyIndian( amount.toString())}";
 
   final fontSizes = FontSizeFactor(context);
 
@@ -842,12 +843,14 @@ Widget historyTransactions(
       if (showCheckBox.value) {
         redioButton.clear();
         redioButtonIndex.clear();
+        redioButtonAmount.clear();
         showCheckBox.value = false;
         return false; // Prevent popping the screen
       }
       // If no checkboxes, allow normal back navigation and clear state
       redioButton.clear();
       redioButtonIndex.clear();
+      redioButtonAmount.clear();
       showCheckBox.value = false;
       return true; // Allow popping the screen
     },
@@ -861,11 +864,13 @@ Widget historyTransactions(
           if (!isChecked) {
             redioButton[id] = id;
             redioButtonIndex[id] = index;
+            redioButtonAmount[id] = transaction.type=="DEBIT"?  0-transaction.amount: transaction.amount;
             if (isManual) addManually.add(id);
             HapticFeedback.selectionClick();
           } else {
             redioButton.remove(id);
             redioButtonIndex.remove(id);
+            redioButtonAmount.remove(id);
             if (isManual) addManually.remove(id);
             HapticFeedback.selectionClick();
           }
@@ -936,12 +941,14 @@ Widget historyTransactions(
                                 if (isChecked == true) {
                                   redioButton[id] = id;
                                   redioButtonIndex[id] = index;
+                                  redioButtonAmount[id] = transaction.type=="DEBIT"?  0-transaction.amount: transaction.amount;
                                   if (ismanual) addManually.add(id);
                                   HapticFeedback
                                       .selectionClick(); // Feedback on check
                                 } else {
                                   redioButton.remove(id);
                                   redioButtonIndex.remove(id);
+                                  redioButtonAmount.remove(id);
                                   if (ismanual) addManually.remove(id);
                                   HapticFeedback.selectionClick();
                                 }

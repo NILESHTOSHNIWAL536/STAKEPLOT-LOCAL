@@ -23,6 +23,17 @@ void getAllAutoTransactions() async {
 }
 
 
+void updateTransactionsBalanceOut(context,transactionId,int index,double amount)async{
+     var res =await postDataApiCall("${url}/transaction/updateGroupTransactions/${transactionId}",{
+      "amount":amount
+   });
+
+  if(getFlagOfResponse(res))
+  {
+     onChanedAutoTransactionStatus(context);
+  }
+
+}
 
 Future<void> addTagToTransactions(context,transactionId,bool flag,int index)async
 {
@@ -41,6 +52,7 @@ Future<void> addTagToTransactions(context,transactionId,bool flag,int index)asyn
   }
 
 }
+
 
 
 void onChanedAutoTransactionStatus(context)async

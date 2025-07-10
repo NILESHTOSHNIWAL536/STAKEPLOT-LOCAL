@@ -118,11 +118,19 @@ Widget tabItem(String text,BuildContext context) {
             context: context
           ),
           const SizedBox(width: 10), // Spacing between buttons
+          actionButton(
+            text: 'GroupBalaceOut',
+            onTap: () {
+              updateTheGroupTransactions(context, true);
+              showCheckBox.value = false;
+            },
+            context: context
+          ),
+          const SizedBox(width: 10), // Spacing between buttons
         Obx(()=> addManually.isEmpty?SizedBox.shrink():  actionButton(
             text: 'Delete',
             onTap: () {
               showModal(context);
-              
             },
             context: context
           )),
@@ -231,6 +239,21 @@ Widget tabItem(String text,BuildContext context) {
 
   redioButton.clear(); // Optionally clear selection after hiding
   redioButtonIndex.clear(); // Optionally clear selection after hiding
+  redioButtonAmount.clear(); // Optionally clear selection after hiding
   addManually.clear();
   Navigator.pop(context);
+}
+
+  void updateTheGroupTransactions(BuildContext context, bool hidden) {
+
+    String id=redioButton.keys.first;
+    double finalAmount=0.0;
+    double amount=redioButtonAmount[redioButtonAmount.keys.first] ?? 0;
+
+    updateTransactionsBalanceOut(context,id,redioButtonIndex[id] ?? 0 ,finalAmount);
+
+      redioButton.clear();      // Optionally clear selection after hiding
+      redioButtonIndex.clear(); // Optionally clear selection after hiding
+      redioButtonAmount.clear(); // Optionally clear selection after hiding
+      addManually.clear();
 }

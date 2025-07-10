@@ -156,7 +156,6 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
-    print("count of transactions for date  is ${obj}");
     if (obj is List) {
       return List<Map<String, dynamic>>.from(obj);
     }
