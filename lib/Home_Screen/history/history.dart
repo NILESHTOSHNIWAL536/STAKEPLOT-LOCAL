@@ -682,6 +682,18 @@ Widget getIconsForHideUpdateSplit(
                         ),
                       ),
                     ],
+                     Tooltip(
+                        message: "Exclude",
+                        child: GestureDetector(
+                          onTap: () {
+                           
+                          },
+                          child: AvatarProfileImage(
+                              url: HomePageIcons.cashIn,
+                              width: 1200,
+                              height: 46),
+                        ),
+                      ),
                     SizedBox(width: 8 * scaleFactor),
                     isManual
                         ? Container(

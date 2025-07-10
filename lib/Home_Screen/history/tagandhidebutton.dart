@@ -146,7 +146,7 @@ Widget getTagHideButtons(BuildContext context) {
                   size: 20,
                 ),
                 onTap: () {
-                  hideSelectedTransactions(context, true);
+                  excludeSelectedTransactions(context, true);
                   showCheckBox.value = false;
                 },
                 context: context),
@@ -270,6 +270,19 @@ void hideSelectedTransactions(BuildContext context, bool hidden) {
 
   redioButton.forEach((id, value) {
     hideTransaction(redioButtonIndex[id] ?? 0, hidden, context, id);
+    index++;
+  });
+
+  redioButton.clear(); // Optionally clear selection after hiding
+  redioButtonIndex.clear(); // Optionally clear selection after hiding
+  addManually.clear();
+  Navigator.pop(context);
+}
+void excludeSelectedTransactions(BuildContext context, bool isExcluded) {
+  int index = 0; // Or get from another list/map if you have matching indexes
+
+  redioButton.forEach((id, value) {
+    excludeCashFlowTransaction(redioButtonIndex[id] ?? 0, isExcluded, context, id);
     index++;
   });
 
