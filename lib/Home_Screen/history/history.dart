@@ -4,7 +4,6 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/iconSwitch.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/tagandhidebutton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
@@ -16,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart'; // For haptic feedback
@@ -242,7 +242,7 @@ Widget historyTransactions(
             vertical: fontSizes.margin / 2, horizontal: fontSizes.margin),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(16 * fontSizes.scaleFactor),
+          borderRadius: BorderRadius.circular(6),
           border: !isReview
               ? Border.all(
                   color: Colorcodes.greyLight,
@@ -262,203 +262,186 @@ Widget historyTransactions(
             ),
           ],
         ),
-        child: Obx(() => AnimatedContainer(
-              duration:
-                  Duration(milliseconds: 300), // Smooth animation for checkbox
-              curve: Curves.easeInOut,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-               
-                children: [
-                   if (isExcluded)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 4 * fontSizes.scaleFactor,
-                          horizontal: 10 * fontSizes.scaleFactor),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-    colors: [
-      AppColors.finSpaceColor,           // Start color
-      AppColors.finSpaceColorGradient, // End color (you can change this)
-    ],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  ),
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(16 * fontSizes.scaleFactor),
-                        ),
-                      ),
-                      child: textStyle(
-                        context: context,
-                        text: "Not Mine",
-                        c: AppColors.backgroundColor,
-                        fontsize: fontSizes.fontSizeSmall,
-                        fontWeight: FontWeight.w600,
-                      ),
+        child:Obx(() => AnimatedContainer(
+      duration: Duration(milliseconds: 300), // Smooth animation for checkbox
+      curve: Curves.easeInOut,
+      child: Stack(
+        children: [
+          // Main content
+         
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+               isExcluded?SizedBox(height: 8):SizedBox(height: 0,),
+              Container(
+                padding: EdgeInsets.only(top: isExcluded ? 0 : fontSizes.padding / 6),
+                child: Row(
+                  children: [
+                    // Animated Checkbox
+                    AnimatedSwitcher(
+                      duration: Duration(milliseconds: 200),
+                      transitionBuilder: (Widget child, Animation<double> animation) {
+                        return ScaleTransition(scale: animation, child: child);
+                      },
+                      child: (showCheckBox.value && !hide)
+                          ? Container(
+                              key: ValueKey('checkbox'),
+                              height: 30,
+                              width: 30,
+                              child: Checkbox(
+                                value: redioButton.containsKey('${transaction.id}'),
+                                onChanged: (bool? isChecked) {
+                                  String id = '${transaction.id}';
+                                  bool ismanual = transaction.manualTransaction;
+                                  if (isChecked == true) {
+                                    redioButton[id] = id;
+                                    redioButtonIndex[id] = index;
+                                    if (ismanual) addManually.add(id);
+                                    HapticFeedback.selectionClick(); // Feedback on check
+                                  } else {
+                                    redioButton.remove(id);
+                                    redioButtonIndex.remove(id);
+                                    if (ismanual) addManually.remove(id);
+                                    HapticFeedback.selectionClick();
+                                  }
+                                },
+                                shape: const CircleBorder(),
+                                side: BorderSide(color: AppColors.primaryColor),
+                                checkColor: Colors.white,
+                                activeColor: AppColors.primaryColor,
+                                semanticLabel: 'Select transaction ${transaction.id}',
+                              ),
+                            )
+                          : SizedBox.shrink(key: ValueKey('no-checkbox')),
                     ),
-                  Container(
-                    // color: Colors.green,
-                    padding: EdgeInsets.only(top: 0),
-                    child: Row(
-                      children: [
-                        // Animated Checkbox
-                        AnimatedSwitcher(
-                          duration: Duration(milliseconds: 200),
-                          transitionBuilder:
-                              (Widget child, Animation<double> animation) {
-                            return ScaleTransition(scale: animation, child: child);
-                          },
-                          child: (showCheckBox.value && !hide)
-                              ? Container(
-                                  key: ValueKey('checkbox'),
-                                  height: 30,
-                                  width: 30,
-                                  child: Checkbox(
-                                    value:
-                                        redioButton.containsKey('${transaction.id}'),
-                                    onChanged: (bool? isChecked) {
-                                      String id = '${transaction.id}';
-                                      bool ismanual = transaction.manualTransaction;
-                                      if (isChecked == true) {
-                                        redioButton[id] = id;
-                                        redioButtonIndex[id] = index;
-                                        if (ismanual) addManually.add(id);
-                                        HapticFeedback
-                                            .selectionClick(); // Feedback on check
-                                      } else {
-                                        redioButton.remove(id);
-                                        redioButtonIndex.remove(id);
-                                        if (ismanual) addManually.remove(id);
-                                        HapticFeedback.selectionClick();
-                                      }
-                                    },
-                                    shape: const CircleBorder(),
-                                    side: BorderSide(color: AppColors.primaryColor),
-                                    checkColor: Colors.white,
-                                    activeColor: AppColors.primaryColor,
-                                    semanticLabel:
-                                        'Select transaction ${transaction.id}',
-                                  ),
-                                )
-                              : SizedBox.shrink(key: ValueKey('no-checkbox')),
-                        ),
-                        // Main Transaction Content
-                    
-                        // remove gesture detector here
-                        Container(
-                          width: MediaQuery.of(context).size.width /
-                              (showCheckBox.value ? 1.2 : 1.1),
-                          padding: EdgeInsets.only(
-                              top: isExcluded?0:fontSizes.padding / 6,
-                              bottom: isExcluded?6:fontSizes.padding / 6),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              (isManual || isReview )
-                                  ? reviewTagTransactions(
-                                      isReview,
-                                      fontSizes.scaleFactor,
-                                      isSplit,
-                                      fontSizes.margin,
-                                      fontSizes.badgeSize,
-                                      fontSizes.fontSizeSmall,
-                                      context,
-                                      index,
-                                      id)
-                                  :SizedBox(height: 10),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: fontSizes.padding),
-                                child: Row(
-                                  children: [
-                                     isExcluded?getIconAvtar(30, category,
-                                        fontSizes.scaleFactor/2):getIconAvtar(fontSizes.avatarSize, category,
-                                        fontSizes.scaleFactor),
-                                    SizedBox(width: fontSizes.padding),
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                    // Main Transaction Content
+                    Container(
+                      width: MediaQuery.of(context).size.width / (showCheckBox.value ? 1.2 : 1.1),
+                      padding: EdgeInsets.only(
+                          top: isExcluded ? 0 : fontSizes.padding / 6,
+                          bottom: isExcluded ? 0 : fontSizes.padding / 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          (isManual || isReview)
+                              ? reviewTagTransactions(
+                                  isReview,
+                                  fontSizes.scaleFactor,
+                                  isSplit,
+                                  fontSizes.margin,
+                                  fontSizes.badgeSize,
+                                  fontSizes.fontSizeSmall,
+                                  context,
+                                  index,
+                                  id)
+                              : SizedBox(height: 10),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: fontSizes.padding),
+                            child: Row(
+                              children: [
+                                isExcluded
+                                    ? getIconAvtar(30, category, fontSizes.scaleFactor / 2)
+                                    : getIconAvtar(
+                                        fontSizes.avatarSize, category, fontSizes.scaleFactor),
+                                SizedBox(width: fontSizes.padding),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                // color: Colorcodes.red,
-                                                width:
-                                                    MediaQuery.sizeOf(context).width /
-                                                        2.4,
-                                                child: textStyle(
-                                                  context: context,
-                                                  text: !isManual
-                                                      ? nameOfUser
-                                                      : subcategory,
-                                                  c: AppColors.accentColor,
-                                                  fontsize: fontSizes.fontSizeMedium,
-                                                  fontWeight: FontWeight.w600,
-                                                  lineHeight: 1.5,
-                                                ),
-                                              ),
-                                              Container(
-                                                // color: Colorcodes.red,
-                                                child: textStyle(
+                                          Container(
+                                            width: MediaQuery.sizeOf(context).width / 3.3,
+                                            //  color: Colors.blue,
+                                            child: textStyle(
+                                              context: context,
+                                              text: !isManual ? nameOfUser : subcategory,
+                                              c: AppColors.accentColor,
+                                              fontsize: fontSizes.fontSizeMedium,
+                                              fontWeight: FontWeight.w600,
+                                              lineHeight: 1.5,
+                                            ),
+                                          ),
+                                          Container(
+                                            //  width: MediaQuery.sizeOf(context).width/3.0,
+                                            //  color: Colors.green,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                textStyle(
                                                   context: context,
                                                   text: formatAmount,
                                                   c: amtColor,
                                                   fontsize: fontSizes.fontSizeLarge,
                                                   fontWeight: FontWeight.w500,
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          textStyle(
-                                            context: context,
-                                            text: isManual
-                                                ? formattedDateManual
-                                                : formattedDate,
-                                            c: AppColors.primaryColor
-                                                .withOpacity(0.7),
-                                            fontsize: fontSizes.fontSizeSmall,
-                                            fontWeight: FontWeight.w400,
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
+                                      textStyle(
+                                        context: context,
+                                        text: isManual ? formattedDateManual : formattedDate,
+                                        c: AppColors.primaryColor.withOpacity(0.7),
+                                        fontsize: fontSizes.fontSizeSmall,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                             isExcluded? SizedBox(height: 10):SizedBox(height: 0),
-                              isExcluded?SizedBox.shrink():Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: getIconsForHideUpdateSplit(
-                                    fontSizes.iconSize,
-                                    fontSizes.padding,
-                                    category,
-                                    amount,
-                                    logo,
-                                    context,
-                                    index,
-                                    subcategory,
-                                    transaction,
-                                    isReview,
-                                    id,
-                                    isManual,
-                                    hide,
-                                    isSplit,
-                                    isExcluded),
-                              ),
-                              (isManual || isReview)
-                                  ? SizedBox(height: 0)
-                                  : SizedBox(height: fontSizes.padding / 2),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          isExcluded ? SizedBox(height: 10) : SizedBox.shrink(),
+                          isExcluded
+                              ? SizedBox.shrink()
+                              : Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: getIconsForHideUpdateSplit(
+                                      fontSizes.iconSize,
+                                      fontSizes.padding,
+                                      category,
+                                      amount,
+                                      logo,
+                                      context,
+                                      index,
+                                      subcategory,
+                                      transaction,
+                                      isReview,
+                                      id,
+                                      isManual,
+                                      hide,
+                                      isSplit,
+                                      isExcluded),
+                                ),
+                          (isManual || isReview)
+                              ? SizedBox(height: 0)
+                              : isExcluded? SizedBox.shrink():SizedBox(height: fontSizes.padding / 2),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )),
+            ],
+          ),
+          // Excluded badge at top-right
+          if (isExcluded)
+            Positioned(
+              top: 0,
+              right: -2,
+              
+              child: SvgPicture.asset(
+                'assets/icons/Home-page/notMIne.svg',
+                height: 20,
+                width: 60,
+              ),
+            ),
+        ],
+      ),
+    )),
       ),
     ),
   );
@@ -919,8 +902,8 @@ Widget getIconsForHideUpdateSplit(
                    
                     isManual
                         ? Container(
-                            height: 30,
-                            width: 30,
+                            // height: 50,
+                            // width: 10,
                             child: Lottie.asset(
                               'assets/splashScreen/manualTransactionIcon.json',
                               errorBuilder: (context, error, stackTrace) {
@@ -928,7 +911,6 @@ Widget getIconsForHideUpdateSplit(
                               },
                             ),
                           )
-
                         // Fallback icon
                         : Image.network(
                             logo,

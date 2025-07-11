@@ -1,6 +1,5 @@
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -14,8 +13,8 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 part 'snackBars.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.5" : "localhost";
-String urlWithLocallHost =!flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.10" : "localhost";
+String urlWithLocallHost =flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 UserController get userController => Get.find<UserController>();

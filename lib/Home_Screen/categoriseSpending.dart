@@ -83,7 +83,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
             ],
           ),
           const SizedBox(
-            height: 1,
+            height: 8,
           ),
           textStyleImage(
               context: context,
@@ -91,7 +91,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
               fontsize: 14,
               fontWeight: FontWeight.w400),
           const SizedBox(
-            height: 5,
+            height: 10,
           ),
           Obx(() => chartData.isEmpty
               ? Center(
