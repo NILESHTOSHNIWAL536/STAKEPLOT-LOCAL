@@ -640,9 +640,10 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
              Center(
   child: textStyle(
     context: context,
-    text: "Acc No: ${account["maskedAccNumber"].toString().substring(account["maskedAccNumber"].toString().length - 4)}",
+    text: "${account["maskedAccNumber"].toString().substring(account["maskedAccNumber"].toString().length - 6)}",
     fontsize: 12,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w700,
+    c: isSelected?AppColors.backgroundColor:AppColors.bg1
   ),
 ),
 
@@ -671,6 +672,7 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
         
            child: isSelected
             ? Container(
+              height: MediaQuery.sizeOf(context).height/20,
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
@@ -816,6 +818,7 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
         },
         child: isSelected
             ? Container(
+              
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
@@ -838,17 +841,18 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
 
 Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTap) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+    height: 40,
+     margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
     child: Obx(() {
       bool isSelected = accountIdPdf.value == text;
 
       Widget content = Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
         child: Center(
           child: textStyleImage(
             context: context,
             text: text,
-            fontsize: 15,
+            fontsize: 14,
             fontWeight: FontWeight.w500,
             c: isSelected ? AppColors.backgroundColor : AppColors.bg1,
           ),
@@ -876,65 +880,32 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
 
         child: isSelected
             ? Container(
+              
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: content,
               )
-            : DottedBorderBox(
-                dashWidth: 4,
-                space: 3,
-                color: AppColors.primaryColor,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: content,
+            : Container(
+              height: MediaQuery.sizeOf(context).height/20,
+              child: DottedBorderBox(
+                  dashWidth: 4,
+                  space: 3,
+                  
+                  color: AppColors.primaryColor,
+                  child: ClipRRect(
+                    
+                    borderRadius: BorderRadius.circular(8),
+                    child: content,
+                  ),
                 ),
-              ),
+            ),
       );
     }),
   );
 }
 
-// Widget getCheckBoxwithText(BuildContext context, String text) {
-//   return Container(
-//     decoration: BoxDecoration(
-//       borderRadius: BorderRadius.circular(12),
-//       border: Border.all(color: AppColors.primaryColor, width: 0.2),
-//     ),
-//     margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
-//     child: Obx(() => ListTile(
-//           leading: const SizedBox(
-//             width: 40,
-//             height: 40,
-//             child: Icon(Icons.credit_card),
-//           ),
-//           title: textStyle(
-//             context: context,
-//             text: text,
-//             fontsize: 15,
-//             fontWeight: FontWeight.w500,
-//           ),
-//           trailing: Theme(
-//             data: Theme.of(context).copyWith(
-//               checkboxTheme: CheckboxThemeData(
-//                 shape: const CircleBorder(), 
-//               ),
-//             ),
-//             child: Checkbox(
-//               value: accountIdPdf.value == text,
-//               onChanged: (isChecked) {
-//                 if (isChecked == true) {
-//                   accountIdPdf.value = text;
-//                 } else {
-//                   accountIdPdf.value = "-";
-//                 }
-//               },
-//             ),
-//           ),
-//         )),
-//   );
-// }
 
 Widget filterTransaction(context) {
   return Container(

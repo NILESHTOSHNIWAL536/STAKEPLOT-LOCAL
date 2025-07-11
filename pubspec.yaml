@@ -89,7 +89,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   skeletonizer: ^1.4.3
   pull_to_refresh_flutter3: ^2.0.2
-  
+  carousel_slider: ^5.1.1
  
   
 

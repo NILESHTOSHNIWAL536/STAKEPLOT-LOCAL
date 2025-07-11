@@ -12,7 +12,7 @@ class DottedBorderBox extends StatelessWidget {
     required this.child,
     this.dashWidth = 3,
     this.dashHeight = 1,
-    this.space = 3,
+    this.space = 1,
     this.color = Colors.black,
   });
 
@@ -44,7 +44,7 @@ class DottedBorderBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // Adds tight padding so border is close to text
-      padding: const EdgeInsets.all(6),
+      padding: const EdgeInsets.all(2),
       child: Stack(
         children: [
           child,

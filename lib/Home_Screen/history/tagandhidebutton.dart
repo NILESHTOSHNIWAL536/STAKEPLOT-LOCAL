@@ -335,5 +335,5 @@ void excludeSelectedTransactions(BuildContext context, bool isExcluded) {
   redioButton.clear(); // Optionally clear selection after hiding
   redioButtonIndex.clear(); // Optionally clear selection after hiding
   addManually.clear();
-  Navigator.pop(context);
+  // Navigator.pop(context);
 }
