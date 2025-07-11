@@ -539,9 +539,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
             Container(
               height:MediaQuery.sizeOf(context).height/1.4,
               child: Obx(() => isDateSummaryView.value
-                  ? Container(
-                    color: Colors.green,
-                    child: _buildDateBreakdownView(context))
+                  ? _buildDateBreakdownView(context)
                   : _buildCalendarView(context)),
             ),
           ],

@@ -623,13 +623,13 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
                 account["accountId"].toString();
 
         Widget content = Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
           child: Row(
            
             children: [
               SizedBox(
-                width: 26,
-                height: 26,
+                width: 20,
+                height: 20,
                 child: Image.network(
                   account["bankLogo"],
                   width: 22,
@@ -642,7 +642,7 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
     context: context,
     text: "${account["maskedAccNumber"].toString().substring(account["maskedAccNumber"].toString().length - 6)}",
     fontsize: 12,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w600,
     c: isSelected?AppColors.backgroundColor:AppColors.bg1
   ),
 ),
@@ -683,10 +683,7 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
                 dashWidth: 4,
                 space: 3,
                 color: AppColors.primaryColor,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: content,
-                ),
+                child: content,
               ),
         );
       });
@@ -802,8 +799,8 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
       bool isSelected = accountIdPdf.value == text;
 
       Widget content = Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: textStyle(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        child: textStyleImage(
           context: context,
           text: text,
           fontsize: 15,

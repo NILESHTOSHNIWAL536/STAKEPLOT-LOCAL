@@ -182,7 +182,7 @@ if (showFilter.value || redioButton.isNotEmpty) {
                                 : SizedBox.shrink()),
                           ),
                         ),
-                           Obx(() => (showFilter.value)
+                           Obx(() => (showFilter.value )
                         ? filterTransaction(context)
                         : SizedBox.shrink()),
                     
