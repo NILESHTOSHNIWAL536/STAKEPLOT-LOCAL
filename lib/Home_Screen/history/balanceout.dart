@@ -150,7 +150,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
               const SizedBox(height: 16),
 
               // CTA Button
-           isValid?  isAlreadyIncluded?textStyle(context: context,text: 'Already Included..',c: Colorcodes.red) :ElevatedButton(
+           isValid?  isAlreadyIncluded?textStyle(context: context,text: "Some of these transactions are already balanced out.",c: Colorcodes.red) :ElevatedButton(
                 onPressed: () {
                   // Trigger balance logic
                   
