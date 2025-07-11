@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -613,6 +614,83 @@ Widget getBankAccountList(context,[fromPdf = true]) {
     ),
   );
 }
+Widget getBankAccountListForFilter(context, [fromPdf = true]) {
+  return Row(
+    children: bankAccountLinkedList.map((account) {
+      return Obx(() {
+        bool isSelected =
+            (fromPdf ? accountIdPdf.value : accountSelected.value) ==
+                account["accountId"].toString();
+
+        Widget content = Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+          child: Row(
+           
+            children: [
+              SizedBox(
+                width: 26,
+                height: 26,
+                child: Image.network(
+                  account["bankLogo"],
+                  width: 22,
+                  height: 22,
+                ),
+              ),
+              const SizedBox(width: 6),
+             Center(
+  child: textStyle(
+    context: context,
+    text: "Acc No: ${account["maskedAccNumber"].toString().substring(account["maskedAccNumber"].toString().length - 4)}",
+    fontsize: 12,
+    fontWeight: FontWeight.w500,
+  ),
+),
+
+            ],
+          ),
+        );
+
+        return GestureDetector(
+          onTap: () {
+            String accId = account["accountId"].toString();
+            if (isSelected) {
+              if (fromPdf)
+                accountIdPdf.value = "-";
+              else
+                accountSelected.value = "-";
+            } else {
+              if (fromPdf)
+                accountIdPdf.value = accId;
+              else
+                accountSelected.value = accId;
+            }
+
+            // Optional: auto filter on tap
+            onChanedAutoTransactionStatus(context);
+          },
+        
+           child: isSelected
+            ? Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: content,
+              )
+            : DottedBorderBox(
+                dashWidth: 4,
+                space: 3,
+                color: AppColors.primaryColor,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: content,
+                ),
+              ),
+        );
+      });
+    }).toList(),
+  );
+}
 
 Widget getHeader(context, text) {
   return Padding(
@@ -767,7 +845,7 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
       Widget content = Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Center(
-          child: textStyle(
+          child: textStyleImage(
             context: context,
             text: text,
             fontsize: 15,

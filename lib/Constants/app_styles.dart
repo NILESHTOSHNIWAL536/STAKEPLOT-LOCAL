@@ -43,6 +43,8 @@ class HomePageIcons {
   static String dayWiseIcon2 = "assets/icons/Home-page/button2.svg";
   static String splitIcon = "assets/icons/Home-page/splitIcon2.svg";
   static String tagIcon = "assets/icons/Home-page/tagIcon2.svg";
+  static String mt1 = "assets/icons/Home-page/mt1.svg";
+  static String mt2 = "assets/icons/Home-page/mt2.svg";
 }
 
 class Categories {

@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/balanceou
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -137,6 +138,23 @@ Widget getTagHideButtons(BuildContext context) {
                     showModal(context);
                   },
                   context: context)),
+           const SizedBox(width: 10),
+           actionButton(
+              text: 'balance out',
+              icon: Icon(
+                Icons.balance,
+               color: AppColors.primaryColor,
+                size: 20,
+              ),
+              // icon: chatAvatartImage(url: 'assets/icons/Home-page/balanceout.svg', width: 200, height: 13),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const BalanceOutDialog(),
+                );
+              },
+              context: context),
+
        const SizedBox(width: 10),
           actionButton(
               text: 'Not mine',
@@ -150,22 +168,8 @@ Widget getTagHideButtons(BuildContext context) {
                 showCheckBox.value = false;
               },
               context: context),
-           const SizedBox(width: 10),
-          actionButton(
-              text: 'balance out',
-              icon: Icon(
-                Icons.close,
-                color: AppColors.primaryColor,
-                size: 20,
-              ),
-              onTap: () {
-                
-                showDialog(
-                  context: context,
-                  builder: (context) => const BalanceOutDialog(),
-                );
-              },
-              context: context),
+          //  assets/icons/Home-page/balanceout.svg
+          
         ],
       ),
     ),
@@ -184,9 +188,10 @@ Widget actionButton(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor, // Match modal background for consistency
-        borderRadius: BorderRadius.circular(2),
-        boxShadow: [
-                const BoxShadow(
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(width: .1,color:AppColors.primaryColor, ),
+        boxShadow:const [
+                 BoxShadow(
                   color: Color.fromRGBO(120, 120, 120, 0.25),
                   offset: Offset(0, 0),
                   blurRadius: 4,
@@ -315,6 +320,7 @@ void updateTheGroupTransactions(BuildContext context, bool hidden,String id,doub
       redioButtonIndex.clear(); // Optionally clear selection after hiding
       redioButtonAmount.clear(); // Optionally clear selection after hiding
       addManually.clear();
+       balanceOutList.clear();
       Navigator.pop(context);
 }
 

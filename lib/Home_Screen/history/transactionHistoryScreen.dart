@@ -43,6 +43,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     super.initState();
     currentPage = 1;
     addManually.clear();
+    balanceOutList.clear();
     getAllTransactionHistory(context, false, false, isRefreshing: true);
     getDayWiseTransactions(context).then((data) {
       dayWiseTransactions.assignAll(data);

@@ -29,7 +29,7 @@ class TransactionModel {
   final String? bankName;
   final String? bankLogo;
   final int? v;
-  final bool? isExcluded;
+   bool? isExcluded;
   TransactionModel({
     required this.id,
     required this.type,
@@ -162,6 +162,6 @@ class TransactionModel {
 
   @override
   String toString() {
-    return 'TransactionModel(id: $id, type: $type, amount: $amount, narration: $narration, bankName: $bankName)';
+    return 'TransactionModel(id: $id, type: $type, amount: $amount, narration: $narration, bankName: $bankName, )';
   }
 }
