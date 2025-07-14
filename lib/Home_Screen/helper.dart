@@ -623,9 +623,10 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
                 account["accountId"].toString();
 
         Widget content = Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           child: Row(
-           
+           mainAxisAlignment: MainAxisAlignment.center,
+           crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: 20,
@@ -638,15 +639,14 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
               ),
               const SizedBox(width: 6),
              Center(
-  child: textStyle(
-    context: context,
-    text: "${account["maskedAccNumber"].toString().substring(account["maskedAccNumber"].toString().length - 6)}",
-    fontsize: 12,
-    fontWeight: FontWeight.w600,
-    c: isSelected?AppColors.backgroundColor:AppColors.bg1
-  ),
-),
-
+              child: textStyleImage(
+                context: context,
+                text: "${account["maskedAccNumber"].toString().substring(account["maskedAccNumber"].toString().length - 6)}",
+                fontsize: 12,
+                fontWeight: FontWeight.w600,
+                c: isSelected?AppColors.backgroundColor:AppColors.bg1
+              ),
+            ),
             ],
           ),
         );
@@ -672,19 +672,26 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
         
            child: isSelected
             ? Container(
-              height: MediaQuery.sizeOf(context).height/20,
+                margin: EdgeInsets.symmetric(horizontal: 4,vertical: 2),
+                padding: EdgeInsets.symmetric(horizontal: 6,vertical: 2),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: content,
               )
-            : DottedBorderBox(
-                dashWidth: 4,
-                space: 3,
-                color: AppColors.primaryColor,
-                child: content,
-              ),
+            : Container(
+              margin: EdgeInsets.symmetric(horizontal: 4,vertical: 2),
+              padding: EdgeInsets.symmetric(horizontal: 4,vertical: 2),
+              child: DottedBorderBox(
+                    dashWidth: 4,
+                    space: 5,
+                    dashHeight: 1,
+                    color: AppColors.grey,
+                    padding: EdgeInsets.symmetric(horizontal: 12,vertical: 2), 
+                    child: content,
+                ),
+            ),
         );
       });
     }).toList(),
@@ -824,8 +831,10 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
               )
             : DottedBorderBox(
                 dashWidth: 4,
-                space: 3,
-                color: AppColors.primaryColor,
+                    space: 5,
+                    dashHeight: 1,
+                    color: AppColors.grey,
+                    padding: EdgeInsets.symmetric(horizontal: 12,vertical: 2), 
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: content,
@@ -842,7 +851,6 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
     child: Obx(() {
       bool isSelected = accountIdPdf.value == text;
-
       Widget content = Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
         child: Center(
@@ -877,7 +885,7 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
 
         child: isSelected
             ? Container(
-              
+                padding: EdgeInsets.symmetric(horizontal: 12,vertical: 2),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
@@ -885,14 +893,13 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
                 child: content,
               )
             : Container(
-              height: MediaQuery.sizeOf(context).height/20,
               child: DottedBorderBox(
                   dashWidth: 4,
-                  space: 3,
-                  
-                  color: AppColors.primaryColor,
+                    space: 5,
+                    dashHeight: 1,
+                    color: AppColors.grey,
+                    padding: EdgeInsets.symmetric(horizontal: 12,vertical: 2), 
                   child: ClipRRect(
-                    
                     borderRadius: BorderRadius.circular(8),
                     child: content,
                   ),
@@ -927,9 +934,9 @@ Widget filterTransaction(context) {
         }),
         
         
-        // bankAccountLinkedList.length >= 2
-        //     ? getBankAccountList(context, false)
-        //     : SizedBox.shrink(),
+        bankAccountLinkedList.length >= 2
+            ? getBankAccountListForFilter(context, false)
+            : SizedBox.shrink(),
       ],
     ),
   );

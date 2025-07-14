@@ -141,6 +141,7 @@ flutter:
     - assets/icons/finSpaceIcons/
     - assets/icons/maskAvatars/
     - assets/icons/appScreenLoader/
+    - assets/icons/Categories2/
     
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

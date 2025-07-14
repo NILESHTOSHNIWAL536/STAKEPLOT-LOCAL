@@ -214,18 +214,18 @@ else {
                   // )),
 
                  Obx(() {
-  double calculatedHeight;
-  if (showFilter.value || redioButton.isNotEmpty) {
-  calculatedHeight = screenHeight / 1.52;
-} 
-else if (showFilter.value && !isDateSummaryView.value) {
-  calculatedHeight = screenHeight / 1.5;
-} 
-else {
-  calculatedHeight = (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
-      ? screenHeight / 1.35
-      : screenHeight / 1.25;
-}
+              double calculatedHeight;
+                if (showFilter.value || redioButton.isNotEmpty) {
+                calculatedHeight = screenHeight / 1.52;
+              } 
+              else if (showFilter.value && !isDateSummaryView.value) {
+                calculatedHeight = screenHeight / 1.5;
+              } 
+              else {
+                calculatedHeight = (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
+                    ? screenHeight / 1.35
+                    : screenHeight / 1.25;
+              }
  
 
   return Container(
