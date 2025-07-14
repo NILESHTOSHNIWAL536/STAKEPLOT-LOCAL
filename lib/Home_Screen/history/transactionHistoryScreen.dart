@@ -67,11 +67,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
 double calculatedHeight;
 
-if (showFilter.value || redioButton.isNotEmpty) {
+ if (showFilter.value || redioButton.isNotEmpty) {
+  calculatedHeight = screenHeight / 1.52;
+} 
+else if (showFilter.value && !isDateSummaryView.value) {
   calculatedHeight = screenHeight / 1.5;
-} else if (showFilter.value && redioButton.isNotEmpty) {
-  calculatedHeight = screenHeight / 1.5;
-} else {
+} 
+else {
   calculatedHeight = (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
       ? screenHeight / 1.35
       : screenHeight / 1.25;
@@ -183,7 +185,7 @@ if (showFilter.value || redioButton.isNotEmpty) {
                                 : SizedBox.shrink()),
                           ),
                         ),
-                           Obx(() => (showFilter.value )
+                           Obx(() => (showFilter.value && !isDateSummaryView.value)
                         ? filterTransaction(context)
                         : SizedBox.shrink()),
                     
@@ -211,30 +213,42 @@ if (showFilter.value || redioButton.isNotEmpty) {
                   //         ),
                   // )),
 
-                  Obx(() => Container(
-                        width: MediaQuery.of(context).size.width,
-                         height: (showFilter.value && redioButton.isNotEmpty)
-    ? MediaQuery.sizeOf(context).height / 1.6
-    : (showFilter.value || redioButton.isNotEmpty)
-        ? MediaQuery.sizeOf(context).height / 1.5
-        : MediaQuery.sizeOf(context).height /
-            ((groupTransactionList.length != 0 || redioButton.isNotEmpty) ? 1.35 : 1.25),
-                        child: IndexedStack(
-                          index: isDateSummaryView.value ? 0 : 1,
-                          children: [
-                            CalendarTransactionScreen(),
-                            SingleChildScrollView(
-                              controller: scrollController,
-                              child: TransactionHistory(
-                                isYearView: false,
-                                isflag: true,
-                                showIcon: false,
-                                expandedPage: false,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ))
+                 Obx(() {
+  double calculatedHeight;
+  if (showFilter.value || redioButton.isNotEmpty) {
+  calculatedHeight = screenHeight / 1.52;
+} 
+else if (showFilter.value && !isDateSummaryView.value) {
+  calculatedHeight = screenHeight / 1.5;
+} 
+else {
+  calculatedHeight = (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
+      ? screenHeight / 1.35
+      : screenHeight / 1.25;
+}
+ 
+
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    height: calculatedHeight,
+    child: IndexedStack(
+      index: isDateSummaryView.value ? 0 : 1,
+      children: [
+        CalendarTransactionScreen(),
+        SingleChildScrollView(
+          controller: scrollController,
+          child: TransactionHistory(
+            isYearView: false,
+            isflag: true,
+            showIcon: false,
+            expandedPage: false,
+          ),
+        ),
+      ],
+    ),
+  );
+}),
+
                 ],
               ),
             ),
