@@ -145,6 +145,7 @@ void getHiddenTransactions(context) async {
     hiddentrasactionsHistory.clear();
     List<TransactionModel> modalObj = TransactionModel.listFromJson(obj);
     hiddentrasactionsHistory.addAll(modalObj);
+    print("hidden trans $hiddentrasactionsHistory");
     getHiddenHistory.value = !getHiddenHistory.value;
   } else {}
 }

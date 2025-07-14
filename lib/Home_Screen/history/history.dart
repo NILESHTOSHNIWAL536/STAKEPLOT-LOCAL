@@ -353,7 +353,7 @@ Widget historyTransactions(
                                         children: [
                                           Container(
                                             width: MediaQuery.sizeOf(context).width / 3.3,
-                                            //  color: Colors.blue,
+                                            // adjust here narrations
                                             child: textStyle(
                                               context: context,
                                               text: !isManual ? nameOfUser : subcategory,
@@ -623,189 +623,157 @@ Widget getIconsForHideUpdateSplit(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Hide Transaction
-
-                    Tooltip(
-                      message: HomepageStringsDart().hideTooltip,
-                      child: GestureDetector(
-                        onTap: () {
-                          !hide
-                              ? null
-                              :
-                              // Show confirmation dialog
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    double screenWidth =
-                                        MediaQuery.sizeOf(context).width;
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      elevation: 4,
-                                      backgroundColor: Colors
-                                          .transparent, // For custom container
-                                      child: Container(
-                                        width: screenWidth *
-                                            0.95, // 85% of screen width
-                                        padding:
-                                            EdgeInsets.all(screenWidth * 0.05),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                            colors: [
-                                              Colors.white,
-                                              Colors.grey[50]!,
-                                            ],
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.1),
-                                              blurRadius: 12,
-                                              spreadRadius: 2,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            // Content
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: screenWidth * 0.02),
-                                              child: textStyleOnly2(
-                                                context: context,
-                                                text: hide
-                                                    ? HomepageStringsDart()
-                                                        .unhideTransactionPrompt
-                                                    : HomepageStringsDart()
-                                                        .hideTransactionPrompt,
-                                                fontsize:
-                                                    screenWidth < 400 ? 14 : 16,
-                                                color: AppColors.bg1,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            // Divider
-                                            Divider(
-                                              color: Colors.grey[200],
-                                              thickness: 1,
-                                              height: screenWidth * 0.06,
-                                            ),
-                                            // Actions
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  style: TextButton.styleFrom(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          screenWidth * 0.06,
-                                                      vertical:
-                                                          screenWidth * 0.03,
-                                                    ),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                  ),
-                                                  child: textStyleOnly2(
-                                                    context: context,
-                                                    text: HomepageStringsDart()
-                                                        .noButton,
-                                                    fontsize: screenWidth < 400
-                                                        ? 14
-                                                        : 16,
-                                                    color: AppColors.bg1
-                                                        .withOpacity(0.7),
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: 1,
-                                                  height: screenWidth * 0.06,
-                                                  color: Colors.grey[200],
-                                                ),
-                                                TextButton(
-                                                  onPressed: () async {
-                                                    await hideTransaction(
-                                                        index,
-                                                        !hide,
-                                                        context,
-                                                        transaction.id);
-
-                                                    if (context.mounted) {
-                                                      Navigator.of(context)
-                                                          .pop(); // Pop the dialog after hiding
-                                                    }
-                                                    //                                           //Navigator.of(context).pop();
-                                                  },
-                                                  style: TextButton.styleFrom(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          screenWidth * 0.06,
-                                                      vertical:
-                                                          screenWidth * 0.03,
-                                                    ),
-                                                    backgroundColor: AppColors
-                                                        .primaryColor
-                                                        .withOpacity(0.1),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                  ),
-                                                  child: textStyleOnly2(
-                                                    context: context,
-                                                    text: HomepageStringsDart()
-                                                        .yesButton,
-                                                    fontsize: screenWidth < 400
-                                                        ? 14
-                                                        : 16,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                        },
-                        child: !hide
-                            ? Text('')
-                            : Icon(
-                                hide
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_rounded,
-                                color: AppColors.primaryColor,
-                                size: 18,
-                              ),
+Tooltip(
+  message: HomepageStringsDart().hideTooltip,
+  child: GestureDetector(
+    onTap: hide
+        ? () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                double screenWidth = MediaQuery.sizeOf(context).width;
+                return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  elevation: 4,
+                  backgroundColor: Colors.transparent,
+                  child: Container(
+                    width: screenWidth * 0.95,
+                    padding: EdgeInsets.all(screenWidth * 0.05),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.white,
+                          Colors.grey[50]!,
+                        ],
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 12,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 8 * scaleFactor),
-                    // Friends Modal
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Title / Prompt Text
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: screenWidth * 0.02,
+                          ),
+                          child: textStyleOnly2(
+                            context: context,
+                            text: HomepageStringsDart().hideTransactionPrompt,
+                            fontsize: screenWidth < 400 ? 14 : 16,
+                            color: AppColors.bg1,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+
+                        // Divider
+                        Divider(
+                          color: Colors.grey[200],
+                          thickness: 1,
+                          height: screenWidth * 0.06,
+                        ),
+
+                        // Buttons Row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // No Button
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: screenWidth * 0.06,
+                                  vertical: screenWidth * 0.03,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: textStyleOnly2(
+                                context: context,
+                                text: HomepageStringsDart().noButton,
+                                fontsize: screenWidth < 400 ? 14 : 16,
+                                color: AppColors.bg1.withOpacity(0.7),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+
+                            // Vertical Divider
+                            Container(
+                              width: 1,
+                              height: screenWidth * 0.06,
+                              color: Colors.grey[200],
+                            ),
+
+                            // Yes Button
+                            TextButton(
+                              onPressed: () async {
+                                await hideTransaction(
+                                  index,
+                                  !hide,
+                                  context,
+                                  transaction.id,
+                                );
+
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: screenWidth * 0.06,
+                                  vertical: screenWidth * 0.03,
+                                ),
+                                backgroundColor: AppColors.primaryColor.withOpacity(0.1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: textStyleOnly2(
+                                context: context,
+                                text: HomepageStringsDart().yesButton,
+                                fontsize: screenWidth < 400 ? 14 : 16,
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        : null, // null if `hide` is false
+    child: hide
+        ? Icon(
+            Icons.visibility_outlined,
+            color: AppColors.primaryColor,
+            size: 18,
+          )
+        : const SizedBox.shrink(), // empty widget if hide is false
+  ),
+),
+SizedBox(width: 8 * scaleFactor),
+
+                      // Friends Modal
                     Tooltip(
                       message: HomepageStringsDart().splitWithFriendsTooltip,
                       child: GestureDetector(
