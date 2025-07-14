@@ -21,13 +21,14 @@ import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart'; // For haptic feedback
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
-// Reactive variables
 
 RxMap<String, String> redioButton = <String, String>{}.obs;
 RxMap<String, int> redioButtonIndex = <String, int>{}.obs;
+RxMap<String, TransactionModel> balanceOutList=<String, TransactionModel>{}.obs;
+RxMap<String, double> redioButtonAmount = <String, double>{}.obs;
 RxList<String> addManually = <String>[].obs;
-RxBool showCheckBox =
-    false.obs; // Initialize as false to avoid showing checkboxes by default
+RxBool showCheckBox =false.obs; 
+
 
 Widget historyTransactions(
     TransactionModel transaction, String? date, int index, BuildContext context,
@@ -75,6 +76,11 @@ Widget historyTransactions(
       ? "+₹${formatMoneyIndian(amount.toString())}"
       : "-₹${formatMoneyIndian(amount.toString())}";
 
+  String formatAmountBalance = type == 'CREDIT'
+      ? "₹${formatMoneyIndian(transaction.balanceOut.toString())}"
+      : "₹${formatMoneyIndian( transaction.balanceOut.toString())}";
+
+
   final fontSizes = FontSizeFactor(context);
 
   return WillPopScope(
@@ -83,11 +89,13 @@ Widget historyTransactions(
       if (showCheckBox.value) {
         redioButton.clear();
         redioButtonIndex.clear();
+        balanceOutList.clear();
         showCheckBox.value = false;
         return false; // Prevent popping the screen
       }
       // If no checkboxes, allow normal back navigation and clear state
       redioButton.clear();
+      balanceOutList.clear();
       redioButtonIndex.clear();
       showCheckBox.value = false;
       return true; // Allow popping the screen
@@ -199,20 +207,25 @@ Widget historyTransactions(
                             }
                             :() {
         // uncomment this
-        if (showCheckBox.value) {
+       if (showCheckBox.value) {
           String id = '${transaction.id}';
           bool isChecked = redioButton.containsKey(id);
           if (!isChecked) {
             redioButton[id] = id;
             redioButtonIndex[id] = index;
+            balanceOutList[id] = transaction;
+            redioButtonAmount[id] = transaction.type=="DEBIT"?  0-transaction.amount: transaction.amount;
             if (isManual) addManually.add(id);
             HapticFeedback.selectionClick();
           } else {
             redioButton.remove(id);
             redioButtonIndex.remove(id);
+            balanceOutList.remove(id);
+            redioButtonAmount.remove(id);
             if (isManual) addManually.remove(id);
             HapticFeedback.selectionClick();
           }
+          print(balanceOutList);
         } else if (!isManual && !hide) {
           showModalBottomSheet(
             context: context,
@@ -221,14 +234,7 @@ Widget historyTransactions(
             },
           );
         }
-        // if (!isManual && !showCheckBox.value) {
-        //   showModalBottomSheet(
-        //     context: context,
-        //     builder: (BuildContext context) {
-        //       return TransactionDetailsPage(transaction: transaction);
-        //     },
-        //   );
-        // }
+       
       },
       onLongPress: isExcluded?null:() {
         if (hide) return;
@@ -291,19 +297,24 @@ Widget historyTransactions(
                               child: Checkbox(
                                 value: redioButton.containsKey('${transaction.id}'),
                                 onChanged: (bool? isChecked) {
-                                  String id = '${transaction.id}';
-                                  bool ismanual = transaction.manualTransaction;
-                                  if (isChecked == true) {
-                                    redioButton[id] = id;
-                                    redioButtonIndex[id] = index;
-                                    if (ismanual) addManually.add(id);
-                                    HapticFeedback.selectionClick(); // Feedback on check
-                                  } else {
-                                    redioButton.remove(id);
-                                    redioButtonIndex.remove(id);
-                                    if (ismanual) addManually.remove(id);
-                                    HapticFeedback.selectionClick();
-                                  }
+                                   String id = '${transaction.id}';
+                                bool ismanual = transaction.manualTransaction;
+                                if (isChecked == true) {
+                                  redioButton[id] = id;
+                                  balanceOutList[id] = transaction;
+                                  redioButtonIndex[id] = index;
+                                  redioButtonAmount[id] = transaction.type=="DEBIT"?  0-transaction.amount: transaction.amount;
+                                  if (ismanual) addManually.add(id);
+                                  HapticFeedback
+                                      .selectionClick(); // Feedback on check
+                                } else {
+                                  redioButton.remove(id);
+                                  redioButtonIndex.remove(id);
+                                  balanceOutList.remove(id);
+                                  redioButtonAmount.remove(id);
+                                  if (ismanual) addManually.remove(id);
+                                  HapticFeedback.selectionClick();
+                                }
                                 },
                                 shape: const CircleBorder(),
                                 side: BorderSide(color: AppColors.primaryColor),
@@ -414,7 +425,7 @@ Widget historyTransactions(
                                       isManual,
                                       hide,
                                       isSplit,
-                                      isExcluded),
+                                      isExcluded,formatAmountBalance),
                                 ),
                           (isManual || isReview)
                               ? SizedBox(height: 0)
@@ -553,6 +564,7 @@ Widget getIconsForHideUpdateSplit(
   bool hide,
   bool isSplit,
   bool isExcluded,
+  String formatAmountBalance
 ) {
   // Responsive scaling with MediaQuery
   final screenWidth = MediaQuery.of(context).size.width;
@@ -574,36 +586,44 @@ Widget getIconsForHideUpdateSplit(
         // Category icon
         Row(
           children: [
-            Container(
-              // width: MediaQuery.sizeOf(context).width / 6,
-              child: GestureDetector(
-                onTap: category == 'Untagged'
-                    ? null
-                    : () {
-                        tagName.value = category;
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(20)),
-                          ),
-                          builder: (context) {
-                            return TagShowmodal(
-                              data: transaction,
-                              index: index,
-                            );
-                          },
-                        );
-                      },
-                child: textStyle(
-                  context: context,
-                  text: toUpperCase(category),
-                  c: AppColors.primaryColor,
-                  fontsize: fontSizeMedium,
-                  fontWeight: FontWeight.w600,
-                ),
+            GestureDetector(
+              onTap: category == 'Untagged'
+                  ? null
+                  : () {
+                      tagName.value = category;
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        builder: (context) {
+                          return TagShowmodal(
+                            data: transaction,
+                            index: index,
+                          );
+                        },
+                      );
+                    },
+              child: Row(
+                children: [ textStyle(
+                context: context,
+                text: toUpperCase(category),
+                c: AppColors.primaryColor,
+                fontsize: fontSizeMedium,
+                fontWeight: FontWeight.w600,
               ),
+
+              ((transaction.isBalanceOut?? false) && formatAmountBalance!="₹-1")? 
+                    Column(
+                        children: [
+                            SizedBox(width: 10,),
+                            textStyle(context: context,text: " ( "+(formatAmountBalance.toString())+" )",fontsize: 13,fontWeight: FontWeight.w500)
+                        ],
+                    ):SizedBox.shrink()
+                
+                ])
             ),
             if (isSplit)
               Container(
@@ -958,3 +978,4 @@ Widget getTagButton(TransactionModel transaction, int index, String category,
     ],
   );
 }
+

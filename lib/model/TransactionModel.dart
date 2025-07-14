@@ -3,6 +3,7 @@ class TransactionModel {
   final String type;
   final String mode;
   final double amount;
+  double? balanceOut;
   final double currentBalance;
   final DateTime transactionTimestamp;
   final String? txnId;
@@ -16,6 +17,7 @@ class TransactionModel {
   final bool isBill;
   final bool isDebt;
   final bool isSplit;
+   bool? isBalanceOut;
   bool? needsReview;
   final bool? isAutoPay;
   final String? autoPayId;
@@ -57,6 +59,8 @@ class TransactionModel {
     this.bankName,
     this.bankLogo,
     this.v,
+    this.isBalanceOut,
+    this.balanceOut,
     this.isExcluded,
   });
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
@@ -94,6 +98,8 @@ class TransactionModel {
       bankName: json['bankName'] ?? '',
       bankLogo: json['bankLogo'] ?? '',
       v: json['__v'],
+      isBalanceOut: json['isBalanceOut'] ?? false,
+      balanceOut:( json['balanceOut'] ?? 0.0).toDouble() ,
       isExcluded: json['isExcluded']
     );
   }
@@ -128,6 +134,8 @@ class TransactionModel {
       "bankId": bankId,
       "bankName": bankName,
       "bankLogo": bankLogo,
+      "balanceOut": bankLogo,
+      "isBalanceOut": isBalanceOut,
       "__v": v,
       "isExcluded":isExcluded
     };

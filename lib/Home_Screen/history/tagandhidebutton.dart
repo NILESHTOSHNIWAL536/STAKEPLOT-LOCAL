@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/balanceout.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -72,86 +74,103 @@ Widget tabItem(String text, BuildContext context) {
 
 Widget getTagHideButtons(BuildContext context) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
-    child: SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        width:MediaQuery.sizeOf(context).width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            actionButton(
-              text: 'Tag',
-              icon: SvgPicture.asset(
-                LikeComment.savedPost,
-                width: 12,
-                height: 20,
+    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+    child: Container(
+      width:MediaQuery.sizeOf(context).width,
+      height: 25,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          actionButton(
+            text: 'Tag',
+            icon: SvgPicture.asset(
+              LikeComment.savedPost,
+              width: 12,
+              height: 20,
+            ),
+            context: context,
+            onTap: () {
+              tagName.value = "Untagged";
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (context) {
+                  return transactionsHistory.isNotEmpty &&
+                          redioButtonIndex.isNotEmpty
+                      ? TagShowmodal(
+                          data:
+                              transactionsHistory[redioButtonIndex.values.first],
+                          index: 0,
+                          isTag: true,
+                        )
+                      : SizedBox.shrink(child: Text("No group Found"));
+                },
+              );
+            },
+          ),
+          const SizedBox(width: 10), // Spacing between buttons
+          actionButton(
+              text: 'Hide',
+              icon: Icon(
+                Icons.visibility_off_rounded,
+                color: AppColors.primaryColor,
+                size: 20,
               ),
-              context: context,
               onTap: () {
-                tagName.value = "Untagged";
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                hideSelectedTransactions(context, true);
+                showCheckBox.value = false;
+              },
+              context: context),
+          const SizedBox(width: 10), // Spacing between buttons
+          Obx(() => addManually.isEmpty
+              ? SizedBox.shrink()
+              : actionButton(
+                  text: 'Delete',
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                    size: 20,
                   ),
-                  builder: (context) {
-                    return transactionsHistory.isNotEmpty &&
-                            redioButtonIndex.isNotEmpty
-                        ? TagShowmodal(
-                            data:
-                                transactionsHistory[redioButtonIndex.values.first],
-                            index: 0,
-                            isTag: true,
-                          )
-                        : SizedBox.shrink(child: Text("No group Found"));
+                  onTap: () {
+                    showModal(context);
                   },
+                  context: context)),
+           const SizedBox(width: 10),
+           actionButton(
+              text: 'balance out',
+              icon: Icon(
+                Icons.balance,
+               color: AppColors.primaryColor,
+                size: 20,
+              ),
+              // icon: chatAvatartImage(url: 'assets/icons/Home-page/balanceout.svg', width: 200, height: 13),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const BalanceOutDialog(),
                 );
               },
-            ),
-            const SizedBox(width: 10), // Spacing between buttons
-            actionButton(
-                text: 'Hide',
-                icon: Icon(
-                  Icons.visibility_off_rounded,
-                  color: AppColors.primaryColor,
-                  size: 20,
-                ),
-                onTap: () {
-                  hideSelectedTransactions(context, true);
-                  showCheckBox.value = false;
-                },
-                context: context),
-            const SizedBox(width: 10), // Spacing between buttons
-            Obx(() => addManually.isEmpty
-                ? SizedBox.shrink()
-                : actionButton(
-                    text: 'Delete',
-                    icon: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                      size: 20,
-                    ),
-                    onTap: () {
-                      showModal(context);
-                    },
-                    context: context)),
-         const SizedBox(width: 10),
-            actionButton(
-                text: 'Not mine',
-                icon: Icon(
-                  Icons.close,
-                  color: AppColors.primaryColor,
-                  size: 20,
-                ),
-                onTap: () {
-                  excludeSelectedTransactions(context, true);
-                  showCheckBox.value = false;
-                },
-                context: context),
-          ],
-        ),
+              context: context),
+
+       const SizedBox(width: 10),
+          actionButton(
+              text: 'Not mine',
+              icon: Icon(
+                Icons.close,
+                color: AppColors.primaryColor,
+                size: 20,
+              ),
+              onTap: () {
+                excludeSelectedTransactions(context, true);
+                showCheckBox.value = false;
+              },
+              context: context),
+          //  assets/icons/Home-page/balanceout.svg
+          
+        ],
       ),
     ),
   );
@@ -169,33 +188,39 @@ Widget actionButton(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor, // Match modal background for consistency
-        borderRadius: BorderRadius.circular(2),
-        boxShadow: [
-                              BoxShadow(
-  color: Color.fromRGBO(120, 120, 120, 0.25),
-  offset: Offset(0, 0),
-  blurRadius: 4,
-  spreadRadius: 0,
-),
-
-                            ]
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(width: .1,color:AppColors.primaryColor, ),
+        boxShadow:const [
+                 BoxShadow(
+                  color: Color.fromRGBO(120, 120, 120, 0.25),
+                  offset: Offset(0, 0),
+                  blurRadius: 4,
+                  spreadRadius: 0,
+                )                    ]
       ),
-      child: Row(
-        children: [
-          if (icon != null) ...[
-            icon is IconData
-                ? Icon(icon, color: AppColors.accentColor, size: 6)
-                : icon as Widget,
-            const SizedBox(width: 6),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              icon is IconData
+                  ? Icon(icon, color: AppColors.accentColor, size: 6)
+                  : Container(
+                    // color: Colorcodes.chatBody,
+                    child: icon as Widget
+                  ),
+            ],
+              const SizedBox(width: 6),
+            textStyleImage(
+              context: context,
+              text: text,
+              c: AppColors.accentColor,
+              fontsize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ],
-          textStyle(
-            context: context,
-            text: text,
-            c: AppColors.accentColor,
-            fontsize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ],
+        ),
       ),
     ),
   );
@@ -275,9 +300,30 @@ void hideSelectedTransactions(BuildContext context, bool hidden) {
 
   redioButton.clear(); // Optionally clear selection after hiding
   redioButtonIndex.clear(); // Optionally clear selection after hiding
+  redioButtonAmount.clear(); // Optionally clear selection after hiding
   addManually.clear();
   Navigator.pop(context);
 }
+
+
+void updateTheGroupTransactions(BuildContext context, bool hidden,String id,double finalAmount) {
+
+
+    updateTransactionsBalanceOut(context,id,redioButtonIndex[id] ?? 0 ,finalAmount);
+
+    redioButton.forEach((txnID, value)
+    {
+      if(txnID!=id)updateTransactionsBalanceOut(context,txnID,redioButtonIndex[txnID] ?? 0 ,-1);
+    });
+
+      redioButton.clear();      // Optionally clear selection after hiding
+      redioButtonIndex.clear(); // Optionally clear selection after hiding
+      redioButtonAmount.clear(); // Optionally clear selection after hiding
+      addManually.clear();
+       balanceOutList.clear();
+      Navigator.pop(context);
+}
+
 void excludeSelectedTransactions(BuildContext context, bool isExcluded) {
   int index = 0; // Or get from another list/map if you have matching indexes
 

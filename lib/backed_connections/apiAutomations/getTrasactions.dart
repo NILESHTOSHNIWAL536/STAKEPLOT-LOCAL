@@ -55,8 +55,7 @@ void changeTrasactiondata() async {
 }
 
 void getAutoMationsTransactionsMonthly() async {
-  var response = await getDataApiCall(
-      "${url}/transactionauto/getalltransactionsbymonth/${getCurrentMonth()}");
+  var response = await getDataApiCall("${url}/transactionauto/getalltransactionsbymonth/${getCurrentMonth()}");
   trasactionsDataMonthlyCredit.clear();
   trasactionsDataMonthlyDebit.clear();
 

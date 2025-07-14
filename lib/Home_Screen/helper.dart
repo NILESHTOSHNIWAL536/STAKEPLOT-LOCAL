@@ -911,7 +911,7 @@ Widget filterTransaction(context) {
     height: MediaQuery.of(context).size.height /
         (bankAccountLinkedList.length <= 1 ? 16 : 14),
     child: ListView(
-      scrollDirection: Axis.horizontal,
+    scrollDirection: Axis.horizontal,
       children: [
         getCheckBoxwithText2(context, "Credit", () {
           onChanedAutoTransactionStatus(context);
@@ -927,9 +927,9 @@ Widget filterTransaction(context) {
         }),
         
         
-        bankAccountLinkedList.length >= 2
-            ? getBankAccountListForFilter(context, false)
-            : SizedBox.shrink(),
+        // bankAccountLinkedList.length >= 2
+        //     ? getBankAccountList(context, false)
+        //     : SizedBox.shrink(),
       ],
     ),
   );

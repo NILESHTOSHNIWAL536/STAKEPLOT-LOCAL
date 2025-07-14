@@ -23,6 +23,20 @@ void getAllAutoTransactions() async {
 }
 
 
+void updateTransactionsBalanceOut(context,transactionId,int index,double amount)async{
+     var res =await postDataApiCall("${url}/transaction/updateGroupTransactions/${transactionId}",{
+      "amount":amount
+   });
+
+  if(getFlagOfResponse(res))
+  {
+              (transactionsHistory[index]).balanceOut = amount;
+              (transactionsHistory[index]).isBalanceOut = true;
+              transactionsHistory.refresh();
+              
+  }
+
+}
 
 Future<void> addTagToTransactions(context,transactionId,bool flag,int index)async
 {
@@ -41,6 +55,7 @@ Future<void> addTagToTransactions(context,transactionId,bool flag,int index)asyn
   }
 
 }
+
 
 
 void onChanedAutoTransactionStatus(context)async
