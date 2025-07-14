@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:get/get.dart';
@@ -306,12 +307,13 @@ void getUserBankData(context) async {
   if (getFlagOfResponse(responce)) {}
 }
 
-void updateTheTagOfTarnsactions(
+void updateTheTagOfTarnsactions2(
     category, subCategory, transactionId, context, index) async {
   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
   var response = await updateDataApiCall2(urlPath, {
     'category': category,
     'subcategory': subCategory,
+
   });
 
   if (getFlagOfResponse(response)) {
@@ -319,7 +321,84 @@ void updateTheTagOfTarnsactions(
     reloadHistory.value = !reloadHistory.value;
   } else {}
 }
+void updateTheTagOfTarnsactions(
+    String category,
+    String subCategory,
+    String transactionId,
+    BuildContext context,
+    int index,
+    TransactionModel transaction, // Add TransactionModel to access predictions
+) async {
+  String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
 
+  // Construct selectedCategory
+  final selectedCategory = {
+    'category': category,
+    'percentage': transaction.predictions != null
+        ? _getPredictionScore(transaction.predictions!, category)
+        : 0.0, // Fallback to 0.0 if no predictions
+  };
+
+  // Construct predictedCategories
+  final predictedCategories = transaction.predictions != null
+      ? [
+          if (transaction.predictions!.top1Category != null)
+            {
+              'category': transaction.predictions!.top1Category,
+              'percentage': transaction.predictions!.top1Score ?? 0.0,
+            },
+          if (transaction.predictions!.top2Category != null)
+            {
+              'category': transaction.predictions!.top2Category,
+              'percentage': transaction.predictions!.top2Score ?? 0.0,
+            },
+          if (transaction.predictions!.top3Category != null)
+            {
+              'category': transaction.predictions!.top3Category,
+              'percentage': transaction.predictions!.top3Score ?? 0.0,
+            },
+          if (transaction.predictions!.top4Category != null)
+            {
+              'category': transaction.predictions!.top4Category,
+              'percentage': transaction.predictions!.top4Score ?? 0.0,
+            },
+          if (transaction.predictions!.top5Category != null)
+            {
+              'category': transaction.predictions!.top5Category,
+              'percentage': transaction.predictions!.top5Score ?? 0.0,
+            },
+        ]
+      : [];
+
+  var response = await updateDataApiCall2(urlPath, {
+    'category': category,
+    'subcategory': subCategory,
+    'selectedCategory': selectedCategory,
+    'predictedCategories': predictedCategories,
+  });
+
+  if (getFlagOfResponse(response)) {
+    // Update the transaction in transactionsHistory
+    transactionsHistory[index] = transaction.copyWith(
+      category: category,
+      subcategory: subCategory,
+      needsReview: false,
+    );
+    transactionsHistory.refresh();
+    reloadHistory.value = !reloadHistory.value;
+    snackBarCalled(context, "Transaction tagged as $category");
+  } else {
+    snackBarCalledfail(context, "Failed to tag transaction");
+  }
+}
+
+// Helper function to get the prediction score for a category
+double _getPredictionScore(Predictions predictions, String category) {
+  if (predictions.top1Category == category) return predictions.top1Score ?? 0.0;
+  if (predictions.top2Category == category) return predictions.top2Score ?? 0.0;
+  if (predictions.top3Category == category) return predictions.top3Score ?? 0.0;
+  return 0.0; // Fallback if category not found in predictions
+}
 void updateTheTagOfTarnsactionsGroup(
     category, subCategory, grpId, context, index) async {
   String urlPath = "${url}/transactionauto/grouped/${grpId}/categorize";

@@ -263,7 +263,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                           transactionsHistory.indexWhere((t) => t.id == id);
 
                       if (index != null) {
-                        updateTheTagOfTarnsactions(
+                        updateTheTagOfTarnsactions2(
                           widget.data.category,
                           widget.data.subcategory,
                           id,
@@ -284,7 +284,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                     Navigator.pop(context);
                     Navigator.pop(context);
                   } else if (!widget.isGroupTransaction) {
-                    updateTheTagOfTarnsactions(
+                    updateTheTagOfTarnsactions2(
                         widget.data.category,
                         widget.data.subcategory,
                         widget.data.id,

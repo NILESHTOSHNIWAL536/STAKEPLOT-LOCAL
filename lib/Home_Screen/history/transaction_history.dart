@@ -333,7 +333,7 @@ final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUr
                   color: Colorcodes.greyLight,
                   width: 0.3,
                 ),
-      borderRadius: BorderRadius.circular(12 * scaleFactor),
+      borderRadius: BorderRadius.circular(6),
     ),
     child: Center(
       child:  AvatarProfileImage(
@@ -341,6 +341,28 @@ final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUr
         height: avatarSize * 0.5,
         width: avatarSize * 0.5,
       ),
+    ),
+  );
+}
+
+Widget getIconAvtar2(double avatarSize, String category, double scaleFactor) {
+
+  String lowerCategory = category?.toLowerCase() ?? '';
+
+final matched = custom.firstWhere(
+  (item) => item['name']?.toString().toLowerCase() == lowerCategory,
+  orElse: () => {},
+);
+
+
+final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
+    :  imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  : "assets/icons/subCategoryIcons/other.svg";
+ 
+  return Center(
+    child:  chatAvatartImage(
+      url:  url,
+      height: avatarSize * 1.7,
+      width: avatarSize * 1.7,
     ),
   );
 }

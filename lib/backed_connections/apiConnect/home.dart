@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
@@ -145,9 +146,31 @@ void getHiddenTransactions(context) async {
     hiddentrasactionsHistory.clear();
     List<TransactionModel> modalObj = TransactionModel.listFromJson(obj);
     hiddentrasactionsHistory.addAll(modalObj);
-    print("hidden trans $hiddentrasactionsHistory");
     getHiddenHistory.value = !getHiddenHistory.value;
   } else {}
+}
+
+Future<void> getTopThreeTransactions(BuildContext context, WeeklyPopupController controller, String userId) async {
+  print("Calling getTopThreeTransactions for userId: $userId");
+  try {
+    // Include userId in the API call (adjust endpoint as per your API)
+    var response = await getDataApiCall("${url}/transactionauto/top-three-transactions-of-week?userId=$userId");
+    print("API response status: ${response.statusCode}, body: ${response.body}");
+    if (response.statusCode == 200) {
+      var her = jsonDecode(response.body);
+      var obj = her['data'];
+      controller.topThreeTransactions.clear();
+      List<TransactionModel> modalObj = TransactionModel.listFromJson(obj);
+      controller.topThreeTransactions.addAll(modalObj);
+      print("Top 3 transactions updated: ${controller.topThreeTransactions.length}");
+      controller.topThreeTransactions.forEach((t) => print("Transaction: ${t.id}, ${t.narration}, ${t.amount}, ${t.type}, ${t.transactionTimestamp}, ${t.predictions?.top1Category}"));
+      getTopThreeHistory.value = !getTopThreeHistory.value;
+    } else {
+      print("API failed: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("Error in getTopThreeTransactions: $e");
+  }
 }
 
 Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
@@ -172,7 +195,6 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactionsForDate(
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
-    print("count of transactions in for date $date is ${obj.length}");
     if (obj is List) {
       return List<Map<String, dynamic>>.from(obj);
     }
@@ -203,8 +225,9 @@ Future<void> getAllTransactionHistory(
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+
       var obj = data['data'];
-      print(" transaction history $obj");
+      print(" transaction history obj $obj");
       if (obj != null && obj is List<dynamic>) {
         if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh
@@ -214,6 +237,7 @@ Future<void> getAllTransactionHistory(
             TransactionModel.listFromJson(obj);
 
         transactionsHistory.addAll(transactions);
+        // print("all transactions in history $transactionsHistory");
 
         // Stop loading indicator if no more transactions exist
         if (obj.isEmpty || obj.length < 20) {

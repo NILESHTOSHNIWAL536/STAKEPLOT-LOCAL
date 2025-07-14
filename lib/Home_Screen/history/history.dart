@@ -8,8 +8,10 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/tagandhid
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
+import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -409,7 +411,7 @@ Widget historyTransactions(
                           isExcluded
                               ? SizedBox.shrink()
                               : Padding(
-                                  padding: const EdgeInsets.only(left: 10),
+                                  padding: const EdgeInsets.only(left: 4),
                                   child: getIconsForHideUpdateSplit(
                                       fontSizes.iconSize,
                                       fontSizes.padding,
@@ -576,6 +578,61 @@ Widget getIconsForHideUpdateSplit(
         url.isNotEmpty &&
         Uri.tryParse(url)?.hasAbsolutePath == true;
   }
+  Widget getPredictedCategoryIcons(TransactionModel transaction) {
+    final predictions = transaction.predictions;
+    if (predictions == null) return const SizedBox.shrink();
+
+    final categories = [
+      predictions.top1Category,
+      predictions.top2Category,
+      predictions.top3Category,
+      predictions.top4Category,
+      predictions.top5Category,
+    ].where((cat) => cat != null && cat.isNotEmpty).toList();
+
+    if (categories.isEmpty) return const SizedBox.shrink();
+
+    return Row(
+      children: categories.map((cat) {
+        return Padding(
+          padding: EdgeInsets.only(right: 16),
+          child: GestureDetector(
+            onTap: () async {
+              // Show loader
+              tagBool.value = true;
+              try {
+                // Update the transaction's category and subcategory
+                TransactionModel updatedTransaction = transaction.copyWith(
+                  category: cat,
+                  subcategory: "Other",
+                  needsReview: false,
+                );
+
+                // Update the backend
+                 updateTheTagOfTarnsactions(
+                  cat!,
+                  "Other",
+                  transaction.id,
+                  context,
+                  index,
+                  updatedTransaction, // Pass the updated transaction
+                );
+              } catch (e) {
+                // Show error snackbar if the update fails
+                snackBarCalledfail(context, "Failed to tag transaction", Colorcodes.red);
+              } finally {
+                tagBool.value = false; // Hide loader
+              }
+            },
+            child: Tooltip(
+              message: 'Tag as $cat',
+              child: getIconAvtar2(30, cat!, 10),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
 
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: padding, vertical: padding / 2),
@@ -586,44 +643,47 @@ Widget getIconsForHideUpdateSplit(
         // Category icon
         Row(
           children: [
-            GestureDetector(
-              onTap: category == 'Untagged'
-                  ? null
-                  : () {
-                      tagName.value = category;
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(20)),
-                        ),
-                        builder: (context) {
-                          return TagShowmodal(
-                            data: transaction,
-                            index: index,
+          
+            Row(
+              children: [
+                 category == 'Untagged'?
+                 getPredictedCategoryIcons(transaction):
+                GestureDetector(
+                  onTap: category == 'Untagged'
+                      ? null
+                      : () {
+                          tagName.value = category;
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.vertical(top: Radius.circular(20)),
+                            ),
+                            builder: (context) {
+                              return TagShowmodal(
+                                data: transaction,
+                                index: index,
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-              child: Row(
-                children: [ textStyle(
-                context: context,
-                text: toUpperCase(category),
-                c: AppColors.primaryColor,
-                fontsize: fontSizeMedium,
-                fontWeight: FontWeight.w600,
-              ),
-
-              ((transaction.isBalanceOut?? false) && formatAmountBalance!="₹-1")? 
+                  child: textStyle(
+                                  context: context,
+                                  text: toUpperCase(category),
+                                  c: AppColors.primaryColor,
+                                  fontsize: fontSizeMedium,
+                                  fontWeight: FontWeight.w600,
+                                )
+                ),
+                 ((transaction.isBalanceOut?? false) && formatAmountBalance!="₹-1")? 
                     Column(
                         children: [
                             SizedBox(width: 10,),
                             textStyle(context: context,text: " ( "+(formatAmountBalance.toString())+" )",fontsize: 13,fontWeight: FontWeight.w500)
                         ],
                     ):SizedBox.shrink()
-                
-                ])
+              ],
             ),
             if (isSplit)
               Container(

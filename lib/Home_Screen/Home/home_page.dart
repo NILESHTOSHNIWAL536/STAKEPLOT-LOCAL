@@ -4,9 +4,12 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_AppBar.
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/indexScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/init_Api_Calls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/noaccountSelected.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,51 +18,38 @@ RxBool sectionReached = false.obs;
 RxString weekOfThis = "This week".obs;
 late AppLifecycleHandler lifecycleHandler;
 
+
+
 class HomePage extends StatefulWidget {
+  
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  
   @override
   void initState() {
     super.initState();
     initializeData(context, mounted);
+    // getTopThreeTransactions(context);
     HomeWidgetBindUpdate();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showPopupOnce();
+    if (!Get.isRegistered<WeeklyPopupController>(tag: 'weeklyPopup_${userController.userId.value}')) {
+      Get.put(WeeklyPopupController(), tag: 'weeklyPopup_${userController.userId.value}');
+      print("WeeklyPopupController initialized for userId: ${userController.userId.value}");
+    }
+    print("User ID: ${userController.userId.value}");
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print("addPostFrameCallback triggered, context.mounted: ${context.mounted}");
+      if (context.mounted) {
+        showWeeklyPopup(context, userController.userId.value);
+      } else {
+        print("Context not mounted, pop-up not triggered");
+      }
     });
   }
 
-  Future<void> _showPopupOnce() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool hasShownPopup = prefs.getBool('hasShownPopup') ?? false;
-    print("value of pop $hasShownPopup");
-
-    if (!hasShownPopup) {
-      // Show the dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Welcome!'),
-            content: Text('This is a one-time pop-up message.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-      // Set the flag to true so the dialog won't show again
-      await prefs.setBool('hasShownPopup', true);
-    }
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

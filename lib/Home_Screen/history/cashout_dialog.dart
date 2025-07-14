@@ -54,7 +54,7 @@ class CashOutDialog extends StatelessWidget {
               TextFormField(
                 controller: controllerName,
                 decoration: InputDecoration(
-                  hintText: "eg. Meena Maruboina",
+                  hintText: "eg. ",
                   filled: true,
                   fillColor: Colors.grey.shade200,
                   contentPadding:
