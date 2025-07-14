@@ -289,7 +289,7 @@ Widget historyTransactions(
                       transitionBuilder: (Widget child, Animation<double> animation) {
                         return ScaleTransition(scale: animation, child: child);
                       },
-                      child: (showCheckBox.value && !hide)
+                      child: (showCheckBox.value && !isExcluded && !hide )
                           ? Container(
                               key: ValueKey('checkbox'),
                               height: 30,
