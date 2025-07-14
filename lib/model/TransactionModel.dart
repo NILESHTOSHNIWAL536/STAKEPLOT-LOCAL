@@ -99,7 +99,7 @@ class TransactionModel {
       bankLogo: json['bankLogo'] ?? '',
       v: json['__v'],
       isBalanceOut: json['isBalanceOut'] ?? false,
-      balanceOut:( json['balanceOut'] ?? 0.0).toDouble() ,
+      balanceOut:( ((json['isBalanceOut'] ?? false) && json['balanceOut'].toString() != '' ) ?json['balanceOut'] ?? 0.0:0.0).toDouble() ,
       isExcluded: json['isExcluded']
     );
   }

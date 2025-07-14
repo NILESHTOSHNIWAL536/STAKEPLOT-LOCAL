@@ -150,13 +150,13 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
               const SizedBox(height: 16),
 
               // CTA Button
-           isValid?  isAlreadyIncluded?textStyle(context: context,text: "Some of these transactions are already balanced out.",c: Colorcodes.red) :ElevatedButton(
-                onPressed: () {
+           isValid?  isAlreadyIncluded?Container(
+            // width: MediaQuery.of(context).size.width/1.1,
+            child: textStyleImage(iswrap: true,context: context,text: "Some of these transactions are already balanced out.",c: Colorcodes.red)) :ElevatedButton(
+                onPressed: () 
+                {
                   // Trigger balance logic
-                  
                   updateTheGroupTransactions(context, true,id,netAmount);
-
-
                   showCheckBox.value = false;
 
                 },
