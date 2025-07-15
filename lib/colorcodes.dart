@@ -113,7 +113,7 @@ Map<String, String> imageMapForHistory = {
   "gifting": "gifts.svg",
   "bills": Categories.bills,
   "snacks": Categories.snacks,
-  "others": SubCategories.others,
+  "others": Categories.other,
   "movies": SubCategories.movies,
   "rent": "b-rent.svg",
   "clothing-shoes": "b-clothing_shoes.svg",
