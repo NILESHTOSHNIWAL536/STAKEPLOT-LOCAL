@@ -23,14 +23,13 @@ import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart'; // For haptic feedback
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
-
 RxMap<String, String> redioButton = <String, String>{}.obs;
 RxMap<String, int> redioButtonIndex = <String, int>{}.obs;
-RxMap<String, TransactionModel> balanceOutList=<String, TransactionModel>{}.obs;
+RxMap<String, TransactionModel> balanceOutList =
+    <String, TransactionModel>{}.obs;
 RxMap<String, double> redioButtonAmount = <String, double>{}.obs;
 RxList<String> addManually = <String>[].obs;
-RxBool showCheckBox =false.obs; 
-
+RxBool showCheckBox = false.obs;
 
 Widget historyTransactions(
     TransactionModel transaction, String? date, int index, BuildContext context,
@@ -80,8 +79,7 @@ Widget historyTransactions(
 
   String formatAmountBalance = type == 'CREDIT'
       ? "₹${formatMoneyIndian(transaction.balanceOut.toString())}"
-      : "₹${formatMoneyIndian( transaction.balanceOut.toString())}";
-
+      : "₹${formatMoneyIndian(transaction.balanceOut.toString())}";
 
   final fontSizes = FontSizeFactor(context);
 
@@ -102,148 +100,144 @@ Widget historyTransactions(
       showCheckBox.value = false;
       return true; // Allow popping the screen
     },
-    
     child: GestureDetector(
       behavior: HitTestBehavior.opaque,
-      
-      onTap: isExcluded?  () async {
-                              // Show confirmation dialog before excluding
-                              final shouldExclude = await showDialog<bool>(
-                                context: context,
-                                
-                                builder: (BuildContext context) {
-                                return Dialog(
-                                  backgroundColor: AppColors.backgroundColor,
-  shape: RoundedRectangleBorder(
-   
-    borderRadius: BorderRadius.circular(12),
-  ),
-  child: ConstrainedBox(
-    constraints: BoxConstraints(
-      minHeight: 100,  // Minimum height
-      maxHeight: 220,
-        // Limit maximum height of dialog box
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          textStyle(
-            context: context,
-            text: "Include transaction?",
-            c: AppColors.bg1,
-            fontsize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-          const SizedBox(height: 10),
-          textStyle(
-            context: context,
-            text:
-                "Are you sure you want to add this transaction? It will be included in your category spending and reflected in your insights.",
-            c: AppColors.grey,
-            fontsize: 14,
-            fontWeight: FontWeight.w600,
-            iswrap: true,
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundColor,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.bg1),
-                  ),
-                  child: textStyle(
-                    context: context,
-                    text: "Cancel",
-                    c: AppColors.grey,
-                    fontsize: 14,
-                    fontWeight: FontWeight.w600,
-                    iswrap: true,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: textStyle(
-                    context: context,
-                    text: "Include",
-                    c: AppColors.backgroundColor,
-                    fontsize: 14,
-                    fontWeight: FontWeight.w600,
-                    iswrap: true,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  ),
-);
-
-                                },
-                              );
-                              if (shouldExclude == true) {
-                                excludeCashFlowTransaction(
-                                    index, false, context, transaction.id);
-                                    
-                                
-                              }
-                            }
-                            :() {
-        // uncomment this
-       if (showCheckBox.value) {
-          String id = '${transaction.id}';
-          bool isChecked = redioButton.containsKey(id);
-          if (!isChecked) {
-            redioButton[id] = id;
-            redioButtonIndex[id] = index;
-            balanceOutList[id] = transaction;
-            redioButtonAmount[id] = transaction.type=="DEBIT"?  0-transaction.amount: transaction.amount;
-            if (isManual) addManually.add(id);
-            HapticFeedback.selectionClick();
-          } else {
-            redioButton.remove(id);
-            redioButtonIndex.remove(id);
-            balanceOutList.remove(id);
-            redioButtonAmount.remove(id);
-            if (isManual) addManually.remove(id);
-            HapticFeedback.selectionClick();
-          }
-          print(balanceOutList);
-        } else if (!isManual && !hide) {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return TransactionDetailsPage(transaction: transaction);
+      onTap: isExcluded
+          ? () async {
+              // Show confirmation dialog before excluding
+              final shouldExclude = await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    backgroundColor: AppColors.backgroundColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: 100, // Minimum height
+                        maxHeight: 220,
+                        // Limit maximum height of dialog box
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            textStyle(
+                              context: context,
+                              text: "Include transaction?",
+                              c: AppColors.bg1,
+                              fontsize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            const SizedBox(height: 10),
+                            textStyle(
+                              context: context,
+                              text:
+                                  "Are you sure you want to add this transaction? It will be included in your category spending and reflected in your insights.",
+                              c: AppColors.grey,
+                              fontsize: 14,
+                              fontWeight: FontWeight.w600,
+                              iswrap: true,
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () => Navigator.of(context).pop(false),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.backgroundColor,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: AppColors.bg1),
+                                    ),
+                                    child: textStyle(
+                                      context: context,
+                                      text: "Cancel",
+                                      c: AppColors.grey,
+                                      fontsize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      iswrap: true,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                GestureDetector(
+                                  onTap: () => Navigator.of(context).pop(true),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryColor,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: textStyle(
+                                      context: context,
+                                      text: "Include",
+                                      c: AppColors.backgroundColor,
+                                      fontsize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      iswrap: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+              if (shouldExclude == true) {
+                excludeCashFlowTransaction(
+                    index, false, context, transaction.id);
+              }
+            }
+          : () {
+              // uncomment this
+              if (showCheckBox.value) {
+                String id = '${transaction.id}';
+                bool isChecked = redioButton.containsKey(id);
+                if (!isChecked) {
+                  redioButton[id] = id;
+                  redioButtonIndex[id] = index;
+                  balanceOutList[id] = transaction;
+                  redioButtonAmount[id] = transaction.type == "DEBIT"
+                      ? 0 - transaction.amount
+                      : transaction.amount;
+                  if (isManual) addManually.add(id);
+                  HapticFeedback.selectionClick();
+                } else {
+                  redioButton.remove(id);
+                  redioButtonIndex.remove(id);
+                  balanceOutList.remove(id);
+                  redioButtonAmount.remove(id);
+                  if (isManual) addManually.remove(id);
+                  HapticFeedback.selectionClick();
+                }
+                print(balanceOutList);
+              } else if (!isManual && !hide) {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return TransactionDetailsPage(transaction: transaction);
+                  },
+                );
+              }
             },
-          );
-        }
-       
-      },
-      onLongPress: isExcluded?null:() {
-        if (hide) return;
-        if (!isexpanded) showCheckBox.value = true;
-        HapticFeedback.mediumImpact(); // Haptic feedback on long press
-      },
-     
+      onLongPress: isExcluded
+          ? null
+          : () {
+              if (hide) return;
+              if (!isexpanded) showCheckBox.value = true;
+              HapticFeedback.mediumImpact(); // Haptic feedback on long press
+            },
       child: Container(
         width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(
@@ -270,191 +264,239 @@ Widget historyTransactions(
             ),
           ],
         ),
-        child:Obx(() => AnimatedContainer(
-      duration: Duration(milliseconds: 300), // Smooth animation for checkbox
-      curve: Curves.easeInOut,
-      child: Stack(
-        children: [
-          // Main content
-         
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-               isExcluded?SizedBox(height: 8):SizedBox(height: 0,),
-              Container(
-                padding: EdgeInsets.only(top: isExcluded ? 0 : fontSizes.padding / 6),
-                child: Row(
-                  children: [
-                    // Animated Checkbox
-                    AnimatedSwitcher(
-                      duration: Duration(milliseconds: 200),
-                      transitionBuilder: (Widget child, Animation<double> animation) {
-                        return ScaleTransition(scale: animation, child: child);
-                      },
-                      child: (showCheckBox.value && !isExcluded && !hide )
-                          ? Container(
-                              key: ValueKey('checkbox'),
-                              height: 30,
-                              width: 30,
-                              child: Checkbox(
-                                value: redioButton.containsKey('${transaction.id}'),
-                                onChanged: (bool? isChecked) {
-                                   String id = '${transaction.id}';
-                                bool ismanual = transaction.manualTransaction;
-                                if (isChecked == true) {
-                                  redioButton[id] = id;
-                                  balanceOutList[id] = transaction;
-                                  redioButtonIndex[id] = index;
-                                  redioButtonAmount[id] = transaction.type=="DEBIT"?  0-transaction.amount: transaction.amount;
-                                  if (ismanual) addManually.add(id);
-                                  HapticFeedback
-                                      .selectionClick(); // Feedback on check
-                                } else {
-                                  redioButton.remove(id);
-                                  redioButtonIndex.remove(id);
-                                  balanceOutList.remove(id);
-                                  redioButtonAmount.remove(id);
-                                  if (ismanual) addManually.remove(id);
-                                  HapticFeedback.selectionClick();
-                                }
-                                },
-                                shape: const CircleBorder(),
-                                side: BorderSide(color: AppColors.primaryColor),
-                                checkColor: Colors.white,
-                                activeColor: AppColors.primaryColor,
-                                semanticLabel: 'Select transaction ${transaction.id}',
-                              ),
-                            )
-                          : SizedBox.shrink(key: ValueKey('no-checkbox')),
-                    ),
-                    // Main Transaction Content
-                    Container(
-                      width: MediaQuery.of(context).size.width / (showCheckBox.value ? 1.2 : 1.1),
-                      padding: EdgeInsets.only(
-                          top: isExcluded ? 0 : fontSizes.padding / 6,
-                          bottom: isExcluded ? 0 : fontSizes.padding / 6),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          (isManual || isReview)
-                              ? reviewTagTransactions(
-                                  isReview,
-                                  fontSizes.scaleFactor,
-                                  isSplit,
-                                  fontSizes.margin,
-                                  fontSizes.badgeSize,
-                                  fontSizes.fontSizeSmall,
-                                  context,
-                                  index,
-                                  id)
-                              : SizedBox(height: 10),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: fontSizes.padding),
-                            child: Row(
-                              children: [
-                                isExcluded
-                                    ? getIconAvtar(30, category, fontSizes.scaleFactor / 2)
-                                    : getIconAvtar(
-                                        fontSizes.avatarSize, category, fontSizes.scaleFactor),
-                                SizedBox(width: fontSizes.padding),
-                                Flexible(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.sizeOf(context).width / 3.3,
-                                            // adjust here narrations
-                                            child: textStyle(
-                                              context: context,
-                                              text: !isManual ? nameOfUser : subcategory,
-                                              c: AppColors.accentColor,
-                                              fontsize: fontSizes.fontSizeMedium,
-                                              fontWeight: FontWeight.w600,
-                                              lineHeight: 1.5,
-                                            ),
-                                          ),
-                                          Container(
-                                            //  width: MediaQuery.sizeOf(context).width/3.0,
-                                            //  color: Colors.green,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                textStyle(
-                                                  context: context,
-                                                  text: formatAmount,
-                                                  c: amtColor,
-                                                  fontsize: fontSizes.fontSizeLarge,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      textStyle(
-                                        context: context,
-                                        text: isManual ? formattedDateManual : formattedDate,
-                                        c: AppColors.primaryColor.withOpacity(0.7),
-                                        fontsize: fontSizes.fontSizeSmall,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+        child: Obx(() => AnimatedContainer(
+              duration:
+                  Duration(milliseconds: 300), // Smooth animation for checkbox
+              curve: Curves.easeInOut,
+              child: Stack(
+                children: [
+                  // Main content
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      isExcluded
+                          ? SizedBox(height: 8)
+                          : SizedBox(
+                              height: 0,
                             ),
-                          ),
-                          isExcluded ? SizedBox(height: 10) : SizedBox.shrink(),
-                          isExcluded
-                              ? SizedBox.shrink()
-                              : Padding(
-                                  padding: const EdgeInsets.only(left: 4),
-                                  child: getIconsForHideUpdateSplit(
-                                      fontSizes.iconSize,
-                                      fontSizes.padding,
-                                      category,
-                                      amount,
-                                      logo,
-                                      context,
-                                      index,
-                                      subcategory,
-                                      transaction,
-                                      isReview,
-                                      id,
-                                      isManual,
-                                      hide,
-                                      isSplit,
-                                      isExcluded,formatAmountBalance),
-                                ),
-                          (isManual || isReview)
-                              ? SizedBox(height: 0)
-                              : isExcluded? SizedBox.shrink():SizedBox(height: fontSizes.padding / 2),
-                        ],
+                      Container(
+                        padding: EdgeInsets.only(
+                            top: isExcluded ? 0 : fontSizes.padding / 6),
+                        child: Row(
+                          children: [
+                            // Animated Checkbox
+                            AnimatedSwitcher(
+                              duration: Duration(milliseconds: 200),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return ScaleTransition(
+                                    scale: animation, child: child);
+                              },
+                              child: (showCheckBox.value &&
+                                      !isExcluded &&
+                                      !hide)
+                                  ? Container(
+                                      key: ValueKey('checkbox'),
+                                      height: 30,
+                                      width: 30,
+                                      child: Checkbox(
+                                        value: redioButton
+                                            .containsKey('${transaction.id}'),
+                                        onChanged: (bool? isChecked) {
+                                          String id = '${transaction.id}';
+                                          bool ismanual =
+                                              transaction.manualTransaction;
+                                          if (isChecked == true) {
+                                            redioButton[id] = id;
+                                            balanceOutList[id] = transaction;
+                                            redioButtonIndex[id] = index;
+                                            redioButtonAmount[id] =
+                                                transaction.type == "DEBIT"
+                                                    ? 0 - transaction.amount
+                                                    : transaction.amount;
+                                            if (ismanual) addManually.add(id);
+                                            HapticFeedback
+                                                .selectionClick(); // Feedback on check
+                                          } else {
+                                            redioButton.remove(id);
+                                            redioButtonIndex.remove(id);
+                                            balanceOutList.remove(id);
+                                            redioButtonAmount.remove(id);
+                                            if (ismanual)
+                                              addManually.remove(id);
+                                            HapticFeedback.selectionClick();
+                                          }
+                                        },
+                                        shape: const CircleBorder(),
+                                        side: BorderSide(
+                                            color: AppColors.primaryColor),
+                                        checkColor: Colors.white,
+                                        activeColor: AppColors.primaryColor,
+                                        semanticLabel:
+                                            'Select transaction ${transaction.id}',
+                                      ),
+                                    )
+                                  : SizedBox.shrink(
+                                      key: ValueKey('no-checkbox')),
+                            ),
+                            // Main Transaction Content
+                            Container(
+                              width: MediaQuery.of(context).size.width /
+                                  (showCheckBox.value ? 1.2 : 1.1),
+                              padding: EdgeInsets.only(
+                                  top: isExcluded ? 0 : fontSizes.padding / 6,
+                                  bottom:
+                                      isExcluded ? 0 : fontSizes.padding / 6),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  (isManual || isReview)
+                                      ? reviewTagTransactions(
+                                          isReview,
+                                          fontSizes.scaleFactor,
+                                          isSplit,
+                                          fontSizes.margin,
+                                          fontSizes.badgeSize,
+                                          fontSizes.fontSizeSmall,
+                                          context,
+                                          index,
+                                          id)
+                                      : SizedBox(height: 10),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: fontSizes.padding),
+                                    child: Row(
+                                      children: [
+                                        isExcluded
+                                            ? getIconAvtar(30, category,
+                                                fontSizes.scaleFactor / 2)
+                                            : getIconAvtar(
+                                                fontSizes.avatarSize,
+                                                category,
+                                                fontSizes.scaleFactor),
+                                        SizedBox(width: fontSizes.padding),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    width: MediaQuery.sizeOf(
+                                                                context)
+                                                            .width /
+                                                        3.3,
+                                                    // adjust here narrations
+                                                    child: textStyle(
+                                                      context: context,
+                                                      text: !isManual
+                                                          ? nameOfUser
+                                                          : subcategory,
+                                                      c: AppColors.accentColor,
+                                                      fontsize: fontSizes
+                                                          .fontSizeMedium,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      lineHeight: 1.5,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    //  width: MediaQuery.sizeOf(context).width/3.0,
+                                                    //  color: Colors.green,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        textStyle(
+                                                          context: context,
+                                                          text: formatAmount,
+                                                          c: amtColor,
+                                                          fontsize: fontSizes
+                                                              .fontSizeLarge,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              textStyle(
+                                                context: context,
+                                                text: isManual
+                                                    ? formattedDateManual
+                                                    : formattedDate,
+                                                c: AppColors.primaryColor
+                                                    .withOpacity(0.7),
+                                                fontsize:
+                                                    fontSizes.fontSizeSmall,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  isExcluded
+                                      ? SizedBox(height: 10)
+                                      : SizedBox.shrink(),
+                                  isExcluded
+                                      ? SizedBox.shrink()
+                                      : Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 4),
+                                          child: getIconsForHideUpdateSplit(
+                                              fontSizes.iconSize,
+                                              fontSizes.padding,
+                                              category,
+                                              amount,
+                                              logo,
+                                              context,
+                                              index,
+                                              subcategory,
+                                              transaction,
+                                              isReview,
+                                              id,
+                                              isManual,
+                                              hide,
+                                              isSplit,
+                                              isExcluded,
+                                              formatAmountBalance),
+                                        ),
+                                  (isManual || isReview)
+                                      ? SizedBox(height: 0)
+                                      : isExcluded
+                                          ? SizedBox.shrink()
+                                          : SizedBox(
+                                              height: fontSizes.padding / 2),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Excluded badge at top-right
+                  if (isExcluded)
+                    Positioned(
+                      top: 0,
+                      right: -2,
+                      child: SvgPicture.asset(
+                        'assets/icons/Home-page/notMIne.svg',
+                        height: 20,
+                        width: 60,
                       ),
                     ),
-                  ],
-                ),
+                ],
               ),
-            ],
-          ),
-          // Excluded badge at top-right
-          if (isExcluded)
-            Positioned(
-              top: 0,
-              right: -2,
-              
-              child: SvgPicture.asset(
-                'assets/icons/Home-page/notMIne.svg',
-                height: 20,
-                width: 60,
-              ),
-            ),
-        ],
-      ),
-    )),
+            )),
       ),
     ),
   );
@@ -505,6 +547,7 @@ Widget reviewTagTransactions(
     ],
   );
 }
+
 Widget animatedIconTransition(BuildContext context) {
   return StatefulBuilder(
     builder: (context, setState) {
@@ -551,23 +594,22 @@ Widget animatedIconTransition(BuildContext context) {
 }
 
 Widget getIconsForHideUpdateSplit(
-  double iconSize,
-  double padding,
-  String category,
-  double amount,
-  String logo,
-  BuildContext context,
-  int index,
-  String subcategory,
-  TransactionModel transaction,
-  bool isReview,
-  String id,
-  bool isManual,
-  bool hide,
-  bool isSplit,
-  bool isExcluded,
-  String formatAmountBalance
-) {
+    double iconSize,
+    double padding,
+    String category,
+    double amount,
+    String logo,
+    BuildContext context,
+    int index,
+    String subcategory,
+    TransactionModel transaction,
+    bool isReview,
+    String id,
+    bool isManual,
+    bool hide,
+    bool isSplit,
+    bool isExcluded,
+    String formatAmountBalance) {
   // Responsive scaling with MediaQuery
   final screenWidth = MediaQuery.of(context).size.width;
   final scaleFactor = screenWidth / 360; // Base width: 360px
@@ -578,6 +620,7 @@ Widget getIconsForHideUpdateSplit(
         url.isNotEmpty &&
         Uri.tryParse(url)?.hasAbsolutePath == true;
   }
+
   Widget getPredictedCategoryIcons(TransactionModel transaction) {
     final predictions = transaction.predictions;
     if (predictions == null) return const SizedBox.shrink();
@@ -609,7 +652,7 @@ Widget getIconsForHideUpdateSplit(
                 );
 
                 // Update the backend
-                 updateTheTagOfTarnsactions(
+                updateTheTagOfTarnsactions(
                   cat!,
                   "Other",
                   transaction.id,
@@ -619,7 +662,8 @@ Widget getIconsForHideUpdateSplit(
                 );
               } catch (e) {
                 // Show error snackbar if the update fails
-                snackBarCalledfail(context, "Failed to tag transaction", Colorcodes.red);
+                snackBarCalledfail(
+                    context, "Failed to tag transaction", Colorcodes.red);
               } finally {
                 tagBool.value = false; // Hide loader
               }
@@ -643,46 +687,54 @@ Widget getIconsForHideUpdateSplit(
         // Category icon
         Row(
           children: [
-          
             Row(
               children: [
-                 category == 'Untagged'?
-                 getPredictedCategoryIcons(transaction):
-                GestureDetector(
-                  onTap: category == 'Untagged'
-                      ? null
-                      : () {
-                          tagName.value = category;
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.vertical(top: Radius.circular(20)),
-                            ),
-                            builder: (context) {
-                              return TagShowmodal(
-                                data: transaction,
-                                index: index,
-                              );
-                            },
-                          );
-                        },
-                  child: textStyle(
+                category == 'Untagged'
+                    ? getPredictedCategoryIcons(transaction)
+                    : GestureDetector(
+                        onTap: category == 'Untagged'
+                            ? null
+                            : () {
+                                tagName.value = category;
+                                showModalBottomSheet(
                                   context: context,
-                                  text: toUpperCase(category),
-                                  c: AppColors.primaryColor,
-                                  fontsize: fontSizeMedium,
-                                  fontWeight: FontWeight.w600,
-                                )
-                ),
-                 ((transaction.isBalanceOut?? false) && formatAmountBalance!="₹-1")? 
-                    Column(
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20)),
+                                  ),
+                                  builder: (context) {
+                                    return TagShowmodal(
+                                      data: transaction,
+                                      index: index,
+                                    );
+                                  },
+                                );
+                              },
+                        child: textStyle(
+                          context: context,
+                          text: toUpperCase(category),
+                          c: AppColors.primaryColor,
+                          fontsize: fontSizeMedium,
+                          fontWeight: FontWeight.w600,
+                        )),
+                ((transaction.isBalanceOut ?? false) &&
+                        formatAmountBalance != "₹-1")
+                    ? Column(
                         children: [
-                            SizedBox(width: 10,),
-                            textStyle(context: context,text: " ( "+(formatAmountBalance.toString())+" )",fontsize: 13,fontWeight: FontWeight.w500)
+                          SizedBox(
+                            width: 10,
+                          ),
+                          textStyle(
+                              context: context,
+                              text: " ( " +
+                                  (formatAmountBalance.toString()) +
+                                  " )",
+                              fontsize: 13,
+                              fontWeight: FontWeight.w500)
                         ],
-                    ):SizedBox.shrink()
+                      )
+                    : SizedBox.shrink()
               ],
             ),
             if (isSplit)
@@ -703,157 +755,190 @@ Widget getIconsForHideUpdateSplit(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Hide Transaction
-Tooltip(
-  message: HomepageStringsDart().hideTooltip,
-  child: GestureDetector(
-    onTap: hide
-        ? () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                double screenWidth = MediaQuery.sizeOf(context).width;
-                return Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 4,
-                  backgroundColor: Colors.transparent,
-                  child: Container(
-                    width: screenWidth * 0.95,
-                    padding: EdgeInsets.all(screenWidth * 0.05),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.white,
-                          Colors.grey[50]!,
-                        ],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 12,
-                          spreadRadius: 2,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Title / Prompt Text
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: screenWidth * 0.02,
-                          ),
-                          child: textStyleOnly2(
-                            context: context,
-                            text: HomepageStringsDart().hideTransactionPrompt,
-                            fontsize: screenWidth < 400 ? 14 : 16,
-                            color: AppColors.bg1,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                    Tooltip(
+                      message: HomepageStringsDart().hideTooltip,
+                      child: GestureDetector(
+                        onTap: hide
+                            ? () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    double screenWidth =
+                                        MediaQuery.sizeOf(context).width;
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      elevation: 4,
+                                      backgroundColor: Colors.transparent,
+                                      child: Container(
+                                        width: screenWidth * 0.95,
+                                        padding:
+                                            EdgeInsets.all(screenWidth * 0.05),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.white,
+                                              Colors.grey[50]!,
+                                            ],
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.1),
+                                              blurRadius: 12,
+                                              spreadRadius: 2,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            // Title / Prompt Text
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: screenWidth * 0.02,
+                                              ),
+                                              child: textStyleOnly2(
+                                                context: context,
+                                                text: HomepageStringsDart()
+                                                    .hideTransactionPrompt,
+                                                fontsize:
+                                                    screenWidth < 400 ? 14 : 16,
+                                                color: AppColors.bg1,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
 
-                        // Divider
-                        Divider(
-                          color: Colors.grey[200],
-                          thickness: 1,
-                          height: screenWidth * 0.06,
-                        ),
+                                            // Divider
+                                            Divider(
+                                              color: Colors.grey[200],
+                                              thickness: 1,
+                                              height: screenWidth * 0.06,
+                                            ),
 
-                        // Buttons Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // No Button
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: screenWidth * 0.06,
-                                  vertical: screenWidth * 0.03,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              child: textStyleOnly2(
-                                context: context,
-                                text: HomepageStringsDart().noButton,
-                                fontsize: screenWidth < 400 ? 14 : 16,
-                                color: AppColors.bg1.withOpacity(0.7),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                                            // Buttons Row
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                // No Button
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  style: TextButton.styleFrom(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          screenWidth * 0.06,
+                                                      vertical:
+                                                          screenWidth * 0.03,
+                                                    ),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                  child: textStyleOnly2(
+                                                    context: context,
+                                                    text: HomepageStringsDart()
+                                                        .noButton,
+                                                    fontsize: screenWidth < 400
+                                                        ? 14
+                                                        : 16,
+                                                    color: AppColors.bg1
+                                                        .withOpacity(0.7),
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
 
-                            // Vertical Divider
-                            Container(
-                              width: 1,
-                              height: screenWidth * 0.06,
-                              color: Colors.grey[200],
-                            ),
+                                                // Vertical Divider
+                                                Container(
+                                                  width: 1,
+                                                  height: screenWidth * 0.06,
+                                                  color: Colors.grey[200],
+                                                ),
 
-                            // Yes Button
-                            TextButton(
-                              onPressed: () async {
-                                await hideTransaction(
-                                  index,
-                                  !hide,
-                                  context,
-                                  transaction.id,
+                                                // Yes Button
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    print("tapped here");
+                                                    await hideTransaction(
+                                                      index,
+                                                      false,
+                                                      context,
+                                                      transaction.id,
+                                                    );
+
+                                                    if (context.mounted) {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    }
+                                                  },
+                                                  style: TextButton.styleFrom(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          screenWidth * 0.06,
+                                                      vertical:
+                                                          screenWidth * 0.03,
+                                                    ),
+                                                    backgroundColor: AppColors
+                                                        .primaryColor
+                                                        .withOpacity(0.1),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                  child: textStyleOnly2(
+                                                    context: context,
+                                                    text: HomepageStringsDart()
+                                                        .yesButton,
+                                                    fontsize: screenWidth < 400
+                                                        ? 14
+                                                        : 16,
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
-
-                                if (context.mounted) {
-                                  Navigator.of(context).pop();
-                                }
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: screenWidth * 0.06,
-                                  vertical: screenWidth * 0.03,
-                                ),
-                                backgroundColor: AppColors.primaryColor.withOpacity(0.1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              child: textStyleOnly2(
-                                context: context,
-                                text: HomepageStringsDart().yesButton,
-                                fontsize: screenWidth < 400 ? 14 : 16,
+                              }
+                            : null, // null if `hide` is false
+                        child: hide
+                            ? Icon(
+                                Icons.visibility_outlined,
                                 color: AppColors.primaryColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                                size: 18,
+                              )
+                            : const SizedBox
+                                .shrink(), // empty widget if hide is false
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
-          }
-        : null, // null if `hide` is false
-    child: hide
-        ? Icon(
-            Icons.visibility_outlined,
-            color: AppColors.primaryColor,
-            size: 18,
-          )
-        : const SizedBox.shrink(), // empty widget if hide is false
-  ),
-),
-SizedBox(width: 8 * scaleFactor),
+                    SizedBox(width: 8 * scaleFactor),
 
-                      // Friends Modal
+                    // Friends Modal
                     Tooltip(
                       message: HomepageStringsDart().splitWithFriendsTooltip,
                       child: GestureDetector(
@@ -933,8 +1018,6 @@ SizedBox(width: 8 * scaleFactor),
                               if (shouldExclude == true) {
                                 excludeCashFlowTransaction(
                                     index, false, context, transaction.id);
-                                    
-                                
                               }
                             },
                             child: Tooltip(
@@ -947,7 +1030,7 @@ SizedBox(width: 8 * scaleFactor),
                           )
                         : const SizedBox.shrink(),
                     SizedBox(width: 8 * scaleFactor),
-                   
+
                     isManual
                         ? Container(
                             // height: 50,
@@ -1038,4 +1121,3 @@ Widget getTagButton(TransactionModel transaction, int index, String category,
     ],
   );
 }
-

@@ -373,8 +373,7 @@ void duesPaid(BuildContext context, int index) async {
   try {
     final response = await updateDataApiCall(apiUrl, {});
   } catch (e) {
-    snackBarCalledfail(context,SnackbarData().errorSettlingDue);
-  
+    snackBarCalledfail(context, SnackbarData().errorSettlingDue);
   }
 }
 
@@ -388,7 +387,6 @@ void settleAmount(
     final response = await updateDataApiCall(apiUrl, body);
   } catch (e) {
     snackBarCalledfail(context, SnackbarData().errorSettlingDue);
-  
   }
 }
 
@@ -421,12 +419,16 @@ Future<void> getHomePageInsights(context) async {
   } catch (e) {}
 }
 
-Future<void> hideTransaction (int index, bool hidden, BuildContext context, String id) async {
+Future<void> hideTransaction(
+    int index, bool hidden, BuildContext context, String id) async {
+     
+
+ 
   final transaction = transactionsHistory[index];
   final apiUrl = "$url/transactionauto/updateTransaction/$id";
   try {
     final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
-   // Debug print
+    // Debug print
     if (getFlagOfResponse(response)) {
       if (hidden) {
         hiddenTransactions.add(transaction);
@@ -442,28 +444,27 @@ Future<void> hideTransaction (int index, bool hidden, BuildContext context, Stri
       snackBarCalledfail(context, SnackbarData().transactionHideFailed);
     }
   } catch (e) {
-  
     snackBarCalledfail(context, SnackbarData().errorHidingTransaction);
   }
 }
 
-Future<void> excludeCashFlowTransaction (int index, bool isExcluded, BuildContext context, String id) async {
+Future<void> excludeCashFlowTransaction(
+    int index, bool isExcluded, BuildContext context, String id) async {
+
   final transaction = transactionsHistory[index];
   final apiUrl = "$url/transactionauto/updateTransaction/$id";
   try {
-    final response = await updateDataApiCall2(apiUrl, {"isExcluded": isExcluded});
-   // Debug print
+    final response =
+        await updateDataApiCall2(apiUrl, {"isExcluded": isExcluded});
+    // Debug print
     if (getFlagOfResponse(response)) {
-      
-        (transactionsHistory[index]).isExcluded = isExcluded;
-         transactionsHistory.refresh();
-        // snackBarCalled(context, SnackbarData().transactionHiddenSuccess);
-      
+      (transactionsHistory[index]).isExcluded = isExcluded;
+      transactionsHistory.refresh();
+      // snackBarCalled(context, SnackbarData().transactionHiddenSuccess);
     } else {
       // snackBarCalledfail(context, SnackbarData().transactionHideFailed);
     }
   } catch (e) {
-  
     // snackBarCalledfail(context, SnackbarData().errorHidingTransaction);
   }
 }
