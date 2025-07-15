@@ -314,7 +314,7 @@ final matched = custom.firstWhere(
 
 
 final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
-    :  imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  : "assets/icons/subCategoryIcons/other.svg";
+    :  imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  : "assets/icons/Categories2/other.svg";
  
   return Container(
     width: avatarSize,

@@ -50,8 +50,9 @@ class HomePageIcons {
 class Categories {
   // assets\icons\Categories\income.svg
   static String link = "assets/icons/Categories2/";
-  static String alcohal = "alcohal.svg";
+  static String alcohal = "alcohol.svg";
   static String bills = "bills.svg";
+  static String investments = "investment.svg";
   static String children = "children.svg";
   static String emi = "emi.svg";
   static String entertainment = "entertainment.svg";
@@ -73,12 +74,13 @@ class Categories {
   static String education = "education.svg";
   static String commerce = "commerce.svg";
   static String groceries = "Groceries.svg";
-  static String income = "PersonalTransfer.svg";
-  static String personalTransfer = "PersonalTransfer.svg";
-  static String personalTransferReceived = "PersonalTransferReceived.svg";
+  static String income = "income.svg";
+  static String personalTransfer = "personalTransfer.svg";
+  static String personalTransferReceived = "personalTransferReceived.svg";
   static String creditCardCheck = "creditCardCheck.svg";
   static String digitalPayment = "digitalPayment.svg";
   static String handBill = "handBill.svg";
+  static String untagged = "untagged.svg";
   /*
   Groceries: SUPRDAILY, GROCERY, SPENCER'S, METRO CASH, VEGETABLE, FRUIT, Ratnadeep, dmart, Veggie, kirana, General Store, milk
 
@@ -292,7 +294,7 @@ class BudgetCategories {
     "Personal Care": Categories.personalCare, //
     "Services": Categories.services,
     "Emi": Categories.emi,
-    "Investments": Categories.bills,
+    "Investments": Categories.investments,
     "Insurance": Categories.insurance,
     "Support": Categories.support,
     "Current": Categories.current, //
@@ -309,6 +311,7 @@ class BudgetCategories {
     "Income": Categories.income,
     "Personal Transfer": Categories.personalTransfer,
     "Personal Transfer Received": Categories.personalTransferReceived,
+   
   };
 
   static List<String> categories =
@@ -316,7 +319,7 @@ class BudgetCategories {
 }
 
 class BudgetSubCategories {
-  static const String connect = "assets/icons/subCategoryIcons/";
+  static const String connect = "assets/icons/subCategoryIcons2/";
   static final Map<String, String> listofSubCategories = {
     // Food
     "Other": "${connect}other.svg",
@@ -335,16 +338,16 @@ class BudgetSubCategories {
     "subway": "${connect}subway.svg",
     "dominos": "${connect}Dominos.svg",
     "Dhaba": "${connect}dhaba.svg",
-    "Chicken": "${connect}Chicken.svg",
+    
     "Italia": "${connect}Italia.svg",
-    "bawarchi": "${connect}Bawarchi.svg",
+    "bawarchi": "${connect}restaurant.svg",  //no icon
     "Tiffin": "${connect}tiffin.svg",
     "meals": "${connect}meal.svg", // Note: "mea" was "meals" in your code
     "Vegetables": "${connect}vegetables.svg",
-    "udupi": "${connect}udupi.svg",
-    "coffee": "${connect}coffee.svg",
-    "eats": "${connect}eats.svg",
-    "Frankie": "${connect}Frankie.svg",
+    "udupi": "${connect}tiffin.svg", //no icon 
+    "coffee": "${connect}Tea.svg", // no icon 
+    "eats": "${connect}restaurant.svg",
+    "Frankie": "${connect}frankie.svg", // no icon 
     // "kirana": "${connect}kirana.svg",
     "Store": "${connect}Store.svg",
     // "General Store": "${connect}general_store.svg",
@@ -388,7 +391,7 @@ class BudgetSubCategories {
     "Filling": "${connect}filling.svg",
     "Rapido": "${connect}rapido.svg",
     "Tgsrtc": "${connect}tgsrtc.svg", // Note: "Tsrtc" was "Tgsrtc" in your code
-    "irctc": "${connect}irctc.svg",
+    "Irctc": "${connect}irctc.svg",
 
     // Health
     "Medical": "${connect}medical.svg",
@@ -407,18 +410,18 @@ class BudgetSubCategories {
     "AIRTEL": "${connect}airtel.svg",
     "JIO": "${connect}Jio.svg",
     "Solutions": "${connect}solutions.svg",
-    "godaddy": "${connect}Godaddy.svg",
-    "hostinger": "${connect}Hostinger.svg",
+    "Godaddy": "${connect}Godaddy.svg",
+    "Hostinger": "${connect}Hostinger.svg",
     "bpcl": "${connect}BPL.svg",
 
     // Subscriptions
-    "Netflix": "${connect}Netflix.svg",
-    "PrimeVideo": "${connect}Primevideo.svg",
-    "Spotify": "${connect}Spotify.svg",
+    "Netflix": "${connect}netflix_icon.svg",
+    "PrimeVideo": "${connect}primevideo.svg",
+    "Spotify": "${connect}spotify.svg",
     "Jio Hotstar":
-        "${connect}Jio_hotstar.svg", // Note: "Hotstar" was "Jio Hotstar" in your code
+        "${connect}jio_hotster.svg", // Note: "Hotstar" was "Jio Hotstar" in your code
     "appleServices": "${connect}appleservices.svg",
-    "disney": "${connect}Disney.svg",
+    "disney": "${connect}disney.svg",
 
     // Events
     "Weddings": "${connect}wedding.svg",
@@ -441,9 +444,9 @@ class BudgetSubCategories {
     "Electrician": "${connect}Electrician.svg",
     "Plumber": "${connect}plumber.svg",
     "Bike/Car Service":
-        "${connect}Bike/Car_service.svg", // Fixed path separator
-    "Events": "${connect}Events.svg",
-    "Service": "${connect}Service.svg",
+        "${connect}Bike_Car_service.svg", // Fixed path separator
+    "Events": "${connect}Events (1).svg",
+    "Service": Categories.services,
     "Bike": "${connect}Bike.svg",
     "Auto": "${connect}Auto.svg",
     "hardware": "${connect}Hardware.svg",
@@ -514,7 +517,7 @@ class BudgetSubCategories {
     "Blinkit": "${connect}blinkit.svg",
     "zepto": "${connect}zepto.svg",
     "Grofers": "${connect}grofers.svg",
-    "Bluedart": "${connect}blueDart.svg",
+    "Bluedart": "${connect}blueDar.svg",
     "ekart": "${connect}ekart.svg",
 
     // snacks
@@ -529,7 +532,7 @@ class BudgetSubCategories {
     "Bakes": "${connect}Bakes.svg",
     "Bakery": "${connect}Bakery.svg",
     "Cakes": "${connect}cake.svg",
-    "chips": "${connect}chips.svg",
+    "chips": "${connect}chips.svg", // keep snacks icon 
     "confectioners": "${connect}confectioners.svg",
     "cool drink": "${connect}Cooldrinks.svg",
 
@@ -540,7 +543,7 @@ class BudgetSubCategories {
     "gaming": "${connect}Games.svg",
     // "Entertainment": "${connect}entertainment.svg", // Commented out in your code
     "pvr": "${connect}pvr.svg",
-    "cinepolis": "${connect}Cinipolis.svg",
+    "cinepolis": "${connect}cinepolis.svg",
     "imax": "${connect}Imax.svg",
     "Escape": "${connect}escape.svg",
     "Adventures": "${connect}adventures.svg",
@@ -643,10 +646,10 @@ final Map<String, List<String>> categories = {
     "subway",
     "dominos",
     "Dhaba",
-    "Chicken",
+    
     "Italia",
     "bawarchi",
-    "cafe",
+   
     "Tiffin",
     "meals",
     "Vegetables",
@@ -698,7 +701,7 @@ final Map<String, List<String>> categories = {
     "Filling",
     "Rapido",
     "Tgsrtc",
-    "irctc",
+    "Irctc",
     "Other"
   ],
   "Health": ["Medical", "Pharmacy", "Hospital", "Medplus", "Other"],
@@ -713,8 +716,8 @@ final Map<String, List<String>> categories = {
     "AIRTEL",
     "JIO",
     "Solutions",
-    "godaddy",
-    "hostinger",
+    "Godaddy",
+    "Hostinger",
     "bpcl",
     "Other"
   ],
@@ -744,7 +747,7 @@ final Map<String, List<String>> categories = {
     "Electrician",
     "Plumber",
     "Bike/Car Service",
-    "Hardware/sanitary Workshop",
+    
     "Events",
     "Service",
     "Bike",
