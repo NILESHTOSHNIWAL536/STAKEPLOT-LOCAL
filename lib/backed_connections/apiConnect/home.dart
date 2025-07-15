@@ -15,7 +15,8 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
 void getAck() async {
   var response = await getDataApiCall('${url}/user/newNotifications');
-  if (getFlagOfResponse(response)) {
+  if (getFlagOfResponse(response))
+  {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     hasGetNewNotifications.value = obj != 0;
@@ -151,18 +152,15 @@ void getHiddenTransactions(context) async {
 }
 
 Future<void> getTopThreeTransactions(BuildContext context, WeeklyPopupController controller, String userId) async {
-  print("Calling getTopThreeTransactions for userId: $userId");
   try {
     // Include userId in the API call (adjust endpoint as per your API)
     var response = await getDataApiCall("${url}/transactionauto/top-three-transactions-of-week?userId=$userId");
-    print("API response status: ${response.statusCode}, body: ${response.body}");
     if (response.statusCode == 200) {
       var her = jsonDecode(response.body);
       var obj = her['data'];
       controller.topThreeTransactions.clear();
       List<TransactionModel> modalObj = TransactionModel.listFromJson(obj);
       controller.topThreeTransactions.addAll(modalObj);
-      print("Top 3 transactions updated: ${controller.topThreeTransactions.length}");
       controller.topThreeTransactions.forEach((t) => print("Transaction: ${t.id}, ${t.narration}, ${t.amount}, ${t.type}, ${t.transactionTimestamp}, ${t.predictions?.top1Category}"));
       getTopThreeHistory.value = !getTopThreeHistory.value;
     } else {
@@ -227,7 +225,6 @@ Future<void> getAllTransactionHistory(
       var data = jsonDecode(response.body);
 
       var obj = data['data'];
-      print(" transaction history obj $obj");
       if (obj != null && obj is List<dynamic>) {
         if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh
@@ -237,7 +234,6 @@ Future<void> getAllTransactionHistory(
             TransactionModel.listFromJson(obj);
 
         transactionsHistory.addAll(transactions);
-        // print("all transactions in history $transactionsHistory");
 
         // Stop loading indicator if no more transactions exist
         if (obj.isEmpty || obj.length < 20) {

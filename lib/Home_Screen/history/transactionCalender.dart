@@ -426,6 +426,7 @@ tempDateList.sort((a, b) =>
                   isDateSummaryView.value = false;
                   selectedDate.value = '';
                   _calculateMonthlyTotals();
+                  _updateCalendarData();
                   
                 },
               ),
@@ -644,7 +645,7 @@ void _updateCenterSelection(dateList) {
   final screenWidth = MediaQuery.sizeOf(context).width;
   final centerPosition = screenWidth / 2;
   final scrollOffset = dateScrollController.offset;
-  final padding = screenWidth / 2 - 20;
+  final padding = screenWidth / 2 -20;
   
   // Find which item is currently in center
   for (int i = 0; i < dateList.length; i++) {

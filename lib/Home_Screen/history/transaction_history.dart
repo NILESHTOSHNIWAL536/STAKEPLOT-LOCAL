@@ -88,7 +88,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
     return SingleChildScrollView(
       child: Container(
         child: Column(
-        
           children: [
           
             Obx(() {

@@ -15,12 +15,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:get/get.dart';
 
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
 final RxBool showFilter = false.obs; // NEW
+
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
 
@@ -42,6 +43,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   void initState() {
     super.initState();
     currentPage = 1;
+    showFilter.value=false;
     addManually.clear();
     balanceOutList.clear();
     getAllTransactionHistory(context, false, false, isRefreshing: true);
@@ -65,19 +67,18 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.sizeOf(context).height;
 
-double calculatedHeight;
+    double calculatedHeight;
 
- if (showFilter.value || redioButton.isNotEmpty) {
-  calculatedHeight = screenHeight / 1.52;
-} 
-else if (showFilter.value && !isDateSummaryView.value) {
-  calculatedHeight = screenHeight / 1.5;
-} 
-else {
-  calculatedHeight = (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
-      ? screenHeight / 1.35
-      : screenHeight / 1.25;
-}
+    if (showFilter.value || redioButton.isNotEmpty) {
+      calculatedHeight = screenHeight / 1.52;
+    } else if (showFilter.value && !isDateSummaryView.value) {
+      calculatedHeight = screenHeight / 1.5;
+    } else {
+      calculatedHeight =
+          (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
+              ? screenHeight / 1.35
+              : screenHeight / 1.25;
+    }
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
@@ -101,8 +102,7 @@ else {
                       children: [
                         const SizedBox(height: 4),
                         Padding(
-                    
-                           padding: const EdgeInsets.only(left: 10, right: 2),
+                          padding: const EdgeInsets.only(left: 10, right: 2),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -126,129 +126,87 @@ else {
                                           height: 36)),
                               InkWell(
                                 onTap: () {
-                              showFilter.value = !showFilter.value; // Toggle the filter visibility
-                            },
+                                  showFilter.value = !showFilter
+                                      .value; // Toggle the filter visibility
+                                },
                                 child: AvatarProfileImage(
                                     url: HomePageIcons.filterIcon,
                                     width: 66,
                                     height: 30),
                               ),
-                              //               InkWell(
-                              //                 onTap: () {
-                              //                   showModalBottomSheet(
-                              //                     context: context,
-                              //                     builder: (_) => SafeArea(
-                              //                       child: Container(
-                              //                         width:
-                              //                             MediaQuery.of(context).size.width,
-                              //                         decoration: const BoxDecoration(
-                              //                           color: AppColors.bg5,
-                              //                           borderRadius: BorderRadius.only(
-                              //                             topLeft: Radius.circular(20),
-                              //                             topRight: Radius.circular(20),
-                              //                           ),
-                              //                         ),
-                              //                         child: filterTransaction(context),
-                              //                       ),
-                              //                     ),
-                              //                   );
-                              //                 },
-                              //                 child:  AvatarProfileImage(
-                              // url: HomePageIcons.filterIcon, width: 66, height: 30),
-                              //               ),
+                             
                             ],
                           ),
                         ),
-                        !isDateSummaryView.value? Padding(
-                           padding: const EdgeInsets.only(left: 10, right: 2),
-                          child: Obx(() => (groupTransactionList.length != 0 ||
-                                  redioButton.isNotEmpty) 
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: getTab(context),
-                                )
-                              : SizedBox.shrink()),
-                        ):SizedBox(height:10),
-                       
+                        !isDateSummaryView.value
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 2),
+                                child: Obx(() => (groupTransactionList.length !=
+                                            0 ||
+                                        redioButton.isNotEmpty)
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: getTab(context),
+                                      )
+                                    : SizedBox.shrink()),
+                              )
+                            : SizedBox(height: 10),
                         Container(
-                          
-                          
                           decoration: BoxDecoration(
                             color: AppColors.backgroundColor,
-                           
                           ),
                           child: Padding(
-                             padding:  redioButton.isNotEmpty?const EdgeInsets.only(left: 10, right: 2,top: 8):const EdgeInsets.only(left: 10, right: 2,top: 0),
-                             
-                            child: Obx(() =>  redioButton.isNotEmpty
+                            padding: (redioButton.isNotEmpty && getBoolFalg())
+                                ? const EdgeInsets.only(
+                                    left: 10, right: 2, top: 8)
+                                : const EdgeInsets.only(
+                                    left: 10, right: 2, top: 0),
+                            child: Obx(() => (redioButton.isNotEmpty && getBoolFalg())
                                 ? getTagHideButtons(context)
                                 : SizedBox.shrink()),
                           ),
                         ),
-                           Obx(() => (showFilter.value && !isDateSummaryView.value)
-                        ? filterTransaction(context)
-                        : SizedBox.shrink()),
-                    
+                        Obx(() => (showFilter.value && getBoolFalg())
+                            ? filterTransaction(context)
+                            : SizedBox.shrink()),
                       ],
                     ),
                   ),
 
-                  //       Obx(() =>Container(
-                  //         width: MediaQuery.of(context).size.width,
-                  //               height: MediaQuery.sizeOf(context).height /
-                  //                   ((groupTransactionList.length != 0 ||
-                  //                           redioButton.isNotEmpty)
-                  //                       ? 1.35
-                  //                       : 1.25),
-                  //   child: isDateSummaryView.value
-                  //       ? CalendarTransactionScreen()
-                  //       : SingleChildScrollView(
-                  //           controller: scrollController,
-                  //           child: TransactionHistory(
-                  //             isYearView: false,
-                  //             isflag: true,
-                  //             showIcon: false,
-                  //             expandedPage: false,
-                  //           ),
-                  //         ),
-                  // )),
+                  Obx(() {
+                    double calculatedHeight;
+                    if (showFilter.value || redioButton.isNotEmpty) {
+                      calculatedHeight = screenHeight / 1.52;
+                    } else if (showFilter.value && !isDateSummaryView.value) {
+                      calculatedHeight = screenHeight / 1.5;
+                    } else {
+                      calculatedHeight = (groupTransactionList.isNotEmpty ||
+                              redioButton.isNotEmpty)
+                          ? screenHeight / 1.35
+                          : screenHeight / 1.25;
+                    }
 
-                 Obx(() {
-              double calculatedHeight;
-                if (showFilter.value || redioButton.isNotEmpty) {
-                calculatedHeight = screenHeight / 1.52;
-              } 
-              else if (showFilter.value && !isDateSummaryView.value) {
-                calculatedHeight = screenHeight / 1.5;
-              } 
-              else {
-                calculatedHeight = (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
-                    ? screenHeight / 1.35
-                    : screenHeight / 1.25;
-              }
- 
-
-  return Container(
-    width: MediaQuery.of(context).size.width,
-    height: calculatedHeight,
-    child: IndexedStack(
-      index: isDateSummaryView.value ? 0 : 1,
-      children: [
-        CalendarTransactionScreen(),
-        SingleChildScrollView(
-          controller: scrollController,
-          child: TransactionHistory(
-            isYearView: false,
-            isflag: true,
-            showIcon: false,
-            expandedPage: false,
-          ),
-        ),
-      ],
-    ),
-  );
-}),
-
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: calculatedHeight,
+                      child: IndexedStack(
+                        index: isDateSummaryView.value ? 0 : 1,
+                        children: [
+                          CalendarTransactionScreen(),
+                          SingleChildScrollView(
+                            controller: scrollController,
+                            child: TransactionHistory(
+                              isYearView: false,
+                              isflag: true,
+                              showIcon: false,
+                              expandedPage: false,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -256,6 +214,12 @@ else {
         ),
       ),
     );
+  }
+
+
+  bool getBoolFalg()
+  {
+    return !isDateSummaryView.value &&  allOrGroupTransactionsName.value == StringConstant.allTransactions;
   }
 
   Widget getTextFeild() {
