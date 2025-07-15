@@ -63,9 +63,9 @@ void clearStackShared(BuildContext context) {
 void expire(response, BuildContext context) {
   try {
    
-    var body = json.decode(response.body);
+    // var body = json.decode(response.body);
     
-    if (body['error'].toString() == "JsonWebTokenError")
+    if (response.statusCode==401 )
     {
       logoutUserFromDevice(context);
     }
@@ -74,7 +74,7 @@ void expire(response, BuildContext context) {
   }
 }
 
-  void clearPostReportHide(int index,[bool f=true]){
+  void clearPostReportHide(int index,context,[bool f=true]){
         postController.currentPageTranding.value = 1;
         postController.currentPageFeed.value = 1;
         postController.isPostloading.value = false;
@@ -84,8 +84,8 @@ void expire(response, BuildContext context) {
         postController.hasMorePostFeed.value = true;
         postController.isPost.value = false;
         postController.isPostTranding.value = false;
-        getPost();
-        getTranding();
+        getPost(context);
+        getTranding(context);
         postController.posting.value = false;
         postController.postDis.value = false;
         postController.getPostedTranding.value=!postController.getPostedTranding.value;

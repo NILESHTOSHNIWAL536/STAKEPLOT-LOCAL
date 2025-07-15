@@ -322,7 +322,7 @@ class BudgetSubCategories {
   static const String connect = "assets/icons/subCategoryIcons2/";
   static final Map<String, String> listofSubCategories = {
     // Food
-    "Other": "${connect}other.svg",
+    "Other": "${connect}others.svg",
     "Swiggy": "${connect}swiggy.svg",
     "Zomato": "${connect}zomato.svg",
     "Restaurant": "${connect}restaurant.svg",
@@ -541,7 +541,7 @@ class BudgetSubCategories {
     "district": "${connect}district.svg",
     "gokarting": "${connect}gokarting.svg",
     "gaming": "${connect}Games.svg",
-    // "Entertainment": "${connect}entertainment.svg", // Commented out in your code
+    "Entertainment": "${connect}entertainment.svg", // Commented out in your code
     "pvr": "${connect}pvr.svg",
     "cinepolis": "${connect}cinepolis.svg",
     "imax": "${connect}Imax.svg",

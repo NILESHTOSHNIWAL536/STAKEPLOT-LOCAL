@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/headsUpAndMoneyMap.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
@@ -54,7 +55,7 @@ class IndexScreen extends StatelessWidget {
 
             SizedBox(
                 height: 30,
-                child:  Text('Made in India with ❤️',
+                child:  Text(HomepageStringsDart().madeWithLove,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w500,
                               fontSize: 16,

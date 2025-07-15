@@ -28,7 +28,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
             {
                 Navigator.pop(context);
             }
-           clearPostReportHide(index);
+           clearPostReportHide(index,context);
         }
         else if (value == 1) {
           BuildContext c=context;
@@ -45,8 +45,8 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
           reportPost(context, id, "hide post", "hide",index);
           if (flag2)
           {
-            getPost();
-            clearPostReportHide(index);
+            getPost(context);
+            clearPostReportHide(index,context);
             Navigator.pop(context);
           }
         }

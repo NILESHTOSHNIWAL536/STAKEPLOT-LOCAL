@@ -1747,7 +1747,7 @@ Widget categoryExpandedWidget() {
         // Get the URL path for the subcategory's icon from BudgetSubCategories
         String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??
             "assets/icons/subCategoryIcons/default.svg";
-
+            
         return GestureDetector(
           onTap: () {
             setState(() {

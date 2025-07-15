@@ -1043,7 +1043,7 @@ Widget getPredictedCategoryIcons(
           },
           child: Tooltip(
             message: 'Tag as $cat',
-            child: getIconAvtar2(30, cat!, 10),
+            child: getPredictedCategorySvgUrl(30, cat!, 10,true),
           ),
         ),
       );

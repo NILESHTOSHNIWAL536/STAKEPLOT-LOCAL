@@ -33,9 +33,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController =
-      TextEditingController(text: "nileshtoshniwal743@gmail.com");
+      TextEditingController(text: "sowmyakuthali5@gmail.com");
   final TextEditingController passwordController =
-      TextEditingController(text: "Nilesh@1234");
+      TextEditingController(text: "Sowmya@123");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override
@@ -117,18 +117,14 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         final userdataApple =await AppleSignIN()
                                     .signInWithApple(context);
-        print("User data received: $userdataApple");
         if (userdataApple != null && userdataApple['data']['accessToken'] != null) {
-          print("Access token is present.");
         } else if (userdataApple != null) {
-          print("Navigating to UserDetailsPage with userdata: $userdataApple");
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => UserDetailsPage(data: userdataApple)),
           );
         } else {
-          print("No user data received.");
         }
       } finally {
         appleSignInBool.value = false; // Reset loading state

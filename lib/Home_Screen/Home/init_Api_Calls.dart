@@ -23,8 +23,8 @@ void callApi(context)async
   {
     await Get.find<UserController>().fetchUserInfo();
     getBankAccounts();
-    getPost();
-    getTranding();
+    getPost(context);
+    getTranding(context);
     getAck();
     getBudget();
     contextGlobal=context;

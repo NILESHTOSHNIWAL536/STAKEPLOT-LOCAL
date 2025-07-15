@@ -152,20 +152,18 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                     : SizedBox.shrink()),
                               )
                             : SizedBox(height: 10),
+                            
                         Container(
                           decoration: BoxDecoration(
                             color: AppColors.backgroundColor,
                           ),
-                          child: Padding(
-                            padding: (redioButton.isNotEmpty && getBoolFalg())
-                                ? const EdgeInsets.only(
-                                    left: 10, right: 2, top: 8)
-                                : const EdgeInsets.only(
-                                    left: 10, right: 2, top: 0),
-                            child: Obx(() => (redioButton.isNotEmpty && getBoolFalg())
-                                ? getTagHideButtons(context)
-                                : SizedBox.shrink()),
-                          ),
+                          child: Obx(() => (redioButton.isNotEmpty && getBoolFalg())
+                              ? Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 10, right: 2, top: 8),
+                                child: getTagHideButtons(context),
+                              )
+                              : SizedBox.shrink()),
                         ),
                         Obx(() => (showFilter.value && getBoolFalg())
                             ? filterTransaction(context)

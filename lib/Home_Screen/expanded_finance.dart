@@ -252,7 +252,7 @@ Widget  transactionsHistoryList() {
                             isYearView: isYearView.value,
                             isflag: true,
                              showIcon: true,
-                              expandedPage: true,
+                            expandedPage: true,
                           ));
   }
 

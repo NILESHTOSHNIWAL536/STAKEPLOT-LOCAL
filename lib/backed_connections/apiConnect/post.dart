@@ -68,7 +68,7 @@ void reportPost(context, String id, String spam, String type, int index) async {
             : SnackbarData().reportedSuccessfully,
         );
 
-    clearPostReportHide(index);
+    clearPostReportHide(index,context);
   } else {
     snackBarCalledfail(context, SnackbarData().errorWhileReporting, Colors.red);
   }
@@ -170,9 +170,10 @@ void createPollOfCommunity(context, String title, String description) async {
   postController.postDis.value = false;
 }
 
-Future<void> getPost() async {
+Future<void> getPost(context) async {
   var response =
       await getDataApiCall('${url}/post/feed/${postController.currentPageFeed.value}');
+  expire(response, context);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -198,7 +199,7 @@ Future<void> getPost() async {
   } else {}
 }
 
-Future<void> getTranding() async {
+Future<void> getTranding(context) async {
   var response =
       await getDataApiCall('${url}/post/trending/${postController.currentPageTranding.value}');
   if (getFlagOfResponse(response)) {

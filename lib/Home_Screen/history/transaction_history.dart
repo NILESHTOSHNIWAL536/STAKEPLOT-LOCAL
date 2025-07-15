@@ -1,4 +1,5 @@
 
+import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -344,7 +345,7 @@ final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUr
   );
 }
 
-Widget getIconAvtar2(double avatarSize, String category, double scaleFactor) {
+Widget getIconAvtar2(double avatarSize, String category, double scaleFactor,[bool f=false]) {
 
   String lowerCategory = category?.toLowerCase() ?? '';
 
@@ -355,8 +356,27 @@ final matched = custom.firstWhere(
 
 
 final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
-    :  imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  : "assets/icons/subCategoryIcons/other.svg";
+    :  imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  :    BudgetSubCategories.listofSubCategories[lowerCategory] ?? Categories.link+"others.svg";
  
+  return Center(
+    child:  chatAvatartImage(
+      url:  url,
+      height: avatarSize * 1.7,
+      width: avatarSize * 1.7,
+    ),
+  );
+}
+
+
+Widget getPredictedCategorySvgUrl(double avatarSize, String category, double scaleFactor,[bool f=false]) {
+
+  String lowerCategory = category.toLowerCase();
+  String upperCategory = toUpperCase(category);
+ 
+
+ final url = imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  :  BudgetSubCategories.listofSubCategories[upperCategory]   ??    BudgetSubCategories.listofSubCategories[lowerCategory] ?? Categories.link+"others.svg";
+
+  
   return Center(
     child:  chatAvatartImage(
       url:  url,

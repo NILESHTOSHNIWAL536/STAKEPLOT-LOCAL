@@ -139,6 +139,7 @@ class HomepageStringsDart {
   String selectDueDateError = "Please select a due date.";
   String messageHint = "e.g., Lunch at Cafe";
   String connectBankButton = "Connect Bank Account";
+  String madeWithLove = "Made in India with ❤️";
   Future<bool> fetchConstants() async {
     try {
       final response = await getDataApiCall("$url/constant/homepage");
@@ -147,7 +148,8 @@ class HomepageStringsDart {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};
-// next fetch
+
+        madeWithLove = data['madeWithLove'] ?? madeWithLove;
         fetchingInProgress = data['fetchingInProgress'] ?? fetchingInProgress;
         nextFetchLabel = data['nextFetchLabel'] ?? nextFetchLabel;
         lastFetchLabel = data['lastFetchLabel'] ?? lastFetchLabel;

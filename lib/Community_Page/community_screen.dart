@@ -60,8 +60,8 @@ class CommunityState extends State<Community> {
     postController.hasMorePostFeed.value = true;
     postController.isPost.value = false;
     postController.isPostTranding.value = false;
-    getPost();
-    getTranding();
+    getPost(context);
+    getTranding(context);
     setUpSocketListenerMainPage(context);
     //     scrollController.addListener(_onScroll); //uncomment this if anything goes wrong 
     scrollControllerPost.addListener(() {
@@ -76,9 +76,9 @@ class CommunityState extends State<Community> {
         print('DEBUG: Triggering pagination');
         postController.isPostloading.value = true;
         if (postController.isTrending.value) {
-          if (postController.hasMorePostTranding.value) getTranding();
+          if (postController.hasMorePostTranding.value) getTranding(context);
         } else {
-          if (postController.hasMorePostFeed.value) getPost();
+          if (postController.hasMorePostFeed.value) getPost(context);
         }
       }
     });
