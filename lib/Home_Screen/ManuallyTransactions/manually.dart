@@ -110,7 +110,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
             ],
           ),
           AvatarProfileImage(
-            url: LikeComment.manualTransaction,
+            url: "assets/icons/subCategoryIcons2/netflix1.svg",
             height: 10,
             width: 14,
           )
