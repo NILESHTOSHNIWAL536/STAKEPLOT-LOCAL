@@ -83,7 +83,7 @@ class WeeklyPopupController extends GetxController {
     print("Fetching top 3 transactions for userId: $userId...");
     await getTopThreeTransactions(context, this, userId);
     print("Top 3 transactions fetched: ${topThreeTransactions.length}");
-    topThreeTransactions.forEach((t) => print("Transaction: ${t.id}, ${t.title}, ${t.amount}, ${t.type}, ${t.transactionTimestamp}, ${t.predictions?.top1Category}"));
+    topThreeTransactions.forEach((t) => print("Transaction: ${t.id}, ${t.title}, ${t.amount}, ${t.type}, ${t.transactionTimestamp},"));
   }
 }
 
@@ -100,7 +100,6 @@ class TransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Building TransactionCard: id=${transaction.id}, narration=${transaction.narration}, predictions=${transaction.predictions?.top1Category}");
     return Container(
        width: MediaQuery.of(context).size.width / 1.3,
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),

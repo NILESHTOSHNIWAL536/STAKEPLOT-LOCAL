@@ -80,14 +80,14 @@ class _TabBarUserState extends State<TabBarUser> {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height / 1.4,
+             height: MediaQuery.of(context).size.height / 1.4,
             child: TabBarView(
               children: [
-                Obx(()=>isLoading.value?Spinner(size: 40,): Padding(
+                Obx(()=>isLoading.value?Spinner(size: 10,): Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child:      pollWidgets(),
                 )),
-                 Obx(()=>isLoading.value?Spinner(size: 50,): feedWidgets()),
+                 Obx(()=>isLoading.value?Spinner(size: 10,): feedWidgets()),
               ],
             ),
           ),

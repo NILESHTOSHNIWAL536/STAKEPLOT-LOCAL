@@ -271,13 +271,13 @@ class _NotificationsState extends State<Notifications> {
             time,
             false);
       case "comment":
-        var notificationAvatar = e['isMaskedConnection']
-            ? e['avatarType']
-            : e['username'] as String?;
+        // var notificationAvatar = e['isMaskedConnection']
+        //     ? e['avatarType']
+        //     : e['username'] as String?;
         return _buildMessageCard(
             "${e['username'] ?? 'Someone'} has commented on your post",
             e['id'] as String? ?? "",
-            notificationAvatar ?? "",
+            e['avatarType'] ?? "",
             time,
             true);
       case "lendRequest":

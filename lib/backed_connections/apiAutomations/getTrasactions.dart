@@ -117,6 +117,8 @@ void getAutoMationsTransactionsCustom(date, context,
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
   var response = await getDataApiCall(urlPath);
 
+
+
   trasactionsDataDebitWeekly.clear();
 
   List<String> labelsLocal = [];
@@ -321,13 +323,92 @@ void updateTheTagOfTarnsactions2(
     reloadHistory.value = !reloadHistory.value;
   } else {}
 }
+// void updateTheTagOfTarnsactions(
+//     String category,
+//     String subCategory,
+//     String transactionId,
+//     BuildContext context,
+//     int index,
+//     TransactionModel transaction, // Add TransactionModel to access predictions
+// ) async {
+//   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
+
+//   // Construct selectedCategory
+//   final selectedCategory = {
+//     'category': category,
+//     'percentage': transaction.predictions != null
+//         ? _getPredictionScore(transaction.predictions!, category)
+//         : 0.0, // Fallback to 0.0 if no predictions
+//   };
+
+//   // Construct predictedCategories
+//   final predictedCategories = transaction.predictions != null
+//       ? [
+//           if (transaction.predictions!.top1Category != null)
+//             {
+//               'category': transaction.predictions!.top1Category,
+//               'percentage': transaction.predictions!.top1Score ?? 0.0,
+//             },
+//           if (transaction.predictions!.top2Category != null)
+//             {
+//               'category': transaction.predictions!.top2Category,
+//               'percentage': transaction.predictions!.top2Score ?? 0.0,
+//             },
+//           if (transaction.predictions!.top3Category != null)
+//             {
+//               'category': transaction.predictions!.top3Category,
+//               'percentage': transaction.predictions!.top3Score ?? 0.0,
+//             },
+//           if (transaction.predictions!.top4Category != null)
+//             {
+//               'category': transaction.predictions!.top4Category,
+//               'percentage': transaction.predictions!.top4Score ?? 0.0,
+//             },
+//           if (transaction.predictions!.top5Category != null)
+//             {
+//               'category': transaction.predictions!.top5Category,
+//               'percentage': transaction.predictions!.top5Score ?? 0.0,
+//             },
+//         ]
+//       : [];
+
+//   var response = await updateDataApiCall2(urlPath, {
+//     'category': category,
+//     'subcategory': subCategory,
+//     'selectedCategory': selectedCategory,
+//     'predictedCategories': predictedCategories,
+//   });
+
+//   if (getFlagOfResponse(response)) {
+//     // Update the transaction in transactionsHistory
+//     transactionsHistory[index] = transaction.copyWith(
+//       category: category,
+//       subcategory: subCategory,
+//       needsReview: false,
+//     );
+//     transactionsHistory.refresh();
+//     reloadHistory.value = !reloadHistory.value;
+//     snackBarCalled(context, "Transaction tagged as $category");
+//   } else {
+//     snackBarCalledfail(context, "Failed to tag transaction");
+//   }
+// }
+
+// // Helper function to get the prediction score for a category
+// double _getPredictionScore(Predictions predictions, String category) {
+//   if (predictions.top1Category == category) return predictions.top1Score ?? 0.0;
+//   if (predictions.top2Category == category) return predictions.top2Score ?? 0.0;
+//   if (predictions.top3Category == category) return predictions.top3Score ?? 0.0;
+//   return 0.0; // Fallback if category not found in predictions
+// }
+
 void updateTheTagOfTarnsactions(
     String category,
     String subCategory,
     String transactionId,
     BuildContext context,
     int index,
-    TransactionModel transaction, // Add TransactionModel to access predictions
+    TransactionModel transaction,
 ) async {
   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
 
@@ -336,38 +417,17 @@ void updateTheTagOfTarnsactions(
     'category': category,
     'percentage': transaction.predictions != null
         ? _getPredictionScore(transaction.predictions!, category)
-        : 0.0, // Fallback to 0.0 if no predictions
+        : 0.0,
   };
 
   // Construct predictedCategories
   final predictedCategories = transaction.predictions != null
-      ? [
-          if (transaction.predictions!.top1Category != null)
-            {
-              'category': transaction.predictions!.top1Category,
-              'percentage': transaction.predictions!.top1Score ?? 0.0,
-            },
-          if (transaction.predictions!.top2Category != null)
-            {
-              'category': transaction.predictions!.top2Category,
-              'percentage': transaction.predictions!.top2Score ?? 0.0,
-            },
-          if (transaction.predictions!.top3Category != null)
-            {
-              'category': transaction.predictions!.top3Category,
-              'percentage': transaction.predictions!.top3Score ?? 0.0,
-            },
-          if (transaction.predictions!.top4Category != null)
-            {
-              'category': transaction.predictions!.top4Category,
-              'percentage': transaction.predictions!.top4Score ?? 0.0,
-            },
-          if (transaction.predictions!.top5Category != null)
-            {
-              'category': transaction.predictions!.top5Category,
-              'percentage': transaction.predictions!.top5Score ?? 0.0,
-            },
-        ]
+      ? transaction.predictions!.entries
+          .map((entry) => {
+                'category': entry.category,
+                'percentage': entry.score,
+              })
+          .toList()
       : [];
 
   var response = await updateDataApiCall2(urlPath, {
@@ -378,7 +438,6 @@ void updateTheTagOfTarnsactions(
   });
 
   if (getFlagOfResponse(response)) {
-    // Update the transaction in transactionsHistory
     transactionsHistory[index] = transaction.copyWith(
       category: category,
       subcategory: subCategory,
@@ -394,10 +453,11 @@ void updateTheTagOfTarnsactions(
 
 // Helper function to get the prediction score for a category
 double _getPredictionScore(Predictions predictions, String category) {
-  if (predictions.top1Category == category) return predictions.top1Score ?? 0.0;
-  if (predictions.top2Category == category) return predictions.top2Score ?? 0.0;
-  if (predictions.top3Category == category) return predictions.top3Score ?? 0.0;
-  return 0.0; // Fallback if category not found in predictions
+  final entry = predictions.entries.firstWhere(
+    (entry) => entry.category == category,
+    orElse: () => PredictionEntry(category: category, score: 0.0),
+  );
+  return entry.score;
 }
 void updateTheTagOfTarnsactionsGroup(
     category, subCategory, grpId, context, index) async {

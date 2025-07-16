@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.da
 import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
+import 'package:flutter_application_code_stakeplot/Utils/pdfStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
@@ -60,6 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
     finvuStrings.fetchConstants();
     homepageStringsDart.fetchConstants();
     profileScreenStrings.fetchConstants();
+    PdfStrings().fetchConstants();
 
   }
 
@@ -69,12 +71,12 @@ class _SplashScreenState extends State<SplashScreen>
     return SafeArea(
       child: AnimatedSplashScreen.withScreenFunction(
         backgroundColor: Colors.white,
-        duration: 2000,
-        splashIconSize: 300,
+        duration: 1800,
+        splashIconSize: 1000,
         splashTransition: SplashTransition.fadeTransition,
         pageTransitionType: PageTransitionType.fade,
         splash: Center(
-          child: Lottie.asset("assets/splashScreen/splash.json"),
+          child: Lottie.asset("assets/splashScreen/appScreen.json"),
         ),
         screenFunction: checkAuthAndNavigate,
       ),

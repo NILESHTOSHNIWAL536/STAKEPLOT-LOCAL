@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
         scaffoldBackgroundColor: AppColors.backgroundColor,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/animatedAppScreen', 
+      initialRoute: '/splash', 
       routes: routes
     );
   }

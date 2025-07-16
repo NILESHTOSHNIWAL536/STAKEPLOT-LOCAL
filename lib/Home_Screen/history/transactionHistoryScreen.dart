@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
 
 final TextEditingController searchController = TextEditingController();
@@ -138,21 +140,50 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                             ],
                           ),
                         ),
-                        !isDateSummaryView.value
-                            ? Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 2),
-                                child: Obx(() => (groupTransactionList.length !=
-                                            0 ||
-                                        redioButton.isNotEmpty)
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(top: 8),
-                                        child: getTab(context),
-                                      )
-                                    : SizedBox.shrink()),
-                              )
-                            : SizedBox(height: 10),
-                            
+                        // !isDateSummaryView.value
+                        //     ? Padding(
+                        //         padding:
+                        //             const EdgeInsets.only(left: 10, right: 2),
+                        //         child: Obx(() => (groupTransactionList.length !=
+                        //                     0 ||
+                        //                 redioButton.isNotEmpty)
+                        //             ? Padding(
+                        //                 padding: const EdgeInsets.only(top: 8),
+                        //                 child: getTab(context),
+                        //               )
+                        //             : SizedBox.shrink()),
+                        //       )
+                        //     : SizedBox(height: 10),
+                            !isDateSummaryView.value
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 2),
+                              child: Obx(() => (groupTransactionList.isNotEmpty ||
+                                      redioButton.isNotEmpty)
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: Obx(() => showCheckBox.value
+                                          ? Padding(
+                                            padding: const EdgeInsets.only(right: 10),
+                                            child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  // Cancel Button
+                                                  
+                                                  
+                                                  SelectButton("Selected (${redioButton.length})", context),
+                                                  CancelButton("Cancel", context),
+                                                 
+                                                 
+                                                ],
+                                              ),
+                                          )
+                                          : getTab(context)),
+                                    )
+                                  : SizedBox.shrink()),
+                            )
+                          : SizedBox(height: 10),
                         Container(
                           decoration: BoxDecoration(
                             color: AppColors.backgroundColor,
@@ -260,4 +291,77 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
       ),
     );
   }
+
+
+Widget CancelButton(String text, BuildContext context) {
+ 
+  // Calculate width based on screen size for responsiveness
+  double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
+  double tabHeight = (MediaQuery.of(context).size.height) /
+      26; // 44 = 16*2 padding + 12 spacing
+  return InkWell(
+    onTap: () {
+      showCheckBox.value = false;
+                                                      redioButton.clear();
+                                                      redioButtonIndex.clear();
+                                                      balanceOutList.clear();
+                                                      addManually.clear();
+                                                      HapticFeedback
+                                                          .selectionClick();
+    },
+    child: Container(
+      margin: EdgeInsets.symmetric(vertical: 4),
+      width: tabWidth,
+      height: tabHeight,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(8)
+
+      ),
+      child: Center(
+        child: textStyleImage(
+          context: context,
+          text: text,
+          c:  AppColors.primaryColor,
+          fontsize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+  );
+}
+Widget SelectButton(String text, BuildContext context) {
+ 
+  // Calculate width based on screen size for responsiveness
+  double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
+  double tabHeight = (MediaQuery.of(context).size.height) /
+      26; // 44 = 16*2 padding + 12 spacing
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: 4),
+    width: tabWidth,
+    height: tabHeight,
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    decoration: BoxDecoration(
+      // border: Border(
+      //   bottom: BorderSide(
+      //     color: 
+      //          AppColors.backgroundColor,
+              
+      //     width:  3.0 , // Adjust the width as needed
+      //   ),
+      // ),
+    ),
+    child: Center(
+      child: textStyleImage(
+        context: context,
+        text: text,
+        c:  AppColors.button,
+        fontsize: 14,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  );
+}
+
 }

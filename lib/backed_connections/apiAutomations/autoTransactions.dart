@@ -25,12 +25,12 @@ void getAllAutoTransactions() async {
 
 void updateTransactionsBalanceOut(context,transactionId,int index,double amount)async{
      var res =await postDataApiCall("${url}/transaction/updateGroupTransactions/${transactionId}",{
-      "amount":amount
+      "amount":(amount).abs()
    });
 
   if(getFlagOfResponse(res))
   {
-              (transactionsHistory[index]).balanceOut = amount;
+              (transactionsHistory[index]).balanceOut = (amount).abs();
               (transactionsHistory[index]).isBalanceOut = true;
               transactionsHistory.refresh();
               
@@ -63,7 +63,7 @@ void onChanedAutoTransactionStatus(context)async
      currentPage=1;
      isLoadingMore.value=false;
      transactionsHistory.clear();
-     getAllTransactionHistory(context,false,false);
+     getAllTransactionHistory(context,false,false, isRefreshing: true);
 }
 
 

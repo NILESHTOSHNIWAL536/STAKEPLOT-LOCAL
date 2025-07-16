@@ -305,7 +305,7 @@ class BudgetCategories {
     "Commerce": Categories.commerce, //
     "snacks": Categories.snacks, //
     "Entertainment": Categories.entertainment, //
-    "Groceries": Categories.groceries,
+    "Groceries":  "assets/icons/Categories2/Groceries.svg",
     "Income": Categories.income,
     "Personal Transfer": Categories.personalTransfer,
     "Personal Transfer Received": Categories.personalTransferReceived,
@@ -464,7 +464,7 @@ class BudgetSubCategories {
     // Insurance
     "Life Insurance": "${connect}life_insurance.svg",
     "Vehicle Insurance": "${connect}vehicle_insurance.svg",
-    "POLICYBAZAAR": "${connect}Policybazaar.svg",
+    "POLICYBAZAAR": "${connect}policyBazaar2.svg",
 
     // Support
     "Charity": "${connect}charity.svg",
@@ -511,9 +511,9 @@ class BudgetSubCategories {
     "Nykaa": "${connect}nykaa2.svg",
     "Blinkit": "${connect}blinkit2.svg",
     "zepto": "${connect}zepto2.svg",
-    "Grofers": "${connect}grofers.svg",
-    "Bluedart": "${connect}blueDar.svg",
-    "ekart": "${connect}ekart.svg",
+    "Grofers": "${connect}grofers2.svg",
+    "Bluedart": "${connect}bluedart2.svg",
+    "ekart": "${connect}ekart2.svg",
 
     // snacks
     "juice": "${connect}Juice.svg",
@@ -533,23 +533,23 @@ class BudgetSubCategories {
 
     // Entertainment
     "Bookmyshow": "${connect}Bookmyshow.svg",
-    "district": "${connect}district.svg",
+    "district": "${connect}district2.svg",
     "gokarting": "${connect}gokarting.svg",
     "gaming": "${connect}Games.svg",
-    "Entertainment": "${connect}entertainment.svg", // Commented out in your code
-    "pvr": "${connect}pvr.svg",
-    "cinepolis": "${connect}cinepolis.svg",
-    "imax": "${connect}Imax.svg",
+    "Entertainment": "${connect}entertainment.svg", 
+    "pvr": "${connect}pvr2.svg",
+    "cinepolis": "${connect}Cinepolis2.svg",
+    "imax": "${connect}imax2.svg",
     "Escape": "${connect}escape.svg",
     "Adventures": "${connect}adventures.svg",
 
     //Groceries
     "SUPRDAILY": "${connect}suprdaily.svg",
-    "GROCERY": Categories.groceries,
-    "SPENCER'S": "${connect}suprdaily.svg",
+    "GROCERY": "assets/icons/Categories2/Groceries.svg",
+    "SPENCER'S": "${connect}spencers2.svg",
     "VEGETABLE": "${connect}vegetables.svg",
     "FRUIT": "${connect}fruit.svg",
-    "Ratnadeep": "${connect}ratnadeep.svg",
+    "Ratnadeep": "${connect}ratnadeep2.svg",
     "dmart": "${connect}mart.svg",
     "kirana": "${connect}kirana.svg",
     "General Store": "${connect}general_store.svg",
@@ -564,7 +564,7 @@ class BudgetSubCategories {
     "credit interest": "${connect}creditInterest.svg",
     "BIL": "${connect}neft.svg",
     "INF": "${connect}neft.svg",
-    "zerodhabroking": "${connect}zerodhabroking.svg",
+    "zerodhabroking": "${connect}zerodha2.svg",
     "credit": "${connect}Credit.svg",
 
     //Personal transfer

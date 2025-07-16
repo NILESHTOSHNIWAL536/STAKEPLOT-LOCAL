@@ -312,3 +312,14 @@ void clearInterest() {
       Get.delete<UserController>();
       Get.delete<PostController>();
   }
+
+  void initGetControllersIfisRegistered(){
+    if (!Get.isRegistered<UserController>()) {
+      Get.put(UserController());
+    }
+
+    if (!Get.isRegistered<PostController>()) {
+      Get.put(PostController());
+    }
+
+ }

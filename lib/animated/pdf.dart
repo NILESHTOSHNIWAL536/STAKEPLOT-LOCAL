@@ -1,5 +1,6 @@
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Utils/pdfStrings.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
@@ -145,7 +146,9 @@ printDoc(data, context, title) {
 
 pw.Widget buildPDFTable(data, context, start,bool flag) {
   final pdfContainers = <pw.Widget>[];
-  int no = flag? 14: selectedValue.value == "6" ? 22 : 20;
+  int no = flag? PdfStrings().firstPage: selectedValue.value == "6" ?  PdfStrings().secoundPage : PdfStrings().thirdPage;
+
+
   for (var i = start; i < data.length; i += no) {
     List chunk = data.sublist(i, (i + no > data.length) ? data.length : i + no);
     startIndex.value += chunk.length;
@@ -217,7 +220,7 @@ tableContent(transactions) {
                 item['narration'].toString(), item['type'], item['txnId'])),
             tableCell(item['type'].toString()),
             tableCell(item['amount'].toString()),
-            tableCell(item['currentBalance'].toString()),
+            tableCell((item['currentBalance']  ?? item['transactionalBalance']  ?? 0).toString()),
           ],
         );
       }).toList(),

@@ -13,8 +13,8 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 part 'snackBars.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.5" : "localhost";
-String urlWithLocallHost =flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.9" : "localhost";
+String urlWithLocallHost =!flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 UserController get userController => Get.find<UserController>();

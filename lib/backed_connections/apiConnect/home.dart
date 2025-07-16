@@ -15,8 +15,7 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
 void getAck() async {
   var response = await getDataApiCall('${url}/user/newNotifications');
-  if (getFlagOfResponse(response))
-  {
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     hasGetNewNotifications.value = obj != 0;
@@ -151,17 +150,20 @@ void getHiddenTransactions(context) async {
   } else {}
 }
 
-Future<void> getTopThreeTransactions(BuildContext context, WeeklyPopupController controller, String userId) async {
+Future<void> getTopThreeTransactions(BuildContext context,
+    WeeklyPopupController controller, String userId) async {
   try {
     // Include userId in the API call (adjust endpoint as per your API)
-    var response = await getDataApiCall("${url}/transactionauto/top-three-transactions-of-week?userId=$userId");
+    var response = await getDataApiCall(
+        "${url}/transactionauto/top-three-transactions-of-week?userId=$userId");
     if (response.statusCode == 200) {
       var her = jsonDecode(response.body);
       var obj = her['data'];
       controller.topThreeTransactions.clear();
       List<TransactionModel> modalObj = TransactionModel.listFromJson(obj);
       controller.topThreeTransactions.addAll(modalObj);
-      controller.topThreeTransactions.forEach((t) => print("Transaction: ${t.id}, ${t.narration}, ${t.amount}, ${t.type}, ${t.transactionTimestamp}, ${t.predictions?.top1Category}"));
+      controller.topThreeTransactions.forEach((t) => print(
+          "Transaction: ${t.id}, ${t.narration}, ${t.amount}, ${t.type}, ${t.transactionTimestamp},"));
       getTopThreeHistory.value = !getTopThreeHistory.value;
     } else {
       print("API failed: ${response.statusCode}");
@@ -234,6 +236,7 @@ Future<void> getAllTransactionHistory(
             TransactionModel.listFromJson(obj);
 
         transactionsHistory.addAll(transactions);
+        print("all transactions $transactionsHistory");
 
         // Stop loading indicator if no more transactions exist
         if (obj.isEmpty || obj.length < 20) {

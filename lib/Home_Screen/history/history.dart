@@ -39,7 +39,7 @@ Widget historyTransactions(
   final category = transaction.category;
   final subcategory = transaction.subcategory;
   final double amount =
-      double.parse(doubleToFixed((transaction.amount).toString()));
+      double.parse(((transaction.amount).toString()));
   final isManual = transaction.manualTransaction;
   final isSplit = transaction.isSplit;
 
@@ -82,7 +82,7 @@ Widget historyTransactions(
       : "₹${formatMoneyIndian(transaction.balanceOut.toString())}";
 
   final fontSizes = FontSizeFactor(context);
-
+  print("transactions cat $transaction");
   return WillPopScope(
     onWillPop: () async {
       // If checkboxes are visible, clear them and stay on the screen
@@ -614,12 +614,16 @@ Widget getIconsForHideUpdateSplit(
   final screenWidth = MediaQuery.of(context).size.width;
   final scaleFactor = screenWidth / 360; // Base width: 360px
   final fontSizeMedium = 12.0 * scaleFactor;
-
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: Container(
-      width: MediaQuery.of(context).size.width/1.1,
-      height: 40,
+         width: (category == 'Untagged' &&
+          (transaction.isBalanceOut ?? false) &&
+          formatAmountBalance != "₹-1")
+      ? null
+      : MediaQuery.of(context).size.width / 1.1,
+      height:  MediaQuery.of(context).size.height / 20,
+      //  color:Colors.red,
       padding: EdgeInsets.symmetric(horizontal: padding, vertical: padding / 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -628,7 +632,7 @@ Widget getIconsForHideUpdateSplit(
           // Category icon
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -666,7 +670,7 @@ Widget getIconsForHideUpdateSplit(
                   ((transaction.isBalanceOut ?? false) &&
                           formatAmountBalance != "₹-1")
                       ? Column(
-                          mainAxisAlignment:MainAxisAlignment.center ,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
                               width: 10,
@@ -687,11 +691,10 @@ Widget getIconsForHideUpdateSplit(
                 Container(
                     width: MediaQuery.sizeOf(context).width / 11,
                     child: AvatarProfileImage(
-                        url: HomePageIcons.isSplit, width: 50, height: 50)
-                ),
+                        url: HomePageIcons.isSplit, width: 50, height: 50)),
             ],
           ),
-       
+
           isReview
               ? getTagButton(transaction, index, category, context, id)
               : Container(
@@ -711,14 +714,15 @@ Widget getIconsForHideUpdateSplit(
                                           MediaQuery.sizeOf(context).width;
                                       return Dialog(
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(16),
+                                          borderRadius:
+                                              BorderRadius.circular(16),
                                         ),
                                         elevation: 4,
                                         backgroundColor: Colors.transparent,
                                         child: Container(
                                           width: screenWidth * 0.95,
-                                          padding:
-                                              EdgeInsets.all(screenWidth * 0.05),
+                                          padding: EdgeInsets.all(
+                                              screenWidth * 0.05),
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                             borderRadius:
@@ -733,8 +737,8 @@ Widget getIconsForHideUpdateSplit(
                                             ),
                                             boxShadow: [
                                               BoxShadow(
-                                                color:
-                                                    Colors.black.withOpacity(0.1),
+                                                color: Colors.black
+                                                    .withOpacity(0.1),
                                                 blurRadius: 12,
                                                 spreadRadius: 2,
                                                 offset: const Offset(0, 2),
@@ -755,29 +759,32 @@ Widget getIconsForHideUpdateSplit(
                                                   context: context,
                                                   text: HomepageStringsDart()
                                                       .hideTransactionPrompt,
-                                                  fontsize:
-                                                      screenWidth < 400 ? 14 : 16,
+                                                  fontsize: screenWidth < 400
+                                                      ? 14
+                                                      : 16,
                                                   color: AppColors.bg1,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
-      
+
                                               // Divider
                                               Divider(
                                                 color: Colors.grey[200],
                                                 thickness: 1,
                                                 height: screenWidth * 0.06,
                                               ),
-      
+
                                               // Buttons Row
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.spaceEvenly,
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
                                                 children: [
                                                   // No Button
                                                   TextButton(
                                                     onPressed: () {
-                                                      Navigator.of(context).pop();
+                                                      Navigator.of(context)
+                                                          .pop();
                                                     },
                                                     style: TextButton.styleFrom(
                                                       padding:
@@ -790,30 +797,33 @@ Widget getIconsForHideUpdateSplit(
                                                       shape:
                                                           RoundedRectangleBorder(
                                                         borderRadius:
-                                                            BorderRadius.circular(
-                                                                10),
+                                                            BorderRadius
+                                                                .circular(10),
                                                       ),
                                                     ),
                                                     child: textStyleOnly2(
                                                       context: context,
-                                                      text: HomepageStringsDart()
-                                                          .noButton,
-                                                      fontsize: screenWidth < 400
-                                                          ? 14
-                                                          : 16,
+                                                      text:
+                                                          HomepageStringsDart()
+                                                              .noButton,
+                                                      fontsize:
+                                                          screenWidth < 400
+                                                              ? 14
+                                                              : 16,
                                                       color: AppColors.bg1
                                                           .withOpacity(0.7),
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                     ),
                                                   ),
-      
+
                                                   // Vertical Divider
                                                   Container(
                                                     width: 1,
                                                     height: screenWidth * 0.06,
                                                     color: Colors.grey[200],
                                                   ),
-      
+
                                                   // Yes Button
                                                   TextButton(
                                                     onPressed: () async {
@@ -823,7 +833,7 @@ Widget getIconsForHideUpdateSplit(
                                                         context,
                                                         transaction.id,
                                                       );
-      
+
                                                       if (context.mounted) {
                                                         Navigator.of(context)
                                                             .pop();
@@ -843,20 +853,23 @@ Widget getIconsForHideUpdateSplit(
                                                       shape:
                                                           RoundedRectangleBorder(
                                                         borderRadius:
-                                                            BorderRadius.circular(
-                                                                10),
+                                                            BorderRadius
+                                                                .circular(10),
                                                       ),
                                                     ),
                                                     child: textStyleOnly2(
                                                       context: context,
-                                                      text: HomepageStringsDart()
-                                                          .yesButton,
-                                                      fontsize: screenWidth < 400
-                                                          ? 14
-                                                          : 16,
-                                                      color:
-                                                          AppColors.primaryColor,
-                                                      fontWeight: FontWeight.w600,
+                                                      text:
+                                                          HomepageStringsDart()
+                                                              .yesButton,
+                                                      fontsize:
+                                                          screenWidth < 400
+                                                              ? 14
+                                                              : 16,
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                     ),
                                                   ),
                                                 ],
@@ -880,7 +893,7 @@ Widget getIconsForHideUpdateSplit(
                         ),
                       ),
                       SizedBox(width: 8 * scaleFactor),
-      
+
                       // Friends Modal
                       Tooltip(
                         message: HomepageStringsDart().splitWithFriendsTooltip,
@@ -902,10 +915,10 @@ Widget getIconsForHideUpdateSplit(
                               height: 46),
                         ),
                       ),
-      
+
                       // Tag Action
-                      getRightSidePart(category, context, isManual, logo, scaleFactor, transaction, index),
-                      
+                      getRightSidePart(category, context, isManual, logo,
+                          scaleFactor, transaction, index),
                     ],
                   ),
                 ),
@@ -915,74 +928,63 @@ Widget getIconsForHideUpdateSplit(
   );
 }
 
-
-
-
-
-
-Widget getRightSidePart(String category,BuildContext context,bool isManual,String logo,double scaleFactor,TransactionModel transaction,int index){
+Widget getRightSidePart(String category, BuildContext context, bool isManual,
+    String logo, double scaleFactor, TransactionModel transaction, int index) {
   return Row(
     children: [
-
-
       if (category == 'Untagged') ...[
-                      Tooltip(
-                        message: HomepageStringsDart().tagTooltip,
-                        child: GestureDetector(
-                          onTap: () {
-                            tagName.value = category;
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20)),
-                              ),
-                              builder: (context) {
-                                return TagShowmodal(
-                                  data: transaction,
-                                  index: index,
-                                );
-                              },
-                            );
-                          },
-                          child: AvatarProfileImage(
-                              url: HomePageIcons.tagIcon,
-                              width: 1200,
-                              height: 46),
-                        ),
-                      ),
-                    ],
-
-
+        Tooltip(
+          message: HomepageStringsDart().tagTooltip,
+          child: GestureDetector(
+            onTap: () {
+              tagName.value = category;
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (context) {
+                  return TagShowmodal(
+                    data: transaction,
+                    index: index,
+                  );
+                },
+              );
+            },
+            child: AvatarProfileImage(
+                url: HomePageIcons.tagIcon, width: 1200, height: 46),
+          ),
+        ),
+      ],
       SizedBox(width: 8 * scaleFactor),
-      isManual ? Container(
-                            // height: 50,
-                            // width: 10,
-                            child: Lottie.asset(
-                              'assets/splashScreen/manualTransactionIcon.json',
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(Icons.error); // fallback UI
-                              },
-                            ),
-                          )
-                        // Fallback icon
-                        : Image.network(
-                            logo,
-                            width: 22,
-                            height: 22,
-                            fit: BoxFit.fitWidth,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return CircularProgressIndicator(
-                                  strokeWidth: 2); // Loading indicator
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(Icons.error,
-                                  size: 22); // Fallback for failed image load
-                            },
-                          ),
-
+      isManual
+          ? Container(
+              // height: 50,
+              // width: 10,
+              child: Lottie.asset(
+                'assets/splashScreen/manualTransactionIcon.json',
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.error); // fallback UI
+                },
+              ),
+            )
+          // Fallback icon
+          : Image.network(
+              logo,
+              width: 22,
+              height: 22,
+              fit: BoxFit.fitWidth,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return CircularProgressIndicator(
+                    strokeWidth: 2); // Loading indicator
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(Icons.error,
+                    size: 22); // Fallback for failed image load
+              },
+            ),
     ],
   );
 }
@@ -992,64 +994,112 @@ bool isValidUrl(String? url) {
       url.isNotEmpty &&
       Uri.tryParse(url)?.hasAbsolutePath == true;
 }
-
 Widget getPredictedCategoryIcons(
     TransactionModel transaction, BuildContext context, int index) {
   final predictions = transaction.predictions;
-  if (predictions == null) return const SizedBox.shrink();
 
-  final categories = [
-    predictions.top1Category,
-    predictions.top2Category,
-    predictions.top3Category,
-    predictions.top4Category,
-    predictions.top5Category,
-  ].where((cat) => cat != null && cat.isNotEmpty).toList();
+  if (predictions == null || predictions.entries.isEmpty) {
+    return const SizedBox.shrink();
+  }
 
-  if (categories.isEmpty) return const SizedBox.shrink();
+  print("predictions for ${predictions.entries.map((e) => e.category).toList()}");
 
   return Row(
-    children: categories.map((cat) {
+    children: predictions.entries.map((entry) {
       return Padding(
-        padding: EdgeInsets.only(right: 16),
+        padding: const EdgeInsets.only(right: 12),
         child: GestureDetector(
           onTap: () async {
-            // Show loader
             tagBool.value = true;
             try {
-              // Update the transaction's category and subcategory
               TransactionModel updatedTransaction = transaction.copyWith(
-                category: cat,
+                category: entry.category,
                 subcategory: "Other",
                 needsReview: false,
               );
 
-              // Update the backend
               updateTheTagOfTarnsactions(
-                cat!,
+                entry.category,
                 "Other",
                 transaction.id,
                 context,
                 index,
-                updatedTransaction, // Pass the updated transaction
+                updatedTransaction,
               );
             } catch (e) {
-              // Show error snackbar if the update fails
-              snackBarCalledfail(
-                  context, "Failed to tag transaction", Colorcodes.red);
+              snackBarCalledfail(context, "Failed to tag transaction", Colorcodes.red);
             } finally {
-              tagBool.value = false; // Hide loader
+              tagBool.value = false;
             }
           },
           child: Tooltip(
-            message: 'Tag as $cat',
-            child: getPredictedCategorySvgUrl(30, cat!, 10,true),
+            message: 'Tag as ${entry.category}',
+            child: getPredictedCategorySvgUrl(25, entry.category, 10, true),
           ),
         ),
       );
     }).toList(),
   );
 }
+// Widget getPredictedCategoryIcons(
+//     TransactionModel transaction, BuildContext context, int index) {
+//   final predictions = transaction.predictions;
+
+//   if (predictions == null) return const SizedBox.shrink();
+
+//   final categories = [
+//     predictions.top1Category,
+//     predictions.top2Category,
+//     predictions.top3Category,
+//     predictions.top4Category,
+//     predictions.top5Category,
+//   ].where((cat) => cat != null && cat.isNotEmpty).toList();
+
+//   if (categories.isEmpty) return const SizedBox.shrink();
+//   print("predictions for ${categories}");
+
+//   return Row(
+//     children: categories.map((cat) {
+//       return Padding(
+//         padding: EdgeInsets.only(right: 12),
+//         child: GestureDetector(
+//           onTap: () async {
+//             // Show loader
+//             tagBool.value = true;
+//             try {
+//               // Update the transaction's category and subcategory
+//               TransactionModel updatedTransaction = transaction.copyWith(
+//                 category: cat,
+//                 subcategory: "Other",
+//                 needsReview: false,
+//               );
+
+//               // Update the backend
+//               updateTheTagOfTarnsactions(
+//                 cat!,
+//                 "Other",
+//                 transaction.id,
+//                 context,
+//                 index,
+//                 updatedTransaction, // Pass the updated transaction
+//               );
+//             } catch (e) {
+//               // Show error snackbar if the update fails
+//               snackBarCalledfail(
+//                   context, "Failed to tag transaction", Colorcodes.red);
+//             } finally {
+//               tagBool.value = false; // Hide loader
+//             }
+//           },
+//           child: Tooltip(
+//             message: 'Tag as $cat',
+//             child: getPredictedCategorySvgUrl(25, cat!, 10, true),
+//           ),
+//         ),
+//       );
+//     }).toList(),
+//   );
+// }
 
 // Reusable showCustomFriendsModal function
 Future<dynamic> showCustomFriendsModalTransactionHistory(BuildContext context,

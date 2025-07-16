@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigato
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/appScreenAnimation.dart';
+import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -35,7 +36,12 @@ PreferredSizeWidget getAppBar(context) {
             children: [
               GestureDetector(
                   onTap: () {
-                    //  navigatorToMyOwnPage(context);
+                     Navigator.push(
+         context,
+         MaterialPageRoute(
+             builder: (context) =>SplashScreen()),
+       );
+                      // navigatorToMyOwnPage(context);
                   },
                   child: Obx(() => AvatarProfile(
                         name: userController.userName.value,

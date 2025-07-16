@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -24,7 +25,6 @@ import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/image_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-
 
 class Community extends StatefulWidget {
   const Community({Key? key}) : super(key: key);
@@ -43,14 +43,15 @@ class CommunityState extends State<Community> {
   bool isLiked = false;
   final CommunityScreenStrings strings = CommunityScreenStrings();
   final ScrollController scrollController = ScrollController();
-   final ScrollController scrollControllerPost = ScrollController();
-   final RxBool showScrollToTop = false.obs;
+  final ScrollController scrollControllerPost = ScrollController();
+  final RxBool showScrollToTop = false.obs;
 
   ScrollController get controller => scrollController;
 
   @override
   void initState() {
     super.initState();
+    initGetControllersIfisRegistered();
     postController.currentPageTranding.value = 1;
     postController.currentPageFeed.value = 1;
     postController.isPostloading.value = false;
@@ -63,10 +64,10 @@ class CommunityState extends State<Community> {
     getPost(context);
     getTranding(context);
     setUpSocketListenerMainPage(context);
-    //     scrollController.addListener(_onScroll); //uncomment this if anything goes wrong 
+    //     scrollController.addListener(_onScroll); //uncomment this if anything goes wrong
     scrollControllerPost.addListener(() {
       // Scroll-to-top visibility
-      
+
       showScrollToTop.value = scrollControllerPost.offset > 50;
 
       // Pagination logic
@@ -82,8 +83,8 @@ class CommunityState extends State<Community> {
         }
       }
     });
-  
   }
+
 //   void _onScroll() // uncomment
 //   {
 //     scrollController.addListener(() async {
@@ -99,7 +100,7 @@ class CommunityState extends State<Community> {
 //       }
 //     });
 //   }
-   // Scroll-to-top callback for BottomNavigations
+  // Scroll-to-top callback for BottomNavigations
   void _scrollToTop() {
     print('DEBUG: Double-tap on Community tab, scrolling to top');
     scrollControllerPost.animateTo(
@@ -108,15 +109,12 @@ class CommunityState extends State<Community> {
       curve: Curves.easeInOut,
     );
   }
-// 
-
-
+//
 
   @override
   Widget build(BuildContext context) {
     print('DEBUG: Building Community widget');
     return Scaffold(
-      
       floatingActionButton: Obx(() =>
           postController.isTrending.value ? SizedBox.shrink() : PostImage()),
       // bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
@@ -139,54 +137,51 @@ class CommunityState extends State<Community> {
               children: [
                 buildWelcomeRow(context),
                 Padding(
-                  padding:const EdgeInsets.only(left: 12.0, right: 12.0, top: 4),
-                  child: Obx(() => postController.isTrending.value ? getTabs(context): getTabs(context)),
+                  padding:
+                      const EdgeInsets.only(left: 12.0, right: 12.0, top: 4),
+                  child: Obx(() => postController.isTrending.value
+                      ? getTabs(context)
+                      : getTabs(context)),
                 ),
                 Obx(() => postController.isTrending.value
                     ? getTrandingWidget()
                     : getFeed()),
-                    
               ],
             ),
-            
           ),
         ),
       ),
-    
     );
-    
   }
 
   Widget getFeed() {
     return postController.feedPostList.isEmpty && !postController.isPost.value
         ? const Center(
-          child:  Loader(
-            
-          ),
-        )
+            child: Loader(),
+          )
         : (postController.isPost.value && postController.feedPostList.isEmpty)
             ? Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: Container(
-                //  color: Colors.amber,
-                height: MediaQuery.sizeOf(context).height/3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                     AvatarProfileImage(
-                                      url: FinSpaceIcons.empty,
-                                      height: 5,
-                                      width: 5,
-                                    ),
-                    Text('Nothing to show based on your interests.',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: AppColors.accentColor)),
-                  ],
+                padding: const EdgeInsets.only(top: 40),
+                child: Container(
+                  //  color: Colors.amber,
+                  height: MediaQuery.sizeOf(context).height / 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AvatarProfileImage(
+                        url: FinSpaceIcons.empty,
+                        height: 5,
+                        width: 5,
+                      ),
+                      Text('Nothing to show based on your interests.',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: AppColors.accentColor)),
+                    ],
+                  ),
                 ),
-              ),
-            )
+              )
             : Obx(() => postController.getPosted.value
                 ? LazyLoadingList()
                 : LazyLoadingList());
@@ -198,28 +193,28 @@ class CommunityState extends State<Community> {
         ? Center(child: const Loader())
         : (postController.isPostTranding.value &&
                 postController.trandingPostList.isEmpty)
-            ?  Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: Container(
-                //  color: Colors.amber,
-                height: MediaQuery.sizeOf(context).height/3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                     AvatarProfileImage(
-                                      url: FinSpaceIcons.empty,
-                                      height: 5,
-                                      width: 5,
-                                    ),
-                    Text('Nothing to show .',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: AppColors.accentColor)),
-                  ],
+            ? Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Container(
+                  //  color: Colors.amber,
+                  height: MediaQuery.sizeOf(context).height / 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AvatarProfileImage(
+                        url: FinSpaceIcons.empty,
+                        height: 5,
+                        width: 5,
+                      ),
+                      Text('Nothing to show .',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: AppColors.accentColor)),
+                    ],
+                  ),
                 ),
-              ),
-            )
+              )
             : Obx(() => postController.getPostedTranding.value
                 ? LazyLoadingTranding()
                 : LazyLoadingTranding());
@@ -557,5 +552,4 @@ class CommunityState extends State<Community> {
       },
     );
   }
-
 }
