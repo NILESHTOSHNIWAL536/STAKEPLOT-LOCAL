@@ -73,20 +73,19 @@ class TextFeildWidget extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                   filled: true,
                   hintText: lableText,
-                  hintStyle: getStyle(context),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colorcodes.textFeild)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colorcodes.textFeild)),
-                  fillColor: Colorcodes.textFeild,
-                  border: InputBorder.none,
-                  prefixIcon: Icon(
-                    icon,
-                    size: 30,
-                    color: AppColors.primaryColor,
-                  ),
+                  // hintStyle: getStyle(context),
+                  
+                 
+                 fillColor: AppColors.backgroundColor,
+                    hintStyle: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: Colors.black),
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                 
                   
                   suffixIcon: flag
                       ? null
