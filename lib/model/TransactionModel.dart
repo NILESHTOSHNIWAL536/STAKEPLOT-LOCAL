@@ -67,8 +67,8 @@ class PredictionEntry {
 
   factory PredictionEntry.fromJson(Map<String, dynamic> json) {
     return PredictionEntry(
-      category: json['category'] as String? ?? 'Unknown', // Fallback if category is null
-      score: (json['percentage'] as num?)?.toDouble() ?? 0.0, // Fallback if percentage is null
+      category: json['category'] as String? ?? 'Unknown',
+      score: (json['percentage'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -88,30 +88,19 @@ class Predictions {
   factory Predictions.fromJson(Map<String, dynamic> json) {
     List<PredictionEntry> entries = [];
     try {
-      final predictionsData = json['predictions'];
-      if (predictionsData is List<dynamic>) {
-        entries = predictionsData
-            .asMap()
-            .entries
-            .map((entry) {
-              try {
-                final index = entry.key;
-                final item = entry.value;
-                if (item is Map<String, dynamic>) {
-                  return PredictionEntry.fromJson(item);
-                } else {
-                  print('Invalid prediction item at index $index: $item');
-                  return null;
-                }
-              } catch (e) {
-                print('Error parsing prediction item at index ${entry.key}: $e');
-                return null;
-              }
-            })
-            .whereType<PredictionEntry>()
-            .toList();
-      } else if (predictionsData != null) {
-        print('Predictions data is not a list: $predictionsData');
+      // Handle the flat structure with top1_category, top1_score, etc.
+      for (int i = 1; i <= 5; i++) {
+        final categoryKey = 'top${i}_category';
+        final scoreKey = 'top${i}_score';
+        
+        // Check if category exists and is non-null/non-empty
+        if (json.containsKey(categoryKey) && json[categoryKey] is String && json[categoryKey].isNotEmpty) {
+          final score = json.containsKey(scoreKey) ? (json[scoreKey] as num?)?.toDouble() ?? 0.0 : 0.0;
+          entries.add(PredictionEntry(
+            category: json[categoryKey] as String,
+            score: score,
+          ));
+        }
       }
     } catch (e) {
       print('Error parsing predictions: $e');
@@ -121,16 +110,21 @@ class Predictions {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'predictions': entries.map((entry) => entry.toJson()).toList(),
-    };
+    // Convert back to the backend's expected flat structure
+    final json = <String, dynamic>{};
+    for (int i = 0; i < entries.length && i < 5; i++) {
+      json['top${i + 1}_category'] = entries[i].category;
+      json['top${i + 1}_score'] = entries[i].score;
+    }
+    return json;
   }
 
   @override
   String toString() {
     return 'Predictions(entries: ${entries.map((e) => "{category: ${e.category}, score: ${e.score}}").toList()})';
   }
-}class TransactionModel {
+}
+class TransactionModel {
   final String id;
   final String type;
   final String mode;
