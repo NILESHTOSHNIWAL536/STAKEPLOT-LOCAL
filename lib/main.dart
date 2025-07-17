@@ -129,9 +129,9 @@ Future<void> checkForUpdate() async {
       final updateInfo = await InAppUpdate.checkForUpdate();
       if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
         await InAppUpdate.performImmediateUpdate(); // Force update
-       
       }
-    } catch (e) {
+    } catch (e)
+    {
     }
   } else if (Platform.isIOS) {
     final context = updateNavigatorKey.currentContext ?? Get.context;

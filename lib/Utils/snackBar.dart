@@ -10,6 +10,7 @@ class SnackbarData {
   factory SnackbarData() => _instance;
 
   // Snackbar Messages
+  bool showUpdatecall = true;
   String remainder = "Reminder sent successfully!";
   String remainderError = "Error: Reminder not found.";
   String paymentsInit = "Payment request has been initiated!";
@@ -199,6 +200,7 @@ String amountExceed = "Amount exceeds the total budget!";
       {
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};
+        showUpdatecall = data['showUpdatecall'] ?? showUpdatecall;
         maxLimitSetFail = data['maxLimitSetFail'] ?? maxLimitSetFail;
         remainderError = data['remainderError'] ?? remainderError;
         remainder = data['remainder'] ?? remainder;
