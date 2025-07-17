@@ -33,6 +33,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
 
   final RxBool isDateSummaryView = false.obs;
   final RxString selectedDate = ''.obs;
+  final RxBool isTap = false.obs;
   final RxMap<String, dynamic>  selectedDateFormat = <String, dynamic>{}.obs;
   final RxString currentMonth = DateFormat('MMMM').format(DateTime.now()).obs;
   final RxInt currentYear = DateTime.now().year.obs;
@@ -140,12 +141,12 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
     selectedDate.value = dateData['date'].toString();
     isDateSummaryView.value = true;
     selectedDateFormat.value=dateData;
+     isTap.value=true;
     await _loadTransactionsForDate(dateData['fullDate']);
     if(dateList.isEmpty)_generateDateList();
     _calculateDateTotals();
     int index = dateList.indexWhere((dateObj) => dateObj['fullDate'] == dateData['fullDate']);
-    _scrollToIndex(index);
-
+    _scrollToIndex(index,true);
    }
 
   Future<void> _loadTransactionsForDate(String date) async {
@@ -225,6 +226,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
     currentMonth.value = DateFormat('MMMM').format(newMonth);
     currentYear.value = newMonth.year;
     selectedDate.value = ''; // Reset selected date when changing months
+    selectedDateFormat.clear(); // Reset selected date when changing months
     isDateSummaryView.value = false;
     _fetchDayWiseTransactionsForMonth(newMonth);
   }
@@ -425,6 +427,7 @@ tempDateList.sort((a, b) =>
                 onPressed: () {
                   isDateSummaryView.value = false;
                   selectedDate.value = '';
+                  selectedDateFormat.clear();
                   _calculateMonthlyTotals();
                   _updateCalendarData();
                   
@@ -447,7 +450,7 @@ tempDateList.sort((a, b) =>
       
         _buildCreditDebitSummary(context),
         Container(
-          height:MediaQuery.of(context).size.height/1.9,
+          height:MediaQuery.of(context).size.height/1.69,
           child: Obx(() {
             if (selectedDateTransactions.isEmpty) {
               return Center(
@@ -557,7 +560,7 @@ Widget getListOfDateScroll(DateTime now) {
                   dateData['day'] > DateTime.now().day;
                   
               return GestureDetector(
-                onTap: isFutureDate ? null : () => _scrollToIndex(index),
+                onTap: isFutureDate ? null : () => _scrollToIndex(index,false),
                 child: Container(
                   width: 40,
                   margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -629,7 +632,7 @@ bool _isItemInCenter(int index) {
   final screenWidth = MediaQuery.sizeOf(context).width;
   final centerPosition = screenWidth / 2;
   final scrollOffset = dateScrollController.offset;
-  final padding = screenWidth / 2 - 20; // Same as ListView padding
+  final padding = screenWidth / 2 - 20; 
   
   final itemPosition = (index * itemWidth) + (itemWidth / 2) + padding;
   final itemScreenPosition = itemPosition - scrollOffset;
@@ -656,12 +659,13 @@ void _updateCenterSelection(dateList) {
       final dateData = dateList[i];
       
       // Update selection only if it's different
-      if (selectedDate.value != dateData['day'].toString()) {
+      if (selectedDate.value != dateData['day'].toString())
+       {
         selectedDate.value = dateData['day'].toString();
         final selectedDateTime = DateTime.parse(dateData['fullDate']);
         currentMonth.value = DateFormat('MMMM').format(selectedDateTime);
         currentYear.value = selectedDateTime.year;
-        _loadTransactionsForDate(dateData['fullDate']);
+        _loadTransactionsForDate(isTap.value? selectedDateFormat['fullDate']:dateData['fullDate']);
       }
       break;
     }
@@ -698,94 +702,20 @@ void _snapToCenter(dateList) {
 }
 
 // Method to scroll to specific index
-void _scrollToIndex(int index) {
+void _scrollToIndex(int index,[bool flag=false]) {
+  isTap.value=flag;
   if (!dateScrollController.hasClients) return;
   final itemWidth = 48.0;
   final screenWidth = MediaQuery.sizeOf(context).width;
   final padding = screenWidth / 2 - 20;
-  
   final targetOffset = (index * itemWidth) + padding - (screenWidth / 2) + (itemWidth / 2);
-  
-  dateScrollController.animateTo(
+ flag? dateScrollController.jumpTo(targetOffset):dateScrollController.animateTo(
     targetOffset.clamp(0.0, dateScrollController.position.maxScrollExtent),
     duration: const Duration(milliseconds: 300),
-    curve: Curves.easeInOut,
+    curve: Curves.easeInOut, 
   );
 }
 
-
-
-  // Widget getListOfDateScroll2(List<Map<String, dynamic>> dateList,DateTime now){
-  //   return   
-  //       Container(
-  //         height: MediaQuery.sizeOf(context).height/18,
-  //         padding: const EdgeInsets.symmetric(vertical: 4),
-  //         child: ListView.builder(
-  //           controller: dateScrollController,
-  //           scrollDirection: Axis.horizontal,
-  //           itemCount: dateList.length,
-  //           itemBuilder: (context, index) {
-  //              final dateData = dateList[index];
-  //             final day = dateData['day'].toString();
-  //             final isSelected = selectedDate.value == day &&
-  //                 dateData['month'] == now.month &&
-  //                 dateData['year'] == currentYear.value;
-  //             // Disable future dates in current month
-  //             final isFutureDate = dateData['year'] == DateTime.now().year &&
-  //                 dateData['month'] == DateTime.now().month &&
-  //                 dateData['day'] > DateTime.now().day;
-  //             return GestureDetector(
-  //               onTap: isFutureDate
-  //                   ? null
-  //                   : () {
-  //                       selectedDate.value = day;
-  //                       final selectedDateTime =
-  //                           DateTime.parse(dateData['fullDate']);
-  //                       currentMonth.value =
-  //                           DateFormat('MMMM').format(selectedDateTime);
-  //                       currentYear.value = selectedDateTime.year;
-  //                       _loadTransactionsForDate(dateData['fullDate']);
-  //                        _scrollToSelectedDate();
-  //                       },
-  //               child: Container(
-  //                 width: 40,
-  //                 margin: const EdgeInsets.symmetric(horizontal: 4),
-  //                 decoration: BoxDecoration(
-  //                   color: isSelected
-  //                       ? AppColors.primaryColor
-  //                       : AppColors.backgroundColor,
-  //                   borderRadius: BorderRadius.circular(5),
-  //                   boxShadow: isSelected
-  //                       ? [
-  //                           const BoxShadow(
-  //                             color: Color.fromRGBO(75, 77, 115, 0.25),
-  //                             blurRadius: 2,
-  //                             offset: Offset(0, 2),
-  //                             spreadRadius: 0,
-  //                           ),
-  //                         ]
-  //                       : null,
-  //                 ),
-  //                 child: Center(
-  //                   child: Text(
-  //                     day,
-  //                     style: FontManager().getTextStyle(
-  //                       context,
-  //                       fontSize: 16,
-  //                       lWeight:
-  //                           isSelected ? FontWeight.w600 : FontWeight.normal,
-  //                       color: isSelected
-  //                           ? Colors.white
-  //                           : AppColors.historyCalenderText,
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       );
-  // }
 
   Widget _buildCalendarView(BuildContext context) {
     final now = DateTime.now();
