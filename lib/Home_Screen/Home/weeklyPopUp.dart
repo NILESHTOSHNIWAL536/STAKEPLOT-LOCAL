@@ -18,24 +18,19 @@ class WeeklyPopupController extends GetxController {
     String weekString = DateFormat('w').format(date);
     int? weekNumber = int.tryParse(weekString);
     if (weekNumber == null) {
-      print("Error: Could not parse week number from: $weekString");
       return 0;
     }
-    print("Week number: $weekNumber");
     return weekNumber;
   }
 
   // Check if current time is after Monday 10 AM
   bool isAfterMonday10AM(DateTime now) {
-    print("Checking isAfterMonday10AM: weekday=${now.weekday}, hour=${now.hour}");
     return now.weekday >= DateTime.monday && now.hour >= 10;
   }
 
   // Check if pop-up should be shown for the user
   Future<bool> checkPopupStatus(String userId) async {
-    print("checkPopupStatus called with userId: $userId");
     if (userId.isEmpty) {
-      print("Error: userId is empty, cannot show pop-up");
       return false;
     }
     final now = DateTime.now();
@@ -46,27 +41,21 @@ class WeeklyPopupController extends GetxController {
 
     // Check if pop-up was already shown this week
     bool shown = prefs.getBool(popupKey) ?? false;
-    print("Checking popup status: userId=$userId, key=$popupKey, shown=$shown, isAfterMonday10AM=${isAfterMonday10AM(now)}, now=$now");
 
     if (shown) {
-      print("Pop-up already shown for this week");
       return false; // Don't show if already shown
     }
 
     if (isAfterMonday10AM(now)) {
-      print("Pop-up allowed: after Monday 10 AM");
       return true;
     }
 
-    print("Pop-up not allowed: before Monday 10 AM");
     return false;
   }
 
   // Mark pop-up as shown
   Future<void> markPopupAsShown(String userId) async {
-    print("markPopupAsShown called with userId: $userId");
     if (userId.isEmpty) {
-      print("Error: userId is empty, cannot mark pop-up as shown");
       return;
     }
     final now = DateTime.now();
@@ -74,16 +63,12 @@ class WeeklyPopupController extends GetxController {
     final year = now.year;
     final prefs = await SharedPreferences.getInstance();
     final popupKey = 'popup_shown_${userId}_$year$weekNumber';
-    print("Marking popup as shown: userId=$userId, key=$popupKey");
     await prefs.setBool(popupKey, true);
   }
 
   // Fetch top 3 transactions for the specific user
   Future<void> fetchTopThreeTransactions(BuildContext context, String userId) async {
-    print("Fetching top 3 transactions for userId: $userId...");
     await getTopThreeTransactions(context, this, userId);
-    print("Top 3 transactions fetched: ${topThreeTransactions.length}");
-    topThreeTransactions.forEach((t) => print("Transaction: ${t.id}, ${t.title}, ${t.amount}, ${t.type}, ${t.transactionTimestamp},"));
   }
 }
 
@@ -192,14 +177,11 @@ class TransactionCard extends StatelessWidget {
 
 // Show the pop-up
 Future<void> showWeeklyPopup(BuildContext context, String userId) async {
-  print("showWeeklyPopup called with userId: $userId");
   final controller = Get.put(WeeklyPopupController(), tag: 'weeklyPopup_$userId');
 
   // Check if pop-up should be shown
   bool shouldShow = await controller.checkPopupStatus(userId);
-  print("Should show pop-up: $shouldShow");
   if (!shouldShow) {
-    print("Pop-up not shown: conditions not met");
     return;
   }
 
@@ -208,12 +190,10 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
 
   // Only show pop-up if transactions are present
   if (controller.topThreeTransactions.isEmpty) {
-    print("Pop-up not shown: no transactions found");
     return;
   }
 
   // Show dialog
-  print("Showing pop-up dialog for userId: $userId");
   await showDialog(
     context: context,
     barrierDismissible: false,
@@ -251,7 +231,6 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
                 ),
                 const SizedBox(height: 10),
                 Obx(() {
-                  print("Obx triggered, transaction count: ${controller.topThreeTransactions.length}");
                   return controller.topThreeTransactions.isEmpty
                       ? Text(
                           "No transactions found for this week.",
@@ -278,7 +257,6 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
                 const SizedBox(height: 10),
                 GestureDetector(
                   onTap: () async {
-                    print("Dismiss button pressed for userId: $userId");
                     await controller.markPopupAsShown(userId);
                     Navigator.of(context).pop();
                   },

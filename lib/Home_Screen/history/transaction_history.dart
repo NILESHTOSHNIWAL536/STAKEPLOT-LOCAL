@@ -385,4 +385,3 @@ Widget getPredictedCategorySvgUrl(double avatarSize, String category, double sca
     ),
   );
 }
-

@@ -58,14 +58,10 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
       });
 
   } catch (e, stackTrace) {
-    print('Error filtering transactions: $e');
-    print('Stack trace: $stackTrace');
     untaggedTransactions.value = [];
   }
 }
   void tagTransaction(int index, String category, String subcategory) {
-    print(
-        'Tagging transaction at index $index with category: $category, subcategory: $subcategory');
     var transaction = untaggedTransactions[index];
     transaction['category'] = category;
     transaction['subcategory'] = subcategory;
@@ -74,7 +70,6 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
     int globalIndex =
         transactionsHistory.indexWhere((t) => t.id == transaction['_id']);
     if (globalIndex != -1) {
-      print('Updating global transaction at index $globalIndex');
       transactionsHistory[globalIndex].category = category;
       transactionsHistory[globalIndex].subcategory = subcategory;
       transactionsHistory[globalIndex].needsReview = false;
@@ -82,12 +77,10 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
     }
 
     untaggedTransactions.removeAt(index);
-    print('Transaction tagged and removed from untagged list');
   }
 
   @override
   Widget build(BuildContext context) {
-    print('Building UntaggedTransactionScreen UI');
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
@@ -97,7 +90,6 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.backgroundColor),
           onPressed: () {
-            print('Back button pressed');
             Navigator.pop(context);
           },
         ),
@@ -117,9 +109,7 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
             height: MediaQuery.sizeOf(context).height / 2.2,
             color: AppColors.finSpaceColor,
             child: Obx(() {
-              print('Building Swiper for untagged transactions');
               if (untaggedTransactions.isEmpty) {
-                print('No untagged transactions for this month');
                 return Center(
                   child: Text(
                     "No untagged transactions for this month",
@@ -136,7 +126,6 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
               return Swiper(
                 itemCount: untaggedTransactions.length,
                 itemBuilder: (BuildContext context, int index) {
-                  print('Building transaction card for index $index');
                   var transaction = untaggedTransactions[index];
                   return _buildTransactionCard(transaction, context);
                 },
@@ -145,7 +134,7 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
                 itemWidth: MediaQuery.of(context).size.width * 0.9,
                 layout: SwiperLayout.STACK,
                 onIndexChanged: (index) {
-                  print('Swiper index changed to $index');
+                
                 },
               );
             }),
@@ -155,7 +144,6 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
             height: MediaQuery.sizeOf(context).height / 2.6,
             padding: const EdgeInsets.all(16.0),
             child: Obx(() {
-              print('Building category/subcategory grid');
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -166,7 +154,6 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
                           icon: const Icon(Icons.arrow_back,
                               color: AppColors.bg3),
                           onPressed: () {
-                            print('Back to categories from subcategories');
                             showSubcategories.value = false;
                             selectedCategory.value = "";
                             subcategories.clear();
@@ -209,7 +196,6 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
 
   Widget _buildTransactionCard(
       Map<String, dynamic> transaction, BuildContext context) {
-    print('Building transaction card for transaction: \\${transaction['_id']}');
     final isCredit = transaction['type']?.toString().toUpperCase() == 'CREDIT';
     final amountColor = isCredit ? Colors.green : Colors.red;
     String logo = transaction['bankLogo']?.toString() ?? "";
@@ -345,7 +331,6 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
   }
 
   Widget _buildCategoriesGrid(BuildContext context) {
-    print('Building categories grid');
     final List<Map<String, String>> categoryList = [
       {"name": "Food", "icon": Categories.food},
       {"name": "Shopping", "icon": Categories.shopping},
@@ -386,7 +371,6 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
         final category = categoryList[index];
         return GestureDetector(
           onTap: () {
-            print('Category tapped: \\${category["name"]}');
             selectedCategory.value = category["name"]!;
             subcategories.value = categories[category["name"]!] ?? ["Other"];
             showSubcategories.value = true;
@@ -417,8 +401,7 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
   }
 
   Widget _buildSubcategoriesGrid(BuildContext context) {
-    print(
-        'Building subcategories grid for category: \\${selectedCategory.value}');
+   
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -433,7 +416,6 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
         final subcategory = subcategories[index];
         return GestureDetector(
           onTap: () {
-            print('Subcategory tapped: $subcategory');
             if (untaggedTransactions.isNotEmpty) {
               tagTransaction(0, selectedCategory.value, subcategory);
             }

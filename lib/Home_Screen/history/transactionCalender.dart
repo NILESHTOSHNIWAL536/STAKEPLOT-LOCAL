@@ -405,7 +405,6 @@ tempDateList.sort((a, b) =>
         curve: Curves.easeInOut,
       );
     } else {
-      print('No matching date found for day: $selectedDay, month: ${now.month}, year: ${now.year}');
     }
   }
 

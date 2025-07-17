@@ -285,18 +285,18 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
       googleSignInBool.value = true; // Set loading state
       try {
         final userdata = await AuthService().signInWithGoogle(context);
-        print("User data received: $userdata");
+       
         if (userdata != null && userdata['data']['accessToken'] != null) {
-          print("Access token is present.");
+       
         } else if (userdata != null) {
-          print("Navigating to UserDetailsPage with userdata: $userdata");
+         
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => UserDetailsPage(data: userdata)),
           );
         } else {
-          print("No user data received.");
+         
         }
       } finally {
         googleSignInBool.value = false; // Reset loading state
@@ -330,12 +330,9 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
 //       if (googleSignInBool.value) return;
 //       googleSignInBool.value = true;
 //       final userdata = await AuthService().signInWithGoogle(context);
-//       print("User data received: $userdata");
 //       if (userdata != "") {
 //         if (userdata!['data']['accessToken'] != null) {
-//           print("Access token is present.");
 //         } else {
-//           print("Navigating to UserDetailsPage with userdata: $userdata");
 
 //           Navigator.push(
 //             context,
@@ -344,7 +341,6 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
 //           );
 //         }
 //       } else {
-//         print("No user data received.");
 //       }
 //     },
 //     child: Container(

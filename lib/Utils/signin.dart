@@ -34,7 +34,6 @@ class SigninData {
     try {
       
       final response = await getDataApiCall("$url/constant/signin");
-      printData(response);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);

@@ -21,18 +21,15 @@ class AuthService {
       if (googleUser == null) {
         return null;
       }
-      print("google user : $googleUser");
       // Get authentication details
       final GoogleSignInAuthentication googleAuth =await googleUser.authentication;
       final String? idToken = googleAuth.idToken;     // final String? accessToken = googleAuth.accessToken;
-      print("google userid : $idToken");
       if (idToken != null) {
       final response = await http.post(Uri.parse('$url/user/google-auth'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({'idToken': idToken}),
         );
         if (response.statusCode == 200) {
-          print("google userid body : ${response.body}");
           loginCalledData(response, context);
           return json.decode(response.body);
         } else {}
@@ -57,7 +54,6 @@ class AuthService {
             : null;
         final String? userId = credential.userIdentifier;
         if (idToken == null) {
-          print("Apple sign-in: No idToken received");
           return null;
         }
         final response = await http.post(Uri.parse('$url/user/apple-auth'), 
@@ -71,14 +67,11 @@ class AuthService {
           }),
         );
         if (response.statusCode == 200) {
-          print("Apple sign-in response: ${response.body}");
           loginCalledData(response, context); // Reuse your login logic
           return json.decode(response.body);
         } else {
-          print("Apple backend error: ${response.body}");
         }
       } catch (e) {
-        print("Apple sign-in error: $e");
       }
       return null;
     }

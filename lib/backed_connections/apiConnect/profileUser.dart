@@ -69,7 +69,6 @@ void getNotifications(context) async {
   );
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
-    print("notifications from the backend $his");
     notificationList.clear();
     notificationList.addAll(his['data']);
     notificationList.forEach((req) {

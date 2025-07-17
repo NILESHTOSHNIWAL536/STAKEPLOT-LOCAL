@@ -75,8 +75,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
     try {
       FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo =
           await finvuManager.getConsentRequestDetails(handleId.value);
-      //  print('handleId.value');
-      // seletedAccountInfomations
+     
       if (seletedAccountIds.isEmpty) {
         snackBarCalledfail(
             context, "No account was selected. Please add an account.");
@@ -90,14 +89,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
       FinvuProcessConsentRequestResponse response =
           await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
-      //  FinvuProcessConsentRequestResponse response=await finvuManager.approveConsentRequest(finvuConsentRequestDetailInfo,fetchAccountData);
-      //  print(handleId.value);
-      //  print(response.consentIntentId);
-      response.consentInfo!.forEach((e) {
-        // print("e.consentId----------------");
-        // print(e.consentId);
-        // print(e.fipId);
-      });
+     
 
       snackBarCalled(context,
           "Successfully approved the consent request for ${seletedAccountInfomations.length} accounts.");
@@ -109,9 +101,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
       );
     } catch (e) {
       snackBarCalledfail(context, "Error while approving the consent request.");
-      print("d.consentIntentId error");
     }
-    debugPrint('approveConsentRequest');
   }
 
   Widget getBackUi(FinvuLinkedAccountDetailsInfo bankData) {

@@ -151,8 +151,6 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
            await finvuManager.logout();
            finvuManager.disconnect();
        }catch(e){
-          print("error in logoutAndDisconnect");
-          print(e);
        }
   }
 
@@ -178,7 +176,6 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
  number.value="";
  consentUserId.value="";
  handleId.value="";
-   debugPrint('getConsentHandleStatus');
 }
 
 

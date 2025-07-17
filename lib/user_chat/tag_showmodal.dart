@@ -244,9 +244,32 @@ class _TagShowmodalState extends State<TagShowmodal>
               InkWell(
                 onTap: () {
                   //Adding a loader here
+
+                   if (widget.data.category.isNotEmpty &&
+                      widget.data.subcategory.isEmpty) {
+                    snackBarCalledfail(
+                      context,
+                      "Please select a subcategory.",
+                      Colorcodes.red,
+                    );
+                    tagBool.value = false;
+                    return;
+                  }
+                  // Check if both category and subcategory are empty
+                  if (widget.data.category.isEmpty &&
+                      widget.data.subcategory.isEmpty) {
+                    snackBarCalledfail(
+                      context,
+                      SnackbarData().selectCategoryAndSubcategory,
+                      Colorcodes.red,
+                    );
+                    tagBool.value = false;
+                    return;
+                  }
                   if (tagBool.value) return;
                   tagBool.value = true;
                   //  Change Tag
+                  
 
                   if (widget.isTag) {
                     if (widget.data.category == '' &&
@@ -319,7 +342,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                 ):Icon(
                   CupertinoIcons.checkmark_alt,
                   size: 30,
-                  color: AppColors.green,
+                  color: AppColors.creditColor,
                 )),
               ),
             ],
@@ -406,7 +429,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                 customSelections.value = false;
                 tagName.value = value!;
                 widget.data.category = value;
-                widget.data.category = "Other";
+                widget.data.subcategory = "";
                 loadAgain.value = !loadAgain.value;
               },
             )),

@@ -194,7 +194,6 @@ String amountExceed = "Amount exceeds the total budget!";
   Future<bool> fetchConstants() async {
     try {
       final response = await getDataApiCall("${url}/constant/snackbar");
-      printData(response);
 
       if (response.statusCode == 200) 
       {

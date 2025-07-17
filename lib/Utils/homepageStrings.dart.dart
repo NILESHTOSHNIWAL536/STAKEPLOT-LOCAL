@@ -143,7 +143,6 @@ class HomepageStringsDart {
   Future<bool> fetchConstants() async {
     try {
       final response = await getDataApiCall("$url/constant/homepage");
-      printData(response);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);

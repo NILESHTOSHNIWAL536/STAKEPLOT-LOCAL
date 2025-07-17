@@ -89,7 +89,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       'dob': dob,
     };
 
-    print("updates data: $updatedData");
 
     flag.value = true;
     await storeData2(context, updatedData, 'assets/avatar/FRAME-2.svg');
@@ -101,7 +100,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     String name = data['name'];
     String email = data['email'];
     String dob = data['dob'];
-    print("hereee $data");
     final response = await http.post(
       Uri.parse('${url}/user/register'),
       headers: <String, String>{
@@ -116,7 +114,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         'isGoogleUser': true,
       }),
     );
-    printData(response);
 
     try {
       var data2 = jsonDecode(response.body);

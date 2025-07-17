@@ -71,7 +71,6 @@ class ProfileScreenStrings {
   Future<bool> fetchConstants() async {
     try {
       final response = await getDataApiCall("${url}/constant/profile");
-      printData(response);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};
@@ -119,11 +118,9 @@ class ProfileScreenStrings {
         searchHint = data['searchHint'] ?? searchHint;
         return true;
       } else {
-        print("Failed to load constants: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error fetching constants: $e");
       return false;
     }
   }

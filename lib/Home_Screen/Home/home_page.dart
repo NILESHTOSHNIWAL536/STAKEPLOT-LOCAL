@@ -36,15 +36,11 @@ class _HomePageState extends State<HomePage> {
     HomeWidgetBindUpdate();
     if (!Get.isRegistered<WeeklyPopupController>(tag: 'weeklyPopup_${userController.userId.value}')) {
       Get.put(WeeklyPopupController(), tag: 'weeklyPopup_${userController.userId.value}');
-      print("WeeklyPopupController initialized for userId: ${userController.userId.value}");
     }
-    print("User ID: ${userController.userId.value}");
      WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("addPostFrameCallback triggered, context.mounted: ${context.mounted}");
       if (context.mounted) {
         showWeeklyPopup(context, userController.userId.value);
       } else {
-        print("Context not mounted, pop-up not triggered");
       }
     });
   }

@@ -74,9 +74,9 @@ class Categories {
   static String income = "income.svg";
   static String personalTransfer = "personalTransfer.svg";
   static String personalTransferReceived = "personalTransferReceived.svg";
-  static String creditCardCheck = "creditCardCheck.svg";
-  static String digitalPayment = "digitalPayment.svg";
-  static String handBill = "handBill.svg";
+  static String creditCardCheck = "Custom1.svg";
+  static String digitalPayment = "Custom2.svg";
+  static String handBill = "custom3.svg";
   static String untagged = "untagged.svg";
   static String other = "other.svg";
   /*
@@ -405,7 +405,7 @@ class BudgetSubCategories {
     "Rent": "${connect}rent.svg",
     "DTH": "${connect}dth.svg",
     "AIRTEL": "${connect}airtel2.svg",
-    "JIO": "${connect}Jio.svg",
+    "JIO": "${connect}jioHotstar2.svg",
     "Solutions": "${connect}solutions.svg",
     
     "bpcl": "${connect}BPL.svg",
@@ -544,7 +544,7 @@ class BudgetSubCategories {
     "Adventures": "${connect}adventures.svg",
 
     //Groceries
-    "SUPRDAILY": "${connect}suprdaily.svg",
+    "SUPRDAILY": "${connect}suprdaily2.svg",
     "GROCERY": "assets/icons/Categories2/Groceries.svg",
     "SPENCER'S": "${connect}spencers2.svg",
     "VEGETABLE": "${connect}vegetables.svg",

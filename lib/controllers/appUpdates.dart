@@ -15,7 +15,6 @@
 //         // await InAppUpdate.completeFlexibleUpdate();
 //       }
 //     } catch (e) {
-//       print('Android update check failed: $e');
 //     }
 //   } else if (Platform.isIOS) {
 //     final newVersion = NewVersionPlus(

@@ -22,7 +22,6 @@ class PdfStrings {
     void fetchConstants() async {
     try {
       final response = await getDataApiCall("${url}/constant/pdf");
-      printData(response);
       if (response.statusCode == 200)
       {
            var data = jsonDecode(response.body);
@@ -35,7 +34,6 @@ class PdfStrings {
       }
 
     }catch(e){
-       print(e);
     }
   }
 

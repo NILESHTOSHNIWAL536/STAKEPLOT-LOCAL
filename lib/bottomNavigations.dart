@@ -163,7 +163,6 @@ int communityIndex = sizeRoom ? 3 : 2;
       //  onDoubleTap: () {
       //   if (i == communityIndex && isSelected) {
       //     // Double-tap on Community tab when active
-      //     print('DEBUG: Double-tap on Community tab');
       //     widget.onCommunityDoubleTap?.call();
       //   }
       // },
@@ -177,7 +176,6 @@ int communityIndex = sizeRoom ? 3 : 2;
       onTap: () {
          if (i == communityIndex && isSelected) {
           // Single tap on already selected Community tab
-          print('DEBUG: Single tap on selected Community tab (index $i)');
           HapticFeedback.lightImpact();
           widget.onCommunityDoubleTap?.call();
           return;

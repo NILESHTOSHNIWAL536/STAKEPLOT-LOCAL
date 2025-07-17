@@ -208,7 +208,6 @@ class _AccessState extends State<Access> {
   }
 
   Widget getInfomationsAboutUserConsnt() {
-    print(finvuConsentRequestDetailInfo.consentDisplayDescriptions);
 
     return Container(
       width: MediaQuery.of(context).size.width / 1,
@@ -543,7 +542,6 @@ class _AccessState extends State<Access> {
               } else {
                 seletedAccountIds.add(fipId);
               }
-              print(seletedAccountIds);
               addAccount.value = !addAccount.value;
             }),
       ),
@@ -606,7 +604,6 @@ class _AccessState extends State<Access> {
         children: [
           InkWell(
             onTap: () {
-              // print(bankImgMap);
               approveConsentRequest();
             },
             child: Container(
@@ -674,7 +671,6 @@ class _AccessState extends State<Access> {
       skipOrLets.value = "Skip";
       snackBarCalledfail(context, SnackbarData().consentApproveError);
     }
-    debugPrint('approveConsentRequest');
   }
 
   Widget getcheckBox2(String fipId) {
@@ -691,7 +687,6 @@ class _AccessState extends State<Access> {
               } else {
                 seletedAccountIds.add(fipId);
               }
-              print(seletedAccountIds);
               addAccount.value = !addAccount.value;
             }),
       ),

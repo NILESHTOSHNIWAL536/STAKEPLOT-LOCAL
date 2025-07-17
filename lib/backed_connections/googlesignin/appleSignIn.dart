@@ -22,7 +22,6 @@
 //             : null;
 //         final String? userId = credential.userIdentifier;
 //         if (idToken == null) {
-//           print("Apple sign-in: No idToken received");
 //           return null;
 //         }
 //         final response = await http.post(Uri.parse('$url/user/apple-auth'), 
@@ -36,14 +35,11 @@
 //           }),
 //         );
 //         if (response.statusCode == 200) {
-//           print("Apple sign-in response: ${response.body}");
 //           loginCalledData(response, context); // Reuse your login logic
 //           return json.decode(response.body);
 //         } else {
-//           print("Apple backend error: ${response.body}");
 //         }
 //       } catch (e) {
-//         print("Apple sign-in error: $e");
 //       }
 //       return null;
 //     }
@@ -98,7 +94,6 @@ class AppleSignIN {
       }
 
       if (idToken == null) {
-        print("Apple sign-in: No idToken received");
         return null;
       }
 
@@ -116,14 +111,11 @@ class AppleSignIN {
       );
 
       if (response.statusCode == 200) {
-        print("Apple sign-in response: ${response.body}");
         loginCalledData(response, context);
         return json.decode(response.body);
       } else {
-        print("Apple backend error: ${response.body}");
       }
     } catch (e) {
-      print("Apple sign-in error: $e");
     }
 
     return null;

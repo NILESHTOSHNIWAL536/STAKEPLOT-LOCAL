@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
        navigatorKey: navigatorKey, 
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.finSpaceColor),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.backgroundColor),
         scaffoldBackgroundColor: AppColors.backgroundColor,
       ),
       debugShowCheckedModeBanner: false,

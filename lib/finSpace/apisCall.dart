@@ -12,10 +12,8 @@ RxBool isListEnabled = false.obs;
 Future<void> getMaskedNumber(BuildContext context) async {
   maskNameController.clear();
   var response = await getDataApiCall("${url}/user/maskedName");
-  printData(response);
   if (getFlagOfResponse(response)) {
     var body = jsonDecode(response.body);
-    print(body);
     if (body['data'] != null) {
       maskNameController.text = body['data'];
       maskedNameLocal.value = body['data'];
@@ -29,7 +27,6 @@ Future<void> addMyIntreastAndName(BuildContext context, var body,
     [bool falg = false, bool ifFromUpdate = false]) async {
   try {
     var response = await updateDataApiCall2("${url}/user/", body);
-    printData(response);
     if (getFlagOfResponse(response)) {
       if (falg) {
         userController.maskedName.value = maskedNameLocal.value;

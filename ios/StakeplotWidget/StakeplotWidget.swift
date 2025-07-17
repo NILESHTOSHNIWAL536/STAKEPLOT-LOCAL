@@ -27,8 +27,6 @@ struct Provider: TimelineProvider {
         let categories = defaults?.string(forKey: "categories") ?? "Categories: None"
         let timestamp = defaults?.string(forKey: "timestamp") ?? "01 Jan - 01 Jan"
         
-        print("StakeplotWidget: totalSpending=\(totalSpending), categories=\(categories), timestamp=\(timestamp)")
-
         let entry = SimpleEntry(
             date: Date(),
             totalSpending: totalSpending,

@@ -174,7 +174,6 @@ void checkFirebaseAndValidUser() async {
   mainPageWebSocket.connect();
 
   } catch (e) {
-    print('❌ Firebase setup error: $e');
   }
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -197,15 +196,12 @@ Future<void> checkIsUserValid() async {
 
     final isFromPlayStore = await InstallationChecker.isInstalledFromPlayStore();
     if (isFromPlayStore) {
-      debugPrint('✅ App installed from official source');
       runApp(const MyApp());
     } else {
-        debugPrint('⚠️ App not installed from official source');
         runApp( MyApp());
         // runApp( UnverifiedApp());
     }
   } catch (e) {
-    debugPrint('Error in security check: $e');
     runApp(const MyApp());
   }
 }
@@ -239,7 +235,6 @@ class InstallationChecker {
       return hasPlayServices && isOfficialDevice;
       
     } catch (e) {
-      debugPrint('Error checking installation source: $e');
       return false; // Assume not from Play Store if we can't verify
     }
   }

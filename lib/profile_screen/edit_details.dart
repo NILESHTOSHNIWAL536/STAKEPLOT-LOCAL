@@ -56,7 +56,6 @@ class _EditDetailsState extends State<EditDetails> {
   void initState() {
     super.initState();
     changeAvater.value = userController.avatar.value;
-    print("DOB value: ${userController.dob.value}");
     checkBiometricsStatus();
     userController.fetchUserInfo();
   }

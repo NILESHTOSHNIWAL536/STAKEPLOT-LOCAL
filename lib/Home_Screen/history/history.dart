@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -38,8 +40,7 @@ Widget historyTransactions(
 
   final category = transaction.category;
   final subcategory = transaction.subcategory;
-  final double amount =
-      double.parse(((transaction.amount).toString()));
+  final double amount = double.parse(((transaction.amount).toString()));
   final isManual = transaction.manualTransaction;
   final isSplit = transaction.isSplit;
 
@@ -82,7 +83,6 @@ Widget historyTransactions(
       : "₹${formatMoneyIndian(transaction.balanceOut.toString())}";
 
   final fontSizes = FontSizeFactor(context);
-  print("transactions cat $transaction");
   return WillPopScope(
     onWillPop: () async {
       // If checkboxes are visible, clear them and stay on the screen
@@ -221,7 +221,6 @@ Widget historyTransactions(
                   if (isManual) addManually.remove(id);
                   HapticFeedback.selectionClick();
                 }
-                print(balanceOutList);
               } else if (!isManual && !hide) {
                 showModalBottomSheet(
                   context: context,
@@ -617,12 +616,13 @@ Widget getIconsForHideUpdateSplit(
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: Container(
-         width: (category == 'Untagged' &&
-          (transaction.isBalanceOut ?? false) &&
-          formatAmountBalance != "₹-1")
-      ? null
-      : MediaQuery.of(context).size.width / 1.1,
-      height:  MediaQuery.of(context).size.height / 20,
+      width: (transaction.predictions != null &&
+              transaction.predictions!.entries.length > 4 &&
+              (transaction.isBalanceOut ?? false) &&
+              formatAmountBalance != "₹-1")
+          ? null
+          : MediaQuery.of(context).size.width / 1.1,
+      height: MediaQuery.of(context).size.height / 20,
       //  color:Colors.red,
       padding: EdgeInsets.symmetric(horizontal: padding, vertical: padding / 2),
       child: Row(
@@ -994,15 +994,16 @@ bool isValidUrl(String? url) {
       url.isNotEmpty &&
       Uri.tryParse(url)?.hasAbsolutePath == true;
 }
+
 Widget getPredictedCategoryIcons(
     TransactionModel transaction, BuildContext context, int index) {
   final predictions = transaction.predictions;
-
   if (predictions == null || predictions.entries.isEmpty) {
     return const SizedBox.shrink();
   }
 
-  print("predictions for ${predictions.entries.map((e) => e.category).toList()}");
+  // Timer for debouncing taps
+  Timer? _debounce;
 
   return Row(
     children: predictions.entries.map((entry) {
@@ -1010,26 +1011,39 @@ Widget getPredictedCategoryIcons(
         padding: const EdgeInsets.only(right: 12),
         child: GestureDetector(
           onTap: () async {
-            tagBool.value = true;
-            try {
-              TransactionModel updatedTransaction = transaction.copyWith(
-                category: entry.category,
-                subcategory: "Other",
-                needsReview: false,
-              );
+            // Debounce to prevent multiple taps
+            if (_debounce?.isActive ?? false) return;
+            _debounce = Timer(const Duration(milliseconds: 500), () {});
 
-              updateTheTagOfTarnsactions(
+            // Show loader and provide immediate feedback
+            tagBool.value = true;
+
+            // Optimistic UI update
+            final originalTransaction = transactionsHistory[index];
+            transactionsHistory[index] = transaction.copyWith(
+              category: entry.category,
+              subcategory: "Other",
+              needsReview: false,
+            );
+            transactionsHistory.refresh();
+
+            try {
+              await updateTheTagOfTarnsactions(
                 entry.category,
                 "Other",
                 transaction.id,
                 context,
                 index,
-                updatedTransaction,
+                transactionsHistory[index], // Pass updated transaction
               );
             } catch (e) {
+              // Revert UI on failure
+              transactionsHistory[index] = originalTransaction;
+              transactionsHistory.refresh();
               snackBarCalledfail(context, "Failed to tag transaction", Colorcodes.red);
             } finally {
               tagBool.value = false;
+              _debounce?.cancel();
             }
           },
           child: Tooltip(
@@ -1041,67 +1055,6 @@ Widget getPredictedCategoryIcons(
     }).toList(),
   );
 }
-// Widget getPredictedCategoryIcons(
-//     TransactionModel transaction, BuildContext context, int index) {
-//   final predictions = transaction.predictions;
-
-//   if (predictions == null) return const SizedBox.shrink();
-
-//   final categories = [
-//     predictions.top1Category,
-//     predictions.top2Category,
-//     predictions.top3Category,
-//     predictions.top4Category,
-//     predictions.top5Category,
-//   ].where((cat) => cat != null && cat.isNotEmpty).toList();
-
-//   if (categories.isEmpty) return const SizedBox.shrink();
-//   print("predictions for ${categories}");
-
-//   return Row(
-//     children: categories.map((cat) {
-//       return Padding(
-//         padding: EdgeInsets.only(right: 12),
-//         child: GestureDetector(
-//           onTap: () async {
-//             // Show loader
-//             tagBool.value = true;
-//             try {
-//               // Update the transaction's category and subcategory
-//               TransactionModel updatedTransaction = transaction.copyWith(
-//                 category: cat,
-//                 subcategory: "Other",
-//                 needsReview: false,
-//               );
-
-//               // Update the backend
-//               updateTheTagOfTarnsactions(
-//                 cat!,
-//                 "Other",
-//                 transaction.id,
-//                 context,
-//                 index,
-//                 updatedTransaction, // Pass the updated transaction
-//               );
-//             } catch (e) {
-//               // Show error snackbar if the update fails
-//               snackBarCalledfail(
-//                   context, "Failed to tag transaction", Colorcodes.red);
-//             } finally {
-//               tagBool.value = false; // Hide loader
-//             }
-//           },
-//           child: Tooltip(
-//             message: 'Tag as $cat',
-//             child: getPredictedCategorySvgUrl(25, cat!, 10, true),
-//           ),
-//         ),
-//       );
-//     }).toList(),
-//   );
-// }
-
-// Reusable showCustomFriendsModal function
 Future<dynamic> showCustomFriendsModalTransactionHistory(BuildContext context,
     double amount, bool isLendMode, String category, String subcategory,
     [bool ismanulTransaction = false]) async {

@@ -37,7 +37,6 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
       isLoading.value = false;
       if (getFlagOfResponse(response)) {
         var responseData = jsonDecode(response.body);
-        print("response data for saved $responseData['data']");
 
         return responseData['data'] ?? [];
         

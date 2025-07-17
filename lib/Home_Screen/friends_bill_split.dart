@@ -215,7 +215,6 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                               widget.category ?? 'Uncategorized',
                               widget.subcategory ?? 'General',
                             );
-                            print("amounts for split $amounts");
 
                             if (amounts != null) {
                               Navigator.pop(context, amounts);

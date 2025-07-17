@@ -125,9 +125,6 @@ Widget vote(context, PostModel dataObj, data) {
                     String likeKey = "liked" + dataObj.id;
                     bool isLiked = userController.likedPosts.contains(likeKey);
 
-                    print("likekey from the backend: $likeKey");
-
-                    print("is post liked by the user already: $isLiked");
                     return GestureDetector(
                       onTap: () {
                         if (userController.maskedName.value.trim().isEmpty) {

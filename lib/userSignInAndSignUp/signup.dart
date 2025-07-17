@@ -489,39 +489,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // Email format validation
     if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
         .hasMatch(email)) {
-      print("Error: Invalid email format"); // Debugging statement
       snackBarCalledfail(context, SignupData().invalidEmail, Colors.red);
       return;
     }
 
     if (password.isEmpty) {
-      print("Error: Password is empty"); // Debugging statement
       snackBarCalledfail(context, SignupData().emptyPassword, Colors.red);
       return;
     }
 
     if (password.length < 8) {
-      print("Error: Password is too short"); // Debugging statement
       snackBarCalledfail(context, SignupData().shortPassword, Colors.red);
       return;
     }
 
     if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])')
         .hasMatch(password)) {
-      print("Error: Weak password"); // Debugging statement
       snackBarCalledfail(context, SignupData().weakPassword, Colors.red);
       return;
     }
 
     if (conform.isEmpty) {
-      print("Error: Confirm password is empty"); // Debugging statement
       snackBarCalledfail(
           context, SignupData().emptyConfirmPassword, Colors.red);
       return;
     }
 
     if (password != conform) {
-      print("Error: Passwords do not match"); // Debugging statement
       snackBarCalledfail(context, SignupData().passwordMismatch, Colors.red);
       return;
     }
@@ -547,7 +541,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
 
     var responce = jsonDecode(response.body);
-    print("Response from server: $responce"); // Debugging statement
 
     bool boolvar = responce['success'];
 
@@ -557,8 +550,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     if (!boolvar) {
-      print(
-          "Error: ${responce['error']['explanation']}"); // Debugging statement
       snackBarCalledfail(
           context, responce['error']['explanation']);
       flag.value = false;
