@@ -113,7 +113,6 @@ PreferredSizeWidget historyAppBar1(context) {
           children: [
             GestureDetector(
                 onTap: () {
-                  print("hii");
                   // navigatorToMyOwnPage(context);
                   Navigator.push(
                       context,

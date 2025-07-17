@@ -25,7 +25,6 @@ void snackBarCalled(BuildContext context, String text,
       animationDuration: const Duration(milliseconds: 600),
     );
   } catch (e) {
-    print("error in snackbar " + e.toString());
   }
 }
 

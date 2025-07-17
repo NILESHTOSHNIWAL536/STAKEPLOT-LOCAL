@@ -24,7 +24,6 @@ void getChats(data) async {
       "Authorization": "$accessToken",
     },
   );
-  printData(response);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
@@ -229,9 +228,7 @@ void createPoll(context, String question, List options, roomDetails, members,
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-    // //print(response.body);
     var obj = jsonDecode(response.body);
-    // //print(obj['data']);
 
     questionRoom.add(obj['data']);
 
@@ -269,7 +266,6 @@ void createPollOfCommunityPost(context, String question, List options,
     roomDetails, members, String type) async {
   String urlPath = '${url}/post/';
 final TagList = [...selectedSubCategories, ...selectedCategories];
-  print("tags for poll $TagList");
   var body = {'question': question, 'options': options, 'postType': "poll", 'tags':TagList};
 
   final response = await postDataApiCall(urlPath, body);
@@ -439,7 +435,6 @@ void getChatLoader(bool flag) async {
         chatList.add(data);
         chatListOriginal.add(data);
       } catch (e) {
-        print("Error in chat loader: $e");
       }
     });
 
@@ -496,7 +491,6 @@ void addChatSplitAmount(
       },
       "roomId": "",
     };
-    // print(jsonData);
     final response = await http.post(
       Uri.parse('${urlPath}'),
       headers: <String, String>{

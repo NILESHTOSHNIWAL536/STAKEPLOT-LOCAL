@@ -118,7 +118,6 @@ class UserController extends GetxController {
       }
     } catch (e)
     {
-      print("UserController Error: $e");
     } 
     finally {
       isLoading.value = false;

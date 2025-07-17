@@ -72,7 +72,6 @@ class _TribeHomeState extends State<TribeUnique> {
     String data,
     String postId,
   ) async {
-    print("hiiii   $data");
     if (data == "") {
       FocusScope.of(context).requestFocus(_replyFocusNode);
       snackBarCalledfail(
@@ -115,7 +114,6 @@ class _TribeHomeState extends State<TribeUnique> {
         'comment': data,
       }),
     );
-    print("response of comment ${response.statusCode}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
 
@@ -178,7 +176,6 @@ class _TribeHomeState extends State<TribeUnique> {
 
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
-      print("response for get call  $his");
       var obj = his['data'];
       historyListData = obj;
 

@@ -162,14 +162,10 @@ Future<void> getTopThreeTransactions(BuildContext context,
       controller.topThreeTransactions.clear();
       List<TransactionModel> modalObj = TransactionModel.listFromJson(obj);
       controller.topThreeTransactions.addAll(modalObj);
-      controller.topThreeTransactions.forEach((t) => print(
-          "Transaction: ${t.id}, ${t.narration}, ${t.amount}, ${t.type}, ${t.transactionTimestamp},"));
       getTopThreeHistory.value = !getTopThreeHistory.value;
     } else {
-      print("API failed: ${response.statusCode}");
     }
   } catch (e) {
-    print("Error in getTopThreeTransactions: $e");
   }
 }
 
@@ -236,7 +232,6 @@ Future<void> getAllTransactionHistory(
             TransactionModel.listFromJson(obj);
 
         transactionsHistory.addAll(transactions);
-        print("all transactions $transactionsHistory");
 
         // Stop loading indicator if no more transactions exist
         if (obj.isEmpty || obj.length < 20) {

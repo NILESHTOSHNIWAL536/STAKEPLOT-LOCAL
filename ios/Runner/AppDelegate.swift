@@ -54,10 +54,8 @@ import Flutter
   }
 
   private func handleDeepLink(url: URL, methodChannel: FlutterMethodChannel) -> Bool {
-    print("AppDelegate: Handling deep link: \(url.absoluteString)")
     if url.scheme == "stakeplot" && url.host == "finance" {
       methodChannel.invokeMethod("navigateToFinance", arguments: nil)
-      print("AppDelegate: Invoked navigateToFinance")
       return true
     }
     return false

@@ -30,7 +30,6 @@ void getDebts() async {
     debtsList.clear();
     debtsList.addAll(obj);
   } else {
-    //  //print("Error while getting data");
   }
 }
 
@@ -95,7 +94,6 @@ void addBudget(BuildContext context, String name, String amount,
     List expenseCategory, String budgetPeriod) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  print("budget data ");
   List filteredCategories = expenseCategory
       .where((e) => !isZeroAmount(e['amount'].toString() ?? '0'))
       .toList();
@@ -105,7 +103,6 @@ void addBudget(BuildContext context, String name, String amount,
     snackBarCalledfail(context, SnackbarData().budgetAddFailed, Colors.red);
     return;
   }
-  print(filteredCategories);
   var body = {
     'name': name.toString(),
     'amount': amount.toString(),

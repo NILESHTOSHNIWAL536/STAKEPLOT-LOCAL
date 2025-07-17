@@ -85,7 +85,6 @@ class _FetchTransactionState extends State<FetchTransaction> {
 
             InkWell(
                 onTap: () async {
-                  // print(handle.value);
                   FetchTransactionFromFinvuApi(context);
                 },
                 child: getButton(context, "Fetch Transactions")),

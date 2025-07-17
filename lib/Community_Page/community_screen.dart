@@ -74,7 +74,6 @@ class CommunityState extends State<Community> {
       if (scrollControllerPost.position.pixels >=
               scrollControllerPost.position.maxScrollExtent - 50 &&
           !postController.isPostloading.value) {
-        print('DEBUG: Triggering pagination');
         postController.isPostloading.value = true;
         if (postController.isTrending.value) {
           if (postController.hasMorePostTranding.value) getTranding(context);
@@ -102,7 +101,6 @@ class CommunityState extends State<Community> {
 //   }
   // Scroll-to-top callback for BottomNavigations
   void _scrollToTop() {
-    print('DEBUG: Double-tap on Community tab, scrolling to top');
     scrollControllerPost.animateTo(
       0,
       duration: Duration(milliseconds: 300),
@@ -113,7 +111,6 @@ class CommunityState extends State<Community> {
 
   @override
   Widget build(BuildContext context) {
-    print('DEBUG: Building Community widget');
     return Scaffold(
       floatingActionButton: Obx(() =>
           postController.isTrending.value ? SizedBox.shrink() : PostImage()),

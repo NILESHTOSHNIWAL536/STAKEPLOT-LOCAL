@@ -107,7 +107,6 @@ Future<void> oneSignalInit() async {
     // OneSignal.Notifications.requestPermission(true);
   } catch (e)
   {
-    print(e);
   }
 
 }

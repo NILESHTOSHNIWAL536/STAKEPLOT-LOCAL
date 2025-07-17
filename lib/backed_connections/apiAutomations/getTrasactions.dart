@@ -494,76 +494,7 @@ void getHideTransactions(context) async {
         .addAll(his['allTransactions']['categorized_transactions']);
   }
 }
-// Future<void> addTransaction(
-//   String amount,
-//   String subCategory,
-//   String categories,
-//   BuildContext context,
-//   String dropdownValue, [
-//   bool isSplit = false,
-//   bool snackBar = true,
-// ]) async {
-//   var body = {
-//     'amount': amount.toString(),
-//     'category': categories.toString(),
-//     'label': subCategory.toString(),
-//     'account': dropdownValue.toString(),
-//     'room': {},
-//     'isSplit': isSplit,
-//     'isDebit': isDebit,
-//   };
-//   print("body of transaction $body");
 
-//   try {
-//     final response = await postDataApiCall("${url}/transaction/add", body);
-
-//     if (getFlagOfResponse(response)) {
-//       final body = json.decode(response.body);
-//       print('API response body: $body'); // Debug logging
-//       // Check if the expected data structure exists
-//       if (body['data'] != null && body['data'].isNotEmpty && body['data'][0]['data'] != null) {
-//         final transactionData = body['data'][0]['data'] as Map<String, dynamic>;
-//         transactionsHistory.insert(0, TransactionModel.fromJson(transactionData));
-
-//         if (!isSplit && snackBar) {
-//           snackBarCalled(
-//             context,
-//             SnackbarData().transactionSuccess,
-//             AppColors.primaryColor,
-//           );
-//         }
-
-//         reloadHistory.value = !reloadHistory.value;
-//         getCategoryData();
-//         setDonectChat.value = !setDonectChat.value;
-//         processChartData();
-//         getAutoMationsTransactionsCustom(getFormattedDate(), context);
-//         Navigator.pop(context);
-//       } else {
-//         snackBarCalledfail(
-//           context,
-//           'Invalid API response structure',
-//           Colors.red,
-//         );
-//       }
-//     } else {
-//       snackBarCalledfail(
-//         context,
-//         SnackbarData().transactionAddFail,
-//         Colors.red,
-//       );
-//     }
-//   } catch (e) {
-//     print('Error adding transaction: $e');
-//     snackBarCalledfail(
-//       context,
-//       'Failed to add transaction: $e',
-//       Colors.red,
-//     );
-//   } finally {
-//     cashInAndOut.value = false;
-//   }
-// }
 
 void addTransaction(String amount, String subCategory, String categories,BuildContext context, String dropdownValue,[bool isSplit = false, bool snackBar = true]) async {
   var body = {
@@ -575,7 +506,6 @@ void addTransaction(String amount, String subCategory, String categories,BuildCo
     'isSplit': isSplit,
     'isDebit': isDebit
   };
-  print("body of transaction $body");
   final response = await postDataApiCall("${url}/transaction/add", body);
   if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);

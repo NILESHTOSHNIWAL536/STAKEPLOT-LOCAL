@@ -73,7 +73,6 @@ class UnverifiedApp extends StatelessWidget {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       exit(0);
-      debugPrint("❌ Could not launch $_playStoreUrl");
     }
   }
 

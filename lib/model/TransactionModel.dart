@@ -350,8 +350,6 @@ TransactionModel copyWith({
             if (json == null) return null;
             return TransactionModel.fromJson(json);
           } catch (e) {
-            print('Error parsing TransactionModel: $e');
-            print('Invalid JSON: $json');
             return null;
           }
         })

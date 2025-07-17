@@ -566,7 +566,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         "image": '',
       }),
     );
-    print("response for split ${response.body}");
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);

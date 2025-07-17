@@ -85,32 +85,30 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     final String budgetId =
         widget.data['_id']?.toString() ?? '679b6ea12af555d641c5da61';
     final String apiUrl = '$url/budget/get-insights/$budgetId';
-    // print('Fetching insights with budgetId: $budgetId');
-    // print('API URL: $apiUrl');
+  
     try {
       var response = await getDataApiCall(apiUrl);
-      // print('Insights API Response: ${response.body}');
+     
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // print('Responsingggggg: $data');
+       
 
         // Check if the widget is still mounted before calling setState
         if (!mounted) {
-          //  print('Widget not mounted, skipping setState');
+        
           return;
         }
 
         setState(() {
           // Extract the 'data' field from the response, which contains the list of insights
           insightsData = List<String>.from(data['data'] ?? []);
-          //  print('datataata: $insightsData');
+        
         });
       } else {
-        // print('Failed to fetch insights: ${response.statusCode}');
+       
       }
     } catch (e) {
-      //   print('Error fetching insights: $e');
     }
   }
 
@@ -118,16 +116,15 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     final String budgetId =
         widget.data['_id']?.toString() ?? '67b84fdcfab72f34be29c893';
     final String apiUrl = '$url/budget/get-budget-spents/$budgetId';
-    // print('Fetching budget data with budgetId: $budgetId');
-    // print('API URL: $apiUrl');
+   
     try {
       var response = await getDataApiCall(apiUrl);
-      //  print('API Response: ${response.body}');
+     
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // Check if the widget is still mounted before calling setState
+       
         if (!mounted) {
-          // print('Widget not mounted, skipping setState');
+         
           return;
         }
         setState(() {
@@ -135,9 +132,6 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           transactions = data['data'] != null
               ? data['data']['finalResult']['transactions'] ?? []
               : data['transactions'] ?? [];
-          //  print(`Budget type: ${data['data']['categoryWiseSpendings']}`);
-          //   print(data['data']['categoryWiseSpendings']);
-          // print('Transactions after assignment: $transactions');
 
           categoryWiseSpendings = List<Map<String, dynamic>>.from(
               data['data']['categoryWiseSpendings'] ?? []);
@@ -150,10 +144,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           }).toList();
 
           budgetSpentData.clear();
-          //  print('Cleared budgetSpentData');
+        
 
-          // Normalize startDate and endDate to date-only
-          //  print("created datee $data['transactions']['createdAt']");
+         
           final String createdDateStr = widget.data['createdAt']?.toString() ??
               '2025-01-01T00:00:00.000Z';
 
@@ -165,8 +158,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           DateTime endDate = DateTime.parse(endDateStr).toLocal();
           //startDate = DateTime(startDate.year, startDate.month, startDate.day);
           endDate = DateTime(endDate.year, endDate.month, endDate.day);
-          // print('Normalized Start date: $startDate');
-          // print('Normalized End date: $endDate');
+        
 
           if (budgetType == 'yearly') {
             // Use backend-provided labels directly from transactions
@@ -176,7 +168,6 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
               monthlySpent[monthLabel] =
                   (transaction['debitTotalAmount'] as num?)?.toDouble() ?? 0.0;
             }
-            // print('Monthly spent: $monthlySpent');
 
             // Populate budgetSpentData with backend labels+
             List<String> xLabels =
@@ -193,21 +184,18 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
             }
           } else if (budgetType == 'monthly') {
             int totalDays = endDate.difference(startDate).inDays + 1;
-            //  print('Total days: $totalDays');
 
             Map<int, double> dailySpent = {};
             for (var transaction in transactions) {
               DateTime date =
                   DateFormat('yyyy-MM-dd').parse(transaction['_id']);
               int dayIndex = date.difference(startDate).inDays;
-              //  print('Transaction date: $date, dayIndex: $dayIndex, debitTotalAmount: ${transaction['debitTotalAmount']}');
               if (dayIndex >= 0 && dayIndex < totalDays) {
                 dailySpent[dayIndex] =
                     (transaction['debitTotalAmount'] as num?)?.toDouble() ??
                         0.0;
               }
             }
-            // print('Daily spent: $dailySpent');
 
             for (int i = 0; i < totalDays; i++) {
               DateTime currentDate = startDate.add(Duration(days: i));
@@ -221,21 +209,18 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           } else if (budgetType == 'weekly') {
             int totalDays =
                 math.min(endDate.difference(startDate).inDays + 1, 7);
-            //  print('Total days (weekly): $totalDays');
 
             Map<int, double> dailySpent = {};
             for (var transaction in transactions) {
               DateTime date =
                   DateFormat('yyyy-MM-dd').parse(transaction['_id']);
               int dayIndex = date.difference(startDate).inDays;
-              //  print('Transaction date: $date, dayIndex: $dayIndex, debitTotalAmount: ${transaction['debitTotalAmount']}');
               if (dayIndex >= -1 && dayIndex < totalDays) {
                 dailySpent[dayIndex] =
                     (transaction['debitTotalAmount'] as num?)?.toDouble() ??
                         0.0;
               }
             }
-            //  print('Daily spent (weekly): $dailySpent');
 
             for (int i = 0; i < totalDays; i++) {
               DateTime currentDate = startDate.add(Duration(days: i));
@@ -247,14 +232,11 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
               ));
             }
           }
-          //  print('Final budgetSpentData length: ${budgetSpentData.length}');
-          //  print('Final budgetSpentData: $budgetSpentData');
+        
         });
       } else {
-        //  print('Failed to load budget data: ${response.statusCode}');
       }
     } catch (e) {
-      //  print('Error fetching budget data: $e');
     }
   }
 
@@ -479,13 +461,11 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
 
   Widget _buildInsights() {
     if (insightsData == null) {
-      // print("null yyyyy  $insightsData");
+    
       return Center(child: CircularProgressIndicator());
     }
-    //print("insightsData yyyyy  $insightsData");
     List<dynamic>? insightsList = insightsData; // Extract list
-    // print("insightsList yyyyy  $insightsList");
-
+   
     return Container(
       padding: EdgeInsets.all(16),
       // decoration: _buildBackgroundDecoration(),
@@ -599,7 +579,6 @@ class LineChartSample extends StatelessWidget {
         labelRotation = 0;
     }
     double chartWidth = budgetData.length * labelWidth;
-    //print("budgetData $budgetData");
     return budgetData.isNotEmpty
         ? SingleChildScrollView(
             scrollDirection: Axis.horizontal,

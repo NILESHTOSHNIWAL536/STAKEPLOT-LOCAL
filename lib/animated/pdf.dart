@@ -26,7 +26,6 @@ void getPdf(BuildContext context, RxString selectedValue,
   if (getFlagOfResponse(response)) {
     var obj = jsonDecode(response.body);
     List list = obj['data']['transactions'];
-    print(list);
     if (list.length > 0) {
       generatePdf(PdfPageFormat.legal, "StakePlot", list, context,obj['data']['profile'][0],obj['data']['summary'][0],obj['data']['bankAddress'],obj['data']['bankName'],obj['data']['account']['maskedAccNumber']);
     }

@@ -84,8 +84,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
 
     } else {}
     } catch (e) {
-      print("Error fetching discussions: ");
-      print(e);
+     
     }
   }
 
@@ -100,7 +99,6 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
         score.value = his['data']['score'];
       } else {}
     } catch (e) {
-      print(e);
     }
   }
 
@@ -153,7 +151,6 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   }
 
   Widget topUserProfile(data) {
-    print("data for search :$data");
     return Container(
       height: MediaQuery.of(context).size.height / 5.4,
       // height: 200,

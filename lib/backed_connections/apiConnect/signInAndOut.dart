@@ -26,7 +26,6 @@ Future<void> loginUser(TextEditingController emailController,
       'userpassword': passwordController.text.toString(),
       'deviceInfo': deviceData,
     });
-    print("response for login ${response.body}");
     if (response.statusCode == 409) {
       forceLoginShowModal(
           context, response, emailController, passwordController);
@@ -132,7 +131,6 @@ Future<bool> getOTPDeleteCall(
     var response = await postDataApiCallwithOutSharedPref(
         '${url}/otp/resend-otp',
         {'email': email, 'name': name, 'type': "deleteAccount"});
-    print("response for otp :${response.body}");
     if (getFlagOfResponse(response)) {
       snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
       return true;
@@ -176,7 +174,6 @@ void forceLogoutUser(
       "userpassword": userpassword,
       "deviceInfo": deviceData
     });
-    printData(response);
     if (getFlagOfResponse(response)) {
       final body = json.decode(response.body);
       loginCalledData(response, context);
@@ -186,7 +183,6 @@ void forceLogoutUser(
       snackBarCalledfail(context, SnackbarData().cantLogoutUser, Colors.red);
     }
   } catch (e) {
-    print(e);
   }
 }
 
@@ -222,13 +218,9 @@ Future<void> addThisDeviceToBackend(deviceData, context) async {
   try {
     var response =
         await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
-    printData(response);
     if (getFlagOfResponse(response)) {
-      print("object");
     }
   } catch (e) {
-    print(e);
-    print("error");
   }
 }
 

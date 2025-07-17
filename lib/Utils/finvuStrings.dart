@@ -116,7 +116,6 @@ class FinvuStrings {
   Future<bool> fetchConstants() async {
     try {
       final response = await getDataApiCall("${url}/constant/finvu");
-      printData(response);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};
@@ -214,11 +213,9 @@ class FinvuStrings {
 
         return true;
       } else {
-        print("Failed to load constants: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error fetching constants: $e");
       return false;
     }
   }

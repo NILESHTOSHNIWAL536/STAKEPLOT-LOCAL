@@ -444,10 +444,8 @@ class _ExploreModalState extends State<ExploreModal> {
       "isSquareImage": _isSquare ?? true,
     };
 
-    print("req body for the server: $requestBody");
 
     try {
-      print('cam till here');
       var accessToken = await getToken();
       final response = await http.post(
         Uri.parse('$url/post/'),
@@ -458,7 +456,6 @@ class _ExploreModalState extends State<ExploreModal> {
         body: jsonEncode(requestBody),
       );
 
-      print("response from the server: ${response.body}");
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         setState(() {

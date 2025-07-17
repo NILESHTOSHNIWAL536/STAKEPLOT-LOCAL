@@ -132,7 +132,6 @@ void resetCupertinoPin(BuildContext context) async {
                       context, "Failed to reset PIN. Please try again.");
                 }
               } catch (e) {
-                print('API error: $e');
                 
                 snackBarCalledfail(
                     context, "An error occurred. Please try again.");

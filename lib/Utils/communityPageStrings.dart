@@ -146,11 +146,9 @@ class CommunityScreenStrings {
 
         return true;
       } else {
-        print("Failed to load Community constants: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error fetching Community constants: $e");
       return false;
     }
   }

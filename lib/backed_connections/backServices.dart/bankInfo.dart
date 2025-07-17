@@ -80,7 +80,7 @@ Future<bool> deleteUserAccount(BuildContext context,String msg) async {
       'reason':msg,
     };
     var response = await deleteDataApiCallBody("${url}/user",body);
-    printData(response);
+    
     if (getFlagOfResponse(response))
     {
           clearStackLocalInfo();

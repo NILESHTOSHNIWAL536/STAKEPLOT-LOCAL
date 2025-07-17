@@ -385,37 +385,3 @@ Widget getPredictedCategorySvgUrl(double avatarSize, String category, double sca
     ),
   );
 }
-
-// Widget getPredictedCategorySvgUrl(
-//     double avatarSize, String category, double scaleFactor, [bool f = false]) {
-//   // Normalize category to lowercase for consistent lookups
-//   final lowerCategory = category.toLowerCase();
-
-//   // Define the default icon path
-//   const defaultIcon = 'others.svg';
-
-//   // Try to get the icon path from imageMapForHistory
-//   String? iconPath = imageMapForHistory[lowerCategory];
-
-//   // If not found in imageMapForHistory, try BudgetSubCategories.listofSubCategories
-//   if (iconPath == null) {
-//     iconPath = BudgetSubCategories.listofSubCategories[lowerCategory];
-//   }
-
-//   // If still not found, use the default icon and log the unrecognized category
-//   if (iconPath == null) {
-//     print('Unrecognized category: $category (normalized: $lowerCategory)');
-//     iconPath = defaultIcon;
-//   }
-
-//   // Construct the full URL
-//   final url = '${Categories.link}$iconPath';
-
-//   return Center(
-//     child: chatAvatartImage(
-//       url: url,
-//       height: avatarSize * 1.7,
-//       width: avatarSize * 1.7,
-//     ),
-//   );
-// }

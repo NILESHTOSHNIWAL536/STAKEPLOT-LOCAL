@@ -1002,7 +1002,6 @@ Widget getPredictedCategoryIcons(
     return const SizedBox.shrink();
   }
 
-
   // Timer for debouncing taps
   Timer? _debounce;
 
@@ -1056,58 +1055,6 @@ Widget getPredictedCategoryIcons(
     }).toList(),
   );
 }
-
-// Widget getPredictedCategoryIcons(
-//     TransactionModel transaction, BuildContext context, int index) {
-//   final predictions = transaction.predictions;
-//   print("my pred $predictions");
-//   if (predictions == null || predictions.entries.isEmpty) {
-//     return const SizedBox.shrink();
-//   }
-
-//   print(
-//       "predictions for ${predictions.entries.map((e) => e.category).toList()}");
-
-//   return Row(
-//     children: predictions.entries.map((entry) {
-//       return Padding(
-//         padding: const EdgeInsets.only(right: 12),
-//         child: GestureDetector(
-//           onTap: () async {
-//             tagBool.value = true;
-//             try {
-//               TransactionModel updatedTransaction = transaction.copyWith(
-//                 category: entry.category,
-//                 subcategory: "Other",
-//                 needsReview: false,
-//               );
-
-//               updateTheTagOfTarnsactions(
-//                 entry.category,
-//                 "Other",
-//                 transaction.id,
-//                 context,
-//                 index,
-//                 updatedTransaction,
-//               );
-//             } catch (e) {
-//               snackBarCalledfail(
-//                   context, "Failed to tag transaction", Colorcodes.red);
-//             } finally {
-//               tagBool.value = false;
-//             }
-//           },
-//           child: Tooltip(
-//             message: 'Tag as ${entry.category}',
-//             child: getPredictedCategorySvgUrl(25, entry.category, 10, true),
-//           ),
-//         ),
-//       );
-//     }).toList(),
-//   );
-// }
-
-// Reusable showCustomFriendsModal function
 Future<dynamic> showCustomFriendsModalTransactionHistory(BuildContext context,
     double amount, bool isLendMode, String category, String subcategory,
     [bool ismanulTransaction = false]) async {
