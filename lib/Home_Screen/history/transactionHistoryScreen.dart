@@ -202,7 +202,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                       ],
                     ),
                   ),
-
                   Obx(() {
                     double calculatedHeight;
                     if (showFilter.value || redioButton.isNotEmpty) {

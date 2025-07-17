@@ -177,7 +177,7 @@ class CategoryCard extends StatelessWidget {
     if (iconFileName != null) {
       return '${Categories.link}$iconFileName';
     }
-    return HomePageIcons.none; // Fallback icon
+    return "assets/icons/subCategoryIcons2/others.svg"; // Fallback icon
   }
 
   @override

@@ -103,8 +103,7 @@ class Predictions {
         }
       }
     } catch (e) {
-      print('Error parsing predictions: $e');
-      print('JSON input: $json');
+     
     }
     return Predictions(entries: entries);
   }

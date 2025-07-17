@@ -2,15 +2,19 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
+import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -207,6 +211,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+Widget containerIconSiginWith(IconData icon, Color color, context) {
+  return InkWell(
+    onTap: () async {
+      if (googleSignInBool.value) return; // Prevent multiple clicks
+      googleSignInBool.value = true; // Set loading state
+      try {
+        final userdata = await AuthService().signInWithGoogle(context);
+        print("User data received: $userdata");
+        if (userdata != null && userdata['data']['accessToken'] != null) {
+          print("Access token is present.");
+        } else if (userdata != null) {
+          print("Navigating to UserDetailsPage with userdata: $userdata");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserDetailsPage(data: userdata)),
+          );
+        } else {
+          print("No user data received.");
+        }
+      } finally {
+        googleSignInBool.value = false; // Reset loading state
+      }
+    },
+    child: Container(
+      width: MediaQuery.sizeOf(context).width/5,
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Obx(
+        () => googleSignInBool.value
+            ? Spinner(size: 30) // Show spinner when loading
+            : 
+         AvatarProfileImage(
+                      url: Sign.googleIcon,
+                      width: 40,
+                      height: 30,
+                     
+                    ), // Show icon when not loading
+      ),
+    ),
+  );
+}
 
   Widget _buildEmailField() {
     return Container(

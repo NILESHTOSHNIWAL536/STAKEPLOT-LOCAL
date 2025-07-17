@@ -15,7 +15,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/googlesign
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
 import 'dart:math' as math;
@@ -149,6 +148,52 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+Widget containerIconSiginWith(IconData icon, Color color, context) {
+  return InkWell(
+    onTap: () async {
+      if (googleSignInBool.value) return; // Prevent multiple clicks
+      googleSignInBool.value = true; // Set loading state
+      try {
+        final userdata = await AuthService().signInWithGoogle(context);
+        print("User data received: $userdata");
+        if (userdata != null && userdata['data']['accessToken'] != null) {
+          print("Access token is present.");
+        } else if (userdata != null) {
+          print("Navigating to UserDetailsPage with userdata: $userdata");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserDetailsPage(data: userdata)),
+          );
+        } else {
+          print("No user data received.");
+        }
+      } finally {
+        googleSignInBool.value = false; // Reset loading state
+      }
+    },
+    child: Container(
+      width: MediaQuery.sizeOf(context).width/5,
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Obx(
+        () => googleSignInBool.value
+            ? Spinner(size: 30) // Show spinner when loading
+            : 
+         AvatarProfileImage(
+                      url: Sign.googleIcon,
+                      width: 40,
+                      height: 30,
+                     
+                    ), // Show icon when not loading
+      ),
+    ),
+  );
+}
 
   Widget _buildWelcomeText() {
     return Column(

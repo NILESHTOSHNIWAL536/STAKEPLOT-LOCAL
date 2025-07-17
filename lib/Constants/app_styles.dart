@@ -283,13 +283,14 @@ class Finance {
 class BudgetCategories {
   static Map<String, dynamic> listofCategories = {
     "Food": Categories.food,
+    "Untagged": Categories.untagged,
     "Shopping": Categories.shopping,
     "Travel": Categories.travel,
     "Health": Categories.health,
     "Bills": Categories.bills,
     "Subscriptions": Categories.subscription,
     "Events": Categories.events,
-    "Personal Care": Categories.personalCare, //
+    "Personal care": Categories.personalCare, //
     "Services": Categories.services,
     "Emi": Categories.emi,
     "Investments": Categories.investments,

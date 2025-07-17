@@ -83,7 +83,6 @@ Widget historyTransactions(
       : "₹${formatMoneyIndian(transaction.balanceOut.toString())}";
 
   final fontSizes = FontSizeFactor(context);
-  print("transactions cat $transaction");
   return WillPopScope(
     onWillPop: () async {
       // If checkboxes are visible, clear them and stay on the screen
@@ -222,7 +221,6 @@ Widget historyTransactions(
                   if (isManual) addManually.remove(id);
                   HapticFeedback.selectionClick();
                 }
-                print(balanceOutList);
               } else if (!isManual && !hide) {
                 showModalBottomSheet(
                   context: context,
@@ -1000,12 +998,10 @@ bool isValidUrl(String? url) {
 Widget getPredictedCategoryIcons(
     TransactionModel transaction, BuildContext context, int index) {
   final predictions = transaction.predictions;
-  print("my pred $predictions");
   if (predictions == null || predictions.entries.isEmpty) {
     return const SizedBox.shrink();
   }
 
-  print("predictions for ${predictions.entries.map((e) => e.category).toList()}");
 
   // Timer for debouncing taps
   Timer? _debounce;

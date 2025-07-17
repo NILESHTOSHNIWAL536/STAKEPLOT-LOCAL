@@ -12,11 +12,11 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,32 +25,32 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-{
-
- 
+class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
+     _checkForUpdatesAndNavigate();
     callApis();
     initGetControllers();
   }
 
+  Future<void> _checkForUpdatesAndNavigate() async {
+  await checkForUpdate();  
+  await checkAuthAndNavigate();  // only navigate after update check
+}
 
 
+  void callApis() {
+    SignupData signup = SignupData();
+    SnackbarData snackbarData = SnackbarData();
+    SigninData signinData = SigninData();
 
-  void callApis(){
-    SignupData signup= SignupData();
-    SnackbarData snackbarData= SnackbarData();
-    SigninData signinData= SigninData();
-
-    PlotFinanceStaticData plotFinanceStaticData= PlotFinanceStaticData();
-    HomepageStringsDart homepageStringsDart= HomepageStringsDart();
-    CommunityScreenStrings communityScreenStrings= CommunityScreenStrings();
-    FinvuStrings finvuStrings= FinvuStrings();
-    ProfileScreenStrings profileScreenStrings= ProfileScreenStrings();
-    FinspaceStrings finspaceStrings= FinspaceStrings();
+    PlotFinanceStaticData plotFinanceStaticData = PlotFinanceStaticData();
+    HomepageStringsDart homepageStringsDart = HomepageStringsDart();
+    CommunityScreenStrings communityScreenStrings = CommunityScreenStrings();
+    FinvuStrings finvuStrings = FinvuStrings();
+    ProfileScreenStrings profileScreenStrings = ProfileScreenStrings();
+    FinspaceStrings finspaceStrings = FinspaceStrings();
 
     finspaceStrings.fetchConstants();
     signinData.fetchConstants();
@@ -62,9 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
     homepageStringsDart.fetchConstants();
     profileScreenStrings.fetchConstants();
     PdfStrings().fetchConstants();
-
   }
-
 
   @override
   Widget build(BuildContext context) {
