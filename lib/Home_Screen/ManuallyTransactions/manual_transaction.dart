@@ -1623,8 +1623,7 @@ Widget categoryExpandedWidget() {
           urlPath = item['imageUrl'] ?? '';
         } else if (isCategory) {
           try {
-            urlPath = Categories.link +
-                BudgetCategories.listofCategories[category]!;
+            urlPath = Categories.link +BudgetCategories.listofCategories[category]!;
           } catch (e) {
             urlPath = '';
           }

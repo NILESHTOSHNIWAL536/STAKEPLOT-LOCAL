@@ -290,7 +290,8 @@ class BudgetCategories {
     "Bills": Categories.bills,
     "Subscriptions": Categories.subscription,
     "Events": Categories.events,
-    "Personal care": Categories.personalCare, //
+    // "Personal care": Categories.personalCare,
+    "Personal Care": Categories.personalCare, //
     "Services": Categories.services,
     "Emi": Categories.emi,
     "Investments": Categories.investments,
@@ -306,7 +307,8 @@ class BudgetCategories {
     "Commerce": Categories.commerce, //
     "snacks": Categories.snacks, //
     "Entertainment": Categories.entertainment, //
-    "Groceries":  "assets/icons/Categories2/Groceries.svg",
+    "Groceries": "Groceries.svg",
+    "groceries": "Groceries.svg",
     "Income": Categories.income,
     "Personal Transfer": Categories.personalTransfer,
     "Personal Transfer Received": Categories.personalTransferReceived,
@@ -328,7 +330,7 @@ class BudgetSubCategories {
     "Pizza": "${connect}Pizza.svg",
     "Dairy": "${connect}dairy.svg",
     "Tea": "${connect}Tea.svg",
-    
+
     "canteen": "${connect}Canteen.svg",
     "Bistro": "${connect}Bistro.svg",
     "Mcdonalds": "${connect}mcdonalds.svg",
@@ -408,14 +410,14 @@ class BudgetSubCategories {
     "AIRTEL": "${connect}airtel2.svg",
     "JIO": "${connect}jioHotstar2.svg",
     "Solutions": "${connect}solutions.svg",
-    
+
     "bpcl": "${connect}BPL.svg",
 
     // Subscriptions
     "Netflix": "${connect}netflix4.svg",
     "PrimeVideo": "${connect}prime.svg",
     "Spotify": "${connect}spotify3.svg",
-    "Jio Hotstar":"${connect}jio_hotster.svg", 
+    "Jio Hotstar": "${connect}jio_hotster.svg",
     "appleServices": "${connect}apple.svg",
     "disney": "${connect}disney2.svg",
 
@@ -477,10 +479,9 @@ class BudgetSubCategories {
     "School Fees": "${connect}school_fees.svg",
     "Tuitions": "${connect}tutions.svg",
     "Baby store": "${connect}baby_store.svg",
-    
+
     "uniforms": "${connect}uniforms.svg",
     "baby care": "${connect}baby_care.svg",
-   
 
     // Pet Care
     "Pet": "assets/icons/Categories2/petCare.svg",
@@ -537,7 +538,7 @@ class BudgetSubCategories {
     "district": "${connect}district2.svg",
     "gokarting": "${connect}gokarting.svg",
     "gaming": "${connect}Games.svg",
-    "Entertainment": "${connect}entertainment.svg", 
+    "Entertainment": "${connect}entertainment.svg",
     "pvr": "${connect}pvr2.svg",
     "cinepolis": "${connect}Cinepolis2.svg",
     "imax": "${connect}imax2.svg",
@@ -572,7 +573,6 @@ class BudgetSubCategories {
     "POS": "${connect}POS.svg",
     "CASH WDL": "${connect}cashWDL.svg",
     "ATM": "${connect}ATM.svg",
-    
 
     //Personal transfer received
     "UPI-CR": "${connect}scanner.svg",
@@ -634,7 +634,7 @@ final Map<String, List<String>> categories = {
     "Pizza",
     "Dairy",
     "Tea",
-   
+
     "canteen",
     "Bistro",
     "Mcdonalds",
@@ -696,7 +696,6 @@ final Map<String, List<String>> categories = {
     "Transport",
     "Filling",
     "Rapido",
-    
     "Irctc",
     "Other"
   ],
@@ -712,8 +711,6 @@ final Map<String, List<String>> categories = {
     "AIRTEL",
     "JIO",
     "Solutions",
-   
-    
     "bpcl",
     "Other"
   ],
@@ -764,10 +761,8 @@ final Map<String, List<String>> categories = {
     "School Fees",
     "Tuitions",
     "Baby store",
-    
     "uniforms",
     "baby care",
-   
     "Other"
   ],
   "Pet Care": ["Pet", "Other"],
@@ -797,7 +792,6 @@ final Map<String, List<String>> categories = {
   "snacks": [
     "juice",
     "Sweets",
-    
     "Biscuit",
     "Thickshake",
     "chocolate",
@@ -818,7 +812,6 @@ final Map<String, List<String>> categories = {
     "district",
     "gokarting",
     "gaming",
-  
     "pvr",
     "cinepolis",
     "imax",
@@ -851,7 +844,7 @@ final Map<String, List<String>> categories = {
     "credit",
     "Other"
   ],
-  "Personal Transfer": ["POS", "CASH WDL", "ATM",  "Other"],
+  "Personal Transfer": ["POS", "CASH WDL", "ATM", "Other"],
   "Personal Transfer Received": ["UPI-CR", "Other"]
 };
 

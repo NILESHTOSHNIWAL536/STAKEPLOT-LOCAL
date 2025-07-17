@@ -173,7 +173,7 @@ class CategoryCard extends StatelessWidget {
 
   String getCategoryIconPath(String category) {
     final iconFileName =
-        BudgetCategories.listofCategories[toUpperCase(category)];
+        BudgetCategories.listofCategories[toTitleCase(category)];
     if (iconFileName != null) {
       return '${Categories.link}$iconFileName';
     }
@@ -184,41 +184,41 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-      //  if (category.toLowerCase() == 'untagged' ||
-      //       category.toLowerCase() == 'uncategorized') {
-      //      Navigator.push(
-      //               context,
-      //               MaterialPageRoute(
-      //                 builder: (context) => FutureBuilder(
-      //                   future: getAllTransactionHistory(context, false, false, isRefreshing: true),
-      //                   builder: (context, AsyncSnapshot snapshot) {
-      //                     if (snapshot.connectionState == ConnectionState.waiting) {
-      //                       print('FutureBuilder: Waiting for transaction history');
-      //                       return const Scaffold(
-      //                         body: Center(child: CircularProgressIndicator()),
-      //                       );
-      //                     }
-      //                     if (snapshot.hasError) {
-      //                       print('FutureBuilder: Error - ${snapshot.error}');
-      //                       return Scaffold(
-      //                         body: Center(child: Text("Error: ${snapshot.error}")),
-      //                       );
-      //                     }
-      //                     print('FutureBuilder: Navigating to UntaggedTransactionScreen');
-      //                     return const UntaggedTransactionScreen();
-      //                   },
-      //                 ),
-      //               ),
-      //             );
-      //   } else {
-          searchController.text = category.toLowerCase();
-          onChanedAutoTransactionStatus(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TransactionHistoryScreen(),
-            ),
-          );
+        //  if (category.toLowerCase() == 'untagged' ||
+        //       category.toLowerCase() == 'uncategorized') {
+        //      Navigator.push(
+        //               context,
+        //               MaterialPageRoute(
+        //                 builder: (context) => FutureBuilder(
+        //                   future: getAllTransactionHistory(context, false, false, isRefreshing: true),
+        //                   builder: (context, AsyncSnapshot snapshot) {
+        //                     if (snapshot.connectionState == ConnectionState.waiting) {
+        //                       print('FutureBuilder: Waiting for transaction history');
+        //                       return const Scaffold(
+        //                         body: Center(child: CircularProgressIndicator()),
+        //                       );
+        //                     }
+        //                     if (snapshot.hasError) {
+        //                       print('FutureBuilder: Error - ${snapshot.error}');
+        //                       return Scaffold(
+        //                         body: Center(child: Text("Error: ${snapshot.error}")),
+        //                       );
+        //                     }
+        //                     print('FutureBuilder: Navigating to UntaggedTransactionScreen');
+        //                     return const UntaggedTransactionScreen();
+        //                   },
+        //                 ),
+        //               ),
+        //             );
+        //   } else {
+        searchController.text = category.toLowerCase();
+        onChanedAutoTransactionStatus(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TransactionHistoryScreen(),
+          ),
+        );
         // }
       },
       child: Container(
@@ -254,7 +254,7 @@ class CategoryCard extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        toUpperCase(category),
+                        toTitleCase(category),
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w500,

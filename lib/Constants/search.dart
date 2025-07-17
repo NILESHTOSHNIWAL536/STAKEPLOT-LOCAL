@@ -45,3 +45,11 @@ String toUpperCase(String str) {
   return str[0].toUpperCase() + str.substring(1);
 }
 
+String toTitleCase(String str) {
+  if (str.isEmpty) return str;
+
+  return str.split(' ').map((word) {
+    if (word.isEmpty) return '';
+    return word[0].toUpperCase() + word.substring(1).toLowerCase();
+  }).join(' ');
+}

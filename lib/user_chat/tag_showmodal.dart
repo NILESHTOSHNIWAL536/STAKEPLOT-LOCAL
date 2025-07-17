@@ -72,16 +72,14 @@ class _TagShowmodalState extends State<TagShowmodal>
       curve: Curves.easeOut,
     ));
 
-    
     _controller.forward();
     custom = getthelist();
-
   }
 
   String getIconPath(String category) {
     if (imageMapForHistory.containsKey(category))
       return Categories.link + imageMapForHistory[category]!;
-    return Categories.link + Categories.groceries;
+    return Categories.link + Categories.other;
   }
 
   @override
@@ -229,11 +227,8 @@ class _TagShowmodalState extends State<TagShowmodal>
             children: [
               InkWell(
                 onTap: () {
-                  openShowModalCate(
-                      context,
-                      nameController,
-                      transactionsHistory[widget.index].narration ,
-                      callBack);
+                  openShowModalCate(context, nameController,
+                      transactionsHistory[widget.index].narration, callBack);
                 },
                 child: Icon(
                   CupertinoIcons.add,
@@ -245,7 +240,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                 onTap: () {
                   //Adding a loader here
 
-                   if (widget.data.category.isNotEmpty &&
+                  if (widget.data.category.isNotEmpty &&
                       widget.data.subcategory.isEmpty) {
                     snackBarCalledfail(
                       context,
@@ -269,7 +264,6 @@ class _TagShowmodalState extends State<TagShowmodal>
                   if (tagBool.value) return;
                   tagBool.value = true;
                   //  Change Tag
-                  
 
                   if (widget.isTag) {
                     if (widget.data.category == '' &&
@@ -293,8 +287,10 @@ class _TagShowmodalState extends State<TagShowmodal>
                           context,
                           index,
                         );
-                        transactionsHistory[index].category =widget.data.category;
-                        transactionsHistory[index].subcategory =widget.data.subcategory;
+                        transactionsHistory[index].category =
+                            widget.data.category;
+                        transactionsHistory[index].subcategory =
+                            widget.data.subcategory;
                         transactionsHistory[index].needsReview = false;
                       }
                     });
@@ -313,8 +309,10 @@ class _TagShowmodalState extends State<TagShowmodal>
                         widget.data.id,
                         context,
                         widget.index);
-                    (transactionsHistory[widget.index]).category =widget.data.category;
-                    (transactionsHistory[widget.index]).subcategory =widget.data.subcategory;
+                    (transactionsHistory[widget.index]).category =
+                        widget.data.category;
+                    (transactionsHistory[widget.index]).subcategory =
+                        widget.data.subcategory;
                     (transactionsHistory[widget.index]).needsReview = false;
                     transactionsHistory.refresh();
                   } else {
@@ -335,15 +333,18 @@ class _TagShowmodalState extends State<TagShowmodal>
                   }
 
                   getCategoryData();
-                  tagBool.value = false; // if anything goes wrong in tag check here first
+                  tagBool.value =
+                      false; // if anything goes wrong in tag check here first
                 },
-                child:  Obx(()=>tagBool.value?Spinner(
-                  size: 30,
-                ):Icon(
-                  CupertinoIcons.checkmark_alt,
-                  size: 30,
-                  color: AppColors.creditColor,
-                )),
+                child: Obx(() => tagBool.value
+                    ? Spinner(
+                        size: 30,
+                      )
+                    : Icon(
+                        CupertinoIcons.checkmark_alt,
+                        size: 30,
+                        color: AppColors.creditColor,
+                      )),
               ),
             ],
           ),
@@ -457,8 +458,8 @@ class _TagShowmodalState extends State<TagShowmodal>
         duration: Duration(milliseconds: 500),
         opacity: opacity,
         child: Container(
-          child: historyTransactions(
-              widget.data, widget.data.transactionTimestamp.toString(), context),
+          child: historyTransactions(widget.data,
+              widget.data.transactionTimestamp.toString(), context),
         ),
       ),
     );
@@ -496,7 +497,6 @@ class _TagShowmodalState extends State<TagShowmodal>
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           children: [
-          
             SizedBox(
               height: MediaQuery.sizeOf(context).height / 30,
               width: MediaQuery.sizeOf(context).width / 10,
@@ -518,10 +518,11 @@ class _TagShowmodalState extends State<TagShowmodal>
                         ? 13
                         : 11,
                     fontWeight: FontWeight.bold,
-                    c: (widget.data.subcategory == s &&
-                            widget.data.category == main)
-                        ? AppColors.bg2
-                        : AppColors.primaryColor)
+                    c:
+                        (widget.data.subcategory == s &&
+                                widget.data.category == main)
+                            ? AppColors.bg2
+                            : AppColors.primaryColor)
                 : textStyle(
                     context: context,
                     text: s,
@@ -547,7 +548,9 @@ class _TagShowmodalState extends State<TagShowmodal>
       TransactionModel transaction, String? date, context) {
     final category = transaction.category.toString();
     final subcategory = transaction.subcategory;
-    final amount = !widget.isGroupTransaction? transaction.amount: transaction.amount.toString();
+    final amount = !widget.isGroupTransaction
+        ? transaction.amount
+        : transaction.amount.toString();
     final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
 
     return Container(
