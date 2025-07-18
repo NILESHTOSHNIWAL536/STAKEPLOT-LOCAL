@@ -104,7 +104,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                       children: [
                         const SizedBox(height: 4),
                         Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 2),
+                          padding:  EdgeInsets.only(left: 10, right: 2,bottom: (groupTransactionList.isEmpty? 4:3)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -140,20 +140,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                             ],
                           ),
                         ),
-                        // !isDateSummaryView.value
-                        //     ? Padding(
-                        //         padding:
-                        //             const EdgeInsets.only(left: 10, right: 2),
-                        //         child: Obx(() => (groupTransactionList.length !=
-                        //                     0 ||
-                        //                 redioButton.isNotEmpty)
-                        //             ? Padding(
-                        //                 padding: const EdgeInsets.only(top: 8),
-                        //                 child: getTab(context),
-                        //               )
-                        //             : SizedBox.shrink()),
-                        //       )
-                        //     : SizedBox(height: 10),
+                       
                             !isDateSummaryView.value
                           ? Padding(
                               padding:
@@ -161,7 +148,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                               child: Obx(() => (groupTransactionList.isNotEmpty ||
                                       redioButton.isNotEmpty)
                                   ? Padding(
-                                      padding: const EdgeInsets.only(top: 8),
+                                      padding: const EdgeInsets.only(top: 3),
                                       child: Obx(() => showCheckBox.value
                                           ? Padding(
                                             padding: const EdgeInsets.only(right: 10),
@@ -294,10 +281,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
 Widget CancelButton(String text, BuildContext context) {
  
-  // Calculate width based on screen size for responsiveness
   double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
-  double tabHeight = (MediaQuery.of(context).size.height) /
-      26; // 44 = 16*2 padding + 12 spacing
+  double tabHeight = (MediaQuery.of(context).size.height) / 26;
   return InkWell(
     onTap: () {
       showCheckBox.value = false;
@@ -332,25 +317,13 @@ Widget CancelButton(String text, BuildContext context) {
 }
 Widget SelectButton(String text, BuildContext context) {
  
-  // Calculate width based on screen size for responsiveness
   double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
-  double tabHeight = (MediaQuery.of(context).size.height) /
-      26; // 44 = 16*2 padding + 12 spacing
+  double tabHeight = (MediaQuery.of(context).size.height) / 26; 
   return Container(
     margin: EdgeInsets.symmetric(vertical: 4),
     width: tabWidth,
     height: tabHeight,
     padding: const EdgeInsets.symmetric(horizontal: 10),
-    decoration: BoxDecoration(
-      // border: Border(
-      //   bottom: BorderSide(
-      //     color: 
-      //          AppColors.backgroundColor,
-              
-      //     width:  3.0 , // Adjust the width as needed
-      //   ),
-      // ),
-    ),
     child: Center(
       child: textStyleImage(
         context: context,

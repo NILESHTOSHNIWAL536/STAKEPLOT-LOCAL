@@ -72,8 +72,14 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
         itemCount: hiddentrasactionsHistory.length,
         itemBuilder: (context, index) {
           TransactionModel transaction = hiddentrasactionsHistory[index];
-          return historyTransactions(
-              transaction, transaction.transactionTimestamp.toString(), index,context,false,false,true);
+          return HistoryTransactions(
+             transaction:  transaction, 
+             date:  transaction.transactionTimestamp.toString(), 
+             index:  index,
+             context:  context,
+             hideReview:  false,
+             isExpanded:  false,
+             hide:  true);
         },
       ),
     );

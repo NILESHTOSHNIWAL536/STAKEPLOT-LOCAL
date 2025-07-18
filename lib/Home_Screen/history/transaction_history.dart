@@ -29,7 +29,6 @@ RxBool getPdgLoader = false.obs;
 RxString bankLogo = "".obs;
 RxMap<int, double> swipeOffsets = <int, double>{}.obs;
 RxList<TransactionModel> hiddenTransactions = <TransactionModel>[].obs;
-// RxList<Map<String, dynamic>> hiddenTransactions = <Map<String, dynamic>>[].obs;
 
 class TransactionHistory extends StatefulWidget {
  
@@ -198,13 +197,13 @@ class _TransactionHistoryState extends State<TransactionHistory>
           int transactionIndex = transactionsHistory.indexOf(transaction);
 
           return Container(
-            child: historyTransactions(
-                  transaction,
-                  transaction.transactionTimestamp.toString(),
-                  transactionIndex,
-                  context,
-                  true,
-                  widget.expandedPage
+            child: HistoryTransactions(
+                 transaction:  transaction,
+                 date: transaction.transactionTimestamp.toString(),
+                 index: transactionIndex,
+                 context:  context,
+                 hideReview:  true,
+                 isExpanded:  widget.expandedPage
                 ),
           );
         }
@@ -219,13 +218,13 @@ class _TransactionHistoryState extends State<TransactionHistory>
             ):Skeletonizer(
               child: Column(
                 children: [1,2,3].map((e)=>
-                  historyTransactions(
-                      transactionsHistory[transactionsHistory.length-1],
-                      transactionsHistory[transactionsHistory.length-1].transactionTimestamp.toString(),
-                     transactionsHistory.length-1,
-                     context,
-                     true,
-                     widget.expandedPage
+                  HistoryTransactions(
+                  transaction:     transactionsHistory[transactionsHistory.length-1],
+                    date:   transactionsHistory[transactionsHistory.length-1].transactionTimestamp.toString(),
+                   index:   transactionsHistory.length-1,
+                   context:   context,
+                   hideReview:   true,
+                    isExpanded:  widget.expandedPage
                    )).toList(),
               ),
             )
@@ -321,14 +320,7 @@ final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUr
     width: avatarSize,
     height: avatarSize,
     decoration: BoxDecoration(
-      // gradient: LinearGradient(
-      //   colors: [
-      //     AppColors.button.withOpacity(0.8),
-      //     Colors.white.withOpacity(0.6),
-      //   ],
-      //   begin: Alignment.topLeft,
-      //   end: Alignment.bottomRight,
-      // ),
+    
       border: Border.all(
                   color: Colorcodes.greyLight,
                   width: 0.3,

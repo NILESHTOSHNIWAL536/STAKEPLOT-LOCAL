@@ -427,6 +427,15 @@ String formatDate(String dateString) {
   return DateFormat('d MMM yyyy').format(date); // Format as Aug 2024
 }
 
+
+String getFullMonthName(int month) {
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  return monthNames[month - 1];
+}
+
 String getMonthName(int month) {
   const months = [
     'Jan',
