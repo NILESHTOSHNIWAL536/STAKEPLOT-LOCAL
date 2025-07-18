@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
@@ -84,7 +85,8 @@ Widget getPredictedCategoryIcons(
   Timer? _debounce;
 
   return Row(
-    children: predictions.entries.map((entry) {
+    children: getUniquePredictedCategories(predictions.entries).map((entry) {
+      String category=getCategoryForKeyword(entry.category);
       return Padding(
         padding: const EdgeInsets.only(right: 12),
         child: GestureDetector(
@@ -95,7 +97,7 @@ Widget getPredictedCategoryIcons(
             tagBool.value = true;
             final originalTransaction = transactionsHistory[index];
             transactionsHistory[index] = transaction.copyWith(
-              category: entry.category,
+              category: category,
               subcategory: "Other",
               needsReview: false,
             );
@@ -103,7 +105,7 @@ Widget getPredictedCategoryIcons(
 
             try {
               await updateTheTagOfTarnsactions(
-                entry.category,
+                category,
                 "Other",
                 transaction.id,
                 context,
@@ -120,8 +122,8 @@ Widget getPredictedCategoryIcons(
             }
           },
           child: Tooltip(
-            message: 'Tag as ${entry.category}',
-            child: getPredictedCategorySvgUrl(25, entry.category, 10, true),
+            message: 'Tag as ${category}',
+            child: getPredictedCategorySvgUrl(25,category, 10, true),
           ),
         ),
       );
