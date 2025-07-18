@@ -30,7 +30,7 @@ class AuthService {
           body: jsonEncode({'idToken': idToken}),
         );
         if (response.statusCode == 200) {
-          loginCalledData(response, context);
+         
           return json.decode(response.body);
         } else {}
       } else {}
@@ -38,42 +38,68 @@ class AuthService {
     return null;
   }
   // Apple Sign-In (new method)
-    Future<Map<String, dynamic>?> signInWithApple(context) async {
-      try {
-        final credential = await SignInWithApple.getAppleIDCredential(
-          scopes: [
-            AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName,
-          ],
-        );
-        // Extract data
-        final String? idToken = credential.identityToken;
-        final String? authCode = credential.authorizationCode;
-        final String? email = credential.email;
-        final String? fullName = credential.givenName != null
-            ? '${credential.givenName} ${credential.familyName ?? ''}'
-            : null;
-        final String? userId = credential.userIdentifier;
-        if (idToken == null) {
-          return null;
-        }
-        final response = await http.post(Uri.parse('$url/user/apple-auth'), 
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'idToken': idToken,
-            'authorizationCode': authCode,
-            'email': email,
-            'fullName': fullName,
-            'userId': userId,
-          }),
-        );
-        if (response.statusCode == 200) {
-          loginCalledData(response, context); // Reuse your login logic
-          return json.decode(response.body);
-        } else {
-        }
-      } catch (e) {
-      }
-      return null;
-    }
+ Future<Map<String, dynamic>?> signInWithApple(context) async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+      // Extract data
+      final String? idToken = credential.identityToken;
+      final String? authCode = credential.authorizationCode;
+      String? email = credential.email;
+      final String? fullName = credential.givenName != null
+          ? '${credential.givenName} ${credential.familyName ?? ''}'
+          : null;
 
+      if (idToken == null) {
+        print("Apple sign-in: No idToken received");
+        return null;
+      }
+      // if (email == null || email.contains('@privaterelay.appleid.com')) {
+      //   // Prompt user to enter their real email
+      //   // email = await _promptForEmail(context);
+      //   if (email == null) {
+      //     // User canceled the email input
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       const SnackBar(content: Text('Email is required to proceed')),
+      //     );
+      //     return null;
+      //   }
+      // }
+
+      print("credential from the apple store : $credential");
+      final response = await http.post(
+        Uri.parse('$url/user/apple-auth'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'idToken': idToken,
+          'authorizationCode': authCode,
+          'email': email,
+          'fullName': fullName,
+        }),
+      );
+
+      print("Apple sign-in response status: ${response.statusCode}");
+      print("Apple sign-in response body: ${response.body}");
+
+      if (response.statusCode == 400) {
+        print("Apple sign-in error: ${response.body}");
+        return null;
+      }
+
+      // Check response status
+      if (response.statusCode == 200) {
+        print("Apple sign-in response: ${response.body}");
+        return json.decode(response.body);
+      } else {
+        print("Apple backend error: ${response.body}");
+      }
+    } catch (e) {
+      print("Apple sign-in error: $e");
+    }
+    return null;
+  }
 }

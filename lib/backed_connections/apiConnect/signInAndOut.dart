@@ -100,7 +100,21 @@ void loginCalledData(response, context) async {
   Navigator.of(context)
       .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
 }
-
+void loginCalledDataForApple(response, context) async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  final body = response;
+  String accessToken = body['data']['accessToken'];
+  initGetControllers();
+  pref.setString("accessToken", "Bearer " + accessToken);
+  await getBankAccounts();
+  await initializeOneSignal(context);
+  userController.userId.value = body['data']['_id'];
+  isBankAccountLink.value = body['data']['isBankAccountLinked'];
+  acceptReset.value = false;
+  getPhoneNo(body);
+  Navigator.of(context)
+      .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+}
 void getPhoneNo(body) {
   List<dynamic> phoneList = body['data']['phone'] ?? [];
   String phone = "0";

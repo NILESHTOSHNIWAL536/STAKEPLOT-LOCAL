@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.da
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/appleSignIn.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
@@ -31,8 +32,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController =
-      TextEditingController(text: "");
+  final TextEditingController emailController = TextEditingController(text: "");
   final TextEditingController passwordController =
       TextEditingController(text: "");
   bool _isPasswordVisible = false;
@@ -110,27 +110,40 @@ class _LoginScreenState extends State<LoginScreen> {
                       Platform.isAndroid
                           ? Text('')
                           : SignInWithAppleButton(
-                            onPressed: () async {
-      if (appleSignInBool.value) return; // Prevent multiple clicks
-      appleSignInBool.value = true; // Set loading state
-      try {
-        final userdataApple =await AppleSignIN()
-                                    .signInWithApple(context);
-        if (userdataApple != null && userdataApple['data']['accessToken'] != null) {
-        } else if (userdataApple != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => UserDetailsPage(data: userdataApple)),
-          );
-        } else {
-        }
-      } finally {
-        appleSignInBool.value = false; // Reset loading state
-      }
-    },  
-     ),
-                      const SizedBox(height: 20),
+                              onPressed: () async {
+                                if (appleSignInBool.value)
+                                  return; // Prevent multiple clicks
+                                appleSignInBool.value =
+                                    true; // Set loading state
+                                try {
+                                  final userdataApple = await AuthService()
+                                      .signInWithApple(context);
+                                  print(
+                                      "User data received from the api: $userdataApple");
+                                  if (userdataApple != null &&
+                                      userdataApple['data']['accessToken'] !=
+                                          null) {
+                                    print("Access token is present.");
+                                    loginCalledDataForApple(userdataApple, context);
+                                  } else if (userdataApple != null) {
+                                    print(
+                                        "Navigating to UserDetailsPage with userdata: $userdataApple");
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              UserDetailsPage2(
+                                                  data: userdataApple)),
+                                    );
+                                  } else {
+                                    print("No user data received.");
+                                  }
+                                } finally {
+                                  appleSignInBool.value =
+                                      false; // Reset loading state
+                                }
+                              },
+                            ),
 
                       // const Spacer(),
 
@@ -149,51 +162,50 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-Widget containerIconSiginWith(IconData icon, Color color, context) {
-  return InkWell(
-    onTap: () async {
-      if (googleSignInBool.value) return; // Prevent multiple clicks
-      googleSignInBool.value = true; // Set loading state
-      try {
-        final userdata = await AuthService().signInWithGoogle(context);
-        print("User data received: $userdata");
-        if (userdata != null && userdata['data']['accessToken'] != null) {
-          print("Access token is present.");
-        } else if (userdata != null) {
-          print("Navigating to UserDetailsPage with userdata: $userdata");
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => UserDetailsPage(data: userdata)),
-          );
-        } else {
-          print("No user data received.");
+  Widget containerIconSiginWith(IconData icon, Color color, context) {
+    return InkWell(
+      onTap: () async {
+        if (googleSignInBool.value) return; // Prevent multiple clicks
+        googleSignInBool.value = true; // Set loading state
+        try {
+          final userdata = await AuthService().signInWithGoogle(context);
+          print("User data received: $userdata");
+          if (userdata != null && userdata['data']['accessToken'] != null) {
+            print("Access token is present.");
+            loginCalledDataForApple(userdata, context);
+          } else if (userdata != null) {
+            print("Navigating to UserDetailsPage with userdata: $userdata");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserDetailsPage(data: userdata)),
+            );
+          } else {
+            print("No user data received.");
+          }
+        } finally {
+          googleSignInBool.value = false; // Reset loading state
         }
-      } finally {
-        googleSignInBool.value = false; // Reset loading state
-      }
-    },
-    child: Container(
-      width: MediaQuery.sizeOf(context).width/5,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(10),
+      },
+      child: Container(
+        width: MediaQuery.sizeOf(context).width / 5,
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Obx(
+          () => googleSignInBool.value
+              ? Spinner(size: 30) // Show spinner when loading
+              : AvatarProfileImage(
+                  url: Sign.googleIcon,
+                  width: 40,
+                  height: 30,
+                ), // Show icon when not loading
+        ),
       ),
-      child: Obx(
-        () => googleSignInBool.value
-            ? Spinner(size: 30) // Show spinner when loading
-            : 
-         AvatarProfileImage(
-                      url: Sign.googleIcon,
-                      width: 40,
-                      height: 30,
-                     
-                    ), // Show icon when not loading
-      ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildWelcomeText() {
     return Column(
