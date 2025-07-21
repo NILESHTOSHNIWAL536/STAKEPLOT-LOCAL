@@ -405,7 +405,7 @@ class _TribeSearchState extends State<TribeChats> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  Chat(data: item, myId: myId, myprofile: myprofile),
+                  Chat(data: item, myId: userController.userId.value, myprofile: myprofile),
             ),
           );
         },

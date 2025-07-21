@@ -90,6 +90,9 @@ class PostCard extends StatelessWidget {
             onTap: flag
                 ? null
                 : () {
+                  commentList.clear();
+                 indexArray.clear();
+
                     Navigator.push(
                       context,
                       PageRouteBuilder(

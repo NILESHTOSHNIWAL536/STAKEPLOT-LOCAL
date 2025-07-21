@@ -506,7 +506,8 @@ void addChatSplitAmount(
   } catch (e) {}
 }
 
-Future<String> addImageToCloud2(imageFile) async {
+Future<String> addImageToCloud2(imageFile) async
+{
   final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
 
   final request = http.MultipartRequest('POST', url2)
