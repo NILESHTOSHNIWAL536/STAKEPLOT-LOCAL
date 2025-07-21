@@ -418,7 +418,7 @@ void getChatLoader(bool flag) async {
                               ? "Sent a split bill"
                               : "message";
         } catch (e) {
-          
+         print(e); 
         }
        
        var data = 
@@ -435,6 +435,7 @@ void getChatLoader(bool flag) async {
         chatList.add(data);
         chatListOriginal.add(data);
       } catch (e) {
+        print(e);
       }
     });
 
@@ -528,7 +529,7 @@ Future<String> addImageToCloud2(imageFile) async {
 void addMessageImage(context, String messageType, String messageObj, String id,
     File imageFile, data, me, socket, myId, roomIdVal) async {
   String urlPath = await addImageToCloud2(imageFile);
-
+   print(urlPath);
   messages.insert(
       0,
       Message(
@@ -556,6 +557,9 @@ void addMessageImage(context, String messageType, String messageObj, String id,
     "roomId": data['name'] + "" + data['name'],
     'isMasked': ismaskedUsers.value,
   });
+
+   getChatLoader(ismaskedUsers.value);
+   Navigator.pop(context);
 }
 
 void getChats2(data, key) async {

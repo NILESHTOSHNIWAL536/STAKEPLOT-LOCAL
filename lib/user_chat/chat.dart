@@ -99,11 +99,11 @@ class _ChatState extends State<Chat> {
   @override
   void dispose() {
     // Close the socket connection when the widget is disposed
-    if (socket != null) {
-      socket.disconnect();
-      socket.destroy();
-    }
-    super.dispose();
+    // if (socket != null) {
+    //   socket.disconnect();
+    //   socket.destroy();
+    // }
+    // super.dispose();
   }
 
   setUpSocketListener() {
@@ -364,12 +364,12 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  void getImage() async {
+  void getImage(context) async {
     final _picker = ImagePicker();
     final imageData = await _picker.pickImage(source: ImageSource.gallery);
 
     if (imageData != null) {
-      showData(imageData);
+      showData(imageData,context);
     }
   }
 
@@ -732,7 +732,7 @@ class _ChatState extends State<Chat> {
                     size: 25,
                   ),
                   onPressed: () {
-                    getImage();
+                    getImage(context);
                   }),
               IconButton(
                 icon: Icon(
@@ -944,10 +944,10 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  void showData(imageData) {
+  void showData(imageData,BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (context2) {
         return Center(
           child: Container(
             width: MediaQuery.of(context).size.width / 1.2,
@@ -984,12 +984,12 @@ class _ChatState extends State<Chat> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     textStyleColor(
-                        "Cancel", AppColors.accentColor, data, imageData),
+                        "Cancel", AppColors.accentColor, data, imageData,context2),
                     const SizedBox(
                       width: 5,
                     ),
                     textStyleColor(
-                        " Send ", AppColors.primaryColor, data, imageData),
+                        " Send ", AppColors.primaryColor, data, imageData,context2),
                   ],
                 ),
               ],
@@ -1000,12 +1000,14 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  Widget textStyleColor(str, color, data, imageData) {
+  Widget textStyleColor(str,Color color, data, imageData,BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: GestureDetector(
         onTap: () {
-          if (str == " Send ") {
+          try{
+          if (str.toString().trim().toLowerCase() == "Send".toLowerCase())
+          {
             addMessageImage(
               context,
               "image",
@@ -1018,9 +1020,15 @@ class _ChatState extends State<Chat> {
               widget.myId,
               roomId.value,
             );
+             
+          }else
+          {
+              getChatLoader(ismaskedUsers.value);
+              Navigator.pop(context);
           }
-          getChatLoader(ismaskedUsers.value);
-          Navigator.pop(context);
+          }catch(e){
+             print(e);
+          }
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
