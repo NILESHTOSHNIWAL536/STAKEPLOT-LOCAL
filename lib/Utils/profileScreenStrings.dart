@@ -17,6 +17,7 @@ class ProfileScreenStrings {
   String editProfileLabel = "Edit";
   String communityProfileLabel = "Community profile";
   String friendsListLabel = "Friends list";
+  String rewards = "Rewards";
   String friendsListLabelMasked = "Masked list";
   String historyArchivesLabel = "History archives";
   String termsConditionsLabel = "Terms & conditions";
@@ -78,6 +79,7 @@ class ProfileScreenStrings {
         editProfileLabel = data['editProfileLabel'] ?? editProfileLabel;
         communityProfileLabel = data['communityProfileLabel'] ?? communityProfileLabel;
         friendsListLabel = data['friendsListLabel'] ?? friendsListLabel;
+        rewards = data['rewards'] ?? rewards;
         historyArchivesLabel = data['historyArchivesLabel'] ?? historyArchivesLabel;
         termsConditionsLabel = data['termsConditionsLabel'] ?? termsConditionsLabel;
         logoutLabel = data['logoutLabel'] ?? logoutLabel;

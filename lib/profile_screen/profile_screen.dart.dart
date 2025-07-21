@@ -3,7 +3,6 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
-import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -16,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/rewards_overview.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -206,6 +206,21 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                 .friendsListSubLabel, // Direct access
                             onTap: () {
                               Navigator.pushNamed(context, '/Friends');
+                            },
+                          ),
+                          _buildOption(
+                            ProfileImage(url: ProfileIcons.friends),
+                            ProfileScreenStrings()
+                                .rewards, // Direct access
+                            ProfileScreenStrings()
+                                .friendsListSubLabel, // Direct access
+                            onTap: () {
+                              Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RewardsOverview(),
+      ),
+    );
                             },
                           ),
                         ],

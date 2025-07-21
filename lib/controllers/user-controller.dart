@@ -35,6 +35,7 @@ class UserController extends GetxController {
   RxString cupertinoPin = ''.obs;
   RxBool cupertinoAttemptCount = false.obs;
   RxString selectedBank = ''.obs;
+  RxString firstFetchedDate = ''.obs;
 
   // Lists of maps
   RxList<PostModel> savedList = <PostModel>[].obs;
@@ -90,8 +91,8 @@ class UserController extends GetxController {
         cupertinoPin.value = obj['cupertino_pin'].toString() ;
         cupertinoAttemptCount.value = obj['cupertinoAttemptCount'] != null ? obj['cupertinoAttemptCount'] > 5 : false;
         selectedBank.value = obj['selectedBank'] ?? '';
+        firstFetchedDate.value = obj['firstFetchedDate'] ?? '';
         
-      
         interestedTags.assignAll(List<String>.from(obj['interestedTags'] ?? []));
         likedPosts.assignAll(List<String>.from(obj['likedPosts'] ?? []));
         likedComments.assignAll(List<String>.from(obj['likedComments'] ?? []));

@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
@@ -15,10 +16,48 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+
+
+List<PredictionEntry> getUniquePredictedCategories(List<PredictionEntry> predictions) {
+  final Set<String> seenCategories = {};
+  final List<PredictionEntry> uniquePredictions = [];
+
+  for (final keyword in predictions) {
+    final category = getCategoryForKeyword(keyword.category);
+
+    if (!seenCategories.contains(category)) {
+      seenCategories.add(category);
+      uniquePredictions.add(keyword); // or add category if needed
+    }
+  }
+
+  return uniquePredictions;
+}
+
+
+
+String getCategoryForKeyword(String keyword) {
+  final lowerKeyword = keyword.toLowerCase();
+
+  for (final entry in categories.entries)
+  {
+    for (final item in entry.value)
+    {
+      if (lowerKeyword.contains(item.toLowerCase())) {
+        return entry.key;
+      }
+    }
+  }
+
+  return keyword; // return original if not found
+}
+
 
 final Map<int, Map<String, double>> weekData = {
   for (int i = 0; i < 5; i++)
@@ -425,6 +464,15 @@ Future<void> updateWidget() async {
 String formatDate(String dateString) {
   DateTime date = DateTime.parse(dateString);
   return DateFormat('d MMM yyyy').format(date); // Format as Aug 2024
+}
+
+
+String getFullMonthName(int month) {
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  return monthNames[month - 1];
 }
 
 String getMonthName(int month) {
@@ -876,6 +924,9 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
     searchController.text = accountIdPdf.value.toLowerCase();
   } else if (accountIdPdf.value == "-") {
     searchController.text = "";
+
+
+    
   }
 
   // Apply filter and close dialog

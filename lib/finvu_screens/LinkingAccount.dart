@@ -37,6 +37,8 @@ RxBool addBank = false.obs;
 RxBool addCheck = false.obs;
 List<FinvuLinkedAccountDetailsInfo> fetchAccountData = [];
 List<FinvuLinkedAccountDetailsInfo> seletedAccountInfomations = [];
+List<FinvuDiscoveredAccountInfo> info = [];
+RxMap<String,List<FinvuDiscoveredAccountInfo>> discoverAccountMap=<String,List<FinvuDiscoveredAccountInfo>>{}.obs;
 List<String> seletedAccountIds = [];
 RxBool addAccount = false.obs;
 RxBool getFetch = false.obs;
@@ -65,6 +67,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     count.value = 0;
     otpCount.value = 0;
     loopCount.value = 0;
+    discoverAccountMap.clear();
     getData();
     getinfo();
     getFetch.value = false;
@@ -401,33 +404,57 @@ class _LinkingAccountState extends State<LinkingAccount> {
             SizedBox(height: 10 * textScale),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20 * textScale),
-              child: TextField(
+              child:   Obx(() =>
+               TextField(
                 controller: otpController,
                 keyboardType: TextInputType.number,
                 onSubmitted: (value) {
-                  otpCount.value++;
                   linkAccount(_otpCode.value, fid, context, fipDetails);
                 },
                 decoration: InputDecoration(
                   hintText:FinvuStrings().enterOtp, // 
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12 * textScale)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12 * textScale),
+                    borderSide: BorderSide(
+                      color:  AppColors.primaryColor,
+                    )
+                  ),
+
+                   enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12 * textScale),
+                    borderSide: BorderSide(
+                      color: isOtpWrong.value
+                          ? Colorcodes.redDeleteIcon
+                          : AppColors.primaryColor,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12 * textScale),
+                    borderSide: BorderSide(
+                      color: isOtpWrong.value
+                          ? Colorcodes.redDeleteIcon
+                          : AppColors.primaryColor,
+                      width: 2,
+                    ),
+                  ),
+
                 ),
                 onChanged: (value) {
                   _otpCode.value = value;
                   _isOtpValid.value = value.length > 4;
                   isOtpWrong.value = false;
                 },
-              ),
-            ),
+              )
+            )),
             Obx(() => isOtpWrong.value
                 ? Padding(
-                    padding: EdgeInsets.fromLTRB(40 * textScale, 0, 0, 5 * textScale),
+                    padding: EdgeInsets.fromLTRB(20 * textScale, 4, 0, 5 * textScale),
                     child: Text(
                       FinvuStrings().incorrectOtp,
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w300,
-                        fontSize: 10 * textScale,
+                        fontSize: 13 * textScale,
                         color: Colors.red,
                       ),
                     ),
@@ -631,11 +658,13 @@ class _LinkingAccountState extends State<LinkingAccount> {
       });
       fipDetails = FinvuFIPDetails(fipId: fipId, typeIdentifiers: fetchFIPDetails.typeIdentifiers);
       FinvuFIPDetailsList[fipId] = fipDetails;
-      info = await finvuManager.discoverAccounts(fipDetails.fipId, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
-      if(index==0){
+      info = discoverAccountMap.containsKey(fipId) ?  discoverAccountMap[fipId]! :await finvuManager.discoverAccounts(fipDetails.fipId, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
+      if(index==0)
+      {
         count.value = 0;
       }
-      count.value += info.length;
+       discoverAccountMap[fipId]=info;
+       count.value += info.length;
        count.refresh();
     } catch (e) {
       loopCount++;

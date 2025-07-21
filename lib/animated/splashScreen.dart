@@ -35,10 +35,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkForUpdatesAndNavigate() async {
-  await checkForUpdate();  
-  await checkAuthAndNavigate();  // only navigate after update check
-}
-
+      if(SnackbarData().showUpdatecall) await checkForUpdate();  
+      await checkAuthAndNavigate();  // only navigate after update check
+  }
 
   void callApis() {
     SignupData signup = SignupData();
@@ -65,19 +64,40 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
+  // Widget build(BuildContext context) {
+  //   return SafeArea(
+  //     child: AnimatedSplashScreen.withScreenFunction(
+  //       backgroundColor: Colors.white,
+  //       duration: 1800,
+  //       splashIconSize: 1800,
+  //       splashTransition: SplashTransition.fadeTransition,
+  //       pageTransitionType: PageTransitionType.fade,
+  //       splash: Center(
+  //         child: Lottie.asset("assets/splashScreen/appScreen.json"),
+  //       ),
+  //       screenFunction: checkAuthAndNavigate,
+  //     ),
+  //   );
+  // }
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: AnimatedSplashScreen.withScreenFunction(
-        backgroundColor: Colors.white,
-        duration: 1800,
-        splashIconSize: 1000,
-        splashTransition: SplashTransition.fadeTransition,
-        pageTransitionType: PageTransitionType.fade,
-        splash: Center(
-          child: Lottie.asset("assets/splashScreen/appScreen.json"),
-        ),
-        screenFunction: checkAuthAndNavigate,
+  final size = MediaQuery.of(context).size; 
+
+  return AnimatedSplashScreen.withScreenFunction(
+    backgroundColor: Colors.white,
+    duration: 1800,
+    splashIconSize: size.height, 
+    splashTransition: SplashTransition.fadeTransition,
+    pageTransitionType: PageTransitionType.fade,
+    splash: SizedBox(
+      width: size.width,   
+      height: size.height, 
+      child: Lottie.asset(
+        "assets/splashScreen/appScreen.json",
+        fit: BoxFit.cover, 
       ),
-    );
-  }
+    ),
+    screenFunction: checkAuthAndNavigate,
+  );
+}
+
 }

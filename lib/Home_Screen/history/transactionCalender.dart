@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Bo
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -221,8 +222,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
   }
 
   void _changeMonth(int delta) {
-    final newMonth = DateTime(currentYear.value,
-        DateFormat('MMMM').parse(currentMonth.value).month + delta, 1);
+    final newMonth = DateTime(currentYear.value,DateFormat('MMMM').parse(currentMonth.value).month + delta, 1);
     currentMonth.value = DateFormat('MMMM').format(newMonth);
     currentYear.value = newMonth.year;
     selectedDate.value = ''; // Reset selected date when changing months
@@ -230,6 +230,16 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
     isDateSummaryView.value = false;
     _fetchDayWiseTransactionsForMonth(newMonth);
   }
+
+
+  String formatMonthYear(String isoDateString)
+   {
+      if(isoDateString.trim().isEmpty)return '';
+      final date = DateTime.parse(isoDateString).toLocal(); // Adjusts to local timezone
+      final month = getFullMonthName(date.month);
+      final year = date.year;
+      return '$month $year';
+ }
 
   // Future<void> _fetchDayWiseTransactionsForMonth(DateTime month) async {
   //   final transactions = await getDayWiseTransactions(context);
@@ -249,7 +259,17 @@ void _generateDateList() {
   final List<Map<String, dynamic>> tempDateList = [];
 
   final DateTime today = DateTime.now();
-  final DateTime startDate = DateTime(today.year - 1, today.month, today.day);
+
+    late DateTime startDate;
+    final String isoDate = userController.firstFetchedDate.value.trim();
+
+    if (isoDate == '') {
+      // Default to 1 year before today
+      startDate = DateTime(today.year - 1, today.month, today.day);
+    } else {
+      final parsedDate = DateTime.parse(isoDate).toLocal(); // Converts from UTC to local
+      startDate = DateTime(parsedDate.year, parsedDate.month, 1); // Start of that month
+    }
 
   DateTime currentDate = startDate;
 
@@ -482,14 +502,13 @@ tempDateList.sort((a, b) =>
                 final transaction = TransactionModel.fromJson(transactionData);
                 return GestureDetector(
                   
-                  child: historyTransactions(
-                    transaction,
-                    transaction.transactionTimestamp.toIso8601String(),
-                    index,
-                    context,
-                    true,
-                    true,
-
+                  child: HistoryTransactions(
+                  transaction:    transaction,
+                  date:   transaction.transactionTimestamp.toIso8601String(),
+                  index:     index,
+                  context:   context,
+                  hideReview: true,
+                  isExpanded:true,
                   ),
                 );
               },
@@ -721,7 +740,8 @@ void _scrollToIndex(int index,[bool flag=false]) {
     final isCurrentMonth = currentYear.value == now.year &&
         currentMonth.value == DateFormat('MMMM').format(now);
   
-
+    bool isPrevMonth = formatMonthYear(userController.firstFetchedDate.value)=='$currentMonth $currentYear';
+  
     return Column(
       
       children: [
@@ -732,9 +752,10 @@ void _scrollToIndex(int index,[bool flag=false]) {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                icon: const Icon(Icons.chevron_left,
-                    color: AppColors.accentColor),
-                onPressed: () => _changeMonth(-1),
+                icon:  Icon(Icons.chevron_left,
+                    color: isPrevMonth? AppColors.grey  :AppColors.accentColor
+                  ),
+                onPressed: () => isPrevMonth? null: _changeMonth(-1),
               ),
               Obx(() => Text(
                     '$currentMonth $currentYear',
@@ -748,8 +769,7 @@ void _scrollToIndex(int index,[bool flag=false]) {
               IconButton(
                 icon: Icon(
                   Icons.chevron_right,
-                  color:
-                      isCurrentMonth ? AppColors.grey : AppColors.accentColor,
+                  color: isCurrentMonth ? AppColors.grey : AppColors.accentColor,
                 ),
                 onPressed: isCurrentMonth ? null : () => _changeMonth(1),
               ),

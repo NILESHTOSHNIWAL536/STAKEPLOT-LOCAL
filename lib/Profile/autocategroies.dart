@@ -59,10 +59,12 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
         children: autoTransactionList.asMap().entries.map((entry) {
           int index = entry.key;
           TransactionModel transaction = TransactionModel.fromJson( entry.value);
-          return historyTransactions(
-              transaction,
-              transaction.transactionTimestamp.toString(),
-              index,context,true
+          return HistoryTransactions(
+            transaction:   transaction,
+             date:  transaction.transactionTimestamp.toString(),
+            index:   index,
+             context:   context,
+            hideReview:  true
             );
         }).toList(),
       ),

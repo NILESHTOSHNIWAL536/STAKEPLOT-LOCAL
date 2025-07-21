@@ -244,6 +244,7 @@ class ProfileIcons {
   static String support = "assets/icons/profileScreen/support.svg";
   static String terms = "assets/icons/profileScreen/terms.svg";
   static String emptyFrnds = "assets/icons/profileScreen/emptyFrnds.svg";
+  static String unclaimedCoupon = "assets/icons/profileScreen/UnclaimedCard.svg";
 }
 
 class Sign {

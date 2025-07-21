@@ -401,11 +401,11 @@ class _TribeSearchState extends State<TribeChats> {
           getChats(item);
           clear(item);
 
-          Navigator.push(
+         Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  Chat(data: item, myId: myId, myprofile: myprofile),
+                  Chat(data: item, myId: userController.userId.value, myprofile: myprofile),
             ),
           );
         },
