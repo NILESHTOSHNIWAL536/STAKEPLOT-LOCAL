@@ -333,7 +333,7 @@ class _LoginScreenState extends State<LoginScreen> {
             acceptReset.value = true;
 
             await getDeviceInfo("deviceData.value".toString(), context,
-                emailController, passwordController);
+                emailController, passwordController, );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,

@@ -5,13 +5,16 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/two_factor_email_verification.dart';
 import 'package:get/get.dart';
 
 class UserLoginedAlready extends StatelessWidget {
   var data;
-  var email;
-  var userpassword;
+  TextEditingController email;
+  TextEditingController userpassword;
+
   var isLoading = false.obs;
+
   UserLoginedAlready(
       {Key? key,
       required this.data,
@@ -41,35 +44,41 @@ class UserLoginedAlready extends StatelessWidget {
                   url: "assets/icons/lock.svg", width: 10, height: 10)),
           getContainer(context, body['message']),
           getContainer(context, "Device Limit Exceeded"),
-          getContainer(context, body['loggedInDevice']!=""? body['loggedInDevice']['device']??"" :""),
-          getContainer(context, body['loggedInDevice']!=""? body['loggedInDevice']['brand']??"": ""),
-
+          getContainer(
+              context,
+              body['loggedInDevice'] != ""
+                  ? body['loggedInDevice']['device'] ?? ""
+                  : ""),
+          getContainer(
+              context,
+              body['loggedInDevice'] != ""
+                  ? body['loggedInDevice']['brand'] ?? ""
+                  : ""),
           InkWell(
               onTap: () {
                 isLoading.value = true;
-              var loggedInDevice = body['loggedInDevice'];
-if (loggedInDevice != null && loggedInDevice is Map<String, dynamic>) {
-  forceLogoutUser(
-    body['existingSessionId'],
-    email,
-    userpassword,
-    context,
-    loggedInDevice['deviceId'] ?? "", // Check if deviceId exists and use it
-    (loggedInDevice['brand'] ?? "").toString() + " " + (loggedInDevice['device'] ?? "").toString()
-  );
-} else {
-  forceLogoutUser(
-    body['existingSessionId'],
-    email,
-    userpassword,
-    context,
-    "", // Empty string if loggedInDevice is not a Map or is null
-    ""
-  );
-}
-               
-               },
-              child: Obx(() =>isLoading.value? getspinner(context,30): getButton(context, "Logout User")))
+
+                getOTPForTwoFactorAuth(context, body['user']['name'], email.text.toString());
+
+                // Navigate to the OTP verification screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TwoFactorEmailVerification(
+                      data: {
+                        'email': email.text.toString(),
+                        'password': userpassword.text.toString(),
+                        'response': body,
+                        'isForcedLogin': true
+                      },
+                      // Pass the base URL
+                    ),
+                  ),
+                );
+              },
+              child: Obx(() => isLoading.value
+                  ? getspinner(context, 30)
+                  : getButton(context, "Logout User")))
         ],
       ),
     );

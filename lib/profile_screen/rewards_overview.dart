@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:coupon_uikit/coupon_uikit.dart';
 import 'dart:math' as math;
@@ -55,11 +57,9 @@ class _RewardsOverviewState extends State<RewardsOverview>
         ),
         title: Text(
           'Rewards',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
+           style: FontManager().getTextStyle(context,
+           fontSize: 16,
+                  lWeight: FontWeight.w500, color: AppColors.bg1)
         ),
         centerTitle: true,
       ),
@@ -73,16 +73,14 @@ class _RewardsOverviewState extends State<RewardsOverview>
               unselectedLabelColor: Colors.grey,
               indicatorColor: Colors.black,
               indicatorWeight: 2,
-              labelStyle: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-              unselectedLabelStyle: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-              ),
-              tabs: [
-                Tab(text: 'Claimed'),
+              labelStyle: FontManager().getTextStyle(context,
+           fontSize: 16,
+                  lWeight: FontWeight.w400, color: AppColors.primaryColor),
+              unselectedLabelStyle:FontManager().getTextStyle(context,
+           fontSize: 16,
+                  lWeight: FontWeight.w400, color: AppColors.now),
+              tabs: const [
+                Tab(text: 'Claimed', ),
                 Tab(text: 'Unclaimed'),
               ],
             ),
@@ -224,18 +222,16 @@ class _RewardsOverviewState extends State<RewardsOverview>
                 children: [
                   Text(
                     'Flat ₹199 off',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+                     style: FontManager().getTextStyle(context,
+           fontSize: 14,
+                  lWeight: FontWeight.w600, color: AppColors.bg1)
                   ),
                   SizedBox(height: 2),
                   Text(
                     'on order of ₹499 & above from derma co at play',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey.shade600,
-                    ),
+                     style: FontManager().getTextStyle(context,
+           fontSize: 12,
+                  lWeight: FontWeight.w400, color: AppColors.bg1),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -326,11 +322,9 @@ class _RewardsOverviewState extends State<RewardsOverview>
                     SizedBox(width: 12),
                     Text(
                       'You Won a Coupon!',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                       style: FontManager().getTextStyle(context,
+           fontSize: 20,
+                  lWeight: FontWeight.w700, color: AppColors.bg1)
                     ),
                   ],
                 ),
@@ -340,11 +334,9 @@ class _RewardsOverviewState extends State<RewardsOverview>
                 Text(
                   'You selected 2 transactions.\nAs a reward',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-                    height: 1.4,
-                  ),
+                   style: FontManager().getTextStyle(context,
+           fontSize: 12,
+                  lWeight: FontWeight.w500, color: AppColors.now)
                 ),
                 SizedBox(height: 24),
                 
@@ -353,11 +345,9 @@ class _RewardsOverviewState extends State<RewardsOverview>
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Select the category',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
+                     style: FontManager().getTextStyle(context,
+           fontSize: 12,
+                  lWeight: FontWeight.w600, color: AppColors.bg1)
                   ),
                 ),
                 SizedBox(height: 16),
@@ -414,11 +404,9 @@ class _RewardsOverviewState extends State<RewardsOverview>
             Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
+              style: FontManager().getTextStyle(context,
+           fontSize: 12,
+                  lWeight: FontWeight.w600, color: AppColors.bg1)
             ),
           ],
         ),
@@ -480,11 +468,9 @@ class _RewardsOverviewState extends State<RewardsOverview>
                     SizedBox(width: 12),
                     Text(
                       'You Won a Coupon!',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                       style: FontManager().getTextStyle(context,
+           fontSize: 12,
+                  lWeight: FontWeight.w700, color: AppColors.bg1)
                     ),
                   ],
                 ),
@@ -494,10 +480,9 @@ class _RewardsOverviewState extends State<RewardsOverview>
                 Text(
                   'pick one coupon below',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-                  ),
+                   style: FontManager().getTextStyle(context,
+           fontSize: 12,
+                  lWeight: FontWeight.w500, color: AppColors.now)
                 ),
                 SizedBox(height: 24),
                 
@@ -722,11 +707,14 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
                                 children: [
                                   Text(
                                     '₹${(widget.index + 1) * 50}',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFFEF4444),
-                                    ),
+                                    // style: TextStyle(
+                                    //   fontSize: 12,
+                                    //   fontWeight: FontWeight.bold,
+                                    //   color: Color(0xFFEF4444),
+                                    // ),
+                                     style: FontManager().getTextStyle(context,
+           fontSize: 16,
+                  lWeight: FontWeight.w500, color: Color(0xFFEF4444))
                                   ),
                                   Text(
                                     'OFF',
@@ -822,18 +810,15 @@ class CouponCardWidget extends StatelessWidget {
                     children: [
                       Text(
                         '$discount% OFF',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                        style: FontManager().getTextStyle(context,
+           fontSize: 24,
+                  lWeight: FontWeight.w500, color: AppColors.bg1)
                       ),
                       Text(
                         brandName,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                        ),
+                        style: FontManager().getTextStyle(context,
+           fontSize: 16,
+                  lWeight: FontWeight.w500, color: AppColors.bg1),
                       ),
                     ],
                   ),
@@ -843,11 +828,9 @@ class CouponCardWidget extends StatelessWidget {
               // Main offer text
               Text(
                 'Get $discount% off at your next $brandName buy',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
+                style: FontManager().getTextStyle(context,
+           fontSize: 16,
+                  lWeight: FontWeight.w700, color: AppColors.bg1),
               ),
               
               // Terms and conditions
@@ -880,11 +863,9 @@ class CouponCardWidget extends StatelessWidget {
                 children: [
                   Text(
                     'Copy code',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
+                    style: FontManager().getTextStyle(context,
+           fontSize: 14,
+                  lWeight: FontWeight.w500, color: AppColors.bg1)
                   ),
                   SizedBox(height: 12),
                   
@@ -901,12 +882,9 @@ class CouponCardWidget extends StatelessWidget {
                         Expanded(
                           child: Text(
                             couponCode,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade700,
-                              fontFamily: 'monospace',
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: FontManager().getTextStyle(context,
+           fontSize: 14,
+                  lWeight: FontWeight.w500, color: AppColors.primaryColor),
                           ),
                         ),
                         GestureDetector(
@@ -934,10 +912,9 @@ class CouponCardWidget extends StatelessWidget {
                   // Partnership text
                   Text(
                     'In partnership with fishmydeal - exclusively on Stakeplot',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade500,
-                    ),
+                    style: FontManager().getTextStyle(context,
+           fontSize: 10,
+                  lWeight: FontWeight.w700, color: AppColors.bg1),
                   ),
                 ],
               ),
