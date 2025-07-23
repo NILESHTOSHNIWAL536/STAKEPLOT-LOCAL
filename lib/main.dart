@@ -103,7 +103,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       navigatorKey: navigatorKey, // Keep your existing navigatorKey
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.backgroundColor),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
         scaffoldBackgroundColor: AppColors.backgroundColor,
       ),
       debugShowCheckedModeBanner: false,
