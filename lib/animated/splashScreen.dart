@@ -69,10 +69,10 @@ class _SplashScreenState extends State<SplashScreen> {
       child: AnimatedSplashScreen.withScreenFunction(
         backgroundColor: Colors.white,
         duration: 1800,
-        splashIconSize: 1000,
+        splashIconSize: double.infinity,
         splashTransition: SplashTransition.fadeTransition,
         pageTransitionType: PageTransitionType.fade,
-        splash: Center(
+         splash: SizedBox.expand( 
           child: Lottie.asset("assets/splashScreen/appScreen.json"),
         ),
         screenFunction: checkAuthAndNavigate,

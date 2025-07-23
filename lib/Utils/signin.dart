@@ -34,11 +34,9 @@ class SigninData {
     try {
       
       final response = await getDataApiCall("$url/constant/signin");
-
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};
-
         signInTitle = data['signInTitle'] ?? signInTitle;
         signInSubtitle = data['signInSubtitle'] ?? signInSubtitle;
         emailLabel = data['emailLabel'] ?? emailLabel;

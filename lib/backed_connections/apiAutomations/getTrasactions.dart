@@ -311,11 +311,10 @@ void getUserBankData(context) async {
 
 void updateTheTagOfTarnsactions2(
     category, subCategory, transactionId, context, index) async {
-  String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
+  String urlPath = "${url}/transactionauto/c/${transactionId}";
   var response = await updateDataApiCall2(urlPath, {
     'category': category,
     'subcategory': subCategory,
-
   });
 
   if (getFlagOfResponse(response)) {
