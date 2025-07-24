@@ -22,6 +22,8 @@ class UserController extends GetxController {
   RxString phone = ''.obs;
   RxString currency = 'INR'.obs;
   RxInt coins = 0.obs;
+  RxInt coupons = 0.obs;
+  RxInt score = 0.obs;
   RxString aboutMe = 'Hello'.obs;
   RxString avatar = ''.obs;
   RxString avatarBackGround = ''.obs;
@@ -69,8 +71,11 @@ class UserController extends GetxController {
 
       if (response.statusCode == 200) {
         final res = jsonDecode(response.body);
-        final obj = res['data'];
 
+        final obj = res['data'];
+        print(" object ${obj}");
+        print(" score ${obj['score']}");
+        print(" cps ${obj['coupons']}");
         userId.value = obj['_id'] ?? '';
         userName.value = obj['name'] ?? '';
         isGoogleUser.value = obj['isGoogleUser'] ?? false;
@@ -78,9 +83,13 @@ class UserController extends GetxController {
         canMaskMessage.value = obj['canMaskMessage'] ?? false;
         email.value = obj['email'] ?? '';
         dob.value = obj['dob'];
-        phone.value = (obj['phone'] is List && obj['phone'].isNotEmpty) ? obj['phone'][0] : '';
+        phone.value = (obj['phone'] is List && obj['phone'].isNotEmpty)
+            ? obj['phone'][0]
+            : '';
         currency.value = obj['currency'] ?? 'INR';
         coins.value = obj['coins'] ?? 0;
+        coupons.value = obj['coupons'] ?? 0;
+        score.value = obj['score'] ?? 0;
         aboutMe.value = obj['aboutMe'] ?? 'Hello';
         avatar.value = obj['avatarType'] ?? 'assets/avatar/menp1.svg';
         avatarBackGround.value = obj['avatarBackGround'] ?? '';
@@ -88,19 +97,24 @@ class UserController extends GetxController {
         firstTimeLogin.value = obj['firstTimeLogin'] ?? true;
         isBankAccountLinked.value = obj['isBankAccountLinked'] ?? false;
         fetchInProgress.value = obj['fetchInProgress'] ?? false;
-        cupertinoPin.value = obj['cupertino_pin'].toString() ;
-        cupertinoAttemptCount.value = obj['cupertinoAttemptCount'] != null ? obj['cupertinoAttemptCount'] > 5 : false;
+        cupertinoPin.value = obj['cupertino_pin'].toString();
+        cupertinoAttemptCount.value = obj['cupertinoAttemptCount'] != null
+            ? obj['cupertinoAttemptCount'] > 5
+            : false;
         selectedBank.value = obj['selectedBank'] ?? '';
         firstFetchedDate.value = obj['firstFetchedDate'] ?? '';
-        
-        interestedTags.assignAll(List<String>.from(obj['interestedTags'] ?? []));
+
+        interestedTags
+            .assignAll(List<String>.from(obj['interestedTags'] ?? []));
         likedPosts.assignAll(List<String>.from(obj['likedPosts'] ?? []));
         likedComments.assignAll(List<String>.from(obj['likedComments'] ?? []));
-        likedProducts.assignAll(List<String>.from(obj['likedProducts'] ?? []));        
+        likedProducts.assignAll(List<String>.from(obj['likedProducts'] ?? []));
         savedPostIds.assignAll(List<String>.from(obj['saved'] ?? []));
         // Friends
-        friendsList.assignAll(List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
-        frdsListOrigin.assignAll(List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
+        friendsList.assignAll(
+            List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
+        frdsListOrigin.assignAll(
+            List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
         friendsListDetails.clear();
         for (var friend in friendsList) {
           final id = friend['_id'];
@@ -111,16 +125,13 @@ class UserController extends GetxController {
           };
         }
 
-       getMaskendUsers(true);
-       getMaskendUsers(false);
-       getSaved();
-       getuserPost(obj['_id']);
-      
+        getMaskendUsers(true);
+        getMaskendUsers(false);
+        getSaved();
+        getuserPost(obj['_id']);
       }
-    } catch (e)
-    {
-    } 
-    finally {
+    } catch (e) {
+    } finally {
       isLoading.value = false;
     }
   }
