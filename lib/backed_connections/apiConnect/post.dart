@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
@@ -13,12 +15,13 @@ import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:http/http.dart' as http;
 
-void addReply(context, String data, String commentId, String postId) async {
+Future<http.Response>  addReply(context, String data, String commentId, String postId) async {
   var body = {'comment': commentId, 'reply': data, 'post': postId};
   var response = await postDataApiCall('${url}/reply/', body);
   if (!getFlagOfResponse(response)) {
     snackBarCalledfail(context, SnackbarData().unableToAddReply, Colors.red);
   }
+  return response;
 }
 
 void deletePost(id, context) async {
@@ -200,8 +203,7 @@ Future<void> getPost(context) async {
 }
 
 Future<void> getTranding(context) async {
-  var response =
-      await getDataApiCall('${url}/post/trending/${postController.currentPageTranding.value}');
+  var response = await getDataApiCall('${url}/post/trending/${postController.currentPageTranding.value}');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -266,4 +268,91 @@ Future<List<dynamic>> savePostGetData(context) async {
       var obj = his['data'];
        postController.uniquePostDeatils = PostModel.fromJson(obj[0]);
     } else {}   
+  }
+
+
+  void deleteCommentReply({required String commentId,required String postId,required BuildContext context,required String type,required int commentIndex,required int replyIndex})async
+  {
+       try{ 
+            bool typeBool= type=='comment';
+            String urlPath=  url + ( typeBool ? '/comment/${postId}/${commentId}':'/reply/${commentId}');
+            var response=await deleteDataApiCall(urlPath);
+            if(getFlagOfResponse(response))
+            {
+                if(typeBool)
+                {
+                   int index = commentList.indexWhere((comment) => comment.sId == commentId);
+                   if(index!=-1)
+                   {
+                      commentList.removeAt(index);
+                      indexArray.removeAt(index);
+                      postController.postCommentCount[commentId]= postController.postCommentCount[commentId]!-1;
+                   }
+                }else{
+
+                    int index = commentList.indexWhere((comment) => comment.sId == postId);
+                    
+                     if(index!=-1)
+                     {
+                       int replyIndex = commentList[index].replies!.indexWhere((reply) => reply.sId == commentId);
+
+                         if(replyIndex!=-1)commentList[index].replies!.removeAt(replyIndex);
+                          commentList.refresh();
+                     }
+                }
+
+                 snackBarCalled(context, typeBool ?"deleted comment successfully":"Delete reply successfully");
+            }else{
+                 snackBarCalledfail(context, typeBool ?"can't delete comment":"can't delete reply");
+            }
+       }
+       catch(e)
+       {
+          print(e);
+       }
+       Navigator.pop(context);
+  }
+
+  void editCommentReply({required String commentId,required String postId,required BuildContext context,required String type,required String newText})async
+  {
+       try{ 
+          bool typeBool= type=='comment';
+            String urlPath=  url + ( typeBool ? '/comment/${commentId}':'/reply/${commentId}');
+            var body={
+               typeBool?  'comment':'reply'  :newText
+            };
+            var response=await updateDataApiCall2(urlPath,body);
+            if(getFlagOfResponse(response))
+            {
+              if(typeBool)
+                {
+                   int index = commentList.indexWhere((comment) => comment.sId == commentId);
+                   if(index!=-1)
+                   {
+                      commentList[index].commentText=newText;
+                   }
+                }else{
+                    //687a299fcb1fe084df6d3f5c
+                    int index = commentList.indexWhere((comment) => comment.sId == postId);
+                    
+                     if(index!=-1)
+                     {
+                       int replyIndex = commentList[index].replies!.indexWhere((reply) => reply.sId == commentId);
+                         if(replyIndex!=-1){
+                          commentList[index].replies![replyIndex].replyText=newText;
+                        }
+                     }
+                }
+                 commentList.refresh();
+                 snackBarCalled(context, typeBool ?"updated comment successfully":"updated reply successfully");
+                 
+            }else{
+                 snackBarCalledfail(context, typeBool ?"can't update comment":"can't update reply");
+            }
+       }
+       catch(e)
+       {
+          print(e);
+       }
+       Navigator.pop(context);
   }

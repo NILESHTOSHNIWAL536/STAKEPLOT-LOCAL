@@ -14,8 +14,7 @@ import 'package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/coupons/coupon_card.dart';
 import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+
 // Import CouponCardWidget
 
 class RewardsOverview extends StatefulWidget {
@@ -308,7 +307,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
                       lWeight: FontWeight.w400,
                       color: AppColors.bg1,
                     ),
-                    maxLines: 2,
+                    maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
@@ -394,17 +393,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
-                Text(
-                  'You selected 2 transactions.\nAs a reward',
-                  textAlign: TextAlign.center,
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 12,
-                    lWeight: FontWeight.w500,
-                    color: AppColors.now,
-                  ),
-                ),
+               
                 SizedBox(height: 24),
                 Align(
                   alignment: Alignment.centerLeft,

@@ -5,13 +5,16 @@ import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Tribe/model_delete_edit.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart";
+import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/model/comment.dart";
 import "package:flutter_application_code_stakeplot/model/post_model.dart";
+import "package:flutter_application_code_stakeplot/routes.dart";
 import "package:flutter_svg/svg.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -20,10 +23,12 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 
 RxBool toggle = false.obs;
+RxList<Comments> commentList = <Comments>[].obs;
+RxList<int> indexArray = <int>[].obs;
 
 class TribeUnique extends StatefulWidget {
   final String id;
- PostModel dataObj;
+  PostModel dataObj;
   RxBool popBox;
   TribeUnique(
       {Key? key, required this.id, required this.dataObj, required this.popBox})
@@ -45,15 +50,13 @@ class _TribeHomeState extends State<TribeUnique> {
   List commentListData = [];
   List postList = [];
 
-  RxList<Comments> commentList = <Comments>[].obs;
-  RxList<int> indexArray = <int>[].obs;
   late Comments commentObj;
 
   bool onReply = false;
   String replyid = "";
   String name = "";
   String userId = "";
-  late PostModel dataObj ;
+  late PostModel dataObj;
 
   List<RxInt> countLikes = [];
   int i = 0;
@@ -88,7 +91,7 @@ class _TribeHomeState extends State<TribeUnique> {
 
     // auth.id = authorId;
     auth.name = userController.maskedName.value;
-    auth.avatar =userController. avatar.value;
+    auth.avatar = userController.avatar.value;
     auth.avatarBackGround = userController.avatarBackGround.value;
 
     obj.replies = [];
@@ -98,9 +101,9 @@ class _TribeHomeState extends State<TribeUnique> {
     obj.downvotes = 0;
     obj.postDetails = post;
 
-    commentList.insert(0,obj);
-    indexArray.add(i);
-    i++;
+    // commentList.insert(0,obj);
+    // indexArray.add(i);
+    // i++;
 
     final response = await http.post(
       Uri.parse('${url}/comment/'),
@@ -119,11 +122,17 @@ class _TribeHomeState extends State<TribeUnique> {
 
       var id = body['data']['_id'];
       obj.sId = id;
-       postController.postCount[id] = 0;
+
+      commentList.insert(0, obj);
+      indexArray.add(i);
+      i++;
+
+      postController.postCount[id] = 0;
       snackBarCalled(
           context, SnackbarData().commentAddedSuccessfully, Colors.black);
     } else {
-      snackBarCalledfail(context, SnackbarData().unableToAddComment, Colors.red);
+      snackBarCalledfail(
+          context, SnackbarData().unableToAddComment, Colors.red);
     }
   }
 
@@ -136,8 +145,6 @@ class _TribeHomeState extends State<TribeUnique> {
     getTransactionComments();
     getInfo();
   }
-
-
 
   void getInfo() async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -184,7 +191,7 @@ class _TribeHomeState extends State<TribeUnique> {
       historyListData.forEach((e) {
         // Comments obj=Comments();
         //  historyListData.forEach((element) {
-         postController.postCount[e["_id"]] = e['upvotes'];
+        postController.postCount[e["_id"]] = e['upvotes'];
         //  });
 
         Comments obj = Comments.fromJson(e);
@@ -216,49 +223,50 @@ class _TribeHomeState extends State<TribeUnique> {
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.popBox.value) { // post screen withoutv comments
+    if (!widget.popBox.value) {
+      // post screen withoutv comments
       return Scaffold(
         backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
           leading: InkWell(
-            onTap: (){
-               Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back,size: 30,)),
-            title: Text(
-                                   "FinSpace",
-                                   style: FontManager().getTextStyle(context,
-                                       lWeight: FontWeight.w600, fontSize: 20, color: AppColors.finSpaceColor),
-                                 ),
-                                 
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back,
+                size: 30,
+              )),
+          title: Text(
+            "FinSpace",
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.w600,
+                fontSize: 20,
+                color: AppColors.finSpaceColor),
+          ),
         ),
         // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
         extendBody: true,
 
         body: SafeArea(
           child: Container(
-           
             child: SingleChildScrollView(
               controller: _scrollController,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Padding(
-                     padding: const EdgeInsets.symmetric(vertical: 10),
-                   ),
-                  Obx(() =>  PostCard(
-                          data: postController.reloadUniquePost.value
-                              ?  postController.uniquePostDeatils
-                              :  postController.uniquePostDeatils,
-                          flag: true,
-                          index: -1,
-                          isTribeOne: true,
-                        )
-                      ),
-                  
-                       uploadData( postController.uniquePostDeatils)
-                     
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  Obx(() => PostCard(
+                        data: postController.reloadUniquePost.value
+                            ? postController.uniquePostDeatils
+                            : postController.uniquePostDeatils,
+                        flag: true,
+                        index: -1,
+                        isTribeOne: true,
+                      )),
+                  uploadData(postController.uniquePostDeatils)
                 ],
               ),
             ),
@@ -270,9 +278,7 @@ class _TribeHomeState extends State<TribeUnique> {
         child: Container(
           child: AnimatedPadding(
             padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context)
-                    .viewInsets
-                    .bottom),
+                bottom: MediaQuery.of(context).viewInsets.bottom),
             duration: const Duration(milliseconds: 100),
             child: SingleChildScrollView(
               controller: _scrollController,
@@ -281,7 +287,7 @@ class _TribeHomeState extends State<TribeUnique> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Obx(() => widget.popBox.value
-                      ? uploadData( postController.uniquePostDeatils)
+                      ? uploadData(postController.uniquePostDeatils)
                       : SizedBox.shrink()),
                 ],
               ),
@@ -301,28 +307,35 @@ class _TribeHomeState extends State<TribeUnique> {
 
   Widget uploadData(PostModel dataObj) {
     return Padding(
-      padding:  widget.popBox.value?const EdgeInsets.only(bottom: 15, top: 10):const EdgeInsets.only(bottom: 0, top: 0),
+      padding: widget.popBox.value
+          ? const EdgeInsets.only(bottom: 15, top: 10)
+          : const EdgeInsets.only(bottom: 0, top: 0),
       child: Container(
         child: Column(
           children: [
-           widget.popBox.value? Text(
-              "Comments",
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w600, fontSize: 20, color: Colors.black),
-            ):SizedBox.shrink(),
-            widget.popBox.value? Divider(
-              color: AppColors.buttonBorder,
-              thickness: 0.8,
-            ):SizedBox.shrink(),
-            commentedData(),
-
+            widget.popBox.value
+                ? Text(
+                    "Comments",
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.black),
+                  )
+                : SizedBox.shrink(),
+            widget.popBox.value
+                ? Divider(
+                    color: AppColors.buttonBorder,
+                    thickness: 0.8,
+                  )
+                : SizedBox.shrink(),
+            commentedData(dataObj),
           ],
         ),
       ),
     );
   }
 
-  Widget commentedData() {
+  Widget commentedData(PostModel dataObj) {
     return Container(
         width: MediaQuery.sizeOf(context).width / 1,
         padding: const EdgeInsets.all(10),
@@ -345,16 +358,26 @@ class _TribeHomeState extends State<TribeUnique> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  widget.popBox.value?  replyid == "" // adding comment
-                        ? InputDate("Add a comment", TextInputType.name,
-                            calController1, widget.id)
-                        : SizedBox.shrink():SizedBox.shrink(),
+                    widget.popBox.value
+                        ? replyid == "" // adding comment
+                            ? InputDate("Add a comment", TextInputType.name,
+                                calController1, widget.id)
+                            : SizedBox.shrink()
+                        : SizedBox.shrink(),
+                    // Column(
+                    //   children: commentList
+                    //       .map((index) =>
+                    //           dataComments(commentList[index], index,dataObj))
+                    //       .toList(),
+                    // ),
                     Column(
-                      children: indexArray
-                          .map((index) =>
-                              dataComments(commentList[index], index))
-                          .toList(),
-                    ),
+                      children: commentList.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        var comment = entry.value;
+
+                        return dataComments(comment, index, dataObj);
+                      }).toList(),
+                    )
                   ],
                 ),
               ),
@@ -363,8 +386,7 @@ class _TribeHomeState extends State<TribeUnique> {
         ));
   }
 
- 
-  Widget dataComments(Comments data, int index) {
+  Widget dataComments(Comments data, int index, PostModel dataObj) {
     List<Replies> list = data.replies ?? [];
 
     String idData = data.sId == null ? "" : data.sId.toString();
@@ -395,14 +417,129 @@ class _TribeHomeState extends State<TribeUnique> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Text(
-                            (data.author!.name ?? "name"),
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: AppColors.bg1),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 1.2,
+                          padding: const EdgeInsets.symmetric(vertical: 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                (data.author!.name ?? "name"),
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    color: AppColors.bg1),
+                              ),
+
+                              //  trimlowercase(dataObj.author.maskedName) == trimlowercase(userController.maskedName) || (trimlowercase(data.author!.name)) == trimlowercase(userController.maskedName)?
+                              //   Row(
+                              //        children: [
+                              //         InkWell(
+                              //           onTap: (){
+                              //               showDeleteDialogComment(context,data.commentText.toString(),'comment',data.sId.toString(),dataObj.id,index,0);
+                              //           },
+                              //           child: Icon(Icons.delete,size: 20,color: Colorcodes.red)),
+                              //         (trimlowercase(data.author!.name)) == trimlowercase(userController.maskedName)  ?  Padding(
+                              //           padding: const EdgeInsets.only(left: 5),
+                              //           child: IconButton(
+                              //             icon: Icon(Icons.edit),
+                              //             onPressed: () {
+                              //               showEditBottomSheet(
+                              //                 context: context,
+                              //                 initialText:data.commentText.toString() ,
+                              //                 id: data.sId.toString(),
+                              //                 postId: dataObj.id,
+                              //                 type: 'comment'
+
+                              //               );
+                              //             },
+                              //          ),
+                              //         )
+                              //         :
+                              //         SizedBox.shrink(),
+
+                              //        ],
+                              //     ):SizedBox.shrink(),
+
+                              trimlowercase(dataObj.author.maskedName) ==
+                                          trimlowercase(
+                                              userController.maskedName) ||
+                                      trimlowercase(data.author!.name) ==
+                                          trimlowercase(
+                                              userController.maskedName)
+                                  ? Align(
+                                      alignment: Alignment.topRight,
+                                      
+                                      child: PopupMenuButton<String>(
+                                        icon: const Icon(Icons.more_horiz_rounded,
+                                            size: 20),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        position: PopupMenuPosition.under,
+                                        offset: Offset(-20, -10),
+                                        onSelected: (value) {
+                                          if (value == 'delete') {
+                                            showDeleteDialogComment(
+                                              context,
+                                              data.commentText.toString(),
+                                              'comment',
+                                              data.sId.toString(),
+                                              dataObj.id,
+                                              index,
+                                              0,
+                                            );
+                                          } else if (value == 'edit') {
+                                            showEditBottomSheet(
+                                              context: context,
+                                              initialText:
+                                                  data.commentText.toString(),
+                                              id: data.sId.toString(),
+                                              postId: dataObj.id,
+                                              type: 'comment',
+                                            );
+                                          }
+                                        },
+                                        color: Colorcodes.white,
+                                        itemBuilder: (BuildContext context) {
+                                          List<PopupMenuEntry<String>> items =
+                                              [];
+                                          if (trimlowercase(
+                                                  data.author!.name) ==
+                                              trimlowercase(
+                                                  userController.maskedName)) {
+                                            items.add(
+                                              PopupMenuItem(
+                                                value: 'edit',
+                                                child: Text('Edit',
+                                                    style: getStyle()),
+                                              ),
+                                            );
+                                          }
+                                          if (trimlowercase(dataObj
+                                                      .author.maskedName) ==
+                                                  trimlowercase(userController
+                                                      .maskedName) ||
+                                              trimlowercase(
+                                                      data.author!.name) ==
+                                                  trimlowercase(userController
+                                                      .maskedName)) {
+                                            items.add(
+                                              PopupMenuItem(
+
+                                                value: 'delete',
+                                                child: Text('Delete',
+                                                    style: getStyle()),
+                                              ),
+                                            );
+                                          }
+                                          return items;
+                                        },
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -426,14 +563,15 @@ class _TribeHomeState extends State<TribeUnique> {
                                   height:
                                       MediaQuery.sizeOf(context).height / 36,
                                   width: MediaQuery.sizeOf(context).width / 7,
-                                 
                                   child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          if (userController.maskedName.value.trim().isEmpty) {
+                                          if (userController.maskedName.value
+                                              .trim()
+                                              .isEmpty) {
                                             MaskedNameDialogBox
                                                 .showMaskedNameDialog(context);
                                           } else {
@@ -446,29 +584,40 @@ class _TribeHomeState extends State<TribeUnique> {
                                                 data,
                                                 index);
                                             String l1 = "liked" + idData;
-                                            bool liked =  postController.likedList.contains(l1);
+                                            bool liked = postController
+                                                .likedList
+                                                .contains(l1);
                                             String l2 = "disliked" + idData;
-                                            bool disliked =
-                                                 postController.likedList.contains(l2);
+                                            bool disliked = postController
+                                                .likedList
+                                                .contains(l2);
                                             if (liked) {
-                                               postController.likedList.remove(l1);
-                                               postController.postCount[idData] =
-                                                   postController.postCount[idData]! - 1;
-                                              if ( postController.postCount[idData]! < 0) {
-                                                 postController.postCount[idData] = 0;
+                                              postController.likedList
+                                                  .remove(l1);
+                                              postController.postCount[idData] =
+                                                  postController
+                                                          .postCount[idData]! -
+                                                      1;
+                                              if (postController
+                                                      .postCount[idData]! <
+                                                  0) {
+                                                postController
+                                                    .postCount[idData] = 0;
                                               }
                                             } else {
-                                               postController.likedList.add(l1);
-                                               postController.postCount[idData] =
-                                                   postController.postCount[idData]! + 1;
+                                              postController.likedList.add(l1);
+                                              postController.postCount[idData] =
+                                                  postController
+                                                          .postCount[idData]! +
+                                                      1;
                                             }
-                                             postController.likedList.remove(l2);
+                                            postController.likedList.remove(l2);
                                             reRender.value = !reRender.value;
                                           }
                                         },
                                         child: likeIcon(
                                             context,
-                                             postController.likedList.contains(
+                                            postController.likedList.contains(
                                                 "liked" + data.sId.toString())),
                                       ),
                                       Padding(
@@ -478,13 +627,17 @@ class _TribeHomeState extends State<TribeUnique> {
                                           data.sId == null
                                               ? '0'
                                               : (reRender.value
-                                                  ?  postController.postCount[data.sId]! < 0
-                                                      ?  postController.postCount[
-                                                              dataObj.id]
+                                                  ? postController.postCount[
+                                                              data.sId]! <
+                                                          0
+                                                      ? postController
+                                                          .postCount[dataObj.id]
                                                           .toString()
-                                                      : ( postController.postCount[data.sId]
+                                                      : (postController
+                                                          .postCount[data.sId]
                                                           .toString())
-                                                  : ( postController.postCount[data.sId]
+                                                  : (postController
+                                                      .postCount[data.sId]
                                                       .toString())),
                                           style: FontManager().getTextStyle(
                                               context,
@@ -532,10 +685,18 @@ class _TribeHomeState extends State<TribeUnique> {
                             ],
                           ),
                         ),
+                        // Column(
+                        //   children:
+                        //       list.map((obj) => replyDatas(obj, data,dataObj,index)).toList(),
+                        // ),
                         Column(
-                          children:
-                              list.map((obj) => replyDatas(obj, data)).toList(),
-                        ),
+                          children: list.asMap().entries.map((entry) {
+                            int indexReply = entry.key;
+                            var obj = entry.value;
+                            return replyDatas(
+                                obj, data, dataObj, index, indexReply);
+                          }).toList(),
+                        )
                       ],
                     ),
                   ),
@@ -564,6 +725,11 @@ class _TribeHomeState extends State<TribeUnique> {
         ));
   }
 
+  getStyle() {
+    return FontManager().getTextStyle(context,
+        lWeight: FontWeight.bold, fontSize: 14, color: AppColors.primaryColor);
+  }
+
   Widget InputDate(lableText, keyBoard, TextEditingController Textcontroller,
       String postId) {
     return Center(
@@ -581,9 +747,10 @@ class _TribeHomeState extends State<TribeUnique> {
                 MaskedNameDialogBox.showMaskedNameDialog(context);
               } else {
                 addComment(context, value, postId);
-                 postController.postCommentCount.putIfAbsent(
-                    postId, () => widget.dataObj.comments);
-                 postController.postCommentCount.update(postId, (value) => value + 1);
+                postController.postCommentCount
+                    .putIfAbsent(postId, () => widget.dataObj.comments);
+                postController.postCommentCount
+                    .update(postId, (value) => value + 1);
                 Textcontroller.clear();
               }
             },
@@ -626,7 +793,8 @@ class _TribeHomeState extends State<TribeUnique> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 AvatarProfileImagePng(
-                  url:userController. avatar.value, // Use the user's name from state
+                  url: userController
+                      .avatar.value, // Use the user's name from state
                   width: 10,
                   height: 23,
                 ),
@@ -652,8 +820,7 @@ class _TribeHomeState extends State<TribeUnique> {
                         suffixIcon: suffix(
                             Textcontroller.text, commentId, Textcontroller),
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white
-                                )),
+                            borderSide: const BorderSide(color: Colors.white)),
                         focusedBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: AppColors.buttonBorder)),
@@ -693,16 +860,15 @@ class _TribeHomeState extends State<TribeUnique> {
           MaskedNameDialogBox.showMaskedNameDialog(context);
         } else {
           String value = Textcontroller.text;
-         
 
           addComment(
             context,
             value,
             postId,
           );
-          postController.postCommentCount.putIfAbsent(
-              postId, () => widget.dataObj.comments ?? 0);
-           postController.postCommentCount.update(postId, (value) => value + 1);
+          postController.postCommentCount
+              .putIfAbsent(postId, () => widget.dataObj.comments ?? 0);
+          postController.postCommentCount.update(postId, (value) => value + 1);
           Textcontroller.clear();
         }
       },
@@ -726,7 +892,8 @@ class _TribeHomeState extends State<TribeUnique> {
     );
   }
 
-  Widget replyDatas(Replies replayObj, Comments data) {
+  Widget replyDatas(Replies replayObj, Comments data, PostModel dataObj,
+      int index, int replyIndex) {
     double width = MediaQuery.of(context).size.width;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 0),
@@ -734,17 +901,11 @@ class _TribeHomeState extends State<TribeUnique> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-                AvatarProfileImagePng(
-                    url: replayObj.author!.avatar.toString(),
-                    width: 10,
-                    height: 23,
-                    // background: data.author!.avatarBackGround.toString(),
-                  ),
-            // AvatarProfile(
-            //     name: replayObj.author!.name.toString(),
-            //     width: width,
-            //     height: 23,
-            //     background: replayObj.author!.avatarBackGround.toString()),
+            AvatarProfileImagePng(
+              url: replayObj.author!.avatar.toString(),
+              width: 10,
+              height: 23,
+            ),
             const SizedBox(
               width: 0,
             ),
@@ -758,28 +919,135 @@ class _TribeHomeState extends State<TribeUnique> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text((replayObj.author!.name.toString()),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: AppColors.bg1)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Text((replayObj.author!.name.toString()),
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: AppColors.bg1)),
+                      ),
+                      //  trimlowercase(dataObj.author.maskedName) == trimlowercase(userController.maskedName)   ||  trimlowercase(replayObj.author!.name)==trimlowercase(userController.maskedName)?
+                      //           Row(
+                      //                children: [
+                      //                       InkWell(
+                      //                         onTap: (){
+                      //                           showDeleteDialogComment(context,replayObj.replyText!,'reply',replayObj.sId.toString(),data.sId.toString(),index,replyIndex);
+                      //                         },
+                      //                         child: Icon(Icons.delete,size: 20,color: Colorcodes.red)),
+                      //                       trimlowercase(replayObj.author!.name)==trimlowercase(userController.maskedName)? Padding(
+                      //                         padding: const EdgeInsets.only(left: 5),
+                      //                         child:IconButton(
+                      //                     icon: Icon(Icons.edit),
+                      //                     onPressed: () {
+                      //                       showEditBottomSheet(
+                      //                         context: context,
+                      //                         initialText:replayObj.replyText.toString() ,
+                      //                         id: replayObj.sId.toString(),
+                      //                         postId: data.sId.toString(),
+                      //                         type: 'reply'
+                      //                       );
+                      //                     },
+                      //                  ),
+                      //                       ):SizedBox.shrink(),
+                      //                ],
+                      //             ):SizedBox.shrink(),
+
+                      trimlowercase(dataObj.author.maskedName) ==
+                                  trimlowercase(userController.maskedName) ||
+                              trimlowercase(replayObj.author!.name) ==
+                                  trimlowercase(userController.maskedName)
+                          ? Align(
+                              alignment: Alignment.topRight,
+                              heightFactor: 1.1,
+                              widthFactor: 1.1,
+                            
+                              child: PopupMenuButton<String>(
+                                icon: const Icon(Icons.more_horiz_rounded, size: 20),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                position: PopupMenuPosition.under,
+                                offset: Offset(-20, -10),
+                                onSelected: (value) {
+                                  if (value == 'delete') {
+                                    showDeleteDialogComment(
+                                      context,
+                                      replayObj.replyText ?? '',
+                                      'reply',
+                                      replayObj.sId.toString(),
+                                      data.sId.toString(),
+                                      index,
+                                      replyIndex,
+                                    );
+                                  } else if (value == 'edit') {
+                                    showEditBottomSheet(
+                                      context: context,
+                                      initialText: replayObj.replyText ?? '',
+                                      id: replayObj.sId.toString(),
+                                      postId: data.sId.toString(),
+                                      type: 'reply',
+                                    );
+                                  }
+                                },
+                                 color: Colorcodes.white,
+                                itemBuilder: (BuildContext context) {
+                                  List<PopupMenuEntry<String>> items = [];
+
+                                  // Show "Edit" only if the logged-in user is the reply author
+                                  if (trimlowercase(replayObj.author!.name) ==
+                                      trimlowercase(
+                                          userController.maskedName)) {
+                                    items.add(
+                                      PopupMenuItem(
+                                        value: 'edit',
+                                        child: Text('Edit', style: getStyle()),
+                                      ),
+                                    );
+                                  }
+
+                                  // Show "Delete" if the user is either the post owner or the reply author
+                                  if (trimlowercase(
+                                              dataObj.author.maskedName) ==
+                                          trimlowercase(
+                                              userController.maskedName) ||
+                                      trimlowercase(replayObj.author!.name) ==
+                                          trimlowercase(
+                                              userController.maskedName)) {
+                                    items.add(
+                                      PopupMenuItem(
+                                        value: 'delete',
+                                        child:
+                                            Text('Delete', style: getStyle()),
+                                      ),
+                                    );
+                                  }
+
+                                  return items;
+                                },
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ],
                   ),
-                  SizedBox(
-                    child: Text((replayObj.replyText!),
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: AppColors.commentColor,
-                        )),
-                  ),
+                  Text((replayObj.replyText!),
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: AppColors.commentColor,
+                      )),
                 ],
               ),
             )
           ]),
     );
+  }
+
+  String trimlowercase(str) {
+    return str.toString().trim().toLowerCase();
   }
 
   void upvote2(context, String str, String objectId, dataObj, historyListData2,
@@ -819,11 +1087,10 @@ class _TribeHomeState extends State<TribeUnique> {
 
       commentList.add(dataObj);
       commentList.removeLast();
-    } else {
-    }
+    } else {}
   }
 
-  void reply(value, commentId, Textcontroller) {
+  void reply(value, commentId, Textcontroller) async {
     if (userController.maskedName.value.trim().isEmpty) {
       MaskedNameDialogBox.showMaskedNameDialog(context);
     } else {
@@ -835,21 +1102,23 @@ class _TribeHomeState extends State<TribeUnique> {
       }
 
       if (commentId == "") return;
-      addReply(context, value, commentId, widget.id);
-      replyid = "";
+      var responce = await addReply(context, value, commentId, widget.id);
+      var body = jsonDecode(responce.body);
+      replyid = '';
       Replies rep = Replies();
-      rep.commentId = replyid;
+      rep.sId = body['data']['_id'];
+      rep.commentId = body['data']['comment'];
       rep.replyText = value;
       Author author = Author();
       author.name = userController.maskedName.value;
       author.id = name;
       author.avatar = userController.avatar.value;
       author.name = userController.maskedName.value;
-      author.avatar =userController. avatar.value;
+      author.avatar = userController.avatar.value;
       author.avatarBackGround = userController.avatarBackGround.value;
       //  author.avatar=avatar;
       rep.author = author;
-      commentObj.replies!.insert(0,rep);
+      commentObj.replies!.insert(0, rep);
       Textcontroller.clear();
       autofocus.value = false;
       setState(() {});

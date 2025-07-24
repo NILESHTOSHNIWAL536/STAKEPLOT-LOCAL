@@ -953,13 +953,12 @@ class _ChatState extends State<Chat> {
             width: MediaQuery.of(context).size.width / 1.2,
             height: MediaQuery.of(context).size.height / 3.2,
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            decoration: BoxDecoration(
-                color: AppColors.backgroundColor,
-                borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: AppColors.backgroundColor,borderRadius: BorderRadius.circular(12)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+
                 Text(
                   "Do you want to send this?",
                   style: FontManager().getTextStyle(
@@ -967,7 +966,6 @@ class _ChatState extends State<Chat> {
                     fontSize: 14,
                     color: AppColors.bg1,
                     lWeight: FontWeight.bold,
-                    //  fontFamily: AutofillHints.birthdayDay
                   ),
                 ),
 
@@ -979,17 +977,12 @@ class _ChatState extends State<Chat> {
                       child: Image.file(File(imageData.path))),
                 ),
 
-                //  const SizedBox(height: 30,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    textStyleColor(
-                        "Cancel", AppColors.accentColor, data, imageData,context2),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    textStyleColor(
-                        " Send ", AppColors.primaryColor, data, imageData,context2),
+                    textStyleColor("Cancel", AppColors.accentColor, data, imageData,context2),
+                    const SizedBox(width: 5,),
+                    textStyleColor(" Send ", AppColors.primaryColor, data, imageData,context2),
                   ],
                 ),
               ],
