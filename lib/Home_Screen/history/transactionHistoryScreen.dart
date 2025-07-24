@@ -208,25 +208,35 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                           : screenHeight / 1.25;
                     }
 
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: calculatedHeight,
-                      child: IndexedStack(
-                        index: isDateSummaryView.value ? 0 : 1,
-                        children: [
-                          CalendarTransactionScreen(),
-                          SingleChildScrollView(
-                            controller: scrollController,
-                            child: TransactionHistory(
-                              isYearView: false,
-                              isflag: true,
-                              showIcon: false,
-                              expandedPage: false,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                   return Container(
+  width: MediaQuery.of(context).size.width,
+  height: calculatedHeight,
+  child: IndexedStack(
+    index: isDateSummaryView.value ? 0 : 1,
+    children: [
+      CalendarTransactionScreen(),
+      NotificationListener<ScrollNotification>(
+        onNotification: (scrollNotification) {
+          if (scrollNotification is ScrollStartNotification) {
+            // ✅ Dismiss keyboard when scrolling starts
+            FocusScope.of(context).unfocus();
+          }
+          return false;
+        },
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: TransactionHistory(
+            isYearView: false,
+            isflag: true,
+            showIcon: false,
+            expandedPage: false,
+          ),
+        ),
+      ),
+    ],
+  ),
+);
+
                   }),
                 ],
               ),

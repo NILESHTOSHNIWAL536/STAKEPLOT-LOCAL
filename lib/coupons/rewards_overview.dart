@@ -8,10 +8,11 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/coupon_card.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/envelope_grid.dart';
+import 'package:flutter_application_code_stakeplot/coupons/coupon_card.dart';
+import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -108,15 +109,15 @@ class _RewardsOverviewState extends State<RewardsOverview>
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Obx(() => Text(
-              'Rewards (${userController.coupons.value} Unclaimed)',
+        title: Text(
+              'Rewards ',
               style: FontManager().getTextStyle(
                 context,
                 fontSize: 16,
                 lWeight: FontWeight.w500,
                 color: AppColors.bg1,
               ),
-            )),
+            ),
         centerTitle: true,
       ),
       body: Column(
@@ -163,7 +164,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
 
   Widget _buildClaimedTab() {
     return Obx(() => isLoading.value
-        ? Center(child: CircularProgressIndicator())
+        ? Center(child: Spinner())
         : claimedCoupons.isEmpty
             ? Center(child: Text('No claimed coupons'))
             : Padding(
@@ -193,7 +194,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
           mainAxisSpacing: 16,
           childAspectRatio: 1.2,
         ),
-        itemCount: userController.coupons.value > 6 ? 6 : userController.coupons.value,
+        itemCount: userController.coupons.value ,
         itemBuilder: (context, index) {
           return _buildEnvelopeCard();
         },
@@ -448,7 +449,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
   Widget _buildCategoryCard(String title, String emoji, Color backgroundColor) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pop();
+        // Navigator.of(context).pop();
         _fetchCategoryCoupons(title);
         _showCouponSelectionPopup(context, title);
       },
@@ -516,48 +517,11 @@ class _RewardsOverviewState extends State<RewardsOverview>
                     ),
                   ),
                 ),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.shade100,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        '🎁',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                    Text(
-                      'You Won a Coupon!',
-                      style: FontManager().getTextStyle(
-                        context,
-                        fontSize: 12,
-                        lWeight: FontWeight.w700,
-                        color: AppColors.bg1,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Pick one coupon below',
-                  textAlign: TextAlign.center,
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 12,
-                    lWeight: FontWeight.w500,
-                    color: AppColors.now,
-                  ),
-                ),
+                
                 SizedBox(height: 24),
                 Expanded(
                   child: Obx(() => isLoading.value
-                      ? Center(child: CircularProgressIndicator())
+                      ? Center(child: Spinner())
                       : categoryCoupons.isEmpty
                           ? Center(child: Text('No coupons available'))
                           : EnvelopeGrid(categoryCoupons: categoryCoupons)),

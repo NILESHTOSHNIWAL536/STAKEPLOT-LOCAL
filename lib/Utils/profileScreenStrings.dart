@@ -27,6 +27,7 @@ class ProfileScreenStrings {
   // ✅ Sublabels
   String communityProfileSubLabel = "Check your community profile";
   String friendsListSubLabel = "Check your friends list here";
+  String rewardsListSubLabel = "Find your rewards list here";
   String friendsListSubLabelMasked = "Check your Masked list here";
   String historyArchivesSubLabel = "Find your hidden history here";
   String termsConditionsSubLabel = "Please follow our terms and conditions";
@@ -86,6 +87,7 @@ class ProfileScreenStrings {
         appVersionLabel = data['appVersionLabel'] ?? appVersionLabel;
         communityProfileSubLabel = data['communityProfileSubLabel'] ?? communityProfileSubLabel;
         friendsListSubLabel = data['friendsListSubLabel'] ?? friendsListSubLabel;
+        rewardsListSubLabel = data['rewardsListSubLabel'] ?? rewardsListSubLabel;
         historyArchivesSubLabel = data['historyArchivesSubLabel'] ?? historyArchivesSubLabel;
         termsConditionsSubLabel = data['termsConditionsSubLabel'] ?? termsConditionsSubLabel;
         logoutSubLabel = data['logoutSubLabel'] ?? logoutSubLabel;

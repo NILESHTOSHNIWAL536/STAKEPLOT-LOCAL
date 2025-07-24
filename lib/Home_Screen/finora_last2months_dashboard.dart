@@ -4,8 +4,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class FinoraLastTwoMonthsDashboard extends StatefulWidget {
@@ -51,12 +54,19 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ?  Center(child: Spinner())
             : Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Summary Cards Row
+                     textStyleImage(context: context,text: HomepageStringsDart().finora,
+                       fontsize: 16,
+                       c: AppColors.accentColor,
+                       fontWeight: FontWeight.w600,
+                     ),
+            const SizedBox(height: 14),
                     Row(
                       children: [
                         Expanded(
@@ -94,7 +104,7 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
                         //   ],
                         // ),
                         height: MediaQuery.sizeOf(context).height/3,
-                        color: Colors.amber,
+                        
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: SizedBox(
@@ -212,12 +222,17 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.75),
+              color: Colors.black,
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
               '$month\nDay: ${data.x}\n₹ ${_formatAmount(data.y)}',
-              style: const TextStyle(color: Colors.white, fontSize: 10),
+               style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w600,
+              fontSize: 10,
+              color: AppColors.backgroundColor,
+            ),
             ),
           );
         },
@@ -243,10 +258,11 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
           dataLabelSettings: DataLabelSettings(
             isVisible: true,
             labelAlignment: ChartDataLabelAlignment.top,
-            textStyle: const TextStyle(
+            textStyle:  FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w600,
               fontSize: 10,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.bg1,
             ),
             builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
               if (pointIndex == _getPeakIndex(_getMonth1Data())) {
@@ -265,11 +281,12 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
                   ),
                   child: Text(
                     '₹ ${_formatAmount(data.y)}',
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
+                    style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w600,
+              fontSize: 10,
+              color: AppColors.bg1,
+            ),
                   ),
                 );
               }
@@ -297,10 +314,11 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
           dataLabelSettings: DataLabelSettings(
             isVisible: true,
             labelAlignment: ChartDataLabelAlignment.top,
-            textStyle: const TextStyle(
+            textStyle: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w600,
               fontSize: 10,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.bg1,
             ),
             builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
               if (pointIndex == _getMonth2Data().length - 1) {
@@ -319,11 +337,12 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
                   ),
                   child: Text(
                     '₹ ${_formatAmount(data.y)}',
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
+                     style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w600,
+              fontSize: 10,
+              color: AppColors.bg1,
+            ),
                   ),
                 );
               }

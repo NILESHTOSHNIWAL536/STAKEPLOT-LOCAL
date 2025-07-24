@@ -15,6 +15,7 @@ class CouponCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isClaimed = onClaim.toString().contains('Closure: () => null');
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: CouponCard(
@@ -167,7 +168,7 @@ class CouponCardWidget extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: onClaim,
+                  onPressed: isClaimed ? null : () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF4C51BF),
                     padding: EdgeInsets.symmetric(vertical: 16),
@@ -176,7 +177,7 @@ class CouponCardWidget extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Save',
+                    isClaimed ? 'Claimed' : 'Close',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

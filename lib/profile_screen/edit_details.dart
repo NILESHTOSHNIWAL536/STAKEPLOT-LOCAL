@@ -1,400 +1,6 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-// import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
-// import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
-// import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-// import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
-// import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-// import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
-// import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
-// import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
-// import 'package:flutter_application_code_stakeplot/profile_screen/userstats.dart';
-// import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
-// import 'package:get/get.dart';
-// import 'dart:io';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:local_auth/local_auth.dart';
-// import 'package:intl/intl.dart';
-
-// class EditDetails extends StatefulWidget {
-//   const EditDetails({super.key});
-
-//   @override
-//   State<EditDetails> createState() => _EditDetailsState();
-// }
-
-// class _EditDetailsState extends State<EditDetails> {
-//   File? _image;
-//   final ImagePicker _picker = ImagePicker();
-//   UserController userController = ControllerManagement.userController;
-//   Future<void> _pickImage() async {
-//     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-//     if (pickedFile != null) {
-//       setState(() {
-//         _image = File(pickedFile.path);
-//       });
-//     }
-//   }
-
-//   final Map<String, TextEditingController> _controllers = {
-//     ProfileScreenStrings().nameLabel: TextEditingController(
-//         text: ControllerManagement.userController.userName.value),
-//     ProfileScreenStrings().emailLabel: TextEditingController(
-//         text: ControllerManagement.userController.email.value),
-//     ProfileScreenStrings().dobLabel: TextEditingController(
-//         text: ControllerManagement.userController.dob.value),
-//     ProfileScreenStrings().numberLabel:
-//         TextEditingController(text: number.value),
-//   };
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     changeAvater.value = userController.avatar.value;
-//     checkBiometricsStatus();
-//     userController.fetchUserInfo();
-//   }
-
-//   @override
-//   void dispose() {
-//     // Dispose all controllers when the widget is removed from the tree
-//     _controllers.forEach((_, controller) => controller.dispose());
-//     super.dispose();
-//   }
-
-//   void checkBiometricsStatus() async {
-//     final LocalAuthentication auth = LocalAuthentication();
-
-//     bool canCheckBiometrics = await auth.canCheckBiometrics;
-//     bool isDeviceSupported = await auth.isDeviceSupported();
-//     List<BiometricType> availableBiometrics =
-//         await auth.getAvailableBiometrics();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: AppColors.backgroundColor,
-//       appBar: AppBar(
-//         title: textStyleOnly2(
-//           context: context,
-//           text: ProfileScreenStrings().editProfileTitle,
-//           fontsize: 18,
-//           color: AppColors.accentColor,
-//           fontWeight: FontWeight.bold,
-//         ),
-//         backgroundColor: AppColors.backgroundColor,
-//         elevation: 0,
-//         iconTheme: const IconThemeData(color: Colors.black),
-//         actions: [
-//           IconButton(
-//               icon: Icon(Icons.delete, color: Colors.red),
-//               onPressed: () {
-//                 // Show dialog box for confirmation
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                       builder: (context) => DeleteAccountScreen()),
-//                 );
-//               })
-//         ],
-//       ),
-//       body: SingleChildScrollView(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             // Profile Picture
-//             Column(
-//               children: [
-//                 Obx(() => AvatarProfile(
-//                       name: userController.userName.value,
-//                       width: 5,
-//                       height: 10,
-//                       background: userController.avatarBackGround.value,
-//                       flag: true,
-//                     )),
-//                 // Obx(() => AvatarProfileImage(
-//                 //       url: avaterUrlPath(userName.value),
-//                 //       width: 14,
-//                 //       height: 9,
-//                 //     )),
-//                 GestureDetector(
-//                   onTap: () {
-//                     // var data = {
-//                     //   'name': userName.value,
-//                     //   'email': email.value,
-//                     // };
-//                     // showModalBottomSheet(
-//                     //   isScrollControlled: true,
-//                     //   context: context,
-//                     //   builder: (context) {
-//                     //     return Avatar(
-//                     //       data: data,
-//                     //       isEdit: true,
-//                     //     );
-//                     //   },
-//                     // );
-
-//                     // Navigator.push(
-//                     //   context,
-//                     //   MaterialPageRoute(
-//                     //       builder: (context) => UserStatsScreen()),
-//                     // );
-//                   },
-//                   child: Padding(
-//                     padding: EdgeInsets.only(top: 0.0),
-//                     child: textStyleOnly2(
-//                       context: context,
-//                       text: "",
-//                       fontsize: 14,
-//                       color: AppColors.bg3,
-//                       fontWeight: FontWeight.w400,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             const SizedBox(height: 20),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 Align(
-//                   alignment: Alignment.topLeft,
-//                   child: textStyleOnly2(
-//                     context: context,
-//                     text: ProfileScreenStrings().personalDetailsLabel,
-//                     fontsize: 16,
-//                     color: AppColors.bg3,
-//                     fontWeight: FontWeight.w400,
-//                   ),
-//                 ),
-//                 Obx(() => (bankAccountLinkedList.isEmpty ||
-//                         (hideBackAccountPassword.value ||
-//                             userController.cupertinoPin.value == "0" ||
-//                             userController.cupertinoPin.value == "00"))
-//                     ? SizedBox.shrink()
-//                     : InkWell(
-//                         onTap: () {
-//                           resetCupertinoPin(context);
-//                         },
-//                         child: Row(
-//                           children: [
-//                             Icon(Icons.lock_reset,
-//                                 color: AppColors.primaryColor, size: 20),
-//                             SizedBox(width: 4),
-//                             textStyleOnly2(
-//                               context: context,
-//                               text: ProfileScreenStrings().resetPinLabel,
-//                               fontsize: 14,
-//                               color: AppColors.primaryColor,
-//                               fontWeight: FontWeight.w600,
-//                             ),
-//                           ],
-//                         ),
-//                       )),
-//               ],
-//             ),
-//             const SizedBox(height: 20),
-//             Container(
-//               decoration: BoxDecoration(
-//                 color: AppColors.mt,
-//                 borderRadius: BorderRadius.circular(10),
-//               ),
-//               child: Column(
-//                 children: [
-//                   _buildNonEditableField(
-//                       Icons.email,
-//                       ProfileScreenStrings().emailLabel,
-//                       userController.email.value),
-//                   Divider(),
-//                   _buildNonEditableField(
-//                       Icons.person,
-//                       ProfileScreenStrings().nameLabel,
-//                       userController.userName.value),
-//                   (userController.phone.value == "0" ||
-//                           userController.phone.value == '')
-//                       ? SizedBox.shrink()
-//                       : Divider(),
-//                   (userController.phone.value == "0" ||
-//                           userController.phone.value == '')
-//                       ? SizedBox.shrink()
-//                       : _buildNonEditableField(
-//                           Icons.phone,
-//                           ProfileScreenStrings().numberLabel,
-//                           userController.phone.value),
-//                   Divider(),
-//                   _buildNonEditableField(
-//                       Icons.calendar_today,
-//                       ProfileScreenStrings().dobLabel,
-//                       userController.dob.value.isNotEmpty?
-//                       DateFormat('yyyy-MM-dd').format(DateTime.parse(userController.dob.value)):'Not provided'),
-//                 ],
-//               ),
-//             ),
-
-//             const SizedBox(height: 20),
-//             Divider(),
-//             const SizedBox(height: 10),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 Align(
-//                   alignment: Alignment.topLeft,
-//                   child: textStyle(
-//                       text: ProfileScreenStrings().accountDetailsLabel,
-//                       context: context,
-//                       fontWeight: FontWeight.bold,
-//                       fontsize: 14),
-//                 ),
-//                 InkWell(
-//                     onTap: () {
-//                       number.value = userController.phone.value;
-//                       isFromEditDeatils.value = true;
-//                       Navigator.push(
-//                         context,
-//                         MaterialPageRoute(
-//                           builder: (context) => MobileNumber(
-//                             flag: true,
-//                             formEditDetails: true,
-//                           ),
-//                         ),
-//                       );
-//                     },
-//                     child: textStyle(
-//                         text: ProfileScreenStrings().addBankLabel,
-//                         context: context,
-//                         fontWeight: FontWeight.bold,
-//                         fontsize: 14)),
-//               ],
-//             ),
-//             // Account Details
-//             const SizedBox(height: 20),
-//             getListOfBankConnected(),
-//             const SizedBox(height: 20),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget getListOfBankConnected() {
-//     return Container(
-//       child: Column(
-//         children: [
-//           Obx(() => Column(
-//                 children: bankAccountLinkedList.map((e) {
-//                   return _buildAccountDetails(
-//                       e['bankName'], e['maskedAccNumber'], e, e['bankLogo']);
-//                 }).toList(),
-//               )),
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget _buildNonEditableField(IconData icon, String label, String value) {
-   
-//     return Container(
-//       padding: EdgeInsets.symmetric(vertical: 0),
-//       width: MediaQuery.of(context).size.width / 1.1,
-//       child: Center(
-//         child: TextFormField(
-//           enabled: false,
-//           decoration: InputDecoration(
-//             contentPadding: EdgeInsets.symmetric(vertical: 10),
-//             // prefixIcon: Icon(icon, color: Colors.blueGrey),
-//             prefixIcon: Padding(
-//               padding: const EdgeInsets.all(6.0),
-//               child: Container(
-//                   decoration: BoxDecoration(
-//                     color: AppColors.button,
-//                     borderRadius: BorderRadius.circular(10),
-//                   ),
-//                   child: Icon(icon, color: AppColors.primaryColor)),
-//             ),
-//             border: InputBorder.none, // No border
-//             enabledBorder: InputBorder.none, // No border when not focused
-//             focusedBorder: InputBorder.none,
-//             hintText: value,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildAccountDetails(
-//       String bankName, String accountNumber, var data, String logo) {
-//     return Card(
-//         //shape: ,
-//         elevation: 2,
-//         color: AppColors.mt,
-//         child: ListTile(
-//             leading: Image.network(
-//               logo,
-//               width: 30,
-//               height: 30,
-//               fit: BoxFit.fitWidth,
-//             ),
-//             title: textStyleOnly2(
-//               context: context,
-//               text: bankName,
-//               fontsize: 14,
-//               color: AppColors.bg2,
-//               fontWeight: FontWeight.w600,
-//             ),
-//             subtitle: textStyleOnly2(
-//               context: context,
-//               text: accountNumber,
-//               fontsize: 14,
-//               color: AppColors.bg3,
-//               fontWeight: FontWeight.w400,
-//             ),
-//             trailing: IconButton(
-//                 icon: Icon(Icons.delete, color: AppColors.debitColor),
-//                 onPressed: () {
-//                   // Show dialog box for confirmation
-//                   showDialog(
-//                     context: context,
-//                     builder: (BuildContext context) {
-//                       return AlertDialog(
-//                         title: Text('Delete Account'),
-//                         content: Text(
-//                             'Are you sure you want to delete this account?'),
-//                         actions: [
-//                           TextButton(
-//                             onPressed: () {
-//                               Navigator.of(context).pop(); // Close the dialog
-//                             },
-//                             child: Text('Cancel'),
-//                           ),
-//                           TextButton(
-//                             onPressed: () {
-//                               // Add your delete logic here  jhjbhj
-//                               deleteBankAccount(
-//                                   bankid: data['bankId'],
-//                                   AccountId: data['accountId'],
-//                                   context: context);
-//                               // Close the dialog
-//                             },
-//                             child: Text('Delete'),
-//                           ),
-//                         ],
-//                       );
-//                     },
-//                   );
-//                 })));
-//   }
-// }
-
-
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -404,16 +10,14 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
+import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/emailUpdateOtp.dart';
 import 'package:get/get.dart';
-
 import 'package:local_auth/local_auth.dart';
 import 'package:intl/intl.dart';
 
@@ -425,42 +29,41 @@ class EditDetails extends StatefulWidget {
 }
 
 class _EditDetailsState extends State<EditDetails> {
-  UserController userController = ControllerManagement.userController;
- 
+  final UserController userController = ControllerManagement.userController;
 
   final Map<String, TextEditingController> _controllers = {
-    ProfileScreenStrings().nameLabel: TextEditingController(
-        text: ControllerManagement.userController.userName.value),
-    ProfileScreenStrings().emailLabel: TextEditingController(
-        text: ControllerManagement.userController.email.value),
-    ProfileScreenStrings().dobLabel: TextEditingController(
-        text: ControllerManagement.userController.dob.value),
-    ProfileScreenStrings().numberLabel:
-        TextEditingController(text: number.value),
+    ProfileScreenStrings().nameLabel: TextEditingController(),
+    ProfileScreenStrings().emailLabel: TextEditingController(),
+    ProfileScreenStrings().dobLabel: TextEditingController(),
+    ProfileScreenStrings().numberLabel: TextEditingController(),
   };
 
   @override
   void initState() {
     super.initState();
-    changeAvater.value = userController.avatar.value;
+    // Initialize controllers with reactive values
+    _controllers[ProfileScreenStrings().nameLabel]!.text = userController.userName.value;
+    _controllers[ProfileScreenStrings().emailLabel]!.text = userController.email.value;
+    _controllers[ProfileScreenStrings().dobLabel]!.text = userController.dob.value;
+    _controllers[ProfileScreenStrings().numberLabel]!.text = number.value;
+
+   
     checkBiometricsStatus();
     userController.fetchUserInfo();
   }
 
   @override
   void dispose() {
-    // Dispose all controllers when the widget is removed from the tree
+    // Dispose all controllers
     _controllers.forEach((_, controller) => controller.dispose());
     super.dispose();
   }
 
   void checkBiometricsStatus() async {
     final LocalAuthentication auth = LocalAuthentication();
-
     bool canCheckBiometrics = await auth.canCheckBiometrics;
     bool isDeviceSupported = await auth.isDeviceSupported();
-    List<BiometricType> availableBiometrics =
-        await auth.getAvailableBiometrics();
+    List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
   }
 
   @override
@@ -480,15 +83,14 @@ class _EditDetailsState extends State<EditDetails> {
         iconTheme: const IconThemeData(color: Colors.black),
         actions: [
           IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () {
-                // Show dialog box for confirmation
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DeleteAccountScreen()),
-                );
-              })
+            icon: const Icon(Icons.delete, color: Colors.red),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  DeleteAccountScreen()),
+              );
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -506,45 +108,7 @@ class _EditDetailsState extends State<EditDetails> {
                       background: userController.avatarBackGround.value,
                       flag: true,
                     )),
-                // Obx(() => AvatarProfileImage(
-                //       url: avaterUrlPath(userName.value),
-                //       width: 14,
-                //       height: 9,
-                //     )),
-                GestureDetector(
-                  onTap: () {
-                    // var data = {
-                    //   'name': userName.value,
-                    //   'email': email.value,
-                    // };
-                    // showModalBottomSheet(
-                    //   isScrollControlled: true,
-                    //   context: context,
-                    //   builder: (context) {
-                    //     return Avatar(
-                    //       data: data,
-                    //       isEdit: true,
-                    //     );
-                    //   },
-                    // );
-
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => UserStatsScreen()),
-                    // );
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 0.0),
-                    child: textStyleOnly2(
-                      context: context,
-                      text: "",
-                      fontsize: 14,
-                      color: AppColors.bg3,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
+                
               ],
             ),
             const SizedBox(height: 20),
@@ -565,16 +129,16 @@ class _EditDetailsState extends State<EditDetails> {
                         (hideBackAccountPassword.value ||
                             userController.cupertinoPin.value == "0" ||
                             userController.cupertinoPin.value == "00"))
-                    ? SizedBox.shrink()
+                    ? const SizedBox.shrink()
                     : InkWell(
                         onTap: () {
                           resetCupertinoPin(context);
                         },
                         child: Row(
                           children: [
-                            Icon(Icons.lock_reset,
+                            const Icon(Icons.lock_reset,
                                 color: AppColors.primaryColor, size: 20),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             textStyleOnly2(
                               context: context,
                               text: ProfileScreenStrings().resetPinLabel,
@@ -595,38 +159,40 @@ class _EditDetailsState extends State<EditDetails> {
               ),
               child: Column(
                 children: [
-                  _buildNonEditableField(
-                      Icons.email,
-                      ProfileScreenStrings().emailLabel,
-                      userController.email.value),
-                  Divider(),
+                  Obx(() => _buildNonEditableField(
+                        Icons.email,
+                        ProfileScreenStrings().emailLabel,
+                        userController.email.value,
+                      )),
+                  const Divider(),
                   _buildNonEditableField(
                       Icons.person,
                       ProfileScreenStrings().nameLabel,
                       userController.userName.value),
                   (userController.phone.value == "0" ||
                           userController.phone.value == '')
-                      ? SizedBox.shrink()
-                      : Divider(),
+                      ? const SizedBox.shrink()
+                      : const Divider(),
                   (userController.phone.value == "0" ||
                           userController.phone.value == '')
-                      ? SizedBox.shrink()
+                      ? const SizedBox.shrink()
                       : _buildNonEditableField(
                           Icons.phone,
                           ProfileScreenStrings().numberLabel,
                           userController.phone.value),
-                  Divider(),
+                  const Divider(),
                   _buildNonEditableField(
-                      Icons.calendar_today,
-                      ProfileScreenStrings().dobLabel,
-                      userController.dob.value.isNotEmpty?
-                      DateFormat('yyyy-MM-dd').format(DateTime.parse(userController.dob.value)):'Not provided'),
+                    Icons.calendar_today,
+                    ProfileScreenStrings().dobLabel,
+                    userController.dob.value.isNotEmpty
+                        ? DateFormat('yyyy-MM-dd').format(DateTime.parse(userController.dob.value))
+                        : 'Not provided',
+                  ),
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
-            Divider(),
+            const Divider(),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -634,33 +200,35 @@ class _EditDetailsState extends State<EditDetails> {
                 Align(
                   alignment: Alignment.topLeft,
                   child: textStyle(
-                      text: ProfileScreenStrings().accountDetailsLabel,
-                      context: context,
-                      fontWeight: FontWeight.bold,
-                      fontsize: 14),
+                    text: ProfileScreenStrings().accountDetailsLabel,
+                    context: context,
+                    fontWeight: FontWeight.bold,
+                    fontsize: 14,
+                  ),
                 ),
                 InkWell(
-                    onTap: () {
-                      number.value = userController.phone.value;
-                      isFromEditDeatils.value = true;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MobileNumber(
-                            flag: true,
-                            formEditDetails: true,
-                          ),
+                  onTap: () {
+                    number.value = userController.phone.value;
+                    isFromEditDeatils.value = true;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MobileNumber(
+                          flag: true,
+                          formEditDetails: true,
                         ),
-                      );
-                    },
-                    child: textStyle(
-                        text: ProfileScreenStrings().addBankLabel,
-                        context: context,
-                        fontWeight: FontWeight.bold,
-                        fontsize: 14)),
+                      ),
+                    );
+                  },
+                  child: textStyle(
+                    text: ProfileScreenStrings().addBankLabel,
+                    context: context,
+                    fontWeight: FontWeight.bold,
+                    fontsize: 14,
+                  ),
+                ),
               ],
             ),
-            // Account Details
             const SizedBox(height: 20),
             getListOfBankConnected(),
             const SizedBox(height: 20),
@@ -672,229 +240,308 @@ class _EditDetailsState extends State<EditDetails> {
 
   Widget getListOfBankConnected() {
     return Container(
-      child: Column(
-        children: [
-          Obx(() => Column(
-                children: bankAccountLinkedList.map((e) {
-                  return _buildAccountDetails(
-                      e['bankName'], e['maskedAccNumber'], e, e['bankLogo']);
-                }).toList(),
-              )),
-        ],
+      child: Obx(() => Column(
+            children: bankAccountLinkedList.map((e) {
+              return _buildAccountDetails(
+                e['bankName'],
+                e['maskedAccNumber'],
+                e,
+                e['bankLogo'],
+              );
+            }).toList(),
+          )),
+    );
+  }
+
+  Widget _buildNonEditableField(IconData icon, String label, String value) {
+    final isEmailField = label == ProfileScreenStrings().emailLabel;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 0),
+      width: MediaQuery.of(context).size.width / 1.1,
+      child: TextFormField(
+        controller: _controllers[label]!..text = value, // Update controller text
+        enabled: isEmailField, // Only email field is editable via dialog
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 10),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.button,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: AppColors.primaryColor),
+            ),
+          ),
+          suffixIcon: isEmailField
+              ? IconButton(
+                  icon: const Icon(Icons.edit, color: AppColors.primaryColor),
+                  onPressed: () {
+                    _showEmailEditDialog(context, userController.email.value);
+                  },
+                )
+              : null,
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          hintText: value,
+        ),
       ),
     );
   }
 
- Widget _buildNonEditableField(IconData icon, String label, String value) {
-  final isEmailField = label == ProfileScreenStrings().emailLabel;
-  final TextEditingController controller = TextEditingController(text: value);
+  void _showEmailEditDialog(BuildContext context, String currentEmail) {
+    final TextEditingController newEmailController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
 
-  return Container(
-    padding: EdgeInsets.symmetric(vertical: 0),
-    width: MediaQuery.of(context).size.width / 1.1,
-    child: TextFormField(
-      controller: controller,
-      enabled: isEmailField ? true : false, // Email field initially non-editable
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 10),
-        prefixIcon: Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.button,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: AppColors.primaryColor),
-          ),
-        ),
-        suffixIcon: isEmailField
-            ? IconButton(
-                icon: Icon(Icons.edit, color: AppColors.primaryColor),
-                onPressed: () {
-                  _showEmailEditDialog(context, controller.text);
-                },
-              )
-            : null,
-        border: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        hintText: value,
-      ),
-    ),
-  );
-}
-
-
-void _showEmailEditDialog(BuildContext context, String currentEmail) {
-  final TextEditingController newEmailController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Update Email"),
-        content: Form(
-          key: formKey,
-          child: TextFormField(
-            controller: newEmailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              labelText: "New Email",
-              hintText: "Enter new email address",
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Please enter an email";
-              }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                return "Please enter a valid email";
-              }
-              if (value == currentEmail) {
-                return "New email must be different";
-              }
-              return null;
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                Navigator.pop(context);
-                _confirmAndSendOtp(context, newEmailController.text);
-              }
-            },
-            child: Text("Send OTP"),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-void _confirmAndSendOtp(BuildContext context, String newEmail) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Confirm Email Update"),
-        content: Text("An OTP will be sent to $newEmail. Proceed?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              await _sendOtpForEmailUpdate(context, newEmail);
-            },
-            child: Text("Confirm"),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Future<void> _sendOtpForEmailUpdate(BuildContext context, String newEmail) async {
-  try {
-    // Show loading indicator
     showDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(child: CircularProgressIndicator()),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.backgroundColor,
+          title: textStyleOnly2(
+            context: context,
+            text: "Update Email",
+            fontsize: 18,
+            color: AppColors.primaryColor,
+            fontWeight: FontWeight.w600,
+          ),
+          content: Form(
+            key: formKey,
+            child: TextFormField(
+              controller: newEmailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: AppColors.border,
+                    width: 1.5,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: AppColors.border,
+                    width: 1.8,
+                  ),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                hintText: "Enter new email address",
+                hintStyle: FontManager().getTextStyle(
+                  context,
+                  fontSize: 12,
+                  lWeight: FontWeight.w500,
+                  color: AppColors.grey,
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Please enter an email";
+                }
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  return "Please enter a valid email";
+                }
+                if (value == userController.email.value) {
+                  return "New email must be different";
+                }
+                return null;
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Cancel",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 16,
+                  lWeight: FontWeight.w500,
+                  color: AppColors.bg1,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  Navigator.pop(context);
+                  _confirmAndSendOtp(context, newEmailController.text);
+                }
+              },
+              child: Text(
+                "Send OTP",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 16,
+                  lWeight: FontWeight.w500,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
+  }
 
-    // Call OTP API
-     getOTP(context, userController.userName.value, newEmail);
+  void _confirmAndSendOtp(BuildContext context, String newEmail) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.backgroundColor,
+          title: Text(
+            "Confirm Email Update",
+            style: FontManager().getTextStyle(
+              context,
+              fontSize: 18,
+              lWeight: FontWeight.w500,
+              color: AppColors.accentColor,
+            ),
+          ),
+          content: Text(
+            "An OTP will be sent to $newEmail. Proceed?",
+            style: FontManager().getTextStyle(
+              context,
+              fontSize: 14,
+              lWeight: FontWeight.w500,
+              color: AppColors.bg1,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Cancel",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 16,
+                  lWeight: FontWeight.w500,
+                  color: AppColors.bg1,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await _sendOtpForEmailUpdate(context, newEmail);
+              },
+              child: Text(
+                "Confirm",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 16,
+                  lWeight: FontWeight.w500,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-    // Navigate to OTP screen
-    Navigator.pop(context); // Close loading dialog
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => emailUpdation(
-          data: {
-            'email': newEmail,
-            'name': userController.userName.value,
-            'password': '', // Not needed for email update
-            'response': null, // Not needed for email update
-            'isForcedLogin': false, // Not needed for email update
+  Future<void> _sendOtpForEmailUpdate(BuildContext context, String newEmail) async {
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      // Call OTP API
+       getOTP(context, userController.userName.value, newEmail);
+
+      // Navigate to OTP screen
+      Navigator.pop(context); // Close loading dialog
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => emailUpdation(
+            data: {
+              'email': newEmail,
+              'name': userController.userName.value,
+              'password': '',
+              'response': null,
+              'isForcedLogin': false,
+            },
+          ),
+        ),
+      );
+    } catch (e) {
+      Navigator.pop(context); // Close loading dialog
+      snackBarCalledfail(context, "Failed to send OTP. Please try again.", Colors.red);
+    }
+  }
+
+  Widget _buildAccountDetails(
+      String bankName, String accountNumber, var data, String logo) {
+    return Card(
+      elevation: 2,
+      color: AppColors.mt,
+      child: ListTile(
+        leading: Image.network(
+          logo,
+          width: 30,
+          height: 30,
+          fit: BoxFit.fitWidth,
+          errorBuilder: (context, error, stackTrace) => const Icon(
+            Icons.account_balance,
+            size: 30,
+            color: AppColors.primaryColor,
+          ),
+        ),
+        title: textStyleOnly2(
+          context: context,
+          text: bankName,
+          fontsize: 14,
+          color: AppColors.bg2,
+          fontWeight: FontWeight.w600,
+        ),
+        subtitle: textStyleOnly2(
+          context: context,
+          text: accountNumber,
+          fontsize: 14,
+          color: AppColors.bg3,
+          fontWeight: FontWeight.w400,
+        ),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete, color: AppColors.debitColor),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Delete Account'),
+                  content: const Text('Are you sure you want to delete this account?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        deleteBankAccount(
+                          bankid: data['bankId'],
+                          AccountId: data['accountId'],
+                          context: context,
+                        );
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
       ),
     );
-  } catch (e) {
-    Navigator.pop(context); // Close loading dialog
-    snackBarCalledfail(context, "Failed to send OTP. Please try again.", Colors.red);
-  }
-}
-  Widget _buildAccountDetails(
-      String bankName, String accountNumber, var data, String logo) {
-    return Card(
-        //shape: ,
-        elevation: 2,
-        color: AppColors.mt,
-        child: ListTile(
-            leading: Image.network(
-              logo,
-              width: 30,
-              height: 30,
-              fit: BoxFit.fitWidth,
-            ),
-            title: textStyleOnly2(
-              context: context,
-              text: bankName,
-              fontsize: 14,
-              color: AppColors.bg2,
-              fontWeight: FontWeight.w600,
-            ),
-            subtitle: textStyleOnly2(
-              context: context,
-              text: accountNumber,
-              fontsize: 14,
-              color: AppColors.bg3,
-              fontWeight: FontWeight.w400,
-            ),
-            trailing: IconButton(
-                icon: Icon(Icons.delete, color: AppColors.debitColor),
-                onPressed: () {
-                  // Show dialog box for confirmation
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Delete Account'),
-                        content: Text(
-                            'Are you sure you want to delete this account?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                            },
-                            child: Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              // Add your delete logic here  jhjbhj
-                              deleteBankAccount(
-                                  bankid: data['bankId'],
-                                  AccountId: data['accountId'],
-                                  context: context);
-                              // Close the dialog
-                            },
-                            child: Text('Delete'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                })));
   }
 }

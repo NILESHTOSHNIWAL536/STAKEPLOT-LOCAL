@@ -238,13 +238,14 @@ class ProfileIcons {
   static String profileIcon = "assets/icons/profileScreen/";
   static String communityProf = "assets/icons/profileScreen/CommunityProf.svg";
   static String edit = "assets/icons/profileScreen/Edit.svg";
-  static String friends = "assets/icons/profileScreen/friends.svg";
-  static String logout = "assets/icons/profileScreen/logout.svg";
+  static String friends = "assets/icons/profileScreen/friendsList.svg";
+  static String logout = "assets/icons/profileScreen/logout2.svg";
   static String privacyPolicy = "assets/icons/profileScreen/privacyPolicy.svg";
-  static String support = "assets/icons/profileScreen/support.svg";
-  static String terms = "assets/icons/profileScreen/terms.svg";
+  static String support = "assets/icons/profileScreen/historyArchives.svg";
+  static String terms = "assets/icons/profileScreen/terms2.svg";
   static String emptyFrnds = "assets/icons/profileScreen/emptyFrnds.svg";
   static String unclaimedCoupon = "assets/icons/profileScreen/UnclaimedCard.svg";
+  static String rewards = "assets/icons/profileScreen/rewards.svg";
 }
 
 class Sign {
