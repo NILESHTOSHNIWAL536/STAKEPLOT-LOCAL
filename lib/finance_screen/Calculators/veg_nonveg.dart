@@ -699,6 +699,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           child: TextFormField(
             keyboardType: keyboard,
             controller: textController,
+            
             onChanged: (v) {
               List filtered = [];
 
@@ -762,7 +763,11 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             child: TextField(
               controller: controller,
               keyboardType: TextInputType.number,
+              onTapOutside: (event) {
+    FocusScope.of(context).unfocus(); // This will dismiss the keyboard
+  },
               inputFormatters: allowDecimalInput(),
+              onSubmitted: (_) => FocusScope.of(context).unfocus(),
               onChanged: (value) {
                 _calculateShares();
               },

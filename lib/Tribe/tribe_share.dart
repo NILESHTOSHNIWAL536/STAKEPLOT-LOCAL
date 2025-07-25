@@ -156,7 +156,7 @@ class _TribeHomeState extends State<TribeShare> {
 
               String userToSend = nameList[index] + "" + nameList[index];
               socket.emit("LoadCharts", {
-                "roomId": userToSend,
+                "roomId": roomId,
               });
               index++;
               String  img= widget.dataObj.postType.name=="image"?  widget.dataObj.image:"";

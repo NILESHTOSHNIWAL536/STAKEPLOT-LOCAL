@@ -238,12 +238,14 @@ class ProfileIcons {
   static String profileIcon = "assets/icons/profileScreen/";
   static String communityProf = "assets/icons/profileScreen/CommunityProf.svg";
   static String edit = "assets/icons/profileScreen/Edit.svg";
-  static String friends = "assets/icons/profileScreen/friends.svg";
-  static String logout = "assets/icons/profileScreen/logout.svg";
+  static String friends = "assets/icons/profileScreen/friendsList.svg";
+  static String logout = "assets/icons/profileScreen/logout2.svg";
   static String privacyPolicy = "assets/icons/profileScreen/privacyPolicy.svg";
-  static String support = "assets/icons/profileScreen/support.svg";
-  static String terms = "assets/icons/profileScreen/terms.svg";
+  static String support = "assets/icons/profileScreen/historyArchives.svg";
+  static String terms = "assets/icons/profileScreen/terms2.svg";
   static String emptyFrnds = "assets/icons/profileScreen/emptyFrnds.svg";
+  static String unclaimedCoupon = "assets/icons/profileScreen/UnclaimedCard.svg";
+  static String rewards = "assets/icons/profileScreen/rewards.svg";
 }
 
 class Sign {
@@ -955,3 +957,20 @@ class AnimatedAppLoaders {
   static String animate6 = "assets/icons/appScreenLoader/animate6.svg";
   static String animate7 = "assets/icons/appScreenLoader/animate7.svg";
 }
+
+
+
+ final List<Map<String, dynamic>> categoriesOfReward = [
+    {'title': 'Fashion', 'emoji': '👗', 'color': Colors.purple.shade100},
+    {'title': 'Accessories', 'emoji': '👜', 'color': Colors.pink.shade100},
+    {'title': 'Beauty & Personal Care', 'emoji': '💄', 'color': Colors.red.shade100},
+    {'title': 'Electronics', 'emoji': '📱', 'color': Colors.blue.shade100},
+    {'title': 'Software & Security', 'emoji': '🖥️', 'color': Colors.indigo.shade100},
+    {'title': 'Web Services', 'emoji': '🌐', 'color': Colors.teal.shade100},
+    {'title': 'Travel & Tourism', 'emoji': '🏖️', 'color': Colors.orange.shade100},
+    {'title': 'Flights', 'emoji': '✈️', 'color': Colors.lightBlue.shade100},
+    {'title': 'Rentals', 'emoji': '🚗', 'color': Colors.green.shade100},
+    {'title': 'Food & Beverage', 'emoji': '🍔', 'color': Colors.amber.shade100},
+    {'title': 'Health & Wellness', 'emoji': '🏥', 'color': Colors.cyan.shade100},
+    {'title': 'Entertainment', 'emoji': '🎬', 'color': Colors.deepPurple.shade100},
+  ];

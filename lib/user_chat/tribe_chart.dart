@@ -401,7 +401,7 @@ class _TribeSearchState extends State<TribeChats> {
           getChats(item);
           clear(item);
 
-          Navigator.push(
+         Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) =>

@@ -13,7 +13,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:get/get.dart';
@@ -33,6 +32,17 @@ void getAutoMationsTransactions() async {
     var his = jsonDecode(response.body);
     trasactionsData.addAll(his['allTransactions']['categorized_transactions']);
     changeTrasactiondata();
+  } else {}
+}
+
+void getFinoraPreviousMonthData() async {
+  var response =
+      await getDataApiCall("${url}/transactionauto/getUserMonthlySpending/");
+  if (getFlagOfResponse(response)) {
+    finoraTransactionData.clear();
+    var finoraData = jsonDecode(response.body);
+    finoraTransactionData.addAll(finoraData);
+    print("finora data $finoraData");
   } else {}
 }
 
@@ -56,7 +66,8 @@ void changeTrasactiondata() async {
 }
 
 void getAutoMationsTransactionsMonthly() async {
-  var response = await getDataApiCall("${url}/transactionauto/getalltransactionsbymonth/${getCurrentMonth()}");
+  var response = await getDataApiCall(
+      "${url}/transactionauto/getalltransactionsbymonth/${getCurrentMonth()}");
   trasactionsDataMonthlyCredit.clear();
   trasactionsDataMonthlyDebit.clear();
 
@@ -116,8 +127,6 @@ void getAutoMationsTransactionsCustom(date, context,
       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
   var response = await getDataApiCall(urlPath);
-
-
 
   trasactionsDataDebitWeekly.clear();
 
@@ -323,14 +332,13 @@ void updateTheTagOfTarnsactions2(
   } else {}
 }
 
-
 Future<void> updateTheTagOfTarnsactions(
-    String category,
-    String subCategory,
-    String transactionId,
-    BuildContext context,
-    int index,
-    TransactionModel transaction,
+  String category,
+  String subCategory,
+  String transactionId,
+  BuildContext context,
+  int index,
+  TransactionModel transaction,
 ) async {
   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
 
@@ -494,8 +502,9 @@ void getHideTransactions(context) async {
   }
 }
 
-
-void addTransaction(String amount, String subCategory, String categories,BuildContext context, String dropdownValue,[bool isSplit = false, bool snackBar = true]) async {
+void addTransaction(String amount, String subCategory, String categories,
+    BuildContext context, String dropdownValue,
+    [bool isSplit = false, bool snackBar = true]) async {
   var body = {
     'amount': amount.toString(),
     'category': categories.toString(),
@@ -512,8 +521,9 @@ void addTransaction(String amount, String subCategory, String categories,BuildCo
       snackBarCalled(
           context, SnackbarData().transactionSuccess, AppColors.primaryColor);
     }
-    transactionsHistory.insert(0, TransactionModel.fromJson(body['data'][0]['data']));
-    
+    transactionsHistory.insert(
+        0, TransactionModel.fromJson(body['data'][0]['data']));
+
     reloadHistory.value = !reloadHistory.value;
     getCategoryData();
     setDonectChat.value = !setDonectChat.value;

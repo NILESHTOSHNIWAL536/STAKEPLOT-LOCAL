@@ -123,6 +123,7 @@ class Predictions {
     return 'Predictions(entries: ${entries.map((e) => "{category: ${e.category}, score: ${e.score}}").toList()})';
   }
 }
+
 class TransactionModel {
   final String id;
   final String type;

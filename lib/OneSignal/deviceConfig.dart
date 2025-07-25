@@ -12,13 +12,16 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
+import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
 import 'package:flutter_application_code_stakeplot/firebase_options.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:flutter_application_code_stakeplot/onboarding_screens/onboarding_screen.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -103,28 +106,43 @@ void setUpSocketListenerMainPage(BuildContext context) {
 
     // Listener for events from the socket
     mainPageWebSocket.on("addUserToSocket", (data) {
-     
-      if(data['type'] == "Notify")
+      String type=data['type'];
+      if(type == "Notify")
       {
         hasGetNewNotifications.value=!hasGetNewNotifications.value;
         hasGetNewNotifications.value=!hasGetNewNotifications.value;
         myNotificationBool.value=!myNotificationBool.value;
         getNotifications(context);
       }
-      else if (data['type'] == "reactOnPost")
+      else if (type == "reactOnPost")
       {
              onPostReactLikeAndCommentWebSocket(data['data'],context);
       }
-      else if (data['type'] == "NewPost") {
+      else if (type == "NewPost") {
           onPostDataCallWebSocket(data,context); 
       }
-     else if (data['type'] == "logoutUser")
+     else if (type== "logoutUser")
       {
         logoutUserFromDevice(context);
-      } 
-      else if (data['type'] == "fetchedApiCall")
+      }else if(type=='Reward')
+      {
+           CouponPopupUtils.showCouponPopup(context, (category) {
+                fetchCategoryCoupons(category);
+                CouponPopupUtils.showCouponSelectionPopup(context, category);
+           });
+      }
+      else if (type == "fetchedApiCall")
       {
         isFected.value = false;
+        String message = data['data']['message'] ?? "";
+        bool flag = data['data']['failed'] ?? false;
+         
+         if(flag){
+             snackBarCalledfail(context, message);
+         }else{
+             snackBarCalled(context, message);
+         }
+
         getBankAccounts();
       }
     });

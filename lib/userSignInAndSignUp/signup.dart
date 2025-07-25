@@ -413,32 +413,7 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
     );
   }
 
-  Widget _buildGoogleSignIn() {
-    return GestureDetector(
-      onTap: () {
-        // Handle Google sign in
-      },
-      child: Container(
-        width: 60,
-        height: 50,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: const Center(
-          child: Text(
-            'G',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.blue,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
+ 
   Widget _buildSignInLink() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

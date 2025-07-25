@@ -924,6 +924,9 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
     searchController.text = accountIdPdf.value.toLowerCase();
   } else if (accountIdPdf.value == "-") {
     searchController.text = "";
+
+
+    
   }
 
   // Apply filter and close dialog

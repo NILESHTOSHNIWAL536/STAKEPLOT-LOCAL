@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manually.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/headsUpAndMoneyMap.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
 class IndexScreen extends StatelessWidget {
   const IndexScreen({Key? key}) : super(key: key);
@@ -16,6 +19,8 @@ class IndexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    final double debit = totalDebitThisMonth.value;
+    final bool isZeroOrNegative = debit <= 0;
     return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
           child: SingleChildScrollView(
@@ -40,10 +45,19 @@ class IndexScreen extends StatelessWidget {
             const SizedBox(
               height: 14,
             ),
-            SizedBox(
-              height: height * 0.21,
-              child: SwipeableCardsScreen(),
-            ),
+            // SizedBox(
+            //   height: height * 0.21,
+            //   child: SwipeableCardsScreen(),
+            // ),
+         
+
+SizedBox(
+  height: height * (isZeroOrNegative ? 0.54 : 0.21),
+  child: isZeroOrNegative 
+      ? FinoraLastTwoMonthsDashboard() 
+      : SwipeableCardsScreen(),
+),
+
             SizedBox(
                 height: height * 0.5,
                 child: InsightsScreen()

@@ -45,7 +45,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   void initState() {
     super.initState();
     currentPage = 1;
-    showFilter.value=false;
+    showFilter.value = false;
+    accountSelected.value = '';
     addManually.clear();
     balanceOutList.clear();
     getAllTransactionHistory(context, false, false, isRefreshing: true);
@@ -104,7 +105,10 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                       children: [
                         const SizedBox(height: 4),
                         Padding(
-                          padding:  EdgeInsets.only(left: 10, right: 2,bottom: (groupTransactionList.isEmpty? 4:3)),
+                          padding: EdgeInsets.only(
+                              left: 10,
+                              right: 2,
+                              bottom: (groupTransactionList.isEmpty ? 4 : 3)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -128,60 +132,62 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                           height: 36)),
                               InkWell(
                                 onTap: () {
-                                  showFilter.value = !showFilter
-                                      .value; // Toggle the filter visibility
+                                  showFilter.value = !showFilter.value;
+                                  // Toggle the filter visibility
                                 },
                                 child: AvatarProfileImage(
                                     url: HomePageIcons.filterIcon,
                                     width: 66,
                                     height: 30),
                               ),
-                             
                             ],
                           ),
                         ),
-                       
-                            !isDateSummaryView.value
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 2),
-                              child: Obx(() => (groupTransactionList.isNotEmpty ||
-                                      redioButton.isNotEmpty)
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(top: 3),
-                                      child: Obx(() => showCheckBox.value
-                                          ? Padding(
-                                            padding: const EdgeInsets.only(right: 10),
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  // Cancel Button
-                                                  
-                                                  
-                                                  SelectButton("Selected (${redioButton.length})", context),
-                                                  CancelButton("Cancel", context),
-                                                 
-                                                 
-                                                ],
-                                              ),
-                                          )
-                                          : getTab(context)),
-                                    )
-                                  : SizedBox.shrink()),
-                            )
-                          : SizedBox(height: 10),
+                        !isDateSummaryView.value
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 2),
+                                child: Obx(() => (groupTransactionList
+                                            .isNotEmpty ||
+                                        showCheckBox.value)
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(top: 3),
+                                        child: Obx(() => showCheckBox.value
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    // Cancel Button
+
+                                                    SelectButton(
+                                                        "Selected (${redioButton.length})",
+                                                        context),
+                                                    CancelButton(
+                                                        "Cancel", context),
+                                                  ],
+                                                ),
+                                              )
+                                            : getTab(context)),
+                                      )
+                                    : SizedBox(height: 10)),
+                              )
+                            : SizedBox(height: 10),
                         Container(
                           decoration: BoxDecoration(
                             color: AppColors.backgroundColor,
                           ),
-                          child: Obx(() => (redioButton.isNotEmpty && getBoolFalg())
-                              ? Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 10, right: 2, top: 8),
-                                child: getTagHideButtons(context),
-                              )
-                              : SizedBox.shrink()),
+                          child: Obx(
+                              () => (redioButton.isNotEmpty && getBoolFalg())
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 10, right: 2, top: 8),
+                                      child: getTagHideButtons(context),
+                                    )
+                                  : SizedBox.shrink()),
                         ),
                         Obx(() => (showFilter.value && getBoolFalg())
                             ? filterTransaction(context)
@@ -202,25 +208,35 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                           : screenHeight / 1.25;
                     }
 
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: calculatedHeight,
-                      child: IndexedStack(
-                        index: isDateSummaryView.value ? 0 : 1,
-                        children: [
-                          CalendarTransactionScreen(),
-                          SingleChildScrollView(
-                            controller: scrollController,
-                            child: TransactionHistory(
-                              isYearView: false,
-                              isflag: true,
-                              showIcon: false,
-                              expandedPage: false,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                   return Container(
+  width: MediaQuery.of(context).size.width,
+  height: calculatedHeight,
+  child: IndexedStack(
+    index: isDateSummaryView.value ? 0 : 1,
+    children: [
+      CalendarTransactionScreen(),
+      NotificationListener<ScrollNotification>(
+        onNotification: (scrollNotification) {
+          if (scrollNotification is ScrollStartNotification) {
+            // ✅ Dismiss keyboard when scrolling starts
+            FocusScope.of(context).unfocus();
+          }
+          return false;
+        },
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: TransactionHistory(
+            isYearView: false,
+            isflag: true,
+            showIcon: false,
+            expandedPage: false,
+          ),
+        ),
+      ),
+    ],
+  ),
+);
+
                   }),
                 ],
               ),
@@ -231,10 +247,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-
-  bool getBoolFalg()
-  {
-    return !isDateSummaryView.value &&  allOrGroupTransactionsName.value == StringConstant.allTransactions;
+  bool getBoolFalg() {
+    return !isDateSummaryView.value &&
+        allOrGroupTransactionsName.value == StringConstant.allTransactions;
   }
 
   Widget getTextFeild() {
@@ -278,62 +293,56 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
+  Widget CancelButton(String text, BuildContext context) {
+    double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
+    double tabHeight = (MediaQuery.of(context).size.height) / 26;
+    return InkWell(
+      onTap: () {
+        showCheckBox.value = false;
+        redioButton.clear();
+        redioButtonIndex.clear();
+        balanceOutList.clear();
+        addManually.clear();
+        HapticFeedback.selectionClick();
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 4),
+        width: tabWidth,
+        height: tabHeight,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+            color: AppColors.backgroundColor,
+            borderRadius: BorderRadius.circular(8)),
+        child: Center(
+          child: textStyleImage(
+            context: context,
+            text: text,
+            c: AppColors.primaryColor,
+            fontsize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
 
-Widget CancelButton(String text, BuildContext context) {
- 
-  double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
-  double tabHeight = (MediaQuery.of(context).size.height) / 26;
-  return InkWell(
-    onTap: () {
-      showCheckBox.value = false;
-                                                      redioButton.clear();
-                                                      redioButtonIndex.clear();
-                                                      balanceOutList.clear();
-                                                      addManually.clear();
-                                                      HapticFeedback
-                                                          .selectionClick();
-    },
-    child: Container(
+  Widget SelectButton(String text, BuildContext context) {
+    double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
+    double tabHeight = (MediaQuery.of(context).size.height) / 26;
+    return Container(
       margin: EdgeInsets.symmetric(vertical: 4),
       width: tabWidth,
       height: tabHeight,
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(8)
-
-      ),
       child: Center(
         child: textStyleImage(
           context: context,
           text: text,
-          c:  AppColors.primaryColor,
+          c: AppColors.button,
           fontsize: 14,
           fontWeight: FontWeight.w600,
         ),
       ),
-    ),
-  );
-}
-Widget SelectButton(String text, BuildContext context) {
- 
-  double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
-  double tabHeight = (MediaQuery.of(context).size.height) / 26; 
-  return Container(
-    margin: EdgeInsets.symmetric(vertical: 4),
-    width: tabWidth,
-    height: tabHeight,
-    padding: const EdgeInsets.symmetric(horizontal: 10),
-    child: Center(
-      child: textStyleImage(
-        context: context,
-        text: text,
-        c:  AppColors.button,
-        fontsize: 14,
-        fontWeight: FontWeight.w600,
-      ),
-    ),
-  );
-}
-
+    );
+  }
 }

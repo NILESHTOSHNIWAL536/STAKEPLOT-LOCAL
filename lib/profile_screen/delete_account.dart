@@ -50,7 +50,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
             children: [
               SizedBox(height: 40),
               
-              // Main heading
+              
               Center(
                 child: Text(
                   "We're sorry to see you go!",
@@ -65,7 +65,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               
               SizedBox(height: 24),
               
-              // Description text
+              
               Center(
                 child: Text(
                   "Please help us improve by letting us know why you're deleting your account",
@@ -80,7 +80,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               
               SizedBox(height: 40),
               
-              // Illustration placeholder
+              
               Center(
                 child: Container(
                   height: 120,
@@ -92,7 +92,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Background documents
+                      
                       Positioned(
                         top: 20,
                         left: 40,
@@ -117,7 +117,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                           ),
                         ),
                       ),
-                      // Main document with yen symbol
+                      
                       Container(
                         width: 70,
                         height: 90,
@@ -138,7 +138,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               
               SizedBox(height: 40),
               
-              // Reason section
+              
               Text(
                 'Reason for Deletion (Required)',
                 style: TextStyle(
@@ -150,7 +150,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               
               SizedBox(height: 16),
               
-              // Reason options
+              
               Expanded(
                 child: ListView.builder(
                   itemCount: reasons.length,
@@ -206,28 +206,28 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 ),
               ),
               
-              // Continue button
+              
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.only(bottom: 24),
                 child: ElevatedButton(
-                  // onPressed: selectedReason != null
-                  //     ? () {
-                  //       isGoogleUser.value ? showDeleteConfirmationDialog(context,"",selectedReason.toString()):
-                  //       // !isGoogleUser.value ? deleteUserAccount(context,"",selectedReason.toString()):
-                  //         Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //             builder: (context) => ConfirmDeleteScreen(
-                  //               selectedReason: selectedReason!,
-                  //             ),
-                  //           ),
-                  //         );
-                  //       }
-                  //     : null,
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
                    onPressed: selectedReason != null
                       ? () async {
-                         // Fetch user email
+                         
                           if (userController.email.value != null && userController.userName.value != null) {
                             Navigator.push(
                               context,
@@ -279,7 +279,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   }
 }
 
-// SCREEN 2: Confirm Delete with Password
+
 class ConfirmDeleteScreen extends StatefulWidget {
   final String selectedReason;
 
@@ -322,7 +322,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
             children: [
               SizedBox(height: 40),
               
-              // Important Warning Section
+              
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -376,7 +376,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
               
               SizedBox(height: 40),
               
-              // Password Section
+              
               Text(
                 'Re-enter Password',
                 style: TextStyle(
@@ -388,7 +388,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
               
               SizedBox(height: 12),
               
-              // Password Input Field
+              
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
@@ -398,7 +398,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                   controller: _passwordController,
                   obscureText: !_isPasswordVisible,
                   onChanged: (value) {
-                    setState(() {}); // Rebuild to update button state
+                    setState(() {}); 
                   },
                   decoration: InputDecoration(
                     hintText: 'enter password',
@@ -433,10 +433,10 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                 ),
               ),
               
-              // Spacer to push button to bottom
+              
               Spacer(),
               
-              // Delete Account Button
+              
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.only(bottom: 32),
@@ -559,7 +559,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
 
 
  void performAccountDeletion(context2) {
-    // Show loading indicator
+    
     showDialog(
       context: context2,
       barrierDismissible: false,
@@ -591,13 +591,13 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
       ),
     );
 
-    // Simulate API call
+    
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pop(context2); // Close loading dialog
-      Navigator.pop(context2); // Go back to previous screen
-      Navigator.pop(context2); // Go back to main screen
+      Navigator.pop(context2); 
+      Navigator.pop(context2); 
+      Navigator.pop(context2); 
       
-      // Show success message
+      
       ScaffoldMessenger.of(context2).showSnackBar(
         SnackBar(
           content: Row(

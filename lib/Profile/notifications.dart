@@ -315,6 +315,7 @@ class _NotificationsState extends State<Notifications> {
             false);
       case "FetchedData":
         return _buildMessageCard(
+          e['message']??
             "🔥 Data has been successfully fetched!", "", "", time, false);
       case "lendApprovalRequest":
         return _buildApprovalCard(
