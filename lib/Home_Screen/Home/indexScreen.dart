@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manually.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/auto_pay.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/headsUpAndMoneyMap.dart';
@@ -61,6 +62,10 @@ SizedBox(
             SizedBox(
                 height: height * 0.5,
                 child: InsightsScreen()
+            ),
+            SizedBox(
+                height: height * 0.5,
+                child: CardStackScreen()
             ),
             DoughnutChartExample(),
             const SizedBox(
