@@ -6,11 +6,12 @@ class CardData {
   final String title; // Maps to merchant
   final String amount; // Formatted amount
   final String date; // Maps to recentMostTransactionTimestamp
-  final List<String> occuranceDate;// Maps to recentMostTransactionTimestamp
+  final List<String> occuranceDate; // Maps to recentMostTransactionTimestamp
   final String frequency;
   final String narration;
   final LinearGradient gradient;
-
+  final DateTime? nextReminderAt;
+  final bool? isActive;
   CardData({
     required this.id,
     required this.title,
@@ -20,6 +21,8 @@ class CardData {
     required this.frequency,
     required this.narration,
     required this.gradient,
+    this.nextReminderAt,
+    this.isActive,
   });
 
   // Factory constructor to create CardData from JSON
@@ -43,20 +46,29 @@ class CardData {
       ),
     ];
     // Choose gradient based on index or randomly
-    final gradientIndex = json['index'] != null ? json['index'] % gradients.length : 0;
-final List<String> occuranceDates = (json['recentMostTwoOccurrences'] as List<dynamic>?)
-            ?.map((date) =>formatWhatsAppDateWithoutTime(convertStringToDateTime(date)))
+    final gradientIndex =
+        json['index'] != null ? json['index'] % gradients.length : 0;
+    final List<String> occuranceDates = (json['recentMostTwoOccurrences']
+                as List<dynamic>?)
+            ?.map((date) =>
+                formatWhatsAppDateWithoutTime(convertStringToDateTime(date)))
             .toList() ??
         [];
     return CardData(
       id: json['_id'] as String,
       title: json['merchant'] as String,
-      amount: "₹ ${json['amount'].toString()}", // Format amount with currency symbol
+      amount:
+          "₹ ${json['amount'].toString()}", // Format amount with currency symbol
       date: _formatDate(json['recentMostTransactionTimestamp'] as String),
       occuranceDate: occuranceDates,
       frequency: json['frequency'] as String,
       narration: json['narration'] as String,
       gradient: gradients[gradientIndex],
+       nextReminderAt: json['nextReminderAt'] != null
+          ? DateTime.parse(json['nextReminderAt'] as String)
+          : null,
+          isActive: json['isActive'] as bool?,
+
     );
   }
 

@@ -58,15 +58,19 @@ SizedBox(
       ? FinoraLastTwoMonthsDashboard() 
       : SwipeableCardsScreen(),
 ),
+ const SizedBox(
+              height: 14,
+            ),
 
+             SizedBox(
+                height: height * 0.4,
+                child: CardStackScreen()
+            ),
             SizedBox(
                 height: height * 0.5,
                 child: InsightsScreen()
             ),
-            SizedBox(
-                height: height * 0.5,
-                child: CardStackScreen()
-            ),
+           
             DoughnutChartExample(),
             const SizedBox(
               height: 14,
