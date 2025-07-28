@@ -32,10 +32,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController =
-      TextEditingController(text: "demostakeplot01@gmail.com");
+  final TextEditingController emailController = TextEditingController(text: "");
   final TextEditingController passwordController =
-      TextEditingController(text: "DemoStakeplot@01");
+      TextEditingController(text: "");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override

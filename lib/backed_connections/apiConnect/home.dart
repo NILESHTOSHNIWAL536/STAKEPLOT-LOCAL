@@ -163,10 +163,8 @@ Future<void> getTopThreeTransactions(BuildContext context,
       List<TransactionModel> modalObj = TransactionModel.listFromJson(obj);
       controller.topThreeTransactions.addAll(modalObj);
       getTopThreeHistory.value = !getTopThreeHistory.value;
-    } else {
-    }
-  } catch (e) {
-  }
+    } else {}
+  } catch (e) {}
 }
 
 Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
@@ -175,6 +173,7 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
 
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
+    print("calender data $her");
     var obj = her['data'];
     if (obj is List) {
       return List<Map<String, dynamic>>.from(obj);
@@ -191,6 +190,7 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactionsForDate(
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
+     print("calender data 2 $her");
     if (obj is List) {
       return List<Map<String, dynamic>>.from(obj);
     }

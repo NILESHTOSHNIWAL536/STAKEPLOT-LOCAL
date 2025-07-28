@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
         showWeeklyPopup(context, userController.userId.value);
       } else {}
     });
-    getFinoraPreviousMonthData();
+    getAutoPayInfo();
   }
 
   @override

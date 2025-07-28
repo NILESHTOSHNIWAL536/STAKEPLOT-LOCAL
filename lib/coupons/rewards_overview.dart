@@ -478,7 +478,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
                       lWeight: FontWeight.w400,
                       color: AppColors.bg1,
                     ),
-                    maxLines: 2,
+                    maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
