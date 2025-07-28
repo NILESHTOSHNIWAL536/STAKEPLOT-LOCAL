@@ -210,6 +210,7 @@ Future<void> getAllTransactionHistory(
         : selectedYear.value.toString() +
             "-" +
             selectedMonth.value.toString().padLeft(2, '0');
+    searchTextController.value=searchController.text.trim();
     String text = searchController.text.trim() == ""
         ? "empty"
         : (searchController.text == "cash" ? "Cash" : searchController.text);
@@ -221,20 +222,23 @@ Future<void> getAllTransactionHistory(
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-
-      var obj = data['data'];
-      if (obj != null && obj is List<dynamic>) {
+    
+      var   obj =   data['data'];
+      if (obj != null )
+      {
         if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh
         }
+     
+        List<TransactionModel> transactions = TransactionModel.listFromJson(obj['transactions']);
 
-        List<TransactionModel> transactions =
-            TransactionModel.listFromJson(obj);
+        if(!flag){
+             updateFromResponse(obj);
+        }
 
-        transactionsHistory.addAll(transactions);
-
+         transactionsHistory.addAll(transactions);
         // Stop loading indicator if no more transactions exist
-        if (obj.isEmpty || obj.length < 20) {
+        if ( obj['transactions'].isEmpty ||  obj['transactions'].length < 20) {
           hasMoreData = false;
           isLoadingMore.value = true;
           havingMoreData.value = false;
@@ -258,6 +262,23 @@ Future<void> getAllTransactionHistory(
   }
 
   loadingDelay.value = false;
+}
+
+
+void updateFromResponse(Map<String, dynamic> obj) {
+  // Clear existing data
+  try{
+  matchedKeywords.clear();
+  lastWeekjson.clear();
+  lastmonthjson.clear();
+matchedKeywords.addAll(
+  List<String>.from((obj['matchedKeywords'] ?? []).map((e) => e.toString()))
+);
+  lastWeekjson.addAll(obj['lastWeek'] ?? {});
+  lastmonthjson.addAll(obj['lastMonth']?? {});
+  }catch(e){
+      print(e);
+  }
 }
 
 void extractTransaction(bool isYearView, List obj) {

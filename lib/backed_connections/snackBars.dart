@@ -136,6 +136,32 @@ void snackBarAllFeilds2(context, text, [Color colors = Colors.red]) {
     displayDuration: const Duration(seconds: 2),
     curve: Curves.easeOutBack,
     reverseCurve: Curves.easeInBack,
+    snackBarPosition: SnackBarPosition.bottom,
     animationDuration: const Duration(milliseconds: 600),
   );
+}
+
+void snackBarAllBottom(context, text, [Color colors = Colors.green]) {
+  showTopSnackBar(
+  Overlay.of(context),
+  
+    Container(
+    height: 40,
+    child: CustomSnackBar.success(
+      message: text,
+      backgroundColor:colors,
+      textStyle: FontManager().getTextStyle(
+        context,
+        lWeight: FontWeight.bold,
+        fontSize: 12,
+        color: Colors.white,
+      ),
+    ),
+  ),
+  snackBarPosition: SnackBarPosition.bottom,
+  displayDuration: const Duration(seconds: 2),
+  animationDuration: const Duration(milliseconds: 600),
+  curve: Curves.easeOutBack,
+  reverseCurve: Curves.easeInBack,
+);
 }

@@ -104,6 +104,7 @@ Future<void> getDeviceInfo(
   }
 
   deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
+  // loginUser(emailController,passwordController,context);
   userVerification(emailController, passwordController, context);
 }
 

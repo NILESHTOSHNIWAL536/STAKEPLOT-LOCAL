@@ -112,7 +112,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              getTextFeild(),
+                          Obx(()=>  searchTextControllerBool.value ?  getTextFeild(): getTextFeild()),
                               InkWell(
                                   onTap: () {
                                     setState(() {
@@ -261,6 +261,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         focusNode: focusNodeSearchFeild,
         onChanged: (value) {
           onChanedAutoTransactionStatus(context);
+          searchTextController.value=value;
+          searchTextControllerBool.value =  !  searchTextControllerBool.value;
         },
         decoration: InputDecoration(
           hintText: HomepageStringsDart().searchTransactions,

@@ -53,8 +53,7 @@ Widget upvoteLiked(context, [bool flag = true]) {
   return Container(
       width: width / val,
       height: height / val,
-      child:
-          SvgPicture.asset("assets/svgs/up-voted.svg", color: flagdata(flag)));
+      child:SvgPicture.asset("assets/svgs/up-voted.svg", color: flagdata(flag)));
 }
 
 Widget upvoteLike(context, [bool flag = true]) {
@@ -86,4 +85,14 @@ Widget downvoteLike(context, [bool flag = true]) {
       height: height / val,
       child:
           SvgPicture.asset("assets/svgs/down-vote.svg", color: flagdata(flag)));
+}
+
+Widget SvgImage({required BuildContext context,required String url,required double height,required double width}) {
+  double h = MediaQuery.of(context).size.height;
+  double w = MediaQuery.of(context).size.width;
+  return Container(
+      width: w / width,
+      height: h / height,
+      child:Center(child: Image.network(url))
+    );
 }

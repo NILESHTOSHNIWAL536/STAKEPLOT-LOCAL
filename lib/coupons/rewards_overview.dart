@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
@@ -14,23 +13,14 @@ import 'package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/coupons/coupon_card.dart';
 import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-// Import CouponCardWidget
+import '../backed_connections/apiConnect/reward.dart';
 
-class RewardsOverview extends StatefulWidget {
-  @override
-  _RewardsOverviewState createState() => _RewardsOverviewState();
-}
-
-class _RewardsOverviewState extends State<RewardsOverview>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  final UserController userController = Get.find<UserController>();
-  RxList<CouponModel> claimedCoupons = <CouponModel>[].obs;
-  RxList<CouponModel> categoryCoupons = <CouponModel>[].obs;
-  RxBool isLoading = false.obs;
-
-  final List<Map<String, dynamic>> categories = [
+// Utility class to handle coupon popup
+class CouponPopupUtils {
+  static final List<Map<String, dynamic>> categories = [
     {'title': 'Fashion', 'emoji': '👗', 'color': Colors.purple.shade100},
     {'title': 'Accessories', 'emoji': '👜', 'color': Colors.pink.shade100},
     {'title': 'Beauty & Personal Care', 'emoji': '💄', 'color': Colors.red.shade100},
@@ -45,6 +35,223 @@ class _RewardsOverviewState extends State<RewardsOverview>
     {'title': 'Entertainment', 'emoji': '🎬', 'color': Colors.deepPurple.shade100},
   ];
 
+  static void showCouponPopup(BuildContext context, Function(String) onCategorySelected) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(24),
+            width: MediaQuery.of(context).size.width * 0.9,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.grey.shade600,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade100,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '🎁',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      'You Won a Coupon!',
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 20,
+                        lWeight: FontWeight.w700,
+                        color: AppColors.bg1,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'You selected 2 transactions.\nAs a reward',
+                  textAlign: TextAlign.center,
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 12,
+                    lWeight: FontWeight.w500,
+                    color: AppColors.now,
+                  ),
+                ),
+                SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Select the category',
+                    style: FontManager().getTextStyle(
+                      context,
+                      fontSize: 12,
+                      lWeight: FontWeight.w600,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Container(
+                  height: 100,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      return Container(
+                        margin: EdgeInsets.only(right: 12),
+                        child: _buildCategoryCard(
+                          category['title'],
+                          category['emoji'],
+                          category['color'],
+                          onCategorySelected,
+                          context,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 16),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static Widget _buildCategoryCard(
+      String title, String emoji, Color backgroundColor, Function(String) onCategorySelected, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        onCategorySelected(title);
+      },
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              emoji,
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 4),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 12,
+                lWeight: FontWeight.w600,
+                color: AppColors.bg1,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+static void showCouponSelectionPopup(BuildContext context, String categoryTitle) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(24),
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.7,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.grey.shade600,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 24),
+                Expanded(
+                  child: Obx(() => loadReaward.value
+                      ? Center(child: Spinner())
+                      : categoryCoupons.isEmpty
+                          ? Center(child: Text('No coupons available'))
+                          : EnvelopeGrid(categoryCoupons: categoryCoupons)),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+   
+
+}
+
+class RewardsOverview extends StatefulWidget {
+  @override
+  _RewardsOverviewState createState() => _RewardsOverviewState();
+}
+
+class _RewardsOverviewState extends State<RewardsOverview>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  final UserController userController = Get.find<UserController>();
+
+
   @override
   void initState() {
     super.initState();
@@ -58,45 +265,9 @@ class _RewardsOverviewState extends State<RewardsOverview>
     super.dispose();
   }
 
-  Future<void> fetchClaimedCoupons() async {
-    try {
-      isLoading.value = true;
-      
+ 
 
-      final response = await getDataApiCall(
-       '$url/reward/'
-      );
-
-      if (getFlagOfResponse(response)) {
-        final List<dynamic> data = jsonDecode(response.body)['data'];
-        claimedCoupons.assignAll(CouponModel.listFromJson(data));
-      }
-    } catch (e) {
-      // Handle error silently as per your code
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> _fetchCategoryCoupons(String category) async {
-    try {
-      isLoading.value = true;
-      
-      // Trim spaces and replace with no spaces
-      final formattedCategory = category.replaceAll(' ', '');
-      final response = await getDataApiCall('$url/reward/search/$formattedCategory');
-
-      if (getFlagOfResponse(response)) {
-        final List<dynamic> data = jsonDecode(response.body)['data'];
-        categoryCoupons.assignAll(CouponModel.listFromJson(data));
-      }
-    } catch (e) {
-      // Handle error silently as per your code
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,8 +322,8 @@ class _RewardsOverviewState extends State<RewardsOverview>
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildClaimedTab(),
-                _buildUnclaimedTab(),
+               Obx(()=> loadReaward.value ? Center(child: Spinner()):  refreshCupon.value ?   _buildClaimedTab() : _buildClaimedTab()) ,
+               Obx(()=> _buildUnclaimedTab()),
               ],
             ),
           ),
@@ -162,13 +333,13 @@ class _RewardsOverviewState extends State<RewardsOverview>
   }
 
   Widget _buildClaimedTab() {
-    return Obx(() => isLoading.value
+    return   loadReaward.value
         ? Center(child: Spinner())
         : claimedCoupons.isEmpty
             ? Center(child: Text('No claimed coupons'))
             : Padding(
                 padding: EdgeInsets.all(16),
-                child: GridView.builder(
+                child:  GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 12,
@@ -180,7 +351,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
                     return _buildRewardCard(claimedCoupons[index]);
                   },
                 ),
-              ));
+              );
   }
 
   Widget _buildUnclaimedTab() {
@@ -193,7 +364,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
           mainAxisSpacing: 16,
           childAspectRatio: 1.2,
         ),
-        itemCount: userController.coupons.value ,
+        itemCount: userController.coupons.value <=0?0:userController.coupons.value,
         itemBuilder: (context, index) {
           return _buildEnvelopeCard();
         },
@@ -322,7 +493,10 @@ class _RewardsOverviewState extends State<RewardsOverview>
 
   Widget _buildEnvelopeCard() {
     return GestureDetector(
-      onTap: () => _showCouponPopup(context),
+      onTap: () => CouponPopupUtils.showCouponPopup(context, (category) {
+         fetchCategoryCoupons(category);
+        CouponPopupUtils.showCouponSelectionPopup(context, category);
+      }),
       child: Container(
         child: chatAvatartImage(
           url: ProfileIcons.unclaimedCoupon,
@@ -333,193 +507,4 @@ class _RewardsOverviewState extends State<RewardsOverview>
     );
   }
 
-  void _showCouponPopup(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Container(
-            padding: EdgeInsets.all(24),
-            width: MediaQuery.of(context).size.width * 0.9,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      padding: EdgeInsets.all(4),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.grey.shade600,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.shade100,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        '🎁',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                    Text(
-                      'You Won a Coupon!',
-                      style: FontManager().getTextStyle(
-                        context,
-                        fontSize: 20,
-                        lWeight: FontWeight.w700,
-                        color: AppColors.bg1,
-                      ),
-                    ),
-                  ],
-                ),
-               
-                SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Select the category',
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 12,
-                      lWeight: FontWeight.w600,
-                      color: AppColors.bg1,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Container(
-                  height: 100,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      final category = categories[index];
-                      return Container(
-                        margin: EdgeInsets.only(right: 12),
-                        child: _buildCategoryCard(
-                          category['title'],
-                          category['emoji'],
-                          category['color'],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 16),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildCategoryCard(String title, String emoji, Color backgroundColor) {
-    return GestureDetector(
-      onTap: () {
-        // Navigator.of(context).pop();
-        _fetchCategoryCoupons(title);
-        _showCouponSelectionPopup(context, title);
-      },
-      child: Container(
-        width: 80,
-        height: 80,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              emoji,
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 4),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: FontManager().getTextStyle(
-                context,
-                fontSize: 12,
-                lWeight: FontWeight.w600,
-                color: AppColors.bg1,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showCouponSelectionPopup(BuildContext context, String categoryTitle) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Container(
-            padding: EdgeInsets.all(24),
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.7,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      padding: EdgeInsets.all(4),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.grey.shade600,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                ),
-                
-                SizedBox(height: 24),
-                Expanded(
-                  child: Obx(() => isLoading.value
-                      ? Center(child: Spinner())
-                      : categoryCoupons.isEmpty
-                          ? Center(child: Text('No coupons available'))
-                          : EnvelopeGrid(categoryCoupons: categoryCoupons)),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 }

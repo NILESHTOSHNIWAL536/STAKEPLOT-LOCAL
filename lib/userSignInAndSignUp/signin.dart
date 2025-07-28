@@ -38,7 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override
-  void initState() {
+  void initState()
+  {
     super.initState();
     acceptReset.value = false;
     googleSignInBool.value = false;
@@ -332,8 +333,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
             acceptReset.value = true;
 
-            await getDeviceInfo("deviceData.value".toString(), context,
-                emailController, passwordController, );
+            await getDeviceInfo("deviceData.value".toString(), context,emailController, passwordController, );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,

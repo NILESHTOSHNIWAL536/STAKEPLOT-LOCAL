@@ -278,7 +278,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:get/get.dart';
@@ -290,7 +290,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 class EnvelopeGrid extends StatefulWidget {
   final RxList<CouponModel> categoryCoupons;
 
-  const EnvelopeGrid({Key? key, required this.categoryCoupons}) : super(key: key);
+  const EnvelopeGrid({Key? key, required this.categoryCoupons})
+      : super(key: key);
 
   @override
   _EnvelopeGridState createState() => _EnvelopeGridState();
@@ -307,8 +308,8 @@ class _EnvelopeGridState extends State<EnvelopeGrid> {
     for (int i = 0; i < widget.categoryCoupons.length; i++) {
       _envelopeKeys.add(GlobalKey<_AnimatedCouponEnvelopeState>());
     }
-    // Animation delay set to 0ms as per your code
-    Future.delayed(Duration(milliseconds: 0), () {
+    // Reduced delay from 1000ms to 500ms for faster animation start
+    Future.delayed(Duration(milliseconds: 500), () {
       _startSequentialAnimation();
     });
   }
@@ -323,7 +324,8 @@ class _EnvelopeGridState extends State<EnvelopeGrid> {
         }
       }
       if (availableIndices.isNotEmpty) {
-        final randomIndex = availableIndices[_random.nextInt(availableIndices.length)];
+        final randomIndex =
+            availableIndices[_random.nextInt(availableIndices.length)];
         _envelopeKeys[randomIndex].currentState?.startAnimation();
       }
     });
@@ -336,63 +338,66 @@ class _EnvelopeGridState extends State<EnvelopeGrid> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Regenerate keys dynamically
-    if (_envelopeKeys.length != widget.categoryCoupons.length) {
-      _envelopeKeys.clear();
-      for (int i = 0; i < widget.categoryCoupons.length; i++) {
-        _envelopeKeys.add(GlobalKey<_AnimatedCouponEnvelopeState>());
-      }
-    }
-
-    if (widget.categoryCoupons.isEmpty) {
-      return Center(child: Text("No coupons available"));
-    }
-
-    final isSingleCoupon = widget.categoryCoupons.length == 1;
-
-    if (isSingleCoupon) {
-      return Center(
-        child: AnimatedCouponEnvelope(
-          key: _envelopeKeys[0],
-          coupon: widget.categoryCoupons[0],
-          onClaim: () {
-            if (widget.categoryCoupons.isNotEmpty) {
-              widget.categoryCoupons.removeAt(0);
-            }
-          },
-        ),
-      );
-    } else {
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-          childAspectRatio: 1.0,
-        ),
-        itemCount: widget.categoryCoupons.length,
-        itemBuilder: (context, index) {
-          return AnimatedCouponEnvelope(
-            key: _envelopeKeys[index],
-            coupon: widget.categoryCoupons[index],
-            onClaim: () {
-              if (index < widget.categoryCoupons.length) {
-                widget.categoryCoupons.removeAt(index);
-              }
-            },
-          );
-        },
-      );
+@override
+Widget build(BuildContext context) {
+  // Regenerate keys dynamically
+  if (_envelopeKeys.length != widget.categoryCoupons.length) {
+    _envelopeKeys.clear();
+    for (int i = 0; i < widget.categoryCoupons.length; i++) {
+      _envelopeKeys.add(GlobalKey<_AnimatedCouponEnvelopeState>());
     }
   }
+
+  if (widget.categoryCoupons.isEmpty) {
+    return Center(child: Text("No coupons available"));
+  }
+
+  final isSingleCoupon = widget.categoryCoupons.length == 1;
+
+  if (isSingleCoupon) {
+    return Center(
+      child: AnimatedCouponEnvelope(
+        key: _envelopeKeys[0],
+        coupon: widget.categoryCoupons[0],
+        onClaim: () {
+          if (widget.categoryCoupons.isNotEmpty) {
+            widget.categoryCoupons.removeAt(0);
+          }
+        },
+      ),
+    );
+  } else {
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 1.0,
+      ),
+      itemCount: widget.categoryCoupons.length,
+      itemBuilder: (context, index) {
+        return AnimatedCouponEnvelope(
+          key: _envelopeKeys[index],
+          coupon: widget.categoryCoupons[index],
+          onClaim: () {
+            if (index < widget.categoryCoupons.length) {
+              widget.categoryCoupons.removeAt(index);
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
 }
 
 class AnimatedCouponEnvelope extends StatefulWidget {
   final CouponModel coupon;
   final VoidCallback onClaim;
 
-  const AnimatedCouponEnvelope({Key? key, required this.coupon, required this.onClaim})
+  const AnimatedCouponEnvelope(
+      {Key? key, required this.coupon, required this.onClaim})
       : super(key: key);
 
   @override
@@ -413,8 +418,7 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
       vsync: this,
       duration: Duration(milliseconds: 800),
     );
-    // Restored animation range to prevent card from going too far down
-    cardSlideAnimation = Tween<double>(begin: 0, end: -15).animate(
+    cardSlideAnimation = Tween<double>(begin: 0, end: -30).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -432,48 +436,6 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
     });
   }
 
-  Future<bool> _claimCoupon(BuildContext context) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString("accessToken");
-      if (token == null) return false;
-
-      // Show loading indicator
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Center(child: Spinner());
-        },
-      );
-
-      // PATCH call for claiming coupon
-      final response = await http.patch(
-        Uri.parse('$url/reward/claim/${widget.coupon.id}'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': token,
-        },
-      );
-
-      // Close loading indicator
-      Navigator.of(context).pop();
-
-      if (getFlagOfResponse(response)) {
-        userController.coupons.value--;
-        widget.onClaim();
-        return true;
-      }
-      return false;
-    } catch (e) {
-      // Close loading indicator on error
-      if (context.mounted) {
-        Navigator.of(context).pop();
-      }
-      // Handle error silently as per your code
-      return false;
-    }
-  }
 
   void _showCouponCard(BuildContext context) {
     showDialog(
@@ -484,7 +446,7 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
           backgroundColor: Colors.transparent,
           child: CouponCardWidget(
             coupon: widget.coupon,
-            onClaim: () {}, // No-op since claim is handled on tap
+            onClaim: () {},
           ),
         );
       },
@@ -499,54 +461,41 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
 
   @override
   Widget build(BuildContext context) {
-    // Use MediaQuery for responsive sizing
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isSingleCoupon = context.findAncestorWidgetOfExactType<EnvelopeGrid>()?.categoryCoupons.length == 1;
+        final isSingleCoupon = context.findAncestorWidgetOfExactType<EnvelopeGrid>()?.categoryCoupons.length == 1;
 
-    // Responsive sizes based on screen width
-    final cardSize = isSingleCoupon ? screenWidth * 0.4 : screenWidth * 0.2; // 40% for single, 20% for grid
-    final envelopeBackSize = cardSize * 0.2125; // Scaled from 17/80
-    final envelopeFrontHeight = cardSize * 0.125; // Scaled from 10/80
-    final envelopeFrontWidth = cardSize * 0.0375; // Scaled from 3/80
-    final innerCardWidth = cardSize * 0.75; // Scaled from 60/80
-    final innerCardHeight = cardSize * 0.625; // Scaled from 50/80
-    final priceFontSize = cardSize * 0.2; // Scaled from 16/80
-    final offFontSize = cardSize * 0.1; // Scaled from 8/80
-    final envelopeBackOffset = cardSize * -0.2875; // Scaled from -23/80
-
-    return GestureDetector(
-      onTap: () async {
-        // Trigger claim API call on envelope tap
-        final bool success = await _claimCoupon(context);
-        if (success) {
-          // Show coupon details only if claim is successful
-          _showCouponCard(context);
-        }
+   return GestureDetector(
+      onTap: () async{
+         Navigator.of(context).pop();
+         Navigator.of(context).pop();
+        _showCouponCard(context);
+        await claimCoupon(context,widget.coupon.id,widget); // Explicitly assign to bool
       },
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
           return SizedBox(
-            width: cardSize,
-            height: cardSize,
+            // Increase size for single coupon
+            width: isSingleCoupon ? 220 : 80,
+            height: isSingleCoupon ? 220 : 80,
+            
             child: Stack(
               alignment: Alignment.center,
               children: [
                 // Envelope back
                 Transform.translate(
-                  offset: Offset(0, envelopeBackOffset),
+                  offset: Offset(0, isSingleCoupon ? -70 : -23), // Scaled offset for larger size
                   child: chatAvatartImage(
                     url: 'assets/icons/profileScreen/envelopeBack.svg',
-                    height: envelopeBackSize,
-                    width: envelopeBackSize,
+                    height: isSingleCoupon ? 4 : 17, // Scaled size
+                    width: isSingleCoupon ? 4.5 : 17,
                   ),
                 ),
                 // Animated card
                 Transform.translate(
                   offset: Offset(1, cardSlideAnimation.value),
                   child: Container(
-                    width: innerCardWidth,
-                    height: innerCardHeight,
+                    width: isSingleCoupon ? 200 : 60, // Scaled size
+                    height: isSingleCoupon ? 85 : 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(4),
@@ -571,20 +520,21 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    '₹${widget.coupon.actualPricing}',
+                                    '${widget.coupon.brand}',
                                     style: FontManager().getTextStyle(
                                       context,
-                                      fontSize: priceFontSize,
+                                      fontSize: isSingleCoupon ? 20 : 12, // Larger font for single coupon
                                       lWeight: FontWeight.w500,
                                       color: Color(0xFFEF4444),
                                     ),
                                   ),
                                   Text(
-                                    'OFF',
-                                    style: TextStyle(
-                                      fontSize: offFontSize,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey.shade600,
+                                    '₹${widget.coupon.actualPricing}',
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      fontSize: isSingleCoupon ? 24 : 12, // Larger font for single coupon
+                                      lWeight: FontWeight.w500,
+                                      color: Color(0xFFEF4444),
                                     ),
                                   ),
                                 ],
@@ -599,8 +549,8 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
                 // Envelope front
                 chatAvatartImage(
                   url: 'assets/icons/profileScreen/envelopeFront.svg',
-                  height: envelopeFrontHeight,
-                  width: envelopeFrontWidth,
+                  height: isSingleCoupon ? 5.9: 10, // Scaled size
+                  width: isSingleCoupon ? 4.5 : 3,
                 ),
               ],
             ),
@@ -609,4 +559,6 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
       ),
     );
   }
+
 }
+

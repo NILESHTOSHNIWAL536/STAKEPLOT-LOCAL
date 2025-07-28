@@ -28,8 +28,7 @@ Future<void> loginUser(TextEditingController emailController,
       'deviceInfo': deviceData,
     });
     if (response.statusCode == 409) {
-      forceLoginShowModal(
-          context, response, emailController, passwordController);
+      forceLoginShowModal(context, response, emailController, passwordController);
     } else if (response.statusCode == 500) {
       snackBarCalledfail(context, SnackbarData().serverError, Colors.red);
     } else if (getFlagOfResponse(response)) {

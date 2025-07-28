@@ -165,3 +165,64 @@ class DashedBorderPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+
+class DottedDivider extends StatelessWidget {
+  final double height;
+  final double dashWidth;
+  final double dashSpacing;
+  final Color color;
+
+  const DottedDivider({
+    Key? key,
+    this.height = 1,
+    this.dashWidth = 5,
+    this.dashSpacing = 3,
+    this.color = Colors.grey,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      child: CustomPaint(
+        painter: _DottedLinePainter(
+          dashWidth: dashWidth,
+          dashSpacing: dashSpacing,
+          color: color,
+        ),
+      ),
+    );
+  }
+}
+
+class _DottedLinePainter extends CustomPainter {
+  final double dashWidth;
+  final double dashSpacing;
+  final Color color;
+
+  _DottedLinePainter({
+    required this.dashWidth,
+    required this.dashSpacing,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = size.height;
+
+    double startX = 0;
+    while (startX < size.width) {
+      canvas.drawLine(
+        Offset(startX, 0),
+        Offset(startX + dashWidth, 0),
+        paint,
+      );
+      startX += dashWidth + dashSpacing;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}

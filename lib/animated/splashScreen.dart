@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.da
 import 'package:flutter_application_code_stakeplot/Utils/pdfStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -61,24 +62,10 @@ class _SplashScreenState extends State<SplashScreen> {
     homepageStringsDart.fetchConstants();
     profileScreenStrings.fetchConstants();
     PdfStrings().fetchConstants();
+    RewardScreenStrings().fetchConstants();
   }
 
   @override
-  // Widget build(BuildContext context) {
-  //   return SafeArea(
-  //     child: AnimatedSplashScreen.withScreenFunction(
-  //       backgroundColor: Colors.white,
-  //       duration: 1800,
-  //       splashIconSize: 1800,
-  //       splashTransition: SplashTransition.fadeTransition,
-  //       pageTransitionType: PageTransitionType.fade,
-  //       splash: Center(
-  //         child: Lottie.asset("assets/splashScreen/appScreen.json"),
-  //       ),
-  //       screenFunction: checkAuthAndNavigate,
-  //     ),
-  //   );
-  // }
   Widget build(BuildContext context) {
   final size = MediaQuery.of(context).size; 
 

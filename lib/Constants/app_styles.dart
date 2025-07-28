@@ -957,3 +957,20 @@ class AnimatedAppLoaders {
   static String animate6 = "assets/icons/appScreenLoader/animate6.svg";
   static String animate7 = "assets/icons/appScreenLoader/animate7.svg";
 }
+
+
+
+ final List<Map<String, dynamic>> categoriesOfReward = [
+    {'title': 'Fashion', 'emoji': '👗', 'color': Colors.purple.shade100},
+    {'title': 'Accessories', 'emoji': '👜', 'color': Colors.pink.shade100},
+    {'title': 'Beauty & Personal Care', 'emoji': '💄', 'color': Colors.red.shade100},
+    {'title': 'Electronics', 'emoji': '📱', 'color': Colors.blue.shade100},
+    {'title': 'Software & Security', 'emoji': '🖥️', 'color': Colors.indigo.shade100},
+    {'title': 'Web Services', 'emoji': '🌐', 'color': Colors.teal.shade100},
+    {'title': 'Travel & Tourism', 'emoji': '🏖️', 'color': Colors.orange.shade100},
+    {'title': 'Flights', 'emoji': '✈️', 'color': Colors.lightBlue.shade100},
+    {'title': 'Rentals', 'emoji': '🚗', 'color': Colors.green.shade100},
+    {'title': 'Food & Beverage', 'emoji': '🍔', 'color': Colors.amber.shade100},
+    {'title': 'Health & Wellness', 'emoji': '🏥', 'color': Colors.cyan.shade100},
+    {'title': 'Entertainment', 'emoji': '🎬', 'color': Colors.deepPurple.shade100},
+  ];
