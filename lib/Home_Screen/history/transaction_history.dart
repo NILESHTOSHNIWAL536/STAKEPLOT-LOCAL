@@ -4,6 +4,9 @@ import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionCalender.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_credit_debit.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_search_list.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -89,7 +92,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
       child: Container(
         child: Column(
           children: [
-          
+            
+           Obx(()=> getBoolForSearch() ?  searchTextControllerBool.value?  getSearchListAndCreditDebit():getSearchListAndCreditDebit():SizedBox.shrink()),
+
             Obx(() {
               if (widget.showIcon ?? false) {
                 return reloadHistory.value ? getlist() : getlist();
@@ -107,10 +112,26 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 
 
+  bool getBoolForSearch(){
+     return (searchTextController.value.trim().isNotEmpty  && allOrGroupTransactionsName.value ==
+                        StringConstant.allTransactions);
+  }
+
+
   void changeTheBool() {
     sectionReached.value = true;
     Navigator.pop(context);
   }
+
+
+ Widget getSearchListAndCreditDebit(){
+  return Column(
+     children: [
+              TransactionsSearchList(),
+            lastWeekjson.isNotEmpty && lastmonthjson.isNotEmpty ?  TransactionCreditDebitScreen():SizedBox.shrink(),
+     ],
+  );
+ }
     
 
   Widget getlist() {

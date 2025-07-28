@@ -921,11 +921,11 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
   if (accountIdPdf.value.toLowerCase() == "credit" ||
       accountIdPdf.value.toLowerCase() == "debit" ||
       accountIdPdf.value == "Cash") {
-    searchController.text = accountIdPdf.value.toLowerCase();
+    searchTextController.value = accountIdPdf.value.toLowerCase();
+    // searchController.text = accountIdPdf.value.toLowerCase();
   } else if (accountIdPdf.value == "-") {
-    searchController.text = "";
-
-
+     searchTextController.value = "";
+    // searchController.text = "";
     
   }
 
@@ -1034,7 +1034,8 @@ String getDaysLeftInMonth() {
 }
 
 List<Map<String, dynamic>> getthelist() {
-  final lowerSearch = searchController.text.toLowerCase();
+  final lowerSearch =  searchTextController.value.toLowerCase();
+  // final lowerSearch = searchController.text.toLowerCase();
 
   final filtered = customCategoryList.where((e) {
     final name = e['name']?.toString().toLowerCase() ?? '';

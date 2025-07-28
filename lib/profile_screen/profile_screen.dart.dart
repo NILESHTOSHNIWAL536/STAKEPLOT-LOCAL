@@ -33,6 +33,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
   void initState() {
     super.initState();
     getHiddenTransactions(context);
+    userController.fetchUserInfo();
   }
 
   void authenticateUser(BuildContext context) async {
@@ -131,23 +132,23 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                   width: MediaQuery.of(context).size.width / 2.1,
                                   padding: const EdgeInsets.symmetric(vertical: 5),
                                   child: Text(
-                                    userController.email.value,
+                                  "Score : " + userController.score.value.toString(),
                                     style: FontManager().getTextStyle(
                                       context,
-                                      lWeight: FontWeight.w400,
-                                      fontSize: 10,
+                                      lWeight: FontWeight.w500,
+                                      fontSize: 15,
                                       color: AppColors.bg1,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                )),
-                          userController.phone.value == "0"
-                              ? SizedBox.shrink()
-                              : Text(userController.phone.value,
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.w400,
-                                      fontSize: 10,
-                                      color: AppColors.bg1)),
+                              )),
+                          // userController.phone.value == "0"
+                          //     ? SizedBox.shrink()
+                          //     : Text(userController.phone.value,
+                          //         style: FontManager().getTextStyle(context,
+                          //             lWeight: FontWeight.w400,
+                          //             fontSize: 10,
+                          //             color: AppColors.bg1)),
                         ],
                       ),
                     ),

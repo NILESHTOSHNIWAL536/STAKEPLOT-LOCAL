@@ -73,9 +73,6 @@ class UserController extends GetxController {
         final res = jsonDecode(response.body);
 
         final obj = res['data'];
-        print(" object ${obj}");
-        print(" score ${obj['score']}");
-        print(" cps ${obj['coupons']}");
         userId.value = obj['_id'] ?? '';
         userName.value = obj['name'] ?? '';
         isGoogleUser.value = obj['isGoogleUser'] ?? false;

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -13,7 +14,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:intl/intl.dart';
 
-final TextEditingController searchController = TextEditingController();
+// final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
 
 class CalendarTransactionScreen extends StatefulWidget {
@@ -937,13 +938,13 @@ void _scrollToIndex(int index,[bool flag=false]) {
          );
   }
 
-  @override
-  void dispose() {
-    scrollController.dispose();
-    searchController.dispose();
-    focusNodeSearchFeild.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   scrollController.dispose();
+  //   searchController.dispose();
+  //   focusNodeSearchFeild.dispose();
+  //   super.dispose();
+  // }
 }
 
 

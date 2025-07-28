@@ -31,6 +31,7 @@ class AppColors {
   static  Color creditColor = Colors.green.shade700;
   static  Color grey = Colors.black54;
   static const Color unSelectedOption = Color(0xFFE4E4E4);
+  static const Color greyCard = Color(0xFFC4C4C4);
   static const Color buttonBorder = Color(0xFFC7C9E5);
   static const Color commentbg = Color(0xFFF8F8F8);
   static const Color commentColor = Color(0xFF7B7B7B);

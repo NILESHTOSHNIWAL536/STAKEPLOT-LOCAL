@@ -87,12 +87,11 @@ Widget downvoteLike(context, [bool flag = true]) {
           SvgPicture.asset("assets/svgs/down-vote.svg", color: flagdata(flag)));
 }
 
-Widget SvgImage({context,url,height,width}) {
+Widget SvgImage({required BuildContext context,required String url,required double height,required double width}) {
   double h = MediaQuery.of(context).size.height;
   double w = MediaQuery.of(context).size.width;
   return Container(
       width: w / width,
-      // color: Colorcodes.red,
       height: h / height,
       child:Center(child: Image.network(url))
     );
