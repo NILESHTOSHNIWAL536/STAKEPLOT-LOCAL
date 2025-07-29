@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:get/get.dart';
@@ -195,7 +196,7 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
          Navigator.of(context).pop();
          Navigator.of(context).pop();
         _showCouponCard(context);
-        // await claimCoupon(context,widget.coupon.id,widget,widget.coupon); // Explicitly assign to bool
+        await claimCoupon(context,widget.coupon.id,widget,widget.coupon); // Explicitly assign to bool
       },
       child: AnimatedBuilder(
         animation: _controller,
