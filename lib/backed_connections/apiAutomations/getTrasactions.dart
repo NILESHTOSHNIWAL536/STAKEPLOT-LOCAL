@@ -131,6 +131,24 @@ Future<bool> addRecurringPayment(String id, bool isActive) async {
     return false;
   }
 }
+Future<bool> addRecurringPaymentForDaily(String id, bool isDaily) async {
+  try {
+    final response = await updateDataApiCall2("$url/transactionauto/recurring-payments/$id", {'isDaily': isDaily});
+
+    print("Add Response: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      return jsonData['success'] == true;
+    } else {
+      print("Add API call failed with status: ${response.statusCode}");
+      return false;
+    }
+  } catch (e) {
+    print("Error adding recurring payment: $e");
+    return false;
+  }
+}
 
 Future<bool> updateRecurringPaymentDate(String id, DateTime reminderDate) async {
   try {
