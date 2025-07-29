@@ -87,14 +87,14 @@ Future<List<CardData>> getAutoPayInfo() async {
     ]);
 
     
-
-    for (int i = 0; i < responses.length; i++) {
+    allAutoPayData.clear();
+    for (int i = 0; i < responses.length; i++)
+    {
       final response = responses[i];
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         if (jsonData['success'] == true) {
           final List<dynamic> autoPayDataInfo = jsonData['data'];
-          allAutoPayData.clear();
           allAutoPayData.addAll(
             autoPayDataInfo.asMap().entries.map((entry) {
               final index = entry.key;
@@ -102,10 +102,8 @@ Future<List<CardData>> getAutoPayInfo() async {
               return CardData.fromJson({...data, 'index': allAutoPayData.length + index});
             }),
           );
-        } else {
         }
-      } else {
-      }
+      } 
     }
 
     return allAutoPayData;
