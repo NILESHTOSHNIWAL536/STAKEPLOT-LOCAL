@@ -90,5 +90,10 @@
 	<array>
 		<string>group.com.stakeplot.pfa</string>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>https</string>
+			<string>http</string>
+     	</array>
 </dict>
 </plist>

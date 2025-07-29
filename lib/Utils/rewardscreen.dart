@@ -20,6 +20,7 @@ class RewardScreenStrings
   factory RewardScreenStrings() => _instance;
 
   RxBool isRewardNeedToShow=false.obs;
+  RxString productUrl="https://fishmydeal.com/".obs;
   RxList rewardIntroList=[].obs;
 
   void fetchConstants() async {
@@ -31,7 +32,8 @@ class RewardScreenStrings
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};
         rewardIntroList.clear();
-        rewardIntroList.addAll(data['slides']); 
+        rewardIntroList.addAll(data['slides']);
+        productUrl.value= data['productUrl'] ?? productUrl.value; 
         isRewardNeedToShow.value= pref.containsKey(key) ? false :   data['showSliders'];
       } 
     } catch (e) { 

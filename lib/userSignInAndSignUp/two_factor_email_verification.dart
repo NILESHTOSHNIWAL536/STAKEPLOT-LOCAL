@@ -150,37 +150,7 @@ class _TwoFactorEmailVerificationState
         ),
         child: InkWell(
           onTap: () async {
-            if (otpController.text.isEmpty) {
-              snackBarCalledfail(context, 'Please enter the OTP');
-              return;
-            }
-            if (otpController.text.length != 6) {
-              snackBarCalledfail(
-                  context, 'Please enter all 6 digits of the OTP');
-              return;
-            }
-            if (!RegExp(r'^[0-9]{6}$').hasMatch(otpController.text)) {
-              snackBarCalledfail(context, 'Please enter only numeric digits');
-              return;
-            }
-
-            acceptReset.value = true;
-            // Verify OTP for login
-            bool isVerified = await verifyOTPForLogin(
-              context,
-              widget.data['email'],
-              widget.data['password'],
-              otpController.text,
-              widget.data['response'],
-              widget.data['isForcedLogin'], // Pass the login response
-            );
-
-            print("value of verify $isVerified");
-
-            if (!isVerified) {
-              isOtpWrong2.value = true;
-              acceptReset.value = false;
-            }
+              verifyEmail();
           },
           child: Obx(
             () => Center(
@@ -282,8 +252,44 @@ class _TwoFactorEmailVerificationState
         onChanged: (value) {
           _otpCode.value = value;
           _isOtpValid.value = value.length == _otpLength;
+          if( _isOtpValid.value){
+             verifyEmail();
+          }
         },
       ),
     );
+  }
+  
+  void verifyEmail()async {
+     if (otpController.text.isEmpty) {
+              snackBarCalledfail(context, 'Please enter the OTP');
+              return;
+            }
+            if (otpController.text.length != 6) {
+              snackBarCalledfail(
+                  context, 'Please enter all 6 digits of the OTP');
+              return;
+            }
+            if (!RegExp(r'^[0-9]{6}$').hasMatch(otpController.text)) {
+              snackBarCalledfail(context, 'Please enter only numeric digits');
+              return;
+            }
+
+            acceptReset.value = true;
+            // Verify OTP for login
+            bool isVerified = await verifyOTPForLogin(
+              context,
+              widget.data['email'],
+              widget.data['password'],
+              otpController.text,
+              widget.data['response'],
+              widget.data['isForcedLogin'], // Pass the login response
+            );
+
+
+            if (!isVerified) {
+              isOtpWrong2.value = true;
+              acceptReset.value = false;
+            }
   }
 }

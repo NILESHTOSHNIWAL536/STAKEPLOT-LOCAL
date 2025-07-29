@@ -10,11 +10,33 @@ import 'package:get/get.dart';
 
 import '../apiAutomations/curd.dart';
 import '../apis_connect.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 RxBool loadReaward=false.obs;
 RxBool refreshCupon=false.obs;
+RxBool couponAvalible=false.obs;
 RxList<CouponModel> claimedCoupons = <CouponModel>[].obs;
 RxList<CouponModel> categoryCoupons = <CouponModel>[].obs;
+
+Future<void> fetchCouponsCounts() async {
+    try {
+     
+      final response = await getDataApiCall('$url/reward/iscoupons/count');
+     
+      if (getFlagOfResponse(response))
+      {
+          var json=jsonDecode(response.body);
+          couponAvalible.value= json['data']>0;
+      }
+
+    } catch (e) {
+      // Handle error silently as per your code
+    } finally {
+      loadReaward.value = false;
+    }
+  }
+
 
 Future<void> fetchCategoryCoupons(String category) async {
     try {
@@ -76,4 +98,27 @@ Future<void> fetchCategoryCoupons(String category) async {
     } catch (e) {
       // Handle error silently as per your code
     }
+  }
+
+
+
+  void redirectToUrl(BuildContext context,String path)async{
+                String urlString = path.trim();
+                      if (urlString.isEmpty)
+                       {
+                        snackBarCalledfail(context, "No link provided");
+                        return;
+                      }
+
+                        try {
+                          final uri = Uri.tryParse(urlString);
+
+                          if (uri != null && await canLaunchUrl(uri)) {
+                            await launchUrl(uri, mode: LaunchMode.externalApplication);
+                          } else {
+                            snackBarCalledfail(context, "Invalid or unsupported URL: $urlString");
+                          }
+                        } catch (e) {
+                          snackBarCalledfail(context, "Error: ${e.toString()}"); // Show in snackbar
+                        }
   }

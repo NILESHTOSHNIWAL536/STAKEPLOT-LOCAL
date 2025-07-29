@@ -13,7 +13,6 @@ class CardData {
   final DateTime? nextReminderAt;
   final bool isActive;
   final bool isDaily;
-  
   CardData({
     required this.id,
     required this.title,

@@ -94,6 +94,7 @@ Future<List<CardData>> getAutoPayInfo() async {
         final jsonData = jsonDecode(response.body);
         if (jsonData['success'] == true) {
           final List<dynamic> autoPayDataInfo = jsonData['data'];
+          allAutoPayData.clear();
           allAutoPayData.addAll(
             autoPayDataInfo.asMap().entries.map((entry) {
               final index = entry.key;
