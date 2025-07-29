@@ -34,21 +34,12 @@ PreferredSizeWidget getAppBar(context) {
             mainAxisAlignment: MainAxisAlignment.center,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                  onTap: () {
-                     Navigator.push(
-         context,
-         MaterialPageRoute(
-             builder: (context) =>SplashScreen()),
-       );
-                      // navigatorToMyOwnPage(context);
-                  },
-                  child: Obx(() => AvatarProfile(
-                        name: userController.userName.value,
-                        width: 30,
-                        height: 13,
-                        background: userController.avatarBackGround.value,
-                      ))),
+              Obx(() => AvatarProfile(
+                    name: userController.userName.value,
+                    width: 30,
+                    height: 13,
+                    background: userController.avatarBackGround.value,
+                  )),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,

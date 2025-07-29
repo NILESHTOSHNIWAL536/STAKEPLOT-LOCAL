@@ -86,7 +86,7 @@ Future<List<CardData>> getAutoPayInfo() async {
       getDataApiCall("${url}/transactionauto/get-recurring-payments/true"),
     ]);
 
-    List<CardData> allAutoPayData = [];
+    
 
     for (int i = 0; i < responses.length; i++) {
       final response = responses[i];

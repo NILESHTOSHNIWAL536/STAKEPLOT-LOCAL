@@ -134,33 +134,34 @@ class CardWidget extends StatelessWidget {
                     ),
                     if (card.frequency.toLowerCase() == 'daily') ...[
                       SizedBox(width: 8 * fontScale),
-                      Obx(() => Switch(
-                            value: toggleStates[card.id] ??
-                                true, // Use toggleStates only
-                            onChanged: (value) async {
-                              toggleStates[card.id] =
-                                  value; // Optimistic update
-                              onToggleChanged?.call(card.id, value);
-                              final success =
-                                  await addRecurringPayment(card.id, value);
-                              if (success) {
-                                snackBarCalled(parentContext,
-                                    "Autopay status updated successfully");
-                              } else {
-                                toggleStates[card.id] =
-                                    !value; // Revert on failure
-                                onToggleChanged?.call(card.id, !value);
-                                snackBarCalled(parentContext,
-                                    "Failed to update autopay status");
-                              }
-                              onDataChanged(); // Refresh data after success or failure
-                            },
-                            activeColor: AppColors.primaryColor,
-                            inactiveThumbColor: Colors.white70,
-                            inactiveTrackColor: Colors.white.withOpacity(0.3),
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                          )),
+                    Obx(() => Switch(
+  value: toggleStates[card.id] ?? card.isActive, 
+  
+  onChanged: (value) async {
+    // Optimistic update
+    toggleStates[card.id] = value;
+    onToggleChanged?.call(card.id, value);
+    
+    // Perform backend update
+    final success = await addRecurringPayment(card.id, value);
+    if (success) {
+      snackBarCalled(parentContext, "Autopay status updated successfully");
+    } else {
+      // Revert on failure
+      toggleStates[card.id] = !value;
+      onToggleChanged?.call(card.id, !value);
+      snackBarCalled(parentContext, "Failed to update autopay status");
+    }
+    
+    // Refresh data
+    await onDataChanged();
+  },
+  activeColor: AppColors.primaryColor,
+  inactiveThumbColor: Colors.white70,
+  inactiveTrackColor: Colors.white.withOpacity(0.3),
+  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+)),
+                    
                     ],
                   ],
                 ),
@@ -639,7 +640,7 @@ class _CardStackScreenState extends State<CardStackScreen>
     isLoading.value = false;
     toggleStates.clear();
     for (var card in cards) {
-      toggleStates[card.id] = card.isActive ?? true;
+      toggleStates[card.id] = card.isActive ;
     }
     _controllers.forEach((controller) => controller.dispose());
     _initializeAnimations();

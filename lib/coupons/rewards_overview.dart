@@ -1,40 +1,35 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/coupons/infoScreen.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/coupons/coupon_card.dart';
 import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../backed_connections/apiConnect/reward.dart';
 
-// Utility class to handle coupon popup
 class CouponPopupUtils {
-  
   static final List<Map<String, dynamic>> categories = [
-    {'title': 'Fashion', 'png': CouponCategories.fashion, 'color': Colors.purple.shade100},
-    {'title': 'Accessories', 'png': CouponCategories.accessories, 'color': Colors.pink.shade100},
-    {'title': 'Beauty & Personal Care', 'png': CouponCategories.personal, 'color': Colors.red.shade100},
-    {'title': 'Electronics', 'png': CouponCategories.electronics, 'color': Colors.blue.shade100},
-    {'title': 'Software & Security', 'png': CouponCategories.software, 'color': Colors.indigo.shade100},
-    {'title': 'Web Services', 'png': CouponCategories.web, 'color': Colors.teal.shade100},
-    {'title': 'Travel & Tourism', 'png': CouponCategories.travel, 'color': Colors.orange.shade100},
-    {'title': 'Flights', 'png': CouponCategories.flight, 'color': Colors.lightBlue.shade100},
-    {'title': 'Rentals', 'png': CouponCategories.rental, 'color': Colors.green.shade100},
-    {'title': 'Food & Beverage', 'png': CouponCategories.food, 'color': Colors.amber.shade100},
-    {'title': 'Health & Wellness', 'png': CouponCategories.health, 'color': Colors.cyan.shade100},
-    {'title': 'Entertainment', 'png': CouponCategories.entertainment, 'color': Colors.deepPurple.shade100},
+    {'title': 'Fashion', 'emoji': '👗', 'color': Colors.purple.shade100},
+    {'title': 'Accessories', 'emoji': '👜', 'color': Colors.pink.shade100},
+    {'title': 'Beauty & Personal Care', 'emoji': '💄', 'color': Colors.red.shade100},
+    {'title': 'Electronics', 'emoji': '📱', 'color': Colors.blue.shade100},
+    {'title': 'Software & Security', 'emoji': '🖥️', 'color': Colors.indigo.shade100},
+    {'title': 'Web Services', 'emoji': '🌐', 'color': Colors.teal.shade100},
+    {'title': 'Travel & Tourism', 'emoji': '🏖️', 'color': Colors.orange.shade100},
+    {'title': 'Flights', 'emoji': '✈️', 'color': Colors.lightBlue.shade100},
+    {'title': 'Rentals', 'emoji': '🚗', 'color': Colors.green.shade100},
+    {'title': 'Food & Beverage', 'emoji': '🍔', 'color': Colors.amber.shade100},
+    {'title': 'Health & Wellness', 'emoji': '🏥', 'color': Colors.cyan.shade100},
+    {'title': 'Entertainment', 'emoji': '🎬', 'color': Colors.deepPurple.shade100},
   ];
+
   static void showCouponPopup(BuildContext context, Function(String) onCategorySelected) {
     showModalBottomSheet(
       context: context,
@@ -86,7 +81,7 @@ class CouponPopupUtils {
                         margin: EdgeInsets.only(right: 12),
                         child: _buildCategoryCard(
                           category['title'],
-                          category['png'],
+                          category['emoji'],
                           category['color'],
                           onCategorySelected,
                           context,
@@ -130,7 +125,7 @@ static  Widget getHeader(context){
                       'You Won a Coupon!',
                       style: FontManager().getTextStyle(
                         context,
-                        fontSize: 20,
+                        fontSize: 18,
                         lWeight: FontWeight.w700,
                         color: AppColors.bg1,
                       ),
@@ -157,96 +152,44 @@ static  Widget getHeader(context){
               );
   }
 
-  // static Widget _buildCategoryCard(
-  //     String title, String png, Color backgroundColor, Function(String) onCategorySelected, BuildContext context) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       onCategorySelected(title);
-  //     },
-  //     child: Container(
-  //       width: 80,
-  //       height: 80,
-  //       decoration: BoxDecoration(
-  //         color: backgroundColor,
-  //         borderRadius: BorderRadius.circular(12),
-  //       ),
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           ChatAvatarImage2(
-  //             url: png,
-  //             height: 10,
-  //             width: 4,
-              
-  //           ),
-  //          const  SizedBox(height: 4),
-  //           Text(
-  //             title,
-  //             textAlign: TextAlign.center,
-  //             style: FontManager().getTextStyle(
-  //               context,
-  //               fontSize: 12,
-  //               lWeight: FontWeight.w600,
-  //               color: AppColors.bg1,
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-static Widget _buildCategoryCard(
-    String title, String png, Color backgroundColor, Function(String) onCategorySelected, BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      onCategorySelected(title);
-    },
-    child: Stack(
-      fit: StackFit.expand, // Ensures the stack fills the container
-      children: [
-        // Image as full background
-        ChatAvatarImage2(
-          url: png,
-          height: 10,
-          width: 4,
-          // The fit is already handled in ChatAvatarImage2 with BoxFit.cover
+  static Widget _buildCategoryCard(
+      String title, String emoji, Color backgroundColor, Function(String) onCategorySelected, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        onCategorySelected(title);
+      },
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12),
         ),
-        // Optional gradient overlay for better text visibility
-        // Container(
-        //   decoration: BoxDecoration(
-        //     gradient: LinearGradient(
-        //       colors: [
-        //         Colors.black.withOpacity(0.3),
-        //         Colors.transparent,
-        //       ],
-        //       begin: Alignment.topCenter,
-        //       end: Alignment.bottomCenter,
-        //     ),
-        //   ),
-        // ),
-        // Title text centered on the image
-        Center(
-          child: Container(
-            width:80,
-            child: Text(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              emoji,
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 4),
+            Text(
               title,
               textAlign: TextAlign.center,
               style: FontManager().getTextStyle(
                 context,
                 fontSize: 12,
-                lWeight: FontWeight.bold,
-                color: Colors.white, // White text for contrast
+                lWeight: FontWeight.w600,
+                color: AppColors.bg1,
               ),
-              maxLines: 2, // Allow wrapping if needed
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
+          ],
         ),
-      ],
-    ),
-  );
-}
+      ),
+    );
+  }
+
+
 
 static void showCouponSelectionPopup(BuildContext context, String categoryTitle) {
      showModalBottomSheet(
@@ -254,7 +197,7 @@ static void showCouponSelectionPopup(BuildContext context, String categoryTitle)
       builder: (BuildContext context) {
         return Container(
           width: MediaQuery.of(context).size.width ,
-          height: MediaQuery.of(context).size.height/2.3,
+          height: MediaQuery.of(context).size.height/2,
           padding: EdgeInsets.symmetric(horizontal: 10,vertical: 4),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -262,26 +205,13 @@ static void showCouponSelectionPopup(BuildContext context, String categoryTitle)
           ),
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    padding: EdgeInsets.all(4),
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.grey.shade600,
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ),
+              getHeader(context),
               SizedBox(height: 24),
               Expanded(
                 child: Obx(() => loadReaward.value
                     ? Center(child: Spinner())
                     : categoryCoupons.isEmpty
-                        ? Center(child: Text('No coupons available'))
+                        ? Center(child: textStyle(text:'No coupons available',context: context,fontWeight: FontWeight.bold,fontsize: 12))
                         : EnvelopeGrid(categoryCoupons: categoryCoupons)),
               ),
             ],
@@ -344,6 +274,12 @@ class _RewardsOverviewState extends State<RewardsOverview>
               ),
             ),
         centerTitle: true,
+        actions: [
+          IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => showEarningScoreDialog(context),
+        ),
+        ],
       ),
       body: Column(
         children: [
@@ -436,7 +372,9 @@ class _RewardsOverviewState extends State<RewardsOverview>
           barrierDismissible: true,
           builder: (BuildContext context) {
             return Dialog(
+               insetPadding: EdgeInsets.zero,
               backgroundColor: Colors.transparent,
+               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               child: CouponCardWidget(
                 coupon: coupon,
                 onClaim: () {},

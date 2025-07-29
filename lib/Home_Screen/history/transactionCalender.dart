@@ -851,6 +851,7 @@ Widget _buildCalendarDateItem(BuildContext context, Map<String, dynamic> dateDat
       frequency: '',
       narration: '',
       gradient: const LinearGradient(colors: [Colors.transparent, Colors.transparent]),
+
       isActive: false,
       isDaily:false
     ),

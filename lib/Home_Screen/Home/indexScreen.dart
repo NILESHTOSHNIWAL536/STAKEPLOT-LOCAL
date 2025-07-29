@@ -62,7 +62,7 @@ SizedBox(
               height: 14,
             ),
 
-             SizedBox(
+            SizedBox(
                 height: height * 0.4,
                 child: CardStackScreen()
             ),

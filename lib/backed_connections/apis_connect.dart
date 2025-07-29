@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/controllers/post-controller.d
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
+import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -197,3 +198,4 @@ RxBool getChatSplit = false.obs;
 
 DateTime startDateCustom = DateTime.now().subtract(const Duration(days: 7));
 DateTime endDateCustom = DateTime.now();
+List<CardData> allAutoPayData = [];
