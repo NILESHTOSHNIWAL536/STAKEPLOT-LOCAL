@@ -296,7 +296,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
         centerTitle: true,
         actions: [
           IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.info, color: Colors.black),
           onPressed: () => showEarningScoreDialog(context),
         ),
         ],
@@ -492,7 +492,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
                       lWeight: FontWeight.w400,
                       color: AppColors.bg1,
                     ),
-                    maxLines: 4,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],

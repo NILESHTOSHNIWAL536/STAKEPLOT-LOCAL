@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -134,39 +133,42 @@ class CardWidget extends StatelessWidget {
                     ),
                     if (card.frequency.toLowerCase() == 'daily') ...[
                       SizedBox(width: 8 * fontScale),
-                    Obx(() => Switch(
-  value: toggleStates[card.id] ?? card.isActive, 
-  
-  onChanged: (value) async {
-    // Optimistic update
-    toggleStates[card.id] = value;
-    onToggleChanged?.call(card.id, value);
-    
-    // Perform backend update
-    final success = await addRecurringPayment(card.id, value);
-    if (success) {
-      snackBarCalled(parentContext, "Autopay status updated successfully");
-    } else {
-      // Revert on failure
-      toggleStates[card.id] = !value;
-      onToggleChanged?.call(card.id, !value);
-      snackBarCalled(parentContext, "Failed to update autopay status");
-    }
-    
-    // Refresh data
-    await onDataChanged();
-  },
-  activeColor: AppColors.primaryColor,
-  inactiveThumbColor: Colors.white70,
-  inactiveTrackColor: Colors.white.withOpacity(0.3),
-  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-)),
-                    
+                      Obx(() => Switch(
+                            value: toggleStates[card.id] ??
+                                card.isActive, // Use card.isActive as fallback
+                            onChanged: (value) async {
+                              // Optimistic update
+                              toggleStates[card.id] = value;
+                              onToggleChanged?.call(card.id, value);
+
+                              // Perform backend update
+                              final success =
+                                  await addRecurringPayment(card.id, value);
+                              if (success) {
+                                snackBarCalled(parentContext,
+                                    "Autopay status updated successfully");
+                              } else {
+                                // Revert on failure
+                                toggleStates[card.id] = !value;
+                                onToggleChanged?.call(card.id, !value);
+                                snackBarCalled(parentContext,
+                                    "Failed to update autopay status");
+                              }
+
+                              // Refresh data
+                              // await onDataChanged();
+                            },
+                            activeColor: AppColors.primaryColor,
+                            inactiveThumbColor: Colors.white70,
+                            inactiveTrackColor: Colors.white.withOpacity(0.3),
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                          )),
                     ],
                   ],
                 ),
                 Column(mainAxisSize: MainAxisSize.min, children: [
-                  if (card.isActive ||card.isDaily)
+                  if (card.isActive || card.isDaily)
                     GestureDetector(
                       onTap: () async {
                         final confirm = await showDialog<bool>(
@@ -188,10 +190,11 @@ class CardWidget extends StatelessWidget {
                           ),
                         );
                         if (confirm == true) {
-                          
-                          final success = card.isDaily?await addRecurringPaymentForDaily(
-                              card.id, false):await addRecurringPayment(
-                              card.id, false); // use `false` to remove
+                          final success = card.isDaily
+                              ? await addRecurringPaymentForDaily(
+                                  card.id, false)
+                              : await addRecurringPayment(
+                                  card.id, false); // use `false` to remove
                           snackBarCalled(
                             parentContext,
                             success
@@ -245,8 +248,8 @@ class CardWidget extends StatelessWidget {
                             // Note: The actual addRecurringPayment call will happen in _showCustomCalendarPopup
                           }
                           if (card.frequency.toLowerCase() == 'daily') {
-                            final success =
-                                await addRecurringPaymentForDaily(card.id, true);
+                            final success = await addRecurringPaymentForDaily(
+                                card.id, true);
                             snackBarCalled(
                               parentContext,
                               success ? "Added successfully" : "Failed to add ",
@@ -393,29 +396,32 @@ class CardWidget extends StatelessWidget {
                 ),
                 card.frequency.toLowerCase() == 'daily'
                     ? SizedBox.shrink()
-                    : !card.isActive ?SizedBox.shrink():GestureDetector(
-                        onTap: () => onSetReminder?.call(card.id),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8 * fontScale,
-                              vertical: 6 * fontScale),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(10 * fontScale),
-                          ),
-                          child: Text(
-                            card.nextReminderAt != null
-                                ? "Upcoming reminder: ${formatWhatsAppDateWithoutTime(card.nextReminderAt!)}"
-                                : "Set Reminder",
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 12 * fontScale,
-                              color: AppColors.backgroundColor,
+                    : !card.isActive
+                        ? SizedBox.shrink()
+                        : GestureDetector(
+                            onTap: () => onSetReminder?.call(card.id),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8 * fontScale,
+                                  vertical: 6 * fontScale),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius:
+                                    BorderRadius.circular(10 * fontScale),
+                              ),
+                              child: Text(
+                                card.nextReminderAt != null
+                                    ? "Upcoming reminder: ${formatWhatsAppDateWithoutTime(card.nextReminderAt!)}"
+                                    : "Set Reminder",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 12 * fontScale,
+                                  color: AppColors.backgroundColor,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
               ],
             ),
           ],
@@ -635,12 +641,13 @@ class _CardStackScreenState extends State<CardStackScreen>
   Future<void> _fetchAutoPayData() async {
     isLoading.value = true;
     final fetchedCards = await getAutoPayInfo();
+    allCards.clear();
     allCards.assignAll(fetchedCards);
     cards.assignAll(fetchedCards.take(3).toList());
     isLoading.value = false;
     toggleStates.clear();
     for (var card in cards) {
-      toggleStates[card.id] = card.isActive ;
+      toggleStates[card.id] = card.isActive;
     }
     _controllers.forEach((controller) => controller.dispose());
     _initializeAnimations();
