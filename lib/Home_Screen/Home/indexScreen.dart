@@ -52,20 +52,21 @@ class IndexScreen extends StatelessWidget {
             // ),
          
 
-SizedBox(
-  height: height * (isZeroOrNegative ? 0.54 : 0.21),
-  child: isZeroOrNegative 
-      ? FinoraLastTwoMonthsDashboard() 
-      : SwipeableCardsScreen(),
-),
- const SizedBox(
+          SizedBox(
+            height: height * (isZeroOrNegative ? 0.54 : 0.21),
+            child: isZeroOrNegative 
+                ? FinoraLastTwoMonthsDashboard() 
+                : SwipeableCardsScreen(),
+          ),
+          const SizedBox(
               height: 14,
             ),
 
-            SizedBox(
+            allAutoPayData.isEmpty?SizedBox.shrink(): SizedBox(
                 height: height * 0.4,
                 child: CardStackScreen()
             ),
+            
             SizedBox(
                 height: height * 0.5,
                 child: InsightsScreen()
