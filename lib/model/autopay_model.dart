@@ -11,7 +11,9 @@ class CardData {
   final String narration;
   final LinearGradient gradient;
   final DateTime? nextReminderAt;
-  final bool? isActive;
+  final bool isActive;
+  final bool isDaily;
+  
   CardData({
     required this.id,
     required this.title,
@@ -22,7 +24,8 @@ class CardData {
     required this.narration,
     required this.gradient,
     this.nextReminderAt,
-    this.isActive,
+    required this.isActive,
+    required this.isDaily,
   });
 
   // Factory constructor to create CardData from JSON
@@ -67,7 +70,8 @@ class CardData {
        nextReminderAt: json['nextReminderAt'] != null
           ? DateTime.parse(json['nextReminderAt'] as String)
           : null,
-          isActive: json['isActive'] as bool?,
+          isActive: json['isActive'],
+          isDaily: json['isDaily'] ,
 
     );
   }

@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/coupons/infoScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
@@ -293,6 +294,12 @@ class _RewardsOverviewState extends State<RewardsOverview>
               ),
             ),
         centerTitle: true,
+        actions: [
+          IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => showEarningScoreDialog(context),
+        ),
+        ],
       ),
       body: Column(
         children: [

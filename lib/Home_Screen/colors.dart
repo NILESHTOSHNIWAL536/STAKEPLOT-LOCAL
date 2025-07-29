@@ -45,6 +45,12 @@ class AppColors {
    static const Color historyCalenderText = Color(0xFFA1A1A1);
    static const Color historyCalenderDivider = Color(0xFF7E80A8);
    static const Color finoraMonth = Color(0xFF8E92DD);
+   static const Color autoPay1 = Color(0xFFDCAAAA);
+   static const Color autoPay2 = Color(0xFFA0CAD0);
+   static const Color autoPay3 = Color(0xFFA9B3DA);
+   static const Color autoPay4 = Color(0xFFCC9EBD);
+   static const Color autoPay5 = Color(0xFFBACC9E);
+
 
  
 }

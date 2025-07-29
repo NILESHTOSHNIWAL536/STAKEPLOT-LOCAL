@@ -945,6 +945,23 @@ class MaskedAvatars {
   static String profileIcon11 = "assets/icons/maskAvatars/mask11.png";
   static String profileIcon12 = "assets/icons/maskAvatars/mask12.png";
 }
+class CouponCategories {
+ 
+
+  static String accessories = "assets/icons/couponCategories/Accessories.png";
+  static String electronics = "assets/icons/couponCategories/Electronics.png";
+  static String entertainment = "assets/icons/couponCategories/Entertain-ment.png";
+  static String fashion = "assets/icons/couponCategories/Fashion.png";
+  static String flight = "assets/icons/couponCategories/Flights.png";
+  static String food = "assets/icons/couponCategories/food.png";
+  static String health = "assets/icons/couponCategories/health.png";
+  static String personal = "assets/icons/couponCategories/personal.png";
+  static String rental = "assets/icons/couponCategories/Rentals.png";
+  static String software = "assets/icons/couponCategories/software.png";
+  static String travel = "assets/icons/couponCategories/travel.png";
+  static String web = "assets/icons/couponCategories/web.png";
+ 
+}
 
 List avatarBackGroundList = ["#FA7070", "#FFB07A", "#4C8BF5", "#68B2A0"];
 
