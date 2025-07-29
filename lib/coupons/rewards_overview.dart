@@ -20,55 +20,97 @@ import '../backed_connections/apiConnect/reward.dart';
 
 // Utility class to handle coupon popup
 class CouponPopupUtils {
+  
   static final List<Map<String, dynamic>> categories = [
-    {'title': 'Fashion', 'emoji': '👗', 'color': Colors.purple.shade100},
-    {'title': 'Accessories', 'emoji': '👜', 'color': Colors.pink.shade100},
-    {'title': 'Beauty & Personal Care', 'emoji': '💄', 'color': Colors.red.shade100},
-    {'title': 'Electronics', 'emoji': '📱', 'color': Colors.blue.shade100},
-    {'title': 'Software & Security', 'emoji': '🖥️', 'color': Colors.indigo.shade100},
-    {'title': 'Web Services', 'emoji': '🌐', 'color': Colors.teal.shade100},
-    {'title': 'Travel & Tourism', 'emoji': '🏖️', 'color': Colors.orange.shade100},
-    {'title': 'Flights', 'emoji': '✈️', 'color': Colors.lightBlue.shade100},
-    {'title': 'Rentals', 'emoji': '🚗', 'color': Colors.green.shade100},
-    {'title': 'Food & Beverage', 'emoji': '🍔', 'color': Colors.amber.shade100},
-    {'title': 'Health & Wellness', 'emoji': '🏥', 'color': Colors.cyan.shade100},
-    {'title': 'Entertainment', 'emoji': '🎬', 'color': Colors.deepPurple.shade100},
+    {'title': 'Fashion', 'svg': CouponCategories.fashion, 'color': Colors.purple.shade100},
+    {'title': 'Accessories', 'svg': CouponCategories.accessories, 'color': Colors.pink.shade100},
+    {'title': 'Beauty & Personal Care', 'svg': CouponCategories.personal, 'color': Colors.red.shade100},
+    {'title': 'Electronics', 'svg': CouponCategories.electronics, 'color': Colors.blue.shade100},
+    {'title': 'Software & Security', 'svg': CouponCategories.software, 'color': Colors.indigo.shade100},
+    {'title': 'Web Services', 'svg': CouponCategories.web, 'color': Colors.teal.shade100},
+    {'title': 'Travel & Tourism', 'svg': CouponCategories.travel, 'color': Colors.orange.shade100},
+    {'title': 'Flights', 'svg': CouponCategories.flight, 'color': Colors.lightBlue.shade100},
+    {'title': 'Rentals', 'svg': CouponCategories.rental, 'color': Colors.green.shade100},
+    {'title': 'Food & Beverage', 'svg': CouponCategories.food, 'color': Colors.amber.shade100},
+    {'title': 'Health & Wellness', 'svg': CouponCategories.health, 'color': Colors.cyan.shade100},
+    {'title': 'Entertainment', 'svg': CouponCategories.entertainment, 'color': Colors.deepPurple.shade100},
   ];
-
   static void showCouponPopup(BuildContext context, Function(String) onCategorySelected) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
+        return Container(
+          width: MediaQuery.of(context).size.width ,
+          height: MediaQuery.of(context).size.height/2,
+          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Container(
-            padding: EdgeInsets.all(24),
-            width: MediaQuery.of(context).size.width * 0.9,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      padding: EdgeInsets.all(4),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.grey.shade600,
-                        size: 20,
-                      ),
-                    ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+             
+               getHeader(context),
+              SizedBox(height: 16),
+              
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Select the category',
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 14,
+                    lWeight: FontWeight.w600,
+                    color: AppColors.bg1,
                   ),
                 ),
-                SizedBox(height: 8),
+              ),
+              SizedBox(height: 16),
+              Expanded(
+                child: Container(
+                  height: MediaQuery.of(context).size.height/2.8,
+                  child: GridView.builder(
+                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,          // 2 columns
+                      crossAxisSpacing: 0,       // horizontal space
+                      mainAxisSpacing: 3,        // vertical space
+                      childAspectRatio: 1.1,    // width / height ratio
+                    ),
+                    scrollDirection: Axis.vertical,
+                    itemCount: categories.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      return Container(
+                        margin: EdgeInsets.only(right: 12),
+                        child: _buildCategoryCard(
+                          category['title'],
+                          category['svg'],
+                          category['color'],
+                          onCategorySelected,
+                          context,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+static  Widget getHeader(context){
+    return  Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -95,62 +137,28 @@ class CouponPopupUtils {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
-                Text(
-                  'You selected 2 transactions.\nAs a reward',
-                  textAlign: TextAlign.center,
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 12,
-                    lWeight: FontWeight.w500,
-                    color: AppColors.now,
-                  ),
-                ),
-                SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Select the category',
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 12,
-                      lWeight: FontWeight.w600,
-                      color: AppColors.bg1,
+                
+                 Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.grey.shade600,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
-                Container(
-                  height: 100,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      final category = categories[index];
-                      return Container(
-                        margin: EdgeInsets.only(right: 12),
-                        child: _buildCategoryCard(
-                          category['title'],
-                          category['emoji'],
-                          category['color'],
-                          onCategorySelected,
-                          context,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 16),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+                             ],
+                          ),
+              );
   }
 
   static Widget _buildCategoryCard(
-      String title, String emoji, Color backgroundColor, Function(String) onCategorySelected, BuildContext context) {
+      String title, String svg, Color backgroundColor, Function(String) onCategorySelected, BuildContext context) {
     return GestureDetector(
       onTap: () {
         onCategorySelected(title);
@@ -165,11 +173,12 @@ class CouponPopupUtils {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              emoji,
-              style: TextStyle(fontSize: 20),
+            chatAvatartImage(
+              url: svg,
+              height: 20,
+              width: 20,
             ),
-            SizedBox(height: 4),
+           const  SizedBox(height: 4),
             Text(
               title,
               textAlign: TextAlign.center,
@@ -189,48 +198,42 @@ class CouponPopupUtils {
 
 
 static void showCouponSelectionPopup(BuildContext context, String categoryTitle) {
-    showDialog(
+     showModalBottomSheet(
       context: context,
-      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
+        return Container(
+          width: MediaQuery.of(context).size.width ,
+          height: MediaQuery.of(context).size.height/2.3,
+          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Container(
-            padding: EdgeInsets.all(24),
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.7,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      padding: EdgeInsets.all(4),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.grey.shade600,
-                        size: 20,
-                      ),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.grey.shade600,
+                      size: 20,
                     ),
                   ),
                 ),
-                SizedBox(height: 24),
-                Expanded(
-                  child: Obx(() => loadReaward.value
-                      ? Center(child: Spinner())
-                      : categoryCoupons.isEmpty
-                          ? Center(child: Text('No coupons available'))
-                          : EnvelopeGrid(categoryCoupons: categoryCoupons)),
-                ),
-              ],
-            ),
+              ),
+              SizedBox(height: 24),
+              Expanded(
+                child: Obx(() => loadReaward.value
+                    ? Center(child: Spinner())
+                    : categoryCoupons.isEmpty
+                        ? Center(child: Text('No coupons available'))
+                        : EnvelopeGrid(categoryCoupons: categoryCoupons)),
+              ),
+            ],
           ),
         );
       },
@@ -256,6 +259,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    userController.fetchUserInfo();
     fetchClaimedCoupons();
   }
 
@@ -323,7 +327,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
               controller: _tabController,
               children: [
                Obx(()=> loadReaward.value ? Center(child: Spinner()):  refreshCupon.value ?   _buildClaimedTab() : _buildClaimedTab()) ,
-               Obx(()=> _buildUnclaimedTab()),
+               Obx(()=>  refreshCupon.value ? _buildUnclaimedTab(): _buildUnclaimedTab()),
               ],
             ),
           ),
@@ -384,7 +388,8 @@ class _RewardsOverviewState extends State<RewardsOverview>
               backgroundColor: Colors.transparent,
               child: CouponCardWidget(
                 coupon: coupon,
-                onClaim: () {}, // No-op since coupon is already claimed
+                onClaim: () {},
+                parentContext: context, // No-op since coupon is already claimed
               ),
             );
           },
