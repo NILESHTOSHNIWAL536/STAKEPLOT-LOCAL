@@ -948,18 +948,18 @@ class MaskedAvatars {
 class CouponCategories {
  
 
-  static String accessories = "assets/icons/couponCategories/Accessories.svg";
-  static String electronics = "assets/icons/couponCategories/Electronics2.svg";
-  static String entertainment = "assets/icons/couponCategories/Entertainment2.svg";
-  static String fashion = "assets/icons/couponCategories/Fashion2.svg";
-  static String flight = "assets/icons/couponCategories/Flights.svg";
-  static String food = "assets/icons/couponCategories/food.svg";
-  static String health = "assets/icons/couponCategories/health.svg";
-  static String personal = "assets/icons/couponCategories/personal.svg";
-  static String rental = "assets/icons/couponCategories/Rentals.svg";
-  static String software = "assets/icons/couponCategories/software.svg";
-  static String travel = "assets/icons/couponCategories/travel.svg";
-  static String web = "assets/icons/couponCategories/web.svg";
+  static String accessories = "assets/icons/couponCategories/Accessories.png";
+  static String electronics = "assets/icons/couponCategories/Electronics.png";
+  static String entertainment = "assets/icons/couponCategories/Entertain-ment.png";
+  static String fashion = "assets/icons/couponCategories/Fashion.png";
+  static String flight = "assets/icons/couponCategories/Flights.png";
+  static String food = "assets/icons/couponCategories/food.png";
+  static String health = "assets/icons/couponCategories/health.png";
+  static String personal = "assets/icons/couponCategories/personal.png";
+  static String rental = "assets/icons/couponCategories/Rentals.png";
+  static String software = "assets/icons/couponCategories/software.png";
+  static String travel = "assets/icons/couponCategories/travel.png";
+  static String web = "assets/icons/couponCategories/web.png";
  
 }
 

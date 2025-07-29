@@ -113,6 +113,66 @@ chatAvatartImage({ Key? key,required this.url,required this.width,required this.
   }
 }
 
+class ChatAvatarImage2 extends StatelessWidget {
+  final String url;
+  final double width;
+  final double height;
+
+  const ChatAvatarImage2({
+    Key? key,
+    required this.url,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
+
+  bool get _isSvg => url.trim().toLowerCase().endsWith('.svg');
+  bool get _isNetwork => url.trim().toLowerCase().startsWith('http');
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width / width;
+    final screenHeight = MediaQuery.of(context).size.height / height;
+
+    Widget imageWidget;
+
+    if (_isSvg) {
+      imageWidget = _isNetwork
+          ? SvgPicture.network(
+              url.trim(),
+              width: screenWidth,
+              height: screenHeight,
+              fit: BoxFit.cover,
+            )
+          : SvgPicture.asset(
+              url.trim(),
+              width: screenWidth,
+              height: screenHeight,
+            );
+    } else {
+      imageWidget = _isNetwork
+          ? Image.network(
+              url.trim(),
+              width: screenWidth,
+              height: screenHeight,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+            )
+          : Image.asset(
+              url.trim(),
+              width: screenWidth,
+              height: screenHeight,
+              fit: BoxFit.cover,
+            );
+    }
+
+    return Container(
+      padding: EdgeInsets.zero,
+      alignment: Alignment.center,
+      child: imageWidget,
+    );
+  }
+}
+
 
 class IconImage extends StatelessWidget {
 String url;

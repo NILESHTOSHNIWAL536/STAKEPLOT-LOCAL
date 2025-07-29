@@ -22,18 +22,18 @@ import '../backed_connections/apiConnect/reward.dart';
 class CouponPopupUtils {
   
   static final List<Map<String, dynamic>> categories = [
-    {'title': 'Fashion', 'svg': CouponCategories.fashion, 'color': Colors.purple.shade100},
-    {'title': 'Accessories', 'svg': CouponCategories.accessories, 'color': Colors.pink.shade100},
-    {'title': 'Beauty & Personal Care', 'svg': CouponCategories.personal, 'color': Colors.red.shade100},
-    {'title': 'Electronics', 'svg': CouponCategories.electronics, 'color': Colors.blue.shade100},
-    {'title': 'Software & Security', 'svg': CouponCategories.software, 'color': Colors.indigo.shade100},
-    {'title': 'Web Services', 'svg': CouponCategories.web, 'color': Colors.teal.shade100},
-    {'title': 'Travel & Tourism', 'svg': CouponCategories.travel, 'color': Colors.orange.shade100},
-    {'title': 'Flights', 'svg': CouponCategories.flight, 'color': Colors.lightBlue.shade100},
-    {'title': 'Rentals', 'svg': CouponCategories.rental, 'color': Colors.green.shade100},
-    {'title': 'Food & Beverage', 'svg': CouponCategories.food, 'color': Colors.amber.shade100},
-    {'title': 'Health & Wellness', 'svg': CouponCategories.health, 'color': Colors.cyan.shade100},
-    {'title': 'Entertainment', 'svg': CouponCategories.entertainment, 'color': Colors.deepPurple.shade100},
+    {'title': 'Fashion', 'png': CouponCategories.fashion, 'color': Colors.purple.shade100},
+    {'title': 'Accessories', 'png': CouponCategories.accessories, 'color': Colors.pink.shade100},
+    {'title': 'Beauty & Personal Care', 'png': CouponCategories.personal, 'color': Colors.red.shade100},
+    {'title': 'Electronics', 'png': CouponCategories.electronics, 'color': Colors.blue.shade100},
+    {'title': 'Software & Security', 'png': CouponCategories.software, 'color': Colors.indigo.shade100},
+    {'title': 'Web Services', 'png': CouponCategories.web, 'color': Colors.teal.shade100},
+    {'title': 'Travel & Tourism', 'png': CouponCategories.travel, 'color': Colors.orange.shade100},
+    {'title': 'Flights', 'png': CouponCategories.flight, 'color': Colors.lightBlue.shade100},
+    {'title': 'Rentals', 'png': CouponCategories.rental, 'color': Colors.green.shade100},
+    {'title': 'Food & Beverage', 'png': CouponCategories.food, 'color': Colors.amber.shade100},
+    {'title': 'Health & Wellness', 'png': CouponCategories.health, 'color': Colors.cyan.shade100},
+    {'title': 'Entertainment', 'png': CouponCategories.entertainment, 'color': Colors.deepPurple.shade100},
   ];
   static void showCouponPopup(BuildContext context, Function(String) onCategorySelected) {
     showModalBottomSheet(
@@ -86,7 +86,7 @@ class CouponPopupUtils {
                         margin: EdgeInsets.only(right: 12),
                         child: _buildCategoryCard(
                           category['title'],
-                          category['svg'],
+                          category['png'],
                           category['color'],
                           onCategorySelected,
                           context,
@@ -157,45 +157,96 @@ static  Widget getHeader(context){
               );
   }
 
-  static Widget _buildCategoryCard(
-      String title, String svg, Color backgroundColor, Function(String) onCategorySelected, BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        onCategorySelected(title);
-      },
-      child: Container(
-        width: 80,
-        height: 80,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(12),
+  // static Widget _buildCategoryCard(
+  //     String title, String png, Color backgroundColor, Function(String) onCategorySelected, BuildContext context) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       onCategorySelected(title);
+  //     },
+  //     child: Container(
+  //       width: 80,
+  //       height: 80,
+  //       decoration: BoxDecoration(
+  //         color: backgroundColor,
+  //         borderRadius: BorderRadius.circular(12),
+  //       ),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           ChatAvatarImage2(
+  //             url: png,
+  //             height: 10,
+  //             width: 4,
+              
+  //           ),
+  //          const  SizedBox(height: 4),
+  //           Text(
+  //             title,
+  //             textAlign: TextAlign.center,
+  //             style: FontManager().getTextStyle(
+  //               context,
+  //               fontSize: 12,
+  //               lWeight: FontWeight.w600,
+  //               color: AppColors.bg1,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+static Widget _buildCategoryCard(
+    String title, String png, Color backgroundColor, Function(String) onCategorySelected, BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      onCategorySelected(title);
+    },
+    child: Stack(
+      fit: StackFit.expand, // Ensures the stack fills the container
+      children: [
+        // Image as full background
+        ChatAvatarImage2(
+          url: png,
+          height: 10,
+          width: 4,
+          // The fit is already handled in ChatAvatarImage2 with BoxFit.cover
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            chatAvatartImage(
-              url: svg,
-              height: 20,
-              width: 20,
-            ),
-           const  SizedBox(height: 4),
-            Text(
+        // Optional gradient overlay for better text visibility
+        // Container(
+        //   decoration: BoxDecoration(
+        //     gradient: LinearGradient(
+        //       colors: [
+        //         Colors.black.withOpacity(0.3),
+        //         Colors.transparent,
+        //       ],
+        //       begin: Alignment.topCenter,
+        //       end: Alignment.bottomCenter,
+        //     ),
+        //   ),
+        // ),
+        // Title text centered on the image
+        Center(
+          child: Container(
+            width:80,
+            child: Text(
               title,
               textAlign: TextAlign.center,
               style: FontManager().getTextStyle(
                 context,
                 fontSize: 12,
-                lWeight: FontWeight.w600,
-                color: AppColors.bg1,
+                lWeight: FontWeight.bold,
+                color: Colors.white, // White text for contrast
               ),
+              maxLines: 2, // Allow wrapping if needed
+              overflow: TextOverflow.ellipsis,
             ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
-
-
+      ],
+    ),
+  );
+}
 
 static void showCouponSelectionPopup(BuildContext context, String categoryTitle) {
      showModalBottomSheet(
