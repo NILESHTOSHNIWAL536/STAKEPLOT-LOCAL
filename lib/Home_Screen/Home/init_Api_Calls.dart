@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -38,6 +39,7 @@ void callApi(context)async
     getAllContstant(context);
     getGroupTransactions();
     getCustomCategory(context);
+    // getAutoPayInfo();
     custom = getthelist();
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     clearAllFlags();

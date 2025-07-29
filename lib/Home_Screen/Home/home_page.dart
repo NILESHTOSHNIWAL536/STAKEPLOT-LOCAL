@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
         showWeeklyPopup(context, userController.userId.value);
       } else {}
     });
-    getAutoPayInfo();
+    
   }
 
   @override
@@ -58,8 +58,7 @@ class _HomePageState extends State<HomePage> {
         bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
         backgroundColor: AppColors.backgroundColor,
         appBar: getAppBar(context),
-        body:
-            Obx(() => !isBankLinked.value ? NoAccountScreen() : IndexScreen()),
+        body: Obx(() => !isBankLinked.value ? NoAccountScreen() : IndexScreen()),
       ),
     ));
   }

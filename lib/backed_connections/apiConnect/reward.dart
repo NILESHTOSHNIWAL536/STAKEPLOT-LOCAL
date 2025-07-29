@@ -4,6 +4,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:get/get.dart';
 
@@ -19,14 +20,14 @@ Future<void> fetchCategoryCoupons(String category) async {
     try {
       loadReaward.value = true;
       // Trim spaces and replace with no spaces
-      final formattedCategory = category.replaceAll(' ', '');
+      final formattedCategory = category.trim();
+      categorySelected.value=formattedCategory;
       final response = await getDataApiCall('$url/reward/search/$formattedCategory');
 
       if (getFlagOfResponse(response))
       {
         final List<dynamic> data = jsonDecode(response.body)['data'];
         categoryCoupons.assignAll(CouponModel.listFromJson(data));
-
       }
 
     } catch (e) {
@@ -51,23 +52,26 @@ Future<void> fetchCategoryCoupons(String category) async {
         claimedCoupons.addAll(CouponModel.listFromJson(data));
         claimedCoupons.refresh();
         refreshCupon.value = !refreshCupon.value;
-        // claimedCoupons.assignAll(CouponModel.listFromJson(data));
       }
     } catch (e) {
-      // Handle error silently as per your code
     } finally {
       loadReaward.value = false;
     }
   }
 
 
-   Future<void> claimCoupon(BuildContext context,String id,widget) async {
+   Future<void> claimCoupon(BuildContext context,String id,widget,CouponModel coupon) async {
     try {
-      var response=await updateDataApiCall('$url/reward/claim/${id}');
-      if (getFlagOfResponse(response)) {
-        userController.coupons.value--;
+      var body={
+         "category":categorySelected.value
+      };
+      claimedCoupons.add(coupon);
+      userController.coupons.value--;
+      refreshCupon.value = !refreshCupon.value;
+      var response=await updateDataApiCall2('$url/reward/claim/${id}',body);
+      if (getFlagOfResponse(response))
+      {
         widget.onClaim(); 
-        fetchClaimedCoupons();
       }
     } catch (e) {
       // Handle error silently as per your code

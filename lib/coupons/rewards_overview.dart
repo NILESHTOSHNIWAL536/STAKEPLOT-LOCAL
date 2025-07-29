@@ -36,39 +36,81 @@ class CouponPopupUtils {
   ];
 
   static void showCouponPopup(BuildContext context, Function(String) onCategorySelected) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
+        return Container(
+          width: MediaQuery.of(context).size.width ,
+          height: MediaQuery.of(context).size.height/2,
+          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Container(
-            padding: EdgeInsets.all(24),
-            width: MediaQuery.of(context).size.width * 0.9,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      padding: EdgeInsets.all(4),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.grey.shade600,
-                        size: 20,
-                      ),
-                    ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+             
+               getHeader(context),
+              SizedBox(height: 16),
+              
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Select the category',
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 14,
+                    lWeight: FontWeight.w600,
+                    color: AppColors.bg1,
                   ),
                 ),
-                SizedBox(height: 8),
+              ),
+              SizedBox(height: 16),
+              Expanded(
+                child: Container(
+                  height: MediaQuery.of(context).size.height/2.8,
+                  child: GridView.builder(
+                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,          // 2 columns
+                      crossAxisSpacing: 0,       // horizontal space
+                      mainAxisSpacing: 3,        // vertical space
+                      childAspectRatio: 1.1,    // width / height ratio
+                    ),
+                    scrollDirection: Axis.vertical,
+                    itemCount: categories.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      return Container(
+                        margin: EdgeInsets.only(right: 12),
+                        child: _buildCategoryCard(
+                          category['title'],
+                          category['emoji'],
+                          category['color'],
+                          onCategorySelected,
+                          context,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+static  Widget getHeader(context){
+    return  Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -95,58 +137,24 @@ class CouponPopupUtils {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
-                Text(
-                  'You selected 2 transactions.\nAs a reward',
-                  textAlign: TextAlign.center,
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 12,
-                    lWeight: FontWeight.w500,
-                    color: AppColors.now,
-                  ),
-                ),
-                SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Select the category',
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 12,
-                      lWeight: FontWeight.w600,
-                      color: AppColors.bg1,
+                
+                 Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.grey.shade600,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
-                Container(
-                  height: 100,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      final category = categories[index];
-                      return Container(
-                        margin: EdgeInsets.only(right: 12),
-                        child: _buildCategoryCard(
-                          category['title'],
-                          category['emoji'],
-                          category['color'],
-                          onCategorySelected,
-                          context,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 16),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+                             ],
+                          ),
+              );
   }
 
   static Widget _buildCategoryCard(
@@ -189,48 +197,42 @@ class CouponPopupUtils {
 
 
 static void showCouponSelectionPopup(BuildContext context, String categoryTitle) {
-    showDialog(
+     showModalBottomSheet(
       context: context,
-      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
+        return Container(
+          width: MediaQuery.of(context).size.width ,
+          height: MediaQuery.of(context).size.height/2.3,
+          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Container(
-            padding: EdgeInsets.all(24),
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.7,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      padding: EdgeInsets.all(4),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.grey.shade600,
-                        size: 20,
-                      ),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.grey.shade600,
+                      size: 20,
                     ),
                   ),
                 ),
-                SizedBox(height: 24),
-                Expanded(
-                  child: Obx(() => loadReaward.value
-                      ? Center(child: Spinner())
-                      : categoryCoupons.isEmpty
-                          ? Center(child: Text('No coupons available'))
-                          : EnvelopeGrid(categoryCoupons: categoryCoupons)),
-                ),
-              ],
-            ),
+              ),
+              SizedBox(height: 24),
+              Expanded(
+                child: Obx(() => loadReaward.value
+                    ? Center(child: Spinner())
+                    : categoryCoupons.isEmpty
+                        ? Center(child: Text('No coupons available'))
+                        : EnvelopeGrid(categoryCoupons: categoryCoupons)),
+              ),
+            ],
           ),
         );
       },
@@ -256,6 +258,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    userController.fetchUserInfo();
     fetchClaimedCoupons();
   }
 
@@ -323,7 +326,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
               controller: _tabController,
               children: [
                Obx(()=> loadReaward.value ? Center(child: Spinner()):  refreshCupon.value ?   _buildClaimedTab() : _buildClaimedTab()) ,
-               Obx(()=> _buildUnclaimedTab()),
+               Obx(()=>  refreshCupon.value ? _buildUnclaimedTab(): _buildUnclaimedTab()),
               ],
             ),
           ),
@@ -384,7 +387,8 @@ class _RewardsOverviewState extends State<RewardsOverview>
               backgroundColor: Colors.transparent,
               child: CouponCardWidget(
                 coupon: coupon,
-                onClaim: () {}, // No-op since coupon is already claimed
+                onClaim: () {},
+                parentContext: context, // No-op since coupon is already claimed
               ),
             );
           },
