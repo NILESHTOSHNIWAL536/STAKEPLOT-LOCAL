@@ -58,6 +58,7 @@ class CouponCardWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    
                     InkWell(
                       onTap: (){
                          redirectToUrl(context, coupon.link);
