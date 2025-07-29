@@ -241,6 +241,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
     _tabController = TabController(length: 2, vsync: this);
     userController.fetchUserInfo();
     fetchClaimedCoupons();
+    fetchCouponsCounts();
   }
 
   @override

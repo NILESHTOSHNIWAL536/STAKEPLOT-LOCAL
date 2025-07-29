@@ -15,8 +15,28 @@ import 'package:url_launcher/url_launcher.dart';
 
 RxBool loadReaward=false.obs;
 RxBool refreshCupon=false.obs;
+RxBool couponAvalible=false.obs;
 RxList<CouponModel> claimedCoupons = <CouponModel>[].obs;
 RxList<CouponModel> categoryCoupons = <CouponModel>[].obs;
+
+Future<void> fetchCouponsCounts() async {
+    try {
+     
+      final response = await getDataApiCall('$url/reward/iscoupons/count');
+     
+      if (getFlagOfResponse(response))
+      {
+          var json=jsonDecode(response.body);
+          couponAvalible.value= json['data']>0;
+      }
+
+    } catch (e) {
+      // Handle error silently as per your code
+    } finally {
+      loadReaward.value = false;
+    }
+  }
+
 
 Future<void> fetchCategoryCoupons(String category) async {
     try {
