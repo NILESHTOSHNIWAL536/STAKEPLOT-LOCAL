@@ -15,7 +15,7 @@ part 'snackBars.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.4" : "localhost";
-String urlWithLocallHost =!flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost =flag ? "https://test.stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 UserController get userController => Get.find<UserController>();

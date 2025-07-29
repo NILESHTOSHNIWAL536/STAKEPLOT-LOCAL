@@ -266,16 +266,17 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
                             ),
                             child: Center(
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                // mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Row(
-                                   mainAxisAlignment: MainAxisAlignment.center, 
+                                   mainAxisAlignment: MainAxisAlignment.start, 
                                     children:[
+                                        SizedBox(width: envelopeSize * 0.04),
                                        widget.coupon.image.isNotEmpty
                                         ? Image.network(
                                             widget.coupon.image,
-                                            width: isSingleCoupon?fontSize * 2.5:fontSize * 1.5, // Adjust size as needed
-                                            height: isSingleCoupon?fontSize * 2.5:fontSize * 1.5,
+                                            width: isSingleCoupon?fontSize * 3:fontSize * 1.5, // Adjust size as needed
+                                            height: isSingleCoupon?fontSize * 3:fontSize * 1.5,
 
                                             
                                             errorBuilder: (context, error, stackTrace) => Icon(
@@ -290,18 +291,19 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
                                             color: Colors.grey,
                                           ),
                                             SizedBox(width: envelopeSize * 0.02),
-                                            Text(
-                                    widget.coupon.brand.length > 9
-                                        ? '${widget.coupon.brand.substring(0, 9)}...'
-                                        : widget.coupon.brand,
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      fontSize: fontSize,
-                                      lWeight: FontWeight.w500,
-                                      color: Color(0xFFEF4444),
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                            Container(
+                                               width: isSingleCoupon?MediaQuery.sizeOf(context).width/3:MediaQuery.sizeOf(context).width/7,
+                                              child: Text(
+                                                                                   widget.coupon.brand,
+                                                                                  style: FontManager().getTextStyle(
+                                                                                    context,
+                                                                                    fontSize: fontSize,
+                                                                                    lWeight: FontWeight.w500,
+                                                                                    color: Color(0xFFEF4444),
+                                                                                  ),
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                ),
+                                            ),
                                     ]
                                   ),
                                  
@@ -324,6 +326,7 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
                       ],
                     ),
                   ),
+                
                 ),
                 // Envelope front
                 chatAvatartImage(
