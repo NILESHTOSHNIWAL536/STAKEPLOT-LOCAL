@@ -1,24 +1,15 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'coupon_card.dart'; // Import CouponCardWidget
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'coupon_card.dart'; 
 
 
 RxString categorySelected="".obs;
-
-
 class EnvelopeGrid extends StatefulWidget {
   final RxList<CouponModel> categoryCoupons;
 
@@ -176,7 +167,9 @@ class _AnimatedCouponEnvelopeState extends State<AnimatedCouponEnvelope>
       barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.transparent,
+              insetPadding: EdgeInsets.zero,
+              backgroundColor: Colors.transparent,
+               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: CouponCardWidget(
             coupon: widget.coupon,
             onClaim: () {},

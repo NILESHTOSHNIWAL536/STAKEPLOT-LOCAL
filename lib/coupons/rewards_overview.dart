@@ -1,24 +1,18 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/coupons/coupon_card.dart';
 import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../backed_connections/apiConnect/reward.dart';
 
-// Utility class to handle coupon popup
 class CouponPopupUtils {
   static final List<Map<String, dynamic>> categories = [
     {'title': 'Fashion', 'emoji': '👗', 'color': Colors.purple.shade100},
@@ -211,26 +205,12 @@ static void showCouponSelectionPopup(BuildContext context, String categoryTitle)
           child: Column(
             children: [
               getHeader(context),
-              // Align(
-              //   alignment: Alignment.topRight,
-              //   child: GestureDetector(
-              //     onTap: () => Navigator.of(context).pop(),
-              //     child: Container(
-              //       padding: EdgeInsets.all(4),
-              //       child: Icon(
-              //         Icons.close,
-              //         color: Colors.grey.shade600,
-              //         size: 20,
-              //       ),
-              //     ),
-              //   ),
-              // ),
               SizedBox(height: 24),
               Expanded(
                 child: Obx(() => loadReaward.value
                     ? Center(child: Spinner())
                     : categoryCoupons.isEmpty
-                        ? Center(child: Text('No coupons available'))
+                        ? Center(child: textStyle(text:'No coupons available',context: context,fontWeight: FontWeight.bold,fontsize: 12))
                         : EnvelopeGrid(categoryCoupons: categoryCoupons)),
               ),
             ],
@@ -385,7 +365,9 @@ class _RewardsOverviewState extends State<RewardsOverview>
           barrierDismissible: true,
           builder: (BuildContext context) {
             return Dialog(
+               insetPadding: EdgeInsets.zero,
               backgroundColor: Colors.transparent,
+               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               child: CouponCardWidget(
                 coupon: coupon,
                 onClaim: () {},
