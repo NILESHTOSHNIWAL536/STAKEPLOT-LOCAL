@@ -28,9 +28,9 @@ class CouponCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isClaimed = onClaim.toString().contains('Closure: () => null');
-    double height = MediaQuery.of(context).size.height / 2.2;
+    double height = MediaQuery.of(context).size.height / 1.8;
     final width = MediaQuery.of(context).size.width;
-    double curve=  height / 3;
+    double curve=  height / 2.5;
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -59,18 +59,40 @@ class CouponCardWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     
-                    InkWell(
-                      onTap: (){
-                         redirectToUrl(context, coupon.link);
-                      },
-                      child: textStyleImage(
-                          context: context,
-                          text: coupon.brand,
-                          fontWeight: FontWeight.bold,
-                          fontsize: 24,
-                          c: Colorcodes.red,
-                          iswrap: true
+                    Row(
+                      children: [
+                          coupon.image.isNotEmpty
+                                        ? Image.network(
+                                            coupon.image,
+                                            width: fontSize * 2.5, // Adjust size as needed
+                                            height: fontSize * 2.5,
+                                            errorBuilder: (context, error, stackTrace) => Icon(
+                                              Icons.broken_image,
+                                              size: fontSize * 1.5,
+                                              color: Colors.grey,
+                                            ),
+                                          )
+                                        : Icon(
+                                            Icons.image,
+                                            size: fontSize * 1.5,
+                                            color: Colors.grey,
+                                          ),
+                        const SizedBox(width:4),
+                        InkWell(
+                          onTap: (){
+                             redirectToUrl(context, coupon.link);
+                          },
+                          child: textStyleImage(
+                              context: context,
+                              text: coupon.brand,
+                              fontWeight: FontWeight.bold,
+                              fontsize: 24,
+                              c: Colorcodes.red,
+                              iswrap: true
+                            ),
                         ),
+
+                      ],
                     ),
                     InkWell(
                       onTap: (){
