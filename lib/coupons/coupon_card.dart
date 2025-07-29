@@ -34,7 +34,6 @@ class CouponCardWidget extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-     
         CouponCard(
           height: height,
           width: width/1.15,

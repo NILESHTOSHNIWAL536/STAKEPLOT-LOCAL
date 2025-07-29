@@ -105,7 +105,7 @@ void setUpSocketListenerMainPage(BuildContext context) {
   });
 
     // Listener for events from the socket
-    mainPageWebSocket.on("addUserToSocket", (data) {
+    mainPageWebSocket.on("addUserToSocket", (data)async {
       String type=data['type'];
       if(type == "Notify")
       {
@@ -128,6 +128,7 @@ void setUpSocketListenerMainPage(BuildContext context) {
       {
           //  couponAvalible.value
           //  fetchCouponsCounts();
+          //  await Future.delayed(Duration(milliseconds: 200));
           callRewardApis(context);
           
       }
