@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
+import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:get/get.dart';
 
@@ -121,4 +122,15 @@ Future<void> fetchCategoryCoupons(String category) async {
                         } catch (e) {
                           snackBarCalledfail(context, "Error: ${e.toString()}"); // Show in snackbar
                         }
+  }
+
+
+
+  void callRewardApis(context)
+  {
+        fetchCouponsCounts();
+        CouponPopupUtils.showCouponPopup(context, (category) {
+                fetchCategoryCoupons(category);
+                CouponPopupUtils.showCouponSelectionPopup(context, category);
+           });
   }

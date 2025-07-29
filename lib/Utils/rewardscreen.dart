@@ -21,6 +21,7 @@ class RewardScreenStrings
 
   RxBool isRewardNeedToShow=false.obs;
   RxString productUrl="https://fishmydeal.com/".obs;
+  RxString outOfReaward="All the coupons have been redeemed, please hold on while we gather more rewards for you.".obs;
   RxList rewardIntroList=[].obs;
 
   void fetchConstants() async {
@@ -34,6 +35,7 @@ class RewardScreenStrings
         rewardIntroList.clear();
         rewardIntroList.addAll(data['slides']);
         productUrl.value= data['productUrl'] ?? productUrl.value; 
+        outOfReaward.value= data['outOfReaward'] ?? outOfReaward.value; 
         isRewardNeedToShow.value= pref.containsKey(key) ? false :   data['showSliders'];
       } 
     } catch (e) { 

@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
@@ -61,7 +62,31 @@ class CouponPopupUtils {
                 ),
               ),
               SizedBox(height: 16),
-              Expanded(
+               couponAvalible.value ? gridList(context, onCategorySelected):
+               Container(
+                  height: MediaQuery.of(context).size.height/3,
+                 padding: const EdgeInsets.symmetric(horizontal: 20),
+                 child: Center(
+                   child: textStyleImage(
+                    context: context,
+                    text: RewardScreenStrings().outOfReaward,
+                    fontsize: 17,
+                    fontWeight: FontWeight.w500,
+                    iswrap: true
+                                 ),
+                 ),
+               ),
+              SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+  static Widget gridList(context, onCategorySelected){
+      return  Expanded(
                 child: Container(
                   height: MediaQuery.of(context).size.height/2.8,
                   child: GridView.builder(
@@ -89,13 +114,7 @@ class CouponPopupUtils {
                     },
                   ),
                 ),
-              ),
-              SizedBox(height: 16),
-            ],
-          ),
-        );
-      },
-    );
+              );
   }
 
 
@@ -481,10 +500,13 @@ class _RewardsOverviewState extends State<RewardsOverview>
 
   Widget _buildEnvelopeCard() {
     return GestureDetector(
-      onTap: () => CouponPopupUtils.showCouponPopup(context, (category) {
-         fetchCategoryCoupons(category);
-        CouponPopupUtils.showCouponSelectionPopup(context, category);
-      }),
+      onTap: (){
+        callRewardApis(context);
+      },
+      // onTap: () => CouponPopupUtils.showCouponPopup(context, (category) {
+      //    fetchCategoryCoupons(category);
+      //   CouponPopupUtils.showCouponSelectionPopup(context, category);
+      // }),
       child: Container(
         child: chatAvatartImage(
           url: ProfileIcons.unclaimedCoupon,

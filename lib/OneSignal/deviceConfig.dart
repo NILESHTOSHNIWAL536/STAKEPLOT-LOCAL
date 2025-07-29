@@ -126,10 +126,10 @@ void setUpSocketListenerMainPage(BuildContext context) {
         logoutUserFromDevice(context);
       }else if(type=='Reward')
       {
-           CouponPopupUtils.showCouponPopup(context, (category) {
-                fetchCategoryCoupons(category);
-                CouponPopupUtils.showCouponSelectionPopup(context, category);
-           });
+          //  couponAvalible.value
+          //  fetchCouponsCounts();
+          callRewardApis(context);
+          
       }
       else if (type == "fetchedApiCall")
       {
