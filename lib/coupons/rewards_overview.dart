@@ -130,7 +130,7 @@ static  Widget getHeader(context){
                       'You Won a Coupon!',
                       style: FontManager().getTextStyle(
                         context,
-                        fontSize: 20,
+                        fontSize: 18,
                         lWeight: FontWeight.w700,
                         color: AppColors.bg1,
                       ),
@@ -202,7 +202,7 @@ static void showCouponSelectionPopup(BuildContext context, String categoryTitle)
       builder: (BuildContext context) {
         return Container(
           width: MediaQuery.of(context).size.width ,
-          height: MediaQuery.of(context).size.height/2.3,
+          height: MediaQuery.of(context).size.height/2,
           padding: EdgeInsets.symmetric(horizontal: 10,vertical: 4),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -210,20 +210,21 @@ static void showCouponSelectionPopup(BuildContext context, String categoryTitle)
           ),
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    padding: EdgeInsets.all(4),
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.grey.shade600,
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ),
+              getHeader(context),
+              // Align(
+              //   alignment: Alignment.topRight,
+              //   child: GestureDetector(
+              //     onTap: () => Navigator.of(context).pop(),
+              //     child: Container(
+              //       padding: EdgeInsets.all(4),
+              //       child: Icon(
+              //         Icons.close,
+              //         color: Colors.grey.shade600,
+              //         size: 20,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 24),
               Expanded(
                 child: Obx(() => loadReaward.value

@@ -4,13 +4,14 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:coupon_uikit/coupon_uikit.dart';
+import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class CouponCardWidget extends StatelessWidget {
@@ -50,12 +51,17 @@ class CouponCardWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  textStyle(
-                      context: context,
-                      text: coupon.brand,
-                      fontWeight: FontWeight.bold,
-                      fontsize: 24,
-                      c: Colorcodes.red),
+                  InkWell(
+                    onTap: (){
+                       redirectToUrl(context, coupon.link);
+                    },
+                    child: textStyle(
+                        context: context,
+                        text: coupon.brand,
+                        fontWeight: FontWeight.bold,
+                        fontsize: 24,
+                        c: Colorcodes.red),
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -80,7 +86,9 @@ class CouponCardWidget extends StatelessWidget {
                   fontSize: 16,
                   lWeight: FontWeight.w700,
                   color: AppColors.bg1,
+                  
                 ),
+                softWrap: false,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,40 +162,9 @@ class CouponCardWidget extends StatelessWidget {
                   SizedBox(height: 16),
                   InkWell(
                     // coupon.link
-                    onTap: () async {
-                      String urlString = coupon.link.trim();
-                      WebViewController controller = WebViewController()
-                                ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                                ..loadRequest(Uri.parse(
-                                    urlString));
-                      // Navigator.push(
-                      //   parentContext,
-                      //   MaterialPageRoute(
-                      //     builder: (context) =>
-                      //         WebViewPage(controller: controller),
-                      //   ),
-                      // );
-                              
-                      if (urlString.isEmpty) {
-                        snackBarCalledfail(context, "No link provided");
-                        return;
-                      }
-
-                        try {
-                          // Get.to(() => WebViewPage(controller: controller));
-                          final uri = Uri.tryParse(urlString);
-
-                          if (uri != null && await canLaunchUrl(uri)) {
-                            await launchUrl(uri, mode: LaunchMode.externalApplication);
-                          } else {
-                            print("Failed to launch URL: $urlString"); // Log to console
-                            snackBarCalledfail(context, "Invalid or unsupported URL: $urlString");
-                          }
-                        } catch (e) {
-                          print("Error launching URL: $e"); // Print actual error
-                          snackBarCalledfail(context, "Error: ${e.toString()}"); // Show in snackbar
-                        }
-
+                    onTap: () async 
+                    {
+                        redirectToUrl(context,RewardScreenStrings().productUrl.value);
                     },
                     child: Text(
                       'In partnership with fishmydeal - exclusively on Stakeplot',

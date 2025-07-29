@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 
 import '../apiAutomations/curd.dart';
 import '../apis_connect.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 RxBool loadReaward=false.obs;
 RxBool refreshCupon=false.obs;
@@ -76,4 +78,27 @@ Future<void> fetchCategoryCoupons(String category) async {
     } catch (e) {
       // Handle error silently as per your code
     }
+  }
+
+
+
+  void redirectToUrl(BuildContext context,String path)async{
+                String urlString = path.trim();
+                      if (urlString.isEmpty)
+                       {
+                        snackBarCalledfail(context, "No link provided");
+                        return;
+                      }
+
+                        try {
+                          final uri = Uri.tryParse(urlString);
+
+                          if (uri != null && await canLaunchUrl(uri)) {
+                            await launchUrl(uri, mode: LaunchMode.externalApplication);
+                          } else {
+                            snackBarCalledfail(context, "Invalid or unsupported URL: $urlString");
+                          }
+                        } catch (e) {
+                          snackBarCalledfail(context, "Error: ${e.toString()}"); // Show in snackbar
+                        }
   }
