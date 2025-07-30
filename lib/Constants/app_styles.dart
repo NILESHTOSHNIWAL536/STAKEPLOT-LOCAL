@@ -926,12 +926,6 @@ class FontSizeFactor {
 }
 
 class MaskedAvatars {
-  // static String profileIcon1 = "assets/onboarding/Avatar1.png";
-  // static String profileIcon2 = "assets/onboarding/Avatar2.png";
-  // static String profileIcon3 = "assets/onboarding/Avatar3.png";
-  // static String profileIcon4 = "assets/onboarding/Avatar4.png";
-  // static String profileIcon5 = "assets/onboarding/Avatar6.png";
-
   static String profileIcon1 = "assets/icons/maskAvatars/mask1.png";
   static String profileIcon2 = "assets/icons/maskAvatars/mask2.png";
   static String profileIcon3 = "assets/icons/maskAvatars/mask3.png";
@@ -944,23 +938,6 @@ class MaskedAvatars {
   static String profileIcon10 = "assets/icons/maskAvatars/mask10.png";
   static String profileIcon11 = "assets/icons/maskAvatars/mask11.png";
   static String profileIcon12 = "assets/icons/maskAvatars/mask12.png";
-}
-class CouponCategories {
- 
-
-  static String accessories = "assets/icons/couponCategories/Accessories.png";
-  static String electronics = "assets/icons/couponCategories/Electronics.png";
-  static String entertainment = "assets/icons/couponCategories/Entertain-ment.png";
-  static String fashion = "assets/icons/couponCategories/Fashion.png";
-  static String flight = "assets/icons/couponCategories/Flights.png";
-  static String food = "assets/icons/couponCategories/food.png";
-  static String health = "assets/icons/couponCategories/health.png";
-  static String personal = "assets/icons/couponCategories/personal.png";
-  static String rental = "assets/icons/couponCategories/Rentals.png";
-  static String software = "assets/icons/couponCategories/software.png";
-  static String travel = "assets/icons/couponCategories/travel.png";
-  static String web = "assets/icons/couponCategories/web.png";
- 
 }
 
 List avatarBackGroundList = ["#FA7070", "#FFB07A", "#4C8BF5", "#68B2A0"];
