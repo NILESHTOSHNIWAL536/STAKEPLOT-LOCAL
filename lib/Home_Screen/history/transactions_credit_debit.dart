@@ -21,13 +21,13 @@ class TransactionCreditDebitScreen extends StatelessWidget {
           children: [
             TransactionCard(
               title: 'Weekly Transaction',
-              credits: lastWeekjson['credit'],
-              debits: lastWeekjson['debit'],
+              credits: lastWeekjson['credit'].toString(),
+              debits: lastWeekjson['debit'].toString(),
             ),
             TransactionCard(
               title: 'Monthly Transaction',
-              credits: lastmonthjson['credit'],
-              debits: lastmonthjson['debit'],
+              credits: lastmonthjson['credit'].toString(),
+              debits: lastmonthjson['debit'].toString(),
             ),
           ],
         ),
@@ -37,8 +37,8 @@ class TransactionCreditDebitScreen extends StatelessWidget {
 
 class TransactionCard extends StatelessWidget {
   final String title;
-  final int credits;
-  final int debits;
+  final String credits;
+  final String debits;
 
   TransactionCard({required this.title, required this.credits, required this.debits});
 

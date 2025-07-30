@@ -199,3 +199,4 @@ RxBool getChatSplit = false.obs;
 DateTime startDateCustom = DateTime.now().subtract(const Duration(days: 7));
 DateTime endDateCustom = DateTime.now();
 List<CardData> allAutoPayData = [];
+RxBool isAutoPayFected = false.obs;

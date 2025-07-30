@@ -106,6 +106,8 @@ Future<List<CardData>> getAutoPayInfo() async {
       } 
     }
 
+    isAutoPayFected.value=!isAutoPayFected.value;
+
     return allAutoPayData;
   } catch (e) {
     return [];

@@ -1,10 +1,14 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -20,6 +24,8 @@ import 'package:flutter_application_code_stakeplot/signInOut/emailUpdateOtp.dart
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:intl/intl.dart';
+
+late BuildContext showSnackBarContext;
 
 class EditDetails extends StatefulWidget {
   const EditDetails({super.key});
@@ -278,6 +284,7 @@ class _EditDetailsState extends State<EditDetails> {
               ? IconButton(
                   icon: const Icon(Icons.edit, color: AppColors.primaryColor),
                   onPressed: () {
+                    showSnackBarContext=context;
                     _showEmailEditDialog(context, userController.email.value);
                   },
                 )
@@ -291,7 +298,7 @@ class _EditDetailsState extends State<EditDetails> {
     );
   }
 
-  void _showEmailEditDialog(BuildContext context, String currentEmail) {
+  void _showEmailEditDialog(BuildContext contextBuild, String currentEmail) {
     final TextEditingController newEmailController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
@@ -368,7 +375,7 @@ class _EditDetailsState extends State<EditDetails> {
               onPressed: () {
                 if (formKey.currentState!.validate()) {
                   Navigator.pop(context);
-                  _confirmAndSendOtp(context, newEmailController.text);
+                  _confirmAndSendOtp(contextBuild, newEmailController.text);
                 }
               },
               child: Text(
@@ -387,7 +394,7 @@ class _EditDetailsState extends State<EditDetails> {
     );
   }
 
-  void _confirmAndSendOtp(BuildContext context, String newEmail) {
+  void _confirmAndSendOtp(BuildContext contextShow, String newEmail) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -427,7 +434,7 @@ class _EditDetailsState extends State<EditDetails> {
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
-                await _sendOtpForEmailUpdate(context, newEmail);
+                await _sendOtpForEmailUpdate(contextShow, newEmail);
               },
               child: Text(
                 "Confirm",
@@ -448,23 +455,39 @@ class _EditDetailsState extends State<EditDetails> {
   Future<void> _sendOtpForEmailUpdate(BuildContext context, String newEmail) async {
     try {
       // Show loading indicator
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()),
-      );
+      // showDialog(
+      //   context: context,
+      //   barrierDismissible: false,
+      //   builder: (context) => const Center(child: CircularProgressIndicator()),
+      // );
 
       // Call OTP API
-       getOTP(context, userController.userName.value, newEmail);
+       sendOtp(context, userController.userName.value, newEmail);
 
       // Navigate to OTP screen
+      
+    } catch (e) {
+      Navigator.pop(context); // Close loading dialog
+      snackBarCalledfail(context, "Failed to send OTP. Please try again.", Colors.red);
+    }
+  }
+
+
+  void sendOtp(BuildContext context, String name, String email) async {
+  var response = await postDataApiCallwithOutSharedPref('${url}/otp/send', {
+    'email': email,
+    'name': name,
+  });
+  if (getFlagOfResponse(response))
+ {
+    snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
       Navigator.pop(context); // Close loading dialog
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => emailUpdation(
             data: {
-              'email': newEmail,
+              'email': email,
               'name': userController.userName.value,
               'password': '',
               'response': null,
@@ -473,11 +496,15 @@ class _EditDetailsState extends State<EditDetails> {
           ),
         ),
       );
-    } catch (e) {
-      Navigator.pop(context); // Close loading dialog
-      snackBarCalledfail(context, "Failed to send OTP. Please try again.", Colors.red);
-    }
+
+  } else 
+  {
+    var body=jsonDecode(response.body);
+    print(body['error']);
+    print(body);
+    snackBarCalledfail(showSnackBarContext,body['error']??"error", Colors.red);
   }
+}
 
   Widget _buildAccountDetails(
       String bankName, String accountNumber, var data, String logo) {

@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:get/get.dart';
 
 class IndexScreen extends StatelessWidget {
   const IndexScreen({Key? key}) : super(key: key);
@@ -62,10 +63,7 @@ class IndexScreen extends StatelessWidget {
               height: 14,
             ),
 
-            allAutoPayData.isEmpty?SizedBox.shrink(): SizedBox(
-                height: height * 0.4,
-                child: CardStackScreen()
-            ),
+          Obx(()=> isAutoPayFected.value?GetAutopays(height) : GetAutopays(height)),
             
             SizedBox(
                 height: height * 0.5,
@@ -89,5 +87,13 @@ class IndexScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+
+  Widget GetAutopays(height){
+    return allAutoPayData.isEmpty?SizedBox.shrink(): SizedBox(
+                height: height * 0.4,
+                child: CardStackScreen()
+            );
   }
 }
