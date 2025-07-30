@@ -30,7 +30,8 @@ void getCategoryData() async {
       frequentPayments.addAll(data["data"]['frequentPayments']);
       moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
 
-      totalDebitThisMonth.value = double.parse(doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
+      totalDebitThisMonth.value = double.parse(
+          doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
 
       categoriesListWeek.addAll(data["data"]['week']['categorized']);
       frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
@@ -46,9 +47,8 @@ void getCategoryData() async {
       frequentPaymentsWeek.refresh();
       moreDrasticChangeWeek.refresh();
       setDonectChat.value = !setDonectChat.value;
-    } catch (e) {
-      
-    }
+    } catch (e) {}
+    isFinoraVisible.value = !isFinoraVisible.value;
     processChartData();
   }
 }
@@ -73,47 +73,44 @@ void getdebts() async {
   }
 }
 
-Future<bool> deleteUserAccount(BuildContext context,String msg) async {
+Future<bool> deleteUserAccount(BuildContext context, String msg) async {
   try {
-    var body={
+    var body = {
       // 'password':password,
-      'reason':msg,
+      'reason': msg,
     };
-    var response = await deleteDataApiCallBody("${url}/user",body);
-    
-    if (getFlagOfResponse(response))
-    {
-          clearStackLocalInfo();
-          logoutUserFromDevice(context);
-    }
-    else if(response.statusCode==400){
-         var res=jsonDecode(response.body);
-          snackBarCalledfail(context,res['error']['explanation'] ?? "Password incorrect");
-          return false; 
-    }
-  } catch (e)
-  {
-      snackBarCalledfail(context, "error while deleting");  
+    var response = await deleteDataApiCallBody("${url}/user", body);
+
+    if (getFlagOfResponse(response)) {
+      clearStackLocalInfo();
+      logoutUserFromDevice(context);
+    } else if (response.statusCode == 400) {
+      var res = jsonDecode(response.body);
+      snackBarCalledfail(
+          context, res['error']['explanation'] ?? "Password incorrect");
       return false;
+    }
+  } catch (e) {
+    snackBarCalledfail(context, "error while deleting");
+    return false;
   }
-  
+
   return true;
 }
 
-void deleteBankAccount({required String bankid,required String AccountId,required BuildContext context})async
-{
-  var res = await deleteDataApiCall("${url}/transactionauto/${bankid}/${AccountId}");
-  if (getFlagOfResponse(res))
-  {
-     accountId.value="";
-     getBankAccounts();
-     getCategoryData();
-     clearGraph();
-     getAutoMationsTransactionsCustom(getFormattedDate(), context);
-     Navigator.of(context).pop();
-     bankAccountLinkedList.refresh();   
+void deleteBankAccount(
+    {required String bankid,
+    required String AccountId,
+    required BuildContext context}) async {
+  var res =
+      await deleteDataApiCall("${url}/transactionauto/${bankid}/${AccountId}");
+  if (getFlagOfResponse(res)) {
+    accountId.value = "";
+    getBankAccounts();
+    getCategoryData();
+    clearGraph();
+    getAutoMationsTransactionsCustom(getFormattedDate(), context);
+    Navigator.of(context).pop();
+    bankAccountLinkedList.refresh();
   }
-
 }
-
-

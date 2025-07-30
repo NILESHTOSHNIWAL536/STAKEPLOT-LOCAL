@@ -39,7 +39,7 @@ void callApi(context)async
     getAllContstant(context);
     getGroupTransactions();
     getCustomCategory(context);
-    // getAutoPayInfo();
+    getAutoPayInfo();
     custom = getthelist();
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     clearAllFlags();

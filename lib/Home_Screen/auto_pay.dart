@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -18,6 +20,7 @@ class CardWidget extends StatelessWidget {
   final Function(String)? onSetReminder;
   final BuildContext parentContext;
   final Function() onDataChanged;
+  final int index;
   const CardWidget({
     required this.card,
     required this.toggleStates,
@@ -26,6 +29,7 @@ class CardWidget extends StatelessWidget {
     this.onToggleChanged,
     this.onSetReminder,
     Key? key,
+    required this.index,
   }) : super(key: key);
 
   @override
@@ -37,11 +41,22 @@ class CardWidget extends StatelessWidget {
         screenSize.width / 375; // Base font scaling for 375px width
     final padding =
         screenSize.width * 0.03; // Responsive padding (3% of screen width)
+    const List<Color> _autoPayColors = [
+      AppColors.autoPay1,
+      AppColors.autoPay2,
+      AppColors.autoPay3,
+      AppColors.autoPay4,
+      AppColors.autoPay5,
+    ];
+    Color _getColorForIndex() {
+      return _autoPayColors[index % _autoPayColors.length];
+    }
 
     return Container(
       height: cardHeight,
       decoration: BoxDecoration(
-        gradient: card.gradient,
+        color: _getColorForIndex(),
+        // gradient: card.gradient,
         borderRadius: BorderRadius.circular(16 * fontScale),
         boxShadow: [
           BoxShadow(
@@ -174,17 +189,48 @@ class CardWidget extends StatelessWidget {
                         final confirm = await showDialog<bool>(
                           context: parentContext,
                           builder: (context) => AlertDialog(
-                            title: const Text("Remove Payment"),
-                            content: const Text(
-                                "Do you want to remove this recurring payment?"),
+                            title: Text(
+                              "Remove Payment",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 18 * fontScale,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                            content: Text(
+                              "Do you want to remove this recurring payment?",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w500,
+                                fontSize: 16 * fontScale,
+                                color: AppColors.accentColor,
+                              ),
+                            ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context, false),
-                                child: const Text("Cancel"),
+                                child: Text(
+                                  "Cancel",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 14 * fontScale,
+                                    color: AppColors.accentColor,
+                                  ),
+                                ),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pop(context, true),
-                                child: const Text("Remove"),
+                                child: Text(
+                                  "Remove",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 14 * fontScale,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -224,17 +270,49 @@ class CardWidget extends StatelessWidget {
                         final confirm = await showDialog<bool>(
                           context: parentContext,
                           builder: (context) => AlertDialog(
-                            title: const Text("Add Payment"),
-                            content: const Text(
-                                "Do you want to add this recurring payment?"),
+                            backgroundColor: AppColors.backgroundColor,
+                            title: Text(
+                              "Add Payment",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 18 * fontScale,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                            content: Text(
+                              "Are you sure you want to add this recurring payment?",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w500,
+                                fontSize: 16 * fontScale,
+                                color: AppColors.accentColor,
+                              ),
+                            ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context, false),
-                                child: const Text("Cancel"),
+                                child: Text(
+                                  "Cancel",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 14 * fontScale,
+                                    color: AppColors.accentColor,
+                                  ),
+                                ),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pop(context, true),
-                                child: const Text("Add"),
+                                child: Text(
+                                  "Add",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w600,
+                                    fontSize: 14 * fontScale,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -282,17 +360,49 @@ class CardWidget extends StatelessWidget {
                         final confirm = await showDialog<bool>(
                           context: parentContext,
                           builder: (context) => AlertDialog(
-                            title: Text("Ignore Payment"),
+                            backgroundColor: AppColors.backgroundColor,
+                            title: Text(
+                              "Ignore Payment",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 18 * fontScale,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
                             content: Text(
-                                "Are you sure you want to delete this recurring payment?"),
+                              "Are you sure you want to delete this recurring payment?",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w500,
+                                fontSize: 16 * fontScale,
+                                color: AppColors.accentColor,
+                              ),
+                            ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context, false),
-                                child: Text("Cancel"),
+                                child: Text(
+                                  "Cancel",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 14 * fontScale,
+                                    color: AppColors.accentColor,
+                                  ),
+                                ),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pop(context, true),
-                                child: Text("delete"),
+                                child: Text(
+                                  "delete",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w600,
+                                    fontSize: 14 * fontScale,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -641,6 +751,7 @@ class _CardStackScreenState extends State<CardStackScreen>
   Future<void> _fetchAutoPayData() async {
     isLoading.value = true;
     final fetchedCards = await getAutoPayInfo();
+    isAutoPayFected.value = !isAutoPayFected.value;
     allCards.clear();
     allCards.assignAll(fetchedCards);
     cards.assignAll(fetchedCards.take(3).toList());
@@ -789,6 +900,7 @@ class _CardStackScreenState extends State<CardStackScreen>
                                                       context, cardId),
                                               parentContext: context,
                                               onDataChanged: _fetchAutoPayData,
+                                              index: i,
                                             ),
                                     ),
                                   );
@@ -871,6 +983,7 @@ class AllCardsScreen extends StatelessWidget {
                       onSetReminder: onSetReminder,
                       onDataChanged: onDataChanged,
                       parentContext: context,
+                      index: i,
                     ),
                   ),
                 )),

@@ -12,7 +12,7 @@ class TransactionCreditDebitScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 6.5,
+      height: MediaQuery.of(context).size.height / 7.5,
       padding: const EdgeInsets.all(5.0),
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -55,8 +55,18 @@ class TransactionCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       margin: EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(width: .3)),
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(137, 137, 137,
+                0.25), // Equivalent to rgba(137, 137, 137, 0.25);
+            blurRadius: 4, // Equivalent to box-shadow: 0 0 4px 0;
+            offset: Offset(0, 0), // Equivalent to box-shadow: 0 0 4px 0;
+          ),
+        ],
+        // border: Border.all(width: .3)
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -64,24 +74,38 @@ class TransactionCard extends StatelessWidget {
           textStyle(
               context: context,
               text: title,
-              fontsize: 16,
-              c: Colorcodes.black,
-              fontWeight: FontWeight.bold),
+              fontsize: 14,
+              c: AppColors.grey,
+              fontWeight: FontWeight.w600),
           SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    textStyle(
-                        context: context,
-                        text: '+ ₹$credits',
-                        fontsize: 16,
-                        c: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold),
+                    credits.toString().length >= 6
+                        ? SizedBox(
+                            width: MediaQuery.of(context).size.width /
+                                6, // adjust as needed
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: textStyle(
+                                  context: context,
+                                  text: '+ ₹$credits',
+                                  fontsize: 14,
+                                  c: AppColors.primaryColor,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          )
+                        : textStyle(
+                            context: context,
+                            text: '+ ₹$credits',
+                            fontsize: 14,
+                            c: AppColors.primaryColor,
+                            fontWeight: FontWeight.w700),
                     const SizedBox(
                       height: 4,
                     ),
@@ -89,7 +113,7 @@ class TransactionCard extends StatelessWidget {
                         context: context,
                         text: 'credits',
                         fontsize: 14,
-                        c: Colors.grey,
+                        c: AppColors.grey,
                         fontWeight: FontWeight.bold),
                   ],
                 ),
@@ -102,14 +126,28 @@ class TransactionCard extends StatelessWidget {
                   ),
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    textStyle(
-                        context: context,
-                        text: '- ₹$debits',
-                        fontsize: 16,
-                        c: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold),
+                    debits.toString().length >= 6
+                        ? SizedBox(
+                            width: MediaQuery.of(context).size.width /
+                                6, // adjust as needed
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: textStyle(
+                                  context: context,
+                                  text: '- ₹$debits',
+                                  fontsize: 14,
+                                  c: AppColors.primaryColor,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          )
+                        : textStyle(
+                            context: context,
+                            text: '+ ₹$debits',
+                            fontsize: 14,
+                            c: AppColors.primaryColor,
+                            fontWeight: FontWeight.w700),
                     const SizedBox(
                       height: 4,
                     ),
@@ -117,7 +155,7 @@ class TransactionCard extends StatelessWidget {
                         context: context,
                         text: 'debits',
                         fontsize: 14,
-                        c: Colors.grey,
+                        c: AppColors.grey,
                         fontWeight: FontWeight.bold),
                   ],
                 ),

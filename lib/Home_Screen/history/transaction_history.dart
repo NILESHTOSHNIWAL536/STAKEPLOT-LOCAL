@@ -1,4 +1,3 @@
-
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
@@ -34,7 +33,6 @@ RxMap<int, double> swipeOffsets = <int, double>{}.obs;
 RxList<TransactionModel> hiddenTransactions = <TransactionModel>[].obs;
 
 class TransactionHistory extends StatefulWidget {
- 
   final bool? isYearView;
   final bool? isflag;
   final bool? showIcon;
@@ -64,16 +62,17 @@ class _TransactionHistoryState extends State<TransactionHistory>
   void initState() {
     super.initState();
     _stableContext = context;
-  
+
     if (!widget.expandedPage) currentPage = 1;
 
     _scrollController2.addListener(() {
-      if (_scrollController2.position.pixels >=_scrollController2.position.maxScrollExtent - 100) {
+      if (_scrollController2.position.pixels >=
+          _scrollController2.position.maxScrollExtent - 100) {
         getAllTransactionHistory(
           context,
           widget.isflag!,
           widget.isYearView!,
-        ); 
+        );
       }
     });
     getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
@@ -92,9 +91,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
       child: Container(
         child: Column(
           children: [
-            
-           Obx(()=> getBoolForSearch() ?  searchTextControllerBool.value?  getSearchListAndCreditDebit():getSearchListAndCreditDebit():SizedBox.shrink()),
-
+            Obx(() => getBoolForSearch()
+                ? searchTextControllerBool.value
+                    ? getSearchListAndCreditDebit()
+                    : getSearchListAndCreditDebit()
+                : SizedBox.shrink()),
             Obx(() {
               if (widget.showIcon ?? false) {
                 return reloadHistory.value ? getlist() : getlist();
@@ -111,28 +112,29 @@ class _TransactionHistoryState extends State<TransactionHistory>
     );
   }
 
-
-  bool getBoolForSearch(){
-     return (searchTextController.value.trim().isNotEmpty  && allOrGroupTransactionsName.value ==
-                        StringConstant.allTransactions);
+  bool getBoolForSearch() {
+    return (searchTextController.value.trim().isNotEmpty &&
+        allOrGroupTransactionsName.value == StringConstant.allTransactions);
   }
-
 
   void changeTheBool() {
     sectionReached.value = true;
     Navigator.pop(context);
   }
 
-
- Widget getSearchListAndCreditDebit(){
-  return Column(
-     children: [
-              TransactionsSearchList(),
-            lastWeekjson.isNotEmpty && lastmonthjson.isNotEmpty ?  TransactionCreditDebitScreen():SizedBox.shrink(),
-     ],
-  );
- }
-    
+  Widget getSearchListAndCreditDebit() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 8),
+          child: TransactionsSearchList(),
+        ),
+        lastWeekjson.isNotEmpty && lastmonthjson.isNotEmpty
+            ? TransactionCreditDebitScreen()
+            : SizedBox.shrink(),
+      ],
+    );
+  }
 
   Widget getlist() {
     // Group transactions by month and year
@@ -148,7 +150,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
           // Use only year and month for grouping to avoid day boundary issues
           String monthYearKey =
               DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
-          groupedTransactions.putIfAbsent(monthYearKey, () => []).add(transaction);
+          groupedTransactions
+              .putIfAbsent(monthYearKey, () => [])
+              .add(transaction);
           // Debug: Log the timestamp and its IST conversion
         } catch (e) {
           continue;
@@ -174,12 +178,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
     List<dynamic> displayItems = [];
     for (var monthYear in sortedMonths) {
       displayItems.add(monthYear); // Add the month header
-      displayItems.addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
+      displayItems
+          .addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
     }
 
     // Add a loading indicator at the end if more data is being fetched
-    if (isLoadingMore.value)
-    {
+    if (isLoadingMore.value) {
       displayItems.add('loader'); // Use a distinct marker to avoid confusion
     }
 
@@ -198,7 +202,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  displayItems.length>0?monthYear:'',
+                  displayItems.length > 0 ? monthYear : '',
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
@@ -206,7 +210,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     color: AppColors.accentColor,
                   ),
                 ),
-                
               ],
             ),
           );
@@ -219,45 +222,52 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
           return Container(
             child: HistoryTransactions(
-                 transaction:  transaction,
-                 date: transaction.transactionTimestamp.toString(),
-                 index: transactionIndex,
-                 context:  context,
-                 hideReview:  true,
-                 isExpanded:  widget.expandedPage
-                ),
+                transaction: transaction,
+                date: transaction.transactionTimestamp.toString(),
+                index: transactionIndex,
+                context: context,
+                hideReview: true,
+                isExpanded: widget.expandedPage),
           );
         }
 
-
-
-        return  Obx(()=>!isLoadingMore.value? SizedBox.shrink(): loadingDelay.value
-            ?  transactionsHistory.length-1<=0? Container(
-              height: 50,
-              width: 50,
-              child: Spinner(),
-            ):Skeletonizer(
-              child: Column(
-                children: [1,2,3].map((e)=>
-                  HistoryTransactions(
-                  transaction:     transactionsHistory[transactionsHistory.length-1],
-                    date:   transactionsHistory[transactionsHistory.length-1].transactionTimestamp.toString(),
-                   index:   transactionsHistory.length-1,
-                   context:   context,
-                   hideReview:   true,
-                    isExpanded:  widget.expandedPage
-                   )).toList(),
-              ),
-            )
-            : transactionsHistory.isEmpty
-                ? Container(
-                  height:MediaQuery.of(context).size.height / 1.38,
-                  child: Center(child: textStyleImage(context: context, text:  HomepageStringsDart().noTransactions)))
-                : SizedBox.shrink()); // Fallback for unexpected items
+        return Obx(() => !isLoadingMore.value
+            ? SizedBox.shrink()
+            : loadingDelay.value
+                ? transactionsHistory.length - 1 <= 0
+                    ? Container(
+                        height: 50,
+                        width: 50,
+                        child: Spinner(),
+                      )
+                    : Skeletonizer(
+                        child: Column(
+                          children: [1, 2, 3]
+                              .map((e) => HistoryTransactions(
+                                  transaction: transactionsHistory[
+                                      transactionsHistory.length - 1],
+                                  date: transactionsHistory[
+                                          transactionsHistory.length - 1]
+                                      .transactionTimestamp
+                                      .toString(),
+                                  index: transactionsHistory.length - 1,
+                                  context: context,
+                                  hideReview: true,
+                                  isExpanded: widget.expandedPage))
+                              .toList(),
+                        ),
+                      )
+                : transactionsHistory.isEmpty
+                    ? Container(
+                        height: MediaQuery.of(context).size.height / 1.38,
+                        child: Center(
+                            child: textStyleImage(
+                                context: context,
+                                text: HomepageStringsDart().noTransactions)))
+                    : SizedBox.shrink()); // Fallback for unexpected items
       },
     );
   }
-  
 
   void showModal() {
     getPdgLoader.value = false;
@@ -301,10 +311,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ),
               ),
               const SizedBox(height: 20),
-              getListItemListTile(HomepageStringsDart().thirtyDays, "days", context),
-              getListItemListTile(HomepageStringsDart().thirtyDays, "days", context),
-              getListItemListTile(HomepageStringsDart().sixtyDays, "months", context),
-             
+              getListItemListTile(
+                  HomepageStringsDart().thirtyDays, "days", context),
+              getListItemListTile(
+                  HomepageStringsDart().thirtyDays, "days", context),
+              getListItemListTile(
+                  HomepageStringsDart().sixtyDays, "months", context),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: InkWell(
@@ -314,7 +326,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     },
                     child: Obx(() => getPdgLoader.value
                         ? getspinner(context, "")
-                        : getButton(context,HomepageStringsDart().sixMonths))),
+                        : getButton(context, HomepageStringsDart().sixMonths))),
               )
             ],
           ),
@@ -325,32 +337,32 @@ class _TransactionHistoryState extends State<TransactionHistory>
 }
 
 Widget getIconAvtar(double avatarSize, String category, double scaleFactor) {
-
   String lowerCategory = category?.toLowerCase() ?? '';
 
-final matched = custom.firstWhere(
-  (item) => item['name']?.toString().toLowerCase() == lowerCategory,
-  orElse: () => {},
-);
+  final matched = custom.firstWhere(
+    (item) => item['name']?.toString().toLowerCase() == lowerCategory,
+    orElse: () => {},
+  );
 
+  final url = matched.isNotEmpty && matched['imageUrl'] != null
+      ? matched['imageUrl']
+      : imageMapForHistory[lowerCategory] != null
+          ? Categories.link + imageMapForHistory[lowerCategory].toString()
+          : "assets/icons/Categories2/other.svg";
 
-final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
-    :  imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  : "assets/icons/Categories2/other.svg";
- 
   return Container(
     width: avatarSize,
     height: avatarSize,
     decoration: BoxDecoration(
-    
       border: Border.all(
-                  color: Colorcodes.greyLight,
-                  width: 0.3,
-                ),
+        color: Colorcodes.greyLight,
+        width: 0.3,
+      ),
       borderRadius: BorderRadius.circular(6),
     ),
     child: Center(
-      child:  AvatarProfileImage(
-        url:  url,
+      child: AvatarProfileImage(
+        url: url,
         height: avatarSize * 0.5,
         width: avatarSize * 0.5,
       ),
@@ -358,41 +370,46 @@ final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUr
   );
 }
 
-Widget getIconAvtar2(double avatarSize, String category, double scaleFactor,[bool f=false]) {
-
+Widget getIconAvtar2(double avatarSize, String category, double scaleFactor,
+    [bool f = false]) {
   String lowerCategory = category?.toLowerCase() ?? '';
 
-final matched = custom.firstWhere(
-  (item) => item['name']?.toString().toLowerCase() == lowerCategory,
-  orElse: () => {},
-);
+  final matched = custom.firstWhere(
+    (item) => item['name']?.toString().toLowerCase() == lowerCategory,
+    orElse: () => {},
+  );
 
+  final url = matched.isNotEmpty && matched['imageUrl'] != null
+      ? matched['imageUrl']
+      : imageMapForHistory[lowerCategory] != null
+          ? Categories.link + imageMapForHistory[lowerCategory].toString()
+          : BudgetSubCategories.listofSubCategories[lowerCategory] ??
+              Categories.link + "others.svg";
 
-final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
-    :  imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  :    BudgetSubCategories.listofSubCategories[lowerCategory] ?? Categories.link+"others.svg";
- 
   return Center(
-    child:  chatAvatartImage(
-      url:  url,
+    child: chatAvatartImage(
+      url: url,
       height: avatarSize * 1.7,
       width: avatarSize * 1.7,
     ),
   );
 }
 
-
-Widget getPredictedCategorySvgUrl(double avatarSize, String category, double scaleFactor,[bool f=false]) {
-
+Widget getPredictedCategorySvgUrl(
+    double avatarSize, String category, double scaleFactor,
+    [bool f = false]) {
   String lowerCategory = category.toLowerCase();
   String upperCategory = toUpperCase(category);
- 
 
- final url = imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  :  BudgetSubCategories.listofSubCategories[upperCategory]   ??    BudgetSubCategories.listofSubCategories[lowerCategory] ?? Categories.link+"others.svg";
+  final url = imageMapForHistory[lowerCategory] != null
+      ? Categories.link + imageMapForHistory[lowerCategory].toString()
+      : BudgetSubCategories.listofSubCategories[upperCategory] ??
+          BudgetSubCategories.listofSubCategories[lowerCategory] ??
+          Categories.link + "others.svg";
 
-  
   return Center(
-    child:  chatAvatartImage(
-      url:  url,
+    child: chatAvatartImage(
+      url: url,
       height: avatarSize * 1.7,
       width: avatarSize * 1.7,
     ),

@@ -242,7 +242,7 @@ void getOTPForTwoFactorAuth(
           "Too many OTP requests. Please try again later.", Colors.red);
     }
   } else {
-    snackBarCalledfail(context, SnackbarData().cantSendOtp, Colors.red);
+    snackBarCalledfail(context, decodedResponse['message'], Colors.red);
   }
 }
 

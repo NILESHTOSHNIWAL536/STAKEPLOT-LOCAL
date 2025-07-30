@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -13,10 +11,12 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class FinoraLastTwoMonthsDashboard extends StatefulWidget {
   @override
-  _FinoraLastTwoMonthsDashboardState createState() => _FinoraLastTwoMonthsDashboardState();
+  _FinoraLastTwoMonthsDashboardState createState() =>
+      _FinoraLastTwoMonthsDashboardState();
 }
 
-class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashboard> {
+class _FinoraLastTwoMonthsDashboardState
+    extends State<FinoraLastTwoMonthsDashboard> {
   Map<String, dynamic> finoraTransactionData = {};
   bool isLoading = true;
 
@@ -28,7 +28,8 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
 
   void getFinoraPreviousMonthData() async {
     try {
-      var response = await getDataApiCall("${url}/transactionauto/getUserMonthlySpending/");
+      var response = await getDataApiCall(
+          "${url}/transactionauto/getUserMonthlySpending/");
       if (getFlagOfResponse(response)) {
         setState(() {
           finoraTransactionData = jsonDecode(response.body)['data'] ?? {};
@@ -45,6 +46,7 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
       setState(() {
         isLoading = false;
       });
+      isFinoraVisible.value = !isFinoraVisible.value;
     }
   }
 
@@ -54,25 +56,28 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: isLoading
-            ?  Center(child: Spinner())
+            ? Center(child: Spinner())
             : Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Summary Cards Row
-                     textStyleImage(context: context,text: HomepageStringsDart().finora,
-                       fontsize: 16,
-                       c: AppColors.accentColor,
-                       fontWeight: FontWeight.w600,
-                     ),
-            const SizedBox(height: 14),
+                    textStyleImage(
+                      context: context,
+                      text: HomepageStringsDart().finora,
+                      fontsize: 16,
+                      c: AppColors.accentColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    const SizedBox(height: 14),
                     Row(
                       children: [
                         Expanded(
                           child: _buildSummaryCard(
                             context,
-                            finoraTransactionData['month2Name']?.toString() ?? 'June 2025',
+                            finoraTransactionData['month2Name']?.toString() ??
+                                'June 2025',
                             '₹ ${_formatAmount(finoraTransactionData['month2Avg'])}',
                             AppColors.primaryColor,
                           ),
@@ -81,7 +86,8 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
                         Expanded(
                           child: _buildSummaryCard(
                             context,
-                            finoraTransactionData['month1Name']?.toString() ?? 'May 2025',
+                            finoraTransactionData['month1Name']?.toString() ??
+                                'May 2025',
                             '₹ ${_formatAmount(finoraTransactionData['month1Avg'])}',
                             AppColors.finoraMonth,
                           ),
@@ -90,31 +96,30 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
                     ),
                     const SizedBox(height: 10),
                     // Chart Container
-                     Container(
-                        // padding: const EdgeInsets.all(16), // Increased padding
-                        // decoration: BoxDecoration(
-                        //   color: Colors.white,
-                        //   borderRadius: BorderRadius.circular(5),
-                        //   boxShadow: [
-                        //     BoxShadow(
-                        //       color: const Color.fromRGBO(89, 89, 89, 0.25),
-                        //       blurRadius: 4,
-                        //       offset: const Offset(0, 0),
-                        //     ),
-                        //   ],
-                        // ),
-                        height: MediaQuery.sizeOf(context).height/3,
-                        
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                            width: _calculateChartWidth(),
-                            height: double.infinity, // Use full available height
-                            child: _buildSpendingChart(),
-                          ),
+                    Container(
+                      // padding: const EdgeInsets.all(16), // Increased padding
+                      // decoration: BoxDecoration(
+                      //   color: Colors.white,
+                      //   borderRadius: BorderRadius.circular(5),
+                      //   boxShadow: [
+                      //     BoxShadow(
+                      //       color: const Color.fromRGBO(89, 89, 89, 0.25),
+                      //       blurRadius: 4,
+                      //       offset: const Offset(0, 0),
+                      //     ),
+                      //   ],
+                      // ),
+                      height: MediaQuery.sizeOf(context).height / 3,
+
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: SizedBox(
+                          width: _calculateChartWidth(),
+                          height: double.infinity, // Use full available height
+                          child: _buildSpendingChart(),
                         ),
                       ),
-                    
+                    ),
                   ],
                 ),
               ),
@@ -125,11 +130,14 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
   double _calculateChartWidth() {
     final month1Data = _getMonth1Data();
     final month2Data = _getMonth2Data();
-    final maxDataPoints = month1Data.length > month2Data.length ? month1Data.length : month2Data.length;
+    final maxDataPoints = month1Data.length > month2Data.length
+        ? month1Data.length
+        : month2Data.length;
     return maxDataPoints * 26.0;
   }
 
-  Widget _buildSummaryCard(BuildContext context, String month, String amount, Color indicatorColor) {
+  Widget _buildSummaryCard(
+      BuildContext context, String month, String amount, Color indicatorColor) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -195,10 +203,9 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
 
   Widget _buildSpendingChart() {
     return SfCartesianChart(
-     
       plotAreaBorderWidth: 0,
       // Increased margins to prevent clipping
-      
+
       primaryXAxis: CategoryAxis(
         isVisible: false,
         axisLine: const AxisLine(width: 0),
@@ -208,14 +215,15 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
       ),
       primaryYAxis: NumericAxis(
         isVisible: false,
-      //  minimum: 0,
-         maximum: _getMaxY(),
+        //  minimum: 0,
+        maximum: _getMaxY(),
         // Add extra range for spline curves
         rangePadding: ChartRangePadding.additional,
       ),
       tooltipBehavior: TooltipBehavior(
         enable: true,
-        builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
+        builder: (dynamic data, dynamic point, dynamic series, int pointIndex,
+            int seriesIndex) {
           final String month = seriesIndex == 0
               ? (finoraTransactionData['month1Name']?.toString() ?? 'Month 1')
               : (finoraTransactionData['month2Name']?.toString() ?? 'Month 2');
@@ -227,12 +235,12 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
             ),
             child: Text(
               '$month\nDay: ${data.x}\n₹ ${_formatAmount(data.y)}',
-               style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w600,
-              fontSize: 10,
-              color: AppColors.backgroundColor,
-            ),
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w600,
+                fontSize: 10,
+                color: AppColors.backgroundColor,
+              ),
             ),
           );
         },
@@ -258,16 +266,18 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
           dataLabelSettings: DataLabelSettings(
             isVisible: true,
             labelAlignment: ChartDataLabelAlignment.top,
-            textStyle:  FontManager().getTextStyle(
+            textStyle: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w600,
               fontSize: 10,
               color: AppColors.bg1,
             ),
-            builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
+            builder: (dynamic data, dynamic point, dynamic series,
+                int pointIndex, int seriesIndex) {
               if (pointIndex == _getPeakIndex(_getMonth1Data())) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(4),
@@ -282,11 +292,11 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
                   child: Text(
                     '₹ ${_formatAmount(data.y)}',
                     style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w600,
-              fontSize: 10,
-              color: AppColors.bg1,
-            ),
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 10,
+                      color: AppColors.bg1,
+                    ),
                   ),
                 );
               }
@@ -320,10 +330,12 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
               fontSize: 10,
               color: AppColors.bg1,
             ),
-            builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
+            builder: (dynamic data, dynamic point, dynamic series,
+                int pointIndex, int seriesIndex) {
               if (pointIndex == _getMonth2Data().length - 1) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(4),
@@ -337,12 +349,12 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
                   ),
                   child: Text(
                     '₹ ${_formatAmount(data.y)}',
-                     style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w600,
-              fontSize: 10,
-              color: AppColors.bg1,
-            ),
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 10,
+                      color: AppColors.bg1,
+                    ),
                   ),
                 );
               }
@@ -383,13 +395,13 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
   double _getMinY() {
     final month1Data = _getMonth1Data();
     final month2Data = _getMonth2Data();
-    
+
     List<double> allValues = [];
     allValues.addAll(month1Data.map((e) => e.y));
     allValues.addAll(month2Data.map((e) => e.y));
-    
+
     if (allValues.isEmpty) return 0.0;
-    
+
     double min = allValues.reduce((a, b) => a < b ? a : b);
     // Increase padding to 30% below minimum to accommodate spline curves
     return min;
@@ -398,16 +410,16 @@ class _FinoraLastTwoMonthsDashboardState extends State<FinoraLastTwoMonthsDashbo
   double _getMaxY() {
     final month1Data = _getMonth1Data();
     final month2Data = _getMonth2Data();
-    
+
     List<double> allValues = [];
     allValues.addAll(month1Data.map((e) => e.y));
     allValues.addAll(month2Data.map((e) => e.y));
-    
+
     if (allValues.isEmpty) return 1000.0;
-    
+
     double max = allValues.reduce((a, b) => a > b ? a : b);
     // Increase padding to 30% above maximum to accommodate spline curves
-    return max*1.3;
+    return max * 1.3;
   }
 
   int _getPeakIndex(List<ChartData> data) {
