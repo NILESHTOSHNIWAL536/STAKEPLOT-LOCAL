@@ -119,16 +119,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 try {
                                   final userdataApple = await AuthService()
                                       .signInWithApple(context);
-                                  print(
-                                      "User data received from the api: $userdataApple");
+                               
                                   if (userdataApple != null &&
                                       userdataApple['data']['accessToken'] !=
                                           null) {
-                                    print("Access token is present.");
                                     loginCalledDataForApple(userdataApple, context);
                                   } else if (userdataApple != null) {
-                                    print(
-                                        "Navigating to UserDetailsPage with userdata: $userdataApple");
+                                 
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -137,7 +134,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   data: userdataApple)),
                                     );
                                   } else {
-                                    print("No user data received.");
                                   }
                                 } finally {
                                   appleSignInBool.value =
@@ -170,19 +166,15 @@ class _LoginScreenState extends State<LoginScreen> {
         googleSignInBool.value = true; // Set loading state
         try {
           final userdata = await AuthService().signInWithGoogle(context);
-          print("User data received: $userdata");
           if (userdata != null && userdata['data']['accessToken'] != null) {
-            print("Access token is present.");
             loginCalledDataForApple(userdata, context);
           } else if (userdata != null) {
-            print("Navigating to UserDetailsPage with userdata: $userdata");
             Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => UserDetailsPage(data: userdata)),
             );
           } else {
-            print("No user data received.");
           }
         } finally {
           googleSignInBool.value = false; // Reset loading state

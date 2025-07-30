@@ -8,10 +8,17 @@ import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
+import '../backed_connections/apis_connect.dart';
+
 RxString cateName = "".obs;
 
 void openShowModalCate(
-    BuildContext context, TextEditingController nameController, String narr,void Function(dynamic e) callBack,) {
+    BuildContext context,
+     TextEditingController nameController,
+      String narr,
+      void Function(dynamic e) callBack,
+    )
+  {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true, // Allows the modal to resize with the keyboard
@@ -51,11 +58,7 @@ void openShowModalCate(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  getImageContainer(Categories.link + Categories.handBill),
-                  getImageContainer(Categories.link + Categories.creditCardCheck),
-                  getImageContainer(Categories.link + Categories.digitalPayment),
-                ],
+                children: customCategoryUnUsedList.map((urlPathImage)=> getImageContainer(urlPathImage)).toList()
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.02,

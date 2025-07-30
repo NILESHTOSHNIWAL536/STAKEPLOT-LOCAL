@@ -308,7 +308,6 @@ Future<List<dynamic>> savePostGetData(context) async {
        }
        catch(e)
        {
-          print(e);
        }
        Navigator.pop(context);
   }
@@ -352,7 +351,6 @@ Future<List<dynamic>> savePostGetData(context) async {
        }
        catch(e)
        {
-          print(e);
        }
        Navigator.pop(context);
   }

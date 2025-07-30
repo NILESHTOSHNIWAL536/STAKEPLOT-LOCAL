@@ -7,6 +7,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
+import '../../Constants/app_styles.dart';
+
 
 
 void getAllAutoTransactions() async {
@@ -77,6 +79,8 @@ void getCustomCategory(context)async
     customCategoryList.clear();
     customCategoryList.addAll(data);
     customCategoryList.refresh();
+    updateCusTagList();
+    // Extract used imageUrls from category list
   }
 }
 
@@ -98,10 +102,26 @@ void postCustomCategory(context,name,urlPath,narr)async
     customCategoryList.clear();
     customCategoryList.addAll(data);
     customCategoryList.refresh();
+    updateCusTagList();
     LoadTag.value=!LoadTag.value;
     custom=getthelist();
     Navigator.pop(context);
     snackBarCalled(context, SnackbarData().categoryAdded, Colors.green);
   }
 
+}
+
+
+void updateCusTagList(){
+   List<String> usedImages = customCategoryList
+        .map((e) => (e['imageUrl'] ?? '').toString())
+        .toList();
+
+    // Filter unused from tag list
+    List<String> unusedImages = customTagList
+        .where((img) => !usedImages.contains(img))
+        .toList();
+
+    customCategoryUnUsedList.clear();
+    customCategoryUnUsedList.addAll(unusedImages);
 }

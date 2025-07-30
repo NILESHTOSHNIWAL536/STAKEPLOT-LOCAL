@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class NavBarIcons {
   static String community = "assets/icons/Navigation_bar/communityfilled.svg";
@@ -968,3 +969,31 @@ class AnimatedAppLoaders {
     {'title': 'Health & Wellness', 'emoji': '🏥', 'color': Colors.cyan.shade100},
     {'title': 'Entertainment', 'emoji': '🎬', 'color': Colors.deepPurple.shade100},
   ];
+
+
+RxList<String> customTagList=<String>[
+    Categories.link + Categories.handBill,
+    Categories.link + Categories.creditCardCheck,
+    Categories.link + Categories.digitalPayment,
+].obs;
+
+Map<String, List<String>> moveMatchedCategoryFirst(String match) {
+  // Convert to entries
+  final entries = categories.entries.toList();
+
+  // Find the matched entry (case-insensitive contains or exact match)
+  final matchLower = match.toLowerCase();
+  final matched = entries.where(
+    (e) => e.key.toLowerCase().contains(matchLower),
+  ).toList();
+
+  final others = entries.where(
+    (e) => !e.key.toLowerCase().contains(matchLower),
+  ).toList();
+
+  // Combine matched first, then others
+  final newEntries = [...matched, ...others];
+
+  // Convert back to map
+  return Map<String, List<String>>.fromEntries(newEntries);
+}

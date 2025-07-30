@@ -186,7 +186,6 @@ class _emailUpdationState extends State<emailUpdation> {
                   'otp': otpController.text,
                 },
               );
-              print("response for otp ${response.body}");
 
               if (getFlagOfResponse(response)) {
                 // Call PATCH API to update email

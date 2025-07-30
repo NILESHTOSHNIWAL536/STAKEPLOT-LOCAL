@@ -9,8 +9,9 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 
 
-void navToHistory(context){
-                  HapticFeedback.selectionClick();
+void navToHistory(context)
+{
+                    HapticFeedback.selectionClick();
                     isLoadingMore.value=false;
                     clearTransactions(context: context,f: false);
                      Navigator.push(

@@ -65,8 +65,6 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
 
  Future<void> _fetchAutoPayData() async {
   final fetchedCards = await getAutoPayInfo();
-  print('Fetched cards: ${fetchedCards.length}'); // Debug
-  // print('Card details: ${fetchedCards.map((c) => c.toJson()).toList()}'); // Debug
   if (mounted) {
     setState(() {
       cards.assignAll(fetchedCards);
@@ -825,9 +823,6 @@ Widget _buildCalendarDateItem(BuildContext context, Map<String, dynamic> dateDat
   final parsedDate = DateTime.parse(dateData['fullDate']);
   final formattedDate = "${parsedDate.year}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}";
 
-  // Debug: Print date being checked
-  print('Checking date: $formattedDate, fullDate: ${dateData['fullDate']}');
-
   // Calculate fontScale for responsive sizing
   final screenSize = MediaQuery.of(context).size;
   final fontScale = screenSize.width / 375;
@@ -839,7 +834,6 @@ Widget _buildCalendarDateItem(BuildContext context, Map<String, dynamic> dateDat
       final reminderDate = card.nextReminderAt!;
       final formattedReminderDate = "${reminderDate.year}-${reminderDate.month.toString().padLeft(2, '0')}-${reminderDate.day.toString().padLeft(2, '0')}";
       bool isMatch = formattedReminderDate == formattedDate;
-      print('Card: ${card.title}, isActive: ${card.isActive}, nextReminderAt: $formattedReminderDate, match: $isMatch');
       return isMatch;
     },
     orElse: () => CardData(

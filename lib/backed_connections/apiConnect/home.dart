@@ -173,7 +173,6 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
 
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
-    print("calender data $her");
     var obj = her['data'];
     if (obj is List) {
       return List<Map<String, dynamic>>.from(obj);
@@ -190,7 +189,6 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactionsForDate(
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
-     print("calender data 2 $her");
     if (obj is List) {
       return List<Map<String, dynamic>>.from(obj);
     }
@@ -277,7 +275,6 @@ matchedKeywords.addAll(
   lastWeekjson.addAll(obj['lastWeek'] ?? {});
   lastmonthjson.addAll(obj['lastMonth']?? {});
   }catch(e){
-      print(e);
   }
 }
 

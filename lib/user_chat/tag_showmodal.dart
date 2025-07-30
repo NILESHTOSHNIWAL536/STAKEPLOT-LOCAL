@@ -53,10 +53,14 @@ class _TagShowmodalState extends State<TagShowmodal>
 
   RxBool customSelections = false.obs;
   RxString UrlPathImage = "".obs;
+  Map<String, List<String>> categories={};
+
+
 
   @override
   void initState() {
     super.initState();
+    categories= moveMatchedCategoryFirst(widget.data.category.toLowerCase());
 
     UrlPathImage.value = getIconPath(widget.data.category.toLowerCase());
     _controller = AnimationController(
@@ -227,14 +231,18 @@ class _TagShowmodalState extends State<TagShowmodal>
             children: [
               InkWell(
                 onTap: () {
-                  openShowModalCate(context, nameController,
-                      transactionsHistory[widget.index].narration, callBack);
+                  openShowModalCate(
+                      context,
+                       nameController,
+                       transactionsHistory[widget.index].narration,
+                       callBack    
+                    );
                 },
-                child: Icon(
+                child:Obx(()=> Icon(
                   CupertinoIcons.add,
-                  size: 30,
+                  size: customCategoryUnUsedList.isEmpty?0: 30,
                   color: AppColors.bg1,
-                ),
+                )),
               ),
               InkWell(
                 onTap: () {

@@ -1020,7 +1020,6 @@ class _ChatState extends State<Chat> {
               Navigator.pop(context);
           }
           }catch(e){
-             print(e);
           }
         },
         child: Container(

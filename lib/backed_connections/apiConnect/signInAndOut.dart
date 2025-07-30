@@ -82,17 +82,13 @@ Future<void> userVerification(TextEditingController emailController,
           ),
         ),
       );
-// commented this for 2 factor auth
-      // loginCalledData(response, context); commented this for 2 factor auth
-      // await screenDataLocalStorage();
-      // Navigator.pushReplacementNamed(context, '/home');
+
     } else {
       acceptReset.value = false;
       snackBarCalledfail(context, SnackbarData().invalidCredentials);
     }
-  } catch (e, stackTrace) {
+  } catch (e) {
     acceptReset.value = false;
-    print("erroro from login: $e");
     snackBarCalledfail(context, SnackbarData().loginFailedTryAgain);
   }
 }
@@ -321,7 +317,6 @@ Future<void> forceLogoutUser(
       "userpassword": userpassword,
       "deviceInfo": deviceData.value,
     });
-    print("response for logout ${response.body}");
     if (getFlagOfResponse(response)) {
       final body = jsonDecode(response.body);
       // Notify the logged-out device (if applicable)

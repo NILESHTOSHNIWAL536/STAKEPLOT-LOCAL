@@ -55,22 +55,9 @@ class AuthService {
           : null;
 
       if (idToken == null) {
-        print("Apple sign-in: No idToken received");
         return null;
       }
-      // if (email == null || email.contains('@privaterelay.appleid.com')) {
-      //   // Prompt user to enter their real email
-      //   // email = await _promptForEmail(context);
-      //   if (email == null) {
-      //     // User canceled the email input
-      //     ScaffoldMessenger.of(context).showSnackBar(
-      //       const SnackBar(content: Text('Email is required to proceed')),
-      //     );
-      //     return null;
-      //   }
-      // }
-
-      print("credential from the apple store : $credential");
+    
       final response = await http.post(
         Uri.parse('$url/user/apple-auth'),
         headers: {'Content-Type': 'application/json'},
@@ -82,23 +69,16 @@ class AuthService {
         }),
       );
 
-      print("Apple sign-in response status: ${response.statusCode}");
-      print("Apple sign-in response body: ${response.body}");
-
       if (response.statusCode == 400) {
-        print("Apple sign-in error: ${response.body}");
         return null;
       }
 
       // Check response status
       if (response.statusCode == 200) {
-        print("Apple sign-in response: ${response.body}");
         return json.decode(response.body);
       } else {
-        print("Apple backend error: ${response.body}");
       }
     } catch (e) {
-      print("Apple sign-in error: $e");
     }
     return null;
   }

@@ -19,6 +19,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
+import 'dart:async';
+
 
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
@@ -39,6 +41,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   final RxList<Map<String, dynamic>> dayWiseTransactions =
       RxList<Map<String, dynamic>>([]);
   final RxBool isDateSummaryView = false.obs;
+  Timer? _debounce;
+
+  
   // State to toggle views
 
   @override
@@ -260,7 +265,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         controller: searchController,
         focusNode: focusNodeSearchFeild,
         onChanged: (value) {
-          onChanedAutoTransactionStatus(context);
+          if (_debounce?.isActive ?? false) _debounce!.cancel();
+            // Start a new debounce timer
+            _debounce = Timer(const Duration(milliseconds: 500), () {
+                onChanedAutoTransactionStatus(context);
+            });
+
+          // onChanedAutoTransactionStatus(context);
           searchTextController.value=value;
           searchTextControllerBool.value =  !  searchTextControllerBool.value;
         },

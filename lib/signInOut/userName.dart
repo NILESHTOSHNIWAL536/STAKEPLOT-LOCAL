@@ -254,7 +254,6 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
   void initState() {
     super.initState();
     // Autofill fields with Google Sign-In data
-    print("data from the google sign in: ${widget.data}");
     usernameController.text = (widget.data?['data']?['name']) ?? '';
     dobController.text = widget.data['data']['dob'] ?? '1970-01-01';
     // Add listener for real-time username validation
@@ -312,7 +311,6 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
       'appleUserId': widget.data['data']['appleUserId'],
     };
 
-    print("updates data: $updatedData");
 
     flag.value = true;
     await storeData2(context, updatedData, 'assets/avatar/FRAME-2.svg');
@@ -324,7 +322,6 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
     String name = data['name'];
     String email = data['email'];
     String dob = data['dob'];
-    print("hereee $data");
     final response = await http.post(
       Uri.parse('${url}/user/register'),
       headers: <String, String>{
@@ -340,7 +337,6 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
         'appleUserId': data['appleUserId'],
       }),
     );
-    printData(response);
 
     try {
       var data2 = jsonDecode(response.body);

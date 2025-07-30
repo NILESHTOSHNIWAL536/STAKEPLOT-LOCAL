@@ -500,8 +500,6 @@ class _EditDetailsState extends State<EditDetails> {
   } else 
   {
     var body=jsonDecode(response.body);
-    print(body['error']);
-    print(body);
     snackBarCalledfail(showSnackBarContext,body['error']??"error", Colors.red);
   }
 }

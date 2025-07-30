@@ -43,41 +43,10 @@ void getFinoraPreviousMonthData() async {
     finoraTransactionData.clear();
     var finoraData = jsonDecode(response.body);
     finoraTransactionData.addAll(finoraData);
-    print("finora data $finoraData");
   } else {}
 }
 
-// Assuming this is your global function
-// Future<List<CardData>> getAutoPayInfo() async {
-//   try {
-//     final response = await getDataApiCall(
-//         "${url}/transactionauto/get-recurring-payments/false");
 
-//     print("Response: ${response.body}");
-
-//     if (response.statusCode == 200) {
-//       final jsonData = jsonDecode(response.body);
-//       if (jsonData['success'] == true) {
-//         final List<dynamic> autoPayDataInfo = jsonData['data'];
-//         // Map JSON data to CardData objects, adding an index for gradient selection
-//         return autoPayDataInfo.asMap().entries.map((entry) {
-//           final index = entry.key;
-//           final data = entry.value as Map<String, dynamic>;
-//           return CardData.fromJson({...data, 'index': index});
-//         }).toList();
-//       } else {
-//         print("API returned success: false - ${jsonData['message']}");
-//         return [];
-//       }
-//     } else {
-//       print("API call failed with status: ${response.statusCode}");
-//       return [];
-//     }
-//   } catch (e) {
-//     print("Error fetching auto pay data: $e");
-//     return [];
-//   }
-// }
 Future<List<CardData>> getAutoPayInfo() async {
   try {
     // Fetch both false and true auto pay info
@@ -118,35 +87,26 @@ Future<bool> addRecurringPayment(String id, bool isActive) async {
   try {
     final response = await updateDataApiCall2("$url/transactionauto/recurring-payments/$id", {'isActive': isActive});
 
-    print("Add Response: ${response.body}");
-
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       return jsonData['success'] == true;
     } else {
-      print("Add API call failed with status: ${response.statusCode}");
       return false;
     }
   } catch (e) {
-    print("Error adding recurring payment: $e");
     return false;
   }
 }
 Future<bool> addRecurringPaymentForDaily(String id, bool isDaily) async {
   try {
     final response = await updateDataApiCall2("$url/transactionauto/recurring-payments/$id", {'isDaily': isDaily});
-
-    print("Add Response: ${response.body}");
-
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       return jsonData['success'] == true;
     } else {
-      print("Add API call failed with status: ${response.statusCode}");
       return false;
     }
   } catch (e) {
-    print("Error adding recurring payment: $e");
     return false;
   }
 }
@@ -189,19 +149,13 @@ Future<bool> updateRecurringPaymentDate(String id, DateTime reminderDate) async 
 Future<bool> ignoreRecurringPayment(String id) async {
   try {
     final response = await deleteDataApiCall("$url/transactionauto/recurring-payments/$id");
-   
-
-    print("Ignore Response: ${response.body}");
-
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       return jsonData['success'] == true;
     } else {
-      print("Ignore API call failed with status: ${response.statusCode}");
       return false;
     }
   } catch (e) {
-    print("Error ignoring recurring payment: $e");
     return false;
   }
 }
