@@ -108,6 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       containerIconSiginWith(
                           FontAwesomeIcons.google, Colorcodes.white, context),
                       // buildGoogleSignIn(),
+                       const SizedBox(height: 20),
                       Platform.isAndroid
                           ? Text('')
                           : SignInWithAppleButton(

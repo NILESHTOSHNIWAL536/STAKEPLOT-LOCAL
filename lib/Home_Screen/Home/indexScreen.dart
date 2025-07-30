@@ -22,6 +22,7 @@ class IndexScreen extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     final double debit = totalDebitThisMonth.value;
     final bool isZeroOrNegative = debit <= 0;
+    
     return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
           child: SingleChildScrollView(
@@ -62,7 +63,7 @@ SizedBox(
               height: 14,
             ),
 
-            SizedBox(
+            allAutoPayData.isEmpty?SizedBox.shrink(): SizedBox(
                 height: height * 0.4,
                 child: CardStackScreen()
             ),
