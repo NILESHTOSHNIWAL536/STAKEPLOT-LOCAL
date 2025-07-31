@@ -955,16 +955,16 @@ class AnimatedAppLoaders {
 
 
  final List<Map<String, dynamic>> categoriesOfReward = [
-    {'title': 'Fashion', 'emoji': '👗', 'color': Colors.purple.shade100},
-    {'title': 'Accessories', 'emoji': '👜', 'color': Colors.pink.shade100},
-    {'title': 'Beauty & Personal Care', 'emoji': '💄', 'color': Colors.red.shade100},
-    {'title': 'Electronics', 'emoji': '📱', 'color': Colors.blue.shade100},
-    {'title': 'Software & Security', 'emoji': '🖥️', 'color': Colors.indigo.shade100},
-    {'title': 'Web Services', 'emoji': '🌐', 'color': Colors.teal.shade100},
-    {'title': 'Travel & Tourism', 'emoji': '🏖️', 'color': Colors.orange.shade100},
-    {'title': 'Flights', 'emoji': '✈️', 'color': Colors.lightBlue.shade100},
-    {'title': 'Rentals', 'emoji': '🚗', 'color': Colors.green.shade100},
-    {'title': 'Food & Beverage', 'emoji': '🍔', 'color': Colors.amber.shade100},
-    {'title': 'Health & Wellness', 'emoji': '🏥', 'color': Colors.cyan.shade100},
-    {'title': 'Entertainment', 'emoji': '🎬', 'color': Colors.deepPurple.shade100},
+    {'title': 'Fashion', 'emoji': '👗', 'color': Color(0xFFDCAAAA)},
+    {'title': 'Accessories', 'emoji': '👜', 'color': Color(0xFFA0CAD0)},
+    {'title': 'Beauty & Personal Care', 'emoji': '💄', 'color': Color(0xFFA9B3DA)},
+    {'title': 'Electronics', 'emoji': '📱', 'color': Color(0xFFCC9EBD)},
+    {'title': 'Software & Security', 'emoji': '🖥️', 'color': Color(0xFFBACC9E)},
+    {'title': 'Web Services', 'emoji': '🌐', 'color': Color(0xFFDCAAAA)},
+    {'title': 'Travel & Tourism', 'emoji': '🏖️', 'color': Color(0xFFA0CAD0)},
+    {'title': 'Flights', 'emoji': '✈️', 'color': Color(0xFFA9B3DA)},
+    {'title': 'Rentals', 'emoji': '🚗', 'color': Color(0xFFCC9EBD)},
+    {'title': 'Food & Beverage', 'emoji': '🍔', 'color': Color(0xFFBACC9E)},
+    {'title': 'Health & Wellness', 'emoji': '🏥', 'color': Color(0xFFDCAAAA)},
+    {'title': 'Entertainment', 'emoji': '🎬', 'color': Color(0xFFA0CAD0)},
   ];
