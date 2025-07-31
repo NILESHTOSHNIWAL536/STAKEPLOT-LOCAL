@@ -157,6 +157,58 @@ static  Widget getHeader(context){
                           ),
               );
   }
+static Widget getHeaderForCoupons(BuildContext context) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+   
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.card_giftcard,
+                color: AppColors.primaryColor,
+                size: 24,
+              ),
+            ),
+            SizedBox(width: 12),
+            Text(
+              'Select Your Coupon Reward',
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 12,
+                lWeight: FontWeight.w600,
+                color: AppColors.accentColor,
+              ),
+            ),
+          ],
+        ),
+        GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Container(
+            padding: EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.close,
+              color: Colors.grey.shade700,
+              size: 16,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   static Widget _buildCategoryCard(
       String title, String emoji, Color backgroundColor, Function(String) onCategorySelected, BuildContext context) {
@@ -198,35 +250,45 @@ static  Widget getHeader(context){
 
 
 static void showCouponSelectionPopup(BuildContext context, String categoryTitle) {
-     showModalBottomSheet(
+    showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          width: MediaQuery.of(context).size.width ,
-          height: MediaQuery.of(context).size.height/2,
-          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 4),
-          decoration: BoxDecoration(
-            color: Colors.white,
+        return Dialog(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Column(
-            children: [
-              getHeader(context),
-              SizedBox(height: 24),
-              Expanded(
-                child: Obx(() => loadReaward.value
-                    ? Center(child: Spinner())
-                    : categoryCoupons.isEmpty
-                        ? Center(child: textStyle(text:'No coupons available',context: context,fontWeight: FontWeight.bold,fontsize: 12))
-                        : EnvelopeGrid(categoryCoupons: categoryCoupons)),
-              ),
-            ],
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9, // 90% of screen width
+            height: MediaQuery.of(context).size.height / 1.9, // Half of screen height
+            // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                 getHeaderForCoupons(context), // Assuming getHeader is defined elsewhere
+               
+                Container(
+                 
+                  child: Obx(() => loadReaward.value
+                      ? Center(child: Spinner())
+                      : categoryCoupons.isEmpty
+                          ? Center(
+                              child: textStyle(
+                                  text: 'No coupons available',
+                                  context: context,
+                                  fontWeight: FontWeight.bold,
+                                  fontsize: 12))
+                          : EnvelopeGrid(categoryCoupons: categoryCoupons)),
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
-
    
 
 }
