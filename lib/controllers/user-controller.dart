@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/user_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:get/get.dart';
@@ -101,19 +102,34 @@ class UserController extends GetxController {
         selectedBank.value = obj['selectedBank'] ?? '';
         firstFetchedDate.value = obj['firstFetchedDate'] ?? '';
 
-        interestedTags
-            .assignAll(List<String>.from(obj['interestedTags'] ?? []));
+        interestedTags.assignAll(List<String>.from(obj['interestedTags'] ?? []));
         likedPosts.assignAll(List<String>.from(obj['likedPosts'] ?? []));
         likedComments.assignAll(List<String>.from(obj['likedComments'] ?? []));
         likedProducts.assignAll(List<String>.from(obj['likedProducts'] ?? []));
         savedPostIds.assignAll(List<String>.from(obj['saved'] ?? []));
-        // Friends
-        friendsList.assignAll(
-            List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
-        frdsListOrigin.assignAll(
-            List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
+          friendsList.assignAll(List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
+
+        addFriendtoList();
+
+        getMaskendUsers(true);
+        getMaskendUsers(false);
+        getSaved();
+        getuserPost(obj['_id']);
+        cacheUserDataLocally();
+      }
+    } catch (e) {
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
+
+
+void addFriendtoList(){
+        userController.frdsListOrigin.assignAll(
+            List<Map<String, dynamic>>.from(userController.friendsList));
         friendsListDetails.clear();
-        for (var friend in friendsList) {
+        for (var friend in userController.friendsList) {
           final id = friend['_id'];
           friendsListDetails[id] = {
             'name': friend['name'] ?? '',
@@ -121,15 +137,14 @@ class UserController extends GetxController {
             'avatarBackGround': friend['avatarBackGround'] ?? '',
           };
         }
+}
 
-        getMaskendUsers(true);
-        getMaskendUsers(false);
-        getSaved();
-        getuserPost(obj['_id']);
-      }
-    } catch (e) {
-    } finally {
-      isLoading.value = false;
-    }
-  }
+void addSavedPostList(obj)
+{
+     userController.savedList.clear();
+     userController.savedList.addAll(PostModel.listFromJson(obj));
+     userController.savedList.forEach((element) {
+       postController.postCount[element.id] = element.upvotes;
+       postController.postCommentCount[element.id] = element.comments;
+     });
 }

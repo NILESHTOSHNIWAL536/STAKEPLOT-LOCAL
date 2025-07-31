@@ -118,28 +118,17 @@ void getMaskendUsers(bool flag) async {
   }
 }
 
+
+
+
 void getSaved() async {
   String urlPath = "${url}/post/saved";
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.get(
-    Uri.parse(urlPath),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
+  var response = await getDataApiCall(urlPath);
   if (response.statusCode == 200 || response.statusCode == 201) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
+    addSavedPostList(obj);
 
-    userController.savedList.clear();
-    userController.savedList.addAll(PostModel.listFromJson(obj));
-    userController.savedList.forEach((element) {
-      postController.postCount[element.id] = element.upvotes;
-      postController.postCommentCount[element.id] = element.comments;
-    });
   } else {}
 }
 

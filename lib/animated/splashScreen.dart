@@ -19,6 +19,8 @@ import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../Hive_localstorage/apisCall/init_hive.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -63,6 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
     profileScreenStrings.fetchConstants();
     PdfStrings().fetchConstants();
     RewardScreenStrings().fetchConstants();
+    GetLocalStorage();
   }
 
   @override
