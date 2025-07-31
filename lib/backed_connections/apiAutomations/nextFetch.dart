@@ -233,6 +233,7 @@ class _RotatingIconState extends State<Nextfetch>
                           width: 30,
                           height: 30,
                           fit: BoxFit.fitWidth,
+                          errorBuilder: getErrorBankLogo(),
                         ),
                         SizedBox(width: Colorcodes.borderRadius10),
                         Container(

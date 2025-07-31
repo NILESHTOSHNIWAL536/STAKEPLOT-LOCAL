@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await checkAuthAndNavigate();  // only navigate after update check
   }
 
-  void callApis() {
+  void callApis()async {
     SignupData signup = SignupData();
     SnackbarData snackbarData = SnackbarData();
     SigninData signinData = SigninData();
@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
     profileScreenStrings.fetchConstants();
     PdfStrings().fetchConstants();
     RewardScreenStrings().fetchConstants();
-    GetLocalStorage();
+    await  GetLocalStorage();
   }
 
   @override

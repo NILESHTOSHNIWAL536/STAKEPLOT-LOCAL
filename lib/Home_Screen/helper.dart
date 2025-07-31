@@ -1102,3 +1102,11 @@ String formatDateToIST(String dateStr) {
     return dateStr;
   }
 }
+
+
+
+ getErrorBankLogo()=> (context, error, stackTrace) => const Icon(
+            Icons.account_balance,
+            size: 30,
+            color: AppColors.primaryColor,
+          );

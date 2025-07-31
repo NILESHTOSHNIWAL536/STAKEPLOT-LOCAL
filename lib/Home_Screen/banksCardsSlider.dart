@@ -50,7 +50,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
         child: SizedBox(
             width: width,
             height: height > 0 ? height / 2.5 : 100, // Fallback height
-            child: Obx(() => loadBanks.value ? BankSlider() : loadBalance.value?  avatarSlider(): avatarSlider())));
+            child: Obx(() => loadBanks.value ? BankSlider() :loadBalance.value?  avatarSlider(): avatarSlider())));
   }
 
   Widget avatarSlider() {
@@ -105,11 +105,13 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             SizedBox(height: Colorcodes.borderRadius10),
             Row(
               children: [
-                 Image.network(
-                          data['bankLogo'],
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.fitWidth,
+            Image.network
+            (
+                data['bankLogo'],
+                width: 30,
+                height: 30,
+                fit: BoxFit.fitWidth,
+                errorBuilder: getErrorBankLogo(),
             ),
              SizedBox(width: Colorcodes.borderRadius10),
                 Text(

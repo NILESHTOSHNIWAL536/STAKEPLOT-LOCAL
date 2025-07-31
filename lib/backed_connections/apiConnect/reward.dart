@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 
 import '../apiAutomations/curd.dart';
 import '../apis_connect.dart';
@@ -128,6 +129,7 @@ Future<void> fetchCategoryCoupons(String category) async {
 
   void callRewardApis(context)
   {
+        
         fetchCouponsCounts();
         CouponPopupUtils.showCouponPopup(context, (category) {
                 fetchCategoryCoupons(category);
