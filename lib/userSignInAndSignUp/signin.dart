@@ -32,9 +32,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController(text: "");
+  final TextEditingController emailController = TextEditingController(text: "nileshtoshniwal743@gmail.com");
   final TextEditingController passwordController =
-      TextEditingController(text: "");
+      TextEditingController(text: "Nilesh1234@");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override
@@ -108,6 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       containerIconSiginWith(
                           FontAwesomeIcons.google, Colorcodes.white, context),
                       // buildGoogleSignIn(),
+                       const SizedBox(height: 20),
                       Platform.isAndroid
                           ? Text('')
                           : SignInWithAppleButton(

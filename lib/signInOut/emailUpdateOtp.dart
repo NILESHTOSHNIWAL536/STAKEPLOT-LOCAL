@@ -77,7 +77,7 @@ class _emailUpdationState extends State<emailUpdation> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colorcodes.white,
+        backgroundColor: AppColors.primaryColor,
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -178,7 +178,7 @@ class _emailUpdationState extends State<emailUpdation> {
               );
 
               // Verify OTP
-              
+
               var response = await postDataApiCallwithOutSharedPref(
                 '$url/otp/verify-otp',
                 {

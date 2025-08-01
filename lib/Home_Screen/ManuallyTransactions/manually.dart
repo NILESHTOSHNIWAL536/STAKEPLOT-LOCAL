@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -136,3 +137,4 @@ void showCustomModal(BuildContext context, bool isDebit) {
     },
   );
 }
+

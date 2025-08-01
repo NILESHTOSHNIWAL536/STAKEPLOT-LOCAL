@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -48,12 +47,14 @@ class _EditDetailsState extends State<EditDetails> {
   void initState() {
     super.initState();
     // Initialize controllers with reactive values
-    _controllers[ProfileScreenStrings().nameLabel]!.text = userController.userName.value;
-    _controllers[ProfileScreenStrings().emailLabel]!.text = userController.email.value;
-    _controllers[ProfileScreenStrings().dobLabel]!.text = userController.dob.value;
+    _controllers[ProfileScreenStrings().nameLabel]!.text =
+        userController.userName.value;
+    _controllers[ProfileScreenStrings().emailLabel]!.text =
+        userController.email.value;
+    _controllers[ProfileScreenStrings().dobLabel]!.text =
+        userController.dob.value;
     _controllers[ProfileScreenStrings().numberLabel]!.text = number.value;
 
-   
     checkBiometricsStatus();
     userController.fetchUserInfo();
   }
@@ -69,7 +70,8 @@ class _EditDetailsState extends State<EditDetails> {
     final LocalAuthentication auth = LocalAuthentication();
     bool canCheckBiometrics = await auth.canCheckBiometrics;
     bool isDeviceSupported = await auth.isDeviceSupported();
-    List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
+    List<BiometricType> availableBiometrics =
+        await auth.getAvailableBiometrics();
   }
 
   @override
@@ -93,7 +95,7 @@ class _EditDetailsState extends State<EditDetails> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  DeleteAccountScreen()),
+                MaterialPageRoute(builder: (context) => DeleteAccountScreen()),
               );
             },
           ),
@@ -114,7 +116,6 @@ class _EditDetailsState extends State<EditDetails> {
                       background: userController.avatarBackGround.value,
                       flag: true,
                     )),
-                
               ],
             ),
             const SizedBox(height: 20),
@@ -191,7 +192,8 @@ class _EditDetailsState extends State<EditDetails> {
                     Icons.calendar_today,
                     ProfileScreenStrings().dobLabel,
                     userController.dob.value.isNotEmpty
-                        ? DateFormat('yyyy-MM-dd').format(DateTime.parse(userController.dob.value))
+                        ? DateFormat('yyyy-MM-dd')
+                            .format(DateTime.parse(userController.dob.value))
                         : 'Not provided',
                   ),
                 ],
@@ -266,7 +268,8 @@ class _EditDetailsState extends State<EditDetails> {
       padding: const EdgeInsets.symmetric(vertical: 0),
       width: MediaQuery.of(context).size.width / 1.1,
       child: TextFormField(
-        controller: _controllers[label]!..text = value, // Update controller text
+        controller: _controllers[label]!
+          ..text = value, // Update controller text
         enabled: isEmailField, // Only email field is editable via dialog
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 10),
@@ -284,7 +287,7 @@ class _EditDetailsState extends State<EditDetails> {
               ? IconButton(
                   icon: const Icon(Icons.edit, color: AppColors.primaryColor),
                   onPressed: () {
-                    showSnackBarContext=context;
+                    showSnackBarContext = context;
                     _showEmailEditDialog(context, userController.email.value);
                   },
                 )
@@ -348,7 +351,8 @@ class _EditDetailsState extends State<EditDetails> {
                 if (value == null || value.isEmpty) {
                   return "Please enter an email";
                 }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                    .hasMatch(value)) {
                   return "Please enter a valid email";
                 }
                 if (value == userController.email.value) {
@@ -452,7 +456,8 @@ class _EditDetailsState extends State<EditDetails> {
     );
   }
 
-  Future<void> _sendOtpForEmailUpdate(BuildContext context, String newEmail) async {
+  Future<void> _sendOtpForEmailUpdate(
+      BuildContext context, String newEmail) async {
     try {
       // Show loading indicator
       // showDialog(
@@ -462,26 +467,24 @@ class _EditDetailsState extends State<EditDetails> {
       // );
 
       // Call OTP API
-       sendOtp(context, userController.userName.value, newEmail);
+      sendOtp(context, userController.userName.value, newEmail);
 
       // Navigate to OTP screen
-      
     } catch (e) {
       Navigator.pop(context); // Close loading dialog
-      snackBarCalledfail(context, "Failed to send OTP. Please try again.", Colors.red);
+      snackBarCalledfail(
+          context, "Failed to send OTP. Please try again.", Colors.red);
     }
   }
 
-
   void sendOtp(BuildContext context, String name, String email) async {
-  var response = await postDataApiCallwithOutSharedPref('${url}/otp/send', {
-    'email': email,
-    'name': name,
-  });
-  if (getFlagOfResponse(response))
- {
-    snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
-      Navigator.pop(context); // Close loading dialog
+    var response = await postDataApiCallwithOutSharedPref('${url}/otp/send', {
+      'email': email,
+      'name': name,
+    });
+    if (getFlagOfResponse(response)) {
+      snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
+
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -543,7 +546,8 @@ class _EditDetailsState extends State<EditDetails> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: const Text('Delete Account'),
-                  content: const Text('Are you sure you want to delete this account?'),
+                  content: const Text(
+                      'Are you sure you want to delete this account?'),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),

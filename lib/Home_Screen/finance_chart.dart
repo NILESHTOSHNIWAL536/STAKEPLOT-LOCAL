@@ -34,8 +34,6 @@ class _FinancePageState extends State<FinancePage> {
     calledFunctionToFetchData(context);
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -143,16 +141,19 @@ class _FinancePageState extends State<FinancePage> {
                 ? Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height / 2.6,
-                    child: consentAndHandleDetails.isEmpty?
-                     Center(
-                      child: textStyleImage(
-                        context: context,
-                        text: HomepageStringsDart().noSpendingsAvailable, 
-                        fontsize: fontSizeFactor * 4.0, c: AppColors.accentColor)):Center(
-                          child: Spinner(
-                                                size: 60,
-                                              ),
-                        ),
+                    child: consentAndHandleDetails.isEmpty
+                        ? Center(
+                            child: textStyleImage(
+                                context: context,
+                                text:
+                                    HomepageStringsDart().noSpendingsAvailable,
+                                fontsize: fontSizeFactor * 4.0,
+                                c: AppColors.accentColor))
+                        : Center(
+                            child: Spinner(
+                              size: 60,
+                            ),
+                          ),
                   )
                 : LineChartWidget(
                     chartData: transactionChatGraph,
@@ -210,8 +211,6 @@ class _FinancePageState extends State<FinancePage> {
                 ),
               ),
             ),
-          
-
             SizedBox(width: screenWidth * 0.02),
             GestureDetector(
               onTap: () {
@@ -432,7 +431,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
-                // change in future 
+              // change in future
               Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,

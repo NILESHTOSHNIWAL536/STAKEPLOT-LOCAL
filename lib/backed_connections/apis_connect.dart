@@ -8,14 +8,15 @@ import 'package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
+import 'package:flutter_application_code_stakeplot/model/user_activity_model.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 part 'snackBars.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.2" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.4" : "localhost";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String urlWithLocallHostWeb = !flag ? "https://stakeplot.in/" : "http://${portNo}:3000/";
 String url = "${urlWithLocallHost}api/v1";
 String webUrl = "${urlWithLocallHostWeb}api/";
@@ -203,3 +204,5 @@ DateTime startDateCustom = DateTime.now().subtract(const Duration(days: 7));
 DateTime endDateCustom = DateTime.now();
 List<CardData> allAutoPayData = [];
 RxBool isAutoPayFected = false.obs;
+RxBool isFinoraVisible = false.obs;
+UserActivity? userActivity;

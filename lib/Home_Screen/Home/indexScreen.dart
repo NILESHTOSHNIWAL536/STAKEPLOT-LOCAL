@@ -21,8 +21,8 @@ class IndexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    final double debit = totalDebitThisMonth.value;
-    final bool isZeroOrNegative = debit <= 0;
+   
+    
     return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
           child: SingleChildScrollView(
@@ -53,16 +53,12 @@ class IndexScreen extends StatelessWidget {
             // ),
          
 
-          SizedBox(
-            height: height * (isZeroOrNegative ? 0.54 : 0.21),
-            child: isZeroOrNegative 
-                ? FinoraLastTwoMonthsDashboard() 
-                : SwipeableCardsScreen(),
-          ),
+         Obx(()=> isFinoraVisible.value?GetFinora(height) : GetFinora(height)),
           const SizedBox(
               height: 14,
             ),
 
+         
           Obx(()=> isAutoPayFected.value?GetAutopays(height) : GetAutopays(height)),
             
             SizedBox(
@@ -96,4 +92,13 @@ class IndexScreen extends StatelessWidget {
                 child: CardStackScreen()
             );
   }
+  Widget GetFinora(height){
+    return SizedBox(
+            height: height * ( totalDebitThisMonth.value<=0 ? 0.54 : 0.21),
+            child:  totalDebitThisMonth.value<=0 
+                ? FinoraLastTwoMonthsDashboard() 
+                : SwipeableCardsScreen(),
+          );
+  }
+
 }
