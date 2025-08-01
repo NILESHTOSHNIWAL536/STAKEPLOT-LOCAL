@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/user_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:get/get.dart';
@@ -115,7 +114,6 @@ class UserController extends GetxController {
         getMaskendUsers(false);
         getSaved();
         getuserPost(obj['_id']);
-        cacheUserDataLocally();
       }
     } catch (e) {
     } finally {

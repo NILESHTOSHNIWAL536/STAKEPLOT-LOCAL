@@ -93,9 +93,9 @@ class _MyAppState extends State<MyApp> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
   }
 
-  Future<void> initPlatformState() async {
+  Future<void> initPlatformState() async 
+  {
     if (!mounted) return;
-    // Initialize other platform-specific configs here if needed
   }
 
   @override
