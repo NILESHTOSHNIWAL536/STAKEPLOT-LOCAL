@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
@@ -34,7 +35,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
 late IO.Socket socket;
 
@@ -67,7 +67,8 @@ class _ChatState extends State<Chat> {
 
   String path = "assets/avatar/menp1.svg";
   ValueNotifier<bool> onlineUser = ValueNotifier<bool>(false);
-
+  ValueNotifier<bool> isUploading = ValueNotifier<bool>(false); // Declare isUploading here
+  bool _isSending = false;
   @override
   void initState() {
     super.initState();
@@ -993,12 +994,14 @@ class _ChatState extends State<Chat> {
     );
   }
 
+ 
   Widget textStyleColor(str,Color color, data, imageData,BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: GestureDetector(
         onTap: () {
           try{
+            
           if (str.toString().trim().toLowerCase() == "Send".toLowerCase())
           {
             addMessageImage(
@@ -1013,6 +1016,7 @@ class _ChatState extends State<Chat> {
               widget.myId,
               roomId.value,
             );
+          
              
           }else
           {
@@ -1020,6 +1024,7 @@ class _ChatState extends State<Chat> {
               Navigator.pop(context);
           }
           }catch(e){
+             print(e);
           }
         },
         child: Container(

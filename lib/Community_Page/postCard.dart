@@ -4,8 +4,8 @@ import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.da
 import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/pollDisplay.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/pop-up-menu.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';

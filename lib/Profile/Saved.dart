@@ -2,8 +2,8 @@
 import "dart:convert";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart";
+import "package:flutter_application_code_stakeplot/Constants/colors.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/controllers/controllerManagement.dart";

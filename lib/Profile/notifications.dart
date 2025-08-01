@@ -2,9 +2,9 @@ import "dart:convert";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
+import "package:flutter_application_code_stakeplot/Constants/colors.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart";
 import "package:flutter_application_code_stakeplot/Profile/autocategroies.dart";
@@ -376,6 +376,7 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        
         if (!isFetchedData && avatar.isNotEmpty)
           if (!isMasked)
             AvatarProfile(name: avatar, width: 20, height: 17, background: "")

@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Constants/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_search.dart";

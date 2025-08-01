@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -34,11 +36,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
         ),
         title: Text(
           'Delete Account',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+           style: FontManager().getTextStyle(
+          context,
+          fontSize: 18,
+          lWeight: FontWeight.w600,
+          color: AppColors.accentColor,
+        ),
         ),
         centerTitle: true,
       ),
@@ -54,11 +57,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               Center(
                 child: Text(
                   "We're sorry to see you go!",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                  style: FontManager().getTextStyle(
+          context,
+          fontSize: 18,
+          lWeight: FontWeight.w600,
+          color: AppColors.accentColor,
+        ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -69,11 +73,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               Center(
                 child: Text(
                   "Please help us improve by letting us know why you're deleting your account",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                    height: 1.4,
-                  ),
+                   style: FontManager().getTextStyle(
+          context,
+          fontSize: 16,
+          lWeight: FontWeight.w400,
+          color: AppColors.accentColor,
+        ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -141,11 +146,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               
               Text(
                 'Reason for Deletion (Required)',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
+                style: FontManager().getTextStyle(
+          context,
+          fontSize: 16,
+          lWeight: FontWeight.w600,
+          color: AppColors.accentColor,
+        ),
               ),
               
               SizedBox(height: 16),
@@ -192,10 +198,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                             Expanded(
                               child: Text(
                                 reasons[index],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
+                                 style: FontManager().getTextStyle(
+          context,
+          fontSize: 16,
+          lWeight: FontWeight.w500,
+          color: AppColors.accentColor,
+        ),
                               ),
                             ),
                           ],
@@ -211,20 +219,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 width: double.infinity,
                 margin: EdgeInsets.only(bottom: 24),
                 child: ElevatedButton(
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
+
                    onPressed: selectedReason != null
                       ? () async {
                          
@@ -261,13 +256,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                   ),
                   child: Text(
                      isGoogleUser.value ? 'Delete':'Continue',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: selectedReason != null
-                          ? Colors.white
-                          : Colors.grey[600],
-                    ),
+                    style: FontManager().getTextStyle(
+          context,
+          fontSize: 18,
+          lWeight: FontWeight.w600,
+          color: AppColors.accentColor,
+        ),
                   ),
                 ),
               ),
@@ -306,11 +300,12 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
         ),
         title: Text(
           'Delete Account',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+          style: FontManager().getTextStyle(
+          context,
+          fontSize: 18,
+          lWeight: FontWeight.w600,
+          color: AppColors.accentColor,
+        ),
         ),
         centerTitle: true,
       ),
@@ -352,11 +347,12 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                           children: [
                             TextSpan(
                               text: 'Important: ',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              ),
+                               style: FontManager().getTextStyle(
+          context,
+          fontSize: 16,
+          lWeight: FontWeight.w600,
+          color: AppColors.accentColor,
+        ),
                             ),
                             TextSpan(
                               text: 'Deleting your account is permanent and cannot be undone. All your data will be erased.',
@@ -539,8 +535,8 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
             TextButton(
               onPressed: () async{
                 Navigator.pop(context); 
-                bool accountDeleted= await deleteUserAccount(context2,selectedReason);
-                if(accountDeleted)performAccountDeletion(context2);
+                await deleteUserAccount(context2,selectedReason);
+                // if(accountDeleted)performAccountDeletion(context2);
                },
               child: Text(
                 'Delete Account',

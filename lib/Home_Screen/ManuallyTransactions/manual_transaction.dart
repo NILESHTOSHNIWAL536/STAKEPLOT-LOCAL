@@ -2,15 +2,14 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/apicalls.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/speechToText.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
@@ -58,7 +57,6 @@ class _ModalContentState extends State<ModalContent>
   bool _isAmountFieldFocused = true;
   late IO.Socket socket;
 
-  late SpeechToTextService speechService;
   @override
   void initState() {
     super.initState();
@@ -82,103 +80,11 @@ class _ModalContentState extends State<ModalContent>
     socket = IO.io(urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
-    speechService = SpeechToTextService(
-      context: context,
-      categories: categories,
-      customCategoryList: customCategoryList.cast<Map<String, dynamic>>(),
-      isDebit: widget.isDebit,
-      tickerProvider: this,
-      onSpeechProcessed:
-          (double parsedAmount, String category, String? subCategory) {
-        setState(() {
-          amount = parsedAmount;
-          _amountController.text = parsedAmount.toString();
-          selectedCategory = category;
-          selectedSubCategory = subCategory ?? '';
-          selectedCategory2 = selectedCategory;
-          selectedSubCategory2 = selectedSubCategory;
-          fin =
-              '$selectedCategory (${selectedSubCategory?.isEmpty == true ? 'None' : selectedSubCategory})';
-          _isAmountFieldFocused = false;
-          isCategoryFieldExpanded = false;
-        });
-        _showConfirmationDialog(parsedAmount, category, subCategory);
-      },
-    );
+ 
   }
 
-  void _showConfirmationDialog(
-      double amount, String category, String? subCategory) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppColors.mt,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text(
-            'Confirm Transaction',
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.bold,
-                fontSize: 18,
-                color: AppColors.accentColor),
-          ),
-          content: Text(
-            'Add ₹$amount to $category (${subCategory?.isEmpty == true ? 'None' : subCategory})?',
-            style: FontManager().getTextStyle(context,
-                fontSize: 16, color: AppColors.accentColor),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                setState(() => isProcessing = false);
-              },
-              child: Text(
-                'No',
-                style: FontManager()
-                    .getTextStyle(context, fontSize: 14, color: Colors.red),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _addTransactionAutomatically();
-              },
-              child: Text(
-                'Yes',
-                style: FontManager().getTextStyle(context,
-                    fontSize: 14, color: AppColors.primaryColor),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
+ 
   // Add transaction
-  void _addTransactionAutomatically() async {
-    if (cashInAndOut.value) return;
-    cashInAndOut.value = true;
-
-    try {
-      addTransaction(
-        amount.toString(),
-        selectedSubCategory2 ?? '',
-        selectedCategory2!,
-        context,
-        "cash",
-      );
-      snackBarCalled(context, "Successfully added", Colors.black);
-      Navigator.pop(context); // Close modal
-    } catch (error) {
-      snackBarCalledfail(context, 'Failed to add transaction: $error', Colors.red);
-    } finally {
-      cashInAndOut.value = false;
-      isProcessing = false;
-    }
-  }
 
   setUpSocketListener() {
     socket.on(

@@ -2,7 +2,7 @@ import "dart:convert";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Constants/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";

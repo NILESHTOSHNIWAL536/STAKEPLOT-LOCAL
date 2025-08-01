@@ -1,8 +1,9 @@
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:coupon_uikit/coupon_uikit.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
@@ -28,13 +29,16 @@ class CouponCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isClaimed = onClaim.toString().contains('Closure: () => null');
     // Responsive height based on screen size, capped for smaller devices
-    double height =
-        MediaQuery.of(context).size.height * 0.5; // 45% of screen height
-    height = height.clamp(300, 600); // Min 300, max 450 for consistency
-    final width =
-        MediaQuery.of(context).size.width * 0.9; // 90% of screen width
-    double curve = height * 0.5; // Adjusted curve for more space in firstChild
-
+    // double height =
+    //     MediaQuery.of(context).size.height * 0.5; // 45% of screen height
+    // height = height.clamp(300, 600); // Min 300, max 450 for consistency
+    // final width =
+    //     MediaQuery.of(context).size.width * 0.9; // 90% of screen width
+    // double curve = height * 0.5; // Adjusted curve for more space in firstChild
+ double height = MediaQuery.of(context).size.height * 0.45; // Reduced to 45% for better fit
+    height = height.clamp(300, 500); // Adjusted max to 500 for better proportion
+    final width = MediaQuery.of(context).size.width * 0.9; // 90% of screen width
+    double curve = height * 0.6;
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -47,6 +51,7 @@ class CouponCardWidget extends StatelessWidget {
           curveRadius: 20,
           borderRadius: 20,
           firstChild: Container(
+            height: height * 0.6,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -137,13 +142,15 @@ class CouponCardWidget extends StatelessWidget {
                     color: AppColors.grey,
                     lineHeight: 1.2,
                   ),
-                  maxLines: 6,
-                  overflow: TextOverflow.ellipsis,
+                  maxLines: 8,
+                  // softWrap: true,
+                    overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
          secondChild: Container(
+          height: height * 0.4,
             padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
@@ -166,29 +173,74 @@ class CouponCardWidget extends StatelessWidget {
                         color: AppColors.bg1,
                       ),
                     ),
-                    SizedBox(height: 12),
-                   
-                    InkWell(
-                      onTap: () async {
-                        redirectToUrl(
-                            context, RewardScreenStrings().productUrl.value);
-                      },
-                      child: Text(
-                        'In partnership with fishmydeal - exclusively on Stakeplot',
-                        style: FontManager().getTextStyle(
-                          context,
-                          fontSize: 12,
-                          lWeight: FontWeight.w600,
-                          color: AppColors.bg1.withOpacity(0.6),
-                        ),
-                      ),
-                    ),
+                    SizedBox(height: 10),
+                   Text.rich(
+  TextSpan(
+    text: 'In partnership with ',
+    style: FontManager().getTextStyle(
+      context,
+      fontSize: 12,
+      lWeight: FontWeight.w600,
+      color: AppColors.bg1.withOpacity(0.6),
+    ),
+    children: [
+      TextSpan(
+        text: 'fishmydeal',
+        style: FontManager().getTextStyle(
+          context,
+          fontSize: 13,
+          lWeight: FontWeight.w600,
+          color: AppColors.primaryColor, // Highlight by using full opacity or a different color
+          decoration: TextDecoration.underline, // Optional: underline to emphasize
+        ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () async {
+            redirectToUrl(context, RewardScreenStrings().productUrl.value);
+          },
+      ),
+      TextSpan(
+        text: ' - exclusively on ',
+        style: FontManager().getTextStyle(
+          context,
+          fontSize: 12,
+          lWeight: FontWeight.w600,
+          color: AppColors.bg1.withOpacity(0.6),
+        ),
+      ),
+      TextSpan(
+        text: ' Stakeplot',
+        style: FontManager().getTextStyle(
+          context,
+          fontSize: 13,
+          lWeight: FontWeight.w600,
+          color: AppColors.bg6,
+        ),
+      ),
+    ],
+  ),
+)
+                    // InkWell(
+                    //   onTap: () async {
+                    //     redirectToUrl(
+                    //         context, RewardScreenStrings().productUrl.value);
+                    //   },
+                    //   child: Text(
+                    //     'In partnership with fishmydeal - exclusively on Stakeplot',
+                    //     style: FontManager().getTextStyle(
+                    //       context,
+                    //       fontSize: 12,
+                    //       lWeight: FontWeight.w600,
+                    //       color: AppColors.bg1.withOpacity(0.6),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 10),
                 Center(
                   child: SizedBox(
                     width: MediaQuery.sizeOf(context).width/1.5,
+                    height: MediaQuery.sizeOf(context).height/20,
                     child: ElevatedButton(
                       onPressed: isClaimed
                           ? null

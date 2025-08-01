@@ -385,8 +385,9 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:get/get.dart';
@@ -524,9 +525,9 @@ class CouponCarouselCard extends StatelessWidget {
                   // Proceed with navigation and claim
       
                   Navigator.of(context).popUntil((route) => route.isFirst);
-                    _showCouponCard(context);
-                    await claimCoupon(context, coupon.id, this, coupon);
-                    onClaim(); // Trigger removal and UI refresh
+                  _showCouponCard(context);
+                      await claimCoupon(context, coupon.id, this, coupon);
+                  onClaim(); // Trigger removal and UI refresh
                 });
               },
             ),
@@ -648,6 +649,7 @@ class CouponCarouselCard extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                         Navigator.pop(dialofBoxContext);
+                        HapticFeedback.heavyImpact();
                       _showLottieAnimation(context);
                     },
                     style: ElevatedButton.styleFrom(

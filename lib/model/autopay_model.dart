@@ -59,8 +59,10 @@ class CardData {
     return CardData(
       id: json['_id'] as String,
       title: json['merchant'] as String,
-      amount:
-          "₹ ${json['amount'].toString()}", // Format amount with currency symbol
+      amount: "₹ ${formatMoneyIndian(json['amount'].toString())}",
+
+      // amount:
+      //     "₹ ${json['amount'].toString()}", // Format amount with currency symbol
       date: _formatDate(json['recentMostTransactionTimestamp'] as String),
       occuranceDate: occuranceDates,
       frequency: json['frequency'] as String,
