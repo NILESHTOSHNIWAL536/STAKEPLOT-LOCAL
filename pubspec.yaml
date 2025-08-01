@@ -94,7 +94,6 @@ dependencies:
   coupon_uikit: ^0.2.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  share_plus: ^11.0.0
   carousel_slider: ^5.1.1
 
   
