@@ -7,6 +7,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
+import '../../Constants/search.dart';
+
 class TransactionsSearchList extends StatefulWidget {
   const TransactionsSearchList({Key? key}) : super(key: key);
 
@@ -63,7 +65,7 @@ class _TransactionsSearchListState extends State<TransactionsSearchList> {
                               color: AppColors.primaryColor),
                           child: textStyle(
                               context: context,
-                              text: data[0].toString(),
+                              text: (data[0].toString()).toUpperCase(),
                               fontWeight: FontWeight.bold,
                               fontsize: 20,
                               lineHeight: 1.3,
@@ -72,13 +74,17 @@ class _TransactionsSearchListState extends State<TransactionsSearchList> {
                         const SizedBox(
                           width: 10,
                         ),
-                        textStyle(
-                            context: context,
-                            text: data,
-                            fontWeight: FontWeight.w600,
-                            fontsize: 20,
-                            lineHeight: 1.3,
-                            c: AppColors.accentColor),
+                        Container(
+                          width: MediaQuery.of(context).size.width/1.4,
+                          child: textStyle(
+                              context: context,
+                              text: data,
+                              fontWeight: FontWeight.w600,
+                              fontsize: 20,
+                              lineHeight: 1.3,
+                              c: AppColors.accentColor
+                            ),
+                        ),
                       ])),
                 ))
             .toList(),

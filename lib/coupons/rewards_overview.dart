@@ -215,7 +215,7 @@ class CouponPopupUtils {
       BuildContext context) {
     return GestureDetector(
       onTap: () {
-         Navigator.pop(context);
+       
         onCategorySelected(title);
       },
       child: Container(
