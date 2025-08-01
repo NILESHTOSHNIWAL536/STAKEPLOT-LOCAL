@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.da
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 
 // Utility class for responsive sizing
 class ResponsiveUtils {
@@ -58,14 +58,14 @@ class _InsightsScreenState extends State<InsightsScreen>
     {
       'title': HomepageStringsDart().headsUp,
       'icon': Icons.send,
-      'color': const Color(0xFF00565E),
-      'backgroundColor': const Color(0xFF00565E),
+      'color': AppColors.primaryColor,
+      'backgroundColor': AppColors.primaryColor,
     },
     {
       'title': HomepageStringsDart().moneyMap,
       'icon': Icons.currency_rupee_rounded,
-      'color': const Color(0xFF00565E),
-      'backgroundColor': const Color(0xFF00565E),
+      'color': AppColors.primaryColor,
+      'backgroundColor': AppColors.primaryColor,
     },
   ];
 
@@ -111,10 +111,16 @@ class _InsightsScreenState extends State<InsightsScreen>
 
   Color getColorForInsight(int index) {
     const colors = [
-      Color.fromARGB(255, 36, 55, 57),
-      Color.fromARGB(255, 150, 193, 108),
-      Color.fromARGB(255, 224, 150, 86),
-      Color.fromARGB(255, 77, 79, 217),
+      AppColors.autoPay1,
+      AppColors.autoPay2,
+      AppColors.autoPay3,
+      AppColors.autoPay4,
+      AppColors.autoPay5,
+
+      // Color.fromARGB(255, 36, 55, 57),
+      // Color.fromARGB(255, 150, 193, 108),
+      // Color.fromARGB(255, 224, 150, 86),
+      // Color.fromARGB(255, 77, 79, 217),
     ];
     return colors[index % colors.length];
   }
@@ -548,14 +554,8 @@ class InsightCard extends StatelessWidget {
         width: width,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              color,
-              color.withOpacity(0.96),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+           color: color,
+         
           borderRadius: BorderRadius.circular(24),
         ),
         child: Stack(

@@ -1,6 +1,6 @@
 import 'package:coupon_uikit/coupon_uikit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';

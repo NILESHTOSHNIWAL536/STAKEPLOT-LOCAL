@@ -1,7 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';

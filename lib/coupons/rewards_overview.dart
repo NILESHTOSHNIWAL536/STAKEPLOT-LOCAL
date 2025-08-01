@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/coupons/infoScreen.dart';
@@ -212,6 +212,7 @@ class CouponPopupUtils {
       BuildContext context) {
     return GestureDetector(
       onTap: () {
+         Navigator.pop(context);
         onCategorySelected(title);
       },
       child: Container(
@@ -348,7 +349,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.info, color: Colors.black),
+            icon: Icon(Icons.info, color: AppColors.primaryColor),
             onPressed: () => showEarningScoreDialog(context),
           ),
         ],
@@ -361,8 +362,8 @@ class _RewardsOverviewState extends State<RewardsOverview>
               controller: _tabController,
               labelColor: Colors.black,
               unselectedLabelColor: Colors.grey,
-              indicatorColor: Colors.black,
-              indicatorWeight: 2,
+              indicatorColor: AppColors.primaryColor,
+              indicatorWeight: 0.4,
               labelStyle: FontManager().getTextStyle(
                 context,
                 fontSize: 16,

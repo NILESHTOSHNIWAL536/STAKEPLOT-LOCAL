@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:intl/intl.dart';

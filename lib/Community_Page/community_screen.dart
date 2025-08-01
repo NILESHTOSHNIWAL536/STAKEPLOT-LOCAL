@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/Community_Page/postloadTrandi
 import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/widgets/buildbutton.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
@@ -16,7 +17,6 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';

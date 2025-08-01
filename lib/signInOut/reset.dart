@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/opt_email.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';

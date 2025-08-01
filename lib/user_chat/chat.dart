@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
@@ -34,7 +35,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
 late IO.Socket socket;
 
@@ -67,7 +67,8 @@ class _ChatState extends State<Chat> {
 
   String path = "assets/avatar/menp1.svg";
   ValueNotifier<bool> onlineUser = ValueNotifier<bool>(false);
-
+  ValueNotifier<bool> isUploading = ValueNotifier<bool>(false); // Declare isUploading here
+  bool _isSending = false;
   @override
   void initState() {
     super.initState();
@@ -993,53 +994,120 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  Widget textStyleColor(str,Color color, data, imageData,BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: GestureDetector(
-        onTap: () {
-          try{
-          if (str.toString().trim().toLowerCase() == "Send".toLowerCase())
-          {
-            addMessageImage(
-              context,
-              "image",
-              "None",
-              data['_id'],
-              File(imageData.path),
-              widget.data,
-              widget.myId,
-              socket,
-              widget.myId,
-              roomId.value,
-            );
-             
-          }else
-          {
-              getChatLoader(ismaskedUsers.value);
-              Navigator.pop(context);
-          }
-          }catch(e){
-             print(e);
-          }
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          decoration: BoxDecoration(
-              color: color, borderRadius: BorderRadius.circular(12)),
-          child: Text(
-            str,
-            style: FontManager().getTextStyle(context,
-                fontSize: 14,
-                lWeight: FontWeight.w500,
-                color: AppColors.backgroundColor
-                //  fontStyle: FontStyle.italic
-                ),
+Widget textStyleColor(str, Color color, data, imageData, BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: isUploading,
+      builder: (context, uploading, child) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: GestureDetector(
+            onTapDown: (_) {
+              HapticFeedback.lightImpact();
+            },
+            onTap: uploading
+                ? null // Disable tap during upload
+                : () async {
+                    if (_isSending) return; // Prevent multiple taps
+                    _isSending = true;
+                    try {
+                      if (str.toString().trim().toLowerCase() == "send") {
+                         addMessageImage(
+                          context,
+                          "image",
+                          "None",
+                          data['_id'],
+                          File(imageData.path),
+                          widget.data,
+                          widget.myId,
+                          socket,
+                          widget.myId,
+                          roomId.value,
+                        );
+                      } else {
+                        getChatLoader(ismaskedUsers.value);
+                        Navigator.pop(context);
+                      }
+                    } catch (e) {
+                      print("Error in textStyleColor: $e");
+                      snackBarCalledfail(context, "Error sending image");
+                    } finally {
+                      _isSending = false;
+                    }
+                  },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: uploading && str.toString().trim().toLowerCase() == "send"
+                  ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.backgroundColor),
+                    )
+                  : Text(
+                      str,
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 14,
+                        lWeight: FontWeight.w500,
+                        color: AppColors.backgroundColor,
+                      ),
+                    ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
+  // Widget textStyleColor(str,Color color, data, imageData,BuildContext context) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 10.0),
+  //     child: GestureDetector(
+  //       onTap: () {
+  //         try{
+            
+  //         if (str.toString().trim().toLowerCase() == "Send".toLowerCase())
+  //         {
+  //           addMessageImage(
+  //             context,
+  //             "image",
+  //             "None",
+  //             data['_id'],
+  //             File(imageData.path),
+  //             widget.data,
+  //             widget.myId,
+  //             socket,
+  //             widget.myId,
+  //             roomId.value,
+  //           );
+          
+             
+  //         }else
+  //         {
+  //             getChatLoader(ismaskedUsers.value);
+  //             Navigator.pop(context);
+  //         }
+  //         }catch(e){
+  //            print(e);
+  //         }
+  //       },
+  //       child: Container(
+  //         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+  //         decoration: BoxDecoration(
+  //             color: color, borderRadius: BorderRadius.circular(12)),
+  //         child: Text(
+  //           str,
+  //           style: FontManager().getTextStyle(context,
+  //               fontSize: 14,
+  //               lWeight: FontWeight.w500,
+  //               color: AppColors.backgroundColor
+  //               //  fontStyle: FontStyle.italic
+  //               ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
 
  Widget uploadData(String dataObj2, Message message) {

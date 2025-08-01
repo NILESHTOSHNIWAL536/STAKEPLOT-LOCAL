@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';

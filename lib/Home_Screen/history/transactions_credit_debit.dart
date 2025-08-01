@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'dart:convert';
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -94,7 +95,7 @@ class TransactionCard extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               child: textStyle(
                                   context: context,
-                                  text: '+ ₹$credits',
+                                  text: '+ ₹${formatMoneyIndian(credits)}',
                                   fontsize: 14,
                                   c: AppColors.primaryColor,
                                   fontWeight: FontWeight.w700),
@@ -102,7 +103,7 @@ class TransactionCard extends StatelessWidget {
                           )
                         : textStyle(
                             context: context,
-                            text: '+ ₹$credits',
+                            text: '+ ₹${formatMoneyIndian(credits)}',
                             fontsize: 14,
                             c: AppColors.primaryColor,
                             fontWeight: FontWeight.w700),
@@ -136,7 +137,7 @@ class TransactionCard extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               child: textStyle(
                                   context: context,
-                                  text: '- ₹$debits',
+                                  text: '- ₹${formatMoneyIndian(debits)}',
                                   fontsize: 14,
                                   c: AppColors.primaryColor,
                                   fontWeight: FontWeight.w700),
@@ -144,7 +145,7 @@ class TransactionCard extends StatelessWidget {
                           )
                         : textStyle(
                             context: context,
-                            text: '+ ₹$debits',
+                            text:'- ₹${formatMoneyIndian(debits)}',
                             fontsize: 14,
                             c: AppColors.primaryColor,
                             fontWeight: FontWeight.w700),

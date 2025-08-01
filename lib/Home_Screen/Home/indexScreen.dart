@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manually.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/auto_pay.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStack.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardWidget.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/headsUpAndMoneyMap.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';

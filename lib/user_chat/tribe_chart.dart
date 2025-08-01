@@ -2,6 +2,7 @@ import "dart:convert";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
+import "package:flutter_application_code_stakeplot/Constants/colors.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Constants/search.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
@@ -20,7 +21,6 @@ import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
