@@ -22,6 +22,8 @@ import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../backed_connections/apiConnect/profileUser.dart';
+
 class ProfileScreenDart extends StatefulWidget {
   const ProfileScreenDart({super.key});
 
@@ -122,35 +124,40 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                       width: 3,
                     ),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(userController.userName.value,
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w600,
-                                  color: AppColors.primaryColor)),
-                          Obx(() => Container(
-                                  width: MediaQuery.of(context).size.width / 2.1,
-                                  padding: const EdgeInsets.symmetric(vertical: 5),
-                                  child: Text(
-                                  "Score : " + userController.score.value.toString(),
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: 15,
-                                      color: AppColors.bg1,
+                      child: InkWell(
+                        onTap:(){
+                             shareApp();
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(userController.userName.value,
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w600,
+                                    color: AppColors.primaryColor)),
+                            Obx(() => Container(
+                                    width: MediaQuery.of(context).size.width / 2.1,
+                                    padding: const EdgeInsets.symmetric(vertical: 5),
+                                    child: Text(
+                                    "Score : " + userController.score.value.toString(),
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        lWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                        color: AppColors.bg1,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                              )),
-                          // userController.phone.value == "0"
-                          //     ? SizedBox.shrink()
-                          //     : Text(userController.phone.value,
-                          //         style: FontManager().getTextStyle(context,
-                          //             lWeight: FontWeight.w400,
-                          //             fontSize: 10,
-                          //             color: AppColors.bg1)),
-                        ],
+                                )),
+                            // userController.phone.value == "0"
+                            //     ? SizedBox.shrink()
+                            //     : Text(userController.phone.value,
+                            //         style: FontManager().getTextStyle(context,
+                            //             lWeight: FontWeight.w400,
+                            //             fontSize: 10,
+                            //             color: AppColors.bg1)),
+                          ],
+                        ),
                       ),
                     ),
                     GestureDetector(

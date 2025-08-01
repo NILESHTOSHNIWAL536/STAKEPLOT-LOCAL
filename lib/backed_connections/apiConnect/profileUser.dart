@@ -12,6 +12,8 @@ import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
+
 
 void approveBill(context, id, type, notifyId) async {
   String urlPath = "${url}/bill/acceptBill/${id}/${type}/${notifyId}";
@@ -226,4 +228,25 @@ void editUserDetails(
       userController.dob.value = controller['dob']!.text.toString();
     } else {}
   } catch (e) {}
+}
+
+
+
+void shareApp() {
+  const String androidLink = 'https://play.google.com/store/apps/details?id=com.stakeplot.pfa';
+  const String iosLink = 'https://apps.apple.com/in/app/stakeplot/id6747454141';
+
+  const String message = '''
+Check out this amazing app StakePlot 👇
+
+📱 Android: $androidLink
+🍎 iOS: $iosLink
+
+Track your money, tag transactions, and earn rewards!
+''';
+
+  Share.share(
+    message,
+    subject: "StakePlot - Track & Earn with your bank data",
+  );
 }

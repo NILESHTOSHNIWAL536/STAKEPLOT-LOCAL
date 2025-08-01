@@ -16,9 +16,9 @@ import 'package:http/http.dart' as http;
 
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
-    FinvuConfig(
-          //  finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
-       finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+    FinvuConfig(  
+        finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
+        //  finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
             //  "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
@@ -46,8 +46,8 @@ Future<String> login(context) async {
   );
   otpReference = login.reference;
 
-  }catch(e){
-  
+  }catch(e)
+  {
       snackBarCalledfail(context, e.toString());
   }
   return otpReference;

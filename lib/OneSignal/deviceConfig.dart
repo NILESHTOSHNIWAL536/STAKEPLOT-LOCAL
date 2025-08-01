@@ -124,6 +124,7 @@ void setUpSocketListenerMainPage(BuildContext context) {
      else if (type== "logoutUser")
       {
         logoutUserFromDevice(context);
+
       }else if(type=='Reward')
       {
           //  couponAvalible.value
@@ -148,8 +149,7 @@ void setUpSocketListenerMainPage(BuildContext context) {
       }
     });
 
-  } catch (e) {
-  }
+  } catch (e){}
 }
 
 
