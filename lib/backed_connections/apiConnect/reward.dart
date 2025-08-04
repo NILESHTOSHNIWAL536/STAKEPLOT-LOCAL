@@ -6,8 +6,6 @@ import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/model/user_activity_model.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
-
 import '../apiAutomations/curd.dart';
 import '../apis_connect.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,7 +19,7 @@ RxList<CouponModel> categoryCoupons = <CouponModel>[].obs;
 Future<void> fetchCouponsCounts() async {
   try {
     final response = await getDataApiCall('$url/reward/iscoupons/count');
-
+  
     if (getFlagOfResponse(response)) {
       var json = jsonDecode(response.body);
       couponAvalible.value = json['data'] > 0;
@@ -41,6 +39,7 @@ Future<void> fetchCategoryCoupons(String category) async {
     categorySelected.value = formattedCategory;
     final response =
         await getDataApiCall('$url/reward/search/$formattedCategory');
+  
 
     if (getFlagOfResponse(response)) {
       final List<dynamic> data = jsonDecode(response.body)['data'];
@@ -58,7 +57,7 @@ Future<void> fetchClaimedCoupons() async {
     loadReaward.value = true;
 
     final response = await getDataApiCall('$url/reward/');
-
+  
     if (getFlagOfResponse(response)) {
       final List<dynamic> data = jsonDecode(response.body)['data'];
       claimedCoupons.clear();
@@ -111,7 +110,7 @@ void redirectToUrl(BuildContext context, String path) async {
 
 void callRewardApis(context) {
   fetchCouponsCounts();
-  dialofBoxContext=context;
+  dialofBoxContext = context;
   CouponPopupUtils.showCouponPopup(context, (category) {
     fetchCategoryCoupons(category);
     CouponPopupUtils.showCouponSelectionPopup(context, category);
@@ -123,17 +122,50 @@ void updateClickOrViewCount({required String type, required String id}) async {
   await updateDataApiCall(urlPath);
 }
 
+void getUserActity() async {
+  try {
+    String urlPath = url + "/reward/getUserActivity/";
+    var response = await getDataApiCall(urlPath);
+    if (getFlagOfResponse(response)) {
+      var data = jsonDecode(response.body);
+      userActivity = UserActivity.fromJson(data['data']);
+    }
+  } catch (e) {}
+}
 
-
-void getUserActity()async
-{
-    try{
-        String urlPath=url+"/reward/getUserActivity/";
-        var response=await getDataApiCall(urlPath);
-        if(getFlagOfResponse(response))
-        {
-           var data=jsonDecode(response.body);
-            userActivity = UserActivity.fromJson(data['data']);
-        }
-    }catch(e){}   
+Future<void> getCouponRequestCheck(String category) async {
+  try {
+    var response = await getDataApiCall("${url}/reward/$category");
+    
+    if (getFlagOfResponse(response)) {
+      var couponCall = jsonDecode(response.body);
+      // Extract the inner 'data' list from the nested structure
+      couponRequestMap[category] = couponCall['data']['data'] ?? [];
+    } else {
+      couponRequestMap[category] = [];
+    }
+  } catch (e) {
+    couponRequestMap[category] = [];
+  }
+}
+Future<void> requestCoupon(BuildContext context, String category, String brand) async {
+  try {
+    var response = await postDataApiCall(
+      "${url}/reward/coupon-request",
+      {"brand": brand, "category": category},
+    );
+    print("POST response: ${response.statusCode} - ${response.body}");
+    
+    if (getFlagOfResponse(response)) {
+      print("Coupon request successful for $category");
+      // Refresh request status
+      await getCouponRequestCheck(category);
+      // Show success snackbar
+      snackBarCalled(context, "Coupon request submitted for $category");
+    } else {
+      snackBarCalledfail(context, "Failed to request coupon for $category");
+    }
+  } catch (e) {
+    snackBarCalledfail(context, "Error requesting coupon: $e");
+  }
 }

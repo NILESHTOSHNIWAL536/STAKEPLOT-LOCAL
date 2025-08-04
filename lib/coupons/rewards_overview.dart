@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/coupons/infoScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -16,8 +17,8 @@ import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:get/get.dart';
 import '../backed_connections/apiConnect/reward.dart';
 
-
 late BuildContext dialofBoxContext;
+
 class CouponPopupUtils {
   static void showCouponPopup(
       BuildContext context, Function(String) onCategorySelected) {
@@ -96,6 +97,7 @@ class CouponPopupUtils {
                 category['color'],
                 onCategorySelected,
                 context,
+                couponRequestMap[category['title']]?.isNotEmpty ?? false,
               ),
             );
           },
@@ -114,7 +116,7 @@ class CouponPopupUtils {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.orange.shade100,
                   borderRadius: BorderRadius.circular(8),
@@ -212,11 +214,19 @@ class CouponPopupUtils {
       String emoji,
       Color backgroundColor,
       Function(String) onCategorySelected,
-      BuildContext context) {
+      BuildContext context,
+      bool hasRequestedCoupons) {
     return GestureDetector(
-      onTap: () {
-         Navigator.pop(context);
-        onCategorySelected(title);
+      onTap: () async {
+        await getCouponRequestCheck(title);
+        await fetchCategoryCoupons(title); // Fetch coupons for the category
+        if (categoryCoupons.isNotEmpty) {
+          // If coupons are available, show the coupon selection popup
+          CouponPopupUtils.showCouponSelectionPopup(context, title);
+        } else {
+          // If no coupons, show the status in the card (handled in UI below)
+          onCategorySelected(title);
+        }
       },
       child: Container(
         width: 80,
@@ -248,8 +258,51 @@ class CouponPopupUtils {
       ),
     );
   }
-
-  static void showCouponSelectionPopup(BuildContext context, String categoryTitle) {
+  // static Widget _buildCategoryCard(
+  //     String title,
+  //     String emoji,
+  //     Color backgroundColor,
+  //     Function(String) onCategorySelected,
+  //     BuildContext context,
+  //     bool hasRequestedCoupons) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       onCategorySelected(title);
+  //     },
+  //     child: Container(
+  //       width: 80,
+  //       height: 80,
+  //       decoration: BoxDecoration(
+  //         color: backgroundColor,
+  //         borderRadius: BorderRadius.circular(12),
+  //       ),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           Text(
+  //             emoji,
+  //             style: TextStyle(fontSize: 20),
+  //           ),
+  //           SizedBox(height: 4),
+  //           Text(
+  //             title,
+  //             textAlign: TextAlign.center,
+  //             style: FontManager().getTextStyle(
+  //               context,
+  //               fontSize: 12,
+  //               lWeight: FontWeight.w600,
+  //               color: AppColors.bg1,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+  
+  static void showCouponSelectionPopup(
+      BuildContext context, String categoryTitle) async{
+         await getCouponRequestCheck(categoryTitle);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -258,42 +311,75 @@ class CouponPopupUtils {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Container(
-            width:
-                MediaQuery.of(context).size.width * 0.9, // 90% of screen width
-            height: MediaQuery.of(context).size.height /
-                1.9, // Half of screen height
-            // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height / 1.9,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
               children: [
-                getHeaderForCoupons(
-                    context), // Assuming getHeader is defined elsewhere
-
-                Container(
-                  child: Obx(() => loadReaward.value
-                      ? Center(child: Spinner())
-                      : categoryCoupons.isEmpty
-                          ? Container(
-                              height: MediaQuery.of(context).size.height / 3,
-                              // color: Colors.amber,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Center(
+                getHeaderForCoupons(context),
+                Obx(() => loadReaward.value
+                    ? Center(child: Spinner())
+                    : categoryCoupons.isEmpty
+                        ? Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: Obx(() {
+                              if (couponRequestMap[categoryTitle]?.isNotEmpty ??
+                                  false) {
+                                return Center(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.primaryColor,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 24,
+                                        vertical: 12,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      List<String> brands =
+                                          couponRequestMap[categoryTitle]
+                                              ?.cast<String>()??["default_brand"];;
+                                    for (String brand in brands) {
+                                      await requestCoupon(context, categoryTitle, brand);
+                                    }
+                                      Navigator.of(context).pop();
+                                      // Add navigation or logic to view requested coupons
+                                    },
+                                    child: Text(
+                                      'Request',
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        fontSize: 14,
+                                        lWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(
                                       child: textStyle(
-                                          text: 'No coupons available',
-                                          context: context,
-                                          c: AppColors.accentColor,
-                                          fontWeight: FontWeight.w600,
-                                          fontsize: 14)),
-                                ],
-                              ),
-                            )
-                          : EnvelopeGrid(categoryCoupons: categoryCoupons)),
-                ),
+                                        text: 'No coupons available',
+                                        context: context,
+                                        c: AppColors.accentColor,
+                                        fontWeight: FontWeight.w600,
+                                        fontsize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+                            }),
+                          )
+                        : EnvelopeGrid(categoryCoupons: categoryCoupons)),
               ],
             ),
           ),
@@ -302,6 +388,59 @@ class CouponPopupUtils {
     );
   }
 }
+// static void showCouponSelectionPopup(BuildContext context, String categoryTitle) async {
+//   await getCouponRequestCheck(categoryTitle);
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return Dialog(
+//         shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.circular(20),
+//         ),
+//         child: Container(
+//           width:
+//               MediaQuery.of(context).size.width * 0.9, // 90% of screen width
+//           height: MediaQuery.of(context).size.height /
+//               1.9, // Half of screen height
+//           // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+//           decoration: BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.circular(20),
+//           ),
+//           child: Column(
+//             children: [
+//               getHeaderForCoupons(
+//                   context), // Assuming getHeader is defined elsewhere
+
+//               Container(
+//                 child: Obx(() => loadReaward.value
+//                     ? Center(child: Spinner())
+//                     : categoryCoupons.isEmpty
+//                         ? Container(
+//                             height: MediaQuery.of(context).size.height / 3,
+//                             // color: Colors.amber,
+//                             child: Column(
+//                               mainAxisAlignment: MainAxisAlignment.center,
+//                               children: [
+//                                 Center(
+//                                     child: textStyle(
+//                                         text: 'No coupons available',
+//                                         context: context,
+//                                         c: AppColors.accentColor,
+//                                         fontWeight: FontWeight.w600,
+//                                         fontsize: 14)),
+//                               ],
+//                             ),
+//                           )
+//                         : EnvelopeGrid(categoryCoupons: categoryCoupons)),
+//               ),
+//             ],
+//           ),
+//         ),
+//       );
+//     },
+//   );
+// }
 
 class RewardsOverview extends StatefulWidget {
   @override
@@ -577,12 +716,10 @@ class _RewardsOverviewState extends State<RewardsOverview>
   Widget _buildEnvelopeCard() {
     return GestureDetector(
       onTap: () {
-     
-        if(userActivity!=null && userActivity!.todaysClaimCount!.count>=3)
-        {  
-             snackBarCalledfail(context, RewardScreenStrings().claimedAll.value);
-        }else
-        {
+        if (userActivity != null &&
+            userActivity!.todaysClaimCount!.count >= 3) {
+          snackBarCalledfail(context, RewardScreenStrings().claimedAll.value);
+        } else {
           callRewardApis(context);
         }
       },

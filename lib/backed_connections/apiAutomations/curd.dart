@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 Future postDataApiCall(String urlPath, Map body) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
@@ -18,8 +17,7 @@ Future postDataApiCall(String urlPath, Map body) async {
   return response;
 }
 
-Future postDataApiCallwithOutSharedPref(String urlPath, Map body) async
-{
+Future postDataApiCallwithOutSharedPref(String urlPath, Map body) async {
   final response = await http.post(
     Uri.parse(urlPath),
     headers: {
@@ -28,9 +26,7 @@ Future postDataApiCallwithOutSharedPref(String urlPath, Map body) async
     body: jsonEncode(body),
   );
   return response;
-  
 }
-
 
 Future<http.Response> updateDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -45,7 +41,8 @@ Future<http.Response> updateDataApiCall(urlPath) async {
   return response;
 }
 
-Future<http.Response> updateDataApiCall2(String urlPath, Map<String, dynamic> body) async {
+Future<http.Response> updateDataApiCall2(
+    String urlPath, Map<String, dynamic> body) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
 
@@ -59,7 +56,9 @@ Future<http.Response> updateDataApiCall2(String urlPath, Map<String, dynamic> bo
   );
   return response;
 }
-Future<http.Response> updateDataApiCall3(String urlPath, {required Map<String, dynamic> data}) async {
+
+Future<http.Response> updateDataApiCall3(String urlPath,
+    {required Map<String, dynamic> data}) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
 
@@ -73,9 +72,11 @@ Future<http.Response> updateDataApiCall3(String urlPath, {required Map<String, d
   );
   return response;
 }
+
 Future<http.Response> getDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
+  
   final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{
@@ -87,7 +88,7 @@ Future<http.Response> getDataApiCall(urlPath) async {
 }
 
 Future<http.Response> deleteDataApiCall(urlPath) async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
+  final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
   final response = await http.delete(
     Uri.parse(urlPath),
@@ -99,8 +100,8 @@ Future<http.Response> deleteDataApiCall(urlPath) async {
   return response;
 }
 
-Future<http.Response> deleteDataApiCallBody(urlPath,body) async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
+Future<http.Response> deleteDataApiCallBody(urlPath, body) async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
   final response = await http.delete(
     Uri.parse(urlPath),
@@ -108,11 +109,10 @@ Future<http.Response> deleteDataApiCallBody(urlPath,body) async {
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
-     body: jsonEncode(body),
+    body: jsonEncode(body),
   );
   return response;
 }
-
 
 bool getFlagOfResponse(response) {
   if (response.statusCode == 200 || response.statusCode == 201) return true;

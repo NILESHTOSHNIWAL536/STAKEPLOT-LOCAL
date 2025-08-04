@@ -58,7 +58,15 @@ class _HomePageState extends State<HomePage> {
         bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
         backgroundColor: AppColors.backgroundColor,
         appBar: getAppBar(context),
-        body: Obx(() => isBankLinked.value ? IndexScreen():NoAccountScreen() ),
+    //     body: Obx(() => isBankLinked.value
+    // ? MediaQuery(
+    //     data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+    //     child: IndexScreen(),
+    //   )
+    // : NoAccountScreen()),
+
+        
+          body: Obx(() => isBankLinked.value ? const IndexScreen():NoAccountScreen()),
       ),
     ));
   }

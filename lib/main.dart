@@ -100,24 +100,27 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey, // Keep your existing navigatorKey
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
-        scaffoldBackgroundColor: AppColors.backgroundColor,
+    return MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
+          scaffoldBackgroundColor: AppColors.backgroundColor,
+        ),
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/splash',
+        routes: routes,
+        // Attach updateNavigatorKey to a nested Navigator if needed (optional)
+        builder: (context, child) {
+          return Navigator(
+            key: updateNavigatorKey, // Attach updateNavigatorKey for update dialogs
+            onGenerateRoute: (settings) => MaterialPageRoute(
+              builder: (context) => child ?? Container(), // Fallback to empty container
+            ),
+          );
+        },
       ),
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/splash',
-      routes: routes,
-      // Attach updateNavigatorKey to a nested Navigator if needed (optional)
-      builder: (context, child) {
-        return Navigator(
-          key: updateNavigatorKey, // Attach updateNavigatorKey for update dialogs
-          onGenerateRoute: (settings) => MaterialPageRoute(
-            builder: (context) => child ?? Container(), // Fallback to empty container
-          ),
-        );
-      },
     );
   }
 }

@@ -52,8 +52,8 @@ class CouponCardWidget extends StatelessWidget {
           borderRadius: 20,
           firstChild: Container(
             height: height * 0.6,
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
@@ -89,7 +89,7 @@ class CouponCardWidget extends StatelessWidget {
                                   size: fontSize * 1.5,
                                   color: Colors.grey.shade400,
                                 ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Flexible(
                             child: InkWell(
                               onTap: () {
@@ -120,7 +120,7 @@ class CouponCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   coupon.title,
                   style: FontManager().getTextStyle(
@@ -132,7 +132,7 @@ class CouponCardWidget extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 14),
+                const SizedBox(height: 14),
                 Text(
                   coupon.description,
                   style: FontManager().getTextStyle(
@@ -151,10 +151,10 @@ class CouponCardWidget extends StatelessWidget {
           ),
          secondChild: Container(
           height: height * 0.4,
-            padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,9 +173,9 @@ class CouponCardWidget extends StatelessWidget {
                         color: AppColors.bg1,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                    Text.rich(
-  TextSpan(
+       TextSpan(
     text: 'In partnership with ',
     style: FontManager().getTextStyle(
       context,
@@ -190,12 +190,12 @@ class CouponCardWidget extends StatelessWidget {
           context,
           fontSize: 13,
           lWeight: FontWeight.w600,
-          color: AppColors.primaryColor, // Highlight by using full opacity or a different color
-          decoration: TextDecoration.underline, // Optional: underline to emphasize
+          color: AppColors.primaryColor,
+          decoration: TextDecoration.underline,
         ),
         recognizer: TapGestureRecognizer()
           ..onTap = () async {
-            redirectToUrl(context, RewardScreenStrings().productUrl.value);
+             redirectToUrl(context, RewardScreenStrings().productUrl.value);
           },
       ),
       TextSpan(
@@ -236,27 +236,23 @@ class CouponCardWidget extends StatelessWidget {
                     // ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Center(
                   child: SizedBox(
                     width: MediaQuery.sizeOf(context).width/1.5,
                     height: MediaQuery.sizeOf(context).height/20,
                     child: ElevatedButton(
-                      onPressed: isClaimed
-                          ? null
-                          : () {
-                              Clipboard.setData(
-                                  ClipboardData(text: coupon.code));
-                              snackBarCalled(context, "Code copied ");
+                      onPressed: isClaimed ? null: () {
+                              Clipboard.setData(ClipboardData(text: coupon.code));
+                              snackBarCalled(context, "Code Copied ");
                               redirectToUrl(context, coupon.link);
                               onClaim();
                               Navigator.pop(context);
                             },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isClaimed
-                            ? Colors.grey.shade300
-                            : AppColors.primaryColor,
-                        padding: EdgeInsets.symmetric(vertical: 4),
+                            ? Colors.grey.shade300 : AppColors.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -288,7 +284,7 @@ class CouponCardWidget extends StatelessWidget {
       left: 0,
       right: 0,
       child: Center(
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.84,
           child: DottedDivider(
             height: 1,
