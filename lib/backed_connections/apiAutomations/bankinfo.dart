@@ -8,8 +8,11 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
+import '../../model/fips_metric_model.dart';
+
 
 RxList bankAccountLinkedList = [].obs;
+RxList<FipsMetric>  fipsMetricList = <FipsMetric>[].obs;
 RxList consentAndHandleDetails = [].obs;
 RxMap bankImagemap = {}.obs;
 
@@ -72,6 +75,7 @@ void addBankApiCall(){
   }
   loadBanks.value = false;
   loadBalance.value = !loadBalance.value;
+  getFipAccountInfo();
 }
 
 void getWeeklyfetchData(
@@ -111,4 +115,36 @@ void calledFunctionToFetchData(context) async {
   } else {
     getAutoMationsTransactionsCustom(getFormattedDate(), context, 'Custom');
   }
+}
+
+Future<void> getFipAccountInfo() async
+{
+   try{ 
+   List<String> fipIds=[];
+   Map<String,String> bankNameMap=new Map();
+   bankAccountLinkedList.forEach((d){
+      fipIds.add(d["fipId"]);
+      bankNameMap[d["fipId"]]=d['bankName'];
+   });
+
+
+    if(fipIds.isEmpty)return;
+    String urlPath=url+"/finvu/fip-details/";
+    var body={
+       "fipIds":fipIds
+    };
+    var response=await postDataApiCall(urlPath,body);
+
+    if(getFlagOfResponse(response))
+    {
+        var data=jsonDecode(response.body)['data'];
+        fipsMetricList.clear();
+        List<FipsMetric> list = (data as List) .map((item) => FipsMetric.fromJson(item,bankNameMap[item['fip_id']]??"")).toList();
+        fipsMetricList.addAll(list);
+    }
+
+   }catch(e){
+
+   }
+
 }
