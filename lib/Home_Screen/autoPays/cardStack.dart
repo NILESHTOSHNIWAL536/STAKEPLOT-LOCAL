@@ -266,13 +266,13 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
                           ],
                         ),
                         borderRadius: BorderRadius.circular(20 * fontScale),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 20 * fontScale,
-                            offset: Offset(0, 8 * fontScale),
-                          ),
-                        ],
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //     color: Colors.black.withOpacity(0.3),
+                        //     blurRadius: 20 * fontScale,
+                        //     offset: Offset(0, 8 * fontScale),
+                        //   ),
+                        // ],
                       ),
                       child: Stack(
                         clipBehavior: Clip.none,

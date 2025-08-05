@@ -130,7 +130,9 @@ void getUserActity() async {
       var data = jsonDecode(response.body);
       userActivity = UserActivity.fromJson(data['data']);
     }
-  } catch (e) {}
+  } catch (e) {
+    
+  }
 }
 
 Future<void> getCouponRequestCheck(String category) async {
@@ -139,7 +141,7 @@ Future<void> getCouponRequestCheck(String category) async {
     
     if (getFlagOfResponse(response)) {
       var couponCall = jsonDecode(response.body);
-      // Extract the inner 'data' list from the nested structure
+     
       couponRequestMap[category] = couponCall['data']['data'] ?? [];
     } else {
       couponRequestMap[category] = [];

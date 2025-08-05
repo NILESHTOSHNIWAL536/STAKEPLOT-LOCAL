@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -336,7 +337,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 }
 
-Widget getIconAvtar(double avatarSize, String category, double scaleFactor) {
+Widget getIconAvtar(double avatarSize, String category, double scaleFactor, ) {
   String lowerCategory = category?.toLowerCase() ?? '';
 
   final matched = custom.firstWhere(

@@ -21,7 +21,6 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:get/get.dart';
 import 'dart:async';
 
-
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
 final RxBool showFilter = false.obs; // NEW
@@ -43,7 +42,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   final RxBool isDateSummaryView = false.obs;
   Timer? _debounce;
 
-  
   // State to toggle views
 
   @override
@@ -75,18 +73,18 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.sizeOf(context).height;
 
-    double calculatedHeight;
+    // double calculatedHeight;
 
-    if (showFilter.value || redioButton.isNotEmpty) {
-      calculatedHeight = screenHeight / 1.52;
-    } else if (showFilter.value && !isDateSummaryView.value) {
-      calculatedHeight = screenHeight / 1.5;
-    } else {
-      calculatedHeight =
-          (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
-              ? screenHeight / 1.35
-              : screenHeight / 1.25;
-    }
+    // if (showFilter.value || redioButton.isNotEmpty) {
+    //   calculatedHeight = screenHeight / 1.52;
+    // } else if (showFilter.value && !isDateSummaryView.value) {
+    //   calculatedHeight = screenHeight / 1.5;
+    // } else {
+    //   calculatedHeight =
+    //       (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
+    //           ? screenHeight / 1.35
+    //           : screenHeight / 1.25;
+    // }
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
@@ -117,7 +115,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                          Obx(()=>  searchTextControllerBool.value ?  getTextFeild(): getTextFeild()),
+                              Obx(() => searchTextControllerBool.value
+                                  ? getTextFeild()
+                                  : getTextFeild()),
                               InkWell(
                                   onTap: () {
                                     setState(() {
@@ -213,35 +213,35 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                           : screenHeight / 1.25;
                     }
 
-                   return Container(
-  width: MediaQuery.of(context).size.width,
-  height: calculatedHeight,
-  child: IndexedStack(
-    index: isDateSummaryView.value ? 0 : 1,
-    children: [
-      CalendarTransactionScreen(),
-      NotificationListener<ScrollNotification>(
-        onNotification: (scrollNotification) {
-          if (scrollNotification is ScrollStartNotification) {
-            // ✅ Dismiss keyboard when scrolling starts
-            FocusScope.of(context).unfocus();
-          }
-          return false;
-        },
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: TransactionHistory(
-            isYearView: false,
-            isflag: true,
-            showIcon: false,
-            expandedPage: false,
-          ),
-        ),
-      ),
-    ],
-  ),
-);
-
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: calculatedHeight,
+                      child: IndexedStack(
+                        index: isDateSummaryView.value ? 0 : 1,
+                        children: [
+                          CalendarTransactionScreen(),
+                          NotificationListener<ScrollNotification>(
+                            onNotification: (scrollNotification) {
+                              if (scrollNotification
+                                  is ScrollStartNotification) {
+                                // ✅ Dismiss keyboard when scrolling starts
+                                FocusScope.of(context).unfocus();
+                              }
+                              return false;
+                            },
+                            child: SingleChildScrollView(
+                              controller: scrollController,
+                              child: TransactionHistory(
+                                isYearView: false,
+                                isflag: true,
+                                showIcon: false,
+                                expandedPage: false,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
                   }),
                 ],
               ),
@@ -265,15 +265,16 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         controller: searchController,
         focusNode: focusNodeSearchFeild,
         onChanged: (value) {
+          isDateSummaryView.value = false;
           if (_debounce?.isActive ?? false) _debounce!.cancel();
-            // Start a new debounce timer
-            _debounce = Timer(const Duration(milliseconds: 500), () {
-                onChanedAutoTransactionStatus(context);
-            });
+          // Start a new debounce timer
+          _debounce = Timer(const Duration(milliseconds: 500), () {
+            onChanedAutoTransactionStatus(context);
+          });
 
           // onChanedAutoTransactionStatus(context);
-          searchTextController.value=value;
-          searchTextControllerBool.value =  !  searchTextControllerBool.value;
+          searchTextController.value = value;
+          searchTextControllerBool.value = !searchTextControllerBool.value;
         },
         decoration: InputDecoration(
           hintText: HomepageStringsDart().searchTransactions,

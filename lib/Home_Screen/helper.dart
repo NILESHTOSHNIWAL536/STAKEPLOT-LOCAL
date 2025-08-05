@@ -922,10 +922,10 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
       accountIdPdf.value.toLowerCase() == "debit" ||
       accountIdPdf.value == "Cash") {
     searchTextController.value = accountIdPdf.value.toLowerCase();
-    // searchController.text = accountIdPdf.value.toLowerCase();
+     searchController.text = accountIdPdf.value.toLowerCase();
   } else if (accountIdPdf.value == "-") {
      searchTextController.value = "";
-    // searchController.text = "";
+     searchController.text = "";
     
   }
 

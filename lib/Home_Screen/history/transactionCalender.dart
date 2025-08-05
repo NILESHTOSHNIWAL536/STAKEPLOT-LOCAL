@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -822,7 +821,9 @@ Widget _buildCalendarDateItem(BuildContext context, Map<String, dynamic> dateDat
   String displayText = '${dateData['transactionCount']} tnxs';
   final parsedDate = DateTime.parse(dateData['fullDate']);
   final formattedDate = "${parsedDate.year}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}";
-
+final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
+      parsedDate.month == DateTime.now().month &&
+      parsedDate.year == DateTime.now().year;
   // Calculate fontScale for responsive sizing
   final screenSize = MediaQuery.of(context).size;
   final fontScale = screenSize.width / 375;
@@ -852,7 +853,7 @@ Widget _buildCalendarDateItem(BuildContext context, Map<String, dynamic> dateDat
   );
 
   return GestureDetector(
-    onTap: () => _onDateTapped(dateData),
+    onTap: isFutureDate ? null :() => _onDateTapped(dateData),
     child: Container(
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,

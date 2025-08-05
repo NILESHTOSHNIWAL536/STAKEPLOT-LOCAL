@@ -8,7 +8,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
-
 RxList bankAccountLinkedList = [].obs;
 RxList consentAndHandleDetails = [].obs;
 RxMap bankImagemap = {}.obs;
@@ -56,13 +55,11 @@ Future<void> getBankAccounts() async {
       });
     });
   }
-   addBankApiCall();
+  addBankApiCall();
 }
 
-
-void addBankApiCall(){
-   if (bankAccountLinkedList.isNotEmpty)
-    {
+void addBankApiCall() {
+  if (bankAccountLinkedList.isNotEmpty) {
     LastFetchDate.value = bankAccountLinkedList[0]['lastFetch'].toString();
     nextFecthDate.value = bankAccountLinkedList[0]['nextFetch'].toString();
     fetchCount.value = bankAccountLinkedList[0]['fetchCount'].toString();

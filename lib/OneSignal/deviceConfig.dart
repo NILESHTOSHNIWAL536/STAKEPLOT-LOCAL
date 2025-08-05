@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -30,12 +31,12 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 
 DateTime? _lastSent;
-
+Timer? snackbarTimer;
 class AppLifecycleHandler extends WidgetsBindingObserver {
   final String userId;
   AppLifecycleState? _previousState;
   DateTime? _lastPausedTime;
-
+  
   AppLifecycleHandler(this.userId);
 
   @override
@@ -146,6 +147,16 @@ void setUpSocketListenerMainPage(BuildContext context) {
          }
 
         getBankAccounts();
+      }
+      else if (type == "coupon"){
+         snackbarTimer =  Timer(Duration(hours: 48), () {
+      if (userController.coupons.value > 0) {
+        snackBarCalled(
+          context,
+          'You have ${userController.coupons.value} unclaimed coupon${userController.coupons.value > 1 ? 's' : ''}! Claim them now from rewards section!',
+        );
+      }
+    });
       }
     });
 
