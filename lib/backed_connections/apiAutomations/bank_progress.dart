@@ -141,7 +141,7 @@ class BankProgress extends StatelessWidget {
     final double clampedPercent = percent.clamp(0, 100);
     
     return Padding(
-       padding: const EdgeInsets.symmetric(vertical: 3),
+       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -153,7 +153,7 @@ class BankProgress extends StatelessWidget {
               c:AppColors.primaryColor,
               fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 3),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -217,7 +217,7 @@ class BankProgress extends StatelessWidget {
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
                         left: indicatorPosition,
-                        top: 3,
+                        top: 0,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -230,7 +230,7 @@ class BankProgress extends StatelessWidget {
                                   // borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     color: _getProgressColor(clampedPercent),
-                                    width: 4,
+                                    width: 2,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
@@ -263,21 +263,21 @@ class BankProgress extends StatelessWidget {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(5.0),
-                                  child: Text(
-                                    "${clampedPercent.toStringAsFixed(0)}%",
-                                    style: TextStyle(
-                                      color:Colorcodes.white, //_getProgressColor(clampedPercent),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 10,
-                                      
-                                    ),
+                                  child:  textStyleOnly2(
+                                    context: context,
+                                    text: "${clampedPercent.toStringAsFixed(0)}%",
+                                    fontsize: 10 ,
+                                    color: Colorcodes.white,
+                                    fontWeight: FontWeight.w500,
+       
+              
                                   ),
                                 ),
                               ),
                             ),
                             
                             // Arrow pointing down
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 2),
                             CustomPaint(
                               size: const Size(12, 8),
                               painter: ArrowPainter(

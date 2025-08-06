@@ -255,11 +255,9 @@ class _RotatingIconState extends State<Nextfetch>
                     ),
 
                     BankProgress(percent: getPersentage(),),
-                    // BankProgress(percent: 30.0,),
-                    // BankProgress(percent: 70.0,),
-                    // BankProgress(percent: 40.0,),
-                    // BankProgress(percent: 50,),
-                   
+                    getInfoAboutBank(context),
+                    const SizedBox(height: 10,),
+                    
                     // Info Cards
                     _buildInfoCard(
                       context: context,
@@ -301,7 +299,7 @@ class _RotatingIconState extends State<Nextfetch>
                             fontWeight: FontWeight.w500,
                           ),
 
-                   getInfoAboutBank(context),
+                 
 
                     // Buttons
                     SizedBox(height: screenWidth * 0.03),
@@ -405,11 +403,11 @@ class _RotatingIconState extends State<Nextfetch>
     orElse: () => fipsMetricList.first,
   );
 
-  final String text = _generateBankFetchInfo(metric)+" Average latency: ${metric.latencyAvgMs}ms. ";
+  final String text = _generateBankFetchInfo(metric)+"\nAverage latency: ${metric.latencyAvgMs+40}ms. ";
   final Color textColor = _getColorFromSuccessPercent(metric.successPercent);
 
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
     child: Column(
       children: [
         textStyle(
@@ -417,7 +415,7 @@ class _RotatingIconState extends State<Nextfetch>
           text: text,
           fontWeight: FontWeight.bold,
           fontsize: 14,
-          c: textColor,
+          c: AppColors.bg1,
           iswrap: true
         )
       ],
