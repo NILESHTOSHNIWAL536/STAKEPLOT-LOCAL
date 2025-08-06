@@ -215,6 +215,7 @@ class TransactionModel {
       "predictions": predictions?.toJson(), // Serialize predictions
     };
   }
+  
 TransactionModel copyWith({
     String? id,
     String? type,

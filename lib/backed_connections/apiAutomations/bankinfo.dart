@@ -37,6 +37,9 @@ Future<void> getBankAccounts() async {
             'lastFetch': bank['accounts'][0]['lastFetch'] ?? "",
             'nextFetch': bank['accounts'][0]['nextFetch'] ?? "",
             'fetchCount': bank['accounts'][0]['fetchCount'] ?? "0",
+            'accountId': bank['accounts'][0]['accountId'] ?? "accountId",
+            'bankName': bank['bankName'] ?? "BankName",
+            'fipId': bank['fipId'] ?? "fipId",
           });
         }
       }
@@ -79,7 +82,7 @@ void addBankApiCall(){
 }
 
 void getWeeklyfetchData(
-    consentId, consendHandleId, sessionId, custId, last) async {
+    consentId, consendHandleId, sessionId, custId, last,bankName,fipId,fetchCount,accountId) async {
   final String apiUrl = "${url}/finvu/fetchWeekly";
   final String userUrl = "${url}/user/updateFetchStatus";
   var body = {
@@ -90,6 +93,10 @@ void getWeeklyfetchData(
     'userId': userController.userId.value,
     'isCron': false,
     'FROM': last,
+    'bankName':bankName,
+    'fipId':fipId,
+    'fetchCount':fetchCount,
+    'accountId':accountId,
   };
 
   var userBody = {
@@ -97,9 +104,14 @@ void getWeeklyfetchData(
   };
 
   try {
-    await updateDataApiCall2(userUrl, userBody);
-    await postDataApiCall(apiUrl, body);
-  } catch (e) {}
+     await updateDataApiCall2(userUrl, userBody);
+     await postDataApiCall(apiUrl, body);
+  } catch (e) {
+      isFected.value = false;
+      await updateDataApiCall2(userUrl, {
+              "fetchInProgress": false,
+      });
+  }
 }
 
 void calledFunctionToFetchData(context) async {
@@ -141,10 +153,11 @@ Future<void> getFipAccountInfo() async
         fipsMetricList.clear();
         List<FipsMetric> list = (data as List) .map((item) => FipsMetric.fromJson(item,bankNameMap[item['fip_id']]??"")).toList();
         fipsMetricList.addAll(list);
+        
     }
 
-   }catch(e){
-
+   }catch(e)
+   {
    }
 
 }

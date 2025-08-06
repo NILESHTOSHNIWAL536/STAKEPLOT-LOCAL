@@ -102,8 +102,7 @@ void deleteBankAccount(
     {required String bankid,
     required String AccountId,
     required BuildContext context}) async {
-  var res =
-      await deleteDataApiCall("${url}/transactionauto/${bankid}/${AccountId}");
+  var res = await deleteDataApiCall("${url}/transactionauto/${bankid}/${AccountId}");
   if (getFlagOfResponse(res)) {
     accountId.value = "";
     getBankAccounts();
