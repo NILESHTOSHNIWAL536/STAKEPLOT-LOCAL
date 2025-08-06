@@ -247,6 +247,8 @@ class ProfileIcons {
   static String emptyFrnds = "assets/icons/profileScreen/emptyFrnds.svg";
   static String unclaimedCoupon = "assets/icons/profileScreen/UnclaimedCard.svg";
   static String rewards = "assets/icons/profileScreen/rewards.svg";
+  static String noCoupons = "assets/icons/profileScreen/noCoupon.svg";
+  static String tag = "assets/icons/profileScreen/tag3.svg";
 }
 
 class Sign {

@@ -211,7 +211,7 @@ Widget getIconAvtarForTagShowModal(double avatarSize, String category, double sc
       ),
       child: Center(
         child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 2000), // 1-second animation
+          duration: const Duration(milliseconds: 1400), // 1-second animation
           transitionBuilder: (Widget child, Animation<double> animation) {
             return ScaleTransition(
               scale: Tween<double>(begin: 0.4, end: 1.0).animate(

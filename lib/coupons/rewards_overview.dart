@@ -129,7 +129,7 @@ class CouponPopupUtils {
               ),
               SizedBox(width: 12),
               Text(
-                'You Won a Coupon!',
+                'Claim your reward',
                 style: FontManager().getTextStyle(
                   context,
                   fontSize: 18,
@@ -190,7 +190,6 @@ class CouponPopupUtils {
               ),
             ],
           ),
-         
         ],
       ),
     );
@@ -205,14 +204,17 @@ class CouponPopupUtils {
       bool hasRequestedCoupons) {
     return GestureDetector(
       onTap: () async {
-        await getCouponRequestCheck(title);
-        await fetchCategoryCoupons(title); // Fetch coupons for the category
+        print("tapp");
+        await fetchCategoryCoupons(title);
         if (categoryCoupons.isNotEmpty) {
+           print("tapp she");
           // If coupons are available, show the coupon selection popup
           CouponPopupUtils.showCouponSelectionPopup(context, title);
         } else {
+           print("tapp he");
           // If no coupons, show the status in the card (handled in UI below)
           onCategorySelected(title);
+          await getCouponRequestCheck(title.trim());
         }
       },
       child: Container(
@@ -248,7 +250,7 @@ class CouponPopupUtils {
 
   static void showCouponSelectionPopup(
       BuildContext context, String categoryTitle) async {
-   
+    await getCouponRequestCheck(categoryTitle);
 
     showDialog(
       context: context,
@@ -275,7 +277,9 @@ class CouponPopupUtils {
             ),
             child: Column(
               children: [
-                getHeaderForCoupons(context),
+                couponRequestMap[categoryTitle]?.isNotEmpty ?? false
+                    ? SizedBox.shrink()
+                    : getHeaderForCoupons(context),
                 Expanded(
                   child: Obx(() => loadReaward.value
                       ? Center(child: Spinner())
@@ -283,49 +287,130 @@ class CouponPopupUtils {
                           ? Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 12),
-                              child:
-                                  couponRequestMap[categoryTitle]?.isNotEmpty ??
-                                          false
-                                      ? Center(
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              // Show brand selection dialog
-                                              _showBrandSelectionDialog(
-                                                  context, categoryTitle);
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  AppColors.primaryColor,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 20, vertical: 12),
+                              child: couponRequestMap[categoryTitle]
+                                          ?.isNotEmpty ??
+                                      false
+                                  ? Column(
+                                      children: [
+                                        chatAvatartImage(
+                                          url: ProfileIcons.noCoupons,
+                                          height: 7,
+                                          width: 3,
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          'No Rewards Yet!',
+                                          style: FontManager().getTextStyle(
+                                            context,
+                                            fontSize: 16,
+                                            lWeight: FontWeight.w600,
+                                            color: AppColors.debitColor,
+                                          ),
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text(
+                                          "Looks like you don't have any coupons right now.",
+                                          style: FontManager().getTextStyle(
+                                            context,
+                                            fontSize: 14,
+                                            lWeight: FontWeight.w400,
+                                            color: AppColors.accentColor,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: 10),
+                                        GestureDetector(
+                                          onTap: () {
+                                            _showBrandSelectionDialog(
+                                                context, categoryTitle);
+                                          },
+                                          child: Container(
+                                            width: MediaQuery.sizeOf(context)
+                                                    .width /
+                                                2,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: AppColors.primaryColor,
                                             ),
-                                            child: Text(
-                                              'Request a Coupon',
-                                              style: FontManager().getTextStyle(
-                                                context,
-                                                fontSize: 16,
-                                                lWeight: FontWeight.w600,
-                                                color: Colors.white,
+                                            child: Center(
+                                              child: Text(
+                                                'Request a Coupon',
+                                                style:
+                                                    FontManager().getTextStyle(
+                                                  context,
+                                                  fontSize: 16,
+                                                  lWeight: FontWeight.w600,
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        )
-                                      : Center(
-                                          child: Text(
+                                        ),
+                                        SizedBox(
+                                          height: 16,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(dialogContext);
+                                          },
+                                          child: Container(
+                                            width: MediaQuery.sizeOf(context)
+                                                    .width /
+                                                2,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              border: Border.all(
+                                                  color:
+                                                      AppColors.primaryColor),
+                                              color: AppColors.backgroundColor,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'Cancel',
+                                                style:
+                                                    FontManager().getTextStyle(
+                                                  context,
+                                                  fontSize: 16,
+                                                  lWeight: FontWeight.w600,
+                                                  color: AppColors.accentColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          chatAvatartImage(
+                                            url: ProfileIcons.noCoupons,
+                                            height: 10,
+                                            width: 3,
+                                          ),
+                                          Text(
                                             'No coupons available / Coupon request has already been initiated',
                                             style: FontManager().getTextStyle(
                                               context,
-                                              fontSize: 14,
-                                              lWeight: FontWeight.w600,
+                                              fontSize: 12,
+                                              lWeight: FontWeight.w500,
                                               color: AppColors.accentColor,
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
-                                        ),
+                                        ],
+                                      ),
+                                    ),
                             )
                           : EnvelopeGrid(categoryCoupons: categoryCoupons)),
                 ),
@@ -343,132 +428,234 @@ class CouponPopupUtils {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          backgroundColor: Colors.white,
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Select a Brand',
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 16,
-                    lWeight: FontWeight.w600,
-                    color: AppColors.bg1,
-                  ),
-                ),
-                SizedBox(height: 16),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Map through existing brands
-                      ...List.generate(
-                        couponRequestMap[categoryTitle]?.length ?? 0,
-                        (index) {
-                          final brand = couponRequestMap[categoryTitle]
-                                  ?[index] ??
-                              "default_brand";
-                          return Padding(
-                            padding: EdgeInsets.only(right: 8),
-                            child: ChoiceChip(
-                              label: Text(
-                                brand,
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  fontSize: 14,
-                                  lWeight: FontWeight.w500,
-                                  color: AppColors.bg1,
+        String? selectedBrand; // Track the selected brand
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              backgroundColor: Colors.white,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height / 2.2,
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Available coupon(s)',
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 16,
+                        lWeight: FontWeight.w600,
+                        color: AppColors.bg1,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, // Maximum 3 items per row
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                          childAspectRatio: 0.8, // Adjust for image and text
+                        ),
+                        itemCount:
+                            (couponRequestMap[categoryTitle]?.length ?? 0) +
+                                1, // +1 for "Other"
+                        itemBuilder: (context, index) {
+                          // Handle "Other" option
+                          if (index ==
+                              (couponRequestMap[categoryTitle]?.length ?? 0)) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedBrand = 'Other';
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: AppColors.backgroundColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          Color.fromRGBO(146, 146, 146, 0.25),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 0),
+                                    ),
+                                  ],
+                                  border: selectedBrand == 'Other'
+                                      ? Border.all(
+                                          color: AppColors.primaryColor,
+                                          width: 2,
+                                        )
+                                      : null,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.add_circle_outline,
+                                      size: 40,
+                                      color: selectedBrand == 'Other'
+                                          ? AppColors.primaryColor
+                                          : AppColors.accentColor,
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      'Other',
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        fontSize: 14,
+                                        lWeight: FontWeight.w600,
+                                        color: selectedBrand == 'Other'
+                                            ? AppColors.primaryColor
+                                            : AppColors.bg1,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              selected: false,
-                              onSelected: (selected) async {
-                                await requestCoupon(
-                                    context, categoryTitle, brand);
-                                Navigator.of(dialogContext)
-                                    .pop(); // Close brand selection dialog
-                                Navigator.of(context)
-                                    .pop(); // Close parent dialog
-                              },
-                              backgroundColor: AppColors.bg1.withOpacity(0.1),
-                              selectedColor:
-                                  AppColors.primaryColor.withOpacity(0.2),
-                              labelPadding: EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(
-                                    color: AppColors.bg1.withOpacity(0.2)),
+                            );
+                          }
+                          // Brand items
+                          final brandData = couponRequestMap[categoryTitle]
+                                  ?[index] ??
+                              {"brand": "default_brand", "image": ""};
+                          final brand = brandData["brand"] ?? "default_brand";
+                          final imageUrl = brandData["image"] ?? "";
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedBrand = brand;
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: AppColors.backgroundColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromRGBO(146, 146, 146, 0.25),
+                                    blurRadius: 4,
+                                    offset: Offset(0, 0),
+                                  ),
+                                ],
+                                border: selectedBrand == brand
+                                    ? Border.all(
+                                        color: AppColors.primaryColor,
+                                        width: 2,
+                                      )
+                                    : null,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  imageUrl.isNotEmpty
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Image.network(
+                                            imageUrl,
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Icon(
+                                              Icons.error,
+                                              size: 60,
+                                              color: selectedBrand == brand
+                                                  ? AppColors.primaryColor
+                                                  : AppColors.accentColor,
+                                            ),
+                                          ),
+                                        )
+                                      : Icon(
+                                          Icons.image_not_supported,
+                                          size: 60,
+                                          color: selectedBrand == brand
+                                              ? AppColors.primaryColor
+                                              : AppColors.accentColor,
+                                        ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    brand,
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      fontSize: 14,
+                                      lWeight: FontWeight.w500,
+                                      color: selectedBrand == brand
+                                          ? AppColors.primaryColor
+                                          : AppColors.bg1,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
                             ),
                           );
                         },
                       ),
-                      // Add "Other" option
-                      Padding(
-                        padding: EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          label: Text(
-                            'Other',
+                    ),
+                    SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.of(dialogContext).pop(),
+                          child: Text(
+                            'Cancel',
                             style: FontManager().getTextStyle(
                               context,
                               fontSize: 14,
                               lWeight: FontWeight.w600,
-                              color: AppColors.primaryColor,
+                              color: AppColors.accentColor,
                             ),
                           ),
-                          selected: false,
-                          onSelected: (selected) async {
-                            await requestCoupon(
-                                context, categoryTitle, 'Other');
-                            Navigator.of(dialogContext)
-                                .pop(); // Close brand selection dialog
-                            Navigator.of(context).pop(); // Close parent dialog
-                          },
-                          backgroundColor:
-                              AppColors.primaryColor.withOpacity(0.05),
-                          selectedColor:
-                              AppColors.primaryColor.withOpacity(0.3),
-                          labelPadding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.4)),
+                        ),
+                        ElevatedButton(
+                          onPressed: selectedBrand != null
+                              ? () async {
+                                  await requestCoupon(
+                                      context, categoryTitle, selectedBrand!);
+                                  Navigator.of(dialogContext)
+                                      .pop(); // Close brand selection dialog
+                                  Navigator.of(context)
+                                      .pop(); // Close parent dialog
+                                }
+                              : null, // Disable button if no brand is selected
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
-                          avatar: Icon(
-                            Icons.add_circle_outline,
-                            size: 16,
-                            color: AppColors.primaryColor,
+                          child: Text(
+                            'Done',
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 14,
+                              lWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16),
-                TextButton(
-                  onPressed: () => Navigator.of(dialogContext).pop(),
-                  child: Text(
-                    'Cancel',
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 14,
-                      lWeight: FontWeight.w600,
-                      color: AppColors.accentColor,
+                      ],
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );

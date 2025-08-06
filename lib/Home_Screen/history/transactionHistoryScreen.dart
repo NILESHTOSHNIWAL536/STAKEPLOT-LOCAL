@@ -120,11 +120,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                   : getTextFeild()),
                               InkWell(
                                   onTap: () {
-                                    setState(() {
+                                    
                                       isDateSummaryView.value =
                                           !isDateSummaryView
                                               .value; // Toggle state
-                                    });
+                                    
                                   },
                                   child: !isDateSummaryView.value
                                       ? AvatarProfileImage(
@@ -266,6 +266,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         focusNode: focusNodeSearchFeild,
         onChanged: (value) {
           isDateSummaryView.value = false;
+          allOrGroupTransactionsName.value = StringConstant.allTransactions;
+
           if (_debounce?.isActive ?? false) _debounce!.cancel();
           // Start a new debounce timer
           _debounce = Timer(const Duration(milliseconds: 500), () {
@@ -288,9 +290,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           suffixIcon: searchController.text.isNotEmpty
               ? IconButton(
                   icon: Icon(Icons.clear, color: AppColors.accentColor),
-                  onPressed: () {
-                    clearTransactions(context: context, f: true);
-                  },
+                 onPressed: () {
+                  searchController.clear(); // Clear the TextEditingController
+                  searchTextController.value = ''; // Clear RxString
+                  clearTransactions(context: context, f: true);
+                  searchTextControllerBool.value = !searchTextControllerBool.value;
+                },
                 )
               : null,
           filled: true,

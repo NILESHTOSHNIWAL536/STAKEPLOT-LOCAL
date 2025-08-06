@@ -2,8 +2,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:get/get.dart';
@@ -295,77 +297,85 @@ class CouponCarouselCard extends StatelessWidget {
             ),
           ),
           // Shiny Ribbon Badge
-          Positioned(
-            top: -screenWidth * 0.003, // Moved further up to be above the card
-            left: -screenWidth * 0.04, // Adjusted to align with top-left corner
-            child: Transform.rotate(
-              angle: -0.785, // 45-degree rotation for ribbon effect
-              child: Stack(
-                children: [
-                  // Main ribbon body
-                  Container(
-                    width: screenWidth * 0.13,
-                    height: screenWidth * 0.05,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.red.shade600, Colors.red.shade900],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(4),
-                        bottomRight: Radius.circular(4),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 6,
-                          offset: const Offset(3, 3),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Folded ribbon effect (triangle overlay)
+          // Positioned(
+          //   top: -screenWidth * 0.003, // Moved further up to be above the card
+          //   left: -screenWidth * 0.04, // Adjusted to align with top-left corner
+          //   child: Transform.rotate(
+          //     angle: -0.785, // 45-degree rotation for ribbon effect
+          //     child: Stack(
+          //       children: [
+          //         // Main ribbon body
+          //         Container(
+          //           width: screenWidth * 0.13,
+          //           height: screenWidth * 0.05,
+          //           decoration: BoxDecoration(
+          //             gradient: LinearGradient(
+          //               colors: [Colors.red.shade600, Colors.red.shade900],
+          //               begin: Alignment.topLeft,
+          //               end: Alignment.bottomRight,
+          //             ),
+          //             borderRadius: BorderRadius.only(
+          //               topLeft: Radius.circular(4),
+          //               bottomRight: Radius.circular(4),
+          //             ),
+          //             boxShadow: [
+          //               BoxShadow(
+          //                 color: Colors.black.withOpacity(0.3),
+          //                 blurRadius: 6,
+          //                 offset: const Offset(3, 3),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //         // Folded ribbon effect (triangle overlay)
+          //         Positioned(
+          //           right: 0,
+          //           bottom: 0,
+          //           child: Transform.rotate(
+          //             angle: 0.785, // Counter-rotate for fold
+          //             child: ClipPath(
+          //               clipper: TriangleClipper(),
+          //               child: Container(
+          //                 width: screenWidth * 0.05,
+          //                 height: screenWidth * 0.05,
+          //                 color: Colors.red.shade800,
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //         // Glossy shine overlay
+          //         Positioned.fill(
+          //           child: Container(
+          //             decoration: BoxDecoration(
+          //               gradient: LinearGradient(
+          //                 colors: [
+          //                   Colors.white.withOpacity(0.5),
+          //                   Colors.white.withOpacity(0.1),
+          //                   Colors.transparent,
+          //                 ],
+          //                 begin: Alignment.topLeft,
+          //                 end: Alignment.bottomRight,
+          //                 stops: [0.0, 0.3, 0.6],
+          //               ),
+          //               borderRadius: BorderRadius.only(
+          //                 topLeft: Radius.circular(4),
+          //                 bottomRight: Radius.circular(4),
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //         // Ribbon text
                   Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: Transform.rotate(
-                      angle: 0.785, // Counter-rotate for fold
-                      child: ClipPath(
-                        clipper: TriangleClipper(),
-                        child: Container(
-                          width: screenWidth * 0.05,
-                          height: screenWidth * 0.05,
-                          color: Colors.red.shade800,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Glossy shine overlay
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.white.withOpacity(0.5),
-                            Colors.white.withOpacity(0.1),
-                            Colors.transparent,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          stops: [0.0, 0.3, 0.6],
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(4),
-                          bottomRight: Radius.circular(4),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Ribbon text
-                ],
-              ),
-            ),
+            top: screenWidth * 0.002, // Moved further up to be above the card
+            right: screenWidth * 0.002, // Adjusted to align with top-left corner
+            child: Transform.rotate(
+              angle: 0, // 45-degree rotation for ribbon effect
+              child:
+                chatAvatartImage(
+                                            url: ProfileIcons.tag,
+                                            height: 30,
+                                            width: 8,
+                                          ),)
           ),
         ],
       ),

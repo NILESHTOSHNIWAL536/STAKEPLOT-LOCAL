@@ -19,7 +19,7 @@ RxList<CouponModel> categoryCoupons = <CouponModel>[].obs;
 Future<void> fetchCouponsCounts() async {
   try {
     final response = await getDataApiCall('$url/reward/iscoupons/count');
-  
+
     if (getFlagOfResponse(response)) {
       var json = jsonDecode(response.body);
       couponAvalible.value = json['data'] > 0;
@@ -32,17 +32,21 @@ Future<void> fetchCouponsCounts() async {
 }
 
 Future<void> fetchCategoryCoupons(String category) async {
+  print("no");
   try {
+    print("yes");
     loadReaward.value = true;
     // Trim spaces and replace with no spaces
     final formattedCategory = category.trim();
     categorySelected.value = formattedCategory;
+  print("formattedCategory $formattedCategory");
     final response =
         await getDataApiCall('$url/reward/search/$formattedCategory');
-  
+    print("response tap ${response.body}");
 
     if (getFlagOfResponse(response)) {
       final List<dynamic> data = jsonDecode(response.body)['data'];
+
       categoryCoupons.assignAll(CouponModel.listFromJson(data));
     }
   } catch (e) {
@@ -52,12 +56,13 @@ Future<void> fetchCategoryCoupons(String category) async {
   }
 }
 
+// this is to fetch claimed coupons
 Future<void> fetchClaimedCoupons() async {
   try {
     loadReaward.value = true;
 
     final response = await getDataApiCall('$url/reward/');
-  
+
     if (getFlagOfResponse(response)) {
       final List<dynamic> data = jsonDecode(response.body)['data'];
       claimedCoupons.clear();
@@ -71,6 +76,7 @@ Future<void> fetchClaimedCoupons() async {
   }
 }
 
+// this is for claiming coupons
 Future<void> claimCoupon(
     BuildContext context, String id, widget, CouponModel coupon) async {
   try {
@@ -130,18 +136,17 @@ void getUserActity() async {
       var data = jsonDecode(response.body);
       userActivity = UserActivity.fromJson(data['data']);
     }
-  } catch (e) {
-    
-  }
+  } catch (e) {}
 }
 
 Future<void> getCouponRequestCheck(String category) async {
   try {
     var response = await getDataApiCall("${url}/reward/$category");
-    
+    print("response ${response.body}");
+
     if (getFlagOfResponse(response)) {
       var couponCall = jsonDecode(response.body);
-     
+
       couponRequestMap[category] = couponCall['data']['data'] ?? [];
     } else {
       couponRequestMap[category] = [];
@@ -150,16 +155,16 @@ Future<void> getCouponRequestCheck(String category) async {
     couponRequestMap[category] = [];
   }
 }
-Future<void> requestCoupon(BuildContext context, String category, String brand) async {
+
+Future<void> requestCoupon(
+    BuildContext context, String category, String brand) async {
   try {
     var response = await postDataApiCall(
       "${url}/reward/coupon-request",
       {"brand": brand, "category": category},
     );
-    print("POST response: ${response.statusCode} - ${response.body}");
-    
+
     if (getFlagOfResponse(response)) {
-      print("Coupon request successful for $category");
       // Refresh request status
       await getCouponRequestCheck(category);
       // Show success snackbar
@@ -168,6 +173,6 @@ Future<void> requestCoupon(BuildContext context, String category, String brand) 
       snackBarCalledfail(context, "Failed to request coupon for $category");
     }
   } catch (e) {
-    snackBarCalledfail(context, "Error requesting coupon: $e");
+    snackBarCalledfail(context, "Error requesting coupon");
   }
 }

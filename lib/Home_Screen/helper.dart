@@ -748,7 +748,7 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
 
 Widget getHeader(context, text) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -783,8 +783,8 @@ void showModalForPdfDownload(BuildContext context) {
           //height: MediaQuery.of(context).size.height / 2.4,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
             ),
             color: Colors.white,
           ),
@@ -793,7 +793,7 @@ void showModalForPdfDownload(BuildContext context) {
               children: [
                 Center(child: Container()),
                 getHeader(context, "Download Statement"),
-                const SizedBox(height: 20),
+                // const SizedBox(height: 20),
                 getListItemListTile("30", "days", context),
                 getListItemListTile("60", "days", context),
                 getListItemListTile("6", "months", context),
