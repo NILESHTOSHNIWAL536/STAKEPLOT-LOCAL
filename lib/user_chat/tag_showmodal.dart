@@ -98,30 +98,39 @@ class _TagShowmodalState extends State<TagShowmodal>
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           )),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            topHeader(context),
-            const SizedBox(
-              height: 5,
-            ),
-            TextFeildWidget(
-              textEditingController: searchController,
-              heading: "tagSearch",
-              keyBoard: TextInputType.text,
-              lableText: "Search Category",
-              icon: CupertinoIcons.doc_text_search,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Obx(() => loadAgain.value
-                ? selectedItem(context)
-                : selectedItem(context)),
-            // Obx(()=>   LoadTag.value? getCustomCategoryList(context):getCustomCategoryList(context)),
-            Obx(() =>
-                LoadTag.value ? getListOfCat(context) : getListOfCat(context)),
-          ],
+      child: NotificationListener<ScrollNotification>(
+      onNotification: (scrollNotification) {
+        if (scrollNotification is ScrollStartNotification) {
+          // Dismiss keyboard when scrolling starts
+          FocusScope.of(context).unfocus();
+        }
+        return false;
+      },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              topHeader(context),
+              const SizedBox(
+                height: 5,
+              ),
+              TextFeildWidget(
+                textEditingController: searchController,
+                heading: "tagSearch",
+                keyBoard: TextInputType.text,
+                lableText: "Search Category",
+                icon: CupertinoIcons.doc_text_search,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Obx(() => loadAgain.value
+                  ? selectedItem(context)
+                  : selectedItem(context)),
+              // Obx(()=>   LoadTag.value? getCustomCategoryList(context):getCustomCategoryList(context)),
+              Obx(() =>
+                  LoadTag.value ? getListOfCat(context) : getListOfCat(context)),
+            ],
+          ),
         ),
       ),
     );

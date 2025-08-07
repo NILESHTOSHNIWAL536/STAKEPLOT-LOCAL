@@ -240,14 +240,14 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
     final fontScale = screenSize.width / 375;
     final cardHeight = screenSize.height * 0.22;
     final stackHeight = screenSize.height * 0.37;
-    final horizontalPadding = screenSize.width * 0.04;
-    final horizontalPaddingForStack = screenSize.width * 0.01;
+    final horizontalPadding = screenSize.width * 0.03;
+    final horizontalPaddingForStack = screenSize.width * 0.016;
     final cardSpacing = screenSize.height * 0.05;
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: horizontalPadding / 2, vertical: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
           child: Obx(() => Column(
                 children: [
                   if (isLoading.value)
@@ -265,14 +265,14 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
                             Color(0xFF2A2A4A).withOpacity(0.7),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(20 * fontScale),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 20 * fontScale,
-                            offset: Offset(0, 8 * fontScale),
-                          ),
-                        ],
+                        borderRadius: BorderRadius.circular(16),
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //     color: Colors.black.withOpacity(0.3),
+                        //     blurRadius: 20 * fontScale,
+                        //     offset: Offset(0, 8 * fontScale),
+                        //   ),
+                        // ],
                       ),
                       child: Stack(
                         clipBehavior: Clip.none,
@@ -335,7 +335,7 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
                             bottom: 12 * fontScale,
                             left: horizontalPaddingForStack,
                             child: CustomNeumorphicContainer(
-                              width: MediaQuery.of(context).size.width * 0.85,
+                              width: MediaQuery.of(context).size.width * 0.88,
                               height: MediaQuery.of(context).size.height * 0.16,
                             ),
                           ),

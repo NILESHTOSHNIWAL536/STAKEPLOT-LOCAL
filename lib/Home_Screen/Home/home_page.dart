@@ -8,26 +8,26 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/Home/noaccountSel
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/rewardsplashscreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 RxBool sectionReached = false.obs;
 RxString weekOfThis = "This week".obs;
 late AppLifecycleHandler lifecycleHandler;
 
 class HomePage extends StatefulWidget {
+
   @override
+
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   bool flag=true;
+ 
   @override
   void initState() {
     super.initState();
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
         showWeeklyPopup(context, userController.userId.value);
       } else {}
     });
-    
+   
   }
 
   @override
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
         backgroundColor: AppColors.backgroundColor,
         appBar: getAppBar(context),
-        body: Obx(() => isBankLinked.value ? IndexScreen():NoAccountScreen() ),
+          body: Obx(() => isBankLinked.value ? const IndexScreen():NoAccountScreen()),
       ),
     ));
   }

@@ -153,7 +153,7 @@ class BankProgress extends StatelessWidget {
               c:AppColors.primaryColor,
               fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 1),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -166,10 +166,10 @@ class BankProgress extends StatelessWidget {
                 final int filledDots = (progressRatio * totalDots).floor();
                 
                 // Calculate indicator position
-                final double indicatorPosition = progressRatio * (availableWidth - dotSize-28);
+                final double indicatorPosition = progressRatio * (availableWidth - dotSize-23);
                 
                 return SizedBox(
-                  height: 80,
+                  height: 70,
                   width: availableWidth,
                   child: Stack(
                     clipBehavior: Clip.none,

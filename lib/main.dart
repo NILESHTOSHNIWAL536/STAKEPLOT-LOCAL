@@ -101,9 +101,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
-       data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
       child: MaterialApp(
-        navigatorKey: navigatorKey, // Keep your existing navigatorKey
+        navigatorKey: navigatorKey,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
           scaffoldBackgroundColor: AppColors.backgroundColor,

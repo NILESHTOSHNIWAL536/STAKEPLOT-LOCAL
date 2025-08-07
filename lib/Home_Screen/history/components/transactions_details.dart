@@ -5,9 +5,13 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 
 import 'icon_split_hide.dart';
@@ -82,8 +86,8 @@ class TransactionDetails extends StatelessWidget {
             child: Row(
               children: [
                 isExcluded
-                    ? getIconAvtar(30, category, fontSizes.scaleFactor / 2)
-                    : getIconAvtar(fontSizes.avatarSize, category, fontSizes.scaleFactor),
+                    ? getIconAvtarForTagShowModal(30, category, fontSizes.scaleFactor / 2, transaction, index, context)
+                    : getIconAvtarForTagShowModal(fontSizes.avatarSize, category, fontSizes.scaleFactor, transaction, index, context),
                 SizedBox(width: fontSizes.padding),
                 Flexible(
                   child: Column(
@@ -164,4 +168,120 @@ class TransactionDetails extends StatelessWidget {
     ));
   }
 }
+Widget getIconAvtarForTagShowModal(double avatarSize, String category, double scaleFactor, TransactionModel transaction, int index, BuildContext context) {
+  String lowerCategory = category?.toLowerCase() ?? '';
 
+  final matched = custom.firstWhere(
+    (item) => item['name']?.toString().toLowerCase() == lowerCategory,
+    orElse: () => {},
+  );
+
+  final url = matched.isNotEmpty && matched['imageUrl'] != null
+      ? matched['imageUrl']
+      : imageMapForHistory[lowerCategory] != null
+          ? Categories.link + imageMapForHistory[lowerCategory].toString()
+          : "assets/icons/Categories2/other.svg";
+
+  return InkWell(
+    onTap: () {
+      tagName.value = category;
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) {
+          return TagShowmodal(
+            data: transaction,
+            index: index,
+          );
+        },
+      );
+    },
+    child: Container(
+      width: avatarSize,
+      height: avatarSize,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colorcodes.greyLight,
+          width: 0.3,
+        ),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Center(
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 1400), // 1-second animation
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.4, end: 1.0).animate(
+                CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeInOut, // Smooth scaling effect
+                ),
+              ),
+              child: child,
+            );
+          },
+          child: AvatarProfileImage(
+            key: ValueKey<String>(url), // Unique key to trigger animation on URL change
+            url: url,
+            height: avatarSize * 0.5,
+            width: avatarSize * 0.5,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+// Widget getIconAvtarForTagShowModal(double avatarSize, String category, double scaleFactor, TransactionModel transaction, int index, BuildContext context) {
+//   String lowerCategory = category?.toLowerCase() ?? '';
+
+//   final matched = custom.firstWhere(
+//     (item) => item['name']?.toString().toLowerCase() == lowerCategory,
+//     orElse: () => {},
+//   );
+
+//   final url = matched.isNotEmpty && matched['imageUrl'] != null
+//       ? matched['imageUrl']
+//       : imageMapForHistory[lowerCategory] != null
+//           ? Categories.link + imageMapForHistory[lowerCategory].toString()
+//           : "assets/icons/Categories2/other.svg";
+
+//   return InkWell(
+//    onTap: () {
+//               tagName.value = category;
+//               showModalBottomSheet(
+//                 context: context,
+//                 isScrollControlled: true,
+//                 shape: const RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+//                 ),
+//                 builder: (context) {
+//                   return TagShowmodal(
+//                     data: transaction,
+//                     index: index,
+//                   );
+//                 },
+//               );
+//             },
+//     child: Container(
+//       width: avatarSize,
+//       height: avatarSize,
+//       decoration: BoxDecoration(
+//         border: Border.all(
+//           color: Colorcodes.greyLight,
+//           width: 0.3,
+//         ),
+//         borderRadius: BorderRadius.circular(6),
+//       ),
+//       child: Center(
+//         child: AvatarProfileImage(
+//           url: url,
+//           height: avatarSize * 0.5,
+//           width: avatarSize * 0.5,
+//         ),
+//       ),
+//     ),
+//   );
+// }

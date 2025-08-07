@@ -47,6 +47,8 @@ void getFinoraPreviousMonthData() async {
 }
 
 
+
+
 Future<List<CardData>> getAutoPayInfo() async {
   try {
     // Fetch both false and true auto pay info
@@ -55,10 +57,8 @@ Future<List<CardData>> getAutoPayInfo() async {
       getDataApiCall("${url}/transactionauto/get-recurring-payments/true"),
     ]);
 
-    
     allAutoPayData.clear();
-    for (int i = 0; i < responses.length; i++)
-    {
+    for (int i = 0; i < responses.length; i++) {
       final response = responses[i];
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
@@ -68,14 +68,15 @@ Future<List<CardData>> getAutoPayInfo() async {
             autoPayDataInfo.asMap().entries.map((entry) {
               final index = entry.key;
               final data = entry.value as Map<String, dynamic>;
-              return CardData.fromJson({...data, 'index': allAutoPayData.length + index});
+              return CardData.fromJson(
+                  {...data, 'index': allAutoPayData.length + index});
             }),
           );
         }
-      } 
+      }
     }
 
-    isAutoPayFected.value=!isAutoPayFected.value;
+    isAutoPayFected.value = !isAutoPayFected.value;
 
     return allAutoPayData;
   } catch (e) {
@@ -85,7 +86,8 @@ Future<List<CardData>> getAutoPayInfo() async {
 
 Future<bool> addRecurringPayment(String id, bool isActive) async {
   try {
-    final response = await updateDataApiCall2("$url/transactionauto/recurring-payments/$id", {'isActive': isActive});
+    final response = await updateDataApiCall2(
+        "$url/transactionauto/recurring-payments/$id", {'isActive': isActive});
 
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
@@ -97,9 +99,11 @@ Future<bool> addRecurringPayment(String id, bool isActive) async {
     return false;
   }
 }
+
 Future<bool> addRecurringPaymentForDaily(String id, bool isDaily) async {
   try {
-    final response = await updateDataApiCall2("$url/transactionauto/recurring-payments/$id", {'isDaily': isDaily});
+    final response = await updateDataApiCall2(
+        "$url/transactionauto/recurring-payments/$id", {'isDaily': isDaily});
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       return jsonData['success'] == true;
@@ -111,7 +115,8 @@ Future<bool> addRecurringPaymentForDaily(String id, bool isDaily) async {
   }
 }
 
-Future<bool> updateRecurringPaymentDate(String id, DateTime reminderDate) async {
+Future<bool> updateRecurringPaymentDate(
+    String id, DateTime reminderDate) async {
   try {
     // Format the DateTime to ISO 8601 with fixed time (9:00 AM UTC)
     final formattedDate = DateTime.utc(
@@ -124,15 +129,12 @@ Future<bool> updateRecurringPaymentDate(String id, DateTime reminderDate) async 
       0, // Fixed millisecond
     ).toIso8601String();
 
-   
-
     final response = await updateDataApiCall2(
       "$url/transactionauto/recurring-payments/$id",
       {'nextReminderAt': formattedDate},
     );
 
     // Debug prints for response
- 
 
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
@@ -141,14 +143,14 @@ Future<bool> updateRecurringPaymentDate(String id, DateTime reminderDate) async 
       return false;
     }
   } catch (e, stackTrace) {
-   
     return false;
   }
 }
 
 Future<bool> ignoreRecurringPayment(String id) async {
   try {
-    final response = await deleteDataApiCall("$url/transactionauto/recurring-payments/$id");
+    final response =
+        await deleteDataApiCall("$url/transactionauto/recurring-payments/$id");
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       return jsonData['success'] == true;

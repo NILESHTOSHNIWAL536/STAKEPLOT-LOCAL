@@ -255,6 +255,7 @@ class _RotatingIconState extends State<Nextfetch>
                     ),
 
                     BankProgress(percent: getPersentage(),),
+                  
                     getInfoAboutBank(context),
                     const SizedBox(height: 10,),
                     

@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
@@ -17,8 +18,7 @@ RxList consentAndHandleDetails = [].obs;
 RxMap bankImagemap = {}.obs;
 
 Future<void> getBankAccounts() async {
-  var response =
-      await getDataApiCall("${url}/transactionauto/get-banks-linked/");
+  var response = await getDataApiCall("${url}/transactionauto/get-banks-linked/");
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     consentAndHandleDetails.clear();
@@ -62,13 +62,11 @@ Future<void> getBankAccounts() async {
       });
     });
   }
-   addBankApiCall();
+  addBankApiCall();
 }
 
-
-void addBankApiCall(){
-   if (bankAccountLinkedList.isNotEmpty)
-    {
+void addBankApiCall() {
+  if (bankAccountLinkedList.isNotEmpty) {
     LastFetchDate.value = bankAccountLinkedList[0]['lastFetch'].toString();
     nextFecthDate.value = bankAccountLinkedList[0]['nextFetch'].toString();
     fetchCount.value = bankAccountLinkedList[0]['fetchCount'].toString();

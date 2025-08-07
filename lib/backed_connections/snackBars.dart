@@ -74,25 +74,6 @@ void snackBarCalledSignup(context, String text, [Color colors = Colors.black]) {
   );
 }
 
-void snackBarCalledFrds(context, String text, [Color colors = Colors.black]) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    duration: Duration(seconds: 2),
-    action: SnackBarAction(
-      label: 'Click Here',
-      onPressed: () {},
-    ),
-    content: Row(
-      children: [
-        Text(
-          text,
-          style: FontManager()
-              .getTextStyle(context, color: Colors.white, fontSize: 13),
-        ),
-      ],
-    ),
-    backgroundColor: colors,
-  ));
-}
 
 void snackBarAllFeilds(context, [Color colors = Colors.red]) {
   showTopSnackBar(
