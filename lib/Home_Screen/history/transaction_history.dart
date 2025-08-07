@@ -81,7 +81,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies()
+  {
     super.didChangeDependencies();
     _stableContext ??= context;
   }

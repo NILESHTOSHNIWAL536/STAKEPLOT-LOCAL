@@ -8,6 +8,9 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_b
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 
+import '../../backed_connections/apiAutomations/bankinfo.dart';
+import '../../backed_connections/apiConnect/clearstack.dart';
+
 class NoAccountScreen extends StatefulWidget {
   @override
   _NoAccountScreenState createState() => _NoAccountScreenState();
@@ -15,6 +18,12 @@ class NoAccountScreen extends StatefulWidget {
 
 class _NoAccountScreenState extends State<NoAccountScreen> {
   int _selectedIndex = 1; // Cash Out is selected by default
+
+  @override
+  void initState() {
+    super.initState();
+     getAllContstant(context);
+  }
 
   @override
   Widget build(BuildContext context) {

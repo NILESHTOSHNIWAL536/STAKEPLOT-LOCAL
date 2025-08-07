@@ -17,6 +17,9 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../model/fips_metric_model.dart';
+import 'bank_progress.dart';
+
 
 RxBool isBankLinked = false.obs;
 
@@ -225,9 +228,11 @@ class _RotatingIconState extends State<Nextfetch>
                       ),
                     ),
 
+                        
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(width: Colorcodes.borderRadius10),
+                        SizedBox(width: Colorcodes.borderRadius),
                         Image.network(
                           BankUrl.value,
                           width: 30,
@@ -249,6 +254,11 @@ class _RotatingIconState extends State<Nextfetch>
                       ],
                     ),
 
+                    BankProgress(percent: getPersentage(),),
+                  
+                    getInfoAboutBank(context),
+                    const SizedBox(height: 10,),
+                    
                     // Info Cards
                     _buildInfoCard(
                       context: context,
@@ -280,7 +290,7 @@ class _RotatingIconState extends State<Nextfetch>
                                 fontWeight: FontWeight.bold),
                           ),
 
-                    fetchCount.value == "5"
+                        fetchCount.value == "5"
                         ? SizedBox.shrink()
                         : textStyleOnly2(
                             context: context,
@@ -289,6 +299,8 @@ class _RotatingIconState extends State<Nextfetch>
                             color: AppColors.bg1,
                             fontWeight: FontWeight.w500,
                           ),
+
+                 
 
                     // Buttons
                     SizedBox(height: screenWidth * 0.03),
@@ -372,6 +384,75 @@ class _RotatingIconState extends State<Nextfetch>
     );
   }
 
+
+  double getPersentage(){
+       if(BankName.value=="")return 100.0;
+       final FipsMetric metric = fipsMetricList.firstWhere(
+            (item) => item.BankName == BankName.value,
+            orElse: () => fipsMetricList.first,
+      );
+      return metric.successPercent.toDouble();
+  }
+
+
+ Widget getInfoAboutBank(BuildContext context) {
+  if (fipsMetricList.isEmpty) return SizedBox();
+
+  // Example: pick first for demo — adapt as per selection logic
+  final FipsMetric metric = fipsMetricList.firstWhere(
+    (item) => item.BankName == BankName.value,
+    orElse: () => fipsMetricList.first,
+  );
+
+  final String text = _generateBankFetchInfo(metric)+"\nAverage latency: ${metric.latencyAvgMs+40}ms. ";
+  final Color textColor = _getColorFromSuccessPercent(metric.successPercent);
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+    child: Column(
+      children: [
+        textStyle(
+          context: context,
+          text: text,
+          fontWeight: FontWeight.bold,
+          fontsize: 14,
+          c: AppColors.bg1,
+          iswrap: true
+        )
+      ],
+    ),
+  );
+}
+
+String _generateBankFetchInfo(FipsMetric metric) {
+  String text1="Bank server is Up. All systems are working smoothly!";
+  String text2="Bank server is responding slowly. Some operations may take longer than usual.";
+  String text3="Bank server is currently down. Please try again later or check back shortly.";
+  
+  if(metric.successPercent>=70)return text1;
+  else if(metric.successPercent<=40)return text3;
+  return text2;
+
+  // return "Bank fetch success rate is ${metric.successPercent}%. "
+  //     "Average latency: ${metric.latencyAvgMs}ms. "
+  //     "Timeouts: ${metric.timeoutPercent}%, "
+  //     "Server errors: ${metric.serverErrorPercent}%, "
+  //     "Client errors: ${metric.clientErrorPercent}%.";
+}
+
+
+Color _getColorFromSuccessPercent(num successPercent) {
+  if (successPercent < 40) {
+    return Colors.red;
+  } else if (successPercent < 70) {
+    return Colors.orange;
+  } else {
+    return Colors.green;
+  }
+}
+
+
+
   Widget _buildInfoCard({
     required BuildContext context,
     required String title,
@@ -385,7 +466,7 @@ class _RotatingIconState extends State<Nextfetch>
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!, width: 1),
+        border: Border.all(color: Colors.grey, width: 1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -415,7 +496,7 @@ class _RotatingIconState extends State<Nextfetch>
     if (consentAndHandleDetails.isNotEmpty) {
       consentAndHandleDetails.forEach((item) {
         getWeeklyfetchData(item["consentId"], item["consendHandleId"],
-            item["sessionId"], item["custId"], item['lastFetch']);
+            item["sessionId"], item["custId"], item['lastFetch'],item['bankName'],item['fipId'],item['fetchCount'],item['accountId']);
       });
     }
     final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -425,5 +506,19 @@ class _RotatingIconState extends State<Nextfetch>
     scrollBankPage.value = 0;
     callApi(context);
     Navigator.pop(context);
+  }
+}
+
+
+Color getFetchStatusColor(num successPercent)
+{
+  if (successPercent < 40)
+  {
+    return Colors.redAccent; // Poor
+  }
+  else if (successPercent < 70) {
+    return Colors.orangeAccent; // Average
+  }else {
+    return Colors.green; // Good
   }
 }

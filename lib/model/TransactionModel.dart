@@ -1,67 +1,9 @@
-
-
-// class Predictions {
-//   final String? top1Category;
-//   final double? top1Score;
-//   final String? top2Category;
-//   final double? top2Score;
-//   final String? top3Category;
-//   final double? top3Score;
-//   final String? top4Category;
-//   final double? top4Score;
-//   final String? top5Category;
-//   final double? top5Score;
-
-//   Predictions({
-//     this.top1Category,
-//     this.top1Score,
-//     this.top2Category,
-//     this.top2Score,
-//     this.top3Category,
-//     this.top3Score,
-//     this.top4Category,
-//     this.top4Score,
-//     this.top5Category,
-//     this.top5Score,
-//   });
-
-//   factory Predictions.fromJson(Map<String, dynamic> json) {
-//     return Predictions(
-//       top1Category: json['top1_category'] as String?,
-//       top1Score: (json['top1_score'] as num?)?.toDouble(),
-//       top2Category: json['top2_category'] as String?,
-//       top2Score: (json['top2_score'] as num?)?.toDouble(),
-//       top3Category: json['top3_category'] as String?,
-//       top3Score: (json['top3_score'] as num?)?.toDouble(),
-//       top4Category: json['top4_category'] as String?,
-//       top4Score: (json['top4_score'] as num?)?.toDouble(),
-//       top5Category: json['top5_category'] as String?,
-//       top5Score: (json['top5_score'] as num?)?.toDouble(),
-//     );
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'top1_category': top1Category,
-//       'top1_score': top1Score,
-//       'top2_category': top2Category,
-//       'top2_score': top2Score,
-//       'top3_category': top3Category,
-//       'top3_score': top3Score,
-//       'top4_category': top4Category,
-//       'top4_score': top4Score,
-//       'top5_category': top5Category,
-//       'top5_score': top5Score,
-//     };
-//   }
-// }
-
 class PredictionEntry {
-  final String category;
+    final String category;
   final double score;
 
   PredictionEntry({
-    required this.category,
+    required this.category, 
     required this.score,
   });
 
@@ -273,6 +215,7 @@ class TransactionModel {
       "predictions": predictions?.toJson(), // Serialize predictions
     };
   }
+  
 TransactionModel copyWith({
     String? id,
     String? type,

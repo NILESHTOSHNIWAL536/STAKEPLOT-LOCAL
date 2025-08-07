@@ -230,7 +230,7 @@ RxMap<String, String> ListOfBankImages = RxMap();
 
 void getAllContstant(context) async {
   var responce = await getDataApiCall("${url}/constant/weekmonth");
-
+  expire(responce, context);
   if (getFlagOfResponse(responce)) {
     var data = jsonDecode(responce.body);
     weekOfThis.value = data['data']['week'];

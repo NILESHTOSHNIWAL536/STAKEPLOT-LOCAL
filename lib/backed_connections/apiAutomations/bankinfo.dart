@@ -4,17 +4,21 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
+import '../../model/fips_metric_model.dart';
+
+
 RxList bankAccountLinkedList = [].obs;
+RxList<FipsMetric>  fipsMetricList = <FipsMetric>[].obs;
 RxList consentAndHandleDetails = [].obs;
 RxMap bankImagemap = {}.obs;
 
 Future<void> getBankAccounts() async {
-  var response =
-      await getDataApiCall("${url}/transactionauto/get-banks-linked/");
+  var response = await getDataApiCall("${url}/transactionauto/get-banks-linked/");
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     consentAndHandleDetails.clear();
@@ -33,6 +37,9 @@ Future<void> getBankAccounts() async {
             'lastFetch': bank['accounts'][0]['lastFetch'] ?? "",
             'nextFetch': bank['accounts'][0]['nextFetch'] ?? "",
             'fetchCount': bank['accounts'][0]['fetchCount'] ?? "0",
+            'accountId': bank['accounts'][0]['accountId'] ?? "accountId",
+            'bankName': bank['bankName'] ?? "BankName",
+            'fipId': bank['fipId'] ?? "fipId",
           });
         }
       }
@@ -69,10 +76,11 @@ void addBankApiCall() {
   }
   loadBanks.value = false;
   loadBalance.value = !loadBalance.value;
+  getFipAccountInfo();
 }
 
 void getWeeklyfetchData(
-    consentId, consendHandleId, sessionId, custId, last) async {
+    consentId, consendHandleId, sessionId, custId, last,bankName,fipId,fetchCount,accountId) async {
   final String apiUrl = "${url}/finvu/fetchWeekly";
   final String userUrl = "${url}/user/updateFetchStatus";
   var body = {
@@ -83,6 +91,10 @@ void getWeeklyfetchData(
     'userId': userController.userId.value,
     'isCron': false,
     'FROM': last,
+    'bankName':bankName,
+    'fipId':fipId,
+    'fetchCount':fetchCount,
+    'accountId':accountId,
   };
 
   var userBody = {
@@ -90,9 +102,14 @@ void getWeeklyfetchData(
   };
 
   try {
-    await updateDataApiCall2(userUrl, userBody);
-    await postDataApiCall(apiUrl, body);
-  } catch (e) {}
+     await updateDataApiCall2(userUrl, userBody);
+     await postDataApiCall(apiUrl, body);
+  } catch (e) {
+      isFected.value = false;
+      await updateDataApiCall2(userUrl, {
+              "fetchInProgress": false,
+      });
+  }
 }
 
 void calledFunctionToFetchData(context) async {
@@ -108,4 +125,37 @@ void calledFunctionToFetchData(context) async {
   } else {
     getAutoMationsTransactionsCustom(getFormattedDate(), context, 'Custom');
   }
+}
+
+Future<void> getFipAccountInfo() async
+{
+   try{ 
+   List<String> fipIds=[];
+   Map<String,String> bankNameMap=new Map();
+   bankAccountLinkedList.forEach((d){
+      fipIds.add(d["fipId"]);
+      bankNameMap[d["fipId"]]=d['bankName'];
+   });
+
+
+    if(fipIds.isEmpty)return;
+    String urlPath=url+"/finvu/fip-details/";
+    var body={
+       "fipIds":fipIds
+    };
+    var response=await postDataApiCall(urlPath,body);
+
+    if(getFlagOfResponse(response))
+    {
+        var data=jsonDecode(response.body)['data'];
+        fipsMetricList.clear();
+        List<FipsMetric> list = (data as List) .map((item) => FipsMetric.fromJson(item,bankNameMap[item['fip_id']]??"")).toList();
+        fipsMetricList.addAll(list);
+        
+    }
+
+   }catch(e)
+   {
+   }
+
 }
