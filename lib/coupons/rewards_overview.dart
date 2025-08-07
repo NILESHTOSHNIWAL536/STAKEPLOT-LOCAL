@@ -675,7 +675,6 @@ class _RewardsOverviewState extends State<RewardsOverview>
   @override
   void initState() {
     super.initState();
-    getUserActity();
     _tabController = TabController(length: 2, vsync: this);
     userController.fetchUserInfo();
     fetchClaimedCoupons();
@@ -937,7 +936,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
     return GestureDetector(
       onTap: () {
         if (userActivity != null &&
-            userActivity!.todaysClaimCount!.count >= 3) {
+            userActivity!.todaysClaimCount!.count >=  RewardScreenStrings().limitCount.value) {
           snackBarCalledfail(context, RewardScreenStrings().claimedAll.value);
         } else {
           callRewardApis(context);
