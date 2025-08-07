@@ -180,7 +180,7 @@ class BalanceOutMismatchUI extends StatelessWidget {
                 "Oops! The shared amounts don't add up correctly.",
                 style: fontManager.getTextStyle(
                   context,
-                  lWeight: FontWeight.bold,
+                  lWeight: FontWeight.w500,
                   fontSize: 15,
                   color: Colorcodes.redDeleteIcon.withOpacity(0.9),
                 ),
