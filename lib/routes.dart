@@ -58,9 +58,10 @@ var routes =
       '/ForgotPassword':(context) => ForgotPassword() ,
       '/OnboardingScreen':(context) => OnboardingScreen() ,
       '/editDetails':(context) => EditDetails() ,
-      '/post':(context) => Community() ,
+     
       '/interestScreen':(context) => InterestSelectionScreen() ,
       '/animatedAppScreen':(context)=>AppScreenAnimation(),
+      
       
 };
 

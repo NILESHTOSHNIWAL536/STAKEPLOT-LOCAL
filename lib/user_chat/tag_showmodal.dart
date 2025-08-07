@@ -127,8 +127,29 @@ class _TagShowmodalState extends State<TagShowmodal>
                   ? selectedItem(context)
                   : selectedItem(context)),
               // Obx(()=>   LoadTag.value? getCustomCategoryList(context):getCustomCategoryList(context)),
-              Obx(() =>
-                  LoadTag.value ? getListOfCat(context) : getListOfCat(context)),
+              Container(
+                decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(14),
+      topRight: Radius.circular(14),
+    ),
+    boxShadow: [
+      BoxShadow(
+        color: Color.fromRGBO(147, 147, 147, 0.25),
+        blurRadius: 4,
+        offset: Offset(0, 0),
+      ),
+    ],
+  ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 16),
+                    Obx(() =>
+                        LoadTag.value ? getListOfCat(context) : getListOfCat(context)),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -149,17 +170,32 @@ class _TagShowmodalState extends State<TagShowmodal>
     if (custom.isEmpty) return SizedBox.shrink();
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+       decoration: BoxDecoration(
+                             borderRadius: BorderRadius.circular(5),
+    color: Colors.white,
+    boxShadow: [
+      BoxShadow(
+        color: Color.fromRGBO(156, 156, 156, 0.25),
+        blurRadius: 4,
+        spreadRadius: 0,
+        offset: Offset(0, 0),
+      ),
+    ],
+                            ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textStyle(
-            context: context,
-            text: "Custom",
-            fontsize: 16,
-            fontWeight: FontWeight.bold,
-            c: AppColors.primaryColor,
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: textStyle(
+              context: context,
+              text: "Custom",
+              fontsize: 16,
+              fontWeight: FontWeight.bold,
+              c: AppColors.primaryColor,
+            ),
           ),
           const SizedBox(height: 5),
           Container(
@@ -209,7 +245,7 @@ class _TagShowmodalState extends State<TagShowmodal>
               }).toList(),
             ),
           ),
-          Divider(),
+         // Divider(),
         ],
       ),
     );
@@ -235,7 +271,7 @@ class _TagShowmodalState extends State<TagShowmodal>
               context: context,
               text: "Tag transaction",
               fontsize: 18,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.w600),
           Row(
             children: [
               InkWell(
@@ -247,12 +283,23 @@ class _TagShowmodalState extends State<TagShowmodal>
                        callBack    
                     );
                 },
-                child:Obx(()=> Icon(
-                  CupertinoIcons.add,
-                  size: customCategoryUnUsedList.isEmpty?0: 30,
-                  color: AppColors.bg1,
+                child:Obx(()=> Container(
+                  padding: EdgeInsets.all(2),
+                 
+                   
+                            decoration:  BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(5),
+                        color: Color(0xFFF6F6F6),
+                      ),
+                  child: Icon(
+                    CupertinoIcons.add,
+                    size: customCategoryUnUsedList.isEmpty?0: 28,
+                    color: AppColors.primaryColor,
+                  ),
                 )),
               ),
+              SizedBox(width: 8,),
               InkWell(
                 onTap: () {
                   //Adding a loader here
@@ -357,11 +404,21 @@ class _TagShowmodalState extends State<TagShowmodal>
                     ? Spinner(
                         size: 30,
                       )
-                    : Icon(
-                        CupertinoIcons.checkmark_alt,
-                        size: 30,
-                        color: AppColors.creditColor,
-                      )),
+                    : Container(
+                       padding: EdgeInsets.all(2),
+                 
+                   
+                            decoration:  BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(5),
+                        color: Color(0xFFF6F6F6),
+                      ),
+                      child: Icon(
+                          CupertinoIcons.checkmark_alt,
+                          size: 28,
+                          color: AppColors.creditColor,
+                        ),
+                    )),
               ),
             ],
           ),
@@ -419,13 +476,25 @@ class _TagShowmodalState extends State<TagShowmodal>
               categoryList[index - 1]; // Adjust index for regular categories
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-            margin: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+             decoration: BoxDecoration(
+                             borderRadius: BorderRadius.circular(5),
+    color: Colors.white,
+    boxShadow: [
+      BoxShadow(
+        color: Color.fromRGBO(156, 156, 156, 0.25),
+        blurRadius: 4,
+        spreadRadius: 0,
+        offset: Offset(0, 0),
+      ),
+    ],
+                            ),
             child: Column(
               children: [
                 mainCategory(context, e.key, e.value),
                 // const SizedBox(height: 10),
                 subCategory(context, e.key, e.value),
-                Divider(),
+                // Divider(),
               ],
             ),
           );
@@ -573,9 +642,9 @@ class _TagShowmodalState extends State<TagShowmodal>
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colorcodes.greyLight, width: 0.6),
-      ),
+      // decoration: BoxDecoration(
+      //   border: Border.all(color: Colorcodes.greyLight, width: 0.6),
+      // ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -589,12 +658,11 @@ class _TagShowmodalState extends State<TagShowmodal>
                   flex: 1,
                   child: Container(
                     margin: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      // color: Colorcodes.black,
-                      border:
-                          Border.all(color: AppColors.primaryColor, width: .4),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                     decoration:  BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(5),
+                        color: Color(0xFFF6F6F6),
+                      ),
                     child: Obx(() => AvatarProfileImage(
                           url: UrlPathImage
                               .value, //: Categories.link +(imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
@@ -614,7 +682,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                           style: FontManager().getTextStyle(
                             context,
                             lWeight: FontWeight.w600,
-                            fontSize: 14,
+                            fontSize: 16,
                             lineHeight: 2.14,
                             color: AppColors.accentColor,
                           ),
@@ -624,7 +692,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                           style: FontManager().getTextStyle(
                             context,
                             lWeight: FontWeight.w400,
-                            fontSize: 12,
+                            fontSize: 14,
                             lineHeight: 1.14,
                             color: AppColors.accentColor,
                           ),

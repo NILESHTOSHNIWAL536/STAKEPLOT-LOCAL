@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/balanceout.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
@@ -109,7 +110,7 @@ class BalanceOutExample extends StatelessWidget {
                 style: fontManager.getTextStyle(
                   context,
                   lWeight: FontWeight.w600,
-                  fontSize: 15,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(height: 10),
@@ -121,16 +122,16 @@ class BalanceOutExample extends StatelessWidget {
   List<Widget> _buildExampleLines(BuildContext context) {
     return [
       _exampleLine(context, "You selected these:"),
-      const SizedBox(height: 10),
+      // const SizedBox(height: 10),
       _exampleLine(context, "+₹1000 credit"),
       _exampleLine(context, "-₹800 debit"),
       _exampleLine(context, "-₹200 debit"),
       _exampleLine(context, "+₹500 credit"),
       const SizedBox(height: 15),
       _exampleLine(context, "✅ If ₹1000 is the highest, then ₹800 + ₹200 = ₹1000 → Valid, Balanced Amount = 500",
-          color: Colors.green),
+          color: AppColors.creditColor),
       _exampleLine(context, "❌  If value excluded then the highest amount → Doesn't balance",
-          color: Colors.redAccent),
+          color: AppColors.debitColor),
     ];
   }
 
@@ -142,9 +143,9 @@ class BalanceOutExample extends StatelessWidget {
         style: fontManager.getTextStyle(
           context,
           lWeight: FontWeight.w400,
-          fontSize: 16,
-          lineHeight: 1.1,
-          color: color ?? Colors.black,
+          fontSize: 14,
+          lineHeight: 1.2,
+          color: color ?? AppColors.now,
         ),
       ),
     );
@@ -158,7 +159,7 @@ class BalanceOutMismatchUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isSmall = screenWidth < 350;
+   
 
     return Container(
       // color: Colors.white,
@@ -213,3 +214,4 @@ class BalanceOutMismatchUI extends StatelessWidget {
 
   
 }
+
