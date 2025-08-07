@@ -331,14 +331,14 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
                                 },
                               ),
                             ),
-                          Positioned(
-                            bottom: 12 * fontScale,
-                            left: horizontalPaddingForStack,
-                            child: CustomNeumorphicContainer(
-                              width: MediaQuery.of(context).size.width * 0.88,
-                              height: MediaQuery.of(context).size.height * 0.16,
-                            ),
-                          ),
+                          // Positioned(
+                          //   bottom: 12 * fontScale,
+                          //   left: horizontalPaddingForStack,
+                          //   child: CustomNeumorphicContainer(
+                          //     width: MediaQuery.of(context).size.width * 0.88,
+                          //     height: MediaQuery.of(context).size.height * 0.16,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
