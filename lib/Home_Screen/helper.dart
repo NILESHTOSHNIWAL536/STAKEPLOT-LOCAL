@@ -522,15 +522,8 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
             //     (MediaQuery.of(context).size.height / 2.5), // Full screen height
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.white,
-                  Colors.grey[50]!,
-                ],
-              ),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
@@ -551,15 +544,15 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
                   )),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         textStyle(
                             context: context,
                             text: "Select Bank Account",
-                            fontsize: 14,
-                            fontWeight: FontWeight.w500),
+                            fontsize: 16,
+                            fontWeight: FontWeight.w600),
                         InkWell(
                           onTap: () {
                             Navigator.pop(context);
@@ -573,7 +566,7 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                
                   getBankAccountList(context),
                   SizedBox(
                     height: 10,
@@ -599,14 +592,34 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
 Widget getBankAccountList(context,[fromPdf = true]) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
+    // decoration: BoxDecoration(
+    //    borderRadius: BorderRadius.circular(5),
+    // color: Colors.white,
+    // boxShadow: [
+    //   BoxShadow(
+    //     color: Color.fromRGBO(156, 156, 156, 0.25),
+    //     blurRadius: 4,
+    //     spreadRadius: 0,
+    //     offset: Offset(0, 0),
+    //   ),
+    // ],
+    // ),
     child: Column(
       children: bankAccountLinkedList.map((account) {
         return Obx(() => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.primaryColor, width: 0.2),
-              ),
-              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+ decoration: BoxDecoration(
+       borderRadius: BorderRadius.circular(5),
+    color: Colors.white,
+    boxShadow: [
+      BoxShadow(
+        color: Color.fromRGBO(156, 156, 156, 0.25),
+        blurRadius: 4,
+        spreadRadius: 0,
+        offset: Offset(0, 0),
+      ),
+    ],
+    ),
+              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
               child: ListTile(
                 leading: SizedBox(
                   width: 40,

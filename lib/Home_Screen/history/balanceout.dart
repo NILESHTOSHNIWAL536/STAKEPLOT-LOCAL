@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/balanceout_mismatch.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/cashout_dialog.dart';
@@ -25,6 +26,12 @@ class BalanceOutDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.all(10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
+        decoration: BoxDecoration(
+           color: AppColors.backgroundColor,
+           borderRadius: BorderRadius.circular(16)
+
+        ),
+       
         width:  width/1.1,
         padding: const EdgeInsets.all(16),
         child: Obx(() {
@@ -68,8 +75,8 @@ class BalanceOutDialog extends StatelessWidget {
                     style: FontManager().getTextStyle(
                       context,
                       fontSize: 18,
-                      lWeight: FontWeight.bold,
-                      color: const Color(0xFF403E6A),
+                      lWeight: FontWeight.w600,
+                      color: AppColors.finSpaceColor
                     ),
                   ),
                   InkWell(
@@ -82,9 +89,10 @@ class BalanceOutDialog extends StatelessWidget {
                     child: Container(
                       height: 25,
                       width: 25,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFFECEBF5),
+                      decoration:  BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(5),
+                        color: Color(0xFFF6F6F6),
                       ),
                       child: const Icon(Icons.add, size: 16, color: Color(0xFF403E6A)),
                     ),
@@ -172,7 +180,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                   style: FontManager().getTextStyle(
                     context,
                     fontSize: 14,
-                    lWeight: FontWeight.bold,
+                    lWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
                 ),
@@ -223,35 +231,43 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                         final tx = transactions[index];
                         final isPositive = tx.type != "DEBIT";
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 0),
+                          padding: const EdgeInsets.symmetric(vertical: 4),
                           child: Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF9F9FB),
-                              borderRadius: BorderRadius.circular(12),
+                             borderRadius: BorderRadius.circular(5),
+    color: Colors.white,
+    boxShadow: [
+      BoxShadow(
+        color: Color.fromRGBO(156, 156, 156, 0.25),
+        blurRadius: 4,
+        spreadRadius: 0,
+        offset: Offset(0, 0),
+      ),
+    ],
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // Title & Credited from
-                                Expanded(
-                                  flex: 3,
+                                Container(
+                                 width: MediaQuery.sizeOf(context).width/3.3,
                                   child: Text(
                                     tx.manualTransaction ? tx.subcategory : tx.title,
                                     style: FontManager().getTextStyle(
                                       context,
                                       fontSize: 11,
                                       lWeight: FontWeight.w500,
-                                      color: const Color(0xFF403E6A),
+                                      color: AppColors.finSpaceColor,
                                     ),
                                   ),
                                 ),
                     
-                                const SizedBox(width: 8),
+                                const SizedBox(width: 4),
                     
                                 // Logo or Lottie
-                                Expanded(
-                                  flex: 2,
+                                Container(
+                                 width: MediaQuery.sizeOf(context).width/9,
                                   child: Container(
                                                            child: tx.manualTransaction
                                       ? Lottie.asset(
@@ -278,22 +294,25 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                         )),
                                 ),
                     
-                                const SizedBox(width: 8),
+                                const SizedBox(width: 4),
                     
                                 // Amount
-                                Expanded(
-                                  flex: 3,
+                                Container(
+                                 width: MediaQuery.sizeOf(context).width/4.3,
                                   child: Text(
+                                    
                                     "${isPositive ? '+' : '-'} ₹ ${tx.amount.toStringAsFixed(0)}",
                                     style: FontManager().getTextStyle(
                                       context,
                                       fontSize: 14,
                                       lWeight: FontWeight.bold,
-                                      color: isPositive ? Colors.blue : Colors.black,
+                                      color:  AppColors.finSpaceColor,
                                     ),
+                                    textAlign: TextAlign.end,
                                   ),
+                                  
                                 ),
-                               
+                                 const SizedBox(width: 8),
                                 InkWell(
                                   onTap: ()
                                   {

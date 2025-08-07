@@ -165,7 +165,7 @@ void oneSignalAddClickListener(context) {
     OneSignal.Notifications.addForegroundWillDisplayListener((event) {
       String s = event.notification.body.toString().toLowerCase().trim();
       String t1 =
-          "There is a problem with you bank server. Please try again later.";
+          "There is a problem with your bank server. Please try again later.";
       String t2 =
           "we couldn't able to fetch your bank details, try again later";
       String t3 = "Your bank account data has been successfully fetched.";

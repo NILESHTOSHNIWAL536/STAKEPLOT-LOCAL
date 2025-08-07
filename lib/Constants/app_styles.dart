@@ -245,10 +245,11 @@ class ProfileIcons {
   static String support = "assets/icons/profileScreen/historyArchives.svg";
   static String terms = "assets/icons/profileScreen/terms2.svg";
   static String emptyFrnds = "assets/icons/profileScreen/emptyFrnds.svg";
-  static String unclaimedCoupon = "assets/icons/profileScreen/UnclaimedCard.svg";
+  // static String unclaimedCoupon = "assets/icons/profileScreen/unclaimed.svg";
   static String rewards = "assets/icons/profileScreen/rewards.svg";
   static String noCoupons = "assets/icons/profileScreen/noCoupon.svg";
   static String tag = "assets/icons/profileScreen/tag3.svg";
+  static String unclaimedCoupon = "assets/icons/profileScreen/unc1.svg";
 }
 
 class Sign {

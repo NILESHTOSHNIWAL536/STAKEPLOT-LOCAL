@@ -791,7 +791,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
       padding: EdgeInsets.all(16),
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
+          crossAxisCount: 2,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
           childAspectRatio: 1.2,
@@ -947,10 +947,22 @@ class _RewardsOverviewState extends State<RewardsOverview>
       //   CouponPopupUtils.showCouponSelectionPopup(context, category);
       // }),
       child: Container(
-        child: chatAvatartImage(
-          url: ProfileIcons.unclaimedCoupon,
-          height: 10,
-          width: 3,
+        padding: EdgeInsets.all(16),
+        
+        decoration:  BoxDecoration(
+          color: AppColors.primaryColor,
+          borderRadius: BorderRadius.circular(12)
+        ),
+        child: Container(
+          decoration:const  BoxDecoration(
+            shape:BoxShape.circle,
+            color: AppColors.backgroundColor
+          ),
+          child: chatAvatartImage(
+            url: ProfileIcons.unclaimedCoupon,
+            height: 12,
+            width: 3,
+          ),
         ),
       ),
     );
