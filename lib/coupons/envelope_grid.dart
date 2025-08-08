@@ -125,7 +125,9 @@ class CouponCarouselCard extends StatelessWidget {
   void _showLottieAnimation(BuildContext context) {
      
   // Call the API first
+  
   claimCoupon(context, coupon.id, this, coupon).then((success) {
+    
     if (success) {
       // Show Lottie animation only on API success
       showDialog(
@@ -148,7 +150,7 @@ class CouponCarouselCard extends StatelessWidget {
                     Navigator.of(dialogContext).pop(); // Close animation dialog
                     Navigator.of(context).popUntil((route) => route.isFirst); // Navigate back to first route
                     _showCouponCard(context); // Show the coupon card
-                    onClaim(); // Trigger removal and UI refresh
+                    // onClaim(); // Trigger removal and UI refresh
                   });
                 },
               ),

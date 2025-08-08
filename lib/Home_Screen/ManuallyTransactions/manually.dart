@@ -111,7 +111,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
             ],
           ),
           AvatarProfileImage(
-            url: ProfileIcons.unclaimedCoupon2,
+            url: LikeComment.manualTransaction,
             height: 10,
             width: 14,
           )
