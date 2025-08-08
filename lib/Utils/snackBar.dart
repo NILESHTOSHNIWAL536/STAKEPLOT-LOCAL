@@ -54,6 +54,7 @@ String noNotificationsSent = "No notifications sent due to invalid data.";
   String requestRemoveFail = "Unable to remove request!";
   String friendRemoved = "Friend has been successfully removed!";
   String noTransactionData = "No transaction data available";
+  String maxMinAmount = "The minimum amount cannot be greater than the maximum amount.";
   String pinSetFail00 = "Unable to set the PIN 00 except 00 try other!";
   String pinSetSuccess = "Your PIN has been set successfully!";
   String pinSetFail = "Unable to set the PIN!";
@@ -366,6 +367,7 @@ noSharesCalculated = data['noSharesCalculated'] ?? noSharesCalculated;
 userIdNotAvailable = data['userIdNotAvailable'] ?? userIdNotAvailable;
 userNameNotAvailable = data['userNameNotAvailable'] ?? userNameNotAvailable;
 noFriendsToNotify = data['noFriendsToNotify'] ?? noFriendsToNotify;
+maxMinAmount = data['maxMinAmount'] ?? maxMinAmount;
 
 
 

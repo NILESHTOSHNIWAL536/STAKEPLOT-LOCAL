@@ -174,6 +174,8 @@ class _RotatingIconState extends State<Nextfetch>
     // Get screen width for responsive sizing
     final double screenWidth = MediaQuery.of(context).size.width;
 
+     bool limit= int.parse(fetchCount.value)>=5;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -275,10 +277,10 @@ class _RotatingIconState extends State<Nextfetch>
                     _buildInfoCard(
                       context: context,
                       title: HomepageStringsDart().fetchCountTitle, // Updated
-                      value: '${fetchCount.value}/5',
+                      value: '${!limit?fetchCount.value:"5"}/5',
                     ),
 
-                    fetchCount.value == "5"
+                    limit
                         ? SizedBox.shrink()
                         : Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
@@ -290,7 +292,7 @@ class _RotatingIconState extends State<Nextfetch>
                                 fontWeight: FontWeight.bold),
                           ),
 
-                        fetchCount.value == "5"
+                        limit
                         ? SizedBox.shrink()
                         : textStyleOnly2(
                             context: context,

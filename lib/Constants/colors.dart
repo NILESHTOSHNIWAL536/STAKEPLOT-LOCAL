@@ -50,6 +50,7 @@ class AppColors {
    static const Color autoPay3 = Color(0xFFA9B3DA);
    static const Color autoPay4 = Color(0xFFCC9EBD);
    static const Color autoPay5 = Color(0xFFBACC9E);
+   static const Color white= Colors.white;
 
 
  

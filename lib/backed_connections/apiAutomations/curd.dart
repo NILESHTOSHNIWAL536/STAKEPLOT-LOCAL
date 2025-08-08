@@ -140,3 +140,38 @@ void printData(response, [context = ""]) {
   // print(response.statusCode);
   // print(response.body);
 }
+
+Future<http.Response> getTransactionsWithAmount({
+  required String urlPath,
+  String minAmount = "",
+  String maxAmount = "",
+}) async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  var accessToken = pref.getString("accessToken");
+
+  // Build the query params
+  final queryParams = <String, String>{};
+  if (minAmount.isNotEmpty) {
+    queryParams['minAmount'] = minAmount;
+  }
+  if (maxAmount.isNotEmpty) {
+    queryParams['maxAmount'] = maxAmount;
+  }
+
+  // Append query params to the URL
+  Uri uri = Uri.parse(urlPath).replace(
+    queryParameters: {
+      ...Uri.parse(urlPath).queryParameters,
+      ...queryParams,
+    },
+  );
+
+   final response = await http.get(
+    uri,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+  );
+  return response;
+}

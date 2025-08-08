@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -216,7 +217,7 @@ Future<void> getAllTransactionHistory(
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
         : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${(accountSelected.value.isEmpty || bankAccountLinkedList.length == 1 || text.toLowerCase() == "cash") ? (text.toLowerCase() == "cash" ? "Cash" : "-") : accountSelected.value}";
 
-    var response = await getDataApiCall(urlPath);
+    var response = (flag || maxController.text.toString().trim().isEmpty || !checkRangeofAmount(context,false) )? await getDataApiCall(urlPath): await getTransactionsWithAmount(urlPath: urlPath,minAmount: minController.text,maxAmount: maxController.text);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
