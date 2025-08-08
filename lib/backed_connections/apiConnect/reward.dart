@@ -40,7 +40,6 @@ Future<void> fetchCategoryCoupons(String category) async {
 
     final response =
         await getDataApiCall('$url/reward/search/$formattedCategory');
-    print("response tap ${response.body}");
 
     if (getFlagOfResponse(response)) {
       final List<dynamic> data = jsonDecode(response.body)['data'];
@@ -60,14 +59,10 @@ Future<void> fetchClaimedCoupons() async {
     loadReaward.value = true;
 
     final response = await getDataApiCall('$url/reward/');
-    print("response for claimed ${response.body}");
     if (getFlagOfResponse(response)) {
-      print("response for success ${response.body}");
       final List<dynamic> data = jsonDecode(response.body)['data'];
-      print("response for data ${data}");
       claimedCoupons.clear();
       claimedCoupons.addAll(CouponModel.listFromJson(data));
-      print("response for claimedCoupons ${claimedCoupons}");
       // claimedCoupons.refresh();
       refreshCupon.value = !refreshCupon.value;
     }
@@ -77,31 +72,14 @@ Future<void> fetchClaimedCoupons() async {
   }
 }
 
-// this is for claiming coupons
-// Future<void> claimCoupon(
-//     BuildContext context, String id, widget, CouponModel coupon) async {
-//   try {
-//     var body = {"category": categorySelected.value};
-//     claimedCoupons.add(coupon);
-//     userController.coupons.value--;
-//     refreshCupon.value = !refreshCupon.value;
-//     var response = await updateDataApiCall2('$url/reward/claim/${id}', body);
-//     if (getFlagOfResponse(response)) {
-//       widget.onClaim();
-//     }
-//   } catch (e) {
-//     // Handle error silently as per your code
-//   }
-//   getUserActity();
-// }
 Future<bool> claimCoupon(
     BuildContext context, String id, dynamic widget, CouponModel coupon) async {
   try {
-    var body = {"category": categorySelected.value};
+    // var body = {"category": categorySelected.value};
 
     var response = await updateDataApiCallWithoutBody(
         '$url/reward/claim/${id}/${categorySelected.value}');
-    print("response for claim ${response.body}");
+    print("response forrrr ${response.body}");
     if (getFlagOfResponse(response)) {
       claimedCoupons.add(coupon);
       userController.coupons.value--;

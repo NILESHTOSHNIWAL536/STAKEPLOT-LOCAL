@@ -241,8 +241,7 @@ class CouponModel {
     final startDateStr = json['startDate'] ?? '';
     final expiryDateStr = json['expiryDate'] ?? '';
 
-    print("Parsing coupon JSON: $json"); // Log full JSON for debugging
-    print("create at: $createdAtStr");
+  
 
     return CouponModel(
       id: id ?? '',
@@ -271,7 +270,6 @@ class CouponModel {
     try {
       return dateStr.isNotEmpty ? DateTime.parse(dateStr) : DateTime.now();
     } catch (e) {
-      print("Error parsing date '$dateStr': $e");
       return DateTime.now();
     }
   }
