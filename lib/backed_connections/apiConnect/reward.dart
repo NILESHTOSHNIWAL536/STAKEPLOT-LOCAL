@@ -32,14 +32,12 @@ Future<void> fetchCouponsCounts() async {
 }
 
 Future<void> fetchCategoryCoupons(String category) async {
-  print("no");
   try {
-    print("yes");
     loadReaward.value = true;
     // Trim spaces and replace with no spaces
     final formattedCategory = category.trim();
     categorySelected.value = formattedCategory;
-  print("formattedCategory $formattedCategory");
+
     final response =
         await getDataApiCall('$url/reward/search/$formattedCategory');
     print("response tap ${response.body}");
@@ -62,12 +60,15 @@ Future<void> fetchClaimedCoupons() async {
     loadReaward.value = true;
 
     final response = await getDataApiCall('$url/reward/');
-
+    print("response for claimed ${response.body}");
     if (getFlagOfResponse(response)) {
+      print("response for success ${response.body}");
       final List<dynamic> data = jsonDecode(response.body)['data'];
+      print("response for data ${data}");
       claimedCoupons.clear();
       claimedCoupons.addAll(CouponModel.listFromJson(data));
-      claimedCoupons.refresh();
+      print("response for claimedCoupons ${claimedCoupons}");
+      // claimedCoupons.refresh();
       refreshCupon.value = !refreshCupon.value;
     }
   } catch (e) {
@@ -77,21 +78,45 @@ Future<void> fetchClaimedCoupons() async {
 }
 
 // this is for claiming coupons
-Future<void> claimCoupon(
-    BuildContext context, String id, widget, CouponModel coupon) async {
+// Future<void> claimCoupon(
+//     BuildContext context, String id, widget, CouponModel coupon) async {
+//   try {
+//     var body = {"category": categorySelected.value};
+//     claimedCoupons.add(coupon);
+//     userController.coupons.value--;
+//     refreshCupon.value = !refreshCupon.value;
+//     var response = await updateDataApiCall2('$url/reward/claim/${id}', body);
+//     if (getFlagOfResponse(response)) {
+//       widget.onClaim();
+//     }
+//   } catch (e) {
+//     // Handle error silently as per your code
+//   }
+//   getUserActity();
+// }
+Future<bool> claimCoupon(
+    BuildContext context, String id, dynamic widget, CouponModel coupon) async {
   try {
     var body = {"category": categorySelected.value};
-    claimedCoupons.add(coupon);
-    userController.coupons.value--;
-    refreshCupon.value = !refreshCupon.value;
-    var response = await updateDataApiCall2('$url/reward/claim/${id}', body);
+
+    var response = await updateDataApiCallWithoutBody(
+        '$url/reward/claim/${id}/${categorySelected.value}');
+    print("response for claim ${response.body}");
     if (getFlagOfResponse(response)) {
-      widget.onClaim();
+      claimedCoupons.add(coupon);
+      userController.coupons.value--;
+      refreshCupon.value = !refreshCupon.value;
+      //  widget.onClaim();
+      return true; // Indicate success
+    } else {
+      return false; // Indicate failure
     }
   } catch (e) {
-    // Handle error silently as per your code
+    // Handle error silently and return false
+    return false;
+  } finally {
+    getUserActity(); // Ensure this is called regardless of success or failure
   }
-  getUserActity();
 }
 
 void redirectToUrl(BuildContext context, String path) async {

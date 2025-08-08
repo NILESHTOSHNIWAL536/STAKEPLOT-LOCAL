@@ -250,6 +250,8 @@ class ProfileIcons {
   static String noCoupons = "assets/icons/profileScreen/noCoupon.svg";
   static String tag = "assets/icons/profileScreen/tag3.svg";
   static String unclaimedCoupon = "assets/icons/profileScreen/unc1.svg";
+  static String unclaimedCoupon2 = "assets/icons/profileScreen/unclaimed2.svg";
+  static String unclaimedCoupon3 = "assets/icons/profileScreen/unc2.svg";
 }
 
 class Sign {

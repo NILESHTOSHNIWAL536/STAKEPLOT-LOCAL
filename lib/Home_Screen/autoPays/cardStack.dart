@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/allcardsScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardWidget.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/shape_clipper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
@@ -331,14 +332,14 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
                                 },
                               ),
                             ),
-                          // Positioned(
-                          //   bottom: 12 * fontScale,
-                          //   left: horizontalPaddingForStack,
-                          //   child: CustomNeumorphicContainer(
-                          //     width: MediaQuery.of(context).size.width * 0.88,
-                          //     height: MediaQuery.of(context).size.height * 0.16,
-                          //   ),
-                          // ),
+                          Positioned(
+                            bottom: 12 * fontScale,
+                            left: horizontalPaddingForStack,
+                            child: CustomNeumorphicContainer(
+                              width: MediaQuery.of(context).size.width * 0.88,
+                              height: MediaQuery.of(context).size.height * 0.16,
+                            ),
+                          ),
                         ],
                       ),
                     ),

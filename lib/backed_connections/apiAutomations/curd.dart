@@ -56,6 +56,21 @@ Future<http.Response> updateDataApiCall2(
   );
   return response;
 }
+Future<http.Response> updateDataApiCallWithoutBody(
+    String urlPath) async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  var accessToken = pref.getString("accessToken");
+
+  final response = await http.patch(
+    Uri.parse(urlPath),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+   
+  );
+  return response;
+}
 
 Future<http.Response> updateDataApiCall3(String urlPath,
     {required Map<String, dynamic> data}) async {

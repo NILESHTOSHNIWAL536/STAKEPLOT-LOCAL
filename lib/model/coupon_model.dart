@@ -1,3 +1,199 @@
+// class CouponModel {
+//   final String id;
+//   final String brand;
+//   final String title;
+//   final String link;
+//   final String image;
+//   final String code;
+//   final double actualPricing;
+//   final String category;
+//   final String description;
+//   final CreatedBy? createdBy; // Nested object
+//   final String? userId;
+//   final int clickCount;
+//   final DateTime startDate;
+//   final DateTime expiryDate;
+//   final bool isLived;
+//   final DateTime createdAt;
+//   final int? v;
+//   final String status;
+
+//   CouponModel({
+//     required this.id,
+//     required this.brand,
+//     required this.title,
+//     required this.link,
+//     required this.image,
+//     required this.code,
+//     required this.actualPricing,
+//     required this.category,
+//     required this.description,
+//     this.createdBy,
+//     this.userId,
+//     required this.clickCount,
+//     required this.startDate,
+//     required this.expiryDate,
+//     required this.isLived,
+//     required this.createdAt,
+//     this.v,
+//     required this.status,
+//   });
+
+//   /// ✅ Factory constructor to parse JSON
+//   factory CouponModel.fromJson(Map<String, dynamic> json) {
+//     final id = json['_id'] is Map ? json['_id']['\$oid'] : json['_id'];
+//     final createdAtStr = json['createdAt'] ?? '';
+//     final startDateStr = json['startDate'] ?? '';
+//     final expiryDateStr = json['expiryDate'] ?? '';
+
+//     print("create at: createdAtStr");
+
+//     return CouponModel(
+//       id: id ?? '',
+//       brand: json['brand'] ?? '',
+//       title: json['title'] ?? '',
+//       link: json['link'] ?? '',
+//       image: json['image'] ?? '',
+//       code: json['code'] ?? '',
+//       actualPricing: (json['actualPricing'] ?? 0).toDouble(),
+//       category: json['category'] ?? '',
+//       description: json['description'] ?? '',
+//       createdBy: json['createdBy'] != null
+//           ? CreatedBy.fromJson(json['createdBy'])
+//           : null,
+//       userId: json['userId'] ?? '',
+//       clickCount: json['clickCount'] ?? 0,
+//       startDate: startDateStr.isNotEmpty
+//           ? DateTime.parse(startDateStr)
+//           : DateTime.now(),
+//       expiryDate: expiryDateStr.isNotEmpty
+//           ? DateTime.parse(expiryDateStr)
+//           : DateTime.now(),
+//       isLived: json['isLived'] ?? false,
+//       createdAt: createdAtStr.isNotEmpty
+//           ? DateTime.parse(createdAtStr)
+//           : DateTime.now(),
+//       v: json['__v'],
+//       status: json['status'] ?? '',
+//     );
+//   }
+
+//   /// ✅ Convert to JSON
+//   Map<String, dynamic> toJson() {
+//     return {
+//       "_id": id,
+//       "brand": brand,
+//       "title": title,
+//       "link": link,
+//       "image": image,
+//       "code": code,
+//       "actualPricing": actualPricing,
+//       "category": category,
+//       "description": description,
+//       "createdBy": createdBy?.toJson(),
+//       "userId": userId,
+//       "clickCount": clickCount,
+//       "startDate": startDate.toIso8601String(),
+//       "expiryDate": expiryDate.toIso8601String(),
+//       "isLived": isLived,
+//       "createdAt": createdAt.toIso8601String(),
+//       "__v": v,
+//       "status": status,
+//     };
+//   }
+
+//   /// ✅ Copy with method
+//   CouponModel copyWith({
+//     String? id,
+//     String? brand,
+//     String? title,
+//     String? link,
+//     String? image,
+//     String? code,
+//     double? actualPricing,
+//     String? category,
+//     String? description,
+//     CreatedBy? createdBy,
+//     String? userId,
+//     int? clickCount,
+//     DateTime? startDate,
+//     DateTime? expiryDate,
+//     bool? isLived,
+//     DateTime? createdAt,
+//     int? v,
+//     String? status,
+//   }) {
+//     return CouponModel(
+//       id: id ?? this.id,
+//       brand: brand ?? this.brand,
+//       title: title ?? this.title,
+//       link: link ?? this.link,
+//       image: image ?? this.image,
+//       code: code ?? this.code,
+//       actualPricing: actualPricing ?? this.actualPricing,
+//       category: category ?? this.category,
+//       description: description ?? this.description,
+//       createdBy: createdBy ?? this.createdBy,
+//       userId: userId ?? this.userId,
+//       clickCount: clickCount ?? this.clickCount,
+//       startDate: startDate ?? this.startDate,
+//       expiryDate: expiryDate ?? this.expiryDate,
+//       isLived: isLived ?? this.isLived,
+//       createdAt: createdAt ?? this.createdAt,
+//       v: v ?? this.v,
+//       status: status ?? this.status,
+//     );
+//   }
+
+//   /// ✅ Parse a list of JSON
+//   static List<CouponModel> listFromJson(List<dynamic> jsonList) {
+//     return jsonList
+//         .map((json) {
+//           try {
+//             if (json == null) return null;
+//             return CouponModel.fromJson(json);
+//           } catch (e) {
+//             return null;
+//           }
+//         })
+//         .whereType<CouponModel>()
+//         .toList();
+//   }
+
+//   @override
+//   String toString() {
+//     return 'CouponModel(id: $id, brand: $brand, title: $title, code: $code, status: $status)';
+//   }
+// }
+
+// /// ✅ Nested CreatedBy class
+// class CreatedBy {
+//   final String id;
+//   final String email;
+
+//   CreatedBy({
+//     required this.id,
+//     required this.email,
+//   });
+
+//   factory CreatedBy.fromJson(Map<String, dynamic> json) {
+//     final id = json['_id'] is Map ? json['_id']['\$oid'] : json['_id'];
+//     return CreatedBy(
+//       id: id ?? '',
+//       email: json['email'] ?? '',
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     return {
+//       "_id": id,
+//       "email": email,
+//     };
+//   }
+
+//   @override
+//   String toString() => 'CreatedBy(id: $id, email: $email)';
+// }
 class CouponModel {
   final String id;
   final String brand;
@@ -8,7 +204,7 @@ class CouponModel {
   final double actualPricing;
   final String category;
   final String description;
-  final CreatedBy? createdBy; // Nested object
+  final String? createdBy; // Changed to String? to match API
   final String? userId;
   final int clickCount;
   final DateTime startDate;
@@ -16,7 +212,7 @@ class CouponModel {
   final bool isLived;
   final DateTime createdAt;
   final int? v;
-  final String status;
+  final String? status; // Made optional to match API
 
   CouponModel({
     required this.id,
@@ -28,7 +224,7 @@ class CouponModel {
     required this.actualPricing,
     required this.category,
     required this.description,
-    this.createdBy,
+    this.createdBy, // String instead of CreatedBy object
     this.userId,
     required this.clickCount,
     required this.startDate,
@@ -36,15 +232,17 @@ class CouponModel {
     required this.isLived,
     required this.createdAt,
     this.v,
-    required this.status,
+    this.status, // Optional
   });
 
-  /// ✅ Factory constructor to parse JSON
   factory CouponModel.fromJson(Map<String, dynamic> json) {
     final id = json['_id'] is Map ? json['_id']['\$oid'] : json['_id'];
     final createdAtStr = json['createdAt'] ?? '';
     final startDateStr = json['startDate'] ?? '';
     final expiryDateStr = json['expiryDate'] ?? '';
+
+    print("Parsing coupon JSON: $json"); // Log full JSON for debugging
+    print("create at: $createdAtStr");
 
     return CouponModel(
       id: id ?? '',
@@ -56,19 +254,28 @@ class CouponModel {
       actualPricing: (json['actualPricing'] ?? 0).toDouble(),
       category: json['category'] ?? '',
       description: json['description'] ?? '',
-      createdBy: json['createdBy'] != null ? CreatedBy.fromJson(json['createdBy']) : null,
+      createdBy: json['createdBy'] is String ? json['createdBy'] : null, // Handle string ID
       userId: json['userId'] ?? '',
       clickCount: json['clickCount'] ?? 0,
-      startDate: startDateStr.isNotEmpty ? DateTime.parse(startDateStr) : DateTime.now(),
-      expiryDate: expiryDateStr.isNotEmpty ? DateTime.parse(expiryDateStr) : DateTime.now(),
+      startDate: _parseDate(startDateStr),
+      expiryDate: _parseDate(expiryDateStr),
       isLived: json['isLived'] ?? false,
-      createdAt: createdAtStr.isNotEmpty ? DateTime.parse(createdAtStr) : DateTime.now(),
+      createdAt: _parseDate(createdAtStr),
       v: json['__v'],
-      status: json['status'] ?? '',
+      status: json['status'] ?? 'unknown', // Default value
     );
   }
 
-  /// ✅ Convert to JSON
+  // Helper method to safely parse DateTime
+  static DateTime _parseDate(String dateStr) {
+    try {
+      return dateStr.isNotEmpty ? DateTime.parse(dateStr) : DateTime.now();
+    } catch (e) {
+      print("Error parsing date '$dateStr': $e");
+      return DateTime.now();
+    }
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "_id": id,
@@ -80,7 +287,7 @@ class CouponModel {
       "actualPricing": actualPricing,
       "category": category,
       "description": description,
-      "createdBy": createdBy?.toJson(),
+      "createdBy": createdBy,
       "userId": userId,
       "clickCount": clickCount,
       "startDate": startDate.toIso8601String(),
@@ -92,7 +299,6 @@ class CouponModel {
     };
   }
 
-  /// ✅ Copy with method
   CouponModel copyWith({
     String? id,
     String? brand,
@@ -103,7 +309,7 @@ class CouponModel {
     double? actualPricing,
     String? category,
     String? description,
-    CreatedBy? createdBy,
+    String? createdBy,
     String? userId,
     int? clickCount,
     DateTime? startDate,
@@ -135,14 +341,21 @@ class CouponModel {
     );
   }
 
-  /// ✅ Parse a list of JSON
   static List<CouponModel> listFromJson(List<dynamic> jsonList) {
     return jsonList
-        .map((json) {
+        .asMap()
+        .entries
+        .map((entry) {
+          final index = entry.key;
+          final json = entry.value;
           try {
-            if (json == null) return null;
+            if (json == null) {
+              print("Null JSON at index $index");
+              return null;
+            }
             return CouponModel.fromJson(json);
           } catch (e) {
+            print("Error parsing coupon at index $index: $e");
             return null;
           }
         })
@@ -154,33 +367,4 @@ class CouponModel {
   String toString() {
     return 'CouponModel(id: $id, brand: $brand, title: $title, code: $code, status: $status)';
   }
-}
-
-/// ✅ Nested CreatedBy class
-class CreatedBy {
-  final String id;
-  final String email;
-
-  CreatedBy({
-    required this.id,
-    required this.email,
-  });
-
-  factory CreatedBy.fromJson(Map<String, dynamic> json) {
-    final id = json['_id'] is Map ? json['_id']['\$oid'] : json['_id'];
-    return CreatedBy(
-      id: id ?? '',
-      email: json['email'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "_id": id,
-      "email": email,
-    };
-  }
-
-  @override
-  String toString() => 'CreatedBy(id: $id, email: $email)';
 }

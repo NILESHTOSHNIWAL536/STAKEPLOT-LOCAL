@@ -28,7 +28,8 @@ Future<void> loginUser(TextEditingController emailController,
       'deviceInfo': deviceData,
     });
     if (response.statusCode == 409) {
-      forceLoginShowModal(context, response, emailController, passwordController);
+      forceLoginShowModal(
+          context, response, emailController, passwordController);
     } else if (response.statusCode == 500) {
       snackBarCalledfail(context, SnackbarData().serverError, Colors.red);
     } else if (getFlagOfResponse(response)) {
@@ -82,7 +83,6 @@ Future<void> userVerification(TextEditingController emailController,
           ),
         ),
       );
-
     } else {
       acceptReset.value = false;
       snackBarCalledfail(context, SnackbarData().invalidCredentials);
@@ -397,8 +397,9 @@ Future<bool> verifyOTPForLogin(
       'email': email,
       'otp': otp,
     });
-
+  print("responses for otp ${response.body}");
     if (getFlagOfResponse(response)) {
+      print("response for otp ${response.body}");
       if (!isForcedLogin) {
         loginUser(
           TextEditingController(text: email),

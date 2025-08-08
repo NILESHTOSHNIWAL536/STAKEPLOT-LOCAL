@@ -1,4 +1,3 @@
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -55,23 +55,26 @@ class _EnvelopeGridState extends State<EnvelopeGrid> {
         itemBuilder: (context, index, realIndex) {
           return CouponCarouselCard(
             coupon: widget.categoryCoupons[index],
-            dialogContext:context,
+            dialogContext: context,
             onClaim: () {
               if (widget.categoryCoupons.isNotEmpty) {
                 widget.categoryCoupons.removeAt(index);
                 setState(() {}); // Refresh UI after removal
               }
             },
-            isCentered: index == (widget.categoryCoupons.length ~/ 2), // Highlight middle card
+            isCentered: index ==
+                (widget.categoryCoupons.length ~/ 2), // Highlight middle card
             screenWidth: screenWidth,
           );
         },
         options: CarouselOptions(
           height: screenHeight * 0.4,
-          initialPage: widget.categoryCoupons.length ~/ 2, // Start at middle card
+          initialPage:
+              widget.categoryCoupons.length ~/ 2, // Start at middle card
           viewportFraction: 0.76, // Show partial cards on sides
           enlargeCenterPage: true, // Scale up center card
-          enableInfiniteScroll: widget.categoryCoupons.length>1, // Loop the carousel
+          enableInfiniteScroll:
+              widget.categoryCoupons.length > 1, // Loop the carousel
           scrollPhysics: const BouncingScrollPhysics(),
           autoPlay: false, // Disable auto-play for user control
         ),
@@ -87,7 +90,7 @@ class CouponCarouselCard extends StatelessWidget {
   final double screenWidth;
   BuildContext dialogContext;
 
-   CouponCarouselCard({
+  CouponCarouselCard({
     Key? key,
     required this.coupon,
     required this.onClaim,
@@ -107,7 +110,8 @@ class CouponCarouselCard extends StatelessWidget {
             vertical: MediaQuery.of(context).size.height * 0.1,
           ),
           backgroundColor: Colors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: CouponCardWidget(
             coupon: coupon,
             onClaim: () {},
@@ -119,42 +123,46 @@ class CouponCarouselCard extends StatelessWidget {
   }
 
   void _showLottieAnimation(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      barrierColor: Colors.black.withOpacity(0.5),
-      builder: (BuildContext dialogContext) {
-        return WillPopScope(
-          onWillPop: () async => false, // Prevent dismissing during animation
-          child: Center(
-            child:   
-            
-            Lottie.asset(
-              'assets/splashScreen/coupon.json', // Ensure this path matches your Lottie file
-              width: screenWidth * 0.5,
-              height: screenWidth * 0.5,
-              fit: BoxFit.contain,
-              
-              repeat: false,
-              onLoaded: (composition)  {
-                // Automatically close animation dialog and proceed after duration
-                Future.delayed(const Duration(seconds: 4), () async{
-                  Navigator.of(dialogContext).pop(); // Close animation dialog
-                  // Proceed with navigation and claim
-      
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                  _showCouponCard(context);
-                      await claimCoupon(context, coupon.id, this, coupon);
-                  onClaim(); // Trigger removal and UI refresh
-                });
-              },
+     
+  // Call the API first
+  claimCoupon(context, coupon.id, this, coupon).then((success) {
+    if (success) {
+      // Show Lottie animation only on API success
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierColor: Colors.black.withOpacity(0.5),
+        builder: (BuildContext dialogContext) {
+          return WillPopScope(
+            onWillPop: () async => false, // Prevent dismissing during animation
+            child: Center(
+              child: Lottie.asset(
+                'assets/splashScreen/coupon.json', // Ensure this path matches your Lottie file
+                width: screenWidth * 0.5,
+                height: screenWidth * 0.5,
+                fit: BoxFit.contain,
+                repeat: false,
+                onLoaded: (composition) {
+                  // Automatically close animation dialog and proceed after animation completes
+                  Future.delayed(const Duration(seconds: 2), () {
+                    Navigator.of(dialogContext).pop(); // Close animation dialog
+                    Navigator.of(context).popUntil((route) => route.isFirst); // Navigate back to first route
+                    _showCouponCard(context); // Show the coupon card
+                    onClaim(); // Trigger removal and UI refresh
+                  });
+                },
+              ),
             ),
-          ),
-        );
-      },
-    );
-  }
-
+          );
+        },
+      );
+    } else {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      // Handle API failure
+      snackBarCalledfail(context, "Failed to claim ");
+    }
+  });
+}
   @override
   Widget build(BuildContext context) {
     final cardWidth = screenWidth * 0.76; // Adjusted for golden ratio
@@ -164,7 +172,8 @@ class CouponCarouselCard extends StatelessWidget {
     return Container(
       width: cardWidth,
       height: cardHeight,
-      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02, vertical: screenWidth * 0.04),
+      margin: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.02, vertical: screenWidth * 0.04),
       child: Stack(
         clipBehavior: Clip.none, // Allow badge to overflow outside the card
         children: [
@@ -236,7 +245,8 @@ class CouponCarouselCard extends StatelessWidget {
                       coupon.title,
                       style: FontManager().getTextStyle(
                         context,
-                        fontSize: fontSize * 0.95, // Slightly smaller for hierarchy
+                        fontSize:
+                            fontSize * 0.95, // Slightly smaller for hierarchy
                         lWeight: FontWeight.w500,
                         color: AppColors.accentColor,
                       ),
@@ -266,13 +276,15 @@ class CouponCarouselCard extends StatelessWidget {
                   // Claim Button
                   ElevatedButton(
                     onPressed: () {
-                        Navigator.pop(dialofBoxContext);
-                        HapticFeedback.heavyImpact();
+                      Navigator.pop(dialofBoxContext);
+                      HapticFeedback.heavyImpact();
                       _showLottieAnimation(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor, // App theme color
-                      foregroundColor: const Color(0xFF374151), // Dark grey text
+                      backgroundColor:
+                          AppColors.primaryColor, // App theme color
+                      foregroundColor:
+                          const Color(0xFF374151), // Dark grey text
                       padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * 0.05,
                         vertical: screenWidth * 0.015,
@@ -365,18 +377,18 @@ class CouponCarouselCard extends StatelessWidget {
           //           ),
           //         ),
           //         // Ribbon text
-                  Positioned(
-            top: screenWidth * 0.002, // Moved further up to be above the card
-            right: screenWidth * 0.002, // Adjusted to align with top-left corner
-            child: Transform.rotate(
-              angle: 0, // 45-degree rotation for ribbon effect
-              child:
-                chatAvatartImage(
-                                            url: ProfileIcons.tag,
-                                            height: 30,
-                                            width: 8,
-                                          ),)
-          ),
+          Positioned(
+              top: screenWidth * 0.002, // Moved further up to be above the card
+              right:
+                  screenWidth * 0.002, // Adjusted to align with top-left corner
+              child: Transform.rotate(
+                angle: 0, // 45-degree rotation for ribbon effect
+                child: chatAvatartImage(
+                  url: ProfileIcons.tag,
+                  height: 30,
+                  width: 8,
+                ),
+              )),
         ],
       ),
     );
