@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpendin
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
@@ -984,7 +985,7 @@ Widget filterTransaction(context) {
         color:AppColors.backgroundColor,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height /
-            (bankAccountLinkedList.length <= 1 ? 16 : 14),
+ (bankAccountLinkedList.length <= 1 ? 16 : 14),
         child: ListView(
         scrollDirection: Axis.horizontal,
         
@@ -1131,3 +1132,15 @@ String formatDateToIST(String dateStr) {
             size: 30,
             color: AppColors.primaryColor,
           );
+
+  bool checkRangeofAmount(context,[bool f=true])
+  {
+        double f1=double.parse(minController.text.isNotEmpty? minController.text:"0");
+        double f2=double.parse(maxController.text.isNotEmpty? maxController.text:"0");
+        if(f1>=f2 && maxController.text.isNotEmpty){
+           if(f)snackBarCalledfail(context, SnackbarData().maxMinAmount);
+           minController.text="";
+           maxController.text="";
+        }
+       return  f1<f2;
+  }

@@ -44,7 +44,7 @@ void snackBarCalledfail(context, String text, [Color colors = Colors.black]) {
         ),
       ),
     ),
-    displayDuration: const Duration(seconds: 2),
+    displayDuration: const Duration(seconds: 3),
     curve: Curves.easeOutBack,
     reverseCurve: Curves.easeInBack,
     animationDuration: const Duration(milliseconds: 600),

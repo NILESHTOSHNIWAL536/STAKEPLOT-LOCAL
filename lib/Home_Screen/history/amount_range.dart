@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
 
 import '../../backed_connections/apis_connect.dart';
+import '../helper.dart';
 
 class AmountRangeField extends StatelessWidget {
 
@@ -29,7 +31,10 @@ class AmountRangeField extends StatelessWidget {
                                       controller: minController,
                                       keyboardType: TextInputType.number,
                                       onSubmitted: (c){
-                                         onChanedAutoTransactionStatus(context);
+                                         if(checkRangeofAmount(context))
+                                         {
+                                            onChanedAutoTransactionStatus(context);
+                                         }
                                      },
                                       decoration: InputDecoration(
                                          contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 0),
@@ -58,7 +63,10 @@ class AmountRangeField extends StatelessWidget {
                                     child: TextField(
                                       controller: maxController,
                                      onSubmitted: (c){
-                                         onChanedAutoTransactionStatus(context);
+                                         if(checkRangeofAmount(context))
+                                         {
+                                            onChanedAutoTransactionStatus(context);
+                                         }
                                      },
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(

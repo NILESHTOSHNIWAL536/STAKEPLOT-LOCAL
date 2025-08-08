@@ -207,11 +207,11 @@ class CouponPopupUtils {
         print("tapp");
         await fetchCategoryCoupons(title);
         if (categoryCoupons.isNotEmpty) {
-           print("tapp she");
+          print("tapp she");
           // If coupons are available, show the coupon selection popup
           CouponPopupUtils.showCouponSelectionPopup(context, title);
         } else {
-           print("tapp he");
+          print("tapp he");
           // If no coupons, show the status in the card (handled in UI below)
           onCategorySelected(title);
           await getCouponRequestCheck(title.trim());
@@ -765,6 +765,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
   }
 
   Widget _buildClaimedTab() {
+    print("claimed cou $claimedCoupons");
     return loadReaward.value
         ? Center(child: Spinner())
         : claimedCoupons.isEmpty
@@ -936,7 +937,8 @@ class _RewardsOverviewState extends State<RewardsOverview>
     return GestureDetector(
       onTap: () {
         if (userActivity != null &&
-            userActivity!.todaysClaimCount!.count >=  RewardScreenStrings().limitCount.value) {
+            userActivity!.todaysClaimCount!.count >=
+                RewardScreenStrings().limitCount.value) {
           snackBarCalledfail(context, RewardScreenStrings().claimedAll.value);
         } else {
           callRewardApis(context);
@@ -948,20 +950,19 @@ class _RewardsOverviewState extends State<RewardsOverview>
       // }),
       child: Container(
         padding: EdgeInsets.all(16),
-        
-        decoration:  BoxDecoration(
-          color: AppColors.primaryColor,
-          borderRadius: BorderRadius.circular(12)
-        ),
+        decoration: BoxDecoration(
+            color: AppColors.primaryColor,
+            borderRadius: BorderRadius.circular(12)),
         child: Container(
-          decoration:const  BoxDecoration(
-            shape:BoxShape.circle,
-            color: AppColors.backgroundColor
-          ),
-          child: chatAvatartImage(
-            url: ProfileIcons.unclaimedCoupon,
-            height: 12,
-            width: 3,
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle, color: AppColors.backgroundColor),
+          child: ClipOval(
+            child: Image.asset(
+              'assets/icons/profileScreen/unc2.png', // your PNG path
+              height: MediaQuery.sizeOf(context).height / 16,
+              width: MediaQuery.sizeOf(context).width / 12,
+              fit: BoxFit.contain,
+            ),
           ),
         ),
       ),
