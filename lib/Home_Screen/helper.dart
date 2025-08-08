@@ -1144,3 +1144,9 @@ String formatDateToIST(String dateStr) {
         }
        return  f1<f2;
   }
+
+
+  bool getListIsValid(String s){
+     List  sdc=["credit","debit","cash"];
+     return sdc.contains(s);
+  }

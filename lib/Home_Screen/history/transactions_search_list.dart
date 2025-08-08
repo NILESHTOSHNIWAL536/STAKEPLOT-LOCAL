@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
 import '../../Constants/search.dart';
+import '../helper.dart';
 
 class TransactionsSearchList extends StatefulWidget {
   const TransactionsSearchList({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _TransactionsSearchListState extends State<TransactionsSearchList> {
         children: (matchedKeywords.length > 4
                 ? matchedKeywords.sublist(0, 4)
                 : matchedKeywords)
-            .map((data) => InkWell(
+            .map((data) => getListIsValid(data.toLowerCase()) ? SizedBox.shrink():InkWell(
                   onTap: () {
                     searchTextController.value = data;
                     searchTextControllerBool.value =
