@@ -216,7 +216,7 @@ Future<void> getAllTransactionHistory(
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
         : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${(accountSelected.value.isEmpty || bankAccountLinkedList.length == 1 || text.toLowerCase() == "cash") ? (text.toLowerCase() == "cash" ? "Cash" : "-") : accountSelected.value}";
 
-    var response = await getDataApiCall(urlPath);
+    var response = (flag || maxController.text.toString().trim().isEmpty )? await getDataApiCall(urlPath): await getTransactionsWithAmount(urlPath: urlPath,minAmount: minController.text,maxAmount: maxController.text);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);

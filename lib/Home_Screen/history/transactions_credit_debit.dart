@@ -85,12 +85,12 @@ class TransactionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     credits.toString().length >= 6
                         ? SizedBox(
                             width: MediaQuery.of(context).size.width /
-                                6, // adjust as needed
+                                4, // adjust as needed
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: textStyle(
@@ -132,7 +132,7 @@ class TransactionCard extends StatelessWidget {
                     debits.toString().length >= 6
                         ? SizedBox(
                             width: MediaQuery.of(context).size.width /
-                                6, // adjust as needed
+                                5, // adjust as needed
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: textStyle(

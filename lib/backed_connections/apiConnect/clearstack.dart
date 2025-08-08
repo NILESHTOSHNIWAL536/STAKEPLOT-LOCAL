@@ -145,6 +145,8 @@ Future<void> storeDeviceInfoLocalBackState() async
           showCheckBox.value=false;
           accountIdPdf.value="-";
           addManually.clear();
+          maxController.text="";
+          minController.text="";
        if(f)
        {
           currentPage = 1;
