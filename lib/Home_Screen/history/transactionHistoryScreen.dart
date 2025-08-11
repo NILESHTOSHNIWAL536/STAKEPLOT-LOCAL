@@ -52,8 +52,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     accountSelected.value = '';
     addManually.clear();
     balanceOutList.clear();
-    maxController.text="";
-    minController.text="";
+    maxController.text = "";
+    minController.text = "";
     getAllTransactionHistory(context, false, false, isRefreshing: true);
     getDayWiseTransactions(context).then((data) {
       dayWiseTransactions.assignAll(data);
@@ -88,167 +88,183 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     //           : screenHeight / 1.25;
     // }
 
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: historyAppBar(context),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Search Bar
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 4),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 10,
-                              right: 2,
-                              bottom: (groupTransactionList.isEmpty ? 4 : 3)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Obx(() => searchTextControllerBool.value
-                                  ? getTextFeild()
-                                  : getTextFeild()),
-                              InkWell(
-                                  onTap: () {
-                                    
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        appBar: historyAppBar(context),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Search Bar
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 4),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 10,
+                                right: 2,
+                                bottom: (groupTransactionList.isEmpty ? 4 : 3)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Obx(() => searchTextControllerBool.value
+                                    ? getTextFeild()
+                                    : getTextFeild()),
+                                InkWell(
+                                    onTap: () {
                                       isDateSummaryView.value =
                                           !isDateSummaryView
                                               .value; // Toggle state
-                                    
-                                  },
-                                  child: !isDateSummaryView.value
-                                      ? AvatarProfileImage(
-                                          url: HomePageIcons.dayWiseIcon1,
-                                          width: 70,
-                                          height: 36)
-                                      : AvatarProfileImage(
-                                          url: HomePageIcons.dayWiseIcon2,
-                                          width: 70,
-                                          height: 36)),
-                              InkWell(
-                                onTap: () {
-                                  showFilter.value = !showFilter.value;
-                                  // Toggle the filter visibility
-                                },
-                                child: AvatarProfileImage(
-                                    url: HomePageIcons.filterIcon,
-                                    width: 66,
-                                    height: 30),
-                              ),
-                            ],
-                          ),
-                        ),
-                        !isDateSummaryView.value
-                            ? Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 2),
-                                child: Obx(() => (groupTransactionList
-                                            .isNotEmpty ||
-                                        showCheckBox.value)
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(top: 3),
-                                        child: Obx(() => showCheckBox.value
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    // Cancel Button
+                                    },
+                                    child: Obx(() => !isDateSummaryView.value
+                                        ? AvatarProfileImage(
+                                            url: HomePageIcons.dayWiseIcon1,
+                                            width: 70,
+                                            height: 36)
+                                        : AvatarProfileImage(
+                                            url: HomePageIcons.dayWiseIcon2,
+                                            width: 70,
+                                            height: 36))),
+                                InkWell(
+                                    onTap: () {
+                                      showFilter.value = !showFilter.value;
 
-                                                    SelectButton(
-                                                        "Selected (${redioButton.length})",
-                                                        context),
-                                                    CancelButton(
-                                                        "Cancel", context),
-                                                  ],
-                                                ),
-                                              )
-                                            : getTab(context)),
-                                      )
-                                    : SizedBox(height: 10)),
-                              )
-                            : SizedBox(height: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.backgroundColor,
-                          ),
-                          child: Obx(
-                              () => (redioButton.isNotEmpty && getBoolFalg())
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, right: 2, top: 8),
-                                      child: getTagHideButtons(context),
-                                    )
-                                  : SizedBox.shrink()),
-                        ),
-                        Obx(() => (showFilter.value && getBoolFalg())
-                            ? filterTransaction(context)
-                            : SizedBox.shrink()),
-                      ],
-                    ),
-                  ),
-                  Obx(() {
-                    double calculatedHeight;
-                    if (showFilter.value || redioButton.isNotEmpty) {
-                      calculatedHeight = screenHeight / 1.52;
-                    } else if (showFilter.value && !isDateSummaryView.value) {
-                      calculatedHeight = screenHeight / 1.5;
-                    } else {
-                      calculatedHeight = (groupTransactionList.isNotEmpty ||
-                              redioButton.isNotEmpty)
-                          ? screenHeight / 1.35
-                          : screenHeight / 1.25;
-                    }
+                                      if (!showFilter.value) {
+                                        searchTextController.value = "";
+                                        searchController.text = "";
+                                        onChanedAutoTransactionStatus(context);
+                                      }
 
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: calculatedHeight,
-                      child: IndexedStack(
-                        index: isDateSummaryView.value ? 0 : 1,
-                        children: [
-                          CalendarTransactionScreen(),
-                          NotificationListener<ScrollNotification>(
-                            onNotification: (scrollNotification) {
-                              if (scrollNotification
-                                  is ScrollStartNotification) {
-                                // ✅ Dismiss keyboard when scrolling starts
-                                FocusScope.of(context).unfocus();
-                              }
-                              return false;
-                            },
-                            child: SingleChildScrollView(
-                              controller: scrollController,
-                              child: TransactionHistory(
-                                isYearView: false,
-                                isflag: true,
-                                showIcon: false,
-                                expandedPage: false,
-                              ),
+                                      // Toggle the filter visibility
+                                    },
+                                    child: Obx(
+                                      () => !showFilter.value
+                                          ? AvatarProfileImage(
+                                              url: HomePageIcons.filterIcon,
+                                              width: 66,
+                                              height: 30)
+                                          : AvatarProfileImage(
+                                              url: HomePageIcons.filterOn,
+                                              width: 66,
+                                              height: 30),
+                                    )),
+                              ],
                             ),
                           ),
+                          !isDateSummaryView.value
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 10, right: 2),
+                                  child: Obx(() => (groupTransactionList
+                                              .isNotEmpty ||
+                                          showCheckBox.value)
+                                      ? Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 3),
+                                          child: Obx(() => showCheckBox.value
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 10),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      // Cancel Button
+
+                                                      SelectButton(
+                                                          "Selected (${redioButton.length})",
+                                                          context),
+                                                      CancelButton(
+                                                          "Cancel", context),
+                                                    ],
+                                                  ),
+                                                )
+                                              : getTab(context)),
+                                        )
+                                      : SizedBox(height: 10)),
+                                )
+                              : SizedBox(height: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.backgroundColor,
+                            ),
+                            child: Obx(
+                                () => (redioButton.isNotEmpty && getBoolFalg())
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 2, top: 8),
+                                        child: getTagHideButtons(context),
+                                      )
+                                    : SizedBox.shrink()),
+                          ),
+                          Obx(() => (showFilter.value && getBoolFalg())
+                              ? filterTransaction(context)
+                              : SizedBox.shrink()),
                         ],
                       ),
-                    );
-                  }),
-                ],
+                    ),
+                    Obx(() {
+                      double calculatedHeight;
+                      if (showFilter.value || redioButton.isNotEmpty) {
+                        calculatedHeight = screenHeight / 1.52;
+                      } else if (showFilter.value && !isDateSummaryView.value) {
+                        calculatedHeight = screenHeight / 1.5;
+                      } else {
+                        calculatedHeight = (groupTransactionList.isNotEmpty ||
+                                redioButton.isNotEmpty)
+                            ? screenHeight / 1.35
+                            : screenHeight / 1.25;
+                      }
+
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: calculatedHeight,
+                        child: IndexedStack(
+                          index: isDateSummaryView.value ? 0 : 1,
+                          children: [
+                            CalendarTransactionScreen(),
+                            NotificationListener<ScrollNotification>(
+                              onNotification: (scrollNotification) {
+                                if (scrollNotification
+                                    is ScrollStartNotification) {
+                                  // ✅ Dismiss keyboard when scrolling starts
+                                  FocusScope.of(context).unfocus();
+                                }
+                                return false;
+                              },
+                              child: SingleChildScrollView(
+                                controller: scrollController,
+                                child: TransactionHistory(
+                                  isYearView: false,
+                                  isflag: true,
+                                  showIcon: false,
+                                  expandedPage: false,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -292,12 +308,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           suffixIcon: searchController.text.isNotEmpty
               ? IconButton(
                   icon: Icon(Icons.clear, color: AppColors.accentColor),
-                 onPressed: () {
-                  searchController.clear(); // Clear the TextEditingController
-                  searchTextController.value = ''; // Clear RxString
-                  clearTransactions(context: context, f: true);
-                  searchTextControllerBool.value = !searchTextControllerBool.value;
-                },
+                  onPressed: () {
+                    searchController.clear(); // Clear the TextEditingController
+                    searchTextController.value = ''; // Clear RxString
+                    clearTransactions(context: context, f: true);
+                    searchTextControllerBool.value =
+                        !searchTextControllerBool.value;
+                  },
                 )
               : null,
           filled: true,
