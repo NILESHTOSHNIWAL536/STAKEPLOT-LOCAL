@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Hive_localstorage/apisCall/user_apis.dart';
 import '../backed_connections/apis_connect.dart';
 
 class UserController extends GetxController {
@@ -106,14 +107,14 @@ class UserController extends GetxController {
         likedComments.assignAll(List<String>.from(obj['likedComments'] ?? []));
         likedProducts.assignAll(List<String>.from(obj['likedProducts'] ?? []));
         savedPostIds.assignAll(List<String>.from(obj['saved'] ?? []));
-          friendsList.assignAll(List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
+        friendsList.assignAll(List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
 
         addFriendtoList();
-
         getMaskendUsers(true);
         getMaskendUsers(false);
         getSaved();
         getuserPost(obj['_id']);
+        cacheUserDataLocally();
       }
     } catch (e) {
     } finally {
