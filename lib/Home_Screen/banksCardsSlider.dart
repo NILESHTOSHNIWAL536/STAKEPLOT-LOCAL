@@ -142,7 +142,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                Obx(()=> Text(
-                  '\u{20B9} ${(hideBackAccountPassword.value || userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00") ? formatMoneyIndian(data['currentBalance'] ?? "null") : lock[randomIndex]}',
+                  '\u{20B9} ${(hideBackAccountPassword.value || userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00") ? formatMoneyIndian(data['currentBalance'] ?? "null",lock[randomIndex]) : lock[randomIndex]}',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 20,

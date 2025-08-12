@@ -380,8 +380,8 @@ String avaterUrlPath(String name) {
   return "assets/avatars/" + name[0].toString().toLowerCase() + ".svg";
 }
 
-String formatMoneyIndian(String value) {
-  if (value.isEmpty) return '0';
+String formatMoneyIndian(String value,[String pattern="0"]) {
+  if (value.isEmpty) return pattern;
   try {
     // Remove commas if user input already has them
     final number = double.parse(value.replaceAll(',', ''));
@@ -394,7 +394,7 @@ String formatMoneyIndian(String value) {
     );
     return formatter.format(number).trim();
   } catch (e) {
-    return '0';
+    return pattern;
   }
 }
 
