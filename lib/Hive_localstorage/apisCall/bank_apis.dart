@@ -90,6 +90,6 @@ Future<void> loadBankDataFromHive() async {
    isBankLinked.value =false;
    isBankLinked.value = bankAccountLinkedList.isNotEmpty;
   }catch(e){
-    print(e);
+    
   }
 }

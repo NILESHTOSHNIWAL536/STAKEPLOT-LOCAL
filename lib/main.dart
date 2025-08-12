@@ -58,6 +58,7 @@ import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
@@ -74,6 +75,7 @@ final GlobalKey<NavigatorState> updateNavigatorKey = GlobalKey<NavigatorState>()
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter bindings are initialized
    checkFirebaseAndValidUser();
+   await GetLocalStorage();
   runApp(const MyApp());
 }
 
