@@ -205,8 +205,6 @@ void checkFirebaseAndValidUser() async {
             .build());
   mainPageWebSocket.connect();
 
-  await GetLocalStorage();
-
   } catch (e) {
   }
 

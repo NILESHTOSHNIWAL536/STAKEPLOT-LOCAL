@@ -4,13 +4,15 @@ import '../../backed_connections/apiAutomations/bankinfo.dart';
 import '../../backed_connections/apiAutomations/nextFetch.dart';
 import '../bank_bata/bank_account_model.dart';
 import '../bank_bata/consent_detail_model.dart';
+import '../hive_storage.dart';
+import 'fipmetric_apis.dart';
 
 
 class BankStorage{
 
 static Future<void>  cacheBankDataLocally() async {
-  final bankBox = Hive.box<BankAccountModel>('bankAccountsBox');
-  final consentBox = Hive.box<ConsentDetailModel>('consentDetailsBox');
+  final bankBox =await HiveStorage.bankAccountsBox;
+  final consentBox =await HiveStorage.consentDetailsBox;
 
 await bankBox.clear();
 await consentBox.clear();
@@ -55,8 +57,8 @@ try{
 
 
 static Future<void> loadBankDataFromHive() async {
-  final bankBox = Hive.box<BankAccountModel>('bankAccountsBox');
-  final consentBox = Hive.box<ConsentDetailModel>('consentDetailsBox');
+ final bankBox =await HiveStorage.bankAccountsBox;
+  final consentBox =await HiveStorage.consentDetailsBox;
   bankAccountLinkedList.clear();
   try{
   for (var item in bankBox.values) {
