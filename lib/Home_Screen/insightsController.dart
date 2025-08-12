@@ -53,7 +53,6 @@ class InsightsController extends GetxController {
           await getDataApiCall("${url}/transactionauto/get-money-map-messages");
       if (response.statusCode == 200) {
         final his = jsonDecode(response.body);
-        print("insights for money map $his");
         final obj = his['data'] as List;
         totalInSightsMoneyMap.clear();
         totalInSightsMoneyMap

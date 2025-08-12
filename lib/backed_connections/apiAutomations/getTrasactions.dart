@@ -238,7 +238,6 @@ void getAutoMationsTransactionsWeekly() async {
 
 Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, [String weekORmonth = 'month', String? endDate]) async {
   if (accountId.value.trim().isEmpty) {
-    print('No account ID, setting empty state');
     _setEmptyState(weekORmonth, date, endDate);
     return;
   }
@@ -249,7 +248,6 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
   // Try loading from Hive first
   final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(accountId.value, storedPeriod, date, endDate);
   if (cachedFinance != null) {
-    print('Using cached data for $cacheKey');
     return;
   }
 
@@ -333,15 +331,12 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
           accountId: accountId.value,
         );
       } catch (e) {
-        print('Error parsing API data: $e');
         _setEmptyState(weekORmonth, date, endDate);
       }
     } else {
-      print('API failed: ${response.statusCode}');
       _setEmptyState(weekORmonth, date, endDate);
     }
   } catch (e) {
-    print('API or processing error: $e');
     _setEmptyState(weekORmonth, date, endDate);
   }
 }
