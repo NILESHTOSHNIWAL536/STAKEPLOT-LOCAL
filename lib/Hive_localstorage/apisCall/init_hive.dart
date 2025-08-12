@@ -1,5 +1,10 @@
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/bank_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/user_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/insights_data/insights_model.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/transactions_data/transaction.dart';
 import 'package:hive/hive.dart';
@@ -19,13 +24,15 @@ Future<void> GetLocalStorage()async
         await init_banks();
         await init_fips_metrics();
         await init_Transactions();
+        await init_finance();
+        await init_insights();
 }
 
-Future<void> init_user()async
-{
+Future<void> init_user() async {
   Hive.registerAdapter(UserModelAdapter());
   await Hive.openBox<UserModel>(HiveStorage.userBoxName);
-  if(HiveStorage.isBoxOpen(HiveStorage.userBoxName))  UserLocalStorage.loadUserFromHive();     
+  if (HiveStorage.isBoxOpen(HiveStorage.userBoxName))
+    UserLocalStorage.loadUserFromHive();
 }
 
 
@@ -38,12 +45,11 @@ Future<void> init_banks()async
         if(HiveStorage.isBoxOpen(HiveStorage.consentDetailsBoxName))BankStorage.loadBankDataFromHive();
 }
 
-
-Future<void> init_fips_metrics() async
-{
+Future<void> init_fips_metrics() async {
   Hive.registerAdapter(FipsMetricsAdapter());
   await Hive.openBox<FipsMetrics>(HiveStorage.fipsMetricBoxName);
-  if(HiveStorage.isBoxOpen(HiveStorage.fipsMetricBoxName)) FipsMetricLocalStorage.loadFipsMetricsFromHive();
+  if (HiveStorage.isBoxOpen(HiveStorage.fipsMetricBoxName))
+    FipsMetricLocalStorage.loadFipsMetricsFromHive();
 }
 
 Future<void> init_Transactions() async
@@ -53,4 +59,27 @@ Future<void> init_Transactions() async
   if(HiveStorage.isBoxOpen(HiveStorage.transactionsBoxName)) TransactionStorage.loadTransactionsFromHive();
 }
 
+Future<void> init_finance() async {
+  Hive.registerAdapter(FinanceModelAdapter());
+  await Hive.openBox<FinanceModel>('financeBox');
+  if (accountId.value.isNotEmpty) {
+    await FinanceLocalStorage.loadFinanceFromHive(
+        accountId.value, 'Month', getFormattedDate());
+  } else {
+  
+  }
+  // BankStorage.loadBankDataFromHive();
+}
 
+Future<void> init_insights() async {
+  try {
+  
+    Hive.registerAdapter(InsightsModelAdapter());
+   
+    await Hive.openBox<InsightsModel>('insightsBox');
+  
+   
+  } catch (e) {
+   
+  }
+}

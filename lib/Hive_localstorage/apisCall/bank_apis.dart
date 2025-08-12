@@ -1,14 +1,12 @@
-import 'package:hive/hive.dart';
 import '../../Utils/homepageStrings.dart.dart';
 import '../../backed_connections/apiAutomations/bankinfo.dart';
 import '../../backed_connections/apiAutomations/nextFetch.dart';
 import '../bank_bata/bank_account_model.dart';
 import '../bank_bata/consent_detail_model.dart';
 import '../hive_storage.dart';
-import 'fipmetric_apis.dart';
 
+class BankStorage {
 
-class BankStorage{
 
 static Future<void>  cacheBankDataLocally() async {
   final bankBox =await HiveStorage.bankAccountsBox;

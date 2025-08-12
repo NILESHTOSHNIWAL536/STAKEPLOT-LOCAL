@@ -140,6 +140,7 @@ class _InsightsScreenState extends State<InsightsScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _fetchInsights();
+    _fetchInsightsMoneyMap();
     _animationController.forward();
   }
 
@@ -179,7 +180,7 @@ class _InsightsScreenState extends State<InsightsScreen>
   }
 
   void _onItemTapped(int index) {
-     if (index == _selectedIndex.value) {
+    if (index == _selectedIndex.value) {
       return;
     }
     _selectedIndex.value = index;
@@ -357,10 +358,7 @@ class _InsightsScreenState extends State<InsightsScreen>
       duration: const Duration(milliseconds: 800),
       width: ResponsiveUtils.getCardWidth(context),
       height: ResponsiveUtils.getCardHeight(context),
-     
-      child:  Center(
-        child: Spinner()
-      ),
+      child: Center(child: Spinner()),
     );
   }
 
@@ -391,13 +389,15 @@ class _InsightsScreenState extends State<InsightsScreen>
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: selectedIndex == 0 ? _fetchInsights : _fetchInsightsMoneyMap,
+              onPressed:
+                  selectedIndex == 0 ? _fetchInsights : _fetchInsightsMoneyMap,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.bg3,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
               child: Text(
                 HomepageStringsDart().retryButton,
@@ -554,8 +554,7 @@ class InsightCard extends StatelessWidget {
         width: width,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-           color: color,
-         
+          color: color,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Stack(

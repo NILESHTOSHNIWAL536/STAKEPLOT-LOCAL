@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
 import 'dart:math';
 import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -17,10 +18,238 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+// Other imports (e.g., AppColors, FontManager, HomepageStringsDart, LineChartWidget, etc.)
+// class FinancePage extends StatefulWidget {
+//   const FinancePage({
+//     super.key,
+//   });
+
+//   @override
+//   State<FinancePage> createState() => _FinancePageState();
+// }
+
+// class _FinancePageState extends State<FinancePage> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     selectedButton.value = 'Month';
+//     calledFunctionToFetchData(context);
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     double screenWidth = MediaQuery.of(context).size.width;
+//     double screenHeight = MediaQuery.of(context).size.height;
+//     double fontSizeFactor = screenWidth * 0.01;
+
+//     return Scaffold(
+//       backgroundColor: AppColors.backgroundColor,
+//       body: Padding(
+//         padding: EdgeInsets.all(0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   HomepageStringsDart().spendingAndCashFlow,
+//                   style: FontManager().getTextStyle(context,
+//                       lWeight: FontWeight.w300,
+//                       fontSize: fontSizeFactor * 4.0,
+//                       color: AppColors.accentColor),
+//                 ),
+//                 historyButton(fontSizeFactor, context),
+//               ],
+//             ),
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 Row(
+//                   children: [
+//                     Obx(() => Text(
+//                           getGraphData.value
+//                               ? '₹${formatMoneyIndian(doubleToFixed(totalDebitValue.toString()))}'
+//                               : '₹${formatMoneyIndian(doubleToFixed(totalDebitValue.toString()))}',
+//                           style: FontManager().getTextStyle(context,
+//                               lWeight: FontWeight.bold,
+//                               fontSize: fontSizeFactor * 4,
+//                               color: AppColors.accentColor),
+//                         )),
+//                     SizedBox(width: screenWidth * 0.02),
+//                     Obx(() {
+//                       String displayText = '';
+//                       if (selectedButton.value == 'Week') {
+//                         displayText =
+//                             HomepageStringsDart().lastWeek; //'This week';
+//                       } else if (selectedButton.value == 'Month') {
+//                         displayText = HomepageStringsDart().thisMonth;
+//                       }
+//                       return Text(
+//                         displayText,
+//                         style: FontManager().getTextStyle(context,
+//                             lWeight: FontWeight.normal,
+//                             fontSize: fontSizeFactor * 2.5,
+//                             color: AppColors.accentColor),
+//                       );
+//                     }),
+//                     SizedBox(width: screenWidth * 0.02),
+//                     Obx(() {
+//                       if (selectedButton.value == 'Custom') {
+//                         return SizedBox
+//                             .shrink(); // Do not show anything for Custom
+//                       }
+//                       // Determine the arrow icon and color based on the value
+//                       final isPositive = totalDebitValuePercent >= 0;
+//                       final arrowIcon = isPositive
+//                           ? Icons.arrow_upward
+//                           : Icons.arrow_downward;
+//                       final arrowColor = isPositive ? Colors.red : Colors.green;
+//                       final formattedValue = totalDebitValuePercent
+//                           .toStringAsFixed(1); // Round to one decimal place
+//                       final textColor = isPositive
+//                           ? Colors.red
+//                           : Colors.green; // Change text color based on value
+
+//                       return Row(
+//                         children: [
+//                           Text(
+//                             '$formattedValue%',
+//                             style: FontManager().getTextStyle(context,
+//                                 lWeight: FontWeight.normal,
+//                                 fontSize: fontSizeFactor * 2.5,
+//                                 color:
+//                                     textColor), // Set text color based on value
+//                           ),
+//                           SizedBox(width: screenWidth * 0.01),
+//                           Icon(
+//                             arrowIcon,
+//                             color: arrowColor,
+//                             size: fontSizeFactor * 2.5, // Adjust size as needed
+//                           ),
+//                         ],
+//                       );
+//                     }),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//             SizedBox(height: screenHeight * 0.01),
+//             Obx(() => getGraphData.value
+//                 ? getMonthWeekCustom(fontSizeFactor, screenWidth)
+//                 : getMonthWeekCustom(fontSizeFactor, screenWidth)),
+//             Obx(() => !getGraphData.value
+//                 ? Container(
+//                     width: MediaQuery.of(context).size.width,
+//                     height: MediaQuery.of(context).size.height / 2.6,
+//                     child: consentAndHandleDetails.isEmpty
+//                         ? Center(
+//                             child: textStyleImage(
+//                                 context: context,
+//                                 text:
+//                                     HomepageStringsDart().noSpendingsAvailable,
+//                                 fontsize: fontSizeFactor * 4.0,
+//                                 c: AppColors.accentColor))
+//                         : Center(
+//                             child: Spinner(
+//                               size: 60,
+//                             ),
+//                           ),
+//                   )
+//                 : LineChartWidget(
+//                     chartData: transactionChatGraph,
+//                     days: labels,
+//                     selectedButton: selectedButton,
+//                     shouldBeNavigate: true,
+//                     daysInMonth: selectedButton == "Week"
+//                         ? 7
+//                         : selectedButton == "Month"
+//                             ? getDaysInCurrentMonth()
+//                             : labels.length,
+//                   )),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget getMonthWeekCustom(fontSizeFactor, screenWidth) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Text(
+//           HomepageStringsDart().bankSpendings,
+//           style: FontManager().getTextStyle(context,
+//               lWeight: FontWeight.normal,
+//               fontSize: fontSizeFactor * 3.4,
+//               color: AppColors.bg1),
+//         ),
+//         Row(
+//           children: [
+//             GestureDetector(
+//               onTap: () {
+//                 // getGraphData.value = false;
+//                 selectedButton.value = 'Month';
+//                 getAutoMationsTransactionsCustom(getFormattedDate(), context);
+//               },
+//               child: Container(
+//                 height: 35,
+//                 width: screenWidth * 0.15,
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(16),
+//                   color: selectedButton.value == 'Month'
+//                       ? AppColors.button
+//                       : AppColors.backgroundColor,
+//                 ),
+//                 child: Center(
+//                   child: Text(
+//                     HomepageStringsDart().month,
+//                     style: FontManager().getTextStyle(context,
+//                         lWeight: FontWeight.normal,
+//                         fontSize: fontSizeFactor * 3.4,
+//                         color: AppColors.accentColor),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             SizedBox(width: screenWidth * 0.02),
+//             GestureDetector(
+//               onTap: () {
+//                 pickCustomDateRange(context);
+//               },
+//               child: Container(
+//                 height: 35,
+//                 width: screenWidth * 0.15,
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(16),
+//                   color: selectedButton.value == 'Custom'
+//                       ? AppColors.button
+//                       : AppColors.backgroundColor,
+//                 ),
+//                 child: Center(
+//                   child: Text(
+//                     HomepageStringsDart().custom,
+//                     style: FontManager().getTextStyle(context,
+//                         lWeight: FontWeight.normal,
+//                         fontSize: fontSizeFactor * 3.4,
+//                         color: AppColors.accentColor),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
+// }
+
 class FinancePage extends StatefulWidget {
-  const FinancePage({
-    super.key,
-  });
+  const FinancePage({super.key});
 
   @override
   State<FinancePage> createState() => _FinancePageState();
@@ -31,9 +260,26 @@ class _FinancePageState extends State<FinancePage> {
   void initState() {
     super.initState();
     selectedButton.value = 'Month';
-    calledFunctionToFetchData(context);
+    _fetchData();
   }
 
+    Future<void> _fetchData() async {
+    try {
+      // Ensure financeBox is open
+      if (accountId.value.isEmpty) {
+        accountId.value = userController.selectedBank.value;
+        if (accountId.value.isEmpty) {
+          print('No account ID available, setting empty state');
+          // _setEmptyState('Month', getFormattedDate(), null);
+          return;
+        }
+      }
+       getAutoMationsTransactionsCustom( getFormattedDate(), context,'Month');
+    } catch (e) {
+      print('Error fetching data: $e');
+      // _setEmptyState('Month', getFormattedDate(), null);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -67,9 +313,7 @@ class _FinancePageState extends State<FinancePage> {
                 Row(
                   children: [
                     Obx(() => Text(
-                          getGraphData.value
-                              ? '₹${formatMoneyIndian(doubleToFixed(totalDebitValue.toString()))}'
-                              : '₹${formatMoneyIndian(doubleToFixed(totalDebitValue.toString()))}',
+                          '₹${formatMoneyIndian(doubleToFixed(totalDebitValue.toString()))}',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
                               fontSize: fontSizeFactor * 4,
@@ -79,8 +323,7 @@ class _FinancePageState extends State<FinancePage> {
                     Obx(() {
                       String displayText = '';
                       if (selectedButton.value == 'Week') {
-                        displayText =
-                            HomepageStringsDart().lastWeek; //'This week';
+                        displayText = HomepageStringsDart().lastWeek;
                       } else if (selectedButton.value == 'Month') {
                         displayText = HomepageStringsDart().thisMonth;
                       }
@@ -95,20 +338,16 @@ class _FinancePageState extends State<FinancePage> {
                     SizedBox(width: screenWidth * 0.02),
                     Obx(() {
                       if (selectedButton.value == 'Custom') {
-                        return SizedBox
-                            .shrink(); // Do not show anything for Custom
+                        return SizedBox.shrink();
                       }
-                      // Determine the arrow icon and color based on the value
                       final isPositive = totalDebitValuePercent >= 0;
                       final arrowIcon = isPositive
                           ? Icons.arrow_upward
                           : Icons.arrow_downward;
                       final arrowColor = isPositive ? Colors.red : Colors.green;
-                      final formattedValue = totalDebitValuePercent
-                          .toStringAsFixed(1); // Round to one decimal place
-                      final textColor = isPositive
-                          ? Colors.red
-                          : Colors.green; // Change text color based on value
+                      final formattedValue =
+                          totalDebitValuePercent.toStringAsFixed(1);
+                      final textColor = isPositive ? Colors.red : Colors.green;
 
                       return Row(
                         children: [
@@ -117,14 +356,13 @@ class _FinancePageState extends State<FinancePage> {
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.normal,
                                 fontSize: fontSizeFactor * 2.5,
-                                color:
-                                    textColor), // Set text color based on value
+                                color: textColor),
                           ),
                           SizedBox(width: screenWidth * 0.01),
                           Icon(
                             arrowIcon,
                             color: arrowColor,
-                            size: fontSizeFactor * 2.5, // Adjust size as needed
+                            size: fontSizeFactor * 2.5,
                           ),
                         ],
                       );
@@ -134,45 +372,47 @@ class _FinancePageState extends State<FinancePage> {
               ],
             ),
             SizedBox(height: screenHeight * 0.01),
-            Obx(() => getGraphData.value
-                ? getMonthWeekCustom(fontSizeFactor, screenWidth)
-                : getMonthWeekCustom(fontSizeFactor, screenWidth)),
+            Obx(() => getMonthWeekCustom(fontSizeFactor, screenWidth)),
             Obx(() => !getGraphData.value
                 ? Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 2.6,
-                    child: consentAndHandleDetails.isEmpty
-                        ? Center(
-                            child: textStyleImage(
-                                context: context,
-                                text:
-                                    HomepageStringsDart().noSpendingsAvailable,
-                                fontsize: fontSizeFactor * 4.0,
-                                c: AppColors.accentColor))
-                        : Center(
-                            child: Spinner(
-                              size: 60,
-                            ),
-                          ),
+                    width: screenWidth,
+                    height: screenHeight / 2.6,
+                    child: Center(
+                      child: Spinner(size: 60),
+                    ),
                   )
-                : LineChartWidget(
-                    chartData: transactionChatGraph,
-                    days: labels,
-                    selectedButton: selectedButton,
-                    shouldBeNavigate: true,
-                    daysInMonth: selectedButton == "Week"
-                        ? 7
-                        : selectedButton == "Month"
-                            ? getDaysInCurrentMonth()
-                            : labels.length,
-                  )),
+                : transactionChatGraph['debited']?.isEmpty == true &&
+                        transactionChatGraph['credited']?.isEmpty == true
+                    ? Container(
+                        width: screenWidth,
+                        height: screenHeight / 2.6,
+                        child: Center(
+                          child: textStyleImage(
+                            context: context,
+                            text: HomepageStringsDart().noSpendingsAvailable,
+                            fontsize: fontSizeFactor * 4.0,
+                            c: AppColors.accentColor,
+                          ),
+                        ),
+                      )
+                    : LineChartWidget(
+                        chartData: transactionChatGraph,
+                        days: labels,
+                        selectedButton: selectedButton,
+                        shouldBeNavigate: true,
+                        daysInMonth: selectedButton == "Week"
+                            ? 7
+                            : selectedButton == "Month"
+                                ? getDaysInCurrentMonth()
+                                : labels.length,
+                      )),
           ],
         ),
       ),
     );
   }
 
-  Widget getMonthWeekCustom(fontSizeFactor, screenWidth) {
+  Widget getMonthWeekCustom(double fontSizeFactor, double screenWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -187,7 +427,6 @@ class _FinancePageState extends State<FinancePage> {
           children: [
             GestureDetector(
               onTap: () {
-                // getGraphData.value = false;
                 selectedButton.value = 'Month';
                 getAutoMationsTransactionsCustom(getFormattedDate(), context);
               },
