@@ -28,6 +28,10 @@ import 'package:home_widget/home_widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../Hive_localstorage/apisCall/init_hive.dart';
+
+
+
 DateTime? _lastSent;
 Timer? snackbarTimer;
 
@@ -172,9 +176,12 @@ void checkFirebaseAndValidUser() async {
             .setTransports(['websocket'])
             .enableForceNewConnection()
             .build());
-    mainPageWebSocket.connect();
-    await GetLocalStorage();
-  } catch (e) {}
+  mainPageWebSocket.connect();
+
+  await GetLocalStorage();
+
+  } catch (e) {
+  }
 
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([

@@ -1,17 +1,19 @@
 import 'package:hive/hive.dart';
-
+import '../../Utils/homepageStrings.dart.dart';
 import '../../backed_connections/apiAutomations/bankinfo.dart';
 import '../../backed_connections/apiAutomations/nextFetch.dart';
-import '../../backed_connections/apis_connect.dart';
 import '../bank_bata/bank_account_model.dart';
 import '../bank_bata/consent_detail_model.dart';
 
-Future<void> cacheBankDataLocally() async {
+
+class BankStorage{
+
+static Future<void>  cacheBankDataLocally() async {
   final bankBox = Hive.box<BankAccountModel>('bankAccountsBox');
   final consentBox = Hive.box<ConsentDetailModel>('consentDetailsBox');
 
-  await bankBox.clear();
-  await consentBox.clear();
+await bankBox.clear();
+await consentBox.clear();
 try{
   for (var item in bankAccountLinkedList) {
     bankBox.add(
@@ -21,9 +23,9 @@ try{
         bankLogo: item['bankLogo'],
         fipId: item['fipId'],
         accountId: item['accountId'],
-        maskedAccNumber: item['maskedAccNumber'],
+        maskedAccNumber: "XXXXXXXXXX",//item['maskedAccNumber'],
         type: item['type'],
-        currentBalance: item['currentBalance'].toString(),
+        currentBalance: HomepageStringsDart().lockPatterns[0],//item['currentBalance'].toString(),
         lastFetch: item['lastFetch'],
         nextFetch: item['nextFetch'],
         fetchCount: item['fetchCount'].toString(),
@@ -52,7 +54,7 @@ try{
 
 
 
-Future<void> loadBankDataFromHive() async {
+static Future<void> loadBankDataFromHive() async {
   final bankBox = Hive.box<BankAccountModel>('bankAccountsBox');
   final consentBox = Hive.box<ConsentDetailModel>('consentDetailsBox');
   bankAccountLinkedList.clear();
@@ -92,4 +94,5 @@ Future<void> loadBankDataFromHive() async {
   }catch(e){
     
   }
+}
 }

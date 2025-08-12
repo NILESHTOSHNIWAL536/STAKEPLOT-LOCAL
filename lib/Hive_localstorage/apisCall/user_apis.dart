@@ -5,7 +5,11 @@ import '../../controllers/user-controller.dart';
 import '../user-data/user_model.dart';
 
 
-Future<void> cacheUserDataLocally() async {
+
+class  UserLocalStorage {
+  
+
+static Future<void> cacheUserDataLocally() async {
   final box = Hive.box<UserModel>('userBox');
 
   final user = UserModel(
@@ -43,7 +47,7 @@ Future<void> cacheUserDataLocally() async {
 }
 
 
-Future<void> loadUserFromHive() async 
+static Future<void> loadUserFromHive() async 
 {
   final box = Hive.box<UserModel>('userBox');
   final user = box.get('localUser');
@@ -87,4 +91,6 @@ Future<void> loadUserFromHive() async
     userController.firstFetchedDate.value = user.firstFetchedDate;
     addFriendtoList();
   }
+}
+
 }
