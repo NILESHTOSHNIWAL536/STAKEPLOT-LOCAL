@@ -20,13 +20,13 @@ class FinanceLocalStorage {
     required String accountId,
   }) async {
     try {
-      final box = Hive.box<FinanceModel>('financeBox');
+      final box =await Hive.box<FinanceModel>('financeBox');
       final cacheKey = '${accountId}_${period}_$startDate${endDate != null ? '_$endDate' : ''}';
-      print('Caching finance data for key: $cacheKey');
+      // print('Caching finance data for key: $cacheKey');
 
       // Validate data before caching
       if (labels.length != debited.length || labels.length != credited.length) {
-        print('Error: Inconsistent data lengths - labels: ${labels.length}, debited: ${debited.length}, credited: ${credited.length}');
+        // print('Error: Inconsistent data lengths - labels: ${labels.length}, debited: ${debited.length}, credited: ${credited.length}');
         return;
       }
 
@@ -43,21 +43,21 @@ class FinanceLocalStorage {
       );
 
       await box.put(cacheKey, finance);
-      print('Successfully cached finance data for $cacheKey');
+      // print('Successfully cached finance data for $cacheKey');
     } catch (e) {
-      print('Error caching finance data: $e');
+      // print('Error caching finance data: $e');
     }
   }
 
   static Future<FinanceModel?> loadFinanceFromHive(String accountId, String period, String startDate, [String? endDate]) async {
     try {
-      final box = Hive.box<FinanceModel>('financeBox');
+      final box =await Hive.box<FinanceModel>('financeBox');
       final cacheKey = '${accountId}_${period}_$startDate${endDate != null ? '_$endDate' : ''}';
-      print('Loading finance data for key: $cacheKey');
+      // print('Loading finance data for key: $cacheKey');
 
       final finance = box.get(cacheKey);
       if (finance != null) {
-        print('Finance data loaded from cache: $cacheKey');
+        // print('Finance data loaded from cache: $cacheKey');
         labels.assignAll(finance.labels);
         transactionChatGraph['debited'] = finance.debited;
         transactionChatGraph['credited'] = finance.credited;
@@ -66,12 +66,12 @@ class FinanceLocalStorage {
         maxYValue.value = finance.maxYValue;
         getGraphData.value = true;
       } else {
-        print('No finance data found in cache for: $cacheKey');
+        // print('No finance data found in cache for: $cacheKey');
         getGraphData.value = false;
       }
       return finance;
     } catch (e) {
-      print('Error loading finance data from Hive: $e');
+      // print('Error loading finance data from Hive: $e');
       getGraphData.value = false;
       return null;
     }
@@ -85,14 +85,14 @@ class FinanceLocalStorage {
         // Clear all data for the account
         final keys = box.keys.where((key) => key.toString().startsWith(accountId));
         await box.deleteAll(keys);
-        print('Cleared all finance cache for account: $accountId');
+        // print('Cleared all finance cache for account: $accountId');
       } else {
         final cacheKey = '${accountId}_${period}_$startDate${endDate != null ? '_$endDate' : ''}';
         await box.delete(cacheKey);
-        print('Cleared finance cache for key: $cacheKey');
+        // print('Cleared finance cache for key: $cacheKey');
       }
     } catch (e) {
-      print('Error clearing finance cache: $e');
+      // print('Error clearing finance cache: $e');
     }
   }
 }

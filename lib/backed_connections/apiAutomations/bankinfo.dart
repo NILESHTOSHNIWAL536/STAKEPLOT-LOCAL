@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:get/get.dart';
 
 import '../../Hive_localstorage/apisCall/bank_apis.dart';
+import '../../Hive_localstorage/apisCall/fipmetric_apis.dart';
 import '../../model/fips_metric_model.dart';
 
 
@@ -157,9 +158,11 @@ Future<void> getFipAccountInfo() async
           list.add(FipsMetric(timestamp: DateTime(2027), fipId: fipIds.isEmpty? "":fipIds.first , eventName: "", BankName: BankName.value, latencyAvgMs: 100, successPercent: 100, timeoutPercent: 10, accNotFoundPercent: 10, serverErrorPercent: 10, clientErrorPercent: 10, latencyP99Ms: 10, latencyP95Ms: 10, latencyP50Ms: 10));
         }
         fipsMetricList.addAll(list);
+        FipsMetricLocalStorage.saveFipsMetricsToHive();
     }
    }catch(e)
    {
+        FipsMetricLocalStorage.loadFipsMetricsFromHive();
    }
 
 }

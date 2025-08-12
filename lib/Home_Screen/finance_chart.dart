@@ -22,6 +22,231 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 // Other imports (e.g., AppColors, FontManager, HomepageStringsDart, LineChartWidget, etc.)
+// class FinancePage extends StatefulWidget {
+//   const FinancePage({
+//     super.key,
+//   });
+
+//   @override
+//   State<FinancePage> createState() => _FinancePageState();
+// }
+
+// class _FinancePageState extends State<FinancePage> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     selectedButton.value = 'Month';
+//     calledFunctionToFetchData(context);
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     double screenWidth = MediaQuery.of(context).size.width;
+//     double screenHeight = MediaQuery.of(context).size.height;
+//     double fontSizeFactor = screenWidth * 0.01;
+
+//     return Scaffold(
+//       backgroundColor: AppColors.backgroundColor,
+//       body: Padding(
+//         padding: EdgeInsets.all(0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   HomepageStringsDart().spendingAndCashFlow,
+//                   style: FontManager().getTextStyle(context,
+//                       lWeight: FontWeight.w300,
+//                       fontSize: fontSizeFactor * 4.0,
+//                       color: AppColors.accentColor),
+//                 ),
+//                 historyButton(fontSizeFactor, context),
+//               ],
+//             ),
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 Row(
+//                   children: [
+//                     Obx(() => Text(
+//                           getGraphData.value
+//                               ? '₹${formatMoneyIndian(doubleToFixed(totalDebitValue.toString()))}'
+//                               : '₹${formatMoneyIndian(doubleToFixed(totalDebitValue.toString()))}',
+//                           style: FontManager().getTextStyle(context,
+//                               lWeight: FontWeight.bold,
+//                               fontSize: fontSizeFactor * 4,
+//                               color: AppColors.accentColor),
+//                         )),
+//                     SizedBox(width: screenWidth * 0.02),
+//                     Obx(() {
+//                       String displayText = '';
+//                       if (selectedButton.value == 'Week') {
+//                         displayText =
+//                             HomepageStringsDart().lastWeek; //'This week';
+//                       } else if (selectedButton.value == 'Month') {
+//                         displayText = HomepageStringsDart().thisMonth;
+//                       }
+//                       return Text(
+//                         displayText,
+//                         style: FontManager().getTextStyle(context,
+//                             lWeight: FontWeight.normal,
+//                             fontSize: fontSizeFactor * 2.5,
+//                             color: AppColors.accentColor),
+//                       );
+//                     }),
+//                     SizedBox(width: screenWidth * 0.02),
+//                     Obx(() {
+//                       if (selectedButton.value == 'Custom') {
+//                         return SizedBox
+//                             .shrink(); // Do not show anything for Custom
+//                       }
+//                       // Determine the arrow icon and color based on the value
+//                       final isPositive = totalDebitValuePercent >= 0;
+//                       final arrowIcon = isPositive
+//                           ? Icons.arrow_upward
+//                           : Icons.arrow_downward;
+//                       final arrowColor = isPositive ? Colors.red : Colors.green;
+//                       final formattedValue = totalDebitValuePercent
+//                           .toStringAsFixed(1); // Round to one decimal place
+//                       final textColor = isPositive
+//                           ? Colors.red
+//                           : Colors.green; // Change text color based on value
+
+//                       return Row(
+//                         children: [
+//                           Text(
+//                             '$formattedValue%',
+//                             style: FontManager().getTextStyle(context,
+//                                 lWeight: FontWeight.normal,
+//                                 fontSize: fontSizeFactor * 2.5,
+//                                 color:
+//                                     textColor), // Set text color based on value
+//                           ),
+//                           SizedBox(width: screenWidth * 0.01),
+//                           Icon(
+//                             arrowIcon,
+//                             color: arrowColor,
+//                             size: fontSizeFactor * 2.5, // Adjust size as needed
+//                           ),
+//                         ],
+//                       );
+//                     }),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//             SizedBox(height: screenHeight * 0.01),
+//             Obx(() => getGraphData.value
+//                 ? getMonthWeekCustom(fontSizeFactor, screenWidth)
+//                 : getMonthWeekCustom(fontSizeFactor, screenWidth)),
+//             Obx(() => !getGraphData.value
+//                 ? Container(
+//                     width: MediaQuery.of(context).size.width,
+//                     height: MediaQuery.of(context).size.height / 2.6,
+//                     child: consentAndHandleDetails.isEmpty
+//                         ? Center(
+//                             child: textStyleImage(
+//                                 context: context,
+//                                 text:
+//                                     HomepageStringsDart().noSpendingsAvailable,
+//                                 fontsize: fontSizeFactor * 4.0,
+//                                 c: AppColors.accentColor))
+//                         : Center(
+//                             child: Spinner(
+//                               size: 60,
+//                             ),
+//                           ),
+//                   )
+//                 : LineChartWidget(
+//                     chartData: transactionChatGraph,
+//                     days: labels,
+//                     selectedButton: selectedButton,
+//                     shouldBeNavigate: true,
+//                     daysInMonth: selectedButton == "Week"
+//                         ? 7
+//                         : selectedButton == "Month"
+//                             ? getDaysInCurrentMonth()
+//                             : labels.length,
+//                   )),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget getMonthWeekCustom(fontSizeFactor, screenWidth) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Text(
+//           HomepageStringsDart().bankSpendings,
+//           style: FontManager().getTextStyle(context,
+//               lWeight: FontWeight.normal,
+//               fontSize: fontSizeFactor * 3.4,
+//               color: AppColors.bg1),
+//         ),
+//         Row(
+//           children: [
+//             GestureDetector(
+//               onTap: () {
+//                 // getGraphData.value = false;
+//                 selectedButton.value = 'Month';
+//                 getAutoMationsTransactionsCustom(getFormattedDate(), context);
+//               },
+//               child: Container(
+//                 height: 35,
+//                 width: screenWidth * 0.15,
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(16),
+//                   color: selectedButton.value == 'Month'
+//                       ? AppColors.button
+//                       : AppColors.backgroundColor,
+//                 ),
+//                 child: Center(
+//                   child: Text(
+//                     HomepageStringsDart().month,
+//                     style: FontManager().getTextStyle(context,
+//                         lWeight: FontWeight.normal,
+//                         fontSize: fontSizeFactor * 3.4,
+//                         color: AppColors.accentColor),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             SizedBox(width: screenWidth * 0.02),
+//             GestureDetector(
+//               onTap: () {
+//                 pickCustomDateRange(context);
+//               },
+//               child: Container(
+//                 height: 35,
+//                 width: screenWidth * 0.15,
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(16),
+//                   color: selectedButton.value == 'Custom'
+//                       ? AppColors.button
+//                       : AppColors.backgroundColor,
+//                 ),
+//                 child: Center(
+//                   child: Text(
+//                     HomepageStringsDart().custom,
+//                     style: FontManager().getTextStyle(context,
+//                         lWeight: FontWeight.normal,
+//                         fontSize: fontSizeFactor * 3.4,
+//                         color: AppColors.accentColor),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
+// }
 
 class FinancePage extends StatefulWidget {
   const FinancePage({super.key});
@@ -41,11 +266,6 @@ class _FinancePageState extends State<FinancePage> {
     Future<void> _fetchData() async {
     try {
       // Ensure financeBox is open
-      if (!Hive.isBoxOpen('financeBox')) {
-        print('Opening financeBox');
-        await Hive.openBox<FinanceModel>('financeBox');
-      }
-
       if (accountId.value.isEmpty) {
         accountId.value = userController.selectedBank.value;
         if (accountId.value.isEmpty) {

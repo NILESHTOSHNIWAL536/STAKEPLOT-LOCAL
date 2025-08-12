@@ -74,8 +74,7 @@ final GlobalKey<NavigatorState> updateNavigatorKey = GlobalKey<NavigatorState>()
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter bindings are initialized
-   checkFirebaseAndValidUser();
-   await GetLocalStorage();
+  checkFirebaseAndValidUser();
   runApp(const MyApp());
 }
 

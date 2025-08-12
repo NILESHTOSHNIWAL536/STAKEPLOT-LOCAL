@@ -374,6 +374,7 @@ void _setEmptyState(String weekORmonth, String date, String? endDate) {
   maxYValue.value = 500.0;
   getGraphData.value = true;
 }
+
 // void getAutoMationsTransactionsCustom(date, context,
 //     [weekORmonth = 'month', String? endDate]) async {
 //   if (accountId.value.trim().toString() == "") return;

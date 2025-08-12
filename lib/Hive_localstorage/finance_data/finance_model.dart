@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'finance_model.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: 8)
 class FinanceModel extends HiveObject {
   @HiveField(0) String period;
   @HiveField(1) String startDate;

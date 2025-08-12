@@ -2,6 +2,7 @@
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:hive/hive.dart';
 import '../../controllers/user-controller.dart';
+import '../hive_storage.dart';
 import '../user-data/user_model.dart';
 
 
@@ -10,7 +11,7 @@ class  UserLocalStorage {
   
 
 static Future<void> cacheUserDataLocally() async {
-  final box = Hive.box<UserModel>('userBox');
+  final box =await HiveStorage.userBox;
 
   final user = UserModel(
     userId:  userController.userId.value,
@@ -49,7 +50,7 @@ static Future<void> cacheUserDataLocally() async {
 
 static Future<void> loadUserFromHive() async 
 {
-  final box = Hive.box<UserModel>('userBox');
+  final box =await HiveStorage.userBox;
   final user = box.get('localUser');
 
   if (user != null) {
