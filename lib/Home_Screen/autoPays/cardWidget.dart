@@ -51,13 +51,7 @@ class CardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: _getColorForIndex(),
         borderRadius: BorderRadius.circular(16 * fontScale),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.25),
-            blurRadius: 12 * fontScale,
-            offset: Offset(0, 6 * fontScale),
-          ),
-        ],
+       
       ),
       child: Padding(
         padding: EdgeInsets.all(padding),
