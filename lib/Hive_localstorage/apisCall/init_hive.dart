@@ -57,20 +57,24 @@ Future<void> init_finance() async {
     await FinanceLocalStorage.loadFinanceFromHive(
         accountId.value, 'Month', getFormattedDate());
   } else {
-  
+    print('Skipping finance data load: accountId is empty');
   }
   // BankStorage.loadBankDataFromHive();
 }
 
 Future<void> init_insights() async {
-  try {
-  
+ 
+    print('Starting init_insights');
     Hive.registerAdapter(InsightsModelAdapter());
-   
+    print('InsightsModelAdapter registered');
     await Hive.openBox<InsightsModel>('insightsBox');
-  
-   
-  } catch (e) {
-   
-  }
+    print('insightsBox opened');
+    if (Hive.isBoxOpen('insightsBox')) {
+      print('insightsBox is open, loading data');
+     await InsightsLocalStorage.loadInsightsFromHive();
+    
+    } else {
+      print('insightsBox is not open');
+    }
+
 }
