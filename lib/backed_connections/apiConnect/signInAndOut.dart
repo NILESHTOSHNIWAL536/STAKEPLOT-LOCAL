@@ -397,9 +397,7 @@ Future<bool> verifyOTPForLogin(
       'email': email,
       'otp': otp,
     });
-  print("responses for otp ${response.body}");
     if (getFlagOfResponse(response)) {
-      print("response for otp ${response.body}");
       if (!isForcedLogin) {
         loginUser(
           TextEditingController(text: email),

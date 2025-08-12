@@ -306,3 +306,5 @@ TransactionModel copyWith({
     return 'TransactionModel(id: $id, type: $type, amount: $amount, narration: $narration, bankName: $bankName, predictions: $predictions)';
   }
 }
+
+

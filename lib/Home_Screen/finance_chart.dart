@@ -269,14 +269,12 @@ class _FinancePageState extends State<FinancePage> {
       if (accountId.value.isEmpty) {
         accountId.value = userController.selectedBank.value;
         if (accountId.value.isEmpty) {
-          print('No account ID available, setting empty state');
           // _setEmptyState('Month', getFormattedDate(), null);
           return;
         }
       }
        getAutoMationsTransactionsCustom( getFormattedDate(), context,'Month');
     } catch (e) {
-      print('Error fetching data: $e');
       // _setEmptyState('Month', getFormattedDate(), null);
     }
   }

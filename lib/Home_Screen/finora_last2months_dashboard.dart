@@ -41,7 +41,6 @@ class _FinoraLastTwoMonthsDashboardState
         });
       }
     } catch (e) {
-      print("Error fetching data: $e");
       setState(() {
         isLoading = false;
       });
