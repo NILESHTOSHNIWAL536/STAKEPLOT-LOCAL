@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
+import '../../Hive_localstorage/apisCall/bank_apis.dart';
 import '../../model/fips_metric_model.dart';
 
 
@@ -63,6 +64,7 @@ Future<void> getBankAccounts() async {
     });
   }
   addBankApiCall();
+  BankStorage.cacheBankDataLocally();
 }
 
 void addBankApiCall() {

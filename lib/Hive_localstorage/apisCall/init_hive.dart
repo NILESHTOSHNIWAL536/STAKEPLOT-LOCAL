@@ -18,7 +18,7 @@ Future<void> init_user()async
 {
    Hive.registerAdapter(UserModelAdapter());
    await Hive.openBox<UserModel>('userBox');
-   loadUserFromHive();     
+  UserLocalStorage.loadUserFromHive();     
 }
 
 
@@ -28,7 +28,7 @@ Future<void> init_banks()async
         Hive.registerAdapter(ConsentDetailModelAdapter());
         await Hive.openBox<BankAccountModel>('bankAccountsBox');
         await Hive.openBox<ConsentDetailModel>('consentDetailsBox');
-        loadBankDataFromHive();
+        BankStorage.loadBankDataFromHive();
 }
 
 

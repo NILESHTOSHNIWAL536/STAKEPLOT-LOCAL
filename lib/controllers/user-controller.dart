@@ -114,7 +114,7 @@ class UserController extends GetxController {
         getMaskendUsers(false);
         getSaved();
         getuserPost(obj['_id']);
-        cacheUserDataLocally();
+        UserLocalStorage.cacheUserDataLocally();
       }
     } catch (e) {
     } finally {
