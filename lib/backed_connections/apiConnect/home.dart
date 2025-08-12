@@ -14,6 +14,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
+import '../../Hive_localstorage/apisCall/transactions_apis.dart';
+
 void getAck() async {
   var response = await getDataApiCall('${url}/user/newNotifications');
   if (getFlagOfResponse(response)) {
@@ -252,15 +254,18 @@ Future<void> getAllTransactionHistory(
           loadChatdataOnChnage.value = !loadChatdataOnChnage.value;
         }
         getHistory.value = !getHistory.value;
+        TransactionStorage.cacheTransactionsLocally();
       } else {
         snackBarCalled(context, SnackbarData().noTransactionData);
       }
     }
   } catch (e) {
+    TransactionStorage.loadTransactionsFromHive();
     snackBarCalledfail(context, e.toString());
   }
 
   loadingDelay.value = false;
+  
 }
 
 
@@ -270,7 +275,7 @@ void updateFromResponse(Map<String, dynamic> obj) {
   matchedKeywords.clear();
   lastWeekjson.clear();
   lastmonthjson.clear();
-matchedKeywords.addAll(
+  matchedKeywords.addAll(
   List<String>.from((obj['matchedKeywords'] ?? []).map((e) => e.toString()))
 );
   lastWeekjson.addAll(obj['lastWeek'] ?? {});

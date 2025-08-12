@@ -79,7 +79,6 @@ Future<bool> claimCoupon(
 
     var response = await updateDataApiCallWithoutBody(
         '$url/reward/claim/${id}/${categorySelected.value}');
-    print("response forrrr ${response.body}");
     if (getFlagOfResponse(response)) {
       claimedCoupons.add(coupon);
       userController.coupons.value--;
@@ -145,7 +144,6 @@ void getUserActity() async {
 Future<void> getCouponRequestCheck(String category) async {
   try {
     var response = await getDataApiCall("${url}/reward/$category");
-    print("response ${response.body}");
 
     if (getFlagOfResponse(response)) {
       var couponCall = jsonDecode(response.body);

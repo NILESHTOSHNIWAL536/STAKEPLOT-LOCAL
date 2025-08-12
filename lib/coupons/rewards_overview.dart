@@ -204,14 +204,12 @@ class CouponPopupUtils {
       bool hasRequestedCoupons) {
     return GestureDetector(
       onTap: () async {
-        print("tapp");
         await fetchCategoryCoupons(title);
         if (categoryCoupons.isNotEmpty) {
-          print("tapp she");
           // If coupons are available, show the coupon selection popup
           CouponPopupUtils.showCouponSelectionPopup(context, title);
         } else {
-          print("tapp he");
+        
           // If no coupons, show the status in the card (handled in UI below)
           onCategorySelected(title);
           await getCouponRequestCheck(title.trim());
@@ -765,7 +763,6 @@ class _RewardsOverviewState extends State<RewardsOverview>
   }
 
   Widget _buildClaimedTab() {
-    print("claimed cou $claimedCoupons");
     return loadReaward.value
         ? Center(child: Spinner())
         : claimedCoupons.isEmpty

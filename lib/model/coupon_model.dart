@@ -46,7 +46,6 @@
 //     final startDateStr = json['startDate'] ?? '';
 //     final expiryDateStr = json['expiryDate'] ?? '';
 
-//     print("create at: createdAtStr");
 
 //     return CouponModel(
 //       id: id ?? '',
@@ -348,12 +347,10 @@ class CouponModel {
           final json = entry.value;
           try {
             if (json == null) {
-              print("Null JSON at index $index");
               return null;
             }
             return CouponModel.fromJson(json);
           } catch (e) {
-            print("Error parsing coupon at index $index: $e");
             return null;
           }
         })

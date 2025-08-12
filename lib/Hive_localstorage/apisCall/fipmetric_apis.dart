@@ -33,8 +33,7 @@ try{
       );
     });
 }catch(e){
-     print("--------------------");
-     print(e);
+    
 }
     // Explicitly cast to avoid type issues
   }
@@ -62,8 +61,7 @@ static Future<void> loadFipsMetricsFromHive() async {
           latencyP50Ms: element.latencyP50Ms));
     });
   }catch(e){
-     print("--------------------");
-     print(e);
+    
 }
 }
 }
