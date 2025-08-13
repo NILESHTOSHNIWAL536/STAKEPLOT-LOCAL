@@ -55,8 +55,10 @@ class CommunityState extends State<Community> {
     postController.currentPageTranding.value = 1;
     postController.currentPageFeed.value = 1;
     postController.isPostloading.value = false;
-    postController.trandingPostList.clear();
-    postController.feedPostList.clear();
+    // if(postController.canRefresh){
+      // postController.trandingPostList.clear();
+      // postController.feedPostList.clear();
+    // }
     postController.hasMorePostTranding.value = true;
     postController.hasMorePostFeed.value = true;
     postController.isPost.value = false;

@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-part "transactions.g.dart";
+part "transaction.g.dart";
 
 @HiveType(typeId: 7) // change if already used
 class Transactions {

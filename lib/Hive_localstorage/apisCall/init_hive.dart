@@ -1,5 +1,6 @@
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/bank_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/post_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/user_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/insights_data/insights_model.dart';
@@ -12,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import '../bank_bata/bank_account_model.dart';
 import '../bank_bata/consent_detail_model.dart';
 import '../fip_metric_bata/fips_metric.dart';
+import '../post_data.dart/post_hive_storage.dart';
 import '../user-data/user_model.dart';
 import 'fipmetric_apis.dart';
 import 'transactions_apis.dart';
@@ -26,6 +28,7 @@ Future<void> GetLocalStorage()async
         await init_Transactions();
         await init_finance();
         await init_insights();
+        await init_post();
 }
 
 Future<void> init_user() async {
@@ -61,25 +64,32 @@ Future<void> init_Transactions() async
 
 Future<void> init_finance() async {
   Hive.registerAdapter(FinanceModelAdapter());
-  await Hive.openBox<FinanceModel>('financeBox');
-  if (accountId.value.isNotEmpty) {
-    await FinanceLocalStorage.loadFinanceFromHive(
-        accountId.value, 'Month', getFormattedDate());
-  } else {
-  
+  await Hive.openBox<FinanceModel>(HiveStorage.financeBoxName);
+  if (accountId.value.isNotEmpty){
+    await FinanceLocalStorage.loadFinanceFromHive(accountId.value, 'Month', getFormattedDate());
   }
-  // BankStorage.loadBankDataFromHive();
 }
 
 Future<void> init_insights() async {
   try {
-  
     Hive.registerAdapter(InsightsModelAdapter());
-   
-    await Hive.openBox<InsightsModel>('insightsBox');
-  
-   
-  } catch (e) {
-   
-  }
+    await Hive.openBox<InsightsModel>(HiveStorage.insightsBoxName);
+  } catch (e) {}
 }
+
+   Future<void> init_post() async
+  {
+    Hive.registerAdapter(PostTypeAdapter());
+    Hive.registerAdapter(PollOptionModelAdapter());
+    Hive.registerAdapter(PollModelAdapter());
+    Hive.registerAdapter(AuthorModelAdapter());
+    Hive.registerAdapter(BudgetModelAdapter());
+    Hive.registerAdapter(PostModelAdapter());
+    await Hive.openBox<PostModels>(HiveStorage.postBoxTrandingName);
+    await Hive.openBox<PostModels>(HiveStorage.postBoxFeedName);
+    await Hive.openBox<PostModels>(HiveStorage.savedPostName);
+    if(HiveStorage.isBoxOpen(HiveStorage.postBoxTrandingName)) PostLocalStorage.loadPostsFromHive(isPostTranding: true);
+    if(HiveStorage.isBoxOpen(HiveStorage.postBoxFeedName)) PostLocalStorage.loadPostsFromHive(isPostTranding: false);
+    if(HiveStorage.isBoxOpen(HiveStorage.savedPostName)) PostLocalStorage.loadPostsFromHive(isPostTranding: true,isSavedPost: true);
+
+  }

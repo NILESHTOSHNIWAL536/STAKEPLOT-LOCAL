@@ -39,7 +39,6 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   TextEditingController about = TextEditingController();
   String dataReport = "";
   RxList<PostModel> getTrendingData = <PostModel>[].obs;
-  RxList<PostModel> getuerPost = <PostModel>[].obs;
   List frds = [];
   RxBool finduserPost = true.obs;
   bool already = false;
@@ -66,26 +65,24 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     var response = await getDataApiCall(
         '${url}/post/userDiscussions/${widget.data['_id']}');
 
-    if (getFlagOfResponse(response)) {
+    if (getFlagOfResponse(response))
+    {
       var his = jsonDecode(response.body);
       var obj = his['data'];
-  
       // getTrendingData =  obj;
-      getuerPost.clear();
       getTrendingData.clear();
-      getuerPost.addAll(PostModel.listFromJson(obj));
       getTrendingData.addAll(PostModel.listFromJson(obj));
       getTrendingData.forEach((element) {
         postController.postCount[element.id] =
             element.upvotes < 0 ? 0 : element.upvotes;
       });
 
-      reload.value =!reload.value;
-
     } else {}
     } catch (e) {
-     
+         
     }
+
+    reload.value =!reload.value;
   }
 
   void getConnections() async {

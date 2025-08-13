@@ -266,12 +266,9 @@ class _FinancePageState extends State<FinancePage> {
     Future<void> _fetchData() async {
     try {
       // Ensure financeBox is open
-      if (accountId.value.isEmpty) {
+      if (accountId.value.isEmpty)
+      {
         accountId.value = userController.selectedBank.value;
-        if (accountId.value.isEmpty) {
-          // _setEmptyState('Month', getFormattedDate(), null);
-          return;
-        }
       }
        getAutoMationsTransactionsCustom( getFormattedDate(), context,'Month');
     } catch (e) {

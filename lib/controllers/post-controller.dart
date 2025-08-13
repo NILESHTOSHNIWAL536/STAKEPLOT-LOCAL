@@ -14,6 +14,7 @@ class PostController extends GetxController
   RxInt currentPageTranding = 1.obs;
   RxInt currentPageFeed = 1.obs;
   RxBool isPostloading = false.obs;
+  RxBool canRefresh = true.obs;
   RxBool hasMorePostTranding = false.obs;
   RxBool hasMorePostFeed = false.obs;
   late PostModel uniquePostDeatils;
