@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'card_insights_model.g.dart';
 
-@HiveType(typeId: 11)
+@HiveType(typeId: 17)
 class CardInsightsModel extends HiveObject {
   @HiveField(0)
   double totalDebitThisMonth;

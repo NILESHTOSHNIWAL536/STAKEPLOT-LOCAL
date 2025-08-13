@@ -8,7 +8,7 @@ part of 'card_insights_model.dart';
 
 class CardInsightsModelAdapter extends TypeAdapter<CardInsightsModel> {
   @override
-  final int typeId = 11;
+  final int typeId = 17;
 
   @override
   CardInsightsModel read(BinaryReader reader) {
