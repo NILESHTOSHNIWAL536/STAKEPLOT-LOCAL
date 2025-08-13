@@ -13,6 +13,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
+import '../../Hive_localstorage/apisCall/post_apis.dart';
+import '../../Hive_localstorage/hive_storage.dart';
+
 
 void approveBill(context, id, type, notifyId) async {
   String urlPath = "${url}/bill/acceptBill/${id}/${type}/${notifyId}";
@@ -123,6 +126,7 @@ void getMaskendUsers(bool flag) async {
 
 
 void getSaved() async {
+  try{
   String urlPath = "${url}/post/saved";
   var response = await getDataApiCall(urlPath);
   if (response.statusCode == 200 || response.statusCode == 201) {
@@ -131,6 +135,13 @@ void getSaved() async {
     addSavedPostList(obj);
 
   } else {}
+  }catch(e)
+  {
+    if(HiveStorage.isBoxOpen(HiveStorage.savedPostName))
+    {
+      PostLocalStorage.loadPostsFromHive(isPostTranding: true,isSavedPost: true);
+    }
+  }
 }
 
 String getCurrentFormattedDate() {

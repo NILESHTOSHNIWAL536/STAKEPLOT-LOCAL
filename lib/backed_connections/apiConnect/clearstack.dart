@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
@@ -222,7 +223,8 @@ void clearGetX() {
   isBankLinked.value=false;
   clearGraph();
   loadBanks.value=true;
- deleteGetControllers();
+  deleteGetControllers();
+  HiveStorage.closeAllBoxes();
 }
 
 

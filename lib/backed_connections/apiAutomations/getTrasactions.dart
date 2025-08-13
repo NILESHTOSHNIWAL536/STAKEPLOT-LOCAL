@@ -244,7 +244,6 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
   }
 
   String storedPeriod = weekORmonth == 'month' ? 'Month' : weekORmonth == 'week' ? 'Week' : 'Custom';
-  final cacheKey = '${accountId.value}_${storedPeriod}_$date${endDate != null ? '_$endDate' : ''}';
 
   // Try loading from Hive first
   final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(accountId.value, storedPeriod, date, endDate);
@@ -252,7 +251,7 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
     return;
   }
 
-  getGraphData.value = false; // Show loading state
+ // Show loading state
   List<String> labelsLocal = [];
   List<double> debitList = [];
   List<double> creditList = [];
@@ -316,6 +315,7 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
         transactionChatGraph['debited'] = debitList;
         transactionChatGraph['credited'] = creditList;
         labels.assignAll(labelsLocal);
+        getGraphData.value = false;
         getGraphData.value = true;
 
         // Cache the data
@@ -331,6 +331,7 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
           maxYValue: maxYValue.value,
           accountId: accountId.value,
         );
+        
       } catch (e) {
         _setEmptyState(weekORmonth, date, endDate);
       }
@@ -371,137 +372,6 @@ void _setEmptyState(String weekORmonth, String date, String? endDate) {
   getGraphData.value = true;
 }
 
-// void getAutoMationsTransactionsCustom(date, context,
-//     [weekORmonth = 'month', String? endDate]) async {
-//   if (accountId.value.trim().toString() == "") return;
-
-//   String urlPath = endDate != null && weekORmonth == 'Custom'
-//       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
-//       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
-//   var response = await getDataApiCall(urlPath);
-
-//   trasactionsDataDebitWeekly.clear();
-
-//   List<String> labelsLocal = [];
-//   List<double> debitList = [];
-//   List<double> creditList = [];
-
-//   if (getFlagOfResponse(response)) {
-//     var his = jsonDecode(response.body);
-//     transactionChatGraph.clear();
-
-//     try {
-//       Map data = his['data']['result'];
-//       try {
-//         String nulldata = (his['data']['debitChangePercentage']).toString();
-//         totalDebitValuePercent.value =
-//             double.parse(nulldata == "null" ? "0" : nulldata);
-//         totalDebitValue.value =
-//             double.parse((his['data']['totalDebit']).toString());
-//       } catch (e) {}
-
-//       maxYValue.value =
-//           double.parse((his['data']['maxAmount'] ?? 500.0).toString());
-
-//       if (maxYValue.value == 0) maxYValue.value = 500.0;
-
-//       if (weekORmonth == 'Custom' && endDate != null) {
-//         DateTime startDate = DateTime.parse(date);
-//         DateTime end = DateTime.parse(endDate);
-
-//         // Generate date labels in "MMM d" format
-//         labelsLocal = [];
-//         int daysDiff = end.difference(startDate).inDays;
-//         debitList = List.filled(daysDiff + 1, 0.0);
-//         creditList = List.filled(daysDiff + 1, 0.0);
-
-//         for (int i = 0; i <= daysDiff; i++) {
-//           DateTime currentDate = startDate.add(Duration(days: i));
-//           String formattedDate = DateFormat('MMM d').format(currentDate);
-//           labelsLocal.add(formattedDate);
-//         }
-
-//         data.forEach((key, value) {
-//           DateTime txDate = DateTime.parse(key);
-//           if (txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
-//               txDate.isBefore(end.add(Duration(days: 1)))) {
-//             int index = txDate.difference(startDate).inDays;
-//             if (index >= 0 && index < debitList.length) {
-//               debitList[index] = getDouble(value['debit']);
-//               creditList[index] = getDouble(value['credit']);
-//             }
-//           }
-//         });
-//       } else {
-//         // Keep original logic for non-custom cases
-//         data.forEach((key, value) {
-//           String label = weekORmonth == 'Custom'
-//               ? key.toString()
-//               : key.toString().substring(key.toString().length - 2);
-//           labelsLocal.add(label);
-//           debitList.add(getDouble(value['debit']));
-//           creditList.add(getDouble(value['credit']));
-//         });
-//       }
-//     } catch (e) {
-//       maxYValue.value = 500.0;
-//       if (labelsLocal.isEmpty) {
-//         if (weekORmonth == 'Custom' && endDate != null) {
-//           DateTime startDate = DateTime.parse(date);
-//           DateTime end = DateTime.parse(endDate);
-//           int daysDiff = end.difference(startDate).inDays;
-//           debitList = List.filled(daysDiff + 1, 0.0);
-//           creditList = List.filled(daysDiff + 1, 0.0);
-
-//           for (int i = 0; i <= daysDiff; i++) {
-//             DateTime currentDate = startDate.add(Duration(days: i));
-//             String formattedDate = DateFormat('MMM d').format(currentDate);
-//             labelsLocal.add(formattedDate);
-//           }
-//         } else {
-//           labelsLocal =
-//               weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
-//           debitList = List.filled(labelsLocal.length, 0.0);
-//           creditList = List.filled(labelsLocal.length, 0.0);
-//         }
-//       }
-//     }
-
-//     if (selectedButton.value == 'Week') {
-//       labelsLocal = getWeekDays();
-//       if (debitList.length < 7) {
-//         debitList = List.filled(7, 0.0)
-//           ..setRange(0, debitList.length, debitList);
-//         creditList = List.filled(7, 0.0)
-//           ..setRange(0, creditList.length, creditList);
-//       }
-//     }
-
-//     transactionChatGraph['debited'] = debitList;
-//     transactionChatGraph['credited'] = creditList;
-
-//     getGraphData.value = false;
-//     labels.assignAll(labelsLocal);
-//     getGraphData.value = true;
-//   } else {
-//     if (weekORmonth == 'Custom' && endDate != null) {
-//       DateTime startDate = DateTime.parse(date);
-//       DateTime end = DateTime.parse(endDate);
-//       int daysDiff = end.difference(startDate).inDays;
-//       debitList = List.filled(daysDiff + 1, 0.0);
-//       creditList = List.filled(daysDiff + 1, 0.0);
-
-//       for (int i = 0; i <= daysDiff; i++) {
-//         DateTime currentDate = startDate.add(Duration(days: i));
-//         String formattedDate = DateFormat('MMM d').format(currentDate);
-//         labelsLocal.add(formattedDate);
-//       }
-//       transactionChatGraph['debited'] = debitList;
-//       transactionChatGraph['credited'] = creditList;
-//     }
-//     getGraphData.value = true;
-//   }
-// }
 
 String getNextDay(String endDate) {
   // Parse the input date string
@@ -640,63 +510,7 @@ double _getPredictionScore(Predictions predictions, String category) {
   );
   return entry.score;
 }
-// void updateTheTagOfTarnsactions(
-//     String category,
-//     String subCategory,
-//     String transactionId,
-//     BuildContext context,
-//     int index,
-//     TransactionModel transaction,
-// ) async {
-//   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
 
-//   // Construct selectedCategory
-//   final selectedCategory = {
-//     'category': category,
-//     'percentage': transaction.predictions != null
-//         ? _getPredictionScore(transaction.predictions!, category)
-//         : 0.0,
-//   };
-
-//   // Construct predictedCategories as a list of maps
-//   final predictedCategories = transaction.predictions != null
-//       ? transaction.predictions!.entries
-//           .map((entry) => {
-//                 'category': entry.category,
-//                 'percentage': entry.score,
-//               })
-//           .toList()
-//       : [];
-
-//   var response = await updateDataApiCall2(urlPath, {
-//     'category': category,
-//     'subcategory': subCategory,
-//     'selectedCategory': selectedCategory,
-//     'predictedCategories': predictedCategories,
-//   });
-
-//   if (getFlagOfResponse(response)) {
-//     transactionsHistory[index] = transaction.copyWith(
-//       category: category,
-//       subcategory: subCategory,
-//       needsReview: false,
-//     );
-//     transactionsHistory.refresh();
-//     reloadHistory.value = !reloadHistory.value;
-//     snackBarCalled(context, "Transaction tagged as $category");
-//   } else {
-//     snackBarCalledfail(context, "Failed to tag transaction");
-//   }
-// }
-
-// // Helper function to get the prediction score for a category
-// double _getPredictionScore(Predictions predictions, String category) {
-//   final entry = predictions.entries.firstWhere(
-//     (entry) => entry.category == category,
-//     orElse: () => PredictionEntry(category: category, score: 0.0),
-//   );
-//   return entry.score;
-// }
 void updateTheTagOfTarnsactionsGroup(
     category, subCategory, grpId, context, index) async {
   String urlPath = "${url}/transactionauto/grouped/${grpId}/categorize";
@@ -1121,6 +935,7 @@ void pickCustomDateRangeoverall(BuildContext context) async {
   }
 }
 
-void overallTransactions(BuildContext context) {
+void overallTransactions(BuildContext context)
+{
   getAutoMationsTransactionsCustomoverall(getFormattedDateoverall(), context);
 }

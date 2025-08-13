@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/post_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:get/get.dart';
@@ -146,4 +147,5 @@ void addSavedPostList(obj)
        postController.postCount[element.id] = element.upvotes;
        postController.postCommentCount[element.id] = element.comments;
      });
+     PostLocalStorage.savePostsToHive(postList: userController.savedList, isPostTranding: true,isSavedPost: true);
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/post_apis.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -174,12 +175,17 @@ void createPollOfCommunity(context, String title, String description) async {
 }
 
 Future<void> getPost(context) async {
+  try{
   var response =
       await getDataApiCall('${url}/post/feed/${postController.currentPageFeed.value}');
   expire(response, context);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
+
+    if(postController.currentPageFeed.value==1){
+      postController.feedPostList.clear();
+    }
 
     historyListData.clear();
     historyListData.addAll(obj);
@@ -199,18 +205,30 @@ Future<void> getPost(context) async {
     });
     postController.isPostloading.value = false;
     postController.isPost.value = true;
-  } else {}
+    PostLocalStorage.savePostsToHive(postList:  postController.feedPostList, isPostTranding: false);
+  }
+  }catch(e)
+  {
+      PostLocalStorage.loadPostsFromHive(isPostTranding: false);
+  }
 }
 
 Future<void> getTranding(context) async {
+  try{
   var response = await getDataApiCall('${url}/post/trending/${postController.currentPageTranding.value}');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     historyListData.clear();
+
+    if(postController.currentPageFeed.value==1){
+      postController.trandingPostList.clear();
+    }
     historyListData.addAll(obj);
     List<PostModel> postList= PostModel.listFromJson(historyListData);
     postController.trandingPostList.addAll(postList);
+
+
 
     if (historyListData.length < 5) {
       postController.hasMorePostTranding.value = false;
@@ -223,6 +241,10 @@ Future<void> getTranding(context) async {
     });
     postController.isPostloading.value = false;
     postController.isPostTranding.value = true;
+    PostLocalStorage.savePostsToHive(postList:  postController.trandingPostList, isPostTranding: true);
+  }
+  }catch(e){
+      PostLocalStorage.loadPostsFromHive(isPostTranding: true);
   }
 }
 

@@ -39,7 +39,7 @@ static Future<void> cacheUserDataLocally() async {
     fetchInProgress:  userController.fetchInProgress.value,
     cupertinoPin:  userController.cupertinoPin.value,
     cupertinoAttemptCount:  userController.cupertinoAttemptCount.value,
-    selectedBank:  userController.selectedBank.value,
+    selectedBank:  userController.selectedBank.value.isEmpty?accountId.value:'',
     firstFetchedDate:  userController.firstFetchedDate.value,
     friendsList:  userController.friendsList.toList(),
   );

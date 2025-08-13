@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'bank_bata/bank_account_model.dart';
 import 'bank_bata/consent_detail_model.dart';
 import 'fip_metric_bata/fips_metric.dart';
+import 'post_data.dart/post_hive_storage.dart';
 import 'transactions_data/transaction.dart';
 import 'user-data/user_model.dart';
 
@@ -22,14 +23,21 @@ class HiveStorage {
   static const String finoraBoxName = 'chartDataBox';
   static const String cardInsightsBoxName = 'cardInsightsBox';
   static const String finoraLastTwoMonthsBoxName = 'finoraLastTwoMonthsBox';
+  static const String postBoxTrandingName = 'postBoxTranding';
+  static const String postBoxFeedName = 'postBoxFeed';
+  static const String savedPostName = 'savedPost';
+  static const String insightsBoxName = 'insightsBox';
 
   /// ------------------ BOX GETTERS ------------------
 
-  static Box<FipsMetrics> get fipsMetricBox => Hive.box<FipsMetrics>(fipsMetricBoxName);
+  static Box<FipsMetrics> get fipsMetricBox =>
+      Hive.box<FipsMetrics>(fipsMetricBoxName);
 
-  static Box<BankAccountModel> get bankAccountsBox => Hive.box<BankAccountModel>(bankAccountsBoxName);
+  static Box<BankAccountModel> get bankAccountsBox =>
+      Hive.box<BankAccountModel>(bankAccountsBoxName);
 
-  static Box<ConsentDetailModel> get consentDetailsBox => Hive.box<ConsentDetailModel>(consentDetailsBoxName);
+  static Box<ConsentDetailModel> get consentDetailsBox =>
+      Hive.box<ConsentDetailModel>(consentDetailsBoxName);
 
   static Box<UserModel> get userBox => Hive.box<UserModel>(userBoxName);
   static Box<Transactions> get transactionsBox => Hive.box<Transactions>(transactionsBoxName);
@@ -39,6 +47,9 @@ class HiveStorage {
     static Box<FinoraLastTwoMonthsModel> get finoraLastTwoMonthsBox =>
       Hive.box<FinoraLastTwoMonthsModel>(finoraLastTwoMonthsBoxName);
   
+  static Box<PostModels> get postBoxTranding => Hive.box<PostModels>(postBoxTrandingName);
+  static Box<PostModels> get postBoxFeed => Hive.box<PostModels>(postBoxFeedName);
+  static Box<PostModels> get savedPost => Hive.box<PostModels>(savedPostName);
 
   /// ------------------ COMMON HELPERS ------------------
 
@@ -46,7 +57,7 @@ class HiveStorage {
   static bool isBoxOpen(String name) => Hive.isBoxOpen(name);
 
   /// Close all boxes
-  static Future<void> closeAllBoxes() async
+  static Future<void> closeAllBoxes() async 
   {
     await Hive.deleteFromDisk();
   }

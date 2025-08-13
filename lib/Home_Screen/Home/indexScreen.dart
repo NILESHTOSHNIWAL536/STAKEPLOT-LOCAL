@@ -5,12 +5,10 @@ import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manually.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStack.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardWidget.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/headsUpAndMoneyMap.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora.dart';

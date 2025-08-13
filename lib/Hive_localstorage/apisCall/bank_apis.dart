@@ -1,6 +1,7 @@
 import '../../Utils/homepageStrings.dart.dart';
 import '../../backed_connections/apiAutomations/bankinfo.dart';
 import '../../backed_connections/apiAutomations/nextFetch.dart';
+import '../../backed_connections/apis_connect.dart';
 import '../bank_bata/bank_account_model.dart';
 import '../bank_bata/consent_detail_model.dart';
 import '../hive_storage.dart';
@@ -88,6 +89,8 @@ static Future<void> loadBankDataFromHive() async {
     });
   }
    addBankApiCall();
+   accountId.value=bankAccountLinkedList.isNotEmpty?bankAccountLinkedList.first['accountId']:"";
+    userController.selectedBank.value=accountId.value;
    isBankLinked.value =false;
    isBankLinked.value = bankAccountLinkedList.isNotEmpty;
   }catch(e){
