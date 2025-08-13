@@ -1,7 +1,13 @@
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/bank_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_last_two_months_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/insights_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/user_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_data/card_insights_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora/chart_data_model.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora_prev_months/finora_last_two_months_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/insights_data/insights_model.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -16,16 +22,18 @@ import '../user-data/user_model.dart';
 import 'fipmetric_apis.dart';
 import 'transactions_apis.dart';
 
-Future<void> GetLocalStorage()async
-{
-        final dir = await getApplicationDocumentsDirectory();
-        Hive.init(dir.path);
-        await init_user();
-        await init_banks();
-        await init_fips_metrics();
-        await init_Transactions();
-        await init_finance();
-        await init_insights();
+Future<void> GetLocalStorage() async {
+  final dir = await getApplicationDocumentsDirectory();
+  Hive.init(dir.path);
+  await init_user();
+  await init_banks();
+  await init_fips_metrics();
+  await init_Transactions();
+  await init_finance();
+  await init_insights();
+  await initChartData();
+  await initCardInsightsData();
+  await initFinoraLastTwoMonthsData();
 }
 
 Future<void> init_user() async {
@@ -35,14 +43,13 @@ Future<void> init_user() async {
     UserLocalStorage.loadUserFromHive();
 }
 
-
-Future<void> init_banks()async
-{
-        Hive.registerAdapter(BankAccountModelAdapter());
-        Hive.registerAdapter(ConsentDetailModelAdapter());
-        await Hive.openBox<BankAccountModel>(HiveStorage.bankAccountsBoxName);
-        await Hive.openBox<ConsentDetailModel>(HiveStorage.consentDetailsBoxName);
-        if(HiveStorage.isBoxOpen(HiveStorage.consentDetailsBoxName))BankStorage.loadBankDataFromHive();
+Future<void> init_banks() async {
+  Hive.registerAdapter(BankAccountModelAdapter());
+  Hive.registerAdapter(ConsentDetailModelAdapter());
+  await Hive.openBox<BankAccountModel>(HiveStorage.bankAccountsBoxName);
+  await Hive.openBox<ConsentDetailModel>(HiveStorage.consentDetailsBoxName);
+  if (HiveStorage.isBoxOpen(HiveStorage.consentDetailsBoxName))
+    BankStorage.loadBankDataFromHive();
 }
 
 Future<void> init_fips_metrics() async {
@@ -52,11 +59,11 @@ Future<void> init_fips_metrics() async {
     FipsMetricLocalStorage.loadFipsMetricsFromHive();
 }
 
-Future<void> init_Transactions() async
-{
+Future<void> init_Transactions() async {
   Hive.registerAdapter(TransactionsAdapter());
   await Hive.openBox<Transactions>(HiveStorage.transactionsBoxName);
-  if(HiveStorage.isBoxOpen(HiveStorage.transactionsBoxName)) TransactionStorage.loadTransactionsFromHive();
+  if (HiveStorage.isBoxOpen(HiveStorage.transactionsBoxName))
+    TransactionStorage.loadTransactionsFromHive();
 }
 
 Future<void> init_finance() async {
@@ -72,18 +79,44 @@ Future<void> init_finance() async {
 }
 
 Future<void> init_insights() async {
- 
-    print('Starting init_insights');
-    Hive.registerAdapter(InsightsModelAdapter());
-    print('InsightsModelAdapter registered');
-    await Hive.openBox<InsightsModel>('insightsBox');
-    print('insightsBox opened');
-    if (Hive.isBoxOpen('insightsBox')) {
-      print('insightsBox is open, loading data');
-     await InsightsLocalStorage.loadInsightsFromHive();
-    
-    } else {
-      print('insightsBox is not open');
-    }
+  Hive.registerAdapter(InsightsModelAdapter());
 
+  await Hive.openBox<InsightsModel>('insightsBox');
+  print('insightsBox opened');
+  if (Hive.isBoxOpen('insightsBox')) {
+    print('insightsBox is open, loading data');
+    await InsightsLocalStorage.loadInsightsFromHive();
+  } else {
+    print('insightsBox is not open');
+  }
+}
+
+Future<void> initChartData() async {
+  Hive.registerAdapter(ChartDataModelAdapter());
+  await Hive.openBox<ChartDataModel>(HiveStorage.finoraBoxName);
+  if (Hive.isBoxOpen(HiveStorage.finoraBoxName)) {
+    await CategoryStorage.loadChartDataFromHive();
+  }
+}
+
+Future<void> initCardInsightsData() async {
+  Hive.registerAdapter(CardInsightsModelAdapter());
+  await Hive.openBox<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
+  if (Hive.isBoxOpen(HiveStorage.cardInsightsBoxName)) {
+    await CategoryStorage.loadCardInsightsDataFromHive();
+  } else {}
+}
+
+Future<void> initFinoraLastTwoMonthsData() async {
+  print('Starting initFinoraLastTwoMonthsData');
+  Hive.registerAdapter(FinoraLastTwoMonthsModelAdapter());
+  await Hive.openBox<FinoraLastTwoMonthsModel>(
+      HiveStorage.finoraLastTwoMonthsBoxName);
+  print('finoraLastTwoMonthsBox opened');
+  if (Hive.isBoxOpen(HiveStorage.finoraLastTwoMonthsBoxName)) {
+    print('finoraLastTwoMonthsBox is open, loading data');
+    await FinoraLastTwoMonthsStorage.loadFinoraLastTwoMonthsDataFromHive();
+  } else {
+    print('finoraLastTwoMonthsBox is not open');
+  }
 }

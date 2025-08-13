@@ -81,6 +81,7 @@ Future<List<CardData>> getAutoPayInfo() async {
 
     return allAutoPayData;
   } catch (e) {
+    
     return [];
   }
 }

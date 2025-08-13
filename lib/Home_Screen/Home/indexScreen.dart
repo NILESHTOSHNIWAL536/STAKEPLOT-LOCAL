@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_data/card_insights_model.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manually.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStack.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardWidget.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/finora.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 
 class IndexScreen extends StatelessWidget {
   const IndexScreen({Key? key}) : super(key: key);
@@ -22,11 +25,10 @@ class IndexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-   
-    
+
     return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-          child: SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+      child: SingleChildScrollView(
         child: Column(
           children: [
             Nextfetch(),
@@ -52,33 +54,31 @@ class IndexScreen extends StatelessWidget {
             //   height: height * 0.21,
             //   child: SwipeableCardsScreen(),
             // ),
-         
 
-         Obx(()=> isFinoraVisible.value?GetFinora(height) : GetFinora(height)),
-          const SizedBox(
+            Obx(() =>
+                isFinoraVisible.value ? GetFinora(height) : GetFinora(height)),
+            const SizedBox(
               height: 14,
             ),
 
-         
-          Obx(()=> isAutoPayFected.value?GetAutopays(height) : GetAutopays(height)),
-            
-            SizedBox(
-                height: height * 0.5,
-                child: InsightsScreen()
-            ),
-           
+            Obx(() => isAutoPayFected.value
+                ? GetAutopays(height)
+                : GetAutopays(height)),
+
+            SizedBox(height: height * 0.5, child: InsightsScreen()),
+
             DoughnutChartExample(),
             const SizedBox(
               height: 14,
             ),
 
             SizedBox(
-                height: 30,
-                child:  Text(HomepageStringsDart().madeWithLove,
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: AppColors.primaryColor)),
+              height: 30,
+              child: Text(HomepageStringsDart().madeWithLove,
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: AppColors.primaryColor)),
             )
           ],
         ),
@@ -86,20 +86,37 @@ class IndexScreen extends StatelessWidget {
     );
   }
 
-
-  Widget GetAutopays(height){
-    return allAutoPayData.isEmpty?SizedBox.shrink(): SizedBox(
-                height: height * 0.4,
-                child: CardStackScreen()
-            );
-  }
-  Widget GetFinora(height){
-    return SizedBox(
-            height: height * ( totalDebitThisMonth.value<=0 ? 0.54 : 0.21),
-            child:  totalDebitThisMonth.value<=0 
-                ? FinoraLastTwoMonthsDashboard() 
-                : SwipeableCardsScreen(),
-          );
+  Widget GetAutopays(height) {
+    return allAutoPayData.isEmpty
+        ? SizedBox.shrink()
+        : SizedBox(height: height * 0.4, child: CardStackScreen());
   }
 
+  // Widget GetFinora(height){
+  //   return SizedBox(
+  //           height: height * ( totalDebitThisMonth.value<=0 ? 0.54 : 0.21),
+  //           child:  totalDebitThisMonth.value<=0
+  //               ? FinoraLastTwoMonthsDashboard()
+  //               : SwipeableCardsScreen(),
+  //         );
+  // }
+  Widget GetFinora(double height) {
+    return Obx(() {
+      // Check if Hive has cached data
+      final hasCachedData = Hive.isBoxOpen(HiveStorage.cardInsightsBoxName)
+          ? Hive.box<CardInsightsModel>(HiveStorage.cardInsightsBoxName)
+              .isNotEmpty
+          : false;
+      print(
+          'GetFinora: totalDebitThisMonth=${totalDebitThisMonth.value}, hasCachedData=$hasCachedData, isFinoraVisible=${isFinoraVisible.value}');
+
+      return SizedBox(
+        height: height *
+            (hasCachedData && totalDebitThisMonth.value <= 0 ? 0.54 : 0.61),
+        child: hasCachedData || totalDebitThisMonth.value > 0
+            ? FinoraLastTwoMonthsDashboard()
+            : FinoraLastTwoMonthsDashboard(),
+      );
+    });
+  }
 }

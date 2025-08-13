@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_last_two_months_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -24,27 +26,41 @@ class _FinoraLastTwoMonthsDashboardState
   void initState() {
     super.initState();
     getFinoraPreviousMonthData();
+    initFinoraLastTwoMonthsData();
   }
 
   void getFinoraPreviousMonthData() async {
+    setState(() => isLoading = true);
+
     try {
       var response = await getDataApiCall(
           "${url}/transactionauto/getUserMonthlySpending/");
+
       if (getFlagOfResponse(response)) {
+        var data = jsonDecode(response.body)['data'] ?? {};
+
+        // Cache before updating UI
+        try {
+          await FinoraLastTwoMonthsStorage.cacheFinoraLastTwoMonthsDataLocally(
+              data);
+        } catch (e) {
+          print("Caching failed: $e");
+        }
+
         setState(() {
-          finoraTransactionData = jsonDecode(response.body)['data'] ?? {};
+          finoraTransactionData = data;
           isLoading = false;
         });
       } else {
-        setState(() {
-          isLoading = false;
-        });
+        setState(() => isLoading = false);
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      isFinoraVisible.value = !isFinoraVisible.value;
+      print("API fetch failed, loading from cache: $e");
+      await FinoraLastTwoMonthsStorage.loadFinoraLastTwoMonthsDataFromHive();
+      setState(() => isLoading = false);
+
+      // Set visibility explicitly if needed
+      isFinoraVisible.value = true;
     }
   }
 

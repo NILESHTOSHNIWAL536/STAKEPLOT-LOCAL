@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
@@ -38,7 +40,9 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   void initState() {
     super.initState();
     selectedIndex.value = -1;
+   initChartData();
     catWidgetBindUpdate();
+    
   }
 
   @override
@@ -190,7 +194,7 @@ class CategoryCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TransactionHistoryScreen(),
+            builder: (context) => const TransactionHistoryScreen(),
           ),
         );
         // }
