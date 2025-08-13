@@ -20,8 +20,8 @@ class FinoraLastTwoMonthsModelAdapter
     return FinoraLastTwoMonthsModel(
       month1Name: fields[0] as String?,
       month2Name: fields[1] as String?,
-      month1Avg: fields[2] as double?,
-      month2Avg: fields[3] as double?,
+      month1Avg: fields[2] as String?,
+      month2Avg: fields[3] as String?,
       month1DailySums: (fields[4] as List)
           .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),

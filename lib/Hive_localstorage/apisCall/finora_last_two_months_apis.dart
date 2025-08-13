@@ -3,23 +3,21 @@ import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storag
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
+import '../../Home_Screen/finora_last2months_dashboard.dart';
+
 class FinoraLastTwoMonthsStorage {
-  static final RxMap<String, dynamic> finoraTransactionData =
-      <String, dynamic>{}.obs;
+  // static final RxMap<String, dynamic> finoraTransactionData =
+  //     <String, dynamic>{}.obs;
 
   static Future<void> cacheFinoraLastTwoMonthsDataLocally(
       Map<String, dynamic> data) async {
     final box = await HiveStorage.finoraLastTwoMonthsBox;
-    // await box.clear();
+    await box.clear();
     final model = FinoraLastTwoMonthsModel(
       month1Name: data['month1Name']?.toString(),
       month2Name: data['month2Name']?.toString(),
-      month1Avg: data['month1Avg'] is num
-          ? (data['month1Avg'] as num).toDouble()
-          : null,
-      month2Avg: data['month2Avg'] is num
-          ? (data['month2Avg'] as num).toDouble()
-          : null,
+      month1Avg: data['month1Avg'].toString() ,
+      month2Avg: data['month2Avg'].toString(),
       month1DailySums: (data['month1DailySums'] as List<dynamic>?)
               ?.cast<Map<String, dynamic>>() ??
           [],
@@ -27,14 +25,13 @@ class FinoraLastTwoMonthsStorage {
               ?.cast<Map<String, dynamic>>() ??
           [],
     );
+
     await box.add(model);
-    finoraTransactionData.value = data;
-    print('Finora last two months data cached');
+   
   }
 
   static Future<void> loadFinoraLastTwoMonthsDataFromHive() async {
     final box = await HiveStorage.finoraLastTwoMonthsBox;
-
     if (box.isNotEmpty) {
       // Convert all values to a list
       final models = box.values.toList();
@@ -51,14 +48,11 @@ class FinoraLastTwoMonthsStorage {
         };
       }).toList();
 
-      finoraTransactionData.value = {
-        'data': dataList,
-      };
-
-      print('All Finora last two months data loaded from Hive: $dataList');
+      finoraTransactionData.clear();
+      finoraTransactionData.addAll(dataList[0]);
+      FinoraLoading.value = !FinoraLoading.value;
     } else {
-      finoraTransactionData.value = {};
-      print('No finora last two months data found in Hive');
+      finoraTransactionData = {};
     }
   }
 
@@ -67,7 +61,6 @@ class FinoraLastTwoMonthsStorage {
       await Hive.box<FinoraLastTwoMonthsModel>(
               HiveStorage.finoraLastTwoMonthsBoxName)
           .close();
-      print('finoraLastTwoMonthsBox closed');
     }
   }
 }

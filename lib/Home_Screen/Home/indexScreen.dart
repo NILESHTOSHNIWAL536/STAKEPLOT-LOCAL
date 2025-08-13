@@ -103,17 +103,10 @@ class IndexScreen extends StatelessWidget {
   Widget GetFinora(double height) {
     return Obx(() {
       // Check if Hive has cached data
-      final hasCachedData = Hive.isBoxOpen(HiveStorage.cardInsightsBoxName)
-          ? Hive.box<CardInsightsModel>(HiveStorage.cardInsightsBoxName)
-              .isNotEmpty
-          : false;
-      print(
-          'GetFinora: totalDebitThisMonth=${totalDebitThisMonth.value}, hasCachedData=$hasCachedData, isFinoraVisible=${isFinoraVisible.value}');
-
       return SizedBox(
         height: height *
-            (hasCachedData && totalDebitThisMonth.value <= 0 ? 0.54 : 0.61),
-        child: hasCachedData || totalDebitThisMonth.value > 0
+            (  totalDebitThisMonth.value <= 0 ? 0.54 : 0.61),
+        child:  totalDebitThisMonth.value > 0
             ? FinoraLastTwoMonthsDashboard()
             : FinoraLastTwoMonthsDashboard(),
       );

@@ -98,9 +98,9 @@ void getCategoryData() async {
       setDonectChat.value = !setDonectChat.value;
     } catch (e) {
       // Fallback to Hive data if API call fails
-      processChartData();
       await CategoryStorage.loadCardInsightsDataFromHive();
       await CategoryStorage.loadChartDataFromHive();
+      processChartData();
     }
     isFinoraVisible.value = !isFinoraVisible.value;
   }

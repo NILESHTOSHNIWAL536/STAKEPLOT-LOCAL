@@ -12,10 +12,10 @@ class FinoraLastTwoMonthsModel extends HiveObject {
   String? month2Name;
 
   @HiveField(2)
-  double? month1Avg;
+  String? month1Avg;
 
   @HiveField(3)
-  double? month2Avg;
+  String? month2Avg;
 
   @HiveField(4)
   List<Map<String, dynamic>> month1DailySums;

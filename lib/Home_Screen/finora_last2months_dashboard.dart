@@ -9,8 +9,11 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+  Map<String, dynamic> finoraTransactionData = {};
+RxBool FinoraLoading=false.obs;
 class FinoraLastTwoMonthsDashboard extends StatefulWidget {
   @override
   _FinoraLastTwoMonthsDashboardState createState() =>
@@ -19,8 +22,7 @@ class FinoraLastTwoMonthsDashboard extends StatefulWidget {
 
 class _FinoraLastTwoMonthsDashboardState
     extends State<FinoraLastTwoMonthsDashboard> {
-  Map<String, dynamic> finoraTransactionData = {};
-  bool isLoading = true;
+  RxBool isLoading = true.obs;
 
   @override
   void initState() {
@@ -30,8 +32,8 @@ class _FinoraLastTwoMonthsDashboardState
   }
 
   void getFinoraPreviousMonthData() async {
-    setState(() => isLoading = true);
-
+     isLoading.value = true;
+    FinoraLoading.value=false;
     try {
       var response = await getDataApiCall(
           "${url}/transactionauto/getUserMonthlySpending/");
@@ -41,25 +43,23 @@ class _FinoraLastTwoMonthsDashboardState
 
         // Cache before updating UI
         try {
+          print("data cache");
           await FinoraLastTwoMonthsStorage.cacheFinoraLastTwoMonthsDataLocally(
-              data);
+              jsonDecode(response.body)['data']);
         } catch (e) {
           print("Caching failed: $e");
         }
 
-        setState(() {
-          finoraTransactionData = data;
-          isLoading = false;
-        });
+       
+          finoraTransactionData = jsonDecode(response.body)['data'] ?? {};
+          isLoading.value = false;
+      
       } else {
-        setState(() => isLoading = false);
+        isLoading.value = false;
       }
     } catch (e) {
-      print("API fetch failed, loading from cache: $e");
+      isLoading.value = false;
       await FinoraLastTwoMonthsStorage.loadFinoraLastTwoMonthsDataFromHive();
-      setState(() => isLoading = false);
-
-      // Set visibility explicitly if needed
       isFinoraVisible.value = true;
     }
   }
@@ -69,7 +69,7 @@ class _FinoraLastTwoMonthsDashboardState
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
-        child: isLoading
+        child:Obx(()=> isLoading.value
             ? Center(child: Spinner())
             : Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -85,7 +85,33 @@ class _FinoraLastTwoMonthsDashboardState
                       fontWeight: FontWeight.w600,
                     ),
                     const SizedBox(height: 14),
-                    Row(
+                    
+                    Obx(()=>FinoraLoading.value?getFindata():getFindata()),
+                    const SizedBox(height: 10),
+                    // Chart Container
+                    Container(
+                      height: MediaQuery.sizeOf(context).height / 3,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: SizedBox(
+                          width: _calculateChartWidth(),
+                          height: double.infinity, // Use full available height
+                          child: _buildSpendingChart(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+      )),
+    );
+  }
+
+
+
+
+  Widget getFindata(){
+    return Row(
                       children: [
                         Expanded(
                           child: _buildSummaryCard(
@@ -107,38 +133,7 @@ class _FinoraLastTwoMonthsDashboardState
                           ),
                         ),
                       ],
-                    ),
-                    const SizedBox(height: 10),
-                    // Chart Container
-                    Container(
-                      // padding: const EdgeInsets.all(16), // Increased padding
-                      // decoration: BoxDecoration(
-                      //   color: Colors.white,
-                      //   borderRadius: BorderRadius.circular(5),
-                      //   boxShadow: [
-                      //     BoxShadow(
-                      //       color: const Color.fromRGBO(89, 89, 89, 0.25),
-                      //       blurRadius: 4,
-                      //       offset: const Offset(0, 0),
-                      //     ),
-                      //   ],
-                      // ),
-                      height: MediaQuery.sizeOf(context).height / 3,
-
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: SizedBox(
-                          width: _calculateChartWidth(),
-                          height: double.infinity, // Use full available height
-                          child: _buildSpendingChart(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-      ),
-    );
+              );
   }
 
   double _calculateChartWidth() {
