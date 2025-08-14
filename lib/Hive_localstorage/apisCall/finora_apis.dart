@@ -35,7 +35,7 @@ class CategoryStorage {
   
   static Future<void> loadChartDataFromHive() async {
     final box = await HiveStorage.categoryBox;
-
+    await box.clear();
     // Convert Hive models to UI ChartData
     chartData.value = box.values.map((model) {
       return ChartData(
