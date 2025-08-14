@@ -32,7 +32,28 @@ class CategoryStorage {
     print("✅ Cached chart data: ${chartDataModels.length} items");
   }
 
-  static Future<void> cacheCardInsightsDataLocally() async {
+  
+  static Future<void> loadChartDataFromHive() async {
+    final box = await HiveStorage.categoryBox;
+
+    // Convert Hive models to UI ChartData
+    chartData.value = box.values.map((model) {
+      return ChartData(
+        model.category,
+        model.value,
+        Color(int.parse(model.color.replaceFirst('#', '0xff'))),
+        model.percentage,
+      );
+    }).toList();
+   
+    totalValue.value = chartData.fold(0.0, (sum, item) => sum + item.value);
+
+    print("📦 Loaded ${chartData.length} chart items from Hive");
+  }
+
+
+  // finora
+static Future<void> cacheCardInsightsDataLocally() async {
     final box = await HiveStorage.cardInsightsBox;
     await box.clear();
     final cardInsightsData = CardInsightsModel(
@@ -53,24 +74,6 @@ class CategoryStorage {
 
     // isFinoraVisible.value = totalDebitThisMonth.value > 0;
     print(' Card insights data cached locally');
-  }
-
-  static Future<void> loadChartDataFromHive() async {
-    final box = HiveStorage.categoryBox;
-
-    // Convert Hive models to UI ChartData
-    chartData.value = box.values.map((model) {
-      return ChartData(
-        model.category,
-        model.value,
-        Color(int.parse(model.color.replaceFirst('#', '0xff'))),
-        model.percentage,
-      );
-    }).toList();
-
-    totalValue.value = chartData.fold(0.0, (sum, item) => sum + item.value);
-
-    print("📦 Loaded ${chartData.length} chart items from Hive");
   }
 
   static Future<void> loadCardInsightsDataFromHive() async {

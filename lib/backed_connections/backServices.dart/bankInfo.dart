@@ -146,13 +146,11 @@ void getCategoryData() async {
     }
   } catch (e) {
     print("catchedddddd: $e");
-   
+
     // Catch any network or parsing errors
-    
+    processChartData();
     await CategoryStorage.loadCardInsightsDataFromHive();
     await CategoryStorage.loadChartDataFromHive();
-    processChartData();
-    
   }
 }
 
