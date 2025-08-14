@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
 import 'package:hive/hive.dart';
 
+import 'autopays_data/cards_data.dart';
 import 'bank_bata/bank_account_model.dart';
 import 'bank_bata/consent_detail_model.dart';
 import 'fip_metric_bata/fips_metric.dart';
@@ -27,6 +28,7 @@ class HiveStorage {
   static const String postBoxFeedName = 'postBoxFeed';
   static const String savedPostName = 'savedPost';
   static const String insightsBoxName = 'insightsBox';
+  static const String autoPayBoxName = 'cardsBox';
 
   /// ------------------ BOX GETTERS ------------------
 
@@ -50,6 +52,7 @@ class HiveStorage {
   static Box<PostModels> get postBoxTranding => Hive.box<PostModels>(postBoxTrandingName);
   static Box<PostModels> get postBoxFeed => Hive.box<PostModels>(postBoxFeedName);
   static Box<PostModels> get savedPost => Hive.box<PostModels>(savedPostName);
+  static Box<CardsData> get autoPays => Hive.box<CardsData>(autoPayBoxName);
 
   /// ------------------ COMMON HELPERS ------------------
 

@@ -23,7 +23,7 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
   @override
   void initState() {
     super.initState();
-    // initChartData();
+     initChartData();
     initCardInsightsData();
   }
 

@@ -16,11 +16,13 @@ import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storag
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/transactions_data/transaction.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import '../autopays_data/cards_data.dart';
 import '../bank_bata/bank_account_model.dart';
 import '../bank_bata/consent_detail_model.dart';
 import '../fip_metric_bata/fips_metric.dart';
 import '../post_data.dart/post_hive_storage.dart';
 import '../user-data/user_model.dart';
+import 'autopays_apis.dart';
 import 'fipmetric_apis.dart';
 import 'transactions_apis.dart';
 
@@ -30,13 +32,14 @@ Future<void> GetLocalStorage() async {
   await init_user();
   await init_banks();
   await init_fips_metrics();
+  await initCardsData();
   await init_Transactions();
   await init_finance();
   await init_insights();
   await initChartData();
   await initCardInsightsData();
   await initFinoraLastTwoMonthsData();
-    await init_post();
+  await init_post();
 }
 
 Future<void> init_user() async {
@@ -103,7 +106,7 @@ Future<void> initCardInsightsData() async {
   await Hive.openBox<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
   if (Hive.isBoxOpen(HiveStorage.cardInsightsBoxName)) {
     await CategoryStorage.loadCardInsightsDataFromHive();
-  } else {}
+  }
 }
 
 Future<void> initFinoraLastTwoMonthsData() async {
@@ -122,12 +125,12 @@ Future<void> initFinoraLastTwoMonthsData() async {
 
    Future<void> init_post() async
   {
-    Hive.registerAdapter(PostTypeAdapter());
-    Hive.registerAdapter(PollOptionModelAdapter());
-    Hive.registerAdapter(PollModelAdapter());
-    Hive.registerAdapter(AuthorModelAdapter());
-    Hive.registerAdapter(BudgetModelAdapter());
-    Hive.registerAdapter(PostModelAdapter());
+    Hive.registerAdapter(PostTypesAdapter());
+    Hive.registerAdapter(PollOptionModelsAdapter());
+    Hive.registerAdapter(PollModelsAdapter());
+    Hive.registerAdapter(AuthorModelsAdapter());
+    Hive.registerAdapter(BudgetModelsAdapter());
+    Hive.registerAdapter(PostModelsAdapter());
     await Hive.openBox<PostModels>(HiveStorage.postBoxTrandingName);
     await Hive.openBox<PostModels>(HiveStorage.postBoxFeedName);
     await Hive.openBox<PostModels>(HiveStorage.savedPostName);
@@ -135,4 +138,13 @@ Future<void> initFinoraLastTwoMonthsData() async {
     if(HiveStorage.isBoxOpen(HiveStorage.postBoxFeedName)) PostLocalStorage.loadPostsFromHive(isPostTranding: false);
     if(HiveStorage.isBoxOpen(HiveStorage.savedPostName)) PostLocalStorage.loadPostsFromHive(isPostTranding: true,isSavedPost: true);
 
+  }
+
+
+  Future<void> initCardsData() async
+  {
+    Hive.registerAdapter(CardsDataAdapter());
+    await Hive.openBox<CardsData>(HiveStorage.autoPayBoxName);
+    if (HiveStorage.isBoxOpen(HiveStorage.autoPayBoxName))
+    CardsLocalStorage.loadCardsFromHive();
   }
