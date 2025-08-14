@@ -1,6 +1,7 @@
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_data/card_insights_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora/chart_data_model.dart'
     as hive_model;
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora/chart_data_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -11,13 +12,12 @@ import 'package:flutter/material.dart';
 class CategoryStorage {
   static Future<void> cacheChartDataLocally() async {
     // Open the box (type-safe)
-    final box = await Hive.openBox<hive_model.ChartDataModel>(
-        HiveStorage.categoryDataBoxName);
+    final box = await HiveStorage.categoryBox;
 
     await box.clear();
 
     final chartDataModels = chartData
-        .map((data) => hive_model.ChartDataModel(
+        .map((data) => ChartDataModel(
               category: data.category,
               percentage: data.persentage,
               value: data.value,
@@ -56,10 +56,7 @@ class CategoryStorage {
   }
 
   static Future<void> loadChartDataFromHive() async {
-    final box = await Hive.openBox<hive_model.ChartDataModel>(
-        HiveStorage.categoryDataBoxName);
-
-    
+    final box = HiveStorage.categoryBox;
 
     // Convert Hive models to UI ChartData
     chartData.value = box.values.map((model) {
@@ -105,8 +102,7 @@ class CategoryStorage {
 
   static Future<void> closeChartDataBox() async {
     if (Hive.isBoxOpen(HiveStorage.categoryDataBoxName)) {
-      await Hive.box<hive_model.ChartDataModel>(HiveStorage.categoryDataBoxName)
-          .close();
+      await Hive.box<ChartDataModel>(HiveStorage.categoryDataBoxName).close();
     }
   }
 

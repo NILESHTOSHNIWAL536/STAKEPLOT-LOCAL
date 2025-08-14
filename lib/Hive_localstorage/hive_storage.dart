@@ -20,7 +20,7 @@ class HiveStorage {
   static const String userBoxName = 'userBox';
   static const String transactionsBoxName = 'transactionsBox';
   static const String financeBoxName = 'financeBox';
-  static const String finoraBoxName = 'chartDataBox';
+  
   static const String categoryDataBoxName = 'categoryDataBoxName';
   static const String cardInsightsBoxName = 'cardInsightsBox';
   static const String finoraLastTwoMonthsBoxName = 'finoraLastTwoMonthsBox';
@@ -43,8 +43,8 @@ class HiveStorage {
   static Box<UserModel> get userBox => Hive.box<UserModel>(userBoxName);
   static Box<Transactions> get transactionsBox => Hive.box<Transactions>(transactionsBoxName);
   static Box<FinanceModel> get financeBox => Hive.box<FinanceModel>(financeBoxName);
-  static Box<FinanceModel> get categoryBox => Hive.box<FinanceModel>(categoryDataBoxName);
-  static Box<ChartDataModel> get finoraBox => Hive.box<ChartDataModel>(finoraBoxName);
+  static Box<ChartDataModel> get categoryBox => Hive.box<ChartDataModel>(categoryDataBoxName);
+ 
   static Box<CardInsightsModel> get cardInsightsBox => Hive.box<CardInsightsModel>(cardInsightsBoxName);
     static Box<FinoraLastTwoMonthsModel> get finoraLastTwoMonthsBox =>
       Hive.box<FinoraLastTwoMonthsModel>(finoraLastTwoMonthsBoxName);
