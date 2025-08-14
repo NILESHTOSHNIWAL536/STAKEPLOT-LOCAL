@@ -40,9 +40,9 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   void initState() {
     super.initState();
     selectedIndex.value = -1;
-   initChartData();
+    // initChartData();
+
     catWidgetBindUpdate();
-    
   }
 
   @override
@@ -188,7 +188,6 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        
         searchController.text = category.toLowerCase();
         onChanedAutoTransactionStatus(context);
         Navigator.push(

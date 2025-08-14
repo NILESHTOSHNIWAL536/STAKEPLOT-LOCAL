@@ -32,11 +32,13 @@ Future<void> GetLocalStorage() async {
   await init_fips_metrics();
   await init_Transactions();
   await init_finance();
+
+  await initCardInsightsData(); // finora
+  await initFinoraLastTwoMonthsData(); // finora last 2 months
   await init_insights();
-  await initChartData();
-  await initCardInsightsData();
-  await initFinoraLastTwoMonthsData();
-    await init_post();
+  await initChartData(); // categorise spend
+
+  await init_post();
 }
 
 Future<void> init_user() async {
@@ -72,12 +74,14 @@ Future<void> init_Transactions() async {
 Future<void> init_finance() async {
   Hive.registerAdapter(FinanceModelAdapter());
   await Hive.openBox<FinanceModel>(HiveStorage.financeBoxName);
-  if (accountId.value.isNotEmpty){
-    await FinanceLocalStorage.loadFinanceFromHive(accountId.value, 'Month', getFormattedDate());
+  if (accountId.value.isNotEmpty) {
+    await FinanceLocalStorage.loadFinanceFromHive(
+        accountId.value, 'Month', getFormattedDate());
   }
 }
 
 Future<void> init_insights() async {
+  // headsup
   Hive.registerAdapter(InsightsModelAdapter());
 
   await Hive.openBox<InsightsModel>('insightsBox');
@@ -91,14 +95,16 @@ Future<void> init_insights() async {
 }
 
 Future<void> initChartData() async {
+  // categorywise
   Hive.registerAdapter(ChartDataModelAdapter());
-  await Hive.openBox<ChartDataModel>(HiveStorage.finoraBoxName);
-  if (Hive.isBoxOpen(HiveStorage.finoraBoxName)) {
+  await Hive.openBox<ChartDataModel>(HiveStorage.categoryDataBoxName);
+  if (Hive.isBoxOpen(HiveStorage.cardInsightsBoxName)) {
     await CategoryStorage.loadChartDataFromHive();
   }
 }
 
 Future<void> initCardInsightsData() async {
+  //finora
   Hive.registerAdapter(CardInsightsModelAdapter());
   await Hive.openBox<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
   if (Hive.isBoxOpen(HiveStorage.cardInsightsBoxName)) {
@@ -120,19 +126,20 @@ Future<void> initFinoraLastTwoMonthsData() async {
   }
 }
 
-   Future<void> init_post() async
-  {
-    Hive.registerAdapter(PostTypeAdapter());
-    Hive.registerAdapter(PollOptionModelAdapter());
-    Hive.registerAdapter(PollModelAdapter());
-    Hive.registerAdapter(AuthorModelAdapter());
-    Hive.registerAdapter(BudgetModelAdapter());
-    Hive.registerAdapter(PostModelAdapter());
-    await Hive.openBox<PostModels>(HiveStorage.postBoxTrandingName);
-    await Hive.openBox<PostModels>(HiveStorage.postBoxFeedName);
-    await Hive.openBox<PostModels>(HiveStorage.savedPostName);
-    if(HiveStorage.isBoxOpen(HiveStorage.postBoxTrandingName)) PostLocalStorage.loadPostsFromHive(isPostTranding: true);
-    if(HiveStorage.isBoxOpen(HiveStorage.postBoxFeedName)) PostLocalStorage.loadPostsFromHive(isPostTranding: false);
-    if(HiveStorage.isBoxOpen(HiveStorage.savedPostName)) PostLocalStorage.loadPostsFromHive(isPostTranding: true,isSavedPost: true);
-
-  }
+Future<void> init_post() async {
+  Hive.registerAdapter(PostTypeAdapter());
+  Hive.registerAdapter(PollOptionModelAdapter());
+  Hive.registerAdapter(PollModelAdapter());
+  Hive.registerAdapter(AuthorModelAdapter());
+  Hive.registerAdapter(BudgetModelAdapter());
+  Hive.registerAdapter(PostModelAdapter());
+  await Hive.openBox<PostModels>(HiveStorage.postBoxTrandingName);
+  await Hive.openBox<PostModels>(HiveStorage.postBoxFeedName);
+  await Hive.openBox<PostModels>(HiveStorage.savedPostName);
+  if (HiveStorage.isBoxOpen(HiveStorage.postBoxTrandingName))
+    PostLocalStorage.loadPostsFromHive(isPostTranding: true);
+  if (HiveStorage.isBoxOpen(HiveStorage.postBoxFeedName))
+    PostLocalStorage.loadPostsFromHive(isPostTranding: false);
+  if (HiveStorage.isBoxOpen(HiveStorage.savedPostName))
+    PostLocalStorage.loadPostsFromHive(isPostTranding: true, isSavedPost: true);
+}

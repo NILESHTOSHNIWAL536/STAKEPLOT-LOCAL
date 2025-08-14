@@ -32,13 +32,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController(text: "nileshtoshniwal743@gmail.com");
-  final TextEditingController passwordController =TextEditingController(text: "Nilesh1234@");
+  final TextEditingController emailController =
+      TextEditingController(text: "nileshtoshniwal743@gmail.com");
+  final TextEditingController passwordController =
+      TextEditingController(text: "Nilesh1234@");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     acceptReset.value = false;
     googleSignInBool.value = false;
@@ -107,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       containerIconSiginWith(
                           FontAwesomeIcons.google, Colorcodes.white, context),
                       // buildGoogleSignIn(),
-                       const SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Platform.isAndroid
                           ? Text('')
                           : SignInWithAppleButton(
@@ -119,13 +120,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 try {
                                   final userdataApple = await AuthService()
                                       .signInWithApple(context);
-                               
+
                                   if (userdataApple != null &&
                                       userdataApple['data']['accessToken'] !=
                                           null) {
-                                    loginCalledDataForApple(userdataApple, context);
+                                    loginCalledDataForApple(
+                                        userdataApple, context);
                                   } else if (userdataApple != null) {
-                                 
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -133,8 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               UserDetailsPage2(
                                                   data: userdataApple)),
                                     );
-                                  } else {
-                                  }
+                                  } else {}
                                 } finally {
                                   appleSignInBool.value =
                                       false; // Reset loading state
@@ -174,8 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
               MaterialPageRoute(
                   builder: (context) => UserDetailsPage(data: userdata)),
             );
-          } else {
-          }
+          } else {}
         } finally {
           googleSignInBool.value = false; // Reset loading state
         }
@@ -231,6 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onChanged: (c) {
           acceptReset.value = false;
         },
+        cursorColor: Colors.white,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Email Address',
@@ -260,6 +260,8 @@ class _LoginScreenState extends State<LoginScreen> {
           acceptReset.value = false;
         },
         obscureText: !_isPasswordVisible,
+        
+        cursorColor: Colors.white,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Password',
@@ -325,7 +327,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
             acceptReset.value = true;
 
-            await getDeviceInfo("deviceData.value".toString(), context,emailController, passwordController, );
+            await getDeviceInfo(
+              "deviceData.value".toString(),
+              context,
+              emailController,
+              passwordController,
+            );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,

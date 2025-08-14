@@ -51,16 +51,31 @@ RxString selectedBank = "".obs;
 //       categoriesListWeek.refresh();
 //       frequentPaymentsWeek.refresh();
 //       moreDrasticChangeWeek.refresh();
+//       processChartData();
+//       await CategoryStorage.cacheCardInsightsDataLocally();
+//       await CategoryStorage.cacheChartDataLocally();
 //       setDonectChat.value = !setDonectChat.value;
-//     } catch (e) {}
+//     } catch (e) {
+//       processChartData();
+//       await CategoryStorage.loadCardInsightsDataFromHive();
+//       await CategoryStorage.loadChartDataFromHive();
+//     }
 //     isFinoraVisible.value = !isFinoraVisible.value;
-//     processChartData();
+
+//     // processChartData();
+//   } else {
+//     await CategoryStorage.loadCardInsightsDataFromHive();
+//     await CategoryStorage.loadChartDataFromHive();
 //   }
 // }
+
 void getCategoryData() async {
-  var res = await getDataApiCall("${url}/transactionauto/categorize");
-  if (getFlagOfResponse(res)) {
-    try {
+  try {
+    // API call inside try
+    var res = await getDataApiCall("${url}/transactionauto/categorize");
+
+    if (getFlagOfResponse(res)) {
+      print("tried");
       var data = jsonDecode(res.body);
       categoriesList.clear();
       frequentPayments.clear();
@@ -69,61 +84,76 @@ void getCategoryData() async {
       frequentPaymentsWeek.clear();
       moreDrasticChangeWeek.clear();
 
-      // Month data
-      categoriesList.addAll(data["data"]['categorized']);
-      frequentPayments.addAll(data["data"]['frequentPayments']);
-      moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
+      // month
+      // categoriesList.addAll(data["data"]['categorized']);
+      categoriesList.addAll(
+        (data["data"]['categorized'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
+
+      // frequentPayments.addAll(data["data"]['frequentPayments']);
+      // moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
+      frequentPayments.addAll(
+        (data["data"]['frequentPayments'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
+
+      moreDrasticChange.addAll(
+        (data["data"]['moreDrasticChange'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
+
       totalDebitThisMonth.value = double.parse(
           doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
 
-      // Week data
-      categoriesListWeek.addAll(data["data"]['week']['categorized']);
-      frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
-      moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
-      totalDebitThisWeek.value = double.parse(doubleToFixed(
-          data["data"]['week']['totalDebitThisMonth'].toString()));
+      // week
+      // categoriesListWeek.addAll(data["data"]['week']['categorized']);
+      // frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
+      // moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
+      // totalDebitThisWeek.value = double.parse(doubleToFixed(
+      //     data["data"]['week']['totalDebitThisMonth'].toString()));
+      categoriesListWeek.addAll(
+        (data["data"]['week']['categorized'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
+      frequentPaymentsWeek.addAll(
+        (data["data"]['week']['frequentPayments'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
+      moreDrasticChangeWeek.addAll(
+        (data["data"]['week']['moreDrasticChange'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
 
+      // Refresh reactive lists
       categoriesList.refresh();
       frequentPayments.refresh();
       moreDrasticChange.refresh();
       categoriesListWeek.refresh();
       frequentPaymentsWeek.refresh();
       moreDrasticChangeWeek.refresh();
-
-      // Process and cache chart data
-
+      isFinoraVisible.value = !isFinoraVisible.value;
+      setDonectChat.value = !setDonectChat.value;
+      processChartData();
       await CategoryStorage.cacheCardInsightsDataLocally();
       await CategoryStorage.cacheChartDataLocally();
-
-      setDonectChat.value = !setDonectChat.value;
-    } catch (e) {
-      // Fallback to Hive data if API call fails
-      await CategoryStorage.loadCardInsightsDataFromHive();
-      await CategoryStorage.loadChartDataFromHive();
-      processChartData();
     }
-    isFinoraVisible.value = !isFinoraVisible.value;
+  } catch (e) {
+    print("catchedddddd: $e");
+   
+    // Catch any network or parsing errors
+    
+    await CategoryStorage.loadCardInsightsDataFromHive();
+    await CategoryStorage.loadChartDataFromHive();
+    processChartData();
+    
   }
-}
-
-void processChartData() {
-  List<ChartData> newData = [];
-  double newTotalValue = 0.0;
-
-  Map<String, Color> categoryColors = colorcodes;
-
-  for (var item in categoriesList) {
-    String category = item["category"];
-    String percentage = item["total_debit_percentage"] ?? "";
-    double value = item["total_debit"].toDouble();
-    Color color = categoryColors[category] ?? Colors.grey;
-
-    newData.add(ChartData(category, value, color, percentage));
-    newTotalValue += value;
-  }
-
-  chartData.value = newData;
-  totalValue.value = newTotalValue;
 }
 
 void getSummary() async {

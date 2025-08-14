@@ -47,9 +47,6 @@ void getFinoraPreviousMonthData() async {
   } else {}
 }
 
-
-
-
 Future<List<CardData>> getAutoPayInfo() async {
   try {
     // Fetch both false and true auto pay info
@@ -81,7 +78,6 @@ Future<List<CardData>> getAutoPayInfo() async {
 
     return allAutoPayData;
   } catch (e) {
-    
     return [];
   }
 }
@@ -237,21 +233,27 @@ void getAutoMationsTransactionsWeekly() async {
   }
 }
 
-Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, [String weekORmonth = 'month', String? endDate]) async {
+Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
+    [String weekORmonth = 'month', String? endDate]) async {
   if (accountId.value.trim().isEmpty) {
     _setEmptyState(weekORmonth, date, endDate);
     return;
   }
 
-  String storedPeriod = weekORmonth == 'month' ? 'Month' : weekORmonth == 'week' ? 'Week' : 'Custom';
+  String storedPeriod = weekORmonth == 'month'
+      ? 'Month'
+      : weekORmonth == 'week'
+          ? 'Week'
+          : 'Custom';
 
   // Try loading from Hive first
-  final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(accountId.value, storedPeriod, date, endDate);
+  final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+      accountId.value, storedPeriod, date, endDate);
   if (cachedFinance != null) {
     return;
   }
 
- // Show loading state
+  // Show loading state
   List<String> labelsLocal = [];
   List<double> debitList = [];
   List<double> creditList = [];
@@ -261,16 +263,22 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
 
   try {
-    final response = await getDataApiCall(urlPath).timeout(Duration(seconds: 10));
+    final response =
+        await getDataApiCall(urlPath).timeout(Duration(seconds: 10));
     if (getFlagOfResponse(response)) {
       final his = jsonDecode(response.body);
       transactionChatGraph.clear();
 
       try {
         final data = his['data']['result'] as Map;
-        totalDebitValuePercent.value = double.tryParse(his['data']['debitChangePercentage']?.toString() ?? '0') ?? 0;
-        totalDebitValue.value = double.tryParse(his['data']['totalDebit']?.toString() ?? '0') ?? 0;
-        maxYValue.value = double.tryParse(his['data']['maxAmount']?.toString() ?? '500') ?? 500;
+        totalDebitValuePercent.value = double.tryParse(
+                his['data']['debitChangePercentage']?.toString() ?? '0') ??
+            0;
+        totalDebitValue.value =
+            double.tryParse(his['data']['totalDebit']?.toString() ?? '0') ?? 0;
+        maxYValue.value =
+            double.tryParse(his['data']['maxAmount']?.toString() ?? '500') ??
+                500;
         if (maxYValue.value == 0) maxYValue.value = 500.0;
 
         if (weekORmonth == 'Custom' && endDate != null) {
@@ -287,7 +295,8 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
 
           data.forEach((key, value) {
             DateTime txDate = DateTime.parse(key);
-            if (txDate.isAfter(startDate.subtract(Duration(days: 1))) && txDate.isBefore(end.add(Duration(days: 1)))) {
+            if (txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
+                txDate.isBefore(end.add(Duration(days: 1)))) {
               int index = txDate.difference(startDate).inDays;
               if (index >= 0 && index < debitList.length) {
                 debitList[index] = getDouble(value['debit']);
@@ -297,7 +306,9 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
           });
         } else {
           data.forEach((key, value) {
-            String label = weekORmonth == 'Custom' ? key : key.toString().substring(key.length - 2);
+            String label = weekORmonth == 'Custom'
+                ? key
+                : key.toString().substring(key.length - 2);
             labelsLocal.add(label);
             debitList.add(getDouble(value['debit']));
             creditList.add(getDouble(value['credit']));
@@ -307,8 +318,10 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
         if (weekORmonth == 'Week') {
           labelsLocal = getWeekDays();
           if (debitList.length < 7) {
-            debitList = List.filled(7, 0.0)..setRange(0, debitList.length, debitList);
-            creditList = List.filled(7, 0.0)..setRange(0, creditList.length, creditList);
+            debitList = List.filled(7, 0.0)
+              ..setRange(0, debitList.length, debitList);
+            creditList = List.filled(7, 0.0)
+              ..setRange(0, creditList.length, creditList);
           }
         }
 
@@ -331,7 +344,6 @@ Future<void> getAutoMationsTransactionsCustom(String date,BuildContext context, 
           maxYValue: maxYValue.value,
           accountId: accountId.value,
         );
-        
       } catch (e) {
         _setEmptyState(weekORmonth, date, endDate);
       }
@@ -355,7 +367,8 @@ void _setEmptyState(String weekORmonth, String date, String? endDate) {
     debitList = List.filled(daysDiff, 0.0);
     creditList = List.filled(daysDiff, 0.0);
     for (int i = 0; i < daysDiff; i++) {
-      labelsLocal.add(DateFormat('MMM d').format(startDate.add(Duration(days: i))));
+      labelsLocal
+          .add(DateFormat('MMM d').format(startDate.add(Duration(days: i))));
     }
   } else {
     labelsLocal = weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
@@ -371,7 +384,6 @@ void _setEmptyState(String weekORmonth, String date, String? endDate) {
   maxYValue.value = 500.0;
   getGraphData.value = true;
 }
-
 
 String getNextDay(String endDate) {
   // Parse the input date string
@@ -935,7 +947,6 @@ void pickCustomDateRangeoverall(BuildContext context) async {
   }
 }
 
-void overallTransactions(BuildContext context)
-{
+void overallTransactions(BuildContext context) {
   getAutoMationsTransactionsCustomoverall(getFormattedDateoverall(), context);
 }

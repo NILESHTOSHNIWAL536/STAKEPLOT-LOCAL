@@ -9,14 +9,13 @@ import 'package:hive/hive.dart';
 import 'package:flutter/material.dart';
 
 class CategoryStorage {
-  // static const String chartDataBoxName = 'chartDataBox';
-
-  static Box<hive_model.ChartDataModel> get chartDataBox =>
-      Hive.box<hive_model.ChartDataModel>(HiveStorage.finoraBoxName);
-
   static Future<void> cacheChartDataLocally() async {
-    final box = await chartDataBox;
-    await box.clear(); // Clear existing data
+    // Open the box (type-safe)
+    final box = await Hive.openBox<hive_model.ChartDataModel>(
+        HiveStorage.categoryDataBoxName);
+
+    await box.clear();
+
     final chartDataModels = chartData
         .map((data) => hive_model.ChartDataModel(
               category: data.category,
@@ -25,15 +24,17 @@ class CategoryStorage {
               color: '#${data.color.value.toRadixString(16).padLeft(8, '0')}',
             ))
         .toList();
+
     await box.addAll(chartDataModels);
+
     totalValue.value = chartData.fold(0.0, (sum, item) => sum + item.value);
+
+    print("✅ Cached chart data: ${chartDataModels.length} items");
   }
 
   static Future<void> cacheCardInsightsDataLocally() async {
     final box = await HiveStorage.cardInsightsBox;
-
-    print("📦 Before caching, box has ${box.length} items");
-
+    await box.clear();
     final cardInsightsData = CardInsightsModel(
       totalDebitThisMonth: totalDebitThisMonth.value,
       totalDebitThisWeek: totalDebitThisWeek.value,
@@ -55,65 +56,61 @@ class CategoryStorage {
   }
 
   static Future<void> loadChartDataFromHive() async {
-    final box = await chartDataBox;
-    final chartDataModels = box.values.toList();
-    chartData.value = chartDataModels
-        .map((model) => ChartData(
-              model.category,
-              model.value,
-              Color(int.parse(model.color.replaceFirst('#', '0xff'))),
-              model.percentage,
-            ))
-        .toList();
-    totalValue.value = chartData.fold(0.0, (sum, item) => sum + item.value);
-  }
+    final box = await Hive.openBox<hive_model.ChartDataModel>(
+        HiveStorage.categoryDataBoxName);
 
- static Future<void> loadCardInsightsDataFromHive() async {
-  final box = await HiveStorage.cardInsightsBox;
-
-  print("Box contents: ${box.values}");
-
-  if (box.isNotEmpty) {
-    // Reset values to avoid duplicate accumulation
-    totalDebitThisMonth.value = 0;
-    totalDebitThisWeek.value = 0;
-    moreDrasticChange.value = [];
-    moreDrasticChangeWeek.value = [];
-    frequentPayments.value = [];
-    frequentPaymentsWeek.value = [];
-
-    // Loop through all stored insights
-    for (var cardInsightsData in box.values) {
-      totalDebitThisMonth.value += cardInsightsData.totalDebitThisMonth;
-      totalDebitThisWeek.value += cardInsightsData.totalDebitThisWeek;
-
-      moreDrasticChange.value.addAll(
-        List<Map<String, dynamic>>.from(cardInsightsData.moreDrasticChange),
-      );
-
-      moreDrasticChangeWeek.value.addAll(
-        List<Map<String, dynamic>>.from(cardInsightsData.moreDrasticChangeWeek),
-      );
-
-      frequentPayments.value.addAll(
-        List<Map<String, dynamic>>.from(cardInsightsData.frequentPayments),
-      );
-
-      frequentPaymentsWeek.value.addAll(
-        List<Map<String, dynamic>>.from(cardInsightsData.frequentPaymentsWeek),
-      );
+    if (box.isEmpty) {
+      print("📦 ChartDataBox is empty");
+      chartData.clear();
+      totalValue.value = 0.0;
+      return;
     }
 
-    isFinoraVisible.value = totalDebitThisMonth.value > 0;
-    print('All card insights data loaded from Hive');
-  } else {
-    print('No card insights data found in Hive');
+    // Convert Hive models to UI ChartData
+    chartData.value = box.values.map((model) {
+      return ChartData(
+        model.category,
+        model.value,
+        Color(int.parse(model.color.replaceFirst('#', '0xff'))),
+        model.percentage,
+      );
+    }).toList();
+
+    totalValue.value = chartData.fold(0.0, (sum, item) => sum + item.value);
+
+    print("📦 Loaded ${chartData.length} chart items from Hive");
   }
-}
+
+  static Future<void> loadCardInsightsDataFromHive() async {
+    final box = await HiveStorage.cardInsightsBox;
+    print("Box contents: ${box.values}");
+
+    if (box.isNotEmpty) {
+      final latestData = box.values.last;
+
+      totalDebitThisMonth.value = latestData.totalDebitThisMonth;
+      totalDebitThisWeek.value = latestData.totalDebitThisWeek;
+
+      moreDrasticChange.value =
+          List<Map<String, dynamic>>.from(latestData.moreDrasticChange);
+      moreDrasticChangeWeek.value =
+          List<Map<String, dynamic>>.from(latestData.moreDrasticChangeWeek);
+
+      frequentPayments.value =
+          List<Map<String, dynamic>>.from(latestData.frequentPayments);
+      frequentPaymentsWeek.value =
+          List<Map<String, dynamic>>.from(latestData.frequentPaymentsWeek);
+
+      isFinoraVisible.value = totalDebitThisMonth.value > 0;
+      print('Latest card insights data loaded from Hive');
+    } else {
+      print('No card insights data found in Hive');
+    }
+  }
 
   static Future<void> closeChartDataBox() async {
-    if (Hive.isBoxOpen(HiveStorage.finoraBoxName)) {
-      await Hive.box<hive_model.ChartDataModel>(HiveStorage.finoraBoxName)
+    if (Hive.isBoxOpen(HiveStorage.categoryDataBoxName)) {
+      await Hive.box<hive_model.ChartDataModel>(HiveStorage.categoryDataBoxName)
           .close();
     }
   }

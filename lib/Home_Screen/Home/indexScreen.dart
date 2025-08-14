@@ -102,11 +102,10 @@ class IndexScreen extends StatelessWidget {
     return Obx(() {
       // Check if Hive has cached data
       return SizedBox(
-        height: height *
-            (  totalDebitThisMonth.value <= 0 ? 0.54 : 0.61),
-        child:  totalDebitThisMonth.value > 0
-            ? FinoraLastTwoMonthsDashboard()
-            : FinoraLastTwoMonthsDashboard(),
+        height: height * (totalDebitThisMonth.value <= 0 ? 0.54 : 0.21),
+        child: totalDebitThisMonth.value <= 0
+            ? SwipeableCardsScreen()
+            : SwipeableCardsScreen(),
       );
     });
   }

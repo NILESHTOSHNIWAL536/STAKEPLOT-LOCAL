@@ -12,8 +12,9 @@ import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-  Map<String, dynamic> finoraTransactionData = {};
-RxBool FinoraLoading=false.obs;
+Map<String, dynamic> finoraTransactionData = {};
+RxBool FinoraLoading = false.obs;
+
 class FinoraLastTwoMonthsDashboard extends StatefulWidget {
   @override
   _FinoraLastTwoMonthsDashboardState createState() =>
@@ -28,12 +29,12 @@ class _FinoraLastTwoMonthsDashboardState
   void initState() {
     super.initState();
     getFinoraPreviousMonthData();
-    initFinoraLastTwoMonthsData();
+    // initFinoraLastTwoMonthsData();
   }
 
   void getFinoraPreviousMonthData() async {
-     isLoading.value = true;
-    FinoraLoading.value=false;
+    isLoading.value = true;
+    FinoraLoading.value = false;
     try {
       var response = await getDataApiCall(
           "${url}/transactionauto/getUserMonthlySpending/");
@@ -50,10 +51,8 @@ class _FinoraLastTwoMonthsDashboardState
           print("Caching failed: $e");
         }
 
-       
-          finoraTransactionData = jsonDecode(response.body)['data'] ?? {};
-          isLoading.value = false;
-      
+        finoraTransactionData = jsonDecode(response.body)['data'] ?? {};
+        isLoading.value = false;
       } else {
         isLoading.value = false;
       }
@@ -69,7 +68,8 @@ class _FinoraLastTwoMonthsDashboardState
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
-        child:Obx(()=> isLoading.value
+          child: Obx(
+        () => isLoading.value
             ? Center(child: Spinner())
             : Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -85,8 +85,9 @@ class _FinoraLastTwoMonthsDashboardState
                       fontWeight: FontWeight.w600,
                     ),
                     const SizedBox(height: 14),
-                    
-                    Obx(()=>FinoraLoading.value?getFindata():getFindata()),
+
+                    Obx(() =>
+                        FinoraLoading.value ? getFindata() : getFindata()),
                     const SizedBox(height: 10),
                     // Chart Container
                     Container(
@@ -107,33 +108,28 @@ class _FinoraLastTwoMonthsDashboardState
     );
   }
 
-
-
-
-  Widget getFindata(){
+  Widget getFindata() {
     return Row(
-                      children: [
-                        Expanded(
-                          child: _buildSummaryCard(
-                            context,
-                            finoraTransactionData['month2Name']?.toString() ??
-                                'June 2025',
-                            '₹ ${_formatAmount(finoraTransactionData['month2Avg'])}',
-                            AppColors.primaryColor,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _buildSummaryCard(
-                            context,
-                            finoraTransactionData['month1Name']?.toString() ??
-                                'May 2025',
-                            '₹ ${_formatAmount(finoraTransactionData['month1Avg'])}',
-                            AppColors.finoraMonth,
-                          ),
-                        ),
-                      ],
-              );
+      children: [
+        Expanded(
+          child: _buildSummaryCard(
+            context,
+            finoraTransactionData['month2Name']?.toString() ?? 'June 2025',
+            '₹ ${_formatAmount(finoraTransactionData['month2Avg'])}',
+            AppColors.primaryColor,
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: _buildSummaryCard(
+            context,
+            finoraTransactionData['month1Name']?.toString() ?? 'May 2025',
+            '₹ ${_formatAmount(finoraTransactionData['month1Avg'])}',
+            AppColors.finoraMonth,
+          ),
+        ),
+      ],
+    );
   }
 
   double _calculateChartWidth() {
