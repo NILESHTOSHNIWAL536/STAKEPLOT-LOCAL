@@ -22,6 +22,8 @@ import 'package:intl/intl.dart';
 import 'package:week_of_year/week_of_year.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
+import '../../Hive_localstorage/apisCall/autopays_apis.dart';
+
 double getDouble(data) {
   return double.parse(data.toString());
 }
@@ -55,6 +57,8 @@ Future<List<CardData>> getAutoPayInfo() async {
       getDataApiCall("${url}/transactionauto/get-recurring-payments/true"),
     ]);
 
+    //throw Error();
+
     allAutoPayData.clear();
     for (int i = 0; i < responses.length; i++) {
       final response = responses[i];
@@ -74,11 +78,15 @@ Future<List<CardData>> getAutoPayInfo() async {
       }
     }
 
+    await CardsLocalStorage.saveCardsToHive(cardList: allAutoPayData);
     isAutoPayFected.value = !isAutoPayFected.value;
 
     return allAutoPayData;
-  } catch (e) {
-    return [];
+  } catch (e){
+    isAutoPayFected.value = !isAutoPayFected.value;
+    await CardsLocalStorage.loadCardsFromHive();
+    print(allAutoPayData);
+    return allAutoPayData;
   }
 }
 

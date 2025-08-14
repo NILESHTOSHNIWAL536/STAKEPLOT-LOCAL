@@ -6,7 +6,7 @@ part of 'post_hive_storage.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PollOptionModelAdapter extends TypeAdapter<PollOptionModels> {
+class PollOptionModelsAdapter extends TypeAdapter<PollOptionModels> {
   @override
   final int typeId = 12;
 
@@ -38,12 +38,12 @@ class PollOptionModelAdapter extends TypeAdapter<PollOptionModels> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PollOptionModelAdapter &&
+      other is PollOptionModelsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class PollModelAdapter extends TypeAdapter<PollModels> {
+class PollModelsAdapter extends TypeAdapter<PollModels> {
   @override
   final int typeId = 13;
 
@@ -75,12 +75,12 @@ class PollModelAdapter extends TypeAdapter<PollModels> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PollModelAdapter &&
+      other is PollModelsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class AuthorModelAdapter extends TypeAdapter<AuthorModels> {
+class AuthorModelsAdapter extends TypeAdapter<AuthorModels> {
   @override
   final int typeId = 14;
 
@@ -121,12 +121,12 @@ class AuthorModelAdapter extends TypeAdapter<AuthorModels> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AuthorModelAdapter &&
+      other is AuthorModelsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class BudgetModelAdapter extends TypeAdapter<BudgetModels> {
+class BudgetModelsAdapter extends TypeAdapter<BudgetModels> {
   @override
   final int typeId = 15;
 
@@ -161,12 +161,12 @@ class BudgetModelAdapter extends TypeAdapter<BudgetModels> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BudgetModelAdapter &&
+      other is BudgetModelsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class PostModelAdapter extends TypeAdapter<PostModels> {
+class PostModelsAdapter extends TypeAdapter<PostModels> {
   @override
   final int typeId = 16;
 
@@ -270,12 +270,12 @@ class PostModelAdapter extends TypeAdapter<PostModels> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PostModelAdapter &&
+      other is PostModelsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class PostTypeAdapter extends TypeAdapter<PostTypes> {
+class PostTypesAdapter extends TypeAdapter<PostTypes> {
   @override
   final int typeId = 11;
 
@@ -324,7 +324,7 @@ class PostTypeAdapter extends TypeAdapter<PostTypes> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PostTypeAdapter &&
+      other is PostTypesAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
