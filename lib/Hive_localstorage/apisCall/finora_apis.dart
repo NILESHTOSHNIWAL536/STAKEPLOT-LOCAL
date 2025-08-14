@@ -59,12 +59,7 @@ class CategoryStorage {
     final box = await Hive.openBox<hive_model.ChartDataModel>(
         HiveStorage.categoryDataBoxName);
 
-    if (box.isEmpty) {
-      print("📦 ChartDataBox is empty");
-      chartData.clear();
-      totalValue.value = 0.0;
-      return;
-    }
+    
 
     // Convert Hive models to UI ChartData
     chartData.value = box.values.map((model) {

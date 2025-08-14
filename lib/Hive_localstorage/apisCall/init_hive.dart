@@ -98,7 +98,7 @@ Future<void> initChartData() async {
   // categorywise
   Hive.registerAdapter(ChartDataModelAdapter());
   await Hive.openBox<ChartDataModel>(HiveStorage.categoryDataBoxName);
-  if (Hive.isBoxOpen(HiveStorage.cardInsightsBoxName)) {
+  if (Hive.isBoxOpen(HiveStorage.categoryDataBoxName)) {
     await CategoryStorage.loadChartDataFromHive();
   }
 }
