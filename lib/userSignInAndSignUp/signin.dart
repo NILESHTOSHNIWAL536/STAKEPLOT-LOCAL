@@ -33,9 +33,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController =
-      TextEditingController(text: "nileshtoshniwal743@gmail.com");
+      TextEditingController(text: "krishna771114@gmail.com");
   final TextEditingController passwordController =
-      TextEditingController(text: "Nilesh1234@");
+      TextEditingController(text: "Steve@0987");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override
@@ -222,6 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildEmailField() {
     return Container(
       decoration: BoxDecoration(
+        color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
@@ -233,6 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
         cursorColor: Colors.white,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
+          fillColor: Color.fromRGBO(255, 255, 255, 0.23),
           hintText: 'Email Address',
           hintStyle: FontManager().getTextStyle(context,
               lWeight: FontWeight.normal,
@@ -251,6 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildPasswordField() {
     return Container(
       decoration: BoxDecoration(
+        color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
@@ -260,16 +263,19 @@ class _LoginScreenState extends State<LoginScreen> {
           acceptReset.value = false;
         },
         obscureText: !_isPasswordVisible,
-        
         cursorColor: Colors.white,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
+          fillColor: Color.fromRGBO(
+              255, 255, 255, 0.23), // same as rgba(255,255,255,0.23)
+
           hintText: 'Password',
           hintStyle: FontManager().getTextStyle(context,
               lWeight: FontWeight.normal,
               fontSize: 14,
               color: AppColors.backgroundColor),
           border: InputBorder.none,
+
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
             vertical: 16,

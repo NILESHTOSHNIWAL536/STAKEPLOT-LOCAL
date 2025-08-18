@@ -41,11 +41,11 @@ class _BudgetOverViewState extends State<BudgetOverView> {
   @override
   void initState() {
     super.initState();
-     createBudget.value = false;
+    createBudget.value = false;
     // Initialize controllers and focus nodes for each category
     for (var category in widget.categoryList) {
-      _controllers.add(TextEditingController(
-          text: category['amount']?.toString() ?? '0'));
+      _controllers.add(
+          TextEditingController(text: category['amount']?.toString() ?? '0'));
       _focusNodes.add(FocusNode());
     }
   }
@@ -70,6 +70,37 @@ class _BudgetOverViewState extends State<BudgetOverView> {
     return enteredAmount <= budgetAmount;
   }
 
+  void _onFocusLost(int index, String value) async {
+    double parsedValue = double.tryParse(value) ?? 0;
+    if (!_validateAmount(value, widget.amount)) {
+      snackBarCalledfail(context, SnackbarData().amountExceed);
+      return;
+    }
+
+    // Update the current category's amount
+    categoriesDividedList[index]['amount'] = parsedValue;
+    _controllers[index].text = parsedValue.toStringAsFixed(2);
+
+    // Call adjustBudget to redistribute the remaining budget
+    var adjustedBudgets = await adjustBudget(
+      double.parse(widget.amount),
+      categoriesDividedList[index]['category'],
+      parsedValue,
+      widget.categoryList.map((e) => e['category'] as String).toList(),
+    );
+
+    // Update categoriesDividedList and controllers with new amounts
+    setState(() {
+      for (int i = 0; i < categoriesDividedList.length; i++) {
+        String category = categoriesDividedList[i]['category'];
+        if (adjustedBudgets.containsKey(category)) {
+          categoriesDividedList[i]['amount'] = adjustedBudgets[category]!;
+          _controllers[i].text = adjustedBudgets[category]!.toStringAsFixed(2);
+        }
+      }
+    });
+  }
+
   bool _isAmountExceeded(int index) {
     double enteredAmount =
         double.tryParse(categoriesDividedList[index]['amount'].toString()) ?? 0;
@@ -81,8 +112,8 @@ class _BudgetOverViewState extends State<BudgetOverView> {
     return Container(
       width: width,
       height: height,
-      padding:const  EdgeInsets.symmetric(horizontal: 20),
-      decoration:const  BoxDecoration(color: AppColors.backgroundColor),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: const BoxDecoration(color: AppColors.backgroundColor),
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -102,8 +133,8 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                      padding:
-                         const  EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 12),
                       decoration: BoxDecoration(
                           color: AppColors.button,
                           borderRadius: BorderRadius.circular(10)),
@@ -132,7 +163,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                     fontsize: 16,
                     fontWeight: FontWeight.w500,
                     c: AppColors.accentColor),
-                    SizedBox(width:10),
+                SizedBox(width: 10),
                 textStyle(
                     context: context,
                     text: PlotFinanceStaticData().totalAmountLabel,
@@ -152,14 +183,17 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                   if (createBudget.value) return;
                   // Show loader
                   createBudget.value = true;
-                   // Check if the sum of category amounts equals the total budget
-                  double totalCategoryAmount = categoriesDividedList.fold(0, (sum, item) {
-                    return sum + (double.tryParse(item['amount'].toString()) ?? 0);
+                  // Check if the sum of category amounts equals the total budget
+                  double totalCategoryAmount =
+                      categoriesDividedList.fold(0, (sum, item) {
+                    return sum +
+                        (double.tryParse(item['amount'].toString()) ?? 0);
                   });
 
                   if (totalCategoryAmount != double.tryParse(widget.amount)!) {
                     // Show error message if amounts do not match
-                    snackBarCalledfail(context, SnackbarData().budgetAmountMismatch);
+                    snackBarCalledfail(
+                        context, SnackbarData().budgetAmountMismatch);
                     createBudget.value = false; // Dismiss loader
                     return;
                   }
@@ -170,8 +204,10 @@ class _BudgetOverViewState extends State<BudgetOverView> {
 
                   // Dismiss loader
                 },
-                child: Obx(()=>createBudget.value?getspinner(context):getButton(
-                    context, PlotFinanceStaticData().addBudgetButton))),
+                child: Obx(() => createBudget.value
+                    ? getspinner(context)
+                    : getButton(
+                        context, PlotFinanceStaticData().addBudgetButton))),
           ],
         ),
       ),
@@ -223,13 +259,13 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                       Expanded(
                         flex: 2,
                         child: TextField(
-                         
-                           controller: _controllers[index],
+                          controller: _controllers[index],
                           focusNode: _focusNodes[index],
-                          
+
                           inputFormatters: allowDecimalInput(),
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 4), 
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 4),
                             isDense: true,
                             hintText: PlotFinanceStaticData().enterAmountHint,
                             hintStyle: FontManager().getTextStyle(context,
@@ -241,14 +277,26 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                                 : null,
                           ),
                           keyboardType: TextInputType.number,
-                          onSubmitted: (value) {
+                          onEditingComplete: () {
+                            // When editing is complete (e.g., user taps "Done" or moves focus)
+                            String value = _controllers[index].text;
                             if (_validateAmount(value, widget.amount)) {
-                              onsubmit(index, value);
-                               setState(() {});
+                              _onFocusLost(index, value);
                             } else {
-                              snackBarCalledfail(context, SnackbarData().amountExceed);
+                              snackBarCalledfail(
+                                  context, SnackbarData().amountExceed);
                             }
+                            // Move focus to the next field or dismiss keyboard
+                            FocusScope.of(context).nextFocus();
                           },
+                          // onSubmitted: (value) {
+                          //   if (_validateAmount(value, widget.amount)) {
+                          //     onsubmit(index, value);
+                          //      setState(() {});
+                          //   } else {
+                          //     snackBarCalledfail(context, SnackbarData().amountExceed);
+                          //   }
+                          // },
                         ),
                       ),
                     ],
@@ -280,36 +328,37 @@ class _BudgetOverViewState extends State<BudgetOverView> {
 //     categoriesDividedList.clear();
 //     categoriesDividedList.addAll(List.from(categoryList));
 //   }
-void onsubmit(int index, String value) async {
-  double parsedValue = double.tryParse(value) ?? 0;
-  if (!_validateAmount(value, widget.amount)) {
-    snackBarCalledfail(context, SnackbarData().amountExceed);
-    return;
+  void onsubmit(int index, String value) async {
+    double parsedValue = double.tryParse(value) ?? 0;
+    if (!_validateAmount(value, widget.amount)) {
+      snackBarCalledfail(context, SnackbarData().amountExceed);
+      return;
+    }
+
+    // Update the current category's amount
+    categoriesDividedList[index]['amount'] = parsedValue;
+    _controllers[index].text = parsedValue.toString();
+
+    // Call adjustBudget to redistribute the remaining budget
+    var adjustedBudgets = await adjustBudget(
+      double.parse(widget.amount),
+      categoriesDividedList[index]['category'],
+      parsedValue,
+      widget.categoryList.map((e) => e['category'] as String).toList(),
+    );
+
+    // Update categoriesDividedList and controllers with new amounts
+    setState(() {
+      for (int i = 0; i < categoriesDividedList.length; i++) {
+        String category = categoriesDividedList[i]['category'];
+        if (adjustedBudgets.containsKey(category)) {
+          categoriesDividedList[i]['amount'] = adjustedBudgets[category]!;
+          _controllers[i].text = adjustedBudgets[category]!.toStringAsFixed(2);
+        }
+      }
+    });
   }
 
-  // Update the current category's amount
-  categoriesDividedList[index]['amount'] = parsedValue;
-  _controllers[index].text = parsedValue.toString();
-
-  // Call adjustBudget to redistribute the remaining budget
-  var adjustedBudgets = await adjustBudget(
-    double.parse(widget.amount),
-    categoriesDividedList[index]['category'],
-    parsedValue,
-    widget.categoryList.map((e) => e['category'] as String).toList(),
-  );
-
-  // Update categoriesDividedList and controllers with new amounts
-  setState(() {
-    for (int i = 0; i < categoriesDividedList.length; i++) {
-      String category = categoriesDividedList[i]['category'];
-      if (adjustedBudgets.containsKey(category)) {
-        categoriesDividedList[i]['amount'] = adjustedBudgets[category]!;
-        _controllers[i].text = adjustedBudgets[category]!.toStringAsFixed(2);
-      }
-    }
-  });
-}
   Future<Map<String, double>> adjustBudget(
     double totalAmount,
     String updatedCategory,
