@@ -271,7 +271,7 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
 
   try {
     final response =
-        await getDataApiCall(urlPath).timeout(Duration(seconds: 10));
+        await getDataApiCall(urlPath);
     if (getFlagOfResponse(response)) {
       final his = jsonDecode(response.body);
       transactionChatGraph.clear();

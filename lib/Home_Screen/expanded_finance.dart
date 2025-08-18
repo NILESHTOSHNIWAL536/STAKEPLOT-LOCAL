@@ -46,6 +46,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
      hasMoreData = true;
      currentDays.value = List.from(widget.days);
      getAllTransactionHistory(context, true, isYearView.value,isRefreshing: true);
+    
      updateMonthLabels();
      filterDataForSelectedMonth();
      scrollController.addListener(_onScroll);
