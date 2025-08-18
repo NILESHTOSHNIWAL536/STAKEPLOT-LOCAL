@@ -6,10 +6,13 @@ import 'package:hive/hive.dart';
 
 import 'package:flutter/material.dart';
 
+import 'init_hive.dart';
+
 class CategoryStorage {
 
   // finora
 static Future<void> cacheCardInsightsDataLocally() async {
+  HiveHelper.openBoxIfNot<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
     final box = await HiveStorage.cardInsightsBox;
     await box.clear();
     final cardInsightsData = CardInsightsModel(
@@ -25,6 +28,7 @@ static Future<void> cacheCardInsightsDataLocally() async {
   }
 
   static Future<void> loadCardInsightsDataFromHive() async {
+    HiveHelper.openBoxIfNot<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
     final box = await HiveStorage.cardInsightsBox;
 
     if (box.isNotEmpty) {

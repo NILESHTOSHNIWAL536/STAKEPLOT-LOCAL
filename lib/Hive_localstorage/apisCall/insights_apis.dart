@@ -3,6 +3,9 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/insightsControlle
 import 'package:hive/hive.dart';
 import 'package:get/get.dart';
 
+import '../hive_storage.dart';
+import 'init_hive.dart';
+
 class InsightsLocalStorage {
   static const String _boxName = 'insightsBox';
   static const String _cacheKey = 'insights_data';
@@ -12,6 +15,7 @@ class InsightsLocalStorage {
     required List<Map<String, dynamic>> totalInSightsMoneyMap,
   }) async {
     try {
+      HiveHelper.openBoxIfNot<InsightsModel>(_boxName);
       final box = await Hive.box<InsightsModel>(_boxName);
       final insights = InsightsModel(
         totalInSights: totalInSights
@@ -32,6 +36,7 @@ class InsightsLocalStorage {
 
   static Future<InsightsModel?> loadInsightsFromHive() async {
     try {
+      HiveHelper.openBoxIfNot<InsightsModel>(_boxName);
       final box = await Hive.box<InsightsModel>(_boxName);
       final insights = box.get(_cacheKey);
 

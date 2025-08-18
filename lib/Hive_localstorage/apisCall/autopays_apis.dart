@@ -5,11 +5,13 @@ import '../../backed_connections/apis_connect.dart';
 import '../../model/autopay_model.dart';
 import '../autopays_data/cards_data.dart';
 import '../hive_storage.dart';
+import 'init_hive.dart';
 
 
 class CardsLocalStorage {
   /// Save all cards to Hive
   static Future<void> saveCardsToHive({required List<CardData> cardList}) async {
+    HiveHelper.openBoxIfNot<CardsData>(HiveStorage.autoPayBoxName);
     final box = await HiveStorage.autoPays; 
     await box.clear();
 
@@ -60,10 +62,7 @@ class CardsLocalStorage {
   static Future<void> loadCardsFromHive() async {
 
     try {
-      // Define gradients again for mapping back
-      if(!HiveStorage.isBoxOpen(HiveStorage.autoPayBoxName)){
-            await Hive.openBox<CardsData>(HiveStorage.autoPayBoxName); 
-      }
+     HiveHelper.openBoxIfNot<CardsData>(HiveStorage.autoPayBoxName);
     final box = await HiveStorage.autoPays;
     RxList<CardData> cardList=<CardData>[].obs;
    const   gradients =  [

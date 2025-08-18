@@ -66,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
     profileScreenStrings.fetchConstants();
     PdfStrings().fetchConstants();
     RewardScreenStrings().fetchConstants();
-    await GetLocalStorage();
+    await initAllHive();
   }
 
   @override

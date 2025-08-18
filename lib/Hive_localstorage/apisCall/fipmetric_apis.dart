@@ -2,14 +2,15 @@ import '../../backed_connections/apiAutomations/bankinfo.dart';
 import '../../model/fips_metric_model.dart';
 import '../fip_metric_bata/fips_metric.dart';
 import '../hive_storage.dart';
+import 'init_hive.dart';
 
 class FipsMetricLocalStorage {
   /// Save RxList to Hive
   static Future<void> saveFipsMetricsToHive() async {
+try{
+    HiveHelper.openBoxIfNot<FipsMetrics>(HiveStorage.fipsMetricBoxName);
     final box =await HiveStorage.fipsMetricBox;
     await box.clear();
-    
-try{
  fipsMetricList.forEach((element){
     box.add(
       FipsMetrics(
@@ -36,10 +37,11 @@ try{
 
   /// Load from Hive into RxList
 static Future<void> loadFipsMetricsFromHive() async {
+  try{
+  HiveHelper.openBoxIfNot<FipsMetrics>(HiveStorage.fipsMetricBoxName);
    final box =await HiveStorage.fipsMetricBox;
     fipsMetricList.clear();
 
-  try{
     box.values.forEach((element) {
       fipsMetricList.add(FipsMetric(
           timestamp: element.timestamp,
