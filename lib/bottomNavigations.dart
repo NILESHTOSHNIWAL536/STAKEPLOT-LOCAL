@@ -26,6 +26,8 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 
+import "offline.dart";
+
 class BottomNavigations extends StatefulWidget {
   int data;
   final VoidCallback? onCommunityDoubleTap;
@@ -190,6 +192,7 @@ int communityIndex = sizeRoom ? 3 : 2;
          
           if (i == 0)
             pushName(HomePage());
+          // else if (i == 1) pushName(Connections());
           else if (i == 1) pushName(PlotFinance());
         
            else if (i == 2) pushName(ControllerManagement.userController.interestedTags.isEmpty? WelcomeScreen():Community());

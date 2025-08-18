@@ -25,6 +25,7 @@ class HiveStorage {
   static const String finoraLastTwoMonthsBoxName = 'finoraLastTwoMonthsBox';
   static const String postBoxTrandingName = 'postBoxTranding';
   static const String postBoxFeedName = 'postBoxFeed';
+  static const String userPostName = 'userPostName';
   static const String savedPostName = 'savedPost';
   static const String insightsBoxName = 'insightsBox';
   static const String autoPayBoxName = 'cardsBox';
@@ -51,6 +52,7 @@ class HiveStorage {
   static Box<PostModels> get postBoxTranding => Hive.box<PostModels>(postBoxTrandingName);
   static Box<PostModels> get postBoxFeed => Hive.box<PostModels>(postBoxFeedName);
   static Box<PostModels> get savedPost => Hive.box<PostModels>(savedPostName);
+  static Box<PostModels> get userPost => Hive.box<PostModels>(userPostName);
   static Box<CardsData> get autoPays => Hive.box<CardsData>(autoPayBoxName);
 
   /// ------------------ COMMON HELPERS ------------------

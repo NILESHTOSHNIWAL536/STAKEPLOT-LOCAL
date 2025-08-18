@@ -17,6 +17,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserModel(
+      
       userId: fields[0] as String,
       userName: fields[1] as String,
       isGoogleUser: fields[2] as bool,
@@ -45,13 +46,15 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       selectedBank: fields[25] as String,
       firstFetchedDate: fields[26] as String,
       friendsList: (fields[27] as List).cast<dynamic>(),
+      maskedConnections: (fields[28] as List).cast<dynamic>(),
+      maskedConnected: (fields[29] as List).cast<dynamic>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(28)
+      ..writeByte(30)
       ..writeByte(0)
       ..write(obj.userId)
       ..writeByte(1)
@@ -107,7 +110,11 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(26)
       ..write(obj.firstFetchedDate)
       ..writeByte(27)
-      ..write(obj.friendsList);
+      ..write(obj.friendsList)
+      ..writeByte(28)
+      ..write(obj.maskedConnections)
+      ..writeByte(29)
+      ..write(obj.maskedConnected);
   }
 
   @override
