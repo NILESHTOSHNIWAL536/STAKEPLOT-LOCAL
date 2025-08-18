@@ -2,12 +2,14 @@ import 'package:flutter_application_code_stakeplot/Hive_localstorage/transaction
 import '../../backed_connections/apis_connect.dart';
 import '../../model/TransactionModel.dart';
 import '../hive_storage.dart';
+import 'init_hive.dart';
 
 class TransactionStorage {
 
   /// Save current transactions to Hive
   static Future<void> cacheTransactionsLocally() async {
     try {
+     HiveHelper.openBoxIfNot<Transactions>(HiveStorage.transactionsBoxName);
     final transactionBox = await HiveStorage.transactionsBox;
     await transactionBox.clear(); // Remove old data
       transactionsHistory.forEach((txn) {
@@ -57,6 +59,7 @@ class TransactionStorage {
   static Future<void> loadTransactionsFromHive() async {
 
     try {
+       HiveHelper.openBoxIfNot<Transactions>(HiveStorage.transactionsBoxName);
       final transactionBox = await HiveStorage.transactionsBox;
       transactionsHistory.clear();
       // transactionBox.values.forEach((txn) {

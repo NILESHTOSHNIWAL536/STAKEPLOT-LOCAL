@@ -1,8 +1,9 @@
 
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
@@ -343,7 +344,6 @@ class AvatarProfile2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double size=MediaQuery.of(context).size.width;
     return flag? Container(
           padding: EdgeInsets.all(2),
           alignment: Alignment.center,

@@ -5,17 +5,20 @@ import '../../backed_connections/apis_connect.dart';
 import '../bank_bata/bank_account_model.dart';
 import '../bank_bata/consent_detail_model.dart';
 import '../hive_storage.dart';
+import 'init_hive.dart';
 
 class BankStorage {
 
 
 static Future<void>  cacheBankDataLocally() async {
+try{
+ HiveHelper.openBoxIfNot<BankAccountModel>(HiveStorage.bankAccountsBoxName);
+  HiveHelper.openBoxIfNot<ConsentDetailModel>(HiveStorage.consentDetailsBoxName);
   final bankBox =await HiveStorage.bankAccountsBox;
   final consentBox =await HiveStorage.consentDetailsBox;
 
 await bankBox.clear();
 await consentBox.clear();
-try{
   for (var item in bankAccountLinkedList) {
     bankBox.add(
       BankAccountModel(
@@ -55,12 +58,13 @@ try{
 
 
 static Future<void> loadBankDataFromHive() async {
+  HiveHelper.openBoxIfNot<BankAccountModel>(HiveStorage.bankAccountsBoxName);
+  HiveHelper.openBoxIfNot<ConsentDetailModel>(HiveStorage.consentDetailsBoxName);
  final bankBox =await HiveStorage.bankAccountsBox;
   final consentBox =await HiveStorage.consentDetailsBox;
   bankAccountLinkedList.clear();
   try{
   for (var item in bankBox.values) {
-  
     bankAccountLinkedList.add({
       'bankId': item.bankId,
       'bankName': item.bankName,

@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import '../../controllers/user-controller.dart';
 import '../hive_storage.dart';
 import '../user-data/user_model.dart';
+import 'init_hive.dart';
 
 
 
@@ -11,6 +12,7 @@ class  UserLocalStorage {
   
 
 static Future<void> cacheUserDataLocally() async {
+   HiveHelper.openBoxIfNot<UserModel>(HiveStorage.userBoxName);
   final box =await HiveStorage.userBox;
 
   final user = UserModel(
@@ -50,10 +52,13 @@ static Future<void> cacheUserDataLocally() async {
 
 static Future<void> loadUserFromHive() async 
 {
+   // ✅ Ensure the box is open
+  HiveHelper. openBoxIfNot<UserModel>(HiveStorage.userBoxName);
   final box =await HiveStorage.userBox;
   final user = box.get('localUser');
 
-  if (user != null) {
+  if (user != null) 
+  {
     userController.userId.value = user.userId;
     userController.userName.value = user.userName;
     userController.isGoogleUser.value = user.isGoogleUser;

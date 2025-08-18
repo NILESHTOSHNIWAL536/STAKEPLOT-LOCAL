@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
 import '../../Home_Screen/finora_last2months_dashboard.dart';
+import 'init_hive.dart';
 
 class FinoraLastTwoMonthsStorage {
   // static final RxMap<String, dynamic> finoraTransactionData =
@@ -11,6 +12,7 @@ class FinoraLastTwoMonthsStorage {
 
   static Future<void> cacheFinoraLastTwoMonthsDataLocally(
       Map<String, dynamic> data) async {
+          HiveHelper.openBoxIfNot<FinoraLastTwoMonthsModel>(HiveStorage.finoraLastTwoMonthsBoxName);
     final box = await HiveStorage.finoraLastTwoMonthsBox;
     await box.clear();
     final model = FinoraLastTwoMonthsModel(
@@ -31,6 +33,7 @@ class FinoraLastTwoMonthsStorage {
   }
 
   static Future<void> loadFinoraLastTwoMonthsDataFromHive() async {
+    HiveHelper.openBoxIfNot<FinoraLastTwoMonthsModel>(HiveStorage.finoraLastTwoMonthsBoxName);
     final box = await HiveStorage.finoraLastTwoMonthsBox;
     if (box.isNotEmpty) {
       // Convert all values to a list
