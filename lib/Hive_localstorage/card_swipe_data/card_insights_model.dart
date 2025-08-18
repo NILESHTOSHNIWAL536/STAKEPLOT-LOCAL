@@ -21,6 +21,8 @@ class CardInsightsModel extends HiveObject {
 
   @HiveField(5)
   List<Map<String, dynamic>> frequentPaymentsWeek;
+  @HiveField(6)
+  List<Map<String, dynamic>> categoriesList;
 
   CardInsightsModel({
     required this.totalDebitThisMonth,
@@ -29,5 +31,6 @@ class CardInsightsModel extends HiveObject {
     required this.moreDrasticChangeWeek,
     required this.frequentPayments,
     required this.frequentPaymentsWeek,
+    required this.categoriesList,
   });
 }

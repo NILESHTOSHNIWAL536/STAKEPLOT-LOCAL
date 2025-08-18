@@ -215,7 +215,7 @@ void clearGetX() {
   bankAccountLinkedList.clear();
   FipIdsConnected.clear();
   transactionsHistory.clear();
-  chartData.clear();
+  spendingsOnCategories.clear();
   isLoadingMore.value = false;
   isFected.value = false;
   currentPage = 1;

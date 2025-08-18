@@ -396,7 +396,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                         widget.index);
                   }
 
-                  getCategoryData();
+                  getCategoryData(context);
                   tagBool.value =
                       false; // if anything goes wrong in tag check here first
                 },

@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/bank_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_last_two_months_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/insights_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/post_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/user_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_data/card_insights_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora/chart_data_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora_prev_months/finora_last_two_months_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/insights_data/insights_model.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -25,6 +23,7 @@ import '../fip_metric_bata/fips_metric.dart';
 import '../post_data.dart/post_hive_storage.dart';
 import '../user-data/user_model.dart';
 import 'autopays_apis.dart';
+import 'finora_apis.dart';
 import 'fipmetric_apis.dart';
 import 'transactions_apis.dart';
 
@@ -37,11 +36,9 @@ Future<void> GetLocalStorage() async {
   await initCardsData();
   await init_Transactions();
   await init_finance();
-
   await initCardInsightsData(); // finora
   await initFinoraLastTwoMonthsData(); // finora last 2 months
   await init_insights();
-  await initChartData(); // categorise spend
 
   await init_post();
 }
@@ -90,21 +87,9 @@ Future<void> init_insights() async {
   Hive.registerAdapter(InsightsModelAdapter());
 
   await Hive.openBox<InsightsModel>('insightsBox');
-  print('insightsBox opened');
   if (Hive.isBoxOpen('insightsBox')) {
-    print('insightsBox is open, loading data');
     await InsightsLocalStorage.loadInsightsFromHive();
   } else {
-    print('insightsBox is not open');
-  }
-}
-
-Future<void> initChartData() async {
-  // categorywise
-  Hive.registerAdapter(ChartDataModelAdapter());
-  await Hive.openBox<ChartDataModel>(HiveStorage.categoryDataBoxName);
-  if (Hive.isBoxOpen(HiveStorage.categoryDataBoxName)) {
-    await CategoryStorage.loadChartDataFromHive();
   }
 }
 
@@ -118,16 +103,12 @@ Future<void> initCardInsightsData() async {
 }
 
 Future<void> initFinoraLastTwoMonthsData() async {
-  print('Starting initFinoraLastTwoMonthsData');
   Hive.registerAdapter(FinoraLastTwoMonthsModelAdapter());
   await Hive.openBox<FinoraLastTwoMonthsModel>(
       HiveStorage.finoraLastTwoMonthsBoxName);
-  print('finoraLastTwoMonthsBox opened');
   if (Hive.isBoxOpen(HiveStorage.finoraLastTwoMonthsBoxName)) {
-    print('finoraLastTwoMonthsBox is open, loading data');
     await FinoraLastTwoMonthsStorage.loadFinoraLastTwoMonthsDataFromHive();
   } else {
-    print('finoraLastTwoMonthsBox is not open');
   }
 }
 

@@ -19,63 +19,14 @@ RxString balance = "0".obs;
 RxString accountName = "Bank Name : ".obs;
 RxString accountNo = "XXXXXXXX".obs;
 RxString selectedBank = "".obs;
-// void getCategoryData() async {
-//   var res = await getDataApiCall("${url}/transactionauto/categorize");
-//   if (getFlagOfResponse(res)) {
-//     try {
-//       var data = jsonDecode(res.body);
-//       categoriesList.clear();
-//       frequentPayments.clear();
-//       moreDrasticChange.clear();
-//       categoriesListWeek.clear();
-//       frequentPaymentsWeek.clear();
-//       moreDrasticChangeWeek.clear();
-//       //month
-//       categoriesList.addAll(data["data"]['categorized']);
-//       frequentPayments.addAll(data["data"]['frequentPayments']);
-//       moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
 
-//       totalDebitThisMonth.value = double.parse(
-//           doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
 
-//       categoriesListWeek.addAll(data["data"]['week']['categorized']);
-//       frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
-//       moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
-//       totalDebitThisWeek.value = double.parse(doubleToFixed(
-//           data["data"]['week']['totalDebitThisMonth'].toString()));
-
-//       categoriesList.refresh();
-//       frequentPayments.refresh();
-//       moreDrasticChange.refresh();
-
-//       categoriesListWeek.refresh();
-//       frequentPaymentsWeek.refresh();
-//       moreDrasticChangeWeek.refresh();
-//       processChartData();
-//       await CategoryStorage.cacheCardInsightsDataLocally();
-//       await CategoryStorage.cacheChartDataLocally();
-//       setDonectChat.value = !setDonectChat.value;
-//     } catch (e) {
-//       processChartData();
-//       await CategoryStorage.loadCardInsightsDataFromHive();
-//       await CategoryStorage.loadChartDataFromHive();
-//     }
-//     isFinoraVisible.value = !isFinoraVisible.value;
-
-//     // processChartData();
-//   } else {
-//     await CategoryStorage.loadCardInsightsDataFromHive();
-//     await CategoryStorage.loadChartDataFromHive();
-//   }
-// }
-
-void getCategoryData() async {
+void getCategoryData(context) async {
   try {
     // API call inside try
     var res = await getDataApiCall("${url}/transactionauto/categorize");
 
     if (getFlagOfResponse(res)) {
-      print("tried");
       var data = jsonDecode(res.body);
       categoriesList.clear();
       frequentPayments.clear();
@@ -83,9 +34,8 @@ void getCategoryData() async {
       categoriesListWeek.clear();
       frequentPaymentsWeek.clear();
       moreDrasticChangeWeek.clear();
-
-      // month
-      // categoriesList.addAll(data["data"]['categorized']);
+      // spendingsOnCategories.clear();
+      // throw Error();
       categoriesList.addAll(
         (data["data"]['categorized'] as List<dynamic>)
             .map((e) => e as Map<String, dynamic>)
@@ -142,15 +92,10 @@ void getCategoryData() async {
       setDonectChat.value = !setDonectChat.value;
       processChartData();
       await CategoryStorage.cacheCardInsightsDataLocally();
-      await CategoryStorage.cacheChartDataLocally();
     }
   } catch (e) {
-    print("catchedddddd: $e");
-
-    // Catch any network or parsing errors
-    processChartData();
-    await CategoryStorage.loadCardInsightsDataFromHive();
-    await CategoryStorage.loadChartDataFromHive();
+     await CategoryStorage.loadCardInsightsDataFromHive();
+     processChartData();
   }
 }
 
@@ -208,7 +153,7 @@ void deleteBankAccount(
   if (getFlagOfResponse(res)) {
     accountId.value = "";
     getBankAccounts();
-    getCategoryData();
+    getCategoryData(context);
     clearGraph();
     getAutoMationsTransactionsCustom(getFormattedDate(), context);
     Navigator.of(context).pop();

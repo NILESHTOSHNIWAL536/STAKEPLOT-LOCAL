@@ -31,13 +31,16 @@ class CardInsightsModelAdapter extends TypeAdapter<CardInsightsModel> {
       frequentPaymentsWeek: (fields[5] as List)
           .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
+      categoriesList: (fields[6] as List)
+          .map((dynamic e) => (e as Map).cast<String, dynamic>())
+          .toList(),
     );
   }
 
   @override
   void write(BinaryWriter writer, CardInsightsModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.totalDebitThisMonth)
       ..writeByte(1)
@@ -49,7 +52,9 @@ class CardInsightsModelAdapter extends TypeAdapter<CardInsightsModel> {
       ..writeByte(4)
       ..write(obj.frequentPayments)
       ..writeByte(5)
-      ..write(obj.frequentPaymentsWeek);
+      ..write(obj.frequentPaymentsWeek)
+      ..writeByte(6)
+      ..write(obj.categoriesList);
   }
 
   @override

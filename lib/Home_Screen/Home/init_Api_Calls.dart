@@ -33,7 +33,6 @@ void callApi(context)async
     getUserLend(context);
     getBudget();
     getHiddenTransactions(context);
-    getCategoryData();
     getNotifications(context);
     getAllAutoTransactions();
     getAllContstant(context);

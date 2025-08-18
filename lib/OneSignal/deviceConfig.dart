@@ -240,13 +240,12 @@ class InstallationChecker {
   }
 }
 
-catWidgetBindUpdate() {
+catWidgetBindUpdate(context) {
   WidgetsBinding.instance.addPostFrameCallback((_) async {
     await HomeWidget.setAppGroupId('group.com.stakeplot.pfa');
-    getCategoryData();
     await updateWidgetSpendingCategories();
   });
-  ever(chartData, (_) => updateWidgetSpendingCategories());
+  ever(spendingsOnCategories, (_) => updateWidgetSpendingCategories());
   ever(totalValue, (_) => updateWidgetSpendingCategories());
 }
 

@@ -286,7 +286,7 @@ void deletSelectedTransactions(BuildContext context) async {
   redioButton.clear(); // Optionally clear selection after hiding
   redioButtonIndex.clear(); // Optionally clear selection after hiding
   addManually.clear();
-  getCategoryData();
+  getCategoryData(context);
   Navigator.pop(context);
 }
 

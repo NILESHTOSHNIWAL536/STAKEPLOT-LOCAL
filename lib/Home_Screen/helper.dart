@@ -405,8 +405,8 @@ String formatMoneyIndian(String value,[String pattern="0"]) {
       final total = '₹${totalValue.value?.toStringAsFixed(2) ?? '0.00'}';
       final timestamp = getMonthlyRange();
       String categories = 'None';
-      if (chartData.isNotEmpty) {
-        categories = chartData
+      if (spendingsOnCategories.isNotEmpty) {
+        categories = spendingsOnCategories
             .map(
                 (data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
             .join('\n');

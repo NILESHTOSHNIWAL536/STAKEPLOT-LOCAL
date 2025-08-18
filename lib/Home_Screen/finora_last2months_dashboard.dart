@@ -44,11 +44,9 @@ class _FinoraLastTwoMonthsDashboardState
 
         // Cache before updating UI
         try {
-          print("data cache");
           await FinoraLastTwoMonthsStorage.cacheFinoraLastTwoMonthsDataLocally(
               jsonDecode(response.body)['data']);
         } catch (e) {
-          print("Caching failed: $e");
         }
 
         finoraTransactionData = jsonDecode(response.body)['data'] ?? {};

@@ -85,7 +85,6 @@ Future<List<CardData>> getAutoPayInfo() async {
   } catch (e){
     isAutoPayFected.value = !isAutoPayFected.value;
     await CardsLocalStorage.loadCardsFromHive();
-    print(allAutoPayData);
     return allAutoPayData;
   }
 }
@@ -611,9 +610,8 @@ void addTransaction(String amount, String subCategory, String categories,
         0, TransactionModel.fromJson(body['data'][0]['data']));
 
     reloadHistory.value = !reloadHistory.value;
-    getCategoryData();
+    getCategoryData(context);
     setDonectChat.value = !setDonectChat.value;
-    processChartData();
     getAutoMationsTransactionsCustom(getFormattedDate(), context);
     Navigator.pop(context);
   } else {
@@ -624,6 +622,7 @@ void addTransaction(String amount, String subCategory, String categories,
 }
 
 void processChartData() {
+  try{
   List<ChartData> newData = [];
   double newTotalValue = 0.0;
 
@@ -639,8 +638,12 @@ void processChartData() {
     newTotalValue += value;
   }
 
-  chartData.value = newData;
+  spendingsOnCategories.value =newData.isNotEmpty? newData:spendingsOnCategories;
   totalValue.value = newTotalValue;
+  }catch(e){
+     print(e);
+     print(e);
+  }
 }
 
 void getTransaction(context) async {

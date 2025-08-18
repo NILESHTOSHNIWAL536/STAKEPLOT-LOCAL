@@ -13,9 +13,6 @@ class CardsLocalStorage {
     final box = await HiveStorage.autoPays; 
     await box.clear();
 
-    print(cardList);
-    print(cardList[0]);
-
     const  gradients =  [
           LinearGradient(
             begin: Alignment.topLeft,
@@ -53,10 +50,7 @@ class CardsLocalStorage {
           isDaily: element.isDaily,
         ));
       }
-      print(box.values);
-      print(box.values.first);
-      print(box.values.first.narration);
-      print(box.values.first.amount);
+     
     } catch (e) {
       print("Error saving cards to Hive: $e");
     }
@@ -108,13 +102,10 @@ class CardsLocalStorage {
 
       allAutoPayData.clear();
       allAutoPayData.addAll(cardList);
-      print(cardList);
-      print(allAutoPayData);
       isAutoPayFected.value=!isAutoPayFected.value;
 
     } catch (e) {
       print(e);
-      print("Error loading cards from Hive: $e");
     }
   }
 }

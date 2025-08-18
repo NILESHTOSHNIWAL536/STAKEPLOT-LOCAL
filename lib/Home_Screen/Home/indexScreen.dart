@@ -65,7 +65,8 @@ class IndexScreen extends StatelessWidget {
 
             SizedBox(height: height * 0.5, child: InsightsScreen()),
 
-            DoughnutChartExample(),
+         Obx(() => isFectedDonetChat.value? DoughnutChartExample():DoughnutChartExample()),
+         
             const SizedBox(
               height: 14,
             ),

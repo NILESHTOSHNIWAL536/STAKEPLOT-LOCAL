@@ -18,8 +18,10 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
 
+import '../backed_connections/backServices.dart/bankInfo.dart';
+
 RxInt selectedIndex = (-1).obs;
-RxList<ChartData> chartData = <ChartData>[].obs;
+RxList<ChartData> spendingsOnCategories = <ChartData>[].obs;
 RxDouble totalValue = 0.0.obs;
 
 class ChartData {
@@ -41,8 +43,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     super.initState();
     selectedIndex.value = -1;
     // initChartData();
-
-    catWidgetBindUpdate();
+      getCategoryData(context);
+    catWidgetBindUpdate(context);
   }
 
   @override
@@ -64,7 +66,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                   color: AppColors.bg3,
                 ),
               ),
-              Obx(() => chartData.length >= 7
+              Obx(() => spendingsOnCategories.length >= 7
                   ? TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -97,7 +99,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
           const SizedBox(
             height: 10,
           ),
-          Obx(() => chartData.isEmpty
+          Obx(() => spendingsOnCategories.isEmpty
               ? Center(
                   child: Text(
                     HomepageStringsDart().noSpendingsAvailable,
@@ -117,7 +119,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
 
   Widget buildCategoryCards() {
     // Take top 4 categories
-    final topCategories = chartData.toList()
+    final topCategories = spendingsOnCategories.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final topFour = topCategories.take(6).toList();
     return GridView.builder(
@@ -341,7 +343,7 @@ class AllCategoriesPage extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Obx(() {
           // Sort chartData by value in descending order
-          final sortedData = chartData.toList()
+          final sortedData = spendingsOnCategories.toList()
             ..sort((a, b) => b.value.compareTo(a.value));
           return sortedData.isEmpty
               ? Center(
