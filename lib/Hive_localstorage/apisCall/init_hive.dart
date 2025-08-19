@@ -96,6 +96,7 @@ Future<void> init_finance() async {
           'Month',
           getFormattedDate(),
         );
+         getGraphData.value = true;
       }
     },
   );
