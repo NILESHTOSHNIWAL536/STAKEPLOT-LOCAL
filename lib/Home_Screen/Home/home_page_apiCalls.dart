@@ -47,29 +47,30 @@ Future<void> fetchYearlyData(int year) async {
   String period = 'Year';
   String startDate = DateFormat('yyyy-MM-dd').format(DateTime(year, 1, 1));
   String? endDate = null; // Year view doesn’t use endDate
-  List<String> labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+   List<String> labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   // Try loading from Hive first
-  final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+   await FinanceLocalStorage.loadFinanceFromHive(
     accountId.value,
     period,
     startDate,
     endDate,
   );
 
-  if (cachedFinance != null) {
-    currentChartData.value = {
-      'credited': cachedFinance.credited,
-      'debited': cachedFinance.debited,
-    };
-    currentDays.value = cachedFinance.labels;
-    maxYValue.value = cachedFinance.maxYValue;
-    totalExpandedValue.value = cachedFinance.totalDebitValue;
-    totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
-    getGraphData.value = true;
-    isLoading.value = false;
-    return;
-  }
+  // if (cachedFinance != null) {
+  //   currentChartData.value = {
+  //     'credited': cachedFinance.credited,
+  //     'debited': cachedFinance.debited,
+  //   };
+  //   currentDays.value = cachedFinance.labels;
+  //   maxYValue.value = cachedFinance.maxYValue;
+  //   totalExpandedValue.value = cachedFinance.totalDebitValue;
+  //   totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
+  //   getGraphData.value = true;
+  //   // isLoading.value = false;
+  //   return;
+  // }
+
   try {
     // isLoading.value = true;
     String yearString = year.toString().padLeft(4, '0');
@@ -173,26 +174,26 @@ Future<void> fetchMonthlyData(int year, int month) async {
   List<String> labels = List.generate(daysInMonth, (index) => DateFormat('MMM d').format(DateTime(year, month, index + 1)));
 
   // Try loading from Hive first
-  final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+   await FinanceLocalStorage.loadFinanceFromHive(
     accountId.value,
     period,
     startDate,
     endDate,
   );
 
-  if (cachedFinance != null) {
-    currentChartData.value = {
-      'credited': cachedFinance.credited,
-      'debited': cachedFinance.debited,
-    };
-    currentDays.value = cachedFinance.labels;
-    maxYValue.value = cachedFinance.maxYValue;
-    totalExpandedValue.value = cachedFinance.totalDebitValue;
-    totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
-    getGraphData.value = true;
-    isLoading.value = false;
-    return;
-  }
+  // if (cachedFinance != null) {
+  //   currentChartData.value = {
+  //     'credited': cachedFinance.credited,
+  //     'debited': cachedFinance.debited,
+  //   };
+  //   currentDays.value = cachedFinance.labels;
+  //   maxYValue.value = cachedFinance.maxYValue;
+  //   totalExpandedValue.value = cachedFinance.totalDebitValue;
+  //   totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
+  //   getGraphData.value = true;
+  //   isLoading.value = false;
+  //   return;
+  // }
    try {
     // isLoading.value = true;
     String formattedDate = DateFormat('yyyy-MM').format(DateTime(year, month));
