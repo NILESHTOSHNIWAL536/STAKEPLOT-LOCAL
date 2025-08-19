@@ -14,6 +14,8 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
+import "../../Hive_localstorage/apisCall/finance_apis.dart";
+
 // expanded finance apis and functions
 final Map<String, int> monthNameToIndex = {
   'Jan': 0,
@@ -42,6 +44,33 @@ int getDaysInMonthExpanded(int year, int month) {
 }
 
 Future<void> fetchYearlyData(int year) async {
+  String period = 'Year';
+  String startDate = DateFormat('yyyy-MM-dd').format(DateTime(year, 1, 1));
+  String? endDate = null; // Year view doesn’t use endDate
+   List<String> labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  // Try loading from Hive first
+   await FinanceLocalStorage.loadFinanceFromHive(
+    accountId.value,
+    period,
+    startDate,
+    endDate,
+  );
+
+  // if (cachedFinance != null) {
+  //   currentChartData.value = {
+  //     'credited': cachedFinance.credited,
+  //     'debited': cachedFinance.debited,
+  //   };
+  //   currentDays.value = cachedFinance.labels;
+  //   maxYValue.value = cachedFinance.maxYValue;
+  //   totalExpandedValue.value = cachedFinance.totalDebitValue;
+  //   totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
+  //   getGraphData.value = true;
+  //   // isLoading.value = false;
+  //   return;
+  // }
+
   try {
     // isLoading.value = true;
     String yearString = year.toString().padLeft(4, '0');
@@ -78,6 +107,18 @@ Future<void> fetchYearlyData(int year) async {
               totalExpandedValue.value =
                   data['data']['totalCredit']?.toDouble() ?? 500.0;
               if (maxYValue.value == 0) maxYValue.value = 500.0;
+               await FinanceLocalStorage.cacheFinanceDataLocally(
+          period: period,
+          startDate: startDate,
+          endDate: endDate,
+          labels: labels,
+          debited: yearlyData['debited']!,
+          credited: yearlyData['credited']!,
+          totalDebitValue: totalExpandedValue.value,
+          totalDebitValuePercent: totalDebitValuePercent.value,
+          maxYValue: maxYValue.value,
+          accountId: accountId.value,
+        );
             } else {
               throw Exception('Invalid data structure received from API');
             }
@@ -114,13 +155,46 @@ Future<void> fetchYearlyData(int year) async {
       'credited': List.filled(12, 0.0),
       'debited': List.filled(12, 0.0),
     };
+     final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+    accountId.value,
+    period,
+    startDate,
+    endDate,
+  );
   } finally {
     isLoading.value = false;
   }
 }
 
 Future<void> fetchMonthlyData(int year, int month) async {
-  try {
+  String period = 'Month';
+  String startDate = DateFormat('yyyy-MM-dd').format(DateTime(year, month, 1));
+  String endDate = DateFormat('yyyy-MM-dd').format(DateTime(year, month + 1, 0));
+  int daysInMonth = getDaysInMonthExpanded(year, month);
+  List<String> labels = List.generate(daysInMonth, (index) => DateFormat('MMM d').format(DateTime(year, month, index + 1)));
+
+  // Try loading from Hive first
+   await FinanceLocalStorage.loadFinanceFromHive(
+    accountId.value,
+    period,
+    startDate,
+    endDate,
+  );
+
+  // if (cachedFinance != null) {
+  //   currentChartData.value = {
+  //     'credited': cachedFinance.credited,
+  //     'debited': cachedFinance.debited,
+  //   };
+  //   currentDays.value = cachedFinance.labels;
+  //   maxYValue.value = cachedFinance.maxYValue;
+  //   totalExpandedValue.value = cachedFinance.totalDebitValue;
+  //   totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
+  //   getGraphData.value = true;
+  //   isLoading.value = false;
+  //   return;
+  // }
+   try {
     // isLoading.value = true;
     String formattedDate = DateFormat('yyyy-MM').format(DateTime(year, month));
     var response = await getDataApiCall(
@@ -151,6 +225,18 @@ Future<void> fetchMonthlyData(int year, int month) async {
         totalExpandedValue.value =
             data['data']['totalDebit']?.toDouble() ?? 500.0;
         if (maxYValue.value == 0) maxYValue.value = 500.0;
+        await FinanceLocalStorage.cacheFinanceDataLocally(
+          period: period,
+          startDate: startDate,
+          endDate: endDate,
+          labels: labels,
+          debited: monthlyData['debited']!,
+          credited: monthlyData['credited']!,
+          totalDebitValue: totalExpandedValue.value,
+          totalDebitValuePercent: totalDebitValuePercent.value,
+          maxYValue: maxYValue.value,
+          accountId: accountId.value,
+        );
       } catch (e) {
         maxYValue.value = 500.0;
         currentChartData.value = {
@@ -171,10 +257,253 @@ Future<void> fetchMonthlyData(int year, int month) async {
       'credited': List.filled(daysInMonth, 0.0),
       'debited': List.filled(daysInMonth, 0.0),
     };
+    final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+    accountId.value,
+    period,
+    startDate,
+    endDate,
+  );
   } finally {
     isLoading.value = false;
   }
 }
+
+// Future<void> fetchYearlyData(int year) async {
+//   String period = 'Year';
+//   String startDate = DateFormat('yyyy-MM-dd').format(DateTime(year, 1, 1));
+//   String? endDate = null; // Year view doesn’t use endDate
+//   List<String> labels = [
+//     'Jan',
+//     'Feb',
+//     'Mar',
+//     'Apr',
+//     'May',
+//     'Jun',
+//     'Jul',
+//     'Aug',
+//     'Sep',
+//     'Oct',
+//     'Nov',
+//     'Dec'
+//   ];
+
+//   // Try loading from Hive first
+//   final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+//     accountId.value,
+//     period,
+//     startDate,
+//     endDate,
+//   );
+
+//   if (cachedFinance != null) {
+//     currentChartData.value = {
+//       'credited': cachedFinance.credited,
+//       'debited': cachedFinance.debited,
+//     };
+//     currentDays.value = cachedFinance.labels;
+//     maxYValue.value = cachedFinance.maxYValue;
+//     totalExpandedValue.value = cachedFinance.totalDebitValue;
+//     totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
+//     getGraphData.value = true;
+//     isLoading.value = false;
+//     return;
+//   }
+
+//   try {
+//     // isLoading.value = true;
+//     String yearString = year.toString().padLeft(4, '0');
+//     String endpoint =
+//         "${url}/transactionauto/getAllCustomTransactions/${accountId.value}/year/$yearString";
+
+//     var response = await getDataApiCall(endpoint);
+
+//     if (response.statusCode == 200 || response.statusCode == 201) {
+//       var data = jsonDecode(response.body);
+
+//       if (data['success'] == true) {
+//         Map<String, List<double>> yearlyData = {
+//           'credited': List.filled(12, 0.0),
+//           'debited': List.filled(12, 0.0),
+//         };
+
+//         if (data['data'] != null && data['data']['result'] != null) {
+//           data['data']['result'].forEach((key, value) {
+//             int monthIndex = monthNameToIndex[key] ?? -1;
+//             if (monthIndex >= 0 && monthIndex < 12) {
+//               yearlyData['credited']![monthIndex] = getDouble(value['credit']);
+//               yearlyData['debited']![monthIndex] = getDouble(value['debit']);
+//             }
+//           });
+
+//           currentChartData.value = yearlyData;
+//           currentDays.value = labels;
+//           maxYValue.value = data['data']['maxAmount']?.toDouble() ?? 500.0;
+//           totalExpandedValue.value =
+//               data['data']['totalDebit']?.toDouble() ?? 0.0;
+//           totalDebitValuePercent.value =
+//               data['data']['debitChangePercentage']?.toDouble() ?? 0.0;
+//           if (maxYValue.value == 0) maxYValue.value = 500.0;
+
+//           // Cache the data
+//           await FinanceLocalStorage.cacheFinanceDataLocally(
+//             period: period,
+//             startDate: startDate,
+//             endDate: endDate,
+//             labels: labels,
+//             debited: yearlyData['debited']!,
+//             credited: yearlyData['credited']!,
+//             totalDebitValue: totalExpandedValue.value,
+//             totalDebitValuePercent: totalDebitValuePercent.value,
+//             maxYValue: maxYValue.value,
+//             accountId: accountId.value,
+//           );
+//         } else {
+//           throw Exception('Invalid data structure received from API');
+//         }
+//       } else {
+//         currentChartData.value = {
+//           'credited': List.filled(12, 0.0),
+//           'debited': List.filled(12, 0.0),
+//         };
+//         currentDays.value = labels;
+//       }
+//     } else {
+//       currentChartData.value = {
+//         'credited': List.filled(12, 0.0),
+//         'debited': List.filled(12, 0.0),
+//       };
+//       currentDays.value = labels;
+//     }
+//   } catch (e) {
+//     currentChartData.value = {
+//       'credited': List.filled(12, 0.0),
+//       'debited': List.filled(12, 0.0),
+//     };
+//     currentDays.value = labels;
+//     print('Error in fetchYearlyData: $e');
+//     final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+//       accountId.value,
+//       period,
+//       startDate,
+//       endDate,
+//     );
+//   } finally {
+//     isLoading.value = false;
+//   }
+// }
+
+// Future<void> fetchMonthlyData(int year, int month) async {
+//   String period = 'Month';
+//   String startDate = DateFormat('yyyy-MM-dd').format(DateTime(year, month, 1));
+//   String endDate =
+//       DateFormat('yyyy-MM-dd').format(DateTime(year, month + 1, 0));
+//   int daysInMonth = getDaysInMonthExpanded(year, month);
+//   List<String> labels = List.generate(daysInMonth,
+//       (index) => DateFormat('MMM d').format(DateTime(year, month, index + 1)));
+
+//   // Try loading from Hive first
+//   final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+//     accountId.value,
+//     period,
+//     startDate,
+//     endDate,
+//   );
+
+//   if (cachedFinance != null) {
+//     currentChartData.value = {
+//       'credited': cachedFinance.credited,
+//       'debited': cachedFinance.debited,
+//     };
+//     currentDays.value = cachedFinance.labels;
+//     maxYValue.value = cachedFinance.maxYValue;
+//     totalExpandedValue.value = cachedFinance.totalDebitValue;
+//     totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
+//     getGraphData.value = true;
+//     isLoading.value = false;
+//     return;
+//   }
+
+//   try {
+//     // isLoading.value = true;
+//     String formattedDate = DateFormat('yyyy-MM').format(DateTime(year, month));
+//     var response = await getDataApiCall(
+//             "${url}/transactionauto/getAllCustomTransactions/${accountId.value}/month/$formattedDate")
+//         .timeout(Duration(seconds: 10));
+
+//     if (getFlagOfResponse(response)) {
+//       var data = jsonDecode(response.body);
+//       Map<String, List<double>> monthlyData = {
+//         'credited': List.filled(daysInMonth, 0.0),
+//         'debited': List.filled(daysInMonth, 0.0),
+//       };
+
+//       if (data['data'] != null && data['data']['result'] != null) {
+//         data['data']['result'].forEach((key, value) {
+//           try {
+//             int dayIndex = int.parse(key.split('-')[2]) - 1;
+//             if (dayIndex >= 0 && dayIndex < daysInMonth) {
+//               monthlyData['credited']![dayIndex] = getDouble(value['credit']);
+//               monthlyData['debited']![dayIndex] = getDouble(value['debit']);
+//             }
+//           } catch (e) {
+//             print('Error processing day index: $e');
+//           }
+//         });
+
+//         currentChartData.value = monthlyData;
+//         currentDays.value = labels;
+//         maxYValue.value = data['data']['maxAmount']?.toDouble() ?? 500.0;
+//         totalExpandedValue.value =
+//             data['data']['totalDebit']?.toDouble() ?? 0.0;
+//         totalDebitValuePercent.value =
+//             data['data']['debitChangePercentage']?.toDouble() ?? 0.0;
+//         if (maxYValue.value == 0) maxYValue.value = 500.0;
+
+//         // Cache the data
+//         await FinanceLocalStorage.cacheFinanceDataLocally(
+//           period: period,
+//           startDate: startDate,
+//           endDate: endDate,
+//           labels: labels,
+//           debited: monthlyData['debited']!,
+//           credited: monthlyData['credited']!,
+//           totalDebitValue: totalExpandedValue.value,
+//           totalDebitValuePercent: totalDebitValuePercent.value,
+//           maxYValue: maxYValue.value,
+//           accountId: accountId.value,
+//         );
+//       } else {
+//         currentChartData.value = {
+//           'credited': List.filled(daysInMonth, 0.0),
+//           'debited': List.filled(daysInMonth, 0.0),
+//         };
+//         currentDays.value = labels;
+//       }
+//     } else {
+//       currentChartData.value = {
+//         'credited': List.filled(daysInMonth, 0.0),
+//         'debited': List.filled(daysInMonth, 0.0),
+//       };
+//       currentDays.value = labels;
+//     }
+//   } catch (e) {
+//     currentChartData.value = {
+//       'credited': List.filled(daysInMonth, 0.0),
+//       'debited': List.filled(daysInMonth, 0.0),
+//     };
+
+//     currentDays.value = labels;
+//     print('Error in fetchMonthlyData: $e');
+//     final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+//       accountId.value,
+//       period,
+//       startDate,
+//       endDate,
+//     );
+//   } finally {
+//     isLoading.value = false;
+//   }
+// }
 
 void filterDataForSelectedMonth() {
   int monthForCalc = selectedMonth.value.clamp(1, 12);
@@ -421,9 +750,6 @@ Future<void> getHomePageInsights(context) async {
 
 Future<void> hideTransaction(
     int index, bool hidden, BuildContext context, String id) async {
-     
-
- 
   final transaction = transactionsHistory[index];
   final apiUrl = "$url/transactionauto/updateTransaction/$id";
   try {
@@ -450,7 +776,6 @@ Future<void> hideTransaction(
 
 Future<void> excludeCashFlowTransaction(
     int index, bool isExcluded, BuildContext context, String id) async {
-
   final transaction = transactionsHistory[index];
   final apiUrl = "$url/transactionauto/updateTransaction/$id";
   try {

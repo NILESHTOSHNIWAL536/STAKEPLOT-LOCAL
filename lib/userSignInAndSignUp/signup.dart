@@ -34,7 +34,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController dobController = TextEditingController(text: '');
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   RxBool flag = false.obs;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -51,7 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               // Color(0xFF9B8BC6),
               // Color(0xFF6568A7),
               // Color(0xFF272841),
-               Color(0xFF6568A7),
+              Color(0xFF6568A7),
               Color(0xFF272841),
             ],
           ),
@@ -63,76 +64,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Stack(
                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Positioned(
-                    bottom: 40,
-                    left: 0,
-                    child: buildBottomWaves(context)
-                  ),
+                  Positioned(
+                      bottom: 40, left: 0, child: buildBottomWaves(context)),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                       
-                        
                         // Welcome Text
                         _buildWelcomeText(),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Username Field
                         _buildUsernameField(),
-                        
+
                         const SizedBox(height: 10),
-                        
+
                         // Date of Birth Field
                         _buildDateOfBirthField(),
-                        
+
                         const SizedBox(height: 10),
-                        
+
                         // Email Field
                         _buildEmailField(),
-                        
+
                         const SizedBox(height: 10),
-                        
+
                         // Password Field
                         _buildPasswordField(),
-                        
+
                         const SizedBox(height: 10),
-                        
+
                         // Confirm Password Field
                         _buildConfirmPasswordField(),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Sign Up Button
                         _buildSignUpButton(),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Or login with
                         _buildDivider(),
-                        
+
                         const SizedBox(height: 15),
-                        
+
                         // Google Sign In
                         // _buildGoogleSignIn(),
-                    containerIconSiginWith(FontAwesomeIcons.google, Colorcodes.white,context),
+                        containerIconSiginWith(
+                            FontAwesomeIcons.google, Colorcodes.white, context),
 
-                        
                         const SizedBox(height: 20),
-                        
+
                         // Sign In Link
                         _buildSignInLink(),
-                        
+
                         const SizedBox(height: 10),
                       ],
                     ),
                   ),
-                  
+
                   // Bottom Wave Design
-                 
                 ],
               ),
             ),
@@ -142,13 +137,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-
   Widget _buildWelcomeText() {
     return Column(
       children: [
-        textStyle(context: context,text: 'Create Account',fontWeight: FontWeight.bold,fontsize: 32,c: Colorcodes.white),
+        textStyle(
+            context: context,
+            text: 'Create Account',
+            fontWeight: FontWeight.bold,
+            fontsize: 32,
+            c: Colorcodes.white),
         const SizedBox(height: 8),
-        textStyle(context: context,text: 'to get started now',fontWeight: FontWeight.w300,fontsize: 18,c: Colorcodes.white),
+        textStyle(
+            context: context,
+            text: 'to get started now',
+            fontWeight: FontWeight.w300,
+            fontsize: 18,
+            c: Colorcodes.white),
       ],
     );
   }
@@ -156,21 +160,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildUsernameField() {
     return Container(
       decoration: BoxDecoration(
+        color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
       child: TextField(
         controller: usernameController,
-        onChanged: (c){
-            flag.value=false;
+        onChanged: (c) {
+          flag.value = false;
         },
         style: const TextStyle(color: Colors.white),
-         inputFormatters: [
-                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                      LowerCaseTextFormatter(),
-          ],
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+          LowerCaseTextFormatter(),
+        ],
         decoration: InputDecoration(
-          
           hintText: 'Username',
           hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
           border: InputBorder.none,
@@ -186,6 +190,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildDateOfBirthField() {
     return Container(
       decoration: BoxDecoration(
+        color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
@@ -211,51 +216,50 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
-Widget containerIconSiginWith(IconData icon, Color color, context) {
-  return InkWell(
-    onTap: () async {
-      if (googleSignInBool.value) return; // Prevent multiple clicks
-      googleSignInBool.value = true; // Set loading state
-      try {
-        final userdata = await AuthService().signInWithGoogle(context);
-        if (userdata != null && userdata['data']['accessToken'] != null) {
-        } else if (userdata != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => UserDetailsPage(data: userdata)),
-          );
-        } else {
+
+  Widget containerIconSiginWith(IconData icon, Color color, context) {
+    return InkWell(
+      onTap: () async {
+        if (googleSignInBool.value) return; // Prevent multiple clicks
+        googleSignInBool.value = true; // Set loading state
+        try {
+          final userdata = await AuthService().signInWithGoogle(context);
+          if (userdata != null && userdata['data']['accessToken'] != null) {
+          } else if (userdata != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserDetailsPage(data: userdata)),
+            );
+          } else {}
+        } finally {
+          googleSignInBool.value = false; // Reset loading state
         }
-      } finally {
-        googleSignInBool.value = false; // Reset loading state
-      }
-    },
-    child: Container(
-      width: MediaQuery.sizeOf(context).width/5,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(10),
+      },
+      child: Container(
+        width: MediaQuery.sizeOf(context).width / 5,
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Obx(
+          () => googleSignInBool.value
+              ? Spinner(size: 30) // Show spinner when loading
+              : AvatarProfileImage(
+                  url: Sign.googleIcon,
+                  width: 40,
+                  height: 30,
+                ), // Show icon when not loading
+        ),
       ),
-      child: Obx(
-        () => googleSignInBool.value
-            ? Spinner(size: 30) // Show spinner when loading
-            : 
-         AvatarProfileImage(
-                      url: Sign.googleIcon,
-                      width: 40,
-                      height: 30,
-                     
-                    ), // Show icon when not loading
-      ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildEmailField() {
     return Container(
       decoration: BoxDecoration(
+        color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
@@ -263,8 +267,8 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
         controller: emailController,
         style: const TextStyle(color: Colors.white),
         keyboardType: TextInputType.emailAddress,
-         onChanged: (c){
-            flag.value=false;
+        onChanged: (c) {
+          flag.value = false;
         },
         decoration: InputDecoration(
           hintText: 'Email',
@@ -282,6 +286,7 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
   Widget _buildPasswordField() {
     return Container(
       decoration: BoxDecoration(
+        color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
@@ -289,8 +294,8 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
         controller: passwordController,
         obscureText: !_isPasswordVisible,
         style: const TextStyle(color: Colors.white),
-         onChanged: (c){
-            flag.value=false;
+        onChanged: (c) {
+          flag.value = false;
         },
         decoration: InputDecoration(
           hintText: 'Password',
@@ -319,14 +324,15 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
   Widget _buildConfirmPasswordField() {
     return Container(
       decoration: BoxDecoration(
+        color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
       child: TextField(
         controller: confirmPasswordController,
         obscureText: !_isConfirmPasswordVisible,
-         onChanged: (c){
-            flag.value=false;
+        onChanged: (c) {
+          flag.value = false;
         },
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
@@ -339,7 +345,9 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
           ),
           suffixIcon: IconButton(
             icon: Icon(
-              _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              _isConfirmPasswordVisible
+                  ? Icons.visibility
+                  : Icons.visibility_off,
               color: Colors.white.withOpacity(0.7),
             ),
             onPressed: () {
@@ -358,29 +366,31 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
       width: double.infinity,
       height: 50,
       child: ElevatedButton(
-        onPressed: () {
-          _handleSignUp();
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+          onPressed: () {
+            _handleSignUp();
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 0,
           ),
-          elevation: 0,
-        ),
-        child: Obx(()=> flag.value
-                    ? Spinner(
-                        size: 20,
-                        color: AppColors.primaryColor,
-                      ): Text(
-          'Sign Up',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      )),
+          child: Obx(
+            () => flag.value
+                ? Spinner(
+                    size: 20,
+                    color: AppColors.primaryColor,
+                  )
+                : Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+          )),
     );
   }
 
@@ -413,7 +423,6 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
     );
   }
 
- 
   Widget _buildSignInLink() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -442,11 +451,11 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
     );
   }
 
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now().subtract(const Duration(days: 6570)), // 18 years ago
+      initialDate:
+          DateTime.now().subtract(const Duration(days: 6570)), // 18 years ago
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
       builder: (context, child) {
@@ -463,20 +472,18 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
         );
       },
     );
-    
+
     if (picked != null) {
       setState(() {
         dobController.text = "${picked.year}-${picked.month}-${picked.day}";
       });
-      flag.value=false;
+      flag.value = false;
     }
-    
   }
 
   void _handleSignUp() {
-       storeData();
+    storeData();
   }
-
 
   void storeData() async {
     String name = usernameController.text;
@@ -485,7 +492,6 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
     String conform = confirmPasswordController.text;
     String phone = "0";
     // String dob = dobController.text;
-
 
     if (name.isEmpty) {
       snackBarCalledfail(context, SignupData().emptyUsername, Colors.red);
@@ -540,8 +546,6 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
       return;
     }
 
-   
-
     flag.value = true;
     final response = await http.post(
       Uri.parse('${url}/user/register'),
@@ -570,14 +574,11 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
     }
 
     if (!boolvar) {
-      snackBarCalledfail(
-          context, responce['error']['explanation']);
+      snackBarCalledfail(context, responce['error']['explanation']);
       flag.value = false;
       return;
     }
   }
-
-
 
   void call() {
     var data = {
@@ -607,7 +608,4 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
       ),
     );
   }
-  
-
- 
 }
