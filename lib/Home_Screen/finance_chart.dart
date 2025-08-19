@@ -683,6 +683,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
                   navToExpanded();
+                  
                 },
                 child: Container(
                   padding: EdgeInsets.all(4),

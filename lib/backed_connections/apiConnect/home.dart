@@ -261,7 +261,7 @@ Future<void> getAllTransactionHistory(
     }
   } catch (e) {
     TransactionStorage.loadTransactionsFromHive();
-    snackBarCalledfail(context, e.toString());
+   
   }
 
   loadingDelay.value = false;

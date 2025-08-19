@@ -50,27 +50,27 @@ Future<void> fetchYearlyData(int year) async {
    List<String> labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   // Try loading from Hive first
-   await FinanceLocalStorage.loadFinanceFromHive(
+  final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
     accountId.value,
     period,
     startDate,
     endDate,
   );
 
-  // if (cachedFinance != null) {
-  //   currentChartData.value = {
-  //     'credited': cachedFinance.credited,
-  //     'debited': cachedFinance.debited,
-  //   };
-  //   currentDays.value = cachedFinance.labels;
-  //   maxYValue.value = cachedFinance.maxYValue;
-  //   totalExpandedValue.value = cachedFinance.totalDebitValue;
-  //   totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
-  //   getGraphData.value = true;
-  //   // isLoading.value = false;
-  //   return;
-  // }
-
+  if (cachedFinance != null) {
+    currentChartData.value = {
+      'credited': cachedFinance.credited,
+      'debited': cachedFinance.debited,
+    };
+    currentDays.value = cachedFinance.labels;
+    maxYValue.value = cachedFinance.maxYValue;
+    totalExpandedValue.value = cachedFinance.totalDebitValue;
+    totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
+    getGraphData.value = true;
+    // isLoading.value = false;
+    return;
+  }
+  
   try {
     // isLoading.value = true;
     String yearString = year.toString().padLeft(4, '0');
@@ -174,26 +174,26 @@ Future<void> fetchMonthlyData(int year, int month) async {
   List<String> labels = List.generate(daysInMonth, (index) => DateFormat('MMM d').format(DateTime(year, month, index + 1)));
 
   // Try loading from Hive first
-   await FinanceLocalStorage.loadFinanceFromHive(
+  final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
     accountId.value,
     period,
     startDate,
     endDate,
   );
 
-  // if (cachedFinance != null) {
-  //   currentChartData.value = {
-  //     'credited': cachedFinance.credited,
-  //     'debited': cachedFinance.debited,
-  //   };
-  //   currentDays.value = cachedFinance.labels;
-  //   maxYValue.value = cachedFinance.maxYValue;
-  //   totalExpandedValue.value = cachedFinance.totalDebitValue;
-  //   totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
-  //   getGraphData.value = true;
-  //   isLoading.value = false;
-  //   return;
-  // }
+  if (cachedFinance != null) {
+    currentChartData.value = {
+      'credited': cachedFinance.credited,
+      'debited': cachedFinance.debited,
+    };
+    currentDays.value = cachedFinance.labels;
+    maxYValue.value = cachedFinance.maxYValue;
+    totalExpandedValue.value = cachedFinance.totalDebitValue;
+    totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent;
+    getGraphData.value = true;
+    isLoading.value = false;
+    return;
+  }
    try {
     // isLoading.value = true;
     String formattedDate = DateFormat('yyyy-MM').format(DateTime(year, month));
