@@ -22,13 +22,14 @@ class AmountRangeField extends StatelessWidget {
             Expanded(
               child: TextField(
                 controller: minController,
+                inputFormatters: allowDecimalInput(),
                 // keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.numberWithOptions(
-                    signed: true, decimal: true),
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                // keyboardType: TextInputType.numberWithOptions(
+                //     signed: true, decimal: true),
+                // inputFormatters: <TextInputFormatter>[
+                //   FilteringTextInputFormatter.digitsOnly,
+                // ],
 
                 // textInputAction: TextInputAction.done,
 
@@ -60,17 +61,18 @@ class AmountRangeField extends StatelessWidget {
             Expanded(
               child: TextField(
                 controller: maxController,
+                inputFormatters: allowDecimalInput(),
                 onSubmitted: (c) {
                   if (checkRangeofAmount(context)) {
                     onChanedAutoTransactionStatus(context);
                   }
                 },
                 textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.numberWithOptions(
-                    signed: true, decimal: true),
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                // keyboardType: TextInputType.numberWithOptions(
+                //     signed: true, decimal: true),
+                // inputFormatters: <TextInputFormatter>[
+                //   FilteringTextInputFormatter.digitsOnly,
+                // ],
 
                 // keyboardType: TextInputType.number,
                 // textInputAction: TextInputAction.done,

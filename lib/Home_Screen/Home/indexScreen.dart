@@ -18,7 +18,8 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
 class IndexScreen extends StatelessWidget {
-  const IndexScreen({Key? key}) : super(key: key);
+  final ScrollController scrollControllerHome;
+  const IndexScreen({Key? key, required this.scrollControllerHome}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,7 @@ class IndexScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
       child: SingleChildScrollView(
+        controller: scrollControllerHome,
         child: Column(
           children: [
             Nextfetch(),

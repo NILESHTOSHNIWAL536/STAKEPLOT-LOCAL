@@ -27,7 +27,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool flag=true;
- 
+ final ScrollController _scrollControllerPage = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -46,7 +46,13 @@ class _HomePageState extends State<HomePage> {
     });
    
   }
-
+void _scrollToTop() {
+    _scrollControllerPage.animateTo(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -55,10 +61,15 @@ class _HomePageState extends State<HomePage> {
       },
       child:Obx(()=> (RewardScreenStrings().isRewardNeedToShow.value) ? RewardsScreen():
       Scaffold(
-        bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
+        bottomNavigationBar: SafeArea(child: BottomNavigations(
+          data: 0,
+          onHomeDoubleTap:_scrollToTop ,
+                  
+
+        )),
         backgroundColor: AppColors.backgroundColor,
         appBar: getAppBar(context),
-          body: Obx(() => isBankLinked.value ? const IndexScreen():NoAccountScreen()),
+          body: Obx(() => isBankLinked.value ?  IndexScreen(scrollControllerHome: _scrollControllerPage):NoAccountScreen()),
       ),
     ));
   }

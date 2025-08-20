@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/cardBuilders.dart';
@@ -272,6 +273,16 @@ class FinanceWidgets {
             PlotFinanceStaticData().calculatorSubtitle, // Updated
             url: Finance.location,
             path: "/TripCost",
+          ),
+          GestureDetector(
+           onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const CurrencyConverterScreen()),
+  );
+}
+,
+            child: Text("currency")
           ),
         ],
       ),

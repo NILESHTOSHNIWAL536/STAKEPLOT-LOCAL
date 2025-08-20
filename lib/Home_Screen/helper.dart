@@ -539,12 +539,7 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Center(
-                      child: Container(
-                    width: 50,
-                    height: 2.2,
-                    color: Colorcodes.claimColor,
-                  )),
+                 
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -553,9 +548,9 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
                       children: [
                         textStyle(
                             context: context,
-                            text: "Select Bank Account",
-                            fontsize: 16,
-                            fontWeight: FontWeight.w600),
+                            text: "Select a Bank Account to Download Statement",
+                            fontsize: 14,
+                            fontWeight: FontWeight.w500),
                         InkWell(
                           onTap: () {
                             Navigator.pop(context);

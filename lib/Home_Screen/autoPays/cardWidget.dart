@@ -51,7 +51,6 @@ class CardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: _getColorForIndex(),
         borderRadius: BorderRadius.circular(16 * fontScale),
-       
       ),
       child: Padding(
         padding: EdgeInsets.all(padding),
@@ -140,19 +139,23 @@ class CardWidget extends StatelessWidget {
                             onChanged: (value) async {
                               toggleStates[card.id] = value;
                               onToggleChanged?.call(card.id, value);
-                              final success = await addRecurringPayment(card.id, value);
+                              final success =
+                                  await addRecurringPayment(card.id, value);
                               if (success) {
-                                snackBarCalled(parentContext, "Autopay status updated successfully");
+                                snackBarCalled(parentContext,
+                                    "Autopay status updated successfully");
                               } else {
                                 toggleStates[card.id] = !value;
                                 onToggleChanged?.call(card.id, !value);
-                                snackBarCalled(parentContext, "Failed to update autopay status");
+                                snackBarCalled(parentContext,
+                                    "Failed to update autopay status");
                               }
                             },
                             activeColor: AppColors.primaryColor,
                             inactiveThumbColor: Colors.white70,
                             inactiveTrackColor: Colors.white.withOpacity(0.3),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
                           )),
                     ],
                   ],
@@ -212,11 +215,14 @@ class CardWidget extends StatelessWidget {
                         );
                         if (confirm == true) {
                           final success = card.isDaily
-                              ? await addRecurringPaymentForDaily(card.id, false)
+                              ? await addRecurringPaymentForDaily(
+                                  card.id, false)
                               : await addRecurringPayment(card.id, false);
                           snackBarCalled(
                             parentContext,
-                            success ? "Removed successfully" : "Failed to remove",
+                            success
+                                ? "Removed successfully"
+                                : "Failed to remove",
                           );
                           if (success) onDataChanged();
                         }
@@ -230,7 +236,8 @@ class CardWidget extends StatelessWidget {
                         ),
                         child: Text(
                           "Added",
-                          style: TextStyle(fontSize: 14 * fontScale, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 14 * fontScale, color: Colors.white),
                         ),
                       ),
                     )
@@ -289,7 +296,8 @@ class CardWidget extends StatelessWidget {
                         );
                         if (confirm == true) {
                           if (card.frequency.toLowerCase() == 'daily') {
-                            final success = await addRecurringPaymentForDaily(card.id, true);
+                            final success = await addRecurringPaymentForDaily(
+                                card.id, true);
                             snackBarCalled(
                               parentContext,
                               success ? "Added successfully" : "Failed to add ",
@@ -302,7 +310,8 @@ class CardWidget extends StatelessWidget {
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 12 * fontScale, vertical: 4 * fontScale),
+                            horizontal: 12 * fontScale,
+                            vertical: 4 * fontScale),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.only(
@@ -312,7 +321,8 @@ class CardWidget extends StatelessWidget {
                         ),
                         child: Text(
                           "+",
-                          style: TextStyle(fontSize: 18 * fontScale, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 18 * fontScale, color: Colors.white),
                         ),
                       ),
                     ),
@@ -373,14 +383,17 @@ class CardWidget extends StatelessWidget {
                           final success = await ignoreRecurringPayment(card.id);
                           snackBarCalled(
                             parentContext,
-                            success ? "Deleted successfully" : "Failed to delete autopay",
+                            success
+                                ? "Deleted successfully"
+                                : "Failed to delete autopay",
                           );
                           if (success) onDataChanged();
                         }
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 12.5 * fontScale, vertical: 4 * fontScale),
+                            horizontal: 12.5 * fontScale,
+                            vertical: 4 * fontScale),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.only(
@@ -390,7 +403,8 @@ class CardWidget extends StatelessWidget {
                         ),
                         child: Text(
                           "x",
-                          style: TextStyle(fontSize: 18 * fontScale, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 18 * fontScale, color: Colors.white),
                         ),
                       ),
                     ),
@@ -420,10 +434,12 @@ class CardWidget extends StatelessWidget {
                         ? [
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 8 * fontScale, vertical: 4 * fontScale),
+                                  horizontal: 8 * fontScale,
+                                  vertical: 4 * fontScale),
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(4 * fontScale),
+                                borderRadius:
+                                    BorderRadius.circular(4 * fontScale),
                               ),
                               child: Text(
                                 "No occurrences",
@@ -439,10 +455,12 @@ class CardWidget extends StatelessWidget {
                         : card.occuranceDate
                             .map((date) => Container(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 8 * fontScale, vertical: 4 * fontScale),
+                                      horizontal: 8 * fontScale,
+                                      vertical: 4 * fontScale),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(8 * fontScale),
+                                    borderRadius:
+                                        BorderRadius.circular(8 * fontScale),
                                   ),
                                   child: Text(
                                     date,
@@ -466,10 +484,12 @@ class CardWidget extends StatelessWidget {
                             onTap: () => onSetReminder?.call(card.id),
                             child: Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 8 * fontScale, vertical: 6 * fontScale),
+                                  horizontal: 8 * fontScale,
+                                  vertical: 6 * fontScale),
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(10 * fontScale),
+                                borderRadius:
+                                    BorderRadius.circular(10 * fontScale),
                               ),
                               child: Text(
                                 card.nextReminderAt != null

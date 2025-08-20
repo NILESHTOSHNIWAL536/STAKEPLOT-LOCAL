@@ -83,11 +83,23 @@ class _TabBarUserState extends State<TabBarUser> {
              height: MediaQuery.of(context).size.height / 1.4,
             child: TabBarView(
               children: [
-                Obx(()=>isLoading.value?Spinner(size: 10,): Padding(
+                Obx(()=>isLoading.value?Center(
+              child: SizedBox(
+                // width: 50, // Adjust width as needed
+                // height: 50, // Adjust height as needed
+                child: Spinner(size: 20), // Ensure Spinner respects the size
+              ),
+            ): Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child:      pollWidgets(),
                 )),
-                 Obx(()=>isLoading.value?Spinner(size: 10,): feedWidgets()),
+                 Obx(()=>isLoading.value?Center(
+              child: SizedBox(
+                // width: 50, // Adjust width as needed
+                // height: 50, // Adjust height as needed
+                child: Spinner(size: 20), // Ensure Spinner respects the size
+              ),
+            ): feedWidgets()),
               ],
             ),
           ),

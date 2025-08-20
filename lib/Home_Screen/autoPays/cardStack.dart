@@ -10,13 +10,13 @@ import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:get/get.dart';
 
-
 class CardStackScreen extends StatefulWidget {
   @override
   _CardStackScreenState createState() => _CardStackScreenState();
 }
 
-class _CardStackScreenState extends State<CardStackScreen> with TickerProviderStateMixin {
+class _CardStackScreenState extends State<CardStackScreen>
+    with TickerProviderStateMixin {
   late List<AnimationController> _controllers;
   late List<Animation<Offset>> _slideAnimations;
   final RxList<CardData> cards = <CardData>[].obs;
@@ -47,8 +47,8 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
     }).toList();
   }
 
-  void _showCustomCalendarPopup(BuildContext context, String cardId) {
-    final screenSize = MediaQuery.of(context).size;
+  void _showCustomCalendarPopup(BuildContext parentContext, String cardId) {
+    final screenSize = MediaQuery.of(parentContext).size;
     final fontScale = screenSize.width / 375;
     final now = DateTime.now();
     final currentYear = now.year;
@@ -56,8 +56,8 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
     final currentDay = now.day;
 
     showDialog(
-      context: context,
-      builder: (context) {
+      context: parentContext,
+      builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: AppColors.primaryColor,
           elevation: 1,
@@ -71,7 +71,7 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
               Text(
                 "Choose a Day for Your Reminder",
                 style: FontManager().getTextStyle(
-                  context,
+                  dialogContext,
                   lWeight: FontWeight.w600,
                   fontSize: 18 * fontScale,
                   color: AppColors.backgroundColor,
@@ -88,7 +88,7 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
                 Text(
                   "Tap a day on the calendar to schedule your upcoming reminder.",
                   style: FontManager().getTextStyle(
-                    context,
+                    dialogContext,
                     lWeight: FontWeight.w600,
                     fontSize: 14 * fontScale,
                     color: AppColors.backgroundColor,
@@ -106,7 +106,8 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
                     ),
                     itemBuilder: (context, index) {
                       final selectedDay = index + 1;
-                      bool isToday = selectedDay == currentDay && currentMonth == now.month;
+                      bool isToday = selectedDay == currentDay &&
+                          currentMonth == now.month;
 
                       return ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -119,56 +120,73 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
                         onPressed: () async {
                           DateTime reminderDate;
                           if (selectedDay >= currentDay) {
-                            reminderDate = DateTime(currentYear, currentMonth, selectedDay);
+                            reminderDate = DateTime(
+                                currentYear, currentMonth, selectedDay);
                           } else {
-                            final nextMonth = currentMonth == 12 ? 1 : currentMonth + 1;
-                            final nextYear = currentMonth == 12 ? currentYear + 1 : currentYear;
-                            final daysInNextMonth = DateTime(nextYear, nextMonth + 1, 0).day;
+                            final nextMonth =
+                                currentMonth == 12 ? 1 : currentMonth + 1;
+                            final nextYear = currentMonth == 12
+                                ? currentYear + 1
+                                : currentYear;
+                            final daysInNextMonth =
+                                DateTime(nextYear, nextMonth + 1, 0).day;
 
                             if (selectedDay <= daysInNextMonth) {
-                              reminderDate = DateTime(nextYear, nextMonth, selectedDay);
+                              reminderDate =
+                                  DateTime(nextYear, nextMonth, selectedDay);
                             } else {
-                              reminderDate = DateTime(nextYear, nextMonth, daysInNextMonth);
+                              reminderDate = DateTime(
+                                  nextYear, nextMonth, daysInNextMonth);
                             }
 
                             if (now.isAfter(reminderDate)) {
-                              final followingMonth = nextMonth == 12 ? 1 : nextMonth + 1;
-                              final followingYear = nextMonth == 12 ? nextYear + 1 : nextYear;
-                              final daysInFollowingMonth = DateTime(followingYear, followingMonth + 1, 0).day;
-                              final validDay = selectedDay <= daysInFollowingMonth ? selectedDay : daysInFollowingMonth;
-                              reminderDate = DateTime(followingYear, followingMonth, validDay);
+                              final followingMonth =
+                                  nextMonth == 12 ? 1 : nextMonth + 1;
+                              final followingYear =
+                                  nextMonth == 12 ? nextYear + 1 : nextYear;
+                              final daysInFollowingMonth =
+                                  DateTime(followingYear, followingMonth + 1, 0)
+                                      .day;
+                              final validDay =
+                                  selectedDay <= daysInFollowingMonth
+                                      ? selectedDay
+                                      : daysInFollowingMonth;
+                              reminderDate = DateTime(
+                                  followingYear, followingMonth, validDay);
                             }
                           }
 
-                          final formattedDate = "${reminderDate.day}/${reminderDate.month}/${reminderDate.year}";
-                          Navigator.pop(context);
+                          final formattedDate =
+                              "${reminderDate.day}/${reminderDate.month}/${reminderDate.year}";
+                          Navigator.pop(dialogContext);
 
-                          final success = await updateRecurringPaymentDate(cardId, reminderDate);
+                          final success = await updateRecurringPaymentDate(
+                              cardId, reminderDate);
                           if (success) {
-                            final addSuccess = await addRecurringPayment(cardId, true);
+                            final addSuccess =
+                                await addRecurringPayment(cardId, true);
                             snackBarCalled(
-                              context,
-                              addSuccess ? "Added and reminder set for $formattedDate" : "Failed to add",
+                              parentContext, // Use parentContext instead of dialogContext
+                              addSuccess
+                                  ? "Added and reminder set for $formattedDate"
+                                  : "Failed to add payment",
                             );
                             if (addSuccess) {
                               toggleStates[cardId] = true;
                               await _fetchAutoPayData();
                             }
                           } else {
-                            snackBarCalled(context, "Failed to set reminder");
+                            snackBarCalled(
+                              parentContext,
+                              "Failed to set reminder",
+                            );
                           }
-
-                          snackBarCalled(
-                            context,
-                            success ? "Reminder set for $formattedDate" : "Failed to set reminder",
-                          );
-                          if (success) await _fetchAutoPayData();
                         },
                         child: Center(
                           child: Text(
                             '$selectedDay',
                             style: FontManager().getTextStyle(
-                              context,
+                              dialogContext,
                               lWeight: FontWeight.w600,
                               fontSize: 14 * fontScale,
                               color: AppColors.accentColor,
@@ -186,6 +204,162 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
       },
     );
   }
+  // void _showCustomCalendarPopup(BuildContext context, String cardId) {
+  //   final screenSize = MediaQuery.of(context).size;
+  //   final fontScale = screenSize.width / 375;
+  //   final now = DateTime.now();
+  //   final currentYear = now.year;
+  //   final currentMonth = now.month;
+  //   final currentDay = now.day;
+
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         backgroundColor: AppColors.primaryColor,
+  //         elevation: 1,
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(16 * fontScale),
+  //         ),
+  //         insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+  //         title: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text(
+  //               "Choose a Day for Your Reminder",
+  //               style: FontManager().getTextStyle(
+  //                 context,
+  //                 lWeight: FontWeight.w600,
+  //                 fontSize: 18 * fontScale,
+  //                 color: AppColors.backgroundColor,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         content: SizedBox(
+  //           height: screenSize.height * 0.3,
+  //           width: screenSize.width * 0.9,
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Text(
+  //                 "Tap a day on the calendar to schedule your upcoming reminder.",
+  //                 style: FontManager().getTextStyle(
+  //                   context,
+  //                   lWeight: FontWeight.w600,
+  //                   fontSize: 14 * fontScale,
+  //                   color: AppColors.backgroundColor,
+  //                 ),
+  //               ),
+  //               const SizedBox(height: 12),
+  //               Expanded(
+  //                 child: GridView.builder(
+  //                   itemCount: 31,
+  //                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //                     crossAxisCount: 7,
+  //                     crossAxisSpacing: 8 * fontScale,
+  //                     mainAxisSpacing: 8 * fontScale,
+  //                     childAspectRatio: 1,
+  //                   ),
+  //                   itemBuilder: (context, index) {
+  //                     final selectedDay = index + 1;
+  //                     bool isToday = selectedDay == currentDay &&
+  //                         currentMonth == now.month;
+
+  //                     return ElevatedButton(
+  //                       style: ElevatedButton.styleFrom(
+  //                         backgroundColor: AppColors.backgroundColor,
+  //                         padding: EdgeInsets.zero,
+  //                         shape: RoundedRectangleBorder(
+  //                           borderRadius: BorderRadius.circular(8 * fontScale),
+  //                         ),
+  //                       ),
+  //                       onPressed: () async {
+  //                         DateTime reminderDate;
+  //                         if (selectedDay >= currentDay) {
+  //                           reminderDate = DateTime(
+  //                               currentYear, currentMonth, selectedDay);
+  //                         } else {
+  //                           final nextMonth =
+  //                               currentMonth == 12 ? 1 : currentMonth + 1;
+  //                           final nextYear = currentMonth == 12
+  //                               ? currentYear + 1
+  //                               : currentYear;
+  //                           final daysInNextMonth =
+  //                               DateTime(nextYear, nextMonth + 1, 0).day;
+
+  //                           if (selectedDay <= daysInNextMonth) {
+  //                             reminderDate =
+  //                                 DateTime(nextYear, nextMonth, selectedDay);
+  //                           } else {
+  //                             reminderDate = DateTime(
+  //                                 nextYear, nextMonth, daysInNextMonth);
+  //                           }
+
+  //                           if (now.isAfter(reminderDate)) {
+  //                             final followingMonth =
+  //                                 nextMonth == 12 ? 1 : nextMonth + 1;
+  //                             final followingYear =
+  //                                 nextMonth == 12 ? nextYear + 1 : nextYear;
+  //                             final daysInFollowingMonth =
+  //                                 DateTime(followingYear, followingMonth + 1, 0)
+  //                                     .day;
+  //                             final validDay =
+  //                                 selectedDay <= daysInFollowingMonth
+  //                                     ? selectedDay
+  //                                     : daysInFollowingMonth;
+  //                             reminderDate = DateTime(
+  //                                 followingYear, followingMonth, validDay);
+  //                           }
+  //                         }
+
+  //                         final formattedDate =
+  //                             "${reminderDate.day}/${reminderDate.month}/${reminderDate.year}";
+  //                         Navigator.pop(context);
+
+  //                         final success = await updateRecurringPaymentDate(
+  //                             cardId, reminderDate);
+  //                         if (success) {
+  //                           final addSuccess =
+  //                               await addRecurringPayment(cardId, true);
+  //                           snackBarCalled(
+  //                             context,
+  //                             addSuccess
+  //                                 ? "Added and reminder set for $formattedDate"
+  //                                 : "Failed to add",
+  //                           );
+  //                           if (addSuccess) {
+  //                             toggleStates[cardId] = true;
+  //                             await _fetchAutoPayData();
+  //                           }
+  //                         } else {
+  //                           snackBarCalled(context, "Failed to set reminder");
+  //                         }
+
+  //                         if (success) await _fetchAutoPayData();
+  //                       },
+  //                       child: Center(
+  //                         child: Text(
+  //                           '$selectedDay',
+  //                           style: FontManager().getTextStyle(
+  //                             context,
+  //                             lWeight: FontWeight.w600,
+  //                             fontSize: 14 * fontScale,
+  //                             color: AppColors.accentColor,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     );
+  //                   },
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Future<void> _fetchAutoPayData() async {
     isLoading.value = true;
@@ -218,7 +392,8 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
             cards: allCards,
             toggleStates: toggleStates,
             onToggleChanged: (id, value) => toggleStates[id] = value,
-            onSetReminder: (cardId) => _showCustomCalendarPopup(context, cardId),
+            onSetReminder: (cardId) =>
+                _showCustomCalendarPopup(context, cardId),
             onDataChanged: _fetchAutoPayData,
           ),
         ),
@@ -228,7 +403,8 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
         _controllers[index].reverse();
         selectedCardIndex.value = -1;
       } else {
-        if (selectedCardIndex.value != -1) _controllers[selectedCardIndex.value].reverse();
+        if (selectedCardIndex.value != -1)
+          _controllers[selectedCardIndex.value].reverse();
         selectedCardIndex.value = index;
         _controllers[index].forward();
       }
@@ -294,25 +470,33 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
                                           ? Container(
                                               height: cardHeight,
                                               decoration: BoxDecoration(
-                                                color: Colors.white.withOpacity(0.2),
-                                                borderRadius: BorderRadius.circular(16 * fontScale),
+                                                color: Colors.white
+                                                    .withOpacity(0.2),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        16 * fontScale),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.black.withOpacity(0.25),
+                                                    color: Colors.black
+                                                        .withOpacity(0.25),
                                                     blurRadius: 12 * fontScale,
-                                                    offset: Offset(0, 6 * fontScale),
+                                                    offset: Offset(
+                                                        0, 6 * fontScale),
                                                   ),
                                                 ],
                                               ),
                                               child: Padding(
-                                                padding: EdgeInsets.all(10.0 * fontScale),
+                                                padding: EdgeInsets.all(
+                                                    10.0 * fontScale),
                                                 child: Text(
                                                   "View All",
-                                                  style: FontManager().getTextStyle(
+                                                  style: FontManager()
+                                                      .getTextStyle(
                                                     context,
                                                     lWeight: FontWeight.w600,
                                                     fontSize: 16 * fontScale,
-                                                    color: AppColors.backgroundColor,
+                                                    color: AppColors
+                                                        .backgroundColor,
                                                   ),
                                                   textAlign: TextAlign.center,
                                                 ),
@@ -321,8 +505,11 @@ class _CardStackScreenState extends State<CardStackScreen> with TickerProviderSt
                                           : CardWidget(
                                               card: cards[i],
                                               toggleStates: toggleStates,
-                                              onToggleChanged: (id, value) => toggleStates[id] = value,
-                                              onSetReminder: (cardId) => _showCustomCalendarPopup(context, cardId),
+                                              onToggleChanged: (id, value) =>
+                                                  toggleStates[id] = value,
+                                              onSetReminder: (cardId) =>
+                                                  _showCustomCalendarPopup(
+                                                      context, cardId),
                                               parentContext: context,
                                               onDataChanged: _fetchAutoPayData,
                                               index: i,

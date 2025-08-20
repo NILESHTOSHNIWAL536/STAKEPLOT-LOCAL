@@ -83,11 +83,11 @@ class _BudgetSearchState extends State<BudgetSearch> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
-    return SafeArea(
-      child: Scaffold(
-        body: getBudgetUiScreen(height, width),
+    return 
+      Scaffold(
+        body: SafeArea(child: getBudgetUiScreen(height, width)),
         // bottomNavigationBar: BottomNavigations(data: 1),
-      ),
+      
     );
   }
 

@@ -19,12 +19,12 @@ class TransactionCreditDebitScreen extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         children: [
           TransactionCard(
-            title: 'Weekly Transaction',
+            title: 'This week transaction(s)',
             credits: lastWeekjson['credit'].toString(),
             debits: lastWeekjson['debit'].toString(),
           ),
           TransactionCard(
-            title: 'Monthly Transaction',
+            title: 'This month transaction(s)',
             credits: lastmonthjson['credit'].toString(),
             debits: lastmonthjson['debit'].toString(),
           ),

@@ -55,12 +55,11 @@ class _BudgetOverViewState extends State<BudgetOverView> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: AppColors.backgroundColor,
-        body: getBudgetUiScreen(height, width),
+        body: SafeArea(child: getBudgetUiScreen(height, width)),
         // bottomNavigationBar: BottomNavigations(data: 1),
-      ),
+      
     );
   }
 
@@ -276,27 +275,16 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                                 ? PlotFinanceStaticData().amountExceedsBudget
                                 : null,
                           ),
-                          keyboardType: TextInputType.number,
-                          onEditingComplete: () {
-                            // When editing is complete (e.g., user taps "Done" or moves focus)
-                            String value = _controllers[index].text;
+                          // keyboardType: TextInputType.number,
+                          
+                          onSubmitted: (value) {
                             if (_validateAmount(value, widget.amount)) {
-                              _onFocusLost(index, value);
+                              onsubmit(index, value);
+                               setState(() {});
                             } else {
-                              snackBarCalledfail(
-                                  context, SnackbarData().amountExceed);
+                              snackBarCalledfail(context, SnackbarData().amountExceed);
                             }
-                            // Move focus to the next field or dismiss keyboard
-                            FocusScope.of(context).nextFocus();
                           },
-                          // onSubmitted: (value) {
-                          //   if (_validateAmount(value, widget.amount)) {
-                          //     onsubmit(index, value);
-                          //      setState(() {});
-                          //   } else {
-                          //     snackBarCalledfail(context, SnackbarData().amountExceed);
-                          //   }
-                          // },
                         ),
                       ),
                     ],
