@@ -29,9 +29,11 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 
 void clearStack(BuildContext context) {
   try {
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   } catch (e) {
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 }
 
@@ -63,37 +65,32 @@ void clearStackShared(BuildContext context) {
 
 void expire(response, BuildContext context) {
   try {
-   
     // var body = json.decode(response.body);
-    
-    if (response.statusCode==401 )
-    {
+
+    if (response.statusCode == 401) {
       logoutUserFromDevice(context);
     }
-  } catch (e) {
-   
-  }
+  } catch (e) {}
 }
 
-  void clearPostReportHide(int index,context,[bool f=true]){
-        postController.currentPageTranding.value = 1;
-        postController.currentPageFeed.value = 1;
-        postController.isPostloading.value = false;
-        postController.feedPostList.clear();
-        postController.trandingPostList.clear();
-        postController.hasMorePostTranding.value = true;
-        postController.hasMorePostFeed.value = true;
-        postController.isPost.value = false;
-        postController.isPostTranding.value = false;
-        getPost(context);
-        getTranding(context);
-        postController.posting.value = false;
-        postController.postDis.value = false;
-        postController.getPostedTranding.value=!postController.getPostedTranding.value;
-        postController.getPosted.value=!postController.getPosted.value;
-
-  }
-
+void clearPostReportHide(int index, context, [bool f = true]) {
+  postController.currentPageTranding.value = 1;
+  postController.currentPageFeed.value = 1;
+  postController.isPostloading.value = false;
+  postController.feedPostList.clear();
+  postController.trandingPostList.clear();
+  postController.hasMorePostTranding.value = true;
+  postController.hasMorePostFeed.value = true;
+  postController.isPost.value = false;
+  postController.isPostTranding.value = false;
+  getPost(context);
+  getTranding(context);
+  postController.posting.value = false;
+  postController.postDis.value = false;
+  postController.getPostedTranding.value =
+      !postController.getPostedTranding.value;
+  postController.getPosted.value = !postController.getPosted.value;
+}
 
 Future<bool> check(context, String flag) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -111,61 +108,48 @@ Future<bool> check(context, String flag) async {
   return true;
 }
 
-Future<void> storeDeviceInfo() async
- {
-
-            var json = await getUserStats();
-            var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
-            if (getFlagOfResponse(responce)) {
-            }
-          try {
-                await postDataApiCall("${url}/user/logout", {});
-            } catch (e) {}
-
+Future<void> storeDeviceInfo() async {
+  var json = await getUserStats();
+  var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
+  if (getFlagOfResponse(responce)) {}
+  try {
+    await postDataApiCall("${url}/user/logout", {});
+  } catch (e) {}
 }
 
-Future<void> storeDeviceInfoLocalBackState() async
- {
+Future<void> storeDeviceInfoLocalBackState() async {
+  var json = await getUserStats();
+  var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
 
-            var json = await getUserStats();
-            var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
-
-            if (getFlagOfResponse(responce))
-            {
-            }
-
+  if (getFlagOfResponse(responce)) {}
 }
 
-
- void clearTransactions({ required BuildContext context,bool f=false})
- {
-          searchController.clear();
-          redioButton.clear();
-          redioButtonIndex.clear();
-          allOrGroupTransactionsName.value = StringConstant.allTransactions;
-          showCheckBox.value=false;
-          accountIdPdf.value="-";
-          addManually.clear();
-          maxController.text="";
-          minController.text="";
-       if(f)
-       {
-          currentPage = 1;
-          isLoadingMore.value = false;
-          getAllTransactionHistory(context, false, false,isRefreshing: true);
-       }
- }
-
-
-
+void clearTransactions({required BuildContext context, bool f = false}) {
+  searchController.clear();
+  redioButton.clear();
+  redioButtonIndex.clear();
+  allOrGroupTransactionsName.value = StringConstant.allTransactions;
+  showCheckBox.value = false;
+  accountIdPdf.value = "-";
+  addManually.clear();
+  maxController.text = "";
+  minController.text = "";
+  startDateController.text = "";
+  endDateController.text = "";
+  if (f) {
+    currentPage = 1;
+    isLoadingMore.value = false;
+    getAllTransactionHistory(context, false, false, isRefreshing: true);
+  }
+}
 
 void clearGraph() {
   totalDebitValue.value = 0.0;
   totalDebitValuePercent.value = 0.0;
-  startDateCustom=DateTime.now().subtract(const Duration(days: 7));
-  endDateCustom =  DateTime.now();
-
+  startDateCustom = DateTime.now().subtract(const Duration(days: 7));
+  endDateCustom = DateTime.now();
 }
+
 void clearGetX() {
   messages.clear();
   messagesTemp.clear();
@@ -220,17 +204,14 @@ void clearGetX() {
   isFected.value = false;
   currentPage = 1;
   consentAndHandleDetails.clear();
-  isBankLinked.value=false;
+  isBankLinked.value = false;
   clearGraph();
-  loadBanks.value=true;
+  loadBanks.value = true;
   deleteGetControllers();
   HiveStorage.closeAllBoxes();
 }
 
-
-
 RxMap<String, String> ListOfBankImages = RxMap();
-
 
 void getAllContstant(context) async {
   var responce = await getDataApiCall("${url}/constant/weekmonth");
@@ -241,31 +222,23 @@ void getAllContstant(context) async {
   }
 }
 
+void logoutUserFromDevice(context2) async {
+  BuildContext context = navigatorKey.currentContext ?? context2;
 
-
-void logoutUserFromDevice(context2)async{
-
-   BuildContext context = navigatorKey.currentContext ?? context2;
-
-           try
-           {
-              final SharedPreferences _pref =await SharedPreferences.getInstance();
-              clearGetX();
-              // added this for logout to prevent red screen
-               if (!Get.isRegistered<UserController>()) {
-                Get.lazyPut(() => UserController());
+  try {
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    clearGetX();
+    // added this for logout to prevent red screen
+    if (!Get.isRegistered<UserController>()) {
+      Get.lazyPut(() => UserController());
     }
-              Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-              Navigator.pushReplacementNamed(context, '/');
-              await _pref.remove("token");
-              await _pref.remove("accessToken");
-           }
-           catch(e)
-           {
-             
-           }
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.pushReplacementNamed(context, '/');
+    await _pref.remove("token");
+    await _pref.remove("accessToken");
+  } catch (e) {}
 }
-
 
 void clearStackLocalInfo() {
   fetchedData.value = false;
@@ -293,10 +266,8 @@ void clearStackLocalInfo() {
   count.value = 0;
   //  maskedName.value="";
   //  interestedTags.clear();
-   clearInterest();
-   
+  clearInterest();
 }
-
 
 void clearInterest() {
   selectedCategories.clear();
@@ -304,26 +275,22 @@ void clearInterest() {
   isListEnabled.value = false;
 }
 
+void initGetControllers() {
+  Get.put(UserController());
+  Get.put(PostController());
+}
 
- void initGetControllers()
-  {
-       Get.put(UserController());
-       Get.put(PostController());
+void deleteGetControllers() {
+  Get.delete<UserController>();
+  Get.delete<PostController>();
+}
+
+void initGetControllersIfisRegistered() {
+  if (!Get.isRegistered<UserController>()) {
+    Get.put(UserController());
   }
 
- void deleteGetControllers()
-  {
-      Get.delete<UserController>();
-      Get.delete<PostController>();
+  if (!Get.isRegistered<PostController>()) {
+    Get.put(PostController());
   }
-
-  void initGetControllersIfisRegistered(){
-    if (!Get.isRegistered<UserController>()) {
-      Get.put(UserController());
-    }
-
-    if (!Get.isRegistered<PostController>()) {
-      Get.put(PostController());
-    }
-
- }
+}

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../helper.dart';
+
 class AmountRangeField extends StatelessWidget {
   const AmountRangeField({
     Key? key,
@@ -39,16 +42,22 @@ class AmountRangeField extends StatelessWidget {
                   }
                 },
                 decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                    hintText: 'Enter min amount',
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                    hintStyle: TextStyle(fontSize: 13)),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                  hintText: 'Enter min amount',
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  hintStyle: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.grey,
+                  ),
+                ),
               ),
             ),
             // Spacer or line between fields
@@ -78,16 +87,22 @@ class AmountRangeField extends StatelessWidget {
                 // textInputAction: TextInputAction.done,
 
                 decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                    hintText: 'Enter max amount',
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                    hintStyle: TextStyle(fontSize: 13)),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                  hintText: 'Enter max amount',
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  hintStyle: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.grey,
+                  ),
+                ),
               ),
             ),
           ]),

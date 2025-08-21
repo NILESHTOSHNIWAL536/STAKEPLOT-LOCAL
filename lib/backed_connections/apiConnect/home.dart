@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/date_range_filter.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -211,7 +212,7 @@ Future<void> getAllTransactionHistory(
         : selectedYear.value.toString() +
             "-" +
             selectedMonth.value.toString().padLeft(2, '0');
-    searchTextController.value=searchController.text.trim();
+    searchTextController.value = searchController.text.trim();
     String text = searchController.text.trim() == ""
         ? "empty"
         : (searchController.text == "cash" ? "Cash" : searchController.text);
@@ -219,27 +220,56 @@ Future<void> getAllTransactionHistory(
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
         : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${(accountSelected.value.isEmpty || bankAccountLinkedList.length == 1 || text.toLowerCase() == "cash") ? (text.toLowerCase() == "cash" ? "Cash" : "-") : accountSelected.value}";
 
-    var response = (flag || maxController.text.toString().trim().isEmpty || !checkRangeofAmount(context,false) )? await getDataApiCall(urlPath): await getTransactionsWithAmount(urlPath: urlPath,minAmount: minController.text,maxAmount: maxController.text);
+    // var response = (flag ||
+    //         maxController.text.toString().trim().isEmpty ||
+    //         endDateController.text.toString().trim().isEmpty ||
+    //         !checkRangeofAmount(context, false) ||
+    //         !checkRangeofDate(context, false))
+    //     ? await getDataApiCall(urlPath)
+    //     : await getTransactionsWithAmount(
+    //         urlPath: urlPath,
+    //         minAmount: minController.text,
+    //         maxAmount: maxController.text,
+    //         startDate: startDateController.text,
+    //         endDate: endDateController.text,
+    //       );
+    bool hasAmount = minController.text.trim().isNotEmpty &&
+        maxController.text.trim().isNotEmpty &&
+        checkRangeofAmount(context, false);
+
+    bool hasDate = startDateController.text.trim().isNotEmpty &&
+        endDateController.text.trim().isNotEmpty &&
+        checkRangeofDate(context, false);
+
+    var response = (flag || (!hasAmount && !hasDate))
+        ? await getDataApiCall(urlPath)
+        : await getTransactionsWithAmount(
+            urlPath: urlPath,
+            minAmount: hasAmount ? minController.text : "",
+            maxAmount: hasAmount ? maxController.text : "",
+            startDate: hasDate ? startDateController.text : "",
+            endDate: hasDate ? endDateController.text : "",
+          );
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-    
-      var   obj =   data['data'];
-      if (obj != null )
-      {
+
+      var obj = data['data'];
+      if (obj != null) {
         if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh
         }
-     
-        List<TransactionModel> transactions = TransactionModel.listFromJson(obj['transactions']);
 
-        if(!flag){
-             updateFromResponse(obj);
+        List<TransactionModel> transactions =
+            TransactionModel.listFromJson(obj['transactions']);
+
+        if (!flag) {
+          updateFromResponse(obj);
         }
 
-         transactionsHistory.addAll(transactions);
+        transactionsHistory.addAll(transactions);
         // Stop loading indicator if no more transactions exist
-        if ( obj['transactions'].isEmpty ||  obj['transactions'].length < 20) {
+        if (obj['transactions'].isEmpty || obj['transactions'].length < 20) {
           hasMoreData = false;
           isLoadingMore.value = true;
           havingMoreData.value = false;
@@ -261,27 +291,22 @@ Future<void> getAllTransactionHistory(
     }
   } catch (e) {
     TransactionStorage.loadTransactionsFromHive();
-   
   }
 
   loadingDelay.value = false;
-  
 }
-
 
 void updateFromResponse(Map<String, dynamic> obj) {
   // Clear existing data
-  try{
-  matchedKeywords.clear();
-  lastWeekjson.clear();
-  lastmonthjson.clear();
-  matchedKeywords.addAll(
-  List<String>.from((obj['matchedKeywords'] ?? []).map((e) => e.toString()))
-);
-  lastWeekjson.addAll(obj['lastWeek'] ?? {});
-  lastmonthjson.addAll(obj['lastMonth']?? {});
-  }catch(e){
-  }
+  try {
+    matchedKeywords.clear();
+    lastWeekjson.clear();
+    lastmonthjson.clear();
+    matchedKeywords.addAll(List<String>.from(
+        (obj['matchedKeywords'] ?? []).map((e) => e.toString())));
+    lastWeekjson.addAll(obj['lastWeek'] ?? {});
+    lastmonthjson.addAll(obj['lastMonth'] ?? {});
+  } catch (e) {}
 }
 
 void extractTransaction(bool isYearView, List obj) {

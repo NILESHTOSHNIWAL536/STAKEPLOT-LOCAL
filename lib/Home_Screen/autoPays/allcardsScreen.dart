@@ -554,8 +554,12 @@ class AllCardsScreen extends StatelessWidget {
                 ? Center(
                     child: Text(
                       "No paycycles available",
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 16 * fontScale),
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 12 * fontScale,
+                        color: AppColors.accentColor,
+                      ),
                     ),
                   )
                 : ListView.builder(
@@ -568,57 +572,69 @@ class AllCardsScreen extends StatelessWidget {
                         final hasSimilarCards =
                             groupedCards[titleLower]!.length > 1;
 
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: verticalPadding / 1.4,
-                            horizontal: screenSize.width * 0.08,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              SizedBox(
-                                width: cardWidth,
-                                child: CardWidget(
-                                  card: card,
-                                  toggleStates: toggleStates,
-                                  onToggleChanged: onToggleChanged,
-                                  onSetReminder: onSetReminder,
-                                  onDataChanged: onDataChanged,
-                                  parentContext: context,
-                                  index: globalIndex++,
+                        return Container(
+                          // color: Colors.amber,
+                          // width: MediaQuery.sizeOf(context).width / 2,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: verticalPadding / 1.4,
+                              // horizontal: screenSize.width * 0.08,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: hasSimilarCards
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: cardWidth / 1.2,
+                                  child: CardWidget(
+                                    card: card,
+                                    toggleStates: toggleStates,
+                                    onToggleChanged: onToggleChanged,
+                                    onSetReminder: onSetReminder,
+                                    onDataChanged: onDataChanged,
+                                    parentContext: context,
+                                    index: globalIndex++,
+                                  ),
                                 ),
-                              ),
-                              if (hasSimilarCards)
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(top: 2.0, right: 2.0),
-                                  child: TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SimilarCardsScreen(
-                                            allCards: cards,
-                                            title: card.title,
-                                            toggleStates: toggleStates,
-                                            onToggleChanged: onToggleChanged,
-                                            onSetReminder: onSetReminder,
-                                            onDataChanged: onDataChanged,
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                if (hasSimilarCards)
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SimilarCardsScreen(
+                                              allCards: cards,
+                                              title: card.title,
+                                              toggleStates: toggleStates,
+                                              onToggleChanged: onToggleChanged,
+                                              onSetReminder: onSetReminder,
+                                              onDataChanged: onDataChanged,
+                                            ),
                                           ),
+                                        );
+                                      },
+                                      child: Container(
+                                        // color: Colors.green,
+                                        child: Icon(
+                                          Icons
+                                              .list, // or Icons.expand_more / Icons.apps
+                                          color: AppColors.primaryColor,
+                                          size: 26,
                                         ),
-                                      );
-                                    },
-                                    child: Text(
-                                      'View',
-                                      style: TextStyle(
-                                        color: AppColors.primaryColor,
-                                        fontSize: 14 * fontScale,
                                       ),
                                     ),
                                   ),
-                                ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       } else {

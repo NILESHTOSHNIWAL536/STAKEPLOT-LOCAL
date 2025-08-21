@@ -15,8 +15,8 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 part 'snackBars.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.3" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.11" : "localhost";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 UserController get userController => Get.find<UserController>();
@@ -209,3 +209,12 @@ RxMap<String, List<dynamic>> couponRequestMap = <String, List<dynamic>>{}.obs;
 
  TextEditingController minController=TextEditingController();
  TextEditingController maxController=TextEditingController();
+
+ final TextEditingController startDateController = TextEditingController();
+final TextEditingController endDateController = TextEditingController();
+RxBool showAmountFilter = false.obs;
+RxBool showDateFilter = false.obs;
+
+// ---------------- Toggle functions ----------------
+void toggleAmountFilter() => showAmountFilter.value = !showAmountFilter.value;
+void toggleDateFilter() => showDateFilter.value = !showDateFilter.value;
