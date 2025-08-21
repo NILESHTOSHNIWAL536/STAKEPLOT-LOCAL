@@ -152,24 +152,12 @@ class DateRangeField extends StatelessWidget {
                   TextButton(
                     child: Text(
                       "Cancel",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: AppColors.grey,
-                      ),
                     ),
                     onPressed: () => Navigator.pop(context),
                   ),
                   TextButton(
                     child: Text(
                       "Done ✅",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: AppColors.creditColor,
-                      ),
                     ),
                     onPressed: () {
                       controller.text =

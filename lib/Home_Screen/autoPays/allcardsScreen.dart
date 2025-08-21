@@ -525,6 +525,7 @@ class AllCardsScreen extends StatelessWidget {
           child: Obx(() {
             // Group non-active cards by title (case-insensitive)
             final Map<String, List<CardData>> groupedCards = {};
+            
             for (var card in cards) {
               if (!card.isActive) {
                 final titleLower = card.title.toLowerCase();

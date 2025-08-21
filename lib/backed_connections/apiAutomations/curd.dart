@@ -147,13 +147,7 @@ Future<http.Response> getTransactionsWithAmount({
   String startDate = '',
   String endDate = '',
 }) async {
-  print('=== getTransactionsWithAmount called ===');
-  print('urlPath: $urlPath');
-  print('minAmount: $minAmount');
-  print('maxAmount: $maxAmount');
-  print('startDate: $startDate');
-  print('endDate: $endDate');
-
+ 
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
   print('accessToken: ${accessToken != null ? "present" : "null"}');
@@ -173,7 +167,7 @@ Future<http.Response> getTransactionsWithAmount({
     queryParams['endDate'] = endDate;
   }
 
-  print('queryParams: $queryParams');
+  
 
   // Append query params to the URL
   Uri uri = Uri.parse(urlPath).replace(
@@ -183,9 +177,7 @@ Future<http.Response> getTransactionsWithAmount({
     },
   );
 
-  print('Final URI: $uri');
-  print('Final URI query parameters: ${uri.queryParameters}');
-
+ 
   final response = await http.get(
     uri,
     headers: <String, String>{
@@ -194,9 +186,6 @@ Future<http.Response> getTransactionsWithAmount({
     },
   );
 
-  print('Response status code: ${response.statusCode}');
-  print('Response body length: ${response.body.length}');
-  print('=== getTransactionsWithAmount completed ===');
-
+  
   return response;
 }

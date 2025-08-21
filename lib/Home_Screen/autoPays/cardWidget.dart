@@ -46,6 +46,7 @@ class CardWidget extends StatelessWidget {
       return _autoPayColors[index % _autoPayColors.length];
     }
 
+    
     return Container(
       height: cardHeight,
       decoration: BoxDecoration(
