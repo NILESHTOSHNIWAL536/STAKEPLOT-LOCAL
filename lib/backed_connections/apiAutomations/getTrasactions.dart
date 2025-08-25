@@ -242,7 +242,8 @@ void getAutoMationsTransactionsWeekly() async {
 
 Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
     [String weekORmonth = 'month', String? endDate]) async {
-  if (accountId.value.trim().isEmpty) {
+  if (accountId.value.trim().isEmpty)
+   {
     _setEmptyState(weekORmonth, date, endDate);
     return;
   }

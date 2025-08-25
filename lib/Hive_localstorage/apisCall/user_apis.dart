@@ -1,11 +1,9 @@
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:hive/hive.dart';
 import '../../controllers/user-controller.dart';
 import '../hive_storage.dart';
 import '../user-data/user_model.dart';
 import 'init_hive.dart';
-
 
 
 class  UserLocalStorage {
@@ -44,6 +42,8 @@ static Future<void> cacheUserDataLocally() async {
     selectedBank:  userController.selectedBank.value.isEmpty?accountId.value:'',
     firstFetchedDate:  userController.firstFetchedDate.value,
     friendsList:  userController.friendsList.toList(),
+     maskedConnections: userController.maskedConnections.toList(),
+     maskedConnected:  userController.maskedConnected.toList(),
   );
 
   await box.put('localUser', user);
@@ -95,6 +95,8 @@ static Future<void> loadUserFromHive() async
     userController.cupertinoAttemptCount.value = user.cupertinoAttemptCount;
     userController.selectedBank.value = user.selectedBank;
     userController.firstFetchedDate.value = user.firstFetchedDate;
+    userController.maskedConnected.addAll(user.maskedConnected);
+    userController.maskedConnections.addAll(user.maskedConnections);
     addFriendtoList();
   }
 }

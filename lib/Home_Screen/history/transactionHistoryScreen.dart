@@ -287,7 +287,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         onChanged: (value) {
           isDateSummaryView.value = false;
           allOrGroupTransactionsName.value = StringConstant.allTransactions;
-
+             searchItemClicked.value=false;
           if (_debounce?.isActive ?? false) _debounce!.cancel();
           // Start a new debounce timer
           _debounce = Timer(const Duration(milliseconds: 500), () {

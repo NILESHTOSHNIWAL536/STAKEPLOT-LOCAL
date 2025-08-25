@@ -32,8 +32,12 @@ class UserModel extends HiveObject {
   @HiveField(25) String selectedBank;
   @HiveField(26) String firstFetchedDate;
   @HiveField(27) List friendsList;
+  @HiveField(28) List maskedConnections;
+  @HiveField(29) List maskedConnected;
 
   UserModel({
+    required this.maskedConnections,
+    required this.maskedConnected,
     required this.userId,
     required this.userName,
     required this.isGoogleUser,

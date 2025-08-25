@@ -9,9 +9,9 @@ part 'post_helper.dart';
 
 class PostLocalStorage {
   /// Save all posts to Hive
-  static Future<void> savePostsToHive({required RxList<PostModel> postList,required bool isPostTranding,bool isSavedPost=false})  async {
+  static Future<void> savePostsToHive({required RxList<PostModel> postList,required bool isPostTranding,bool isSavedPost=false,bool isUserPost=false})  async {
 
-    String boxName = isSavedPost
+    String boxName = isUserPost? HiveStorage.userPostName:isSavedPost
         ? HiveStorage.savedPostName
         : (isPostTranding
             ? HiveStorage.postBoxTrandingName
@@ -20,39 +20,11 @@ class PostLocalStorage {
     // ✅ Ensure the box is open
      HiveHelper.openBoxIfNot<PollModels>(boxName);
 
-   final box =isPostTranding? isSavedPost? await HiveStorage.savedPost:await HiveStorage.postBoxTranding: await HiveStorage.postBoxFeed;  
+   final box =isUserPost? HiveStorage.userPost: isPostTranding? isSavedPost? await HiveStorage.savedPost:await HiveStorage.postBoxTranding: await HiveStorage.postBoxFeed;  
    await box.clear();
     try {
       postList.forEach((element) {
-        AuthorModel auth=element.author;
-        box.add(PostModels(
-          id: element.id,
-          author: AuthorModels(id:auth.id, name: auth.name, maskedName: auth.maskedName, avatarType: auth.avatarType, avatarBackGround: auth.avatarBackGround),
-          title: element.title,
-          place: element.place,
-          description: element.description,
-          image: element.image,
-          isItenary: element.isItenary,
-          isPoll: element.isPoll,
-          isSquareImage: element.isSquareImage,
-          chartType: element.chartType,
-          comments: element.comments,
-          upvotes: element.upvotes,
-          downvotes: element.downvotes,
-          path: element.path,
-          reportCount: element.reportCount,
-          hideCount: element.hideCount,
-          tag: element.tag,
-          createdAt: element.createdAt,
-          updatedAt: element.updatedAt,
-          location: element.location,
-          rating: element.rating,
-          tripHighlights: element.tripHighlights,
-          images: element.images,
-          pollData: element.postType==PostType.poll?PollMapper.toHive(element.pollData!):null,
-          postType: PostTypeMapper.toHive(element.postType),
-          budget:  BudgetMapper.toHiveList(element.budget),
-        ));
+        box.add(PostObj.StorePost(element));
       });
     } catch (e) {
       print("Error saving posts to Hive: $e");
@@ -61,10 +33,10 @@ class PostLocalStorage {
 
 
 
-
   /// Load posts from Hive into RxList
-  static Future<void> loadPostsFromHive({required bool isPostTranding,bool isSavedPost=false}) async {
-    String boxName = isSavedPost
+  static Future<void> loadPostsFromHive({required bool isPostTranding,bool isSavedPost=false,bool isUserPost=false}) async {
+    String boxName = isUserPost? HiveStorage.userPostName:
+           isSavedPost
         ? HiveStorage.savedPostName
         : (isPostTranding
             ? HiveStorage.postBoxTrandingName
@@ -73,40 +45,12 @@ class PostLocalStorage {
     // ✅ Ensure the box is open
     HiveHelper.openBoxIfNot<PollModels>(boxName);
 
-    final box =isPostTranding? isSavedPost? await HiveStorage.savedPost:await HiveStorage.postBoxTranding: await HiveStorage.postBoxFeed;
+    final box = isUserPost?await HiveStorage.userPost:   isPostTranding? isSavedPost? await HiveStorage.savedPost:await HiveStorage.postBoxTranding: await HiveStorage.postBoxFeed;
     RxList<PostModel> postList=<PostModel>[].obs;
 
     try {
       box.values.forEach((element) {
-        AuthorModels auth=element.author;
-        postList.add(PostModel(
-          id: element.id,
-          author:  AuthorModel(id:auth.id, name: auth.name, maskedName: auth.maskedName, avatarType: auth.avatarType, avatarBackGround: auth.avatarBackGround),
-          title: element.title,
-          place: element.place,
-          description: element.description,
-          image: element.image,
-          isItenary: element.isItenary,
-          isPoll: element.isPoll,
-          isSquareImage: element.isSquareImage,
-          chartType: element.chartType,
-          comments: element.comments,
-          upvotes: element.upvotes,
-          downvotes: element.downvotes,
-          path: element.path,
-          reportCount: element.reportCount,
-          hideCount: element.hideCount,
-          tag: element.tag,
-          createdAt: element.createdAt,
-          updatedAt: element.updatedAt,
-          location: element.location,
-          rating: element.rating,
-          tripHighlights: element.tripHighlights,
-          images: element.images,
-          budget: BudgetMapper.fromHiveList(element.budget),
-          postType: PostTypeMapper.toApp(element.postType),
-          pollData: element.postType==PostTypes.poll?PollMapper.fromHive(element.pollData!):null,
-        ));
+        postList.add(PostObj.getPost(element));
       });
 
      if(isPostTranding){
@@ -117,6 +61,9 @@ class PostLocalStorage {
           postController.trandingPostList.clear();
           postController.trandingPostList.addAll(postList);
         }
+     }else if(isUserPost){
+        userController.myPostList.clear();
+        userController.myPostList.addAll(postList);
      }else{
         postController.feedPostList.clear();
         postController.feedPostList.addAll(postList);

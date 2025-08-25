@@ -102,7 +102,10 @@ void getuserPost(id) async {
       postController.postCount[element.id] = element.upvotes;
       postController.postCommentCount[element.id] = element.comments;
     });
-  } else {}
+    PostLocalStorage.savePostsToHive(postList: userController.myPostList, isPostTranding: false,isUserPost: true);
+  } else {
+    PostLocalStorage.loadPostsFromHive(isPostTranding: false,isUserPost: true);
+  }
 }
 
 void getMaskendUsers(bool flag) async {

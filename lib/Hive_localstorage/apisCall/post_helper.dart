@@ -1,6 +1,74 @@
 
 part of 'post_apis.dart';
 
+class PostObj {
+
+    static PostModels StorePost(PostModel element){
+          AuthorModel auth=element.author;
+         return PostModels(
+          id: element.id,
+          author: AuthorModels(id:auth.id, name: auth.name, maskedName: auth.maskedName, avatarType: auth.avatarType, avatarBackGround: auth.avatarBackGround),
+          title: element.title,
+          place: element.place,
+          description: element.description,
+          image: element.image,
+          isItenary: element.isItenary,
+          isPoll: element.isPoll,
+          isSquareImage: element.isSquareImage,
+          chartType: element.chartType,
+          comments: element.comments,
+          upvotes: element.upvotes,
+          downvotes: element.downvotes,
+          path: element.path,
+          reportCount: element.reportCount,
+          hideCount: element.hideCount,
+          tag: element.tag,
+          createdAt: element.createdAt,
+          updatedAt: element.updatedAt,
+          location: element.location,
+          rating: element.rating,
+          tripHighlights: element.tripHighlights,
+          images: element.images,
+          pollData: element.postType==PostType.poll?PollMapper.toHive(element.pollData!):null,
+          postType: PostTypeMapper.toHive(element.postType),
+          budget:  BudgetMapper.toHiveList(element.budget),
+        );
+    }
+
+    static PostModel getPost(PostModels element){
+         AuthorModels auth=element.author;
+        return PostModel(
+          id: element.id,
+          author:  AuthorModel(id:auth.id, name: auth.name, maskedName: auth.maskedName, avatarType: auth.avatarType, avatarBackGround: auth.avatarBackGround),
+          title: element.title,
+          place: element.place,
+          description: element.description,
+          image: element.image,
+          isItenary: element.isItenary,
+          isPoll: element.isPoll,
+          isSquareImage: element.isSquareImage,
+          chartType: element.chartType,
+          comments: element.comments,
+          upvotes: element.upvotes,
+          downvotes: element.downvotes,
+          path: element.path,
+          reportCount: element.reportCount,
+          hideCount: element.hideCount,
+          tag: element.tag,
+          createdAt: element.createdAt,
+          updatedAt: element.updatedAt,
+          location: element.location,
+          rating: element.rating,
+          tripHighlights: element.tripHighlights,
+          images: element.images,
+          budget: BudgetMapper.fromHiveList(element.budget),
+          postType: PostTypeMapper.toApp(element.postType),
+          pollData: element.postType==PostTypes.poll?PollMapper.fromHive(element.pollData!):null,
+        );
+    }
+
+}
+
 class BudgetMapper {
   /// Convert List<BudgetModel> → List<BudgetModels> (for Hive store)
   static List<BudgetModels> toHiveList(List<BudgetModel> budgets) {

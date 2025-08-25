@@ -133,7 +133,7 @@ Future<void> initCardsData() async {
     onLoaded: () => CardsLocalStorage.loadCardsFromHive(),
   );
 }
-
+  
 Future<void> init_post() async {
   try {
     // Register all post-related adapters
@@ -158,6 +158,12 @@ Future<void> init_post() async {
       onLoaded: () => PostLocalStorage.loadPostsFromHive(isPostTranding: false),
     );
 
+    await HiveHelper.initHiveBox<PostModels>(
+      adapter: PostModelsAdapter(),
+      boxName: HiveStorage.userPostName,
+      onLoaded: () => PostLocalStorage.loadPostsFromHive(isPostTranding: false,isUserPost: true),
+    );
+
     // Open + Load Saved
     await HiveHelper.initHiveBox<PostModels>(
       adapter: PostModelsAdapter(),
@@ -165,7 +171,8 @@ Future<void> init_post() async {
       onLoaded: () =>
           PostLocalStorage.loadPostsFromHive(isPostTranding: true, isSavedPost: true),
     );
-  } catch (e) {
+  } catch (e)
+  {
     debugPrint("❌ Error initializing posts: $e");
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.da
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/appleSignIn.dart';
@@ -23,6 +25,7 @@ import 'dart:math' as math;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,9 +36,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController =
-      TextEditingController(text: "krishna771114@gmail.com");
+      TextEditingController(text: "nileshtoshniwal743@gmail.com");
   final TextEditingController passwordController =
-      TextEditingController(text: "Steve@0987");
+      TextEditingController(text: "Nilesh1234@");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override
@@ -103,6 +106,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Or login with
                       _buildDivider(),
 
+                      // const SizedBox(height: 20),
+                      // InkWell(
+                      //   onTap: ()async{
+                      //         print(urlPathString.value);
+                      //         if (await canLaunchUrl(Uri.parse(urlPathString.value))) {
+                      //             await launchUrl(Uri.parse(urlPathString.value), mode: LaunchMode.externalApplication);
+                      //           }
+                      //   },
+                      //   child: Text("urlPath")
+                      // ),
                       const SizedBox(height: 20),
                       // Google Sign In
                       containerIconSiginWith(

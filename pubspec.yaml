@@ -96,6 +96,8 @@ dependencies:
   hive_flutter: ^1.1.0
   carousel_slider: ^5.1.1
   keyboard_actions: ^4.2.0
+  connectivity_plus: ^6.0.5
+  internet_connection_checker: ^1.0.0+1
   
  
   
@@ -146,6 +148,7 @@ flutter:
     - assets/icons/Signup/
     - assets/icons/financeScreen/
     - assets/splashScreen/
+    - assets/finance/
     - assets/onboarding/
     - assets/icons/finSpaceIcons/
     - assets/icons/maskAvatars/

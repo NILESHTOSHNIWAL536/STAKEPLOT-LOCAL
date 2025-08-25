@@ -193,6 +193,8 @@ class svgIconPath {
   static String userAvatar = "assets/images/Add_round.svg";
   static String search = "assets/images/Search.svg";
   static String message = "assets/images2/messages.svg";
+  static String finance = "assets/finance/finance_background.svg";
+  static String finance_background= "assets/finance/background.svg";
   //  static String  send1="assets/images/send1.jpg";
   //  static String  send2="assets/images/Debts.svg";
   //  static String  send3="assets/images/Bills.svg";

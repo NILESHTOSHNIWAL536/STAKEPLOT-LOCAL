@@ -24,6 +24,7 @@ class PostController extends GetxController
   RxMap<String, int> postExploriaCount = <String, int>{}.obs;
   RxMap<String, int> postExploriaCommentCount = <String, int>{}.obs;
   RxMap<String, int> supportExploriaCount = <String, int>{}.obs;
+  RxList<PostModel> userPostList= <PostModel>[].obs;
   RxBool postDis = false.obs;
   RxBool posting = false.obs;
   RxBool getPosted = false.obs;

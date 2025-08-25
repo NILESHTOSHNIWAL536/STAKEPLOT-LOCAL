@@ -1,18 +1,15 @@
 import 'dart:io';
-
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
+import 'google_auth_token.dart';
+
 class AuthService {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: Platform.isAndroid ? '907682114982-g9ke4hcp10mpfb53hnbejg5q4btjpsam.apps.googleusercontent.com' : "907682114982-3nr2b1vgipnq5348u4fieeemr74vmuol.apps.googleusercontent.com",
-    serverClientId:
-        '907682114982-ja3qjtdj38f1p16q1hq9c868ga6sfn8b.apps.googleusercontent.com', // For iOS, optional for Android
-    scopes: ['email', 'profile',],
-  );
+  final GoogleSignIn _googleSignIn = GoogleAuthToken.googleToken;
+
   Future<Map<String, dynamic>?> signInWithGoogle(context) async {
     try {
       // Trigger Google Sign-In
@@ -24,17 +21,32 @@ class AuthService {
       // Get authentication details
       final GoogleSignInAuthentication googleAuth =await googleUser.authentication;
       final String? idToken = googleAuth.idToken;     // final String? accessToken = googleAuth.accessToken;
-      if (idToken != null) {
+      if (idToken == null)return null; 
+
       final response = await http.post(Uri.parse('$url/user/google-auth'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'idToken': idToken}),
-        );
-        if (response.statusCode == 200) {
-         
-          return json.decode(response.body);
-        } else {}
-      } else {}
-    } catch (e) {}
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'idToken': idToken}),
+      );
+
+        final String? authCode = await googleUser.serverAuthCode;
+
+        if (authCode != null) {
+          await http.post(
+            Uri.parse('$url/user/google-gmail-auth'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'idToken':  authCode}),
+          );
+        }
+        if (response.statusCode == 200)return json.decode(response.body);
+   
+
+    } catch (e)
+     {
+        print("Error --------------");
+        print(e);
+
+    }
+
     return null;
   }
   // Apple Sign-In (new method)
