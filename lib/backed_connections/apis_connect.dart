@@ -108,6 +108,7 @@ RxString maskedNameLocal = "".obs;
 RxString allOrGroupTransactionsName = "All".obs;
 RxString searchTextController = "".obs;
 RxBool searchTextControllerBool = false.obs;
+RxBool searchItemClicked = false.obs;
 RxList totalInSights = [].obs;
 RxBool getTotalInsightsHistory = false.obs;
 RxList foodieFundsDetailsRemainders = [].obs;

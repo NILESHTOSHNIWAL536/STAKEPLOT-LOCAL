@@ -115,8 +115,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 
   bool getBoolForSearch() {
-    return (searchTextController.value.trim().isNotEmpty &&
-        allOrGroupTransactionsName.value == StringConstant.allTransactions);
+    return  (searchTextController.value.trim().isNotEmpty && allOrGroupTransactionsName.value == StringConstant.allTransactions);
   }
 
   void changeTheBool() {
@@ -127,7 +126,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   Widget getSearchListAndCreditDebit() {
     return Column(
       children: [
-        Padding(
+       searchItemClicked.value? SizedBox.shrink(): Padding(
           padding: const EdgeInsets.only(top: 12, bottom: 8),
           child: TransactionsSearchList(),
         ),

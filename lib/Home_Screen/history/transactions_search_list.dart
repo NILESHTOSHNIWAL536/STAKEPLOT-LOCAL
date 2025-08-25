@@ -38,6 +38,7 @@ class _TransactionsSearchListState extends State<TransactionsSearchList> {
                         selection: TextSelection.collapsed(offset: data.length),
                       );
                     });
+                    searchItemClicked.value=true;
                     onChanedAutoTransactionStatus(context);
                   },
                   child: Container(

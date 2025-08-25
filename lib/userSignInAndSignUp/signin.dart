@@ -41,21 +41,11 @@ class _LoginScreenState extends State<LoginScreen> {
       TextEditingController(text: "Steve@0987");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
-  RxString urlPathString="".obs;
   @override
   void initState() {
     super.initState();
-    getString();
     acceptReset.value = false;
     googleSignInBool.value = false;
-  }
-
-  void getString()async{
-       var response=await getDataApiCall("${url}/user/readEmail");
-       if(getFlagOfResponse(response)){
-             final his = jsonDecode(response.body);
-             urlPathString.value=his['emails'];
-       }
   }
 
   @override
@@ -116,16 +106,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Or login with
                       _buildDivider(),
 
-                      const SizedBox(height: 20),
-                      InkWell(
-                        onTap: ()async{
-                              print(urlPathString.value);
-                              if (await canLaunchUrl(Uri.parse(urlPathString.value))) {
-                                  await launchUrl(Uri.parse(urlPathString.value), mode: LaunchMode.externalApplication);
-                                }
-                        },
-                        child: Text("urlPath")
-                      ),
+                      // const SizedBox(height: 20),
+                      // InkWell(
+                      //   onTap: ()async{
+                      //         print(urlPathString.value);
+                      //         if (await canLaunchUrl(Uri.parse(urlPathString.value))) {
+                      //             await launchUrl(Uri.parse(urlPathString.value), mode: LaunchMode.externalApplication);
+                      //           }
+                      //   },
+                      //   child: Text("urlPath")
+                      // ),
                       const SizedBox(height: 20),
                       // Google Sign In
                       containerIconSiginWith(
