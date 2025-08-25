@@ -69,29 +69,13 @@ AvatarProfileImageZero({ Key? key,required this.url,required this.width,required
 
   @override
   Widget build(BuildContext context){
-    return  Container(
-        // margin: EdgeInsets.symmetric(horizontal: 5),
-        // padding: EdgeInsetsDirectional.all(4),
-        alignment: Alignment.center,
-        child: isSvgUrl(url)? SvgPicture.asset(url.toString().trim(),
-              width: MediaQuery.of(context).size.width/ width,
-              height: MediaQuery.of(context).size.height/ height,
-        ):Container(
-           width: MediaQuery.of(context).size.width /width,
-           height: MediaQuery.of(context).size.height/height,
-          child: GFImageOverlay(     
-                                shape: BoxShape.circle,
-                                boxFit: BoxFit.contain,
-                                image: NetworkImage(url),
-                                colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
-                                BlendMode.exclusion
-                        ),
-                 ),
-        )
-        
+    return  SvgPicture.asset(url.toString().trim(),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height/ height,
     );
   }
 }
+
 class AvatarProfileImageNextFetch extends StatelessWidget {
 String url;
 double width;
