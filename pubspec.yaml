@@ -148,6 +148,7 @@ flutter:
     - assets/icons/Signup/
     - assets/icons/financeScreen/
     - assets/splashScreen/
+    - assets/finance/
     - assets/onboarding/
     - assets/icons/finSpaceIcons/
     - assets/icons/maskAvatars/
