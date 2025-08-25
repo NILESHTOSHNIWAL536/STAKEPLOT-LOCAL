@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/profile.dart';
-
 import '../bottomNavigations.dart';
 import '../colorcodes.dart';
 import '../finance_screen/Budgets/Budget.dart';
-import '../user_chat/tribe_chart.dart';
+import './FeatureGrid.dart';
+import 'creditCard_slider.dart';
+import 'searchfinance.dart';
+import 'topay_toreceive.dart';
 
 
 class FinanceDashboard extends StatelessWidget {
@@ -17,6 +17,7 @@ class FinanceDashboard extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      // backgroundColor: AppColors.backgroundColor,
        bottomNavigationBar: SafeArea(child: BottomNavigations(
           data: 1,              
         )),
@@ -24,20 +25,25 @@ class FinanceDashboard extends StatelessWidget {
         child: Column(
           children: [
             // Top Section with custom clipper and search bar
-            SizedBox(
+            Container(
+              // color: AppColors.primaryColor,
+              padding: EdgeInsets.all(0),
               height: size.height /2,
+              width: MediaQuery.of(context).size.width,
+              // color: AppColors.primaryColor,
               child: Stack(
                 children: [
                   // Background color with a wave shape at the bottom
-                  
-                  Transform.translate(
-                    offset: const Offset(0, -35),
-                    child: AvatarProfileImageZero(
+                  Center(
+                     child: Transform.translate(
+                        offset: const Offset(0, -15),
+                       child: AvatarProfileImageZero(
                         url: svgIconPath.finance,
                         width: 1,
                         height:2
-                      ),
-                  ),
+                                       ),
+                     )
+              ),
                
                 Column(
                    mainAxisAlignment: MainAxisAlignment.start,
@@ -53,15 +59,15 @@ class FinanceDashboard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                   ),
-
-                  const SizedBox(height: 15),
-
+              
+                  const SizedBox(height: 25),
+              
                   // Search bar located below the title
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: _buildSearchBar(context),
+                    child: buildSearchBar(context),
                   ),
-
+              
                   Stack(
                     children: [
                       Transform.translate(
@@ -75,52 +81,53 @@ class FinanceDashboard extends StatelessWidget {
                             ),
                         ),
                       ),
-                      Positioned(
-                        right: 20,
-                        top: 30,
-                        child: Container(
-                        alignment: Alignment.topRight,
-                        padding: const EdgeInsets.only(right: 10,top: 5),
-                        child: const Icon(
-                            Icons.more_horiz,
-                            color: Color(0xFFB8AECC),
-                            size: 30,
-                          ),
-                      ),),
+                      // Positioned(
+                      //   right: 20,
+                      //   top: 30,
+                      //   child: Container(
+                      //   alignment: Alignment.topRight,
+                      //   padding: const EdgeInsets.only(right: 10,top: 5),
+                      //   child: const Icon(
+                      //       Icons.more_horiz,
+                      //       color: Color(0xFFB8AECC),
+                      //       size: 30,
+                      //     ),
+                      // ),),
                       Container(
                         padding: const EdgeInsets.fromLTRB(5, 10, 10,5),
                         margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Center(child: _buildFeatureCards(context)),
+                        child: Center(child: FeatureGrid()),
+                        // child: Center(child: _buildFeatureCards(context)),
                       ),
                     ],
                   ),
-
+              
                    ],
                 ),
-
+              
                 ],
               ),
             ),
-
+        
             // Middle sections start here
             const SizedBox(height: 24),
-
+        
             // "Heading" section with "View all"
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: _buildSectionHeader('Heading', () {}),
+              child: _buildSectionHeader('Credit Cards', () {}),
             ),
             const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: _buildGridCards(),
+              child: CardDueCarousel(),
             ),
-
+        
             // "Heading to Recieve / to Pay" section
             const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: _buildToPayToReceive(),
+              child: TopayToreceive(),
             ),
             const SizedBox(height: 24),
           ],
@@ -132,91 +139,8 @@ class FinanceDashboard extends StatelessWidget {
 
 
   // Widget for the search bar
-  Widget _buildSearchBar(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 234, 232, 239),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16.0,
-        vertical: 8.0,
-      ),
-      child:InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, '/TribeSearch');
-        },
-        child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children:  [
-          Icon(Icons.search, color: Color(0xFF8A7FA7)),
-          InkWell(
-              onTap: (){
-                  ismaskedUsers.value=false;
-                Navigator.pushNamed(context, '/TribeChats');
-              },
-            child: Icon(Icons.chat, color: Color(0xFF8A7FA7))),
-        ],
-      )),
-    );
-  }
 
-  // Widget for the circular icon list on the main card
-  Widget _buildFeatureCards(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _buildFeatureIcon(Icons.calculate, 'Calculators',0 ,context,"/calculator"),
-        _buildFeatureIcon(Icons.fastfood, 'Foodie\nFund',1  ,context,"/VegNonveg"),
-        _buildFeatureIcon(Icons.account_balance, 'Loan\nAffordability',2  ,context,"/loanAffordability"),
-        _buildFeatureIcon(Icons.currency_exchange, 'Currency\nConverter',3  ,context,"/currencyConverterScreen"),
-      ],
-    );
-  }
-
-  // Individual circular icon widget with text
-  Widget _buildFeatureIcon(IconData icon, String text,int index,BuildContext context,String routerName) {
-    return InkWell(
-      onTap: (){
-           Navigator.pushNamed(context, routerName);
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(top: 25),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: index==0 || index==3 ?0:50.0 ),
-              child: Container(
-                width: 45,
-                height: 45,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  shape: BoxShape.circle, // Changed to a circle for accuracy
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Icon(icon, color: Colors.white, size: 25),
-              ),
-            ),
-            const SizedBox(height: 3),
-            textStyleImage(
-                  text:  text,
-                  context: context,
-                  c: Color(0xFFB8AECC),
-                  fontsize: 12,
-          ),
-          ],
-        ),
-      ),
-    );
-  }
-
+  
   // Widget for the "Heading" and "View all" row
   Widget _buildSectionHeader(String title, VoidCallback onTap) {
     return Row(
@@ -305,73 +229,7 @@ class FinanceDashboard extends StatelessWidget {
     );
   }
 
-  // Widget for the "To Recieve" and "To Pay" sections
-  Widget _buildToPayToReceive() {
-    return Row(
-      children: [
-        Expanded(child: _buildTransactionCard('To Recieve', 300)),
-        const SizedBox(width: 16),
-        Expanded(child: _buildTransactionCard('To Pay', 300)),
-      ],
-    );
-  }
 
-  // Individual transaction card
-  Widget _buildTransactionCard(String title, int amount) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3F1F8),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              const Icon(
-                Icons.add_circle,
-                color: Color(0xFF6A5ACD),
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '₹ $amount',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          const Text(
-            '0 Pending',
-            style: TextStyle(
-              color: Color(0xFF8A7FA7),
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // Widget for the bottom navigation bar
   Widget _buildBottomNavigationBar() {

@@ -306,6 +306,7 @@ Widget textStyleImage({
   Color c = AppColors.bg1,
   FontWeight fontWeight = FontWeight.w500,
   bool iswrap = false,
+  bool isCenter = false,
   double lineHeight=1.0 ,
 }) {
   return Text(
@@ -313,7 +314,8 @@ Widget textStyleImage({
     style: FontManager().getTextStyle(
           context,
           lWeight: fontWeight, fontSize: fontsize, color: c,
-          lineHeight: lineHeight
+          lineHeight: lineHeight,
+          textAlign: isCenter ? TextAlign.center : TextAlign.start
         ),
     overflow: iswrap? TextOverflow.visible:TextOverflow.ellipsis,
   );

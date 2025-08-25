@@ -195,10 +195,13 @@ class svgIconPath {
   static String message = "assets/images2/messages.svg";
   static String finance = "assets/finance/finance_background.svg";
   static String finance_background= "assets/finance/background.svg";
-  //  static String  send1="assets/images/send1.jpg";
-  //  static String  send2="assets/images/Debts.svg";
-  //  static String  send3="assets/images/Bills.svg";
-  //  static String  send4="assets/images/payments.svg";
+   static String  financecal="assets/finance/calculator.svg";
+   static String  financefood="assets/finance/food.svg";
+   static String  financeloan="assets/finance/loan.svg";
+   static String  financeCurrency="assets/finance/currency.svg";
+   static String  financeLine="assets/finance/line.svg";
+   static String  financeSeach="assets/finance/search.svg";
+   static String  financeChat="assets/finance/chat.svg";
 
   // send Tab Screen
   static String send1 = "assets/img/imgs/budgets.svg";
