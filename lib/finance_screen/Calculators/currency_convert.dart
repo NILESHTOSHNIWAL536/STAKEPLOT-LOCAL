@@ -295,64 +295,57 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
-      
-      body: isFetchingCurrencies
-          ? Spinner()
-          : LayoutBuilder(
-              builder: (context, constraints) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 2,
-                    vertical: 10,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+        backgroundColor: AppColors.primaryColor,
+        body: isFetchingCurrencies
+            ? Spinner()
+            : SingleChildScrollView(
+                child: Padding(
+                  
+                  padding: const EdgeInsets.symmetric(vertical: 22,horizontal: 20),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                         const SizedBox(height: 24),
-                        Container(
-                           child: Row(children: [
-                             GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_back,color: AppColors.backgroundColor,),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 40),
-          child: Text(
-            "Currency Converter",
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w600,
-              fontSize: 20,
-              color: Colors.white,
-            ),
-          ),
-        ),
-                           ],),
-                        ),
-                         const SizedBox(height: 24),
-                        Container(
-  width: MediaQuery.sizeOf(context).width,
-  padding: const EdgeInsets.all(16),
-                          child: Stack(
-                             alignment: Alignment.center, 
-                            children: [
-                              Positioned.fill(
-                                child:
-                                 SvgPicture.asset(
-                                  'assets/icons/financeScreen/currency.svg',
-                                  width: double.infinity,
-                                  // fit: BoxFit.contain, // Or BoxFit.contain depending on your SVG
-                                  //  height:  MediaQuery.sizeOf(context).height/2,
-                                  // width: MediaQuery.sizeOf(context).width*0.9,
+                      const SizedBox(height: 24),
+                      Container(
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Icon(
+                                Icons.arrow_back,
+                                color: AppColors.backgroundColor,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 40),
+                              child: Text(
+                                "Currency Converter",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                  color: Colors.white,
                                 ),
                               ),
-                          
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Container(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            AvatarProfileImageZero(
+                                url: 'assets/icons/financeScreen/currency.svg',
+                                width: 1,
+                                height: 1.5
+                            ),
+                  
                             Container(
-                              width: MediaQuery.sizeOf(context).width*0.8,
+                              width: MediaQuery.sizeOf(context).width * 0.8,
                               padding: const EdgeInsets.all(16),
                               // decoration: BoxDecoration(
                               //  color: Color(0xFF60628C),
@@ -368,20 +361,20 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                               //   ],
                               // ),
                               child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                            
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   // Base Currency Picker
                                   Text(
                                     "Base Currency",
                                     style: FontManager().getTextStyle(
-                                     context,
-                                     lWeight: FontWeight.normal,
+                                      context,
+                                      lWeight: FontWeight.normal,
                                       fontSize: 14,
-                                      color: Colors.white, // Adjust color to match your theme
+                                      color: Colors
+                                          .white, // Adjust color to match your theme
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 12),
+                                  const SizedBox(height: 12),
                                   InkWell(
                                     onTap: () =>
                                         _showCurrencyPickerDialog(context, true),
@@ -389,11 +382,12 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                       decoration: InputDecoration(
                                         isDense: true,
                                         filled: true,
-                                         fillColor: Color.fromRGBO(255, 255, 255, 0.23),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                        borderSide: BorderSide.none,
-                                      ),
+                                        fillColor:
+                                            Color.fromRGBO(255, 255, 255, 0.23),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(6),
+                                          borderSide: BorderSide.none,
+                                        ),
                                         focusedBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(12),
                                           borderSide: const BorderSide(
@@ -401,9 +395,9 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                             width: 2,
                                           ),
                                         ),
-                                        
-                                        contentPadding: const EdgeInsets.symmetric(
-                                            vertical: 12, horizontal: 4),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 4),
                                       ),
                                       child: Text(
                                         baseCurrency != null
@@ -429,17 +423,17 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                       child: Container(
                                         padding: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
-                                          // shape: BoxShape.circle,
-                                          // color: AppColors.primaryColor,
-                                          // boxShadow: [
-                                          //   BoxShadow(
-                                          //     color: Colors.grey.withOpacity(0.2),
-                                          //     spreadRadius: 1,
-                                          //     blurRadius: 4,
-                                          //     offset: const Offset(0, 2),
-                                          //   ),
-                                          // ],
-                                        ),
+                                            // shape: BoxShape.circle,
+                                            // color: AppColors.primaryColor,
+                                            // boxShadow: [
+                                            //   BoxShadow(
+                                            //     color: Colors.grey.withOpacity(0.2),
+                                            //     spreadRadius: 1,
+                                            //     blurRadius: 4,
+                                            //     offset: const Offset(0, 2),
+                                            //   ),
+                                            // ],
+                                            ),
                                         child: const Icon(
                                           Icons.swap_vert,
                                           color: Colors.white,
@@ -449,16 +443,17 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 12),
-                                   Text(
+                                  Text(
                                     "Converted Currency",
                                     style: FontManager().getTextStyle(
-                                     context,
-                                     lWeight: FontWeight.normal,
+                                      context,
+                                      lWeight: FontWeight.normal,
                                       fontSize: 14,
-                                      color: Colors.white, // Adjust color to match your theme
+                                      color: Colors
+                                          .white, // Adjust color to match your theme
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 12),
+                                  const SizedBox(height: 12),
                                   // Target Currency Picker
                                   InkWell(
                                     onTap: () =>
@@ -467,11 +462,12 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                       decoration: InputDecoration(
                                         isDense: true,
                                         filled: true,
-                                         fillColor: Color.fromRGBO(255, 255, 255, 0.23),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide.none,
-                                      ),
+                                        fillColor:
+                                            Color.fromRGBO(255, 255, 255, 0.23),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                          borderSide: BorderSide.none,
+                                        ),
                                         focusedBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(6),
                                           borderSide: const BorderSide(
@@ -479,9 +475,9 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                             width: 2,
                                           ),
                                         ),
-                                       
-                                        contentPadding: const EdgeInsets.symmetric(
-                                            vertical: 12, horizontal: 4),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 4),
                                       ),
                                       child: Text(
                                         targetCurrency != null
@@ -500,85 +496,90 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 16),
-                                   Text(
+                                  Text(
                                     "Amount",
                                     style: FontManager().getTextStyle(
-                                     context,
-                                     lWeight: FontWeight.normal,
+                                      context,
+                                      lWeight: FontWeight.normal,
                                       fontSize: 14,
-                                      color: Colors.white, // Adjust color to match your theme
+                                      color: Colors
+                                          .white, // Adjust color to match your theme
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 12),
+                                  const SizedBox(height: 12),
                                   // Amount Field
                                   TextField(
                                     controller: amountController,
                                     keyboardType: TextInputType.number,
                                     textInputAction: TextInputAction.done,
                                     decoration: InputDecoration(
-                                      
                                       filled: true,
-                                       
-                                    
-                                      fillColor: Color.fromRGBO(255, 255, 255, 0.23),
+                                      fillColor:
+                                          Color.fromRGBO(255, 255, 255, 0.23),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(6),
                                         borderSide: BorderSide.none,
                                       ),
-                                      
                                       contentPadding: const EdgeInsets.symmetric(
                                           vertical: 12, horizontal: 16),
-                                      errorText: amountController.text.isNotEmpty &&
-                                              double.tryParse(amountController.text
-                                                      .trim()) ==
-                                                  null
-                                          ? "Invalid number"
-                                          : null,
+                                      errorText:
+                                          amountController.text.isNotEmpty &&
+                                                  double.tryParse(amountController
+                                                          .text
+                                                          .trim()) ==
+                                                      null
+                                              ? "Invalid number"
+                                              : null,
                                     ),
                                     onChanged: (value) => setState(() {}),
                                   ),
                                   const SizedBox(height: 20),
                                   // Convert Button
-                            
+                  
                                   // Inside the Column within the build method's Container
-                                 if (result.isNotEmpty)
-                              Center(
-                                child: Container(
-                                   padding: const EdgeInsets.symmetric(
-                                                  vertical: 4,horizontal: 8),
-                                          decoration: BoxDecoration(
-                                            color: Color.fromRGBO(255, 255, 255, 0.23),
+                                  if (result.isNotEmpty)
+                                    Center(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 4, horizontal: 8),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              Color.fromRGBO(255, 255, 255, 0.23),
+                                        ),
+                                        child: Text(
+                                          result,
+                                          style: FontManager().getTextStyle(
+                                            context,
+                                            lWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            color: AppColors.backgroundColor,
                                           ),
-                                  child: Text(
-                                    result,
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: AppColors.backgroundColor,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                               const SizedBox(height: 24),
-                            // Result Display
-                                                   Center(
+                                  const SizedBox(height: 24),
+                                  // Result Display
+                                  Center(
                                     child: ElevatedButton(
                                       onPressed: isLoading ||
                                               baseCurrency == null ||
                                               targetCurrency == null ||
-                                              amountController.text.trim().isEmpty ||
-                                              double.tryParse(
-                                                      amountController.text.trim()) ==
+                                              amountController.text
+                                                  .trim()
+                                                  .isEmpty ||
+                                              double.tryParse(amountController
+                                                      .text
+                                                      .trim()) ==
                                                   null
                                           ? null
                                           : convertCurrency,
                                       style: ElevatedButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 14, horizontal: 12),
-                                        backgroundColor: AppColors.backgroundColor,
-                                        foregroundColor: Colors.white,
+                                        backgroundColor:
+                                            AppColors.backgroundColor,
+                                        foregroundColor: AppColors.backgroundColor,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8),
                                         ),
@@ -597,37 +598,19 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                             ),
                                     ),
                                   ),
-                                
-                             if (recentConversions.isNotEmpty)
-                              Container(
-                              
-                                decoration: BoxDecoration(
-                                  // color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                 
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Recent Conversions",
-                                      style: FontManager().getTextStyle(
-                                        context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 14,
-                                        color: AppColors.backgroundColor,
+                  
+                                  if (recentConversions.isNotEmpty)
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        // color: Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
                                       ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    ...recentConversions
-                                        .map((conversion) => Container(
-                                          padding: const EdgeInsets.symmetric(
-                                                  vertical: 4,horizontal: 8),
-                                          decoration: BoxDecoration(
-                                            color: Color.fromRGBO(255, 255, 255, 0.23),
-                                          ),
-                                          child: Text(
-                                            conversion,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Recent Conversions",
                                             style: FontManager().getTextStyle(
                                               context,
                                               lWeight: FontWeight.normal,
@@ -635,31 +618,45 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                               color: AppColors.backgroundColor,
                                             ),
                                           ),
-                                        ))
-                                        .toList(),
-                                  ],
-                                ),
-                              ),
-                                                  
+                                          const SizedBox(height: 8),
+                                          ...recentConversions
+                                              .map((conversion) => Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 4,
+                                                        horizontal: 8),
+                                                    decoration: BoxDecoration(
+                                                      color: Color.fromRGBO(
+                                                          255, 255, 255, 0.23),
+                                                    ),
+                                                    child: Text(
+                                                      conversion,
+                                                      style: FontManager()
+                                                          .getTextStyle(
+                                                        context,
+                                                        lWeight:
+                                                            FontWeight.normal,
+                                                        fontSize: 14,
+                                                        color: AppColors
+                                                            .backgroundColor,
+                                                      ),
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                        ],
+                                      ),
+                                    ),
                                 ],
                               ),
-                            
                             ),
-                          
-                                                 
-                           
-                          const SizedBox(height: 24),
-                          // Recent Conversions
-                                                 
-                                                ],
-                                              ),
+                  
+                            const SizedBox(height: 24),
+                            // Recent Conversions
+                          ],
                         ),
-                      ])
-                  ),
-                );
-              },
-            ),
-    );
+                      ),
+                    ]),
+                )));
   }
 
   // @override

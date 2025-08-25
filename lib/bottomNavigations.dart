@@ -202,8 +202,8 @@ int communityIndex = sizeRoom ? 3 : 2;
           if (i == 0)
             pushName(HomePage());
           // else if (i == 1) pushName(Connections());
-          // else if (i == 1) pushName(FinanceDashboard());
-          else if (i == 1) pushName(PlotFinance());
+          else if (i == 1) pushName(FinanceDashboard());
+          // else if (i == 1) pushName(PlotFinance());
         
            else if (i == 2) pushName(ControllerManagement.userController.interestedTags.isEmpty? WelcomeScreen():Community());
            else if (i == 3) pushName(ProfileScreenDart());
