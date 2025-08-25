@@ -20,7 +20,6 @@ class Loader extends StatelessWidget {
         },
       ),
     );
-   
   }
 }
 
@@ -50,7 +49,6 @@ class _LoaderAppState extends State<LoaderApp> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
-        
         child: Lottie.asset(
           'assets/splashScreen/appScreen.json',
           controller: _controller,
@@ -80,7 +78,7 @@ class Spinner extends StatelessWidget {
     //   color: color, // Use a single color
     //   size: size,
     // );
-     return Container(
+    return Container(
       height: 30,
       width: 30,
       child: Lottie.asset(

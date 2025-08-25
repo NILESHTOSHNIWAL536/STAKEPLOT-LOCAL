@@ -54,6 +54,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     balanceOutList.clear();
     maxController.text = "";
     minController.text = "";
+    startDateController.text = "";
+    endDateController.text = "";
     getAllTransactionHistory(context, false, false, isRefreshing: true);
     getDayWiseTransactions(context).then((data) {
       dayWiseTransactions.assignAll(data);

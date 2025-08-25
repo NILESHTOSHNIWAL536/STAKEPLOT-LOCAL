@@ -72,54 +72,55 @@ class _TwoFactorEmailVerificationState
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return  Scaffold(
         backgroundColor: Colorcodes.white,
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF6568A7),
-                Color(0xFF272841),
+        body: SafeArea(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF6568A7),
+                  Color(0xFF272841),
+                ],
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      topHeader(),
+                      textStyleOnly2(
+                        context: context,
+                        text: "Enter the 6-digit OTP sent to your email",
+                        fontWeight: FontWeight.w300,
+                        fontsize: 14,
+                        color: Colorcodes.white,
+                      ),
+                      const SizedBox(height: 40),
+                      verifyOpt(),
+                      acceptButton(),
+                      SizedBox(height: Colorcodes.paddingSize * 2),
+                      resendOtp(),
+                    ],
+                  ),
+                ),
+                buildBottomWaves(context),
               ],
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 20),
-                    topHeader(),
-                    textStyleOnly2(
-                      context: context,
-                      text: "Enter the 6-digit OTP sent to your email",
-                      fontWeight: FontWeight.w300,
-                      fontsize: 14,
-                      color: Colorcodes.white,
-                    ),
-                    const SizedBox(height: 40),
-                    verifyOpt(),
-                    acceptButton(),
-                    SizedBox(height: Colorcodes.paddingSize * 2),
-                    resendOtp(),
-                  ],
-                ),
-              ),
-              buildBottomWaves(context),
-            ],
-          ),
         ),
-      ),
+      
     );
   }
 

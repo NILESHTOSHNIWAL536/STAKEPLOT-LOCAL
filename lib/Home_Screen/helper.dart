@@ -4,7 +4,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/date_range_filter.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
@@ -25,9 +27,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'history/amount_range.dart';
 
-
-
-List<PredictionEntry> getUniquePredictedCategories(List<PredictionEntry> predictions) {
+List<PredictionEntry> getUniquePredictedCategories(
+    List<PredictionEntry> predictions) {
   final Set<String> seenCategories = {};
   final List<PredictionEntry> uniquePredictions = [];
 
@@ -43,15 +44,11 @@ List<PredictionEntry> getUniquePredictedCategories(List<PredictionEntry> predict
   return uniquePredictions;
 }
 
-
-
 String getCategoryForKeyword(String keyword) {
   final lowerKeyword = keyword.toLowerCase();
 
-  for (final entry in categories.entries)
-  {
-    for (final item in entry.value)
-    {
+  for (final entry in categories.entries) {
+    for (final item in entry.value) {
       if (lowerKeyword.contains(item.toLowerCase())) {
         return entry.key;
       }
@@ -60,7 +57,6 @@ String getCategoryForKeyword(String keyword) {
 
   return keyword; // return original if not found
 }
-
 
 final Map<int, Map<String, double>> weekData = {
   for (int i = 0; i < 5; i++)
@@ -225,6 +221,7 @@ String formatWhatsAppDate4(DateTime date) {
     return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // 7 Apr 2025, 10:30 AM
   }
 }
+
 String formatWhatsAppDateWithoutTime(DateTime date) {
   // Remove toLocal() if not needed, or adjust properly
   DateTime now = DateTime.now();
@@ -380,7 +377,7 @@ String avaterUrlPath(String name) {
   return "assets/avatars/" + name[0].toString().toLowerCase() + ".svg";
 }
 
-String formatMoneyIndian(String value,[String pattern="0"]) {
+String formatMoneyIndian(String value, [String pattern = "0"]) {
   if (value.isEmpty) return pattern;
   try {
     // Remove commas if user input already has them
@@ -398,32 +395,28 @@ String formatMoneyIndian(String value,[String pattern="0"]) {
   }
 }
 
+Future<void> updateWidgetSpendingCategories() async {
+  try {
+    final total = '₹${totalValue.value?.toStringAsFixed(2) ?? '0.00'}';
+    final timestamp = getMonthlyRange();
+    String categories = 'None';
+    if (spendingsOnCategories.isNotEmpty) {
+      categories = spendingsOnCategories
+          .map((data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
+          .join('\n');
+    }
 
+    await HomeWidget.saveWidgetData<String>('total_spending', total);
+    await HomeWidget.saveWidgetData<String>('categories', categories);
+    await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
 
- Future<void> updateWidgetSpendingCategories() async {
-    try {
-      final total = '₹${totalValue.value?.toStringAsFixed(2) ?? '0.00'}';
-      final timestamp = getMonthlyRange();
-      String categories = 'None';
-      if (spendingsOnCategories.isNotEmpty) {
-        categories = spendingsOnCategories
-            .map(
-                (data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
-            .join('\n');
-      }
-
-      await HomeWidget.saveWidgetData<String>('total_spending', total);
-      await HomeWidget.saveWidgetData<String>('categories', categories);
-      await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
-
-      await HomeWidget.updateWidget(
-        name: 'StakeplotWidgetProvider',
-        androidName: 'StakeplotWidgetProvider',
-        iOSName: 'StakeplotWidget',
-      );
-    } catch (e) {}
-  }
-
+    await HomeWidget.updateWidget(
+      name: 'StakeplotWidgetProvider',
+      androidName: 'StakeplotWidgetProvider',
+      iOSName: 'StakeplotWidget',
+    );
+  } catch (e) {}
+}
 
 Future<void> updateWidget() async {
   final prefs = await SharedPreferences.getInstance();
@@ -469,11 +462,20 @@ String formatDate(String dateString) {
   return DateFormat('d MMM yyyy').format(date); // Format as Aug 2024
 }
 
-
 String getFullMonthName(int month) {
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
   ];
   return monthNames[month - 1];
 }
@@ -525,8 +527,8 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
             //     (MediaQuery.of(context).size.height / 2.5), // Full screen height
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
@@ -539,23 +541,17 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Center(
-                      child: Container(
-                    width: 50,
-                    height: 2.2,
-                    color: Colorcodes.claimColor,
-                  )),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         textStyle(
                             context: context,
-                            text: "Select Bank Account",
-                            fontsize: 16,
-                            fontWeight: FontWeight.w600),
+                            text: "Select a Bank Account to Download Statement",
+                            fontsize: 14,
+                            fontWeight: FontWeight.w500),
                         InkWell(
                           onTap: () {
                             Navigator.pop(context);
@@ -569,7 +565,6 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
                       ],
                     ),
                   ),
-                
                   getBankAccountList(context),
                   SizedBox(
                     height: 10,
@@ -592,7 +587,7 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
   );
 }
 
-Widget getBankAccountList(context,[fromPdf = true]) {
+Widget getBankAccountList(context, [fromPdf = true]) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
     // decoration: BoxDecoration(
@@ -610,18 +605,18 @@ Widget getBankAccountList(context,[fromPdf = true]) {
     child: Column(
       children: bankAccountLinkedList.map((account) {
         return Obx(() => Container(
- decoration: BoxDecoration(
-       borderRadius: BorderRadius.circular(5),
-    color: Colors.white,
-    boxShadow: [
-      BoxShadow(
-        color: Color.fromRGBO(156, 156, 156, 0.25),
-        blurRadius: 4,
-        spreadRadius: 0,
-        offset: Offset(0, 0),
-      ),
-    ],
-    ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(156, 156, 156, 0.25),
+                    blurRadius: 4,
+                    spreadRadius: 0,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
               margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
               child: ListTile(
                 leading: SizedBox(
@@ -634,23 +629,25 @@ Widget getBankAccountList(context,[fromPdf = true]) {
                   ),
                 ),
                 title: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                        textStyle(
-                          context: context,
-                          text: account["bankName"],
-                          fontsize: 15,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        const SizedBox(height: 4,),
-                        textStyle(
-                          context: context,
-                          text: "Acc No:"+account["maskedAccNumber"],
-                          fontsize: 11,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ]),
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textStyle(
+                        context: context,
+                        text: account["bankName"],
+                        fontsize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      textStyle(
+                        context: context,
+                        text: "Acc No:" + account["maskedAccNumber"],
+                        fontsize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ]),
                 trailing: Theme(
                   data: Theme.of(context).copyWith(
                     checkboxTheme: CheckboxThemeData(
@@ -658,16 +655,22 @@ Widget getBankAccountList(context,[fromPdf = true]) {
                     ),
                   ),
                   child: Checkbox(
-                    value:( fromPdf ? accountIdPdf.value:accountSelected.value )== account["accountId"].toString(),
+                    value: (fromPdf
+                            ? accountIdPdf.value
+                            : accountSelected.value) ==
+                        account["accountId"].toString(),
                     onChanged: (isChecked) {
-                      if (isChecked == true)
-                      {
-                        if(fromPdf) accountIdPdf.value = account["accountId"].toString();
-                        else accountSelected.value = account["accountId"].toString();
-                      } 
-                      else {
-                        if(fromPdf)accountIdPdf.value = "-";
-                        else  accountSelected.value = "-";
+                      if (isChecked == true) {
+                        if (fromPdf)
+                          accountIdPdf.value = account["accountId"].toString();
+                        else
+                          accountSelected.value =
+                              account["accountId"].toString();
+                      } else {
+                        if (fromPdf)
+                          accountIdPdf.value = "-";
+                        else
+                          accountSelected.value = "-";
                       }
                     },
                   ),
@@ -678,6 +681,7 @@ Widget getBankAccountList(context,[fromPdf = true]) {
     ),
   );
 }
+
 Widget getBankAccountListForFilter(context, [fromPdf = true]) {
   return Row(
     children: bankAccountLinkedList.map((account) {
@@ -689,8 +693,8 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
         Widget content = Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           child: Row(
-           mainAxisAlignment: MainAxisAlignment.center,
-           crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: 20,
@@ -702,15 +706,15 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
                 ),
               ),
               const SizedBox(width: 6),
-             Center(
-              child: textStyleImage(
-                context: context,
-                text: "${account["maskedAccNumber"].toString().substring(account["maskedAccNumber"].toString().length - 6)}",
-                fontsize: 12,
-                fontWeight: FontWeight.w600,
-                c: isSelected?AppColors.backgroundColor:AppColors.bg1
+              Center(
+                child: textStyleImage(
+                    context: context,
+                    text:
+                        "${account["maskedAccNumber"].toString().substring(account["maskedAccNumber"].toString().length - 6)}",
+                    fontsize: 12,
+                    fontWeight: FontWeight.w600,
+                    c: isSelected ? AppColors.backgroundColor : AppColors.bg1),
               ),
-            ),
             ],
           ),
         );
@@ -733,29 +737,28 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
             // Optional: auto filter on tap
             onChanedAutoTransactionStatus(context);
           },
-        
-           child: isSelected
-            ? Container(
-                margin: EdgeInsets.symmetric(horizontal: 4,vertical: 2),
-                padding: EdgeInsets.symmetric(horizontal: 6,vertical: 2),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: content,
-              )
-            : Container(
-              margin: EdgeInsets.symmetric(horizontal: 4,vertical: 2),
-              padding: EdgeInsets.symmetric(horizontal: 4,vertical: 2),
-              child: DottedBorderBox(
+          child: isSelected
+              ? Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: content,
+                )
+              : Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  child: DottedBorderBox(
                     dashWidth: 4,
                     space: 5,
                     dashHeight: 1,
                     color: AppColors.grey,
-                    padding: EdgeInsets.symmetric(horizontal: 12,vertical: 2), 
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                     child: content,
+                  ),
                 ),
-            ),
         );
       });
     }).toList(),
@@ -872,12 +875,11 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
       Widget content = Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         child: textStyleImage(
-          context: context,
-          text: text,
-          fontsize: 15,
-          fontWeight: FontWeight.w500,
-          c: isSelected?AppColors.backgroundColor:AppColors.bg1
-        ),
+            context: context,
+            text: text,
+            fontsize: 15,
+            fontWeight: FontWeight.w500,
+            c: isSelected ? AppColors.backgroundColor : AppColors.bg1),
       );
 
       return GestureDetector(
@@ -886,7 +888,6 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
         },
         child: isSelected
             ? Container(
-              
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
@@ -895,10 +896,10 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
               )
             : DottedBorderBox(
                 dashWidth: 4,
-                    space: 5,
-                    dashHeight: 1,
-                    color: AppColors.grey,
-                    padding: EdgeInsets.symmetric(horizontal: 12,vertical: 2), 
+                space: 5,
+                dashHeight: 1,
+                color: AppColors.grey,
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: content,
@@ -909,10 +910,11 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
   );
 }
 
-Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTap) {
+Widget getCheckBoxwithText2(
+    BuildContext context, String text, VoidCallback onTap) {
   return Container(
     height: 40,
-     margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
     child: Obx(() {
       bool isSelected = accountIdPdf.value == text;
       Widget content = Padding(
@@ -929,30 +931,27 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
       );
 
       return GestureDetector(
-       onTap: () {
-  // Toggle selection
-  accountIdPdf.value = isSelected ? "-" : text;
+        onTap: () {
+          // Toggle selection
+          accountIdPdf.value = isSelected ? "-" : text;
 
-  // Update search text if Credit, Debit, or Cash
-  if (accountIdPdf.value.toLowerCase() == "credit" ||
-      accountIdPdf.value.toLowerCase() == "debit" ||
-      accountIdPdf.value == "Cash") {
-    searchTextController.value = accountIdPdf.value.toLowerCase();
-     searchController.text = accountIdPdf.value.toLowerCase();
-  } else if (accountIdPdf.value == "-") {
-     searchTextController.value = "";
-     searchController.text = "";
-    
-  }
+          // Update search text if Credit, Debit, or Cash
+          if (accountIdPdf.value.toLowerCase() == "credit" ||
+              accountIdPdf.value.toLowerCase() == "debit" ||
+              accountIdPdf.value == "Cash") {
+            searchTextController.value = accountIdPdf.value.toLowerCase();
+            searchController.text = accountIdPdf.value.toLowerCase();
+          } else if (accountIdPdf.value == "-") {
+            searchTextController.value = "";
+            searchController.text = "";
+          }
 
-  // Apply filter and close dialog
-  onChanedAutoTransactionStatus(context);
- 
-},
-
+          // Apply filter and close dialog
+          onChanedAutoTransactionStatus(context);
+        },
         child: isSelected
             ? Container(
-                padding: EdgeInsets.symmetric(horizontal: 12,vertical: 2),
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
@@ -960,35 +959,33 @@ Widget getCheckBoxwithText2(BuildContext context, String text, VoidCallback onTa
                 child: content,
               )
             : Container(
-              child: DottedBorderBox(
+                child: DottedBorderBox(
                   dashWidth: 4,
-                    space: 5,
-                    dashHeight: 1,
-                    color: AppColors.grey,
-                    padding: EdgeInsets.symmetric(horizontal: 12,vertical: 2), 
+                  space: 5,
+                  dashHeight: 1,
+                  color: AppColors.grey,
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: content,
                   ),
                 ),
-            ),
+              ),
       );
     }),
   );
 }
 
-
 Widget filterTransaction(context) {
   return Column(
     children: [
       Container(
-        color:AppColors.backgroundColor,
+        color: AppColors.backgroundColor,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height /
- (bankAccountLinkedList.length <= 1 ? 16 : 14),
+            (bankAccountLinkedList.length <= 1 ? 16 : 14),
         child: ListView(
-        scrollDirection: Axis.horizontal,
-        
+          scrollDirection: Axis.horizontal,
           children: [
             getCheckBoxwithText2(context, "Credit", () {
               onChanedAutoTransactionStatus(context);
@@ -1002,15 +999,92 @@ Widget filterTransaction(context) {
               onChanedAutoTransactionStatus(context);
               // Navigator.pop(context);
             }),
-            
-            
             bankAccountLinkedList.length >= 2
                 ? getBankAccountListForFilter(context, false)
                 : SizedBox.shrink(),
+
+            Obx(
+              () => Padding(
+               padding: const EdgeInsets.only(top: 4),
+                child: GestureDetector(
+  onTap: toggleAmountFilter, // ✅ Entire container is tappable
+  child: Container(
+    child: DottedBorderBox(
+      dashWidth: 4,
+      space: 5,
+      dashHeight: 1,
+      color: AppColors.grey,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (showAmountFilter.value)
+              const Icon(Icons.check, size: 18, color: Colors.green),
+            const SizedBox(width: 4),
+             Text("Filter by Amount",  style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: AppColors.accentColor,
+                      ),),
           ],
         ),
       ),
-       AmountRangeField()
+    ),
+  ),
+),
+
+              ),
+            ),
+            const SizedBox(width: 10),
+            // --------- Date Button ---------
+            Obx(
+              () => Padding(
+                padding: const EdgeInsets.only(top: 4),
+               child: GestureDetector(
+  onTap: toggleDateFilter, // ✅ Whole container is tappable
+  child: Container(
+    child: DottedBorderBox(
+      dashWidth: 4,
+      space: 5,
+      dashHeight: 1,
+      color: AppColors.grey,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (showDateFilter.value)
+              const Icon(Icons.check, size: 18, color: Colors.green),
+            const SizedBox(width: 4),
+             Text("Filter by Date",  style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: AppColors.accentColor,
+                      ),),
+          ],
+        ),
+      ),
+    ),
+  ),
+),
+
+              ),
+            ),
+          ],
+        ),
+      ),
+      Obx(() => showAmountFilter.value
+          ? AmountRangeField()
+          : const SizedBox.shrink()),
+      Obx(() =>
+          showDateFilter.value ? DateRangeField() : const SizedBox.shrink()),
+      // AmountRangeField(),
+      // DateRangeField()
     ],
   );
 }
@@ -1056,7 +1130,7 @@ String getDaysLeftInMonth() {
 }
 
 List<Map<String, dynamic>> getthelist() {
-  final lowerSearch =  searchTextController.value.toLowerCase();
+  final lowerSearch = searchTextController.value.toLowerCase();
   // final lowerSearch = searchController.text.toLowerCase();
 
   final filtered = customCategoryList.where((e) {
@@ -1067,14 +1141,15 @@ List<Map<String, dynamic>> getthelist() {
   return filtered.reversed.toList().cast<Map<String, dynamic>>();
 }
 
-List<Map<String, dynamic>> getthelistAll()
- {
+List<Map<String, dynamic>> getthelistAll() {
   String lowerSearch = "";
-  return  customCategoryList.where((e) {
-    final name = e['name']?.toString().toLowerCase() ?? '';
-    return name.contains(lowerSearch);
-  }).toList().cast<Map<String, dynamic>>();
-
+  return customCategoryList
+      .where((e) {
+        final name = e['name']?.toString().toLowerCase() ?? '';
+        return name.contains(lowerSearch);
+      })
+      .toList()
+      .cast<Map<String, dynamic>>();
 }
 
 String getFormattedDateForScreenTime() {
@@ -1082,14 +1157,12 @@ String getFormattedDateForScreenTime() {
   return "${now.day.toString().padLeft(2, '0')}:${now.month.toString().padLeft(2, '0')}:${now.year}";
 }
 
-
 List<TextInputFormatter> allowDecimalInput({int decimalPlaces = 2}) {
   final regex = RegExp(r'^\d*\.?\d{0,' + decimalPlaces.toString() + r'}');
   return [
     FilteringTextInputFormatter.allow(regex),
   ];
 }
-
 
 int getDaysInCurrentMonth() {
   final now = DateTime.now();
@@ -1110,7 +1183,6 @@ const List<Map<String, dynamic>> reportOptions = [
   {'title': 'Spam', 'subtitle': ''},
 ];
 
-
 String formatDateToIST(String dateStr) {
   try {
     DateTime utcDate = DateTime.parse(dateStr).toUtc();
@@ -1118,35 +1190,79 @@ String formatDateToIST(String dateStr) {
     int hour = istDate.hour % 12 == 0 ? 12 : istDate.hour % 12;
     String minute = istDate.minute.toString().padLeft(2, '0');
     String period = istDate.hour >= 12 ? 'PM' : 'AM';
-    String month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][istDate.month - 1];
+    String month = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ][istDate.month - 1];
     return "$hour:$minute $period · $month ${istDate.day}, ${istDate.year}";
   } catch (e) {
     return dateStr;
   }
 }
 
+getErrorBankLogo() => (context, error, stackTrace) => const Icon(
+      Icons.account_balance,
+      size: 30,
+      color: AppColors.primaryColor,
+    );
 
-
- getErrorBankLogo()=> (context, error, stackTrace) => const Icon(
-            Icons.account_balance,
-            size: 30,
-            color: AppColors.primaryColor,
-          );
-
-  bool checkRangeofAmount(context,[bool f=true])
-  {
-        double f1=double.parse(minController.text.isNotEmpty? minController.text:"0");
-        double f2=double.parse(maxController.text.isNotEmpty? maxController.text:"0");
-        if(f1>=f2 && maxController.text.isNotEmpty){
-           if(f)snackBarCalledfail(context, SnackbarData().maxMinAmount);
-           minController.text="";
-           maxController.text="";
-        }
-       return  f1<f2;
+bool checkRangeofAmount(context, [bool f = true]) {
+  double f1 =
+      double.parse(minController.text.isNotEmpty ? minController.text : "0");
+  double f2 =
+      double.parse(maxController.text.isNotEmpty ? maxController.text : "0");
+  if (f1 >= f2 && maxController.text.isNotEmpty) {
+    if (f) snackBarCalledfail(context, SnackbarData().maxMinAmount);
+    minController.text = "";
+    maxController.text = "";
   }
+  return f1 < f2;
+}
 
+bool getListIsValid(String s) {
+  List sdc = ["credit", "debit", "cash"];
+  return sdc.contains(s);
+}
 
-  bool getListIsValid(String s){
-     List  sdc=["credit","debit","cash"];
-     return sdc.contains(s);
+bool checkRangeofDate(BuildContext context, [bool f = true]) {
+  String startDateText =
+      startDateController.text.isNotEmpty ? startDateController.text : '';
+  String endDateText =
+      endDateController.text.isNotEmpty ? endDateController.text : '';
+  if (startDateText.isEmpty || endDateText.isEmpty) {
+    return true;
   }
+  try {
+    final DateFormat formatter = DateFormat('yyyy/MM/dd');
+    final DateTime startDate = formatter.parse(startDateText);
+    final DateTime endDate = formatter.parse(endDateText);
+
+    if (endDate.isBefore(startDate) && endDateText.isNotEmpty) {
+      if (f) {
+        snackBarCalledfail(context, 'End date must be after start date');
+      }
+      startDateController.text = '';
+      endDateController.text = '';
+      return false;
+    }
+    return true;
+  } catch (e) {
+    if (f) {
+      print("eroor $e");
+      snackBarCalledfail(context, 'Invalid date format');
+    }
+    startDateController.text = '';
+    endDateController.text = '';
+    return false;
+  }
+}

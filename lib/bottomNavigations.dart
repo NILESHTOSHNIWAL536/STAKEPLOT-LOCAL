@@ -31,7 +31,8 @@ import "offline.dart";
 class BottomNavigations extends StatefulWidget {
   int data;
   final VoidCallback? onCommunityDoubleTap;
-  BottomNavigations({Key? key, required this.data, this.onCommunityDoubleTap}) : super(key: key);
+  final VoidCallback? onHomeDoubleTap;
+  BottomNavigations({Key? key, required this.data, this.onCommunityDoubleTap, this.onHomeDoubleTap}) : super(key: key);
 
   @override
   _BottomNavigationsState createState() => _BottomNavigationsState();
@@ -176,12 +177,19 @@ int communityIndex = sizeRoom ? 3 : 2;
         } else if (i == 3 && widget.data != i) {}
       },
       onTap: () {
+        if (i == 0 && isSelected) {
+          // Single tap on already selected Home tab
+          HapticFeedback.lightImpact();
+          widget.onHomeDoubleTap?.call(); // Call the Home scroll-to-top callback
+          return;
+        }
          if (i == communityIndex && isSelected) {
           // Single tap on already selected Community tab
           HapticFeedback.lightImpact();
           widget.onCommunityDoubleTap?.call();
           return;
         }
+      
         if (widget.data == i) return;
          HapticFeedback.heavyImpact();
         try {

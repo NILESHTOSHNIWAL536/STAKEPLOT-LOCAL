@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/animated/appScreenAnimation.dart';
+import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Re
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Savings.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
@@ -61,6 +63,8 @@ var routes =
      
       '/interestScreen':(context) => InterestSelectionScreen() ,
       '/animatedAppScreen':(context)=>AppScreenAnimation(),
+      '/currencyConverterScreen':(context)=>CurrencyConverterScreen(),
+      '/rewardsOverview':(context)=>RewardsOverview(),
       
       
 };

@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -57,6 +58,8 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
   {
       currentPage = 1;
       isLoadingMore.value=false;
+      String currentMonth = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    getAutoMationsTransactionsCustom(currentMonth, context, 'month');
       getAllTransactionHistory(context,false,false,isRefreshing: true);
   }
   
@@ -220,6 +223,7 @@ Widget getLineGraph(screenHeight,screenWidth){
           leading: InkWell(
             onTap: () {
                 Navigator.pop(context);
+
                  callBackApi();
             },
             child: Icon(

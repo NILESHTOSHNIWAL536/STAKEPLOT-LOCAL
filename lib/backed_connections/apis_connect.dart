@@ -210,3 +210,12 @@ RxMap<String, List<dynamic>> couponRequestMap = <String, List<dynamic>>{}.obs;
 
  TextEditingController minController=TextEditingController();
  TextEditingController maxController=TextEditingController();
+
+ final TextEditingController startDateController = TextEditingController();
+final TextEditingController endDateController = TextEditingController();
+RxBool showAmountFilter = false.obs;
+RxBool showDateFilter = false.obs;
+
+// ---------------- Toggle functions ----------------
+void toggleAmountFilter() => showAmountFilter.value = !showAmountFilter.value;
+void toggleDateFilter() => showDateFilter.value = !showDateFilter.value;

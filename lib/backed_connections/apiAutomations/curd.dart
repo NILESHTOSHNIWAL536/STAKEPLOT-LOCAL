@@ -56,8 +56,8 @@ Future<http.Response> updateDataApiCall2(
   );
   return response;
 }
-Future<http.Response> updateDataApiCallWithoutBody(
-    String urlPath) async {
+
+Future<http.Response> updateDataApiCallWithoutBody(String urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
 
@@ -67,7 +67,6 @@ Future<http.Response> updateDataApiCallWithoutBody(
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
-   
   );
   return response;
 }
@@ -91,7 +90,7 @@ Future<http.Response> updateDataApiCall3(String urlPath,
 Future<http.Response> getDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
-  
+
   final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{
@@ -145,9 +144,13 @@ Future<http.Response> getTransactionsWithAmount({
   required String urlPath,
   String minAmount = "",
   String maxAmount = "",
+  String startDate = '',
+  String endDate = '',
 }) async {
+ 
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
+  print('accessToken: ${accessToken != null ? "present" : "null"}');
 
   // Build the query params
   final queryParams = <String, String>{};
@@ -157,6 +160,14 @@ Future<http.Response> getTransactionsWithAmount({
   if (maxAmount.isNotEmpty) {
     queryParams['maxAmount'] = maxAmount;
   }
+  if (startDate.isNotEmpty) {
+    queryParams['startDate'] = startDate;
+  }
+  if (endDate.isNotEmpty) {
+    queryParams['endDate'] = endDate;
+  }
+
+  
 
   // Append query params to the URL
   Uri uri = Uri.parse(urlPath).replace(
@@ -166,12 +177,15 @@ Future<http.Response> getTransactionsWithAmount({
     },
   );
 
-   final response = await http.get(
+ 
+  final response = await http.get(
     uri,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
   );
+
+  
   return response;
 }

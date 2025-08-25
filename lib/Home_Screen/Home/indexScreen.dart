@@ -14,7 +14,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:get/get.dart';
 
 class IndexScreen extends StatelessWidget {
-  const IndexScreen({Key? key}) : super(key: key);
+  final ScrollController scrollControllerHome;
+  const IndexScreen({Key? key, required this.scrollControllerHome}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class IndexScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
       child: SingleChildScrollView(
+        controller: scrollControllerHome,
         child: Column(
           children: [
             Nextfetch(),
