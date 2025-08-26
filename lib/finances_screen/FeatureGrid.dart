@@ -17,7 +17,7 @@ class FeatureGrid extends StatelessWidget {
         _buildFeatureIcon(
             Icons.fastfood, 'Foodie\nFund', 1, context, "/VegNonveg",svgIconPath.financefood),
         _buildFeatureIcon(Icons.account_balance, 'Loan\nAffordability', 2,
-            context, "/loanAffordability",svgIconPath.financeloan),
+            context, "/LoanCalculatorUI",svgIconPath.financeloan),
         _buildFeatureIcon(Icons.currency_exchange, 'Currency\nConverter', 3,
             context, "/currencyConverterScreen",svgIconPath.financeCurrency),
       ],

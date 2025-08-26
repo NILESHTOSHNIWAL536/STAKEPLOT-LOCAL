@@ -202,6 +202,8 @@ class svgIconPath {
    static String  financeLine="assets/finance/line.svg";
    static String  financeSeach="assets/finance/search.svg";
    static String  financeChat="assets/finance/chat.svg";
+   static String  financepayReceive="assets/finance/frame.svg";
+   static String  financepayReceive2="assets/finance/frame2.png";
 
   // send Tab Screen
   static String send1 = "assets/img/imgs/budgets.svg";

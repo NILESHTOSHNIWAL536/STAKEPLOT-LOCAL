@@ -28,6 +28,7 @@ import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signin.da
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signup.dart';
 import 'Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
+import 'finance_screen/Calculators/loan_calculator.dart';
 import 'onboarding_screens/onboarding_screen.dart';
 
 
@@ -65,8 +66,7 @@ var routes =
       '/animatedAppScreen':(context)=>AppScreenAnimation(),
       '/currencyConverterScreen':(context)=>CurrencyConverterScreen(),
       '/rewardsOverview':(context)=>RewardsOverview(),
-      
-      
+      '/LoanCalculatorUI':(context)=>LoanCalculatorScreen(),
 };
 
 
