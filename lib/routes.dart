@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Sa
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/loan_affordable_calculator.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
@@ -64,6 +65,7 @@ var routes =
       '/interestScreen':(context) => InterestSelectionScreen() ,
       '/animatedAppScreen':(context)=>AppScreenAnimation(),
       '/currencyConverterScreen':(context)=>CurrencyConverterScreen(),
+      '/loanAffordability':(context)=>LoanAffordableCalculator(),
       '/rewardsOverview':(context)=>RewardsOverview(),
       
       
