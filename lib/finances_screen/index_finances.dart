@@ -2,15 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import '../bottomNavigations.dart';
 import '../colorcodes.dart';
+import '../controllers/credit_card_controller.dart';
 import '../finance_screen/Budgets/Budget.dart';
 import './FeatureGrid.dart';
 import 'creditCard_slider.dart';
 import 'searchfinance.dart';
 import 'topay_toreceive.dart';
 
-
-class FinanceDashboard extends StatelessWidget {
+class FinanceDashboard extends StatefulWidget {
   const FinanceDashboard({super.key});
+
+  @override
+  State<FinanceDashboard> createState() => _FinanceDashboardState();
+}
+
+class _FinanceDashboardState extends State<FinanceDashboard> {
+  @override
+  void initState() {
+    super.initState();
+    CardDueController().fetchCardData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,130 +29,113 @@ class FinanceDashboard extends StatelessWidget {
 
     return Scaffold(
       // backgroundColor: AppColors.backgroundColor,
-       bottomNavigationBar: SafeArea(child: BottomNavigations(
-          data: 1,              
-        )),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Top Section with custom clipper and search bar
-            Container(
-              // color: AppColors.primaryColor,
-              padding: EdgeInsets.all(0),
-              height: size.height /2,
-              width: MediaQuery.of(context).size.width,
-              // color: AppColors.primaryColor,
-              child: Stack(
-                children: [
-                  // Background color with a wave shape at the bottom
-                  Center(
-                     child: Transform.translate(
-                        offset: const Offset(0, -15),
-                       child: AvatarProfileImageZero(
-                        url: svgIconPath.finance,
-                        width: 1,
-                        height:2
-                                       ),
-                     )
-              ),
-               
-                Column(
-                   mainAxisAlignment: MainAxisAlignment.start,
-                   children: [
-                  // Main title "Plot your finances"
-                  const SizedBox(height: 50,),
-                   Center(
-                    child: textStyle(
-                      context: context,
-                      text: 'Plot your finances',
-                        c: Colors.white,
-                        fontsize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                  ),
-              
-                  const SizedBox(height: 25),
-              
-                  // Search bar located below the title
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: buildSearchBar(context),
-                  ),
-              
-                  Stack(
-                    children: [
-                      Transform.translate(
-                        offset: const Offset(0, -130),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: AvatarProfileImageZero(
-                              url: svgIconPath.finance_background,
-                              width: 1,
-                              height: 1.6
+      bottomNavigationBar: SafeArea(
+          child: BottomNavigations(
+        data: 1,
+      )),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Top Section with custom clipper and search bar
+              Container(
+                // color: AppColors.primaryColor,
+                padding: EdgeInsets.all(0),
+                height: size.height / 2,
+                width: MediaQuery.of(context).size.width,
+                // color: AppColors.primaryColor,
+                child: Stack(
+                  children: [
+                    // Background color with a wave shape at the bottom
+                    Center(
+                        child: Transform.translate(
+                      offset: const Offset(0, -15),
+                      child: AvatarProfileImageZero(
+                          url: svgIconPath.finance, width: 1, height: 2),
+                    )),
+        
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // Main title "Plot your finances"
+                         const SizedBox(
+                                height: 25,
+                              ),
+                        buildHeadingAndSearchBar(),
+        
+                        Stack(
+                          children: [
+                            Transform.translate(
+                              offset: const Offset(0, -180),
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: AvatarProfileImageZero(
+                                    url: svgIconPath.finance_background,
+                                    width: 1,
+                                    height: 1.6),
+                              ),
                             ),
+                            // Positioned(
+                            //   right: 20,
+                            //   top: 30,
+                            //   child: Container(
+                            //   alignment: Alignment.topRight,
+                            //   padding: const EdgeInsets.only(right: 10,top: 5),
+                            //   child: const Icon(
+                            //       Icons.more_horiz,
+                            //       color: Color(0xFFB8AECC),
+                            //       size: 30,
+                            //     ),
+                            // ),),
+                          Transform.translate(
+                              offset: const Offset(0, -60),
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10.0),
+                                child: Center(child: FeatureGrid()),
+                                // child: Center(child: _buildFeatureCards(context)),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      // Positioned(
-                      //   right: 20,
-                      //   top: 30,
-                      //   child: Container(
-                      //   alignment: Alignment.topRight,
-                      //   padding: const EdgeInsets.only(right: 10,top: 5),
-                      //   child: const Icon(
-                      //       Icons.more_horiz,
-                      //       color: Color(0xFFB8AECC),
-                      //       size: 30,
-                      //     ),
-                      // ),),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(5, 10, 10,5),
-                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Center(child: FeatureGrid()),
-                        // child: Center(child: _buildFeatureCards(context)),
-                      ),
-                    ],
-                  ),
-              
-                   ],
+                      ],
+                    ),
+                  ],
                 ),
-              
-                ],
               ),
-            ),
         
-            // Middle sections start here
-            const SizedBox(height: 24),
+              // Middle sections start here
+              const SizedBox(height: 24),
         
-            // "Heading" section with "View all"
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: _buildSectionHeader('Credit Cards', () {}),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: CardDueCarousel(),
-            ),
+              // "Heading" section with "View all"
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: _buildSectionHeader('Credit Cards', () {}),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: CardDueCarousel(),
+              ),
         
-            // "Heading to Recieve / to Pay" section
-            const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: TopayToreceive(),
-            ),
-            const SizedBox(height: 24),
-          ],
+              // "Heading to Recieve / to Pay" section
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: TopayToreceive(),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
       // Bottom navigation bar
     );
   }
 
-
   // Widget for the search bar
-
-  
-  // Widget for the "Heading" and "View all" row
   Widget _buildSectionHeader(String title, VoidCallback onTap) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -229,8 +223,6 @@ class FinanceDashboard extends StatelessWidget {
     );
   }
 
-
-
   // Widget for the bottom navigation bar
   Widget _buildBottomNavigationBar() {
     return BottomNavigationBar(
@@ -265,6 +257,57 @@ class FinanceDashboard extends StatelessWidget {
         ),
       ],
     );
+  }
+  
+Widget  buildHeadingAndSearchBar() {
+    return  Container(
+                   margin:const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          image:  DecorationImage(
+                            image: AssetImage(svgIconPath.financepayReceive2),
+                            fit: BoxFit.cover,
+                          ),
+                          // gradient: LinearGradient(
+                          //   begin: Alignment.topCenter,
+                          //   end: Alignment.bottomCenter,
+                          //   colors: [
+                          //     Color(0x061F35E5)
+                          //         .withOpacity(0.4), // top color with opacity
+                          //     Color(0xFF061F35)
+                          //         .withOpacity(0.2), // bottom softer
+                          //     Color(0xFF061F35)
+                          //         .withOpacity(0.1), // bottom softer
+                          //   ],
+                          // ),
+                        ),
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 25,
+                            ),
+                            Center(
+                              child: textStyle(
+                                context: context,
+                                text: 'Plot your finances',
+                                c: Colors.white,
+                                fontsize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            const SizedBox(height: 25),
+
+                            // Search bar located below the title
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15.0),
+                              child: buildSearchBar(context),
+                            ),
+                            const SizedBox(height: 50),
+                          ],
+                        ),
+                      );
   }
 }
 

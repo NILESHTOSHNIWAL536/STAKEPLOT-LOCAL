@@ -18,7 +18,7 @@ const TopayToreceive({ Key? key }) : super(key: key);
   return   Row(
           children: [
             Expanded(
-              child: InkWell(
+              child: GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
@@ -37,7 +37,7 @@ const TopayToreceive({ Key? key }) : super(key: key);
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: InkWell(
+              child: GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,

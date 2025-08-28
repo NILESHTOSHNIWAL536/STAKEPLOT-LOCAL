@@ -4,7 +4,7 @@ class CardDueModel {
   String id;
   String userId;
   String category;
-  double amount;
+  String amount;
   String date;
   String cardNumber;
   String transactionId;
@@ -33,10 +33,10 @@ class CardDueModel {
 
   factory CardDueModel.fromJson(Map<String, dynamic> json) {
     return CardDueModel(
-      id: json["_id"]["\$oid"],
-      userId: json["userId"]["\$oid"],
+      id: json["_id"],
+      userId: json["userId"],
       category: json["category"],
-      amount: double.tryParse(json["amount"].toString()) ?? 0.0,
+      amount: json["amount"].toString(),
       date: json["date"],
       cardNumber: json["card_number"],
       transactionId: json["transaction_id"],
@@ -44,8 +44,8 @@ class CardDueModel {
       mode: json["mode"],
       type: json["type"] ?? "",
       bank: json["bank"],
-      createdAt: DateTime.parse(json["createdAt"]["\$date"]),
-      updatedAt: DateTime.parse(json["updatedAt"]["\$date"]),
+      createdAt: DateTime.parse(json["createdAt"]),
+      updatedAt: DateTime.parse(json["updatedAt"]),
     );
   }
 }

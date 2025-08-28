@@ -56,11 +56,15 @@ class CardDueCarousel extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        card.bank,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                      Container(
+                        width: MediaQuery.of(context).size.width /1.8,
+                        child: Text(
+                          card.bank,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                         const SizedBox(height: 8),
@@ -84,10 +88,16 @@ class CardDueCarousel extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Total Amount"),
-                          Text(
-                            "₹${card.amount.toStringAsFixed(2)}",
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                          Container(
+                             width: MediaQuery.of(context).size.width /2.5,
+                            child: Text(
+                              "₹${card.amount}",
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.ellipsis
+                                ),
+                            ),
                           ),
                         ],
                       ),

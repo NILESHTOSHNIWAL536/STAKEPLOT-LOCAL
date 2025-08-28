@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/MyBudget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:get/get.dart';
@@ -309,35 +310,59 @@ class CardBuilders {
     );
 
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.mt,
+       decoration: BoxDecoration(
+        color: Colors.white, // or AppColors.mt
         borderRadius: BorderRadius.circular(16),
-       
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1), // soft shadow
+            blurRadius: 8, // how soft the shadow looks
+            spreadRadius: 2, // how much it expands
+            offset: const Offset(0, 4), // x, y position
+          ),
+        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          globalText(
-            context: context,
-            text: title,
-            fontsize: 16,
-            fontWeight: FontWeight.w600,
-            color: color,
+           AvatarProfileImageZero(
+             url: svgIconPath.financepayReceive,
+             width: 1, 
+             height: 8
           ),
-          const SizedBox(height: 10),
-          globalText(
-            context: context,
-            text: '₹${formatMoneyIndian(totalAmount.toStringAsFixed(2))}',
-            fontsize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-           globalText(
-            context: context,
-            text: PlotFinanceStaticData().pendingItems.replaceFirst('{count}', pendingItems.length.toString()), // Updated
-            fontsize: 14,
-            fontWeight: FontWeight.w400,
-            color: Colors.grey[600],
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+            decoration: BoxDecoration(
+              // color: AppColors.mt,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                globalText(
+                  context: context,
+                  text: title,
+                  fontsize: 16,
+                  fontWeight: FontWeight.w600,
+                  // color: color,
+                ),
+                const SizedBox(height: 10),
+                globalText(
+                  context: context,
+                  text: '₹${formatMoneyIndian(totalAmount.toStringAsFixed(2))}',
+                  fontsize: 16,
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                ),
+                const SizedBox(height: 6),
+                 globalText(
+                  context: context,
+                  text: PlotFinanceStaticData().pendingItems.replaceFirst('{count}', pendingItems.length.toString()), // Updated
+                  fontsize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[600],
+                ),
+              ],
+            ),
           ),
         ],
       ),
