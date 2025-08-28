@@ -69,11 +69,14 @@ import 'package:app_version_update/app_version_update.dart';
 
 FinvuManager finvuManager = FinvuManager();
 late IO.Socket mainPageWebSocket;
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>(); // Your existing key
-final GlobalKey<NavigatorState> updateNavigatorKey = GlobalKey<NavigatorState>(); // New key for updates
+final GlobalKey<NavigatorState> navigatorKey =
+    GlobalKey<NavigatorState>(); // Your existing key
+final GlobalKey<NavigatorState> updateNavigatorKey =
+    GlobalKey<NavigatorState>(); // New key for updates
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter bindings are initialized
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Ensure Flutter bindings are initialized
   checkFirebaseAndValidUser();
   runApp(const MyApp());
 }
@@ -89,20 +92,20 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    // initPlatformState();
     // Set status bar
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top]);
   }
 
-  Future<void> initPlatformState() async 
-  {
-    if (!mounted) return;
-  }
+  // Future<void> initPlatformState() async {
+  //   if (!mounted) return;
+  // }
 
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+      data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
       child: MaterialApp(
         navigatorKey: navigatorKey,
         theme: ThemeData(
@@ -110,14 +113,16 @@ class _MyAppState extends State<MyApp> {
           scaffoldBackgroundColor: AppColors.backgroundColor,
         ),
         debugShowCheckedModeBanner: false,
-        initialRoute: '/splash',
+        initialRoute: '/',
         routes: routes,
         // Attach updateNavigatorKey to a nested Navigator if needed (optional)
         builder: (context, child) {
           return Navigator(
-            key: updateNavigatorKey, // Attach updateNavigatorKey for update dialogs
+            key:
+                updateNavigatorKey, // Attach updateNavigatorKey for update dialogs
             onGenerateRoute: (settings) => MaterialPageRoute(
-              builder: (context) => child ?? Container(), // Fallback to empty container
+              builder: (context) =>
+                  child ?? Container(), // Fallback to empty container
             ),
           );
         },
@@ -127,43 +132,44 @@ class _MyAppState extends State<MyApp> {
 }
 
 // Update check function
-Future<void> checkForUpdate() async {
-  if (Platform.isAndroid) {
-    try {
-      final updateInfo = await InAppUpdate.checkForUpdate();
-      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-        await InAppUpdate.performImmediateUpdate(); // Force update
-      }
-    } catch (e)
-    {
-    }
-  } else if (Platform.isIOS) {
-    final context = updateNavigatorKey.currentContext ?? Get.context;
-    if (context != null) {
-      try {
-        // Check for updates using app_version_update
-        final result = await AppVersionUpdate.checkForUpdates(
-          appleId: 'com.stakeplot.pfa', // Replace with your iOS App Store bundle ID
-        );
-        // Check if result and canUpdate are non-null and true
-        if (result.canUpdate == true) {
-          // Show update dialog
-          await AppVersionUpdate.showAlertUpdate(
-            appVersionResult: result,
-            context: context,
-            backgroundColor: Colors.white,
-            title: 'Update Available',
-            content:
-                'A new version (${result.storeVersion ?? "unknown"}) is available. Please update the app.',
-            updateButtonText: 'Update Now',
-            cancelButtonText: 'Later',
-            mandatory: false, // Set to true for forced update
-          );
-        } else {
-        }
-      } catch (e) {
-      }
-    } else {
-    }
-  }
-}
+
+// Future<void> checkForUpdate() async {
+//   if (Platform.isAndroid) {
+//     try {
+//       final updateInfo = await InAppUpdate.checkForUpdate();
+//       if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+//         await InAppUpdate.performImmediateUpdate(); // Force update
+//       }
+//     } catch (e)
+//     {
+//     }
+//   } else if (Platform.isIOS) {
+//     final context = updateNavigatorKey.currentContext ?? Get.context;
+//     if (context != null) {
+//       try {
+//         // Check for updates using app_version_update
+//         final result = await AppVersionUpdate.checkForUpdates(
+//           appleId: 'com.stakeplot.pfa', // Replace with your iOS App Store bundle ID
+//         );
+//         // Check if result and canUpdate are non-null and true
+//         if (result.canUpdate == true) {
+//           // Show update dialog
+//           await AppVersionUpdate.showAlertUpdate(
+//             appVersionResult: result,
+//             context: context,
+//             backgroundColor: Colors.white,
+//             title: 'Update Available',
+//             content:
+//                 'A new version (${result.storeVersion ?? "unknown"}) is available. Please update the app.',
+//             updateButtonText: 'Update Now',
+//             cancelButtonText: 'Later',
+//             mandatory: false, // Set to true for forced update
+//           );
+//         } else {
+//         }
+//       } catch (e) {
+//       }
+//     } else {
+//     }
+//   }
+// }

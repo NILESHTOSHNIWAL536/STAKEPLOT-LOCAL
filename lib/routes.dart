@@ -34,7 +34,7 @@ import 'onboarding_screens/onboarding_screen.dart';
 
 var routes =
  {  
-      '/splash': (context) =>  SplashScreen(),   
+      '/splash': (context) =>  const SplashScreen(),   
       '/': (context) =>  LoginScreen(),   
       // '/signup': (context) => SignUp(),  
       '/signup': (context) => SignUpScreen(),  
@@ -65,14 +65,12 @@ var routes =
       '/interestScreen':(context) => InterestSelectionScreen() ,
       '/animatedAppScreen':(context)=>AppScreenAnimation(),
       '/currencyConverterScreen':(context)=>CurrencyConverterScreen(),
-      '/loanAffordability':(context)=>LoanAffordableCalculator(),
+     
       '/rewardsOverview':(context)=>RewardsOverview(),
       
       
 };
-
-
-var colorcodes={
+var colorcodes=const {
     "Food": Color(0xFFE74C3C), // Red
     "Shopping": Color(0xFF8E44AD), // Purple
     "Travel": Color(0xFF3498DB), // Blue
