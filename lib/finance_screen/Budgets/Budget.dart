@@ -68,17 +68,47 @@ class _BudgetState extends State<Budget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            double height = constraints.maxHeight;
-            double width = constraints.maxWidth;
-            return getBudgetUiScreen(height, width, context);
-          },
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushNamed(context, "/FinanceDashboard");
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.white,
+          title:Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(Icons.account_balance_wallet,
+                      color: AppColors.primaryColor, size: 22 * 1.2),
+                  SizedBox(width: 12),
+                  textStyle(
+                    context: context,
+                    text:  PlotFinanceStaticData().budgetPlannerTitle,
+                    fontsize: 20 * 1.2,
+                    fontWeight: FontWeight.bold,
+                    c: AppColors.accentColor,
+                  ),
+                ],
+              ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              double height = constraints.maxHeight;
+              double width = constraints.maxWidth;
+              return getBudgetUiScreen(height, width, context);
+            },
+          ),
+        ),
+       // bottomNavigationBar: BottomNavigations(data: 1),
       ),
-     // bottomNavigationBar: BottomNavigations(data: 1),
     );
   }
 
@@ -109,20 +139,20 @@ class _BudgetState extends State<Budget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 20),
-              Row(
-                children: [
-                  Icon(Icons.account_balance_wallet,
-                      color: AppColors.primaryColor, size: 22 * fontScale),
-                  SizedBox(width: 12),
-                  textStyle(
-                    context: context,
-                    text:  PlotFinanceStaticData().budgetPlannerTitle,
-                    fontsize: 20 * fontScale,
-                    fontWeight: FontWeight.bold,
-                    c: AppColors.accentColor,
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     Icon(Icons.account_balance_wallet,
+              //         color: AppColors.primaryColor, size: 22 * fontScale),
+              //     SizedBox(width: 12),
+              //     textStyle(
+              //       context: context,
+              //       text:  PlotFinanceStaticData().budgetPlannerTitle,
+              //       fontsize: 20 * fontScale,
+              //       fontWeight: FontWeight.bold,
+              //       c: AppColors.accentColor,
+              //     ),
+              //   ],
+              // ),
               SizedBox(height: 8),
               textStyle(
                 context: context,

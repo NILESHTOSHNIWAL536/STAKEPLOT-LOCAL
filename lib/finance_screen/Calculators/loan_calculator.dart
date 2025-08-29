@@ -39,7 +39,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
 
   String _selectedCreditScore = '650-700';
   String _loanType = 'Car';
-  List<String> creditScores = ['600-650', '650-700', '700-750', '750+'];
+  List<String> creditScores = ['<600','600-650', '650-700', '700-750', '750+'];
   List<String> loanTypes = ['Personal', 'Car', 'Home'];
 
   Map<String, dynamic> expenses = {};
@@ -73,6 +73,8 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
 
   int mapCreditScore(String val) {
     switch (val) {
+      case '<600':
+        return 500;
       case '600-650':
         return 625;
       case '650-700':
@@ -87,12 +89,12 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
   }
 
   Future<void> calculateLoan() async {
-    int creditScore = mapCreditScore(_selectedCreditScore);
+    // int creditScore = mapCreditScore(_selectedCreditScore);
     final jsonData = {
       "income": int.tryParse(_incomeController.text) ?? income,
       "existingEmi": int.tryParse(_emiController.text) ?? 0,
       "loanType": _loanType,
-      "creditScore": creditScore,
+      "creditScore": _selectedCreditScore,
       "expenses": expenses,
     };
     try {

@@ -509,66 +509,72 @@ class _EditDetailsState extends State<EditDetails> {
 
   Widget _buildAccountDetails(
       String bankName, String accountNumber, var data, String logo) {
-    return Card(
-      elevation: 2,
-      color: AppColors.mt,
-      child: ListTile(
-        leading: Image.network(
-          logo,
-          width: 30,
-          height: 30,
-          fit: BoxFit.fitWidth,
-          errorBuilder: (context, error, stackTrace) => const Icon(
-            Icons.account_balance,
-            size: 30,
-            color: AppColors.primaryColor,
+    return InkWell(
+      onTap: (){
+         
+      },
+      child: Card(
+        elevation: 2,
+        color: AppColors.mt,
+        child: ListTile(
+          leading: Image.network(
+            logo,
+            width: 30,
+            height: 30,
+            fit: BoxFit.fitWidth,
+            errorBuilder: (context, error, stackTrace) => const Icon(
+              Icons.account_balance,
+              size: 30,
+              color: AppColors.primaryColor,
+            ),
           ),
-        ),
-        title: textStyleOnly2(
-          context: context,
-          text: bankName,
-          fontsize: 14,
-          color: AppColors.bg2,
-          fontWeight: FontWeight.w600,
-        ),
-        subtitle: textStyleOnly2(
-          context: context,
-          text: accountNumber,
-          fontsize: 14,
-          color: AppColors.bg3,
-          fontWeight: FontWeight.w400,
-        ),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete, color: AppColors.debitColor),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Delete Account'),
-                  content: const Text(
-                      'Are you sure you want to delete this account?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        deleteBankAccount(
-                          bankid: data['bankId'],
-                          AccountId: data['accountId'],
-                          context: context,
-                        );
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Delete'),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
+          title: textStyleOnly2(
+            context: context,
+            text: bankName,
+            fontsize: 14,
+            color: AppColors.bg2,
+            fontWeight: FontWeight.w600,
+          ),
+          subtitle: textStyleOnly2(
+            context: context,
+            text: accountNumber,
+            fontsize: 14,
+            color: AppColors.bg3,
+            fontWeight: FontWeight.w400,
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete, color: AppColors.debitColor),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Delete Account'),
+                    content: const Text(
+                        'Are you sure you want to delete this account?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          deleteBankAccount(
+                            bankid: data['bankId'],
+                            AccountId: data['accountId'],
+                            context: context,
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Delete'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+         
         ),
       ),
     );

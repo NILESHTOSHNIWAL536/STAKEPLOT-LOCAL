@@ -30,16 +30,15 @@ class AuthService {
 
         final String? authCode = await googleUser.serverAuthCode;
 
-        if (authCode != null) {
-          await http.post(
-            Uri.parse('$url/user/google-gmail-auth'),
-            headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({'idToken':  authCode}),
-          );
+        if (authCode != null) 
+        {
+            await http.post(
+              Uri.parse('$url/user/google-gmail-auth'),
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode({'idToken':  authCode}),
+            );
         }
         if (response.statusCode == 200)return json.decode(response.body);
-   
-
     } catch (e)
      {
         print("Error --------------");
