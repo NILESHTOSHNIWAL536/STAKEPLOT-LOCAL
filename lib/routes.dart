@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/cr
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/loan_affordable_calculator.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
@@ -29,7 +30,10 @@ import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signin.da
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signup.dart';
 import 'Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
+import 'email_sync/add_credit_card_bank.dart';
 import 'finance_screen/Calculators/loan_calculator.dart';
+import 'finances_screen/creditCard_slider.dart';
+import 'finances_screen/index_finances.dart';
 import 'onboarding_screens/onboarding_screen.dart';
 
 
@@ -50,6 +54,7 @@ var routes =
       '/discover': (context) =>  DiscoverAccount(),     
       '/ShareAccountLogin': (context) =>  ShareAccountLogin(),     
       '/Budget': (context) =>  Budget(),     
+      '/debt': (context) =>  CreateDebtScreen(),     
       '/PlotFinance': (context) =>  PlotFinance(),     
       '/CreditCard':(context) => CreditCard() ,
       '/emi':(context) => Emi() ,
@@ -62,13 +67,15 @@ var routes =
       '/ForgotPassword':(context) => ForgotPassword() ,
       '/OnboardingScreen':(context) => OnboardingScreen() ,
       '/editDetails':(context) => EditDetails() ,
-     
       '/interestScreen':(context) => InterestSelectionScreen() ,
       '/animatedAppScreen':(context)=>AppScreenAnimation(),
       '/currencyConverterScreen':(context)=>CurrencyConverterScreen(),
      
       '/rewardsOverview':(context)=>RewardsOverview(),
       '/LoanCalculatorUI':(context)=>LoanCalculatorScreen(),
+      '/FinanceDashboard':(context)=>FinanceDashboard(),
+      '/creditCard':(context)=>CardDueCarousel(),
+      '/addcreditCard':(context)=>AddCreditCardBankScreen(),
 };
 var colorcodes=const {
     "Food": Color(0xFFE74C3C), // Red

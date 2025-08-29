@@ -14,6 +14,7 @@ class PlotFinanceStaticData {
 
   // FinanceWidgets
   String addBudget = "Add Budget";
+  String budgetAppBarTitle = "Add Budget";
   String addDebt = "Add Debt";
   String foodieFunds = "FoodieFunds";
   String toReceive = "To Receive";

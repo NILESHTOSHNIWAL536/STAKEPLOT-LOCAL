@@ -204,6 +204,13 @@ class svgIconPath {
    static String  financeChat="assets/finance/chat.svg";
    static String  financepayReceive="assets/finance/frame.svg";
    static String  financepayReceive2="assets/finance/frame2.png";
+   static String  dio1="assets/finance/dio1.svg";
+   static String  dio2="assets/finance/dio2.svg";
+   static String  dio3="assets/finance/dio3.svg";
+   static String  g_person="assets/finance/g_person.svg";
+   static String  loading_google="assets/finance/loading.svg";
+   static String  g_person2="assets/finance/g_person2.png";
+   static String  loading_google2="assets/finance/loading2.png";
 
   // send Tab Screen
   static String send1 = "assets/img/imgs/budgets.svg";

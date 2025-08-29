@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/email_sync/add_credit_card_bank.dart';
 import '../bottomNavigations.dart';
 import '../colorcodes.dart';
 import '../controllers/credit_card_controller.dart';
 import '../finance_screen/Budgets/Budget.dart';
 import './FeatureGrid.dart';
 import 'creditCard_slider.dart';
+import 'dilogbox.dart';
 import 'searchfinance.dart';
+import 'select_card_options.dart';
+import 'slider_addding_finances.dart';
 import 'topay_toreceive.dart';
 
 class FinanceDashboard extends StatefulWidget {
@@ -112,12 +116,17 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
               // "Heading" section with "View all"
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: _buildSectionHeader('Credit Cards', () {}),
+                child: _buildSectionHeader('Credit Cards', () {
+                    // showBudgetDebtCreditCard(context);
+                    pushnameToRoute(context, SelectAnyOptionScreen(),false);
+                }),
               ),
+
               const SizedBox(height: 16),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: CardDueCarousel(),
+                child: SliderAdddingFinances(),
               ),
         
               // "Heading to Recieve / to Pay" section
@@ -159,11 +168,11 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                   fontSize: 14,
                 ),
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: Color(0xFF8A7FA7),
-                size: 14,
-              ),
+              // Icon(
+              //   Icons.arrow_forward_ios,
+              //   color: Color(0xFF8A7FA7),
+              //   size: 14,
+              // ),
             ],
           ),
         ),
