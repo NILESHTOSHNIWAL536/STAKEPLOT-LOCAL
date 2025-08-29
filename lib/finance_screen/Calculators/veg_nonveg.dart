@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +25,7 @@ class VegNonVegCalculator extends StatefulWidget {
 }
 
 class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
-  final List<Map<String, dynamic>> categories = [
+  List<Map<String, dynamic>> categories = [
     {
       'name': PlotFinanceStaticData().vegLabel,
       'controller': TextEditingController(),
@@ -98,275 +97,10 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     }
   }
 
-void _openCategoryEditorModal(BuildContext context) {
-  bool showAddCategoryField = false; // State to toggle add category field
-  // Create controllers for each category to manage editing
-  final List<TextEditingController> categoryControllers = categories
-      .map((category) => TextEditingController(text: category['name']))
-      .toList();
-
-  // Load categories from SharedPreferences when opening the modal
-  Future<void> loadCategoriesFromCache() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? cachedCategories = prefs.getString('custom_categories');
-    if (cachedCategories != null) {
-      final List<dynamic> decoded = jsonDecode(cachedCategories);
-      setState(() {
-        categories.clear();
-        categories.addAll(decoded.map((item) => {
-              'name': item['name'],
-              'controller': TextEditingController(),
-              'isCustom': item['isCustom'] ?? false,
-            }).toList());
-        // Update controllers for editing
-        categoryControllers.clear();
-        categoryControllers.addAll(categories
-            .map((category) => TextEditingController(text: category['name']))
-            .toList());
-      });
-    }
-  }
-
-  // Save categories to SharedPreferences
-  Future<void> saveCategoriesToCache() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<Map<String, dynamic>> categoriesToSave = categories
-        .asMap()
-        .entries
-        .map((entry) => {
-              'name': categoryControllers[entry.key].text.trim(),
-              'isCustom': entry.value['isCustom'] ?? false,
-            })
-        .toList();
-    await prefs.setString('custom_categories', jsonEncode(categoriesToSave));
-  }
-
-  // Load categories when the modal opens
-  loadCategoriesFromCache();
-
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: AppColors.backgroundColor,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter modalSetState) {
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-              left: 16,
-              right: 16,
-              top: 16,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                     Text(
-                      'Edit Categories',
-                      style:  FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: AppColors.primaryColor,
-                  ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        showAddCategoryField ? Icons.close : Icons.add,
-                        color: AppColors.primaryColor,
-                      ),
-                      onPressed: () {
-                        if (categories.where((c) => c['isCustom'] == true).length >= 2) {
-                          snackBarCalledfail(context, 'Maximum of 2 custom categories allowed');
-                          return;
-                        }
-                        modalSetState(() {
-                          showAddCategoryField = !showAddCategoryField;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  height: 300, 
-                  
-                  // Adjust height as needed
-                  child: ListView.builder(
-                    
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      final category = categories[index];
-                      return ListTile(
-                        title: TextField(
-                          controller: categoryControllers[index],
-                          onSubmitted: (value) {
-                            if (value.trim().isEmpty) {
-                              snackBarCalledfail(context, 'Category name cannot be empty');
-                              return;
-                            }
-                            setState(() {
-                              _editCategoryName(index, value);
-                              saveCategoriesToCache(); // Save to cache on edit
-                            });
-                          },
-                          decoration:  InputDecoration(
-                            
-                            hintText: 'Edit category name',
-                             filled: true, // <-- Enables background color
-            fillColor: Color.fromRGBO(75, 77, 115, 0.23),
-
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)
-                            ),
-                            
-                          ),
-                        ),
-                        trailing: category['isCustom'] == true
-                            ? IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  setState(() {
-                                    _removeCustomCategory(index);
-                                    categoryControllers.removeAt(index);
-                                    saveCategoriesToCache(); // Save to cache on delete
-                                  });
-                                },
-                              )
-                            : null,
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 10),
-                if (showAddCategoryField)
-                  TextField(
-                    controller: newCategoryController,
-                    decoration: const InputDecoration(
-                      hintText: 'New Category',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                const SizedBox(height: 8),
-                ElevatedButton(
-
-                  onPressed: () {
-                    if (newCategoryController.text.trim().isEmpty) {
-                      snackBarCalledfail(context, 'Please enter a category name');
-                      return;
-                    }
-                    if (categories.where((c) => c['isCustom'] == true).length >= 2) {
-                      snackBarCalledfail(context, 'Maximum of 2 custom categories allowed');
-                      return;
-                    }
-                    setState(() {
-                      _addCustomCategory(); // Add new category
-                      categoryControllers.add(
-                        TextEditingController(text: newCategoryController.text.trim()),
-                      );
-                      saveCategoriesToCache(); // Save to cache on add
-                    });
-                    Navigator.pop(context); // Close the modal
-                  },
-                   style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4A4A68),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
-                  child:  Text('Done', style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: AppColors.backgroundColor,
-                  ),),
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  ).whenComplete(() {
-    // Dispose of category controllers when modal closes
-    for (var controller in categoryControllers) {
-      // controller.dispose();
-    }
-  });
-}
-
   void setUpSocketListener() {
     socket.onConnect((_) => print('Socket connected'));
     socket.onDisconnect((_) => print('Socket disconnected'));
     socket.onError((error) => print('Socket error: $error'));
-  }
-
-  void _addCustomCategory() {
-    if (categories.where((c) => c['isCustom']).length >= 2) {
-      snackBarCalledfail(context, 'Maximum of 2 custom categories allowed');
-      return;
-    }
-    if (newCategoryController.text.trim().isEmpty) {
-      snackBarCalledfail(context, 'Please enter a category name');
-      return;
-    }
-    setState(() {
-      categories.add({
-        'name': newCategoryController.text.trim(),
-        'controller': TextEditingController(),
-        'isCustom': true,
-      });
-      newCategoryController.clear();
-      for (var member in addedMembers) {
-        String? friendId = member['id']?.toString();
-        if (friendId != null && !selectedOptions.containsKey(friendId)) {
-          selectedOptions[friendId] = [];
-        }
-      }
-    });
-  }
-
-  void _editCategoryName(int index, String newName) {
-    if (newName.trim().isEmpty) {
-      snackBarCalledfail(context, 'Category name cannot be empty');
-      return;
-    }
-    setState(() {
-      String oldName = categories[index]['name'];
-      categories[index]['name'] = newName.trim();
-      for (var friendId in selectedOptions.keys) {
-        if (selectedOptions[friendId]!.contains(oldName)) {
-          selectedOptions[friendId]!.remove(oldName);
-          selectedOptions[friendId]!.add(newName.trim());
-        }
-      }
-      _calculateShares();
-    });
-  }
-
-  void _removeCustomCategory(int index) {
-    setState(() {
-      String categoryName = categories[index]['name'];
-      categories[index]['controller'].dispose();
-      categories.removeAt(index);
-      for (var friendId in selectedOptions.keys) {
-        selectedOptions[friendId]!.remove(categoryName);
-        if (selectedOptions[friendId]!.isEmpty) {
-          selectedOptions.remove(friendId);
-        }
-      }
-      _calculateShares();
-    });
   }
 
   void _calculateShares() {
@@ -402,74 +136,97 @@ void _openCategoryEditorModal(BuildContext context) {
     });
   }
 
+// Load custom categories from SharedPreferences
+  Future<void> _loadCustomCategories() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? savedCategories = prefs.getString('custom_categories');
+    if (savedCategories != null) {
+      final List<dynamic> decoded = jsonDecode(savedCategories);
+      final List<Map<String, dynamic>> customCategories = decoded
+          .map((item) => {
+                'name': item['name'],
+                'controller': TextEditingController(),
+                'isCustom': true,
+              })
+          .toList();
+      setState(() {
+        categories.addAll(customCategories);
+      });
+      _calculateShares();
+    }
+  }
+
+  // Save custom categories to SharedPreferences
+  Future<void> _saveCustomCategories() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<Map<String, dynamic>> customCategories =
+        categories.where((cat) => cat['isCustom']).map((cat) {
+      return {'name': cat['name']};
+    }).toList();
+    await prefs.setString('custom_categories', jsonEncode(customCategories));
+  }
+
   Widget _buildInputColumn(
-  String label,
-  TextEditingController controller,
-  int index,
-  bool isCustom,
-) {
-  return Container(
-    width: MediaQuery.of(context).size.width * 0.32,
-    padding: const EdgeInsets.symmetric(horizontal: 5),
-    child: Column(
-      children: [
-        // Show the category name as a label (not editable here anymore)
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: AppColors.backgroundColor
+    String label,
+    TextEditingController controller,
+    int index,
+    bool isCustom,
+  ) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.32,
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: Column(
+        children: [
+          // Show the category name as a label (not editable here anymore)
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: AppColors.backgroundColor),
+                  overflow: TextOverflow.ellipsis,
                 ),
-                overflow: TextOverflow.ellipsis,
               ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            onTapOutside: (event) => FocusScope.of(context).unfocus(),
+            inputFormatters: allowDecimalInput(),
+            onChanged: (value) => _calculateShares(),
+            style: const TextStyle(
+              color: Colors.white, // <-- Change text input color here
             ),
-            if (isCustom)
-              IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () => _removeCustomCategory(index),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: const Color.fromARGB(59, 255, 255, 255),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: const BorderSide(
+                  color: Colors.white,
+                  width: 1,
+                ),
               ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          onTapOutside: (event) => FocusScope.of(context).unfocus(),
-          inputFormatters: allowDecimalInput(),
-          onChanged: (value) => _calculateShares(),
-           style: const TextStyle(
-    color: Colors.white, // <-- Change text input color here
-  ),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: const Color.fromARGB(59, 255, 255, 255),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: const BorderSide(
-                color: Colors.white,
-                width: 1,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              borderSide: const BorderSide(
-                color: Colors.white,
-                width: 1,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: const BorderSide(
+                  color: Colors.white,
+                  width: 1,
+                ),
               ),
             ),
           ),
-        ),
-      
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   Widget calculation() {
     return Padding(
@@ -498,7 +255,8 @@ void _openCategoryEditorModal(BuildContext context) {
                   friendShares,
                 );
               } else {
-                snackBarCalledfail(context, SnackbarData().validAmountAndShares);
+                snackBarCalledfail(
+                    context, SnackbarData().validAmountAndShares);
               }
             },
             child: Container(
@@ -534,7 +292,8 @@ void _openCategoryEditorModal(BuildContext context) {
               }
               final String name = userController.userName.value;
               if (name.isEmpty) {
-                snackBarCalledfail(context, SnackbarData().userNameNotAvailable);
+                snackBarCalledfail(
+                    context, SnackbarData().userNameNotAvailable);
                 return;
               }
               bool hasValidRecipients =
@@ -548,7 +307,8 @@ void _openCategoryEditorModal(BuildContext context) {
                   entry.value['Total'] != null &&
                   (entry.value['Total'] as num) > 0);
               if (!hasValidShares) {
-                snackBarCalledfail(context, SnackbarData().noValidSharesToNotify);
+                snackBarCalledfail(
+                    context, SnackbarData().noValidSharesToNotify);
                 return;
               }
 
@@ -583,10 +343,9 @@ void _openCategoryEditorModal(BuildContext context) {
               width: MediaQuery.of(context).size.width * 0.4,
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 14),
               decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white)
-              ),
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white)),
               child: Center(
                 child: Text(
                   PlotFinanceStaticData().notifyButton,
@@ -616,22 +375,23 @@ void _openCategoryEditorModal(BuildContext context) {
         bool isCurrentUser = friendId == userController.userId.value;
 
         return Container(
-           margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12), // Spacing between items
-        padding: const EdgeInsets.all(0), // Inner padding for each container
-        decoration: BoxDecoration(
-          color: Colors.white, // Background color for each block
-          borderRadius: BorderRadius.circular(12), // Rounded corners
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
+          margin: const EdgeInsets.symmetric(
+              vertical: 6, horizontal: 12), // Spacing between items
+          padding: const EdgeInsets.all(0), // Inner padding for each container
+          decoration: BoxDecoration(
+            color: Colors.white, // Background color for each block
+            borderRadius: BorderRadius.circular(12), // Rounded corners
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
-            
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -651,8 +411,8 @@ void _openCategoryEditorModal(BuildContext context) {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                addedMembers
-                                    .removeWhere((member) => member['id'] == friendId);
+                                addedMembers.removeWhere(
+                                    (member) => member['id'] == friendId);
                                 addedUser.remove(friendId);
                                 selectedOptions.remove(friendId);
                                 _calculateShares();
@@ -767,83 +527,94 @@ void _openCategoryEditorModal(BuildContext context) {
               ),
             )
           else
-          SingleChildScrollView(
-  scrollDirection: Axis.horizontal, // Enables horizontal scrolling
-  child: Row(
-    children: List.generate(limitedFriends.length, (index) {
-      final String id = limitedFriends[index]['_id']?.toString() ?? '';
-      final bool isSelected = addedUser.contains(id);
-
-      return GestureDetector(
-        onTap: () {
-          setState(() {
-            if (isSelected) {
-              addedUser.remove(id);
-              addedMembers.removeWhere((member) => member['id'] == id);
-              selectedOptions.remove(id);
-            } else {
-              addedUser.add(id);
-              addedMembers.add({
-                "name": limitedFriends[index]['name']?.toString() ?? '',
-                "id": id,
-                'avatar': limitedFriends[index]['avatar'],
-                'avatarBackGround': limitedFriends[index]['avatarBackGround'],
-                "balance": 0.0,
-              });
-              selectedOptions[id] = [];
-            }
-            _calculateShares();
-          });
-        },
-        child: Container(
-          height: 50,
-          margin: const EdgeInsets.symmetric(horizontal: 4), // spacing between items
-          child: Container(
-            decoration: BoxDecoration(
-               borderRadius: BorderRadius.circular(10),
-                color: isSelected ? Colors.white : AppColors.primaryColor,
-                border: Border.all(color: Colors.white)
-            ),
-            // elevation: 1,
-           
-           
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal, // Enables horizontal scrolling
               child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: AvatarProfile(
-                      name: limitedFriends[index]['name']?.toString() ?? 'Unknown',
-                      width: 12,
-                      height: 12,
-                      background: limitedFriends[index]['avatarBackGround'] ??
-                          defaultBackGround.value,
-                      flag: true,
-                      fontsize: 5,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    limitedFriends[index]['name']?.toString() ?? 'Unknown',
-                    overflow: TextOverflow.ellipsis,
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: !isSelected ? Colors.white : AppColors.primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }),
-  ),
-)
+                children: List.generate(limitedFriends.length, (index) {
+                  final String id =
+                      limitedFriends[index]['_id']?.toString() ?? '';
+                  final bool isSelected = addedUser.contains(id);
 
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (isSelected) {
+                          addedUser.remove(id);
+                          addedMembers
+                              .removeWhere((member) => member['id'] == id);
+                          selectedOptions.remove(id);
+                        } else {
+                          addedUser.add(id);
+                          addedMembers.add({
+                            "name":
+                                limitedFriends[index]['name']?.toString() ?? '',
+                            "id": id,
+                            'avatar': limitedFriends[index]['avatar'],
+                            'avatarBackGround': limitedFriends[index]
+                                ['avatarBackGround'],
+                            "balance": 0.0,
+                          });
+                          selectedOptions[id] = [];
+                        }
+                        _calculateShares();
+                      });
+                    },
+                    child: Container(
+                      height: 50,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 4), // spacing between items
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.primaryColor,
+                            border: Border.all(color: Colors.white)),
+                        // elevation: 1,
+
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 2),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: AvatarProfile(
+                                  name: limitedFriends[index]['name']
+                                          ?.toString() ??
+                                      'Unknown',
+                                  width: 12,
+                                  height: 12,
+                                  background: limitedFriends[index]
+                                          ['avatarBackGround'] ??
+                                      defaultBackGround.value,
+                                  flag: true,
+                                  fontsize: 5,
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                limitedFriends[index]['name']?.toString() ??
+                                    'Unknown',
+                                overflow: TextOverflow.ellipsis,
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: !isSelected
+                                      ? Colors.white
+                                      : AppColors.primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            )
         ],
       ),
     );
@@ -879,11 +650,13 @@ void _openCategoryEditorModal(BuildContext context) {
               const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color.fromRGBO(249, 246, 238, 1)),
+            borderSide:
+                const BorderSide(color: Color.fromRGBO(249, 246, 238, 1)),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color.fromRGBO(246, 246, 246, 1)),
+            borderSide:
+                const BorderSide(color: Color.fromRGBO(246, 246, 246, 1)),
           ),
           fillColor: AppColors.backgroundColor,
         ),
@@ -1031,171 +804,538 @@ void _openCategoryEditorModal(BuildContext context) {
   //   super.dispose();
   // }
 
-
-@override
- Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
-      
       body: SafeArea(
-        child: Stack(
-          children: [
-             Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 12),
-               child:Transform.translate(
+        child: Stack(children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Transform.translate(
                 offset: const Offset(0, 30),
-                         child: Container(
-                         
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                            Container(
-                               width: MediaQuery.sizeOf(context).width/1.6,
-                               
-                              child: Row(
-                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                          icon: Icon(Icons.arrow_back, color: AppColors.backgroundColor,),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                        Text(
-                                          PlotFinanceStaticData().foodieFundsTitle,
-                                          style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.w600,
-                                            fontSize: 18,
-                                            color: AppColors.backgroundColor,
-                                          ),
-                                        ),
-                                ],
+                child: Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: MediaQuery.sizeOf(context).width / 1.6,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: AppColors.backgroundColor,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            Text(
+                              PlotFinanceStaticData().foodieFundsTitle,
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 18,
+                                color: AppColors.backgroundColor,
                               ),
                             ),
-                                   Container(
-                                    width: MediaQuery.sizeOf(context).width/7,
-                                     child: IconButton(
-                                                                     icon: const Icon(Icons.edit, color: AppColors.backgroundColor,),
-                                                                     onPressed: () {
-                                                                       _openCategoryEditorModal(context);
-                                                                     },
-                                                                   ),
-                                   ),
-                          ],),
-                           // color: Colors.amber,
-                           height: 150,
-                           decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                   gradient: LinearGradient(
-                     begin: Alignment.topCenter,
-                     end: Alignment.bottomCenter,
-                     colors: [
-                       const Color(0xE6061F35), // #061F35 with 0.9 opacity (E6 hex = 90%)
-                       const Color(0x00061F35), // fully transparent
-                     ],
-                   ),),)),
-             ),
-             
-             Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 10),
-               child: Transform.translate(
-                offset: const Offset(0, 80),
-                 // SvgPicture.asset(
-        //     'assets/icons/financeScreen/currency.svg',
-        //     width: double.infinity,   // Full width
-        //     height: double.infinity,  // Full height
-        //     //  fit: BoxFit.cover,        // Make it cover the whole screen
-        //   ),
-                 child: CustomPaint(
-                   painter: CustomShapePainter(),
-                 ),
-                 
-               ),
-             ),
-            Transform.translate(
-                offset: const Offset(0, 90),
-             child: Column(
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.sizeOf(context).width / 7,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.edit,
+                            color: AppColors.backgroundColor,
+                          ),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: AppColors.primaryColor,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
+                              ),
+                              builder: (context) {
+                                // Create controllers for editing existing category names
+                                List<TextEditingController> editControllers =
+                                    categories
+                                        .map((cat) => TextEditingController(
+                                            text: cat['name']))
+                                        .toList();
+                                TextEditingController newCategoryController =
+                                    TextEditingController();
+                                int customCategoryCount = categories
+                                    .where((cat) => cat['isCustom'])
+                                    .length;
+
+                                return StatefulBuilder(
+                                  builder: (BuildContext context,
+                                      StateSetter modalSetState) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom,
+                                        left: 16,
+                                        right: 16,
+                                        top: 16,
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Edit Categories',
+                                                style:
+                                                    FontManager().getTextStyle(
+                                                  context,
+                                                  lWeight: FontWeight.w600,
+                                                  fontSize: 18,
+                                                  color:
+                                                      AppColors.backgroundColor,
+                                                ),
+                                              ),
+                                              if (customCategoryCount < 2)
+                                                IconButton(
+                                                  icon: const Icon(Icons.add,
+                                                      color: AppColors
+                                                          .backgroundColor),
+                                                  onPressed: () {
+                                                    String newCategoryName =
+                                                        newCategoryController
+                                                            .text
+                                                            .trim();
+                                                    if (newCategoryName
+                                                            .isNotEmpty &&
+                                                        !categories.any((cat) =>
+                                                            cat['name']
+                                                                .toLowerCase() ==
+                                                            newCategoryName
+                                                                .toLowerCase()) &&
+                                                        customCategoryCount <
+                                                            2) {
+                                                      modalSetState(() {
+                                                        categories.add({
+                                                          'name':
+                                                              newCategoryName,
+                                                          'controller':
+                                                              TextEditingController(),
+                                                          'isCustom': true,
+                                                        });
+                                                        customCategoryCount++;
+                                                        newCategoryController
+                                                            .clear();
+                                                      });
+                                                      _saveCustomCategories();
+                                                      setState(() {
+                                                        _calculateShares();
+                                                      });
+                                                    } else if (newCategoryName
+                                                        .isEmpty) {
+                                                      snackBarCalledfail(
+                                                          context,
+                                                          'Category name cannot be empty');
+                                                    } else if (categories.any(
+                                                        (cat) =>
+                                                            cat['name']
+                                                                .toLowerCase() ==
+                                                            newCategoryName
+                                                                .toLowerCase())) {
+                                                      snackBarCalledfail(
+                                                          context,
+                                                          'Category name already exists');
+                                                    }
+                                                  },
+                                                ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 16),
+                                          // Existing categories
+                                          ...List.generate(categories.length,
+                                              (index) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8.0),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: TextField(
+                                                      controller:
+                                                          editControllers[
+                                                              index],
+                                                      style: const TextStyle(
+                                                          color: Colors.white),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        filled: true,
+                                                        fillColor: const Color
+                                                            .fromARGB(
+                                                            59, 255, 255, 255),
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          vertical: 10.0,
+                                                          horizontal: 12.0,
+                                                        ),
+                                                        enabledBorder:
+                                                            OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0),
+                                                          borderSide:
+                                                              const BorderSide(
+                                                            color: Colors.white,
+                                                            width: 1,
+                                                          ),
+                                                        ),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0),
+                                                          borderSide:
+                                                              const BorderSide(
+                                                            color: Colors.white,
+                                                            width: 1,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  if (categories[index]
+                                                      ['isCustom'])
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                          Icons.delete,
+                                                          color: Colors.red),
+                                                      onPressed: () {
+                                                        modalSetState(() {
+                                                          String categoryName =
+                                                              categories[index]
+                                                                  ['name'];
+                                                          selectedOptions
+                                                              .forEach(
+                                                                  (key, value) {
+                                                            value.remove(
+                                                                categoryName);
+                                                            if (value.isEmpty)
+                                                              selectedOptions
+                                                                  .remove(key);
+                                                          });
+                                                          categories[index]
+                                                                  ['controller']
+                                                              .dispose();
+                                                          categories
+                                                              .removeAt(index);
+                                                          editControllers
+                                                              .removeAt(index);
+                                                          customCategoryCount--;
+                                                        });
+                                                        _saveCustomCategories();
+                                                        setState(() {
+                                                          _calculateShares();
+                                                        });
+                                                      },
+                                                    ),
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                          // New category input
+                                          if (customCategoryCount < 2)
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8.0),
+                                              child: TextField(
+                                                controller:
+                                                    newCategoryController,
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                decoration: InputDecoration(
+                                                  hintText: 'Add new category',
+                                                  hintStyle: const TextStyle(
+                                                      color: Colors.white70),
+                                                  filled: true,
+                                                  fillColor:
+                                                      const Color.fromARGB(
+                                                          59, 255, 255, 255),
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                    vertical: 10.0,
+                                                    horizontal: 12.0,
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                      color: Colors.white,
+                                                      width: 1,
+                                                    ),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                      color: Colors.white,
+                                                      width: 1,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          const SizedBox(height: 16),
+                                          // Done button
+                                          Center(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                List<Map<String, dynamic>>
+                                                    updatedCategories = [];
+                                                bool hasChanges = false;
+
+                                                for (int i = 0;
+                                                    i < categories.length;
+                                                    i++) {
+                                                  String oldName =
+                                                      categories[i]['name'];
+                                                  String newName =
+                                                      editControllers[i]
+                                                          .text
+                                                          .trim();
+                                                  if (newName.isNotEmpty &&
+                                                      !categories
+                                                          .asMap()
+                                                          .entries
+                                                          .any((entry) =>
+                                                              entry.key != i &&
+                                                              entry.value['name']
+                                                                      .toLowerCase() ==
+                                                                  newName
+                                                                      .toLowerCase())) {
+                                                    if (oldName != newName) {
+                                                      hasChanges = true;
+                                                      selectedOptions.forEach(
+                                                          (key, value) {
+                                                        if (value.contains(
+                                                            oldName)) {
+                                                          value.remove(oldName);
+                                                          value.add(newName);
+                                                        }
+                                                      });
+                                                    }
+                                                    updatedCategories.add({
+                                                      'name': newName,
+                                                      'controller':
+                                                          categories[i]
+                                                              ['controller'],
+                                                      'isCustom': categories[i]
+                                                          ['isCustom'],
+                                                    });
+                                                  } else {
+                                                    if (newName.isEmpty) {
+                                                      snackBarCalledfail(
+                                                          context,
+                                                          'Category name cannot be empty');
+                                                      return;
+                                                    } else {
+                                                      snackBarCalledfail(
+                                                          context,
+                                                          'Category name already exists');
+                                                      return;
+                                                    }
+                                                  }
+                                                }
+
+                                                if (hasChanges) {
+                                                  setState(() {
+                                                    categories.clear();
+                                                    categories.addAll(
+                                                        updatedCategories);
+                                                    _calculateShares();
+                                                  });
+                                                  _saveCustomCategories();
+                                                }
+
+                                                // Dispose modal controllers
+
+                                                Navigator.pop(context);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    AppColors.backgroundColor,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 32,
+                                                  vertical: 12,
+                                                ),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                'Done',
+                                                style:
+                                                    FontManager().getTextStyle(
+                                                  context,
+                                                  lWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: AppColors.primaryColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ).whenComplete(() {
+                              // No additional cleanup needed here since controllers are disposed in Done button
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  // color: Colors.amber,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        const Color(
+                            0xE6061F35), // #061F35 with 0.9 opacity (E6 hex = 90%)
+                        const Color(0x00061F35), // fully transparent
+                      ],
+                    ),
+                  ),
+                )),
+          ),
+          Padding(
+            //
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Transform.translate(
+              offset: const Offset(0, 80),
+              // SvgPicture.asset(
+              //     'assets/icons/financeScreen/currency.svg',
+              //     width: double.infinity,   // Full width
+              //     height: double.infinity,  // Full height
+              //     //  fit: BoxFit.cover,        // Make it cover the whole screen
+              //   ),
+              child: CustomPaint(
+                painter: CustomShapePainter(),
+              ),
+            ),
+          ),
+          Transform.translate(
+            offset: const Offset(0, 90),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Input fields for categories
                 Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child:Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // First Row with 3 default categories
-                // SizedBox(height: 100,),
-                 Padding(
-                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                   child: inputDat(PlotFinanceStaticData().searchHint,
+                    padding: const EdgeInsets.all(5.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // First Row with 3 default categories
+                        // SizedBox(height: 100,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: inputDat(PlotFinanceStaticData().searchHint,
                               TextInputType.name, searchController),
-                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: List.generate(
-                            3, // only first 3 categories
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: List.generate(
+                              3, // only first 3 categories
+                              (index) {
+                                final category = categories[index];
+                                return Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
+                                    child: _buildInputColumn(
+                                      category["name"],
+                                      category["controller"],
+                                      index,
+                                      category["isCustom"],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+
+                        // const SizedBox(height: 10),
+
+                        // Newly added categories (if any) below the row
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: List.generate(
+                            categories.length > 3
+                                ? categories.length - 3
+                                : 0, // only extra ones
                             (index) {
-                              final category = categories[index];
-                              return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: _buildInputColumn(
-                      category["name"],
-                      category["controller"],
-                      index,
-                      category["isCustom"],
-                    ),
-                  ),
+                              final category = categories[index + 3];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 6.0),
+                                child: _buildInputColumn(
+                                  category["name"],
+                                  category["controller"],
+                                  index + 3,
+                                  category["isCustom"],
+                                ),
                               );
                             },
-                    ),
-                  ),
-                ),
-                
-                // const SizedBox(height: 10),
-                       
-                // Newly added categories (if any) below the row
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: List.generate(
-                       categories.length > 3 ? categories.length - 3 : 0, // only extra ones
-                       (index) {
-              final category = categories[index + 3];
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6.0),
-                child: _buildInputColumn(
-                  category["name"],
-                  category["controller"],
-                  index + 3,
-                  category["isCustom"],
-                ),
-              );
-                       },
-                  ),
-                ),
-              ],
-                       )
-                       
-                ),
+                          ),
+                        ),
+                      ],
+                    )),
                 // Search bar
                 Padding(
-                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: commentedData(),
                 ),
                 // Scrollable section
                 Container(
-                  height: MediaQuery.sizeOf(context).height/2.4,
+                  height: MediaQuery.sizeOf(context).height / 2.4,
                   child: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
                       child: Column(
                         children: [
-                         
                           vegNonvegdata(),
                         ],
                       ),
@@ -1205,164 +1345,14 @@ void _openCategoryEditorModal(BuildContext context) {
                 // Calculation section
                 calculation(),
               ],
-                       ),
-           ),
-          ]
-        ),
+            ),
+          ),
+        ]),
       ),
     );
   }
-  
-  
-// Widget build(BuildContext context) {
-//     return Scaffold(
-//         backgroundColor: AppColors.primaryColor,
-//         body: SingleChildScrollView(
-//                 child: Padding(
-                  
-//                   padding: const EdgeInsets.symmetric(vertical: 22,horizontal: 20),
-//                   child: Column(
-//                       crossAxisAlignment: CrossAxisAlignment.center,
-//                       children: [
-//                       const SizedBox(height: 24),
-                      
-//                       Stack(
-//                         children: [
-//                          Positioned(
-//           top: 0, // Start from the top of the Stack
-//           left: 0,
-//           right: 0,
-//           child: Container(
-//             // color: Colors.amber,
-//             height: 150,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.circular(20),
-//     gradient: LinearGradient(
-//       begin: Alignment.topCenter,
-//       end: Alignment.bottomCenter,
-//       colors: [
-//         const Color(0xE6061F35), // #061F35 with 0.9 opacity (E6 hex = 90%)
-//         const Color(0x00061F35), // fully transparent
-//       ],
-//     ),),
-//             padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-//             child: Row(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 GestureDetector(
-//                   onTap: () {
-//                     Navigator.pop(context);
-//                   },
-//                   child: Icon(
-//                     Icons.arrow_back,
-//                     color: AppColors.backgroundColor,
-//                   ),
-//                 ),
-//                 Padding(
-//                   padding: const EdgeInsets.only(left: 40),
-//                   child: Text(
-//                     "FoodieFunds",
-//                     style: FontManager().getTextStyle(
-//                       context,
-//                       lWeight: FontWeight.w600,
-//                       fontSize: 20,
-//                       color: Colors.white,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//                         Container(
-//                           //  margin: const EdgeInsets.only(top: 60),
-//                           child: Stack(
-//                             alignment: Alignment.center,
-//                             children: [
-                              
-//                               AvatarProfileImageZero(
-//                                   url: 'assets/icons/financeScreen/currency.svg',
-//                                   width: 1,
-//                                   height: 1
-//                               ),
-                                          
-//                               Container(
-//                                 width: MediaQuery.sizeOf(context).width * 0.8,
-//                                 padding: const EdgeInsets.all(16),
-//                                 // decoration: BoxDecoration(
-//                                 //  color: Color(0xFF60628C),
-//                                 //   borderRadius: BorderRadius.circular(16),
-//                                 //   border: Border.all(color: AppColors.backgroundColor),
-//                                 //   boxShadow: [
-//                                 //     BoxShadow(
-//                                 //       color: Colors.grey.withOpacity(0.1),
-//                                 //       spreadRadius: 2,
-//                                 //       blurRadius: 8,
-//                                 //       offset: const Offset(0, 2),
-//                                 //     ),
-//                                 //   ],
-//                                 // ),
-//                                 child:  Column(
-//                     children: [
-//                       const SizedBox(height: 60), // Space for avatar
-//                       // Categories
-//                       inputDat(
-//                         PlotFinanceStaticData().searchHint,
-//                         TextInputType.name,
-//                         searchController,
-//                       ),
-//                       Padding(
-//                         padding: const EdgeInsets.all(8.0),
-//                         child: SingleChildScrollView(
-//                           child: Row(
-//                             children: [
-//                               for (int i = 0; i < categories.length; i++)
-//                                 _buildInputColumn(
-//                                   categories[i]['name'],
-//                                   categories[i]['controller'],
-//                                   i,
-//                                   categories[i]['isCustom'],
-//                                 ),
-//                               if (categories.where((c) => c['isCustom']).length < 2)
-//                                 _buildAddCategoryField(),
-//                             ],
-//                           ),
-//                         )
-//                       ),
-//                       // Search bar
-                      
-//                       // Scrollable content
-//                       Container(
-//                         height: MediaQuery.sizeOf(context).height/1.4,
-//                         child: SingleChildScrollView(
-//                           child: Column(
-//                             children: [
-//                               commentedData(),
-//                               vegNonvegdata(),
-//                             ],
-//                           ),
-//                         ),
-//                       ),
-//                       // Calculation buttons
-//                       calculation(),
-//                     ],
-//                   ),
-                
-//                               ),
-                                          
-//                               const SizedBox(height: 24),
-//                               // Recent Conversions
-//                             ],
-//                           ),
-//                         ),
-//                        ] ),
-                      
-//                     ]),
-//                 )
-//                 ));
-//   }
-
 }
+
 class CustomShapePainter extends CustomPainter {
   final double scaleX;
   final double scaleY;
