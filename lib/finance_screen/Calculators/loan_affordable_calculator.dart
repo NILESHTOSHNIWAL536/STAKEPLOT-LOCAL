@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/loan_eligible.dart';
-import 'package:flutter_application_code_stakeplot/loader.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoanAffordableCalculator extends StatefulWidget {
   const LoanAffordableCalculator({super.key});

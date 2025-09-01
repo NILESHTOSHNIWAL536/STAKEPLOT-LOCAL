@@ -1254,6 +1254,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               ),
             ),
           ),
+          
           Transform.translate(
             offset: const Offset(0, 90),
             child: Column(
@@ -1347,6 +1348,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               ],
             ),
           ),
+        
         ]),
       ),
     );
