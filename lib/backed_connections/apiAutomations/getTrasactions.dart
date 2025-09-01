@@ -640,6 +640,7 @@ void processChartData() {
   }
 
   spendingsOnCategories.value =newData.isNotEmpty? newData:spendingsOnCategories;
+  spendingsOnCategoriesBool.value = !spendingsOnCategoriesBool.value;
   totalValue.value = newTotalValue;
   }catch(e){
      print(e);

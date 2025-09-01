@@ -23,6 +23,7 @@ import '../backed_connections/backServices.dart/bankInfo.dart';
 RxInt selectedIndex = (-1).obs;
 RxList<ChartData> spendingsOnCategories = <ChartData>[].obs;
 RxDouble totalValue = 0.0.obs;
+RxBool spendingsOnCategoriesBool = false.obs;
 
 class ChartData {
   final String category;
@@ -66,7 +67,33 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                   color: AppColors.bg3,
                 ),
               ),
-              Obx(() => spendingsOnCategories.length >= 7
+                Obx(() =>   spendingsOnCategoriesBool.value
+              ? checkFlagCount()
+              : checkFlagCount())
+              
+            ],
+          ),
+          const SizedBox(
+            height: 3,
+          ),
+          textStyleImage(
+              context: context,
+              text: getDaysLeftInMonth(),
+              fontsize: 14,
+              fontWeight: FontWeight.w400),
+          const SizedBox(
+            height: 10,
+          ),
+          Obx(() =>   spendingsOnCategoriesBool.value
+              ? checkFlag()
+              : checkFlag()),
+        ],
+      ),
+    );
+  }
+
+  Widget checkFlagCount(){
+   return spendingsOnCategories.length >= 7
                   ? TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -85,24 +112,14 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                           color: AppColors.bg3,
                         ),
                       ))
-                  : const SizedBox.shrink()),
-            ],
-          ),
-          const SizedBox(
-            height: 3,
-          ),
-          textStyleImage(
-              context: context,
-              text: getDaysLeftInMonth(),
-              fontsize: 14,
-              fontWeight: FontWeight.w400),
-          const SizedBox(
-            height: 10,
-          ),
-          Obx(() => spendingsOnCategories.isEmpty
-              ? Center(
+                  : const SizedBox.shrink();
+  }
+
+
+  Widget checkFlag(){
+      return spendingsOnCategories.isEmpty ? Center(
                   child: Text(
-                    HomepageStringsDart().noSpendingsAvailable,
+                  HomepageStringsDart().noSpendingsAvailable,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
@@ -110,11 +127,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                       color: AppColors.bg3.withOpacity(0.8),
                     ),
                   ),
-                )
-              : buildCategoryCards()),
-        ],
-      ),
-    );
+                ): buildCategoryCards();
   }
 
   Widget buildCategoryCards() {

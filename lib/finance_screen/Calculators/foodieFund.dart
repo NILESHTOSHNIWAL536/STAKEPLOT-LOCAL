@@ -306,7 +306,34 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                       const SizedBox(height: 24),
-                      
+                      // Container(
+                      //   child: Row(
+                      //     children: [
+                      //       GestureDetector(
+                      //         onTap: () {
+                      //           Navigator.pop(context);
+                      //         },
+                      //         child: Icon(
+                      //           Icons.arrow_back,
+                      //           color: AppColors.backgroundColor,
+                      //         ),
+                      //       ),
+                      //       Padding(
+                      //         padding: const EdgeInsets.only(left: 40),
+                      //         child: Text(
+                      //           "Currency Converter",
+                      //           style: FontManager().getTextStyle(
+                      //             context,
+                      //             lWeight: FontWeight.w600,
+                      //             fontSize: 20,
+                      //             color: Colors.white,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 24),
                       Stack(
                         children: [
                          Positioned(
@@ -727,8 +754,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                        ] ),
                       
                     ]),
-                )
-                ));
+                )));
   }
 
   // @override

@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Sa
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/loan_affordable_calculator.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
@@ -38,7 +39,7 @@ import 'onboarding_screens/onboarding_screen.dart';
 
 var routes =
  {  
-      '/splash': (context) =>  SplashScreen(),   
+      '/splash': (context) =>  const SplashScreen(),   
       '/': (context) =>  LoginScreen(),   
       // '/signup': (context) => SignUp(),  
       '/signup': (context) => SignUpScreen(),  
@@ -69,15 +70,14 @@ var routes =
       '/interestScreen':(context) => InterestSelectionScreen() ,
       '/animatedAppScreen':(context)=>AppScreenAnimation(),
       '/currencyConverterScreen':(context)=>CurrencyConverterScreen(),
+     
       '/rewardsOverview':(context)=>RewardsOverview(),
       '/LoanCalculatorUI':(context)=>LoanCalculatorScreen(),
       '/FinanceDashboard':(context)=>FinanceDashboard(),
       '/creditCard':(context)=>CardDueCarousel(),
       '/addcreditCard':(context)=>AddCreditCardBankScreen(),
 };
-
-
-var colorcodes={
+var colorcodes=const {
     "Food": Color(0xFFE74C3C), // Red
     "Shopping": Color(0xFF8E44AD), // Purple
     "Travel": Color(0xFF3498DB), // Blue
