@@ -1238,6 +1238,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                   ),
                 )),
           ),
+          
           Padding(
             //
             padding: const EdgeInsets.symmetric(horizontal: 10),

@@ -13,7 +13,7 @@ class FeatureGrid extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _buildFeatureIcon(
-            Icons.calculate, 'Calculators', 0, context, "/calculator",svgIconPath.financecal),
+            Icons.calculate, 'Calculators', 0, context, "/AllCalculator",svgIconPath.financecal),
         _buildFeatureIcon(
             Icons.fastfood, 'Foodie\nFund', 1, context, "/VegNonveg",svgIconPath.financefood),
         _buildFeatureIcon(Icons.account_balance, 'Loan\nAffordability', 2,

@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Em
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Rent_Buy.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Savings.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/all_calculators.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/loan_affordable_calculator.dart';
@@ -76,6 +77,7 @@ var routes =
       '/FinanceDashboard':(context)=>FinanceDashboard(),
       '/creditCard':(context)=>CardDueCarousel(),
       '/addcreditCard':(context)=>AddCreditCardBankScreen(),
+      '/AllCalculator':(context)=>AllCalculatorScreen(),
 };
 var colorcodes=const {
     "Food": Color(0xFFE74C3C), // Red

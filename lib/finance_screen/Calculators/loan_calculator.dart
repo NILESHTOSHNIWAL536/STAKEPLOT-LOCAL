@@ -190,6 +190,7 @@ num safeNum(dynamic value) {
                   ),
                 )),
           ),
+         
           Padding(
             //
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -206,6 +207,7 @@ num safeNum(dynamic value) {
               ),
             ),
           ),
+          
           Transform.translate(
             offset: const Offset(0, 85),
             child: Padding(

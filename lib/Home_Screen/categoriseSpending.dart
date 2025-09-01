@@ -43,7 +43,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     super.initState();
     selectedIndex.value = -1;
     // initChartData();
-      getCategoryData(context);
+    // getCategoryData(context);
     catWidgetBindUpdate(context);
   }
 

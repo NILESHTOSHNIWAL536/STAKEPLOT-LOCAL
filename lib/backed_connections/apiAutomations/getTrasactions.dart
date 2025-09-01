@@ -82,7 +82,7 @@ Future<List<CardData>> getAutoPayInfo() async {
     isAutoPayFected.value = !isAutoPayFected.value;
 
     return allAutoPayData;
-  } catch (e){
+  } catch (e) {
     isAutoPayFected.value = !isAutoPayFected.value;
     await CardsLocalStorage.loadCardsFromHive();
     return allAutoPayData;
@@ -242,8 +242,7 @@ void getAutoMationsTransactionsWeekly() async {
 
 Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
     [String weekORmonth = 'month', String? endDate]) async {
-  if (accountId.value.trim().isEmpty)
-   {
+  if (accountId.value.trim().isEmpty) {
     _setEmptyState(weekORmonth, date, endDate);
     return;
   }
@@ -271,8 +270,7 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
 
   try {
-    final response =
-        await getDataApiCall(urlPath);
+    final response = await getDataApiCall(urlPath);
     if (getFlagOfResponse(response)) {
       final his = jsonDecode(response.body);
       transactionChatGraph.clear();
@@ -623,27 +621,28 @@ void addTransaction(String amount, String subCategory, String categories,
 }
 
 void processChartData() {
-  try{
-  List<ChartData> newData = [];
-  double newTotalValue = 0.0;
+  try {
+    List<ChartData> newData = [];
+    double newTotalValue = 0.0;
 
-  Map<String, Color> categoryColors = colorcodes;
+    Map<String, Color> categoryColors = colorcodes;
 
-  for (var item in categoriesList) {
-    String category = item["category"];
-    String percentage = item["total_debit_percentage"] ?? "";
-    double value = item["total_debit"].toDouble();
-    Color color = categoryColors[category] ?? Colors.grey; // Default color
+    for (var item in categoriesList) {
+      String category = item["category"];
+      String percentage = item["total_debit_percentage"] ?? "";
+      double value = item["total_debit"].toDouble();
+      Color color = categoryColors[category] ?? Colors.grey; // Default color
 
-    newData.add(ChartData(category, value, color, percentage));
-    newTotalValue += value;
-  }
+      newData.add(ChartData(category, value, color, percentage));
+      newTotalValue += value;
+    }
 
-  spendingsOnCategories.value =newData.isNotEmpty? newData:spendingsOnCategories;
-  totalValue.value = newTotalValue;
-  }catch(e){
-     print(e);
-     print(e);
+    spendingsOnCategories.value =
+        newData.isNotEmpty ? newData : spendingsOnCategories;
+    totalValue.value = newTotalValue;
+  } catch (e) {
+    print(e);
+    print(e);
   }
 }
 
