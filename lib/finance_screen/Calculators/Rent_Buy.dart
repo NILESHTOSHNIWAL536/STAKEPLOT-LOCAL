@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
@@ -31,12 +34,30 @@ class _RentBuyState extends State<RentBuy> {
 
   double totalRentingCost = 0.0;
   double totalBuyingCost = 0.0;
-
+bool _isInfoVisible = false; // Controls visibility of the container
+  double _opacity = 0.0; // Controls the fade effect
+  Timer? _timer;
   @override
   void initState() {
     super.initState();
     getslidersList();
     calculateRentVsBuy(); // Initial calculation
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _isInfoVisible = true;
+          _opacity = 1.0; // Fade in
+        });
+        // Start timer to fade out after 5 seconds
+        _timer = Timer(Duration(seconds: 2), () {
+          if (mounted) {
+            setState(() {
+              _opacity = 0.0; // Fade out
+            });
+          }
+        });
+      }
+    });
   }
 
   void getslidersList() {
@@ -172,28 +193,132 @@ class _RentBuyState extends State<RentBuy> {
         title: "Comparison:",
         description: "Compares total buying vs. renting costs in a pie chart."),
   ];
-
+  
+@override
+  void dispose() {
+    _timer?.cancel(); // Cancel the timer to prevent memory leaks
+    for (var slider in slidersList) {
+      slider['controller'].dispose();
+    }
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbarHeader("Rent vs Buy Calculator", context),
+       backgroundColor: AppColors.primaryColor,
+      // appBar: appbarHeader("Rent vs Buy Calculator", context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SliderPage(
-                  slidersList: slidersList,
-                  onSliderValueChanged: updateSliderValue,
-                ),
-                graph(),
-                CustomExpansionTile(
-                  howToUseContent: howToUseContent,
-                  howItWorksContent: howItWorksContent,
-                ),
-              ],
+          child: Container(
+             padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: AppColors.primaryColorHeader),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: AppColors.backgroundColor,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        GestureDetector(
+                           onTap: () {
+                          setState(() {
+                            _isInfoVisible = true;
+                            _opacity = 1.0; // Fade in
+                           
+                          });
+                          _timer?.cancel(); // Cancel any existing timer
+                          // Start a new timer to fade out after 5 seconds
+                          _timer = Timer(Duration(seconds: 2), () {
+                            if (mounted) {
+                              setState(() {
+                                _opacity = 0.0; // Fade out
+                               
+                              });
+                            }
+                          });
+                        },
+                          child: Text(
+                            "Rent vs Buy Calculator",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: AppColors.backgroundColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                   AnimatedOpacity(
+                    opacity: _opacity,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                    onEnd: () {
+                      // Hide container after fade-out completes
+                      if (_opacity == 0.0 && mounted) {
+                        setState(() {
+                          _isInfoVisible = false;
+                          print(
+                              'Container hidden: _isInfoVisible = $_isInfoVisible');
+                        });
+                      }
+                    },
+                    child: _isInfoVisible
+                        ? Container(
+                            margin: EdgeInsets.symmetric(vertical: 4),
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.backgroundColor.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.white, width: 1),
+                            ),
+                            child: SingleChildScrollView(
+                              child: Text(
+                                "The Credit Card Payoff Calculator helps you estimate how long it will take to pay off your credit card balance. Adjust the sliders to input your current balance, interest rate, and monthly payment to see the payoff time and total interest paid.",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: AppColors.primaryColor,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
+                        : SizedBox.shrink(),
+                  ),
+                
+                  SliderPage(
+                    slidersList: slidersList,
+                    onSliderValueChanged: updateSliderValue,
+                  ),
+                  Container(
+                        decoration: BoxDecoration(
+                            color: AppColors.backgroundColor,
+                            borderRadius: BorderRadius.circular(12)),
+                        child: graph()),
+                         SizedBox(
+                    height: 10,
+                  ),
+                  CustomExpansionTile(
+                    howToUseContent: howToUseContent,
+                    howItWorksContent: howItWorksContent,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

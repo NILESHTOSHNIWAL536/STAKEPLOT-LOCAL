@@ -24,6 +24,8 @@ import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:intl/intl.dart';
 
+import '../backed_connections/apiAutomations/share_data.dart';
+
 late BuildContext showSnackBarContext;
 
 class EditDetails extends StatefulWidget {
@@ -511,7 +513,7 @@ class _EditDetailsState extends State<EditDetails> {
       String bankName, String accountNumber, var data, String logo) {
     return InkWell(
       onTap: (){
-         
+        shareBankData(data);   
       },
       child: Card(
         elevation: 2,

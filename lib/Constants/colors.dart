@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primaryColor =  Color(0xFF4B4D73);
+  static const Color primaryColor = Color(0xFF4B4D73);
+  static const Color primaryColorHeader = Color(0xFF404266);
   // static const Color primaryColor =  Color(0xFF004856);
   static const Color accentColor = Color(0xFF1E1E1E);
   static const Color mt = Color(0xFFF4F4F4); // for app bg
@@ -23,35 +24,33 @@ class AppColors {
   static const Color bottomBarColor = Color(0xFF111111);
   static const Color green = Color.fromARGB(255, 88, 241, 49);
   static const Color chatcolor = Color(0xFFF0EBEB);
-  static const Color appIcon = Color(0xFF4B4D73);// Color(0xFF004856);
- static const Color finSpaceColor =  Color(0xFF4B4D73);
- static const Color finSpaceColorGradient =  Color(0xFF8E91D9);
+  static const Color appIcon = Color(0xFF4B4D73); // Color(0xFF004856);
+  static const Color finSpaceColor = Color(0xFF4B4D73);
+  static const Color finSpaceColorGradient = Color(0xFF8E91D9);
   static const Color likesharecommentCount = Color(0xFF454545);
-  static const Color debitColor =  Color.fromARGB(255, 207, 118, 113);
-  static  Color creditColor = Colors.green.shade700;
-  static  Color grey = Colors.black54;
+  static const Color debitColor = Color.fromARGB(255, 207, 118, 113);
+  static Color creditColor = Colors.green.shade700;
+  static Color grey = Colors.black54;
   static const Color unSelectedOption = Color(0xFFE4E4E4);
   static const Color greyCard = Color(0xFFC4C4C4);
   static const Color buttonBorder = Color(0xFFC7C9E5);
   static const Color commentbg = Color(0xFFF8F8F8);
   static const Color commentColor = Color(0xFF7B7B7B);
-   static const Color textBgColor = Color(0xFFEEEEEE);
-   static const Color welcomeBack = Color(0xFF454545);
-   static const Color now = Color(0xFFACACAC);
-   static const Color historyAmtColor = Color(0xFF344054);
-   static const Color historyCategory = Color(0xFF547792);
-   static const Color historyAppbar = Color(0xFFBDBFE9);
-   static const Color historyAppbarIcon = Color(0xFF4B4D73);
-   static const Color historyCalenderText = Color(0xFFA1A1A1);
-   static const Color historyCalenderDivider = Color(0xFF7E80A8);
-   static const Color finoraMonth = Color(0xFF8E92DD);
-   static const Color autoPay1 = Color(0xFFDCAAAA);
-   static const Color autoPay2 = Color(0xFFA0CAD0);
-   static const Color autoPay3 = Color(0xFFA9B3DA);
-   static const Color autoPay4 = Color(0xFFCC9EBD);
-   static const Color autoPay5 = Color(0xFFBACC9E);
-   static const Color white= Colors.white;
-
-
- 
+  static const Color textBgColor = Color(0xFFEEEEEE);
+  static const Color welcomeBack = Color(0xFF454545);
+  static const Color now = Color(0xFFACACAC);
+  static const Color historyAmtColor = Color(0xFF344054);
+  static const Color historyCategory = Color(0xFF547792);
+  static const Color historyAppbar = Color(0xFFBDBFE9);
+  static const Color historyAppbarIcon = Color(0xFF4B4D73);
+  static const Color historyCalenderText = Color(0xFFA1A1A1);
+  static const Color historyCalenderDivider = Color(0xFF7E80A8);
+  static const Color finoraMonth = Color(0xFF8E92DD);
+  static const Color autoPay1 = Color(0xFFDCAAAA);
+  static const Color autoPay2 = Color(0xFFA0CAD0);
+  static const Color autoPay3 = Color(0xFFA9B3DA);
+  static const Color autoPay4 = Color(0xFFCC9EBD);
+  static const Color autoPay5 = Color(0xFFBACC9E);
+  static const Color amtCal = Color(0xFF8586A6);
+  static const Color white = Colors.white;
 }

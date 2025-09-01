@@ -46,6 +46,7 @@ Future<void> getBankAccounts() async {
         }
       }
       bank['accounts'].forEach((account) {
+        var profile=account['profile']['holder'];
         if (accountId.value == "") accountId.value = account['accountId'];
         FipIdsConnected.add(account['maskedAccNumber']);
         bankAccountLinkedList.add({
@@ -60,10 +61,18 @@ Future<void> getBankAccounts() async {
           'lastFetch': account['lastFetch'] ?? "",
           'nextFetch': account['nextFetch'] ?? "",
           'fetchCount': account['fetchCount'] ?? "0",
+          'name':  profile['name'] ?? "0",
+          'pan': profile['pan'] ?? "0",
+          'dob':    profile['dob'] ?? "0",
+          'mobile': profile['mobile'] ?? "0",
+          'address': profile['address'] ?? "0",
+          'ifscCode': account['ifscCode'] ?? "0",
+          'branchAddress': account['branchAddress'] ?? "0",
         });
       });
     });
   }
+  print(bankAccountLinkedList);
   addBankApiCall();
   BankStorage.cacheBankDataLocally();
 }

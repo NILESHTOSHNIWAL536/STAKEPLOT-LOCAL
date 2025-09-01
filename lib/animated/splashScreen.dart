@@ -35,7 +35,6 @@ class _SplashScreenState extends State<SplashScreen> {
      _checkForUpdatesAndNavigate();
     callApis();
     initGetControllers();
-    
   }
 
   Future<void> _checkForUpdatesAndNavigate() async {

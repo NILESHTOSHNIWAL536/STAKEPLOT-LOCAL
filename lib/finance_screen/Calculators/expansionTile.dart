@@ -10,7 +10,8 @@ class ListItemModel {
 }
 
 class CustomExpansionTile extends StatelessWidget {
-  final List<ListItemModel> howToUseContent; // Content for "How to use the calculator?"
+  final List<ListItemModel>
+      howToUseContent; // Content for "How to use the calculator?"
   final List<ListItemModel> howItWorksContent; // Content for "How it works?"
 
   const CustomExpansionTile({
@@ -27,14 +28,18 @@ class CustomExpansionTile extends StatelessWidget {
           context,
           title: "How to use the calculator?",
           icon: Icons.timer_outlined,
-          content: howToUseContent.map((item) => _buildStringListItem(context, item)).toList(),
+          content: howToUseContent
+              .map((item) => _buildStringListItem(context, item))
+              .toList(),
         ),
         const SizedBox(height: 10),
         _buildExpansionTile(
           context,
           title: "How it works?",
           icon: Icons.settings,
-          content: howItWorksContent.map((item) => _buildListItem(context, item)).toList(),
+          content: howItWorksContent
+              .map((item) => _buildListItem(context, item))
+              .toList(),
         ),
       ],
     );
@@ -48,30 +53,36 @@ class CustomExpansionTile extends StatelessWidget {
     required List<Widget> content,
   }) {
     return Container(
-      color: AppColors.mt, // Ensure the container background is set to your theme color
+      color: AppColors
+          .amtCal, // Ensure the container background is set to your theme color
       child: Theme(
         data: ThemeData(
-          dividerColor: Colors.transparent, // This removes the divider between tiles
+          dividerColor:
+              Colors.transparent, // This removes the divider between tiles
           splashColor: Colors.transparent, // This removes the splash effect
-          highlightColor: Colors.transparent, // This removes the highlight effect
+          highlightColor:
+              Colors.transparent, // This removes the highlight effect
         ),
         child: ExpansionTile(
+          iconColor: Colors.white, // Color when expanded
+          collapsedIconColor: Colors.white,
           title: Row(
             children: [
-              Icon(icon, color: AppColors.primaryColor),
+              Icon(icon, color: AppColors.backgroundColor),
               const SizedBox(width: 10),
               Text(
                 title,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w300,
-                  fontSize: MediaQuery.sizeOf(context).height/60,
-                  color: AppColors.primaryColor,
+                  fontSize: MediaQuery.sizeOf(context).height / 60,
+                  color: AppColors.backgroundColor,
                 ),
               ),
             ],
           ),
-          childrenPadding: EdgeInsets.zero, // Removes the default padding around children
+          childrenPadding:
+              EdgeInsets.zero, // Removes the default padding around children
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -99,7 +110,7 @@ class CustomExpansionTile extends StatelessWidget {
               context,
               lWeight: FontWeight.bold,
               fontSize: 14,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 5),
@@ -109,7 +120,7 @@ class CustomExpansionTile extends StatelessWidget {
               context,
               lWeight: FontWeight.w300,
               fontSize: 14,
-              color: Colors.black54,
+              color: Colors.white54,
             ),
           ),
         ],
@@ -130,7 +141,7 @@ class CustomExpansionTile extends StatelessWidget {
               context,
               lWeight: FontWeight.bold,
               fontSize: 14,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 5),
@@ -140,7 +151,7 @@ class CustomExpansionTile extends StatelessWidget {
               context,
               lWeight: FontWeight.w300,
               fontSize: 14,
-              color: Colors.black54,
+              color: Colors.white54,
             ),
           ),
         ],

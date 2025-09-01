@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
@@ -29,12 +33,31 @@ class _SavingsState extends State<Savings> {
   double goalProgress = 0.0;
   double remainingAmount = 0.0;
   List<double> savingsData = [];
+  bool _isInfoVisible = false; // Controls visibility of the container
+  double _opacity = 0.0; // Controls the fade effect
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     getslidersList();
     calculateSavings(); // Initial calculation
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _isInfoVisible = true;
+          _opacity = 1.0; // Fade in
+        });
+        // Start timer to fade out after 5 seconds
+        _timer = Timer(Duration(seconds: 2), () {
+          if (mounted) {
+            setState(() {
+              _opacity = 0.0; // Fade out
+            });
+          }
+        });
+      }
+    });
   }
 
   void getslidersList() {
@@ -67,8 +90,9 @@ class _SavingsState extends State<Savings> {
         newValue = newValue.roundToDouble(); // Integer for non-interest fields
       }
       slidersList[index]['value'] = newValue;
-      slidersList[index]['controller'].text =
-          (index == 4) ? newValue.toStringAsFixed(1) : newValue.toStringAsFixed(0);
+      slidersList[index]['controller'].text = (index == 4)
+          ? newValue.toStringAsFixed(1)
+          : newValue.toStringAsFixed(0);
 
       targetAmount = slidersList[0]['value'];
       currentSavings = slidersList[1]['value'];
@@ -94,13 +118,15 @@ class _SavingsState extends State<Savings> {
     }
 
     // Calculate metrics matching React
-    final double totalInterest = totalSavings - (currentSavings + monthlyContribution * timeframe);
+    final double totalInterest =
+        totalSavings - (currentSavings + monthlyContribution * timeframe);
     //remainingAmount = targetAmount - currentSavings; // Match React's doughnut data
-    
+
     setState(() {
       endBalance = double.parse(totalSavings.toStringAsFixed(2));
       interestEarned = double.parse(totalInterest.toStringAsFixed(2));
-      goalProgress = double.parse(((currentSavings / targetAmount) * 100).toStringAsFixed(2));
+      goalProgress = double.parse(
+          ((currentSavings / targetAmount) * 100).toStringAsFixed(2));
       remainingAmount = targetAmount - currentSavings;
       remainingAmount = remainingAmount < 0 ? 0 : remainingAmount;
     });
@@ -109,7 +135,8 @@ class _SavingsState extends State<Savings> {
   final List<ListItemModel> howToUseContent = [
     ListItemModel(
         title: "Target Amount:",
-        description: "Adjust the slider to set your savings goal (e.g., ₹2300)."),
+        description:
+            "Adjust the slider to set your savings goal (e.g., ₹2300)."),
     ListItemModel(
         title: "Current Savings:",
         description: "Set your current savings amount (e.g., ₹400)."),
@@ -127,36 +154,144 @@ class _SavingsState extends State<Savings> {
   final List<ListItemModel> howItWorksContent = [
     ListItemModel(
         title: "Monthly Savings Calculation:",
-        description: "Adds monthly contributions and interest earned each month."),
+        description:
+            "Adds monthly contributions and interest earned each month."),
     ListItemModel(
         title: "End Balance Calculation:",
-        description: "Projects total savings after timeframe, including interest."),
+        description:
+            "Projects total savings after timeframe, including interest."),
     ListItemModel(
         title: "Interest Earned Calculation:",
-        description: "Estimates total interest based on rate and contributions."),
+        description:
+            "Estimates total interest based on rate and contributions."),
     ListItemModel(
         title: "Goal Progress Tracking:",
         description: "Shows progress as a percentage of the target amount."),
   ];
+  @override
+  void dispose() {
+    _timer?.cancel(); // Cancel the timer to prevent memory leaks
+    for (var slider in slidersList) {
+      slider['controller'].dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbarHeader("Savings Goal Calculator", context),
+      backgroundColor: AppColors.primaryColor,
+      // appBar: appbarHeader("Savings Goal Calculator", context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SliderPage(slidersList: slidersList, onSliderValueChanged: updateSliderValue),
-                graph(),
-                CustomExpansionTile(
-                  howToUseContent: howToUseContent,
-                  howItWorksContent: howItWorksContent,
-                ),
-              ],
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: AppColors.primaryColorHeader),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: AppColors.backgroundColor,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isInfoVisible = true;
+                            _opacity = 1.0; // Fade in
+                            print('Showing container: opacity = $_opacity');
+                          });
+                          _timer?.cancel(); // Cancel any existing timer
+                          // Start a new timer to fade out after 5 seconds
+                          _timer = Timer(Duration(seconds: 2), () {
+                            if (mounted) {
+                              setState(() {
+                                _opacity = 0.0; // Fade out
+                                print('Hiding container: opacity = $_opacity');
+                              });
+                            }
+                          });
+                        },
+                        child: Text(
+                          "Savings Calculator",
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: AppColors.backgroundColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  AnimatedOpacity(
+                    opacity: _opacity,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                    onEnd: () {
+                      // Hide container after fade-out completes
+                      if (_opacity == 0.0 && mounted) {
+                        setState(() {
+                          _isInfoVisible = false;
+                          print(
+                              'Container hidden: _isInfoVisible = $_isInfoVisible');
+                        });
+                      }
+                    },
+                    child: _isInfoVisible
+                        ? Container(
+                            margin: EdgeInsets.symmetric(vertical: 4),
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.backgroundColor.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.white, width: 1),
+                            ),
+                            child: SingleChildScrollView(
+                              child: Text(
+                                "The Credit Card Payoff Calculator helps you estimate how long it will take to pay off your credit card balance. Adjust the sliders to input your current balance, interest rate, and monthly payment to see the payoff time and total interest paid.",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: AppColors.primaryColor,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
+                        : SizedBox.shrink(),
+                  ),
+                  SliderPage(
+                      slidersList: slidersList,
+                      onSliderValueChanged: updateSliderValue),
+                  Container(
+                      decoration: BoxDecoration(
+                          color: AppColors.backgroundColor,
+                          borderRadius: BorderRadius.circular(12)),
+                      child: graph()),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  CustomExpansionTile(
+                    howToUseContent: howToUseContent,
+                    howItWorksContent: howItWorksContent,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -168,12 +303,26 @@ class _SavingsState extends State<Savings> {
     return PieChartGraph(
       title: "Savings Goal Progress:",
       graphData: [
-        {'title': 'Remaining Amount: ₹${formatMoneyIndian(remainingAmount.toStringAsFixed(0))}', 'value': remainingAmount},
-        {'title': 'Current Savings: ₹${formatMoneyIndian(currentSavings.toStringAsFixed(0))}', 'value': currentSavings}, // Updated to use endBalance
+        {
+          'title':
+              'Remaining Amount: ₹${formatMoneyIndian(remainingAmount.toStringAsFixed(0))}',
+          'value': remainingAmount
+        },
+        {
+          'title':
+              'Current Savings: ₹${formatMoneyIndian(currentSavings.toStringAsFixed(0))}',
+          'value': currentSavings
+        }, // Updated to use endBalance
       ],
       graphDisc: [
-        {'title': 'End Balance:', 'amount': "₹${formatMoneyIndian(endBalance.toStringAsFixed(2))}"},
-        {'title': 'Interest Earned:', 'amount': "₹${interestEarned.toStringAsFixed(2)}"},
+        {
+          'title': 'End Balance:',
+          'amount': "₹${formatMoneyIndian(endBalance.toStringAsFixed(2))}"
+        },
+        {
+          'title': 'Interest Earned:',
+          'amount': "₹${interestEarned.toStringAsFixed(2)}"
+        },
         {'title': 'Progress:', 'amount': "${goalProgress.toStringAsFixed(2)}%"},
       ],
     );
@@ -183,6 +332,7 @@ class _SavingsState extends State<Savings> {
 PreferredSizeWidget appbarHeader(String title, BuildContext context) {
   return AppBar(
     centerTitle: true,
-    title: Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+    title: Text(title,
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
   );
 }

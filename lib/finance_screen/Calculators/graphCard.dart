@@ -1,4 +1,3 @@
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
@@ -29,7 +28,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
     AppColors.bg6,
     AppColors.message,
     AppColors.border,
-     AppColors.bg6,
+    AppColors.bg6,
     AppColors.message,
     AppColors.border,
   ];
@@ -41,6 +40,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
 
   Widget buildPieChart() {
     return Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,36 +63,36 @@ class _PieChartGraphState extends State<PieChartGraph> {
             // ),
             child: Column(
               children: [
-                 Column(
+                Column(
                   children: List.generate(
                     widget.graphDisc.length,
                     (index) => getSubtext(widget.graphDisc[index]),
                   ),
-                          ),
+                ),
                 Column(
-                  
                   children: List.generate(
                     widget.graphData.length,
-                    (index) => getSubtext2( widget.graphData[index]),
+                    (index) => getSubtext2(widget.graphData[index]),
                   ),
-                          ),
-                          
+                ),
               ],
-            ),),
+            ),
+          ),
           SizedBox(
             height: Colorcodes.paddingSize,
           ),
           getGraph(),
-          SizedBox(height: Colorcodes.paddingSize*2,),
-
+          SizedBox(
+            height: Colorcodes.paddingSize * 2,
+          ),
         ],
       ),
     );
   }
- Widget getSubtext2( dynamic graphData) {
-    int index = widget.graphData.indexOf(graphData); 
+
+  Widget getSubtext2(dynamic graphData) {
+    int index = widget.graphData.indexOf(graphData);
     // Get index for color
-    
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -109,7 +109,6 @@ class _PieChartGraphState extends State<PieChartGraph> {
             ),
           ),
           const SizedBox(width: 8),
-          
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,21 +120,20 @@ class _PieChartGraphState extends State<PieChartGraph> {
                       context: context,
                       fontsize: 14,
                       fontWeight: FontWeight.w400,
-                      text: graphData['title'], // Title from graphData (PieChartSectionData)
+                      text: graphData[
+                          'title'], // Title from graphData (PieChartSectionData)
                     ),
                     const SizedBox(width: 5),
-                    
                   ],
                 ),
-                
-                
               ],
             ),
           ),
         ],
       ),
     );
- }
+  }
+
   Widget getSubtext(data) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -163,26 +161,21 @@ class _PieChartGraphState extends State<PieChartGraph> {
     );
   }
 
-
-Widget getGraph(){
-   return Container(
-         
-           margin: EdgeInsets.only(top: 10),
-            width: MediaQuery.of(context).size.width/1.1,
-                height:  MediaQuery.of(context).size.height/4,
-            child: PieChart(
-              
-                  PieChartData(
-                      borderData: FlBorderData(
-                                show: false,
-                         ),
-                 sections: widget.graphData
-                  .asMap()
-                  .entries
-                  .map((entry) => getPieChartSectionData(entry.value, entry.key))
-                  .toList()
-                  ),
-            
+  Widget getGraph() {
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      width: MediaQuery.of(context).size.width / 1.1,
+      height: MediaQuery.of(context).size.height / 4,
+      child: PieChart(
+        PieChartData(
+            borderData: FlBorderData(
+              show: false,
+            ),
+            sections: widget.graphData
+                .asMap()
+                .entries
+                .map((entry) => getPieChartSectionData(entry.value, entry.key))
+                .toList()),
       ),
     );
   }
@@ -202,7 +195,7 @@ Widget getGraph(){
       //       fontsize: 12,
       //       c: index - 1 == 0 ? pieChatColor[0] : pieChatColor[1]),
       // ),
-      
+
       // title: data['title'],
       color: pieChatColor[index] ?? AppColors.uncoloredPie,
       radius: 50,
@@ -210,9 +203,6 @@ Widget getGraph(){
       badgePositionPercentageOffset: 1.7,
     );
   }
-
-
-
 }
 
 // import 'package:flutter/material.dart';

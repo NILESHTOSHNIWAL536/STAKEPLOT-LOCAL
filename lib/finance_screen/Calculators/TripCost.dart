@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
@@ -25,7 +27,7 @@ class _TripCostState extends State<TripCost> {
   double accommodationCost = 1500;
   double totalCost = 0;
   double costPerMember = 0;
-double accommodationCostPerDay = 0;
+  double accommodationCostPerDay = 0;
   @override
   void initState() {
     getslidersList();
@@ -77,7 +79,7 @@ double accommodationCostPerDay = 0;
         description:
             "Enter the total number of individuals participating in the trip."),
   ];
-  
+
   // Example data for "How it works?"
   final List<ListItemModel> howItWorksContent = [
     ListItemModel(
@@ -107,8 +109,7 @@ double accommodationCostPerDay = 0;
     });
   }
 
-  
-void calculateTripCost() {
+  void calculateTripCost() {
     accommodationCostPerDay = selectedAccommodation == 'Hotel'
         ? 1500 * (numberOfMembers / 2).round().toDouble()
         : selectedAccommodation == 'Airbnb'
@@ -127,34 +128,73 @@ void calculateTripCost() {
         entertainmentBudget;
     costPerMember = totalCost / numberOfMembers;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appbarHeader("Trip cost calculator ", context),
+        backgroundColor: AppColors.primaryColor,
+        // appBar: appbarHeader("Trip cost calculator ", context),
         body: SafeArea(
           child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SliderPage(
-                      slidersList: slidersList,
-                      onSliderValueChanged: updateSliderValue,
-                      title: "Trip",
-                      onAccommodationChanged: (newAccommodation) {
-                        setState(() {
-                          selectedAccommodation = newAccommodation;
-                          calculateTripCost(); // Recalculate costs when accommodation changes
-                        });
-                      },
-                    ),
-                    graph(),
-                    CustomExpansionTile(
-                      howToUseContent: howToUseContent,
-                      howItWorksContent: howItWorksContent,
-                    ),
-                  ],
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: AppColors.primaryColorHeader),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: AppColors.backgroundColor,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          Text(
+                            "Trip Cost",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: AppColors.backgroundColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SliderPage(
+                        slidersList: slidersList,
+                        onSliderValueChanged: updateSliderValue,
+                        title: "Trip",
+                        onAccommodationChanged: (newAccommodation) {
+                          setState(() {
+                            selectedAccommodation = newAccommodation;
+                            calculateTripCost(); // Recalculate costs when accommodation changes
+                          });
+                        },
+                      ),
+                      Container(
+                          decoration: BoxDecoration(
+                              color: AppColors.backgroundColor,
+                              borderRadius: BorderRadius.circular(12)),
+                          child: graph()),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomExpansionTile(
+                        howToUseContent: howToUseContent,
+                        howItWorksContent: howItWorksContent,
+                      ),
+                    ],
+                  ),
                 ),
               )),
         ));
@@ -164,17 +204,24 @@ void calculateTripCost() {
     return PieChartGraph(
       title: "Trip Cost Breakdown:",
       graphData: [
-        {'title': 'Travel Cost :₹${formatMoneyIndian(doubleToFixed(travelCost.toString()))}',
-         'value': travelCost},
         {
-          'title': 'Accommodation Cost: ₹${formatMoneyIndian(doubleToFixed((accommodationCostPerDay * numberOfDays).toString()))}',
+          'title':
+              'Travel Cost :₹${formatMoneyIndian(doubleToFixed(travelCost.toString()))}',
+          'value': travelCost
+        },
+        {
+          'title':
+              'Accommodation Cost: ₹${formatMoneyIndian(doubleToFixed((accommodationCostPerDay * numberOfDays).toString()))}',
           'value': accommodationCostPerDay * numberOfDays
         },
-        {'title': 'Daily Expenses: ₹${formatMoneyIndian(doubleToFixed((dailyExpenses * numberOfDays).toString()))}',
-         'value': dailyExpenses * numberOfDays
-         },
         {
-          'title': 'Entertainment Budget: ₹${formatMoneyIndian(doubleToFixed(entertainmentBudget.toString()))}',
+          'title':
+              'Daily Expenses: ₹${formatMoneyIndian(doubleToFixed((dailyExpenses * numberOfDays).toString()))}',
+          'value': dailyExpenses * numberOfDays
+        },
+        {
+          'title':
+              'Entertainment Budget: ₹${formatMoneyIndian(doubleToFixed(entertainmentBudget.toString()))}',
           'value': entertainmentBudget
         },
       ],

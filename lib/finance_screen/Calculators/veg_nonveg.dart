@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -25,7 +26,8 @@ class VegNonVegCalculator extends StatefulWidget {
 }
 
 class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
-  List<Map<String, dynamic>> categories = [
+  String target="custom_categories";
+  RxList categories = [
     {
       'name': PlotFinanceStaticData().vegLabel,
       'controller': TextEditingController(),
@@ -41,7 +43,25 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       'controller': TextEditingController(),
       'isCustom': false,
     },
-  ];
+  ].obs;
+  RxList categoriesEdit = [
+    {
+      'name': PlotFinanceStaticData().vegLabel,
+      'controller': TextEditingController(),
+      'isCustom': false,
+    },
+    {
+      'name': PlotFinanceStaticData().nonVegLabel,
+      'controller': TextEditingController(),
+      'isCustom': false,
+    },
+    {
+      'name': PlotFinanceStaticData().alcoholLabel,
+      'controller': TextEditingController(),
+      'isCustom': false,
+    },
+  ].obs;
+ List<TextEditingController> controllers = [];
 
   final TextEditingController newCategoryController = TextEditingController();
   final Map<String, List<String>> selectedOptions = {};
@@ -51,7 +71,10 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   final RxList addedMembers = [].obs;
   final RxString splitID = ''.obs;
   final RxBool acceptReset = false.obs;
+  final RxBool reloadData = false.obs;
   late IO.Socket socket;
+    // TextEditingController newCategoryController =
+    //                                 TextEditingController();
 
   List<Map<dynamic, dynamic>> get friends => userController.friendsList
       .map((e) => e as Map<dynamic, dynamic>)
@@ -75,6 +98,16 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           .build(),
     );
     setUpSocketListener();
+    getStoredData();
+    _loadCustomCategories();
+  }
+
+  void getStoredData()async{
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String? defaultBack = prefs.getString('custom_categories');
+    // print("defaultBack");
+    // print(defaultBack);
+
   }
 
   void _addCurrentUserToMembers() {
@@ -138,32 +171,61 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
 // Load custom categories from SharedPreferences
   Future<void> _loadCustomCategories() async {
+    try{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? savedCategories = prefs.getString('custom_categories');
+    final String? savedCategories = prefs.getString(target);
+    print("savedCategories---------------------------------------------------");
+    print(savedCategories);
     if (savedCategories != null) {
-      final List<dynamic> decoded = jsonDecode(savedCategories);
-      final List<Map<String, dynamic>> customCategories = decoded
-          .map((item) => {
-                'name': item['name'],
-                'controller': TextEditingController(),
-                'isCustom': true,
-              })
-          .toList();
+       List<String> names=savedCategories.split("--");
+      RxList<Map<String, dynamic>> customCategories = names
+    .asMap()
+    .entries
+    .map((entry) {
+      final index = entry.key;
+      final item = entry.value;
+
+      return {
+        'name': item,
+        'controller': TextEditingController(),
+        'isCustom': index > 2, // 👈 condition here
+      };
+    })
+    .toList()
+    .obs;
+
       setState(() {
-        categories.addAll(customCategories);
+         categories.clear(); 
+          categories.addAll(customCategories);
+         categoriesEdit.clear(); 
+          categoriesEdit.addAll(categories);
+          categories.forEach((element){
+              controllers.add(TextEditingController(text: element['name'].toString()));
+          });
+
       });
       _calculateShares();
+    }
+    }catch(e){
+      print(e);
     }
   }
 
   // Save custom categories to SharedPreferences
   Future<void> _saveCustomCategories() async {
+    try{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<Map<String, dynamic>> customCategories =
-        categories.where((cat) => cat['isCustom']).map((cat) {
-      return {'name': cat['name']};
-    }).toList();
-    await prefs.setString('custom_categories', jsonEncode(customCategories));
+    List<String> namesList=[];
+    categories.forEach((e){
+      namesList.add(e['name']);
+    });
+
+    await prefs.setString(target, jsonEncode(namesList.join("--")));
+
+    }catch(e)
+    {
+      print(e);
+    }
   }
 
   Widget _buildInputColumn(
@@ -815,6 +877,19 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             child: Transform.translate(
                 offset: const Offset(0, 30),
                 child: Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        const Color(
+                            0xE6061F35), // #061F35 with 0.9 opacity (E6 hex = 90%)
+                        const Color(0x00061F35), // fully transparent
+                      ],
+                    ),
+                  ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -854,6 +929,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                             color: AppColors.backgroundColor,
                           ),
                           onPressed: () {
+                           
                             showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
@@ -863,14 +939,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                     top: Radius.circular(20)),
                               ),
                               builder: (context) {
-                                // Create controllers for editing existing category names
-                                List<TextEditingController> editControllers =
-                                    categories
-                                        .map((cat) => TextEditingController(
-                                            text: cat['name']))
-                                        .toList();
-                                TextEditingController newCategoryController =
-                                    TextEditingController();
+                              
+                              
+                              
                                 int customCategoryCount = categories
                                     .where((cat) => cat['isCustom'])
                                     .length;
@@ -974,8 +1045,11 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                                   Expanded(
                                                     child: TextField(
                                                       controller:
-                                                          editControllers[
-                                                              index],
+                                                          controllers[index],
+                                                      onChanged: (value) {
+                                                          categoriesEdit[index]['name'] =value;  
+                            
+                                                      },
                                                       style: const TextStyle(
                                                           color: Colors.white),
                                                       decoration:
@@ -1013,6 +1087,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                                             color: Colors.white,
                                                             width: 1,
                                                           ),
+                                                          
                                                         ),
                                                       ),
                                                     ),
@@ -1024,33 +1099,20 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                                           Icons.delete,
                                                           color: Colors.red),
                                                       onPressed: () {
-                                                        modalSetState(() {
-                                                          String categoryName =
-                                                              categories[index]
-                                                                  ['name'];
-                                                          selectedOptions
-                                                              .forEach(
-                                                                  (key, value) {
-                                                            value.remove(
-                                                                categoryName);
-                                                            if (value.isEmpty)
-                                                              selectedOptions
-                                                                  .remove(key);
-                                                          });
-                                                          categories[index]
-                                                                  ['controller']
-                                                              .dispose();
-                                                          categories
-                                                              .removeAt(index);
-                                                          editControllers
-                                                              .removeAt(index);
+                                                      
+                                                    
+                                                          setState(() {
+                                                          categories.removeAt(index);
+                                                          controllers.removeAt(index);
+                                                       if(index<categoriesEdit.length)    categoriesEdit.removeAt(index);
                                                           customCategoryCount--;
-                                                        });
-                                                        _saveCustomCategories();
-                                                        setState(() {
-                                                          _calculateShares();
-                                                        });
-                                                      },
+                                                           _saveCustomCategories();
+                                                            _calculateShares();
+                                                          });
+
+                                                          modalSetState((){});
+                                                                                              
+                                                       },
                                                     ),
                                                 ],
                                               ),
@@ -1063,8 +1125,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 8.0),
                                               child: TextField(
-                                                controller:
-                                                    newCategoryController,
+                                                controller: newCategoryController,
                                                 style: const TextStyle(
                                                     color: Colors.white),
                                                 decoration: InputDecoration(
@@ -1111,72 +1172,43 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                           Center(
                                             child: ElevatedButton(
                                               onPressed: () {
-                                                List<Map<String, dynamic>>
-                                                    updatedCategories = [];
-                                                bool hasChanges = false;
+                                                // RxList<Map<String, dynamic>> updatedCategories = <Map<String, dynamic>>[].obs;
+                                                categories.clear();
 
-                                                for (int i = 0;
-                                                    i < categories.length;
-                                                    i++) {
-                                                  String oldName =
-                                                      categories[i]['name'];
-                                                  String newName =
-                                                      editControllers[i]
-                                                          .text
-                                                          .trim();
-                                                  if (newName.isNotEmpty &&
-                                                      !categories
-                                                          .asMap()
-                                                          .entries
-                                                          .any((entry) =>
-                                                              entry.key != i &&
-                                                              entry.value['name']
-                                                                      .toLowerCase() ==
-                                                                  newName
-                                                                      .toLowerCase())) {
-                                                    if (oldName != newName) {
-                                                      hasChanges = true;
-                                                      selectedOptions.forEach(
-                                                          (key, value) {
-                                                        if (value.contains(
-                                                            oldName)) {
-                                                          value.remove(oldName);
-                                                          value.add(newName);
-                                                        }
+                                                controllers.asMap().entries.forEach((entry) {
+                                                        final index = entry.key;       // index
+                                                        final control = entry.value;   // actual controller
+                                                        categories.add({
+                                                          'name': control.text,
+                                                          'controller': TextEditingController(),
+                                                          'isCustom': false,
+                                                          'index': index>2, // 👈 store index if needed
+                                                        });
+                                                  });
+
+                                          
+
+                                               if(newCategoryController.text.isNotEmpty)
+                                               {
+                                                      categories.add({
+                                                        'name': newCategoryController.text.trim(),
+                                                        'controller': TextEditingController(),
+                                                        'isCustom': true,
                                                       });
-                                                    }
-                                                    updatedCategories.add({
-                                                      'name': newName,
-                                                      'controller':
-                                                          categories[i]
-                                                              ['controller'],
-                                                      'isCustom': categories[i]
-                                                          ['isCustom'],
-                                                    });
-                                                  } else {
-                                                    if (newName.isEmpty) {
-                                                      snackBarCalledfail(
-                                                          context,
-                                                          'Category name cannot be empty');
-                                                      return;
-                                                    } else {
-                                                      snackBarCalledfail(
-                                                          context,
-                                                          'Category name already exists');
-                                                      return;
-                                                    }
-                                                  }
-                                                }
+                                                      customCategoryCount++;
+                                                      controllers.add(TextEditingController(text:newCategoryController.text.trim() ));
+                                                      newCategoryController.clear();
+                                               }
 
-                                                if (hasChanges) {
+                                               
                                                   setState(() {
-                                                    categories.clear();
-                                                    categories.addAll(
-                                                        updatedCategories);
+                                                    categoriesEdit.clear();
+                                                    categoriesEdit.addAll(categories);
+                                                   
                                                     _calculateShares();
                                                   });
-                                                  _saveCustomCategories();
-                                                }
+                                                _saveCustomCategories();
+                                                
 
                                                 // Dispose modal controllers
 
@@ -1221,20 +1253,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                         ),
                       ),
                     ],
-                  ),
-                  // color: Colors.amber,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        const Color(
-                            0xE6061F35), // #061F35 with 0.9 opacity (E6 hex = 90%)
-                        const Color(0x00061F35), // fully transparent
-                      ],
-                    ),
                   ),
                 )),
           ),

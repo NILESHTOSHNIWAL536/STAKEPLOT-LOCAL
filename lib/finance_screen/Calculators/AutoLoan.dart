@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
@@ -63,12 +65,14 @@ class _AutoLoanState extends State<AutoLoan> {
         case 1:
           downPayment = newValue.roundToDouble(); // Integer
           slidersList[index]['value'] = downPayment;
-          slidersList[index]['controller'].text = downPayment.toStringAsFixed(0);
+          slidersList[index]['controller'].text =
+              downPayment.toStringAsFixed(0);
           break;
         case 2:
           loanInterestRate = newValue; // Float
           slidersList[index]['value'] = loanInterestRate;
-          slidersList[index]['controller'].text = loanInterestRate.toStringAsFixed(1);
+          slidersList[index]['controller'].text =
+              loanInterestRate.toStringAsFixed(1);
           break;
         case 3:
           loanTenure = newValue.round(); // Integer
@@ -78,7 +82,8 @@ class _AutoLoanState extends State<AutoLoan> {
         case 4:
           maintenanceCost = newValue; // Float
           slidersList[index]['value'] = maintenanceCost;
-          slidersList[index]['controller'].text = maintenanceCost.toStringAsFixed(1);
+          slidersList[index]['controller'].text =
+              maintenanceCost.toStringAsFixed(1);
           break;
       }
       calculateLoanDetails();
@@ -91,7 +96,8 @@ class _AutoLoanState extends State<AutoLoan> {
     double loanAmount = carPrice - downPaymentAmount;
 
     if (monthlyInterestRate > 0 && loanTenure > 0) {
-      monthlyLoanPayment = (loanAmount * monthlyInterestRate *
+      monthlyLoanPayment = (loanAmount *
+              monthlyInterestRate *
               pow(1 + monthlyInterestRate, loanTenure)) /
           (pow(1 + monthlyInterestRate, loanTenure) - 1);
       totalLoanCost = monthlyLoanPayment * loanTenure;
@@ -109,7 +115,8 @@ class _AutoLoanState extends State<AutoLoan> {
       'Jeep': 0.75,
     };
     double maintenancePercentage = maintenanceCostMap[selectedBrand] ?? 2.0;
-    annualMaintenanceCost = (maintenanceCost / 100) * carPrice; // Use slider value
+    annualMaintenanceCost =
+        (maintenanceCost / 100) * carPrice; // Use slider value
 
     Map<String, double> depreciationMap = {
       'Toyota': 0.60,
@@ -125,25 +132,63 @@ class _AutoLoanState extends State<AutoLoan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbarHeader("Auto Loan Calculator", context),
+      backgroundColor: AppColors.primaryColor,
+      // appBar: appbarHeader("Auto Loan Calculator", context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SliderPage(
-                  slidersList: slidersList,
-                  onSliderValueChanged: updateSliderValue,
-                  title: "Cars",
-                ),
-                graph(),
-                CustomExpansionTile(
-                  howToUseContent: howToUseContent,
-                  howItWorksContent: howItWorksContent,
-                ),
-              ],
+          child: Container(
+             padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: AppColors.primaryColorHeader),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: AppColors.backgroundColor,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Text(
+                        "Auto loan Calculator",
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: AppColors.backgroundColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SliderPage(
+                    slidersList: slidersList,
+                    onSliderValueChanged: updateSliderValue,
+                    title: "Cars",
+                  ),
+                  Container(
+                      decoration: BoxDecoration(
+                          color: AppColors.backgroundColor,
+                          borderRadius: BorderRadius.circular(12)),
+                      child: graph()),
+                       SizedBox(
+                    height: 10,
+                  ),
+                  CustomExpansionTile(
+                    howToUseContent: howToUseContent,
+                    howItWorksContent: howItWorksContent,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -155,39 +200,100 @@ class _AutoLoanState extends State<AutoLoan> {
     return PieChartGraph(
       title: "Auto Loan Details:",
       graphData: [
-        {'title': 'Total Loan Cost: ₹${formatMoneyIndian(totalLoanCost.toStringAsFixed(2))}', 'value': totalLoanCost},
-        {'title': 'Annual Maintenance: ₹${formatMoneyIndian(annualMaintenanceCost.toStringAsFixed(2))}', 'value': annualMaintenanceCost},
-        {'title': 'Depreciation Value: ₹${formatMoneyIndian(depreciationValue.toStringAsFixed(2))}', 'value': depreciationValue},
+        {
+          'title':
+              'Total Loan Cost: ₹${formatMoneyIndian(totalLoanCost.toStringAsFixed(2))}',
+          'value': totalLoanCost
+        },
+        {
+          'title':
+              'Annual Maintenance: ₹${formatMoneyIndian(annualMaintenanceCost.toStringAsFixed(2))}',
+          'value': annualMaintenanceCost
+        },
+        {
+          'title':
+              'Depreciation Value: ₹${formatMoneyIndian(depreciationValue.toStringAsFixed(2))}',
+          'value': depreciationValue
+        },
       ],
       graphDisc: [
-        {'title': 'Monthly Loan Payment:', 'amount': "₹${formatMoneyIndian(monthlyLoanPayment.toStringAsFixed(2))}"},
-        {'title': 'Total Loan Cost:', 'amount': "₹${formatMoneyIndian(totalLoanCost.toStringAsFixed(2))}"},
-        {'title': 'Annual Maintenance:', 'amount': "₹${formatMoneyIndian(annualMaintenanceCost.toStringAsFixed(2))}"},
-        {'title': 'Depreciation Value:', 'amount': "₹${formatMoneyIndian(depreciationValue.toStringAsFixed(2))}"},
+        {
+          'title': 'Monthly Loan Payment:',
+          'amount':
+              "₹${formatMoneyIndian(monthlyLoanPayment.toStringAsFixed(2))}"
+        },
+        {
+          'title': 'Total Loan Cost:',
+          'amount': "₹${formatMoneyIndian(totalLoanCost.toStringAsFixed(2))}"
+        },
+        {
+          'title': 'Annual Maintenance:',
+          'amount':
+              "₹${formatMoneyIndian(annualMaintenanceCost.toStringAsFixed(2))}"
+        },
+        {
+          'title': 'Depreciation Value:',
+          'amount':
+              "₹${formatMoneyIndian(depreciationValue.toStringAsFixed(2))}"
+        },
       ],
     );
   }
 
   final List<ListItemModel> howToUseContent = [
-    ListItemModel(title: "Car Price", description: "Use the slider to set the price of the car you intend to purchase."),
-    ListItemModel(title: "Down Payment (%)", description: "Adjust the slider to set the percentage of the car price you plan to pay as a down payment."),
-    ListItemModel(title: "Loan Interest Rate (%)", description: "Set the annual interest rate for the loan using the slider."),
-    ListItemModel(title: "Loan Tenure (Months)", description: "Adjust the slider to set the loan tenure in months (12-120 months)."),
-    ListItemModel(title: "Annual Maintenance Cost (% of car price)", description: "Set the annual maintenance cost as a percentage of the car price using the slider."),
-    ListItemModel(title: "Select Car Brand", description: "Choose from various car brands to see estimates tailored to specific vehicles."),
+    ListItemModel(
+        title: "Car Price",
+        description:
+            "Use the slider to set the price of the car you intend to purchase."),
+    ListItemModel(
+        title: "Down Payment (%)",
+        description:
+            "Adjust the slider to set the percentage of the car price you plan to pay as a down payment."),
+    ListItemModel(
+        title: "Loan Interest Rate (%)",
+        description:
+            "Set the annual interest rate for the loan using the slider."),
+    ListItemModel(
+        title: "Loan Tenure (Months)",
+        description:
+            "Adjust the slider to set the loan tenure in months (12-120 months)."),
+    ListItemModel(
+        title: "Annual Maintenance Cost (% of car price)",
+        description:
+            "Set the annual maintenance cost as a percentage of the car price using the slider."),
+    ListItemModel(
+        title: "Select Car Brand",
+        description:
+            "Choose from various car brands to see estimates tailored to specific vehicles."),
   ];
 
   final List<ListItemModel> howItWorksContent = [
-    ListItemModel(title: "Monthly Loan Payment Calculation", description: "The calculator determines the Equated Monthly Installment (EMI) based on the car price, down payment, loan interest rate, and loan tenure."),
-    ListItemModel(title: "Total Loan Cost Calculation", description: "This includes the total amount paid towards the loan over the specified tenure, considering the EMI payments."),
-    ListItemModel(title: "Annual Maintenance Cost Calculation", description: "The calculator estimates the annual maintenance expenses based on the specified maintenance cost percentage."),
-    ListItemModel(title: "Depreciation Value Calculation", description: "The estimated depreciation value of the car after four years is calculated based on the selected car brand."),
+    ListItemModel(
+        title: "Monthly Loan Payment Calculation",
+        description:
+            "The calculator determines the Equated Monthly Installment (EMI) based on the car price, down payment, loan interest rate, and loan tenure."),
+    ListItemModel(
+        title: "Total Loan Cost Calculation",
+        description:
+            "This includes the total amount paid towards the loan over the specified tenure, considering the EMI payments."),
+    ListItemModel(
+        title: "Annual Maintenance Cost Calculation",
+        description:
+            "The calculator estimates the annual maintenance expenses based on the specified maintenance cost percentage."),
+    ListItemModel(
+        title: "Depreciation Value Calculation",
+        description:
+            "The estimated depreciation value of the car after four years is calculated based on the selected car brand."),
   ];
 }
 
 PreferredSizeWidget appbarHeader(String title, BuildContext context) {
   return AppBar(
     centerTitle: true,
-    title: textStyle(context: context, text: title, fontsize: 16, fontWeight: FontWeight.w500),
+    title: textStyle(
+        context: context,
+        text: title,
+        fontsize: 16,
+        fontWeight: FontWeight.w500),
   );
 }

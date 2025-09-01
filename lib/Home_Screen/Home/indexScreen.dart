@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manually.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStack.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/headsUpAndMoneyMap.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
@@ -103,7 +104,7 @@ class IndexScreen extends StatelessWidget {
       return SizedBox(
         height: height * (totalDebitThisMonth.value <= 0 ? 0.54 : 0.21),
         child: totalDebitThisMonth.value <= 0
-            ? SwipeableCardsScreen()
+            ? FinoraLastTwoMonthsDashboard()
             : SwipeableCardsScreen(),
       );
     });

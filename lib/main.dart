@@ -118,8 +118,7 @@ class _MyAppState extends State<MyApp> {
         // Attach updateNavigatorKey to a nested Navigator if needed (optional)
         builder: (context, child) {
           return Navigator(
-            key:
-                updateNavigatorKey, // Attach updateNavigatorKey for update dialogs
+            key:updateNavigatorKey, // Attach updateNavigatorKey for update dialogs
             onGenerateRoute: (settings) => MaterialPageRoute(
               builder: (context) =>
                   child ?? Container(), // Fallback to empty container

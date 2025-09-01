@@ -108,13 +108,15 @@ Future<bool> check(context, String flag) async {
   return true;
 }
 
-Future<void> storeDeviceInfo() async {
+Future<void> storeDeviceInfo(context) async {
   var json = await getUserStats();
   var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
   if (getFlagOfResponse(responce)) {}
   try {
     await postDataApiCall("${url}/user/logout", {});
-  } catch (e) {}
+  } catch (e) {
+      logoutUserFromDevice(context);
+  }
 }
 
 Future<void> storeDeviceInfoLocalBackState() async {
