@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -941,10 +942,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                               builder: (context) {
                               
                               
-                              
-                                int customCategoryCount = categories
-                                    .where((cat) => cat['isCustom'])
-                                    .length;
+                  
+                                int customCategoryCount =  categories.length-3;
 
                                 return StatefulBuilder(
                                   builder: (BuildContext context,
@@ -978,58 +977,11 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                                       AppColors.backgroundColor,
                                                 ),
                                               ),
-                                              if (customCategoryCount < 2)
-                                                IconButton(
-                                                  icon: const Icon(Icons.add,
-                                                      color: AppColors
-                                                          .backgroundColor),
-                                                  onPressed: () {
-                                                    String newCategoryName =
-                                                        newCategoryController
-                                                            .text
-                                                            .trim();
-                                                    if (newCategoryName
-                                                            .isNotEmpty &&
-                                                        !categories.any((cat) =>
-                                                            cat['name']
-                                                                .toLowerCase() ==
-                                                            newCategoryName
-                                                                .toLowerCase()) &&
-                                                        customCategoryCount <
-                                                            2) {
-                                                      modalSetState(() {
-                                                        categories.add({
-                                                          'name':
-                                                              newCategoryName,
-                                                          'controller':
-                                                              TextEditingController(),
-                                                          'isCustom': true,
-                                                        });
-                                                        customCategoryCount++;
-                                                        newCategoryController
-                                                            .clear();
-                                                      });
-                                                      _saveCustomCategories();
-                                                      setState(() {
-                                                        _calculateShares();
-                                                      });
-                                                    } else if (newCategoryName
-                                                        .isEmpty) {
-                                                      snackBarCalledfail(
-                                                          context,
-                                                          'Category name cannot be empty');
-                                                    } else if (categories.any(
-                                                        (cat) =>
-                                                            cat['name']
-                                                                .toLowerCase() ==
-                                                            newCategoryName
-                                                                .toLowerCase())) {
-                                                      snackBarCalledfail(
-                                                          context,
-                                                          'Category name already exists');
-                                                    }
-                                                  },
-                                                ),
+
+                                              InkWell(onTap: () {
+                                                 Navigator.pop(context);
+                                              },child: Icon(Icons.close,size: 25,color: Colorcodes.white,))
+                                              
                                             ],
                                           ),
                                           const SizedBox(height: 16),
