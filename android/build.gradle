@@ -20,7 +20,7 @@ if (credentialsFile.exists()) {
         credentialsProps.load(it)
     }
 } else {
-    throw new GradleException("Missing credentials.properties file!")
+    throw new RuntimeException("Missing credentials.properties file!")
 }
 
 allprojects {

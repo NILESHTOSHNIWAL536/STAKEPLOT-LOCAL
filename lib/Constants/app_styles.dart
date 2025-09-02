@@ -288,6 +288,7 @@ class Finance {
   static String addBudget = "assets/icons/financeScreen/addBudget.svg";
   static String vegNonveg = "assets/icons/financeScreen/vegnonveg.svg";
   static String currency = "assets/icons/financeScreen/currency.svg";
+  static String debtIcon = "assets/icons/financeScreen/debtIcon.svg";
 }
 
 class BudgetCategories {

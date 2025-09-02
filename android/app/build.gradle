@@ -102,7 +102,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.stakeplot.pfa"
     compileSdk = 35
-    ndkVersion = "25.1.8937393"    
+    ndkVersion = "26.2.11394342"    
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -126,6 +126,12 @@ android {
         // Add MultiDex support
          multiDexEnabled true
     }
+    packagingOptions {
+    jniLibs {
+        useLegacyPackaging false
+    }
+}
+
 
     signingConfigs {
         debug {

@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/BudgetSearch.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/financeWidgets.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
@@ -79,15 +80,13 @@ class _BudgetState extends State<Budget> {
           title:Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(Icons.account_balance_wallet,
-                      color: AppColors.primaryColor, size: 22 * 1.2),
-                  SizedBox(width: 12),
+                 
                   textStyle(
                     context: context,
                     text:  PlotFinanceStaticData().budgetPlannerTitle,
-                    fontsize: 20 * 1.2,
-                    fontWeight: FontWeight.bold,
-                    c: AppColors.accentColor,
+                    fontsize: 20 ,
+                    fontWeight: FontWeight.w700,
+                    c: AppColors.primaryColor,
                   ),
                 ],
               ),
@@ -103,7 +102,10 @@ class _BudgetState extends State<Budget> {
             builder: (context, constraints) {
               double height = constraints.maxHeight;
               double width = constraints.maxWidth;
-              return getBudgetUiScreen(height, width, context);
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: getBudgetUiScreen(height, width, context),
+              );
             },
           ),
         ),
@@ -112,124 +114,168 @@ class _BudgetState extends State<Budget> {
     );
   }
 
-  Widget getBudgetUiScreen(double height, double width, BuildContext context) {
-    double responsivePadding =
-        width > 600 ? 32 : 24; // Larger padding for tablets
-    double fontScale =
-        width > 600 ? 1.2 : 1.0; // Scale fonts for larger screens
+ Widget getBudgetUiScreen(double height, double width, BuildContext context) {
+  double responsivePadding = width > 600 ? 32 : 24; // Larger padding for tablets
+  double fontScale = width > 600 ? 1.2 : 1.0; // Scale fonts for larger screens
 
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.backgroundColor,
-            AppColors.accentColor.withOpacity(0.1),
+  return Column(
+    children: [
+       Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: FinanceWidgets.budgetHorizontalList(context),
+        ),
+      Container(
+        width: MediaQuery.sizeOf(context).width / 1.2,
+        height: MediaQuery.sizeOf(context).height / 1.7,
+        // padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Color(0xFFF3F4F6),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.05),
+              offset: Offset(0, 1),
+              blurRadius: 2,
+            ),
           ],
         ),
-      ),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: responsivePadding, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 20),
-              // Row(
-              //   children: [
-              //     Icon(Icons.account_balance_wallet,
-              //         color: AppColors.primaryColor, size: 22 * fontScale),
-              //     SizedBox(width: 12),
-              //     textStyle(
-              //       context: context,
-              //       text:  PlotFinanceStaticData().budgetPlannerTitle,
-              //       fontsize: 20 * fontScale,
-              //       fontWeight: FontWeight.bold,
-              //       c: AppColors.accentColor,
-              //     ),
-              //   ],
-              // ),
-              SizedBox(height: 8),
-              textStyle(
-                context: context,
-                text: PlotFinanceStaticData().budgetPlannerDescription,
-                fontsize: 14 * fontScale,
-                fontWeight: FontWeight.w300,
-                c: Colors.grey[600]!,
-              ),
-              SizedBox(height: 32),
-              Container(
-                padding: EdgeInsets.all(responsivePadding * 0.8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 5,
-                      blurRadius: 15,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFeildWidgetCustom(
-                      textEditingController: nameController,
-                      heading: PlotFinanceStaticData().nameLabel, // Updated
-                      keyBoard: TextInputType.emailAddress,
-                      lableText: PlotFinanceStaticData().enterBudgetNameHint, // Updated
-                      icon: Icons.person,
-                    ),
-                    SizedBox(height: 20),
-                    TextFeildWidgetCustom(
-                      textEditingController: amountController,
-                      heading: PlotFinanceStaticData().amountLabelBudget, // Updated
-                      keyBoard: TextInputType.number,
-                      lableText: PlotFinanceStaticData().enterAmountHintBudget, // Updated
-                      icon: Icons.currency_rupee_rounded,
-                      needAmountFormat: true,
-                    ),
-                    SizedBox(height: 24),
-                    textStyle(
-                      context: context,
-                      text: PlotFinanceStaticData().durationLabel, // Updated
-                      fontsize: 16 * fontScale,
-                      fontWeight: FontWeight.bold,
-                      c: AppColors.accentColor,
-                    ),
-                    SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(16),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 12.0),
+                              child: Text(
+                                "Add budget",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  fontSize: 18,
+                                  color: AppColors.accentColor,
+                                  lWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFeildWidgetCustom(
+                        textEditingController: nameController,
+                        heading: PlotFinanceStaticData().nameLabel,
+                        keyBoard: TextInputType.emailAddress,
+                        lableText: PlotFinanceStaticData().enterBudgetNameHint,
+                        icon: Icons.person,
                       ),
-                      child: boolFlag.value ? rowPer(width) : rowPer(width),
-                    ),
-                  ],
+                      SizedBox(height: 10),
+                      TextFeildWidgetCustom(
+                        textEditingController: amountController,
+                        heading: PlotFinanceStaticData().amountLabelBudget,
+                        keyBoard: TextInputType.number,
+                        lableText: PlotFinanceStaticData().enterAmountHintBudget,
+                        icon: Icons.currency_rupee_rounded,
+                        needAmountFormat: true,
+                      ),
+                      SizedBox(height: 10),
+                      textStyle(
+                        context: context,
+                        text: PlotFinanceStaticData().durationLabel,
+                        fontsize: 16 * fontScale,
+                        fontWeight: FontWeight.bold,
+                        c: AppColors.accentColor,
+                      ),
+                     SizedBox(height: 10),
+                      // Improved Dropdown for duration selection
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.mt,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppColors.border),
+                          
+                        ),
+                        child: Obx(() => DropdownButton<String>(
+                              value: period.value.isEmpty ? null : period.value,
+                              hint: Center(
+                                child: Padding(
+                                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                  child: textStyle(
+                                    context: context,
+                                    text: "Select Duration",
+                                    fontsize: 14 * fontScale,
+                                    fontWeight: FontWeight.w300,
+                                    c: AppColors.bg6,
+                                  ),
+                                ),
+                              ),
+                              isExpanded: true,
+                              underline: SizedBox(), // Remove default underline
+                              icon: Icon(
+                                Icons.arrow_drop_down,
+                                color: AppColors.accentColor,
+                                size: 24 * fontScale,
+                              ),
+                              dropdownColor: Colors.white,
+                              items: [
+                                PlotFinanceStaticData().weeklyPeriod,
+                                PlotFinanceStaticData().monthlyPeriod,
+                                PlotFinanceStaticData().yearlyPeriod,
+                              ].map((String periodItem) {
+                                return DropdownMenuItem<String>(
+                                  value: periodItem,
+                                  child: textStyle(
+                                    context: context,
+                                    text: periodItem,
+                                    fontsize: 14 * fontScale,
+                                    fontWeight: FontWeight.w500,
+                                    c: AppColors.bg3,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  period.value = newValue;
+                                  boolFlag.value = !boolFlag.value;
+                                  period.refresh();
+                                }
+                              },
+                              style: FontManager().getTextStyle(
+                                context,
+                                fontSize: 14 * fontScale,
+                                lWeight: FontWeight.w500,
+                                color: AppColors.bg3,
+                              ),
+                              itemHeight: 48, // Consistent item height
+                              menuMaxHeight: 200, // Limit dropdown menu height
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 40),
-              InkWell(
-                onTap: () {
-                  bedgetCalculator();
-                },
-                 child: getButton(context, PlotFinanceStaticData().continueButton),
-              ),
-              SizedBox(height: 20), // Extra padding at bottom for scroll
-            ],
+                SizedBox(height: 20),
+                InkWell(
+                  onTap: () {
+                    bedgetCalculator();
+                  },
+                  child: getButton(context, PlotFinanceStaticData().continueButton),
+                ),
+                SizedBox(height: 20), // Extra padding at bottom for scroll
+              ],
+            ),
           ),
         ),
       ),
-    );
-  }
-
+    ],
+  );
+}
   Widget rowPer(double width) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,

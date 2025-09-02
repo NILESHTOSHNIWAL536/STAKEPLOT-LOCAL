@@ -45,7 +45,7 @@ class PlotFinanceStaticData {
 
 
   // CreateDebtScreen - Form Fields
-  String createDebtTitle = "Create Debt";
+  String createDebtTitle = "Add Debt";
   String enterDebtName = "Enter Debt Name";
   String selectLoanType = "Select Loan Type";
   String enterDebtAmount = "Enter Debt Amount";
@@ -60,7 +60,12 @@ class PlotFinanceStaticData {
   String enterDuration = "Enter Duration (months)";
   String validateDuration = "Please enter duration";
   String validateDate = "Please select a date";
-
+ String get debtNameLabel => 'Debt Name';
+  String get loanTypeLabel2 => 'Loan Type';
+  String get debtAmountLabel2 => 'Debt Amount';
+  String get interestRateLabel2 => 'Interest Rate (%)';
+  String get durationLabel3 => 'Duration (Months)';
+  String get dateLabel2 => 'Start Date';
   // CreateDebtScreen - Loan Types
   String loanType = "Personal Loan";
   String homeLoan = "Home Loan";
@@ -123,7 +128,7 @@ class PlotFinanceStaticData {
   // Budget - UI Elements
   String budgetPlannerTitle = "Budget Planner";
   String budgetPlannerDescription = "Plan and manage your budget effectively";
-  String nameLabel = "Name";
+  String nameLabel = "Budget name";
   String enterBudgetNameHint = "Enter budget name";
   String amountLabelBudget = "Amount";
   String enterAmountHintBudget = "Enter amount";

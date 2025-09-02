@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -16,76 +17,83 @@ class CardBuilders {
     return GestureDetector(
       onTap: () => onTap(debt),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
-        constraints: BoxConstraints(
-          minHeight: 140,
-          maxWidth: MediaQuery.of(context).size.width * 0.85,
-        ),
+        // margin: const EdgeInsets.symmetric(vertical: 8.0),
+        height: MediaQuery.sizeOf(context).height/5,
+        width: MediaQuery.sizeOf(context).width/4,
         decoration: BoxDecoration(
-         color: AppColors.mt,
+                  color: AppColors.backgroundColor,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: Color(0xFFF3F4F6),
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.05),
+                      offset: Offset(0, 1),
+                      blurRadius: 2,
+                    ),
+                  ],
+                ),
+        child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-           
-          ],
+          onTap: () => onTap(debt),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                 AvatarProfileImageZero(
+           url: Finance.debtIcon,
+           width: 1, 
+           height: 26
         ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(20),
-            onTap: () => onTap(debt),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  globalText(
-                    context: context,
-                    text: debt.name,
-                    fontWeight: FontWeight.w700,
-                    fontsize: 18,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    color: AppColors.accentColor,
-                  ),
-                  const SizedBox(height: 6),
-                  globalText(
-                    context: context,
-                    text:  PlotFinanceStaticData().amountLabel,
-                    fontWeight: FontWeight.w500,
-                    fontsize: 13,
-                    color: Colors.grey[600]!,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      globalText(
+                globalText(
+                  context: context,
+                  text: debt.name,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 16,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  color: AppColors.primaryColor,
+                ),
+                const SizedBox(height: 6),
+                // globalText(
+                //   context: context,
+                //   text:  PlotFinanceStaticData().amountLabel,
+                //   fontWeight: FontWeight.w500,
+                //   fontsize: 13,
+                //   color: Colors.grey[600]!,
+                //   overflow: TextOverflow.ellipsis,
+                //   maxLines: 1,
+                // ),
+                // const SizedBox(height: 10),
+                Row(
+                  children: [
+                    globalText(
+                      context: context,
+                      text: PlotFinanceStaticData().debtPrefix,
+                      fontWeight: FontWeight.w600,
+                      fontsize: 14,
+                      color: AppColors.grey
+                    ),
+                    Flexible(
+                      child: globalText(
                         context: context,
-                        text: PlotFinanceStaticData().debtPrefix,
+                        text:
+                            '₹${formatMoneyIndian(debt.amount.toStringAsFixed(2))}',
                         fontWeight: FontWeight.w600,
                         fontsize: 14,
-                        color: AppColors.accentColor.withOpacity(0.9),
+                        color: AppColors.primaryColor,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      Flexible(
-                        child: globalText(
-                          context: context,
-                          text:
-                              '₹${formatMoneyIndian(debt.amount.toStringAsFixed(2))}',
-                          fontWeight: FontWeight.w600,
-                          fontsize: 14,
-                          color: AppColors.primaryColor,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+              ],
             ),
           ),
         ),
@@ -285,6 +293,150 @@ class CardBuilders {
                         ),
                       ),
                     ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  static Widget budgetCard2(BuildContext context, dynamic data) {
+    double budgetAmount =
+        double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
+    double spentAmount =
+        double.tryParse(data['spentAmount']?.toString() ?? '0') ?? 0;
+
+    double percentageSpent =
+        budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
+    if (percentageSpent > 100) percentageSpent = 100;
+
+    List<ChartData> chartData = [
+      ChartData(
+        PlotFinanceStaticData().spent,
+        spentAmount > budgetAmount ? spentAmount : spentAmount,
+        AppColors.primaryColor.withOpacity(0.9),
+      ),
+      ChartData(
+        PlotFinanceStaticData().remaining,
+        spentAmount > budgetAmount ? 0 : budgetAmount - spentAmount,
+        Colors.grey[300]!.withOpacity(0.7),
+      ),
+    ];
+
+    return GestureDetector(
+      onTap: () {
+       
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyBudgetScreen(
+            data: data,
+            
+          )),
+        );
+      },
+      child: Container(
+        // margin: const EdgeInsets.symmetric(vertical: 8.0),
+        // constraints: BoxConstraints(
+        //   minHeight: 140,
+        //   maxWidth: MediaQuery.of(context).size.width * 0.85,
+        // ),
+         decoration: BoxDecoration(
+                  color: AppColors.backgroundColor,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: Color(0xFFF3F4F6),
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.05),
+                      offset: Offset(0, 1),
+                      blurRadius: 2,
+                    ),
+                  ],
+                ),
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: () {
+                
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyBudgetScreen(data: data)),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                   AvatarProfileImageZero(
+           url: Finance.debtIcon,
+           width: 1, 
+           height: 26
+        ),
+        const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            globalText(
+                              context: context,
+                              text: data['name']?.toString() ??PlotFinanceStaticData().unnamedBudget,
+                              fontWeight: FontWeight.w500,
+                              fontsize: 16,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              color: AppColors.accentColor,
+                            ),
+                            const SizedBox(height: 10),
+                            
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: globalText(
+                                    context: context,
+                                    text:
+                                        '₹${formatMoneyIndian(spentAmount.toStringAsFixed(2))}',
+                                    fontWeight: FontWeight.w500,
+                                    fontsize: 12,
+                                    color: Colors.redAccent,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Flexible(
+                                  child: globalText(
+                                    context: context,
+                                    text:
+                                        '/₹${formatMoneyIndian(budgetAmount.toStringAsFixed(2))}',
+                                    fontWeight: FontWeight.w600,
+                                    fontsize: 14,
+                                    color: AppColors.primaryColor,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            
+                           
+                          ],
+                        ),
+                      ),
+                      
+                    
+                    ],
                   ),
                 ],
               ),

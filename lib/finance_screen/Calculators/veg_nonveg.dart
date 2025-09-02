@@ -165,10 +165,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     try{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? savedCategories = prefs.getString(target);
-    print("savedCategories---------------------------------------------------");
-    print(savedCategories);
+    
     if (savedCategories != null) {
-       List<String> names=savedCategories.split("--");
+       List<String> names=savedCategories.substring(1,savedCategories.length-1).split("--");
       RxList<Map<String, dynamic>> customCategories = names
     .asMap()
     .entries

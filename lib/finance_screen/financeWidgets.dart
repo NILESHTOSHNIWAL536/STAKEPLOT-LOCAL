@@ -174,7 +174,7 @@ class FinanceWidgets {
         ? SizedBox.shrink()
         : Center(
             child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
+                height: MediaQuery.of(context).size.height * 0.15,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: debts.length,
@@ -184,8 +184,8 @@ class FinanceWidgets {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: SizedBox(
                         width: isSingleDebt
-                            ? screenWidth * 0.9
-                            : screenWidth * 0.8,
+                            ? screenWidth * 0.4
+                            : screenWidth * 0.4,
                         child: CardBuilders.debtCard(context, debt, onDebtTap),
                       ),
                     );
@@ -204,19 +204,19 @@ class FinanceWidgets {
       return sortedBudgets.isEmpty
           ? SizedBox.shrink()
           : SizedBox(
-              height: MediaQuery.of(context).size.height * 0.2,
+              height: MediaQuery.of(context).size.height * 0.15,
               child: Center(
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: sortedBudgets.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
                       child: SizedBox(
                         width: isSingleBudget
-                            ? screenWidth * 0.9
-                            : screenWidth * 0.8,
-                        child: CardBuilders.budgetCard(
+                            ? screenWidth * 0.5
+                            : screenWidth * 0.5,
+                        child: CardBuilders.budgetCard2(
                             context, sortedBudgets[index]),
                       ),
                     );
