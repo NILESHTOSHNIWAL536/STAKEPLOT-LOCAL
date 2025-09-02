@@ -40,7 +40,7 @@ Future<void> fetchCardData() async {
 Future<void> LinkBankData() async {
   try {
     // API call (replace url with your actual base url)
-    var response = await getDataApiCall("${url}/user/readEmail/${selectedBankName.value}");
+    var response = await getDataApiCall("${url}/user/readEmail/${selectedBankName.value+"-"+"HDFC Bank"+"-"+"Bank of India"}");
 
     if (getFlagOfResponse(response)) {
       var data = jsonDecode(response.body);
