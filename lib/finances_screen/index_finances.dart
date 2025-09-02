@@ -10,6 +10,7 @@ import 'creditCard_slider.dart';
 import 'dilogbox.dart';
 import 'searchfinance.dart';
 import 'select_card_options.dart';
+import 'show_complete_info.dart';
 import 'slider_addding_finances.dart';
 import 'topay_toreceive.dart';
 
@@ -118,7 +119,8 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: _buildSectionHeader('Credit Cards', () {
                     // showBudgetDebtCreditCard(context);
-                    pushnameToRoute(context, SelectAnyOptionScreen(),false);
+                    pushnameToRoute(context, ShowCompleteInfo(),false);
+                    // pushnameToRoute(context, SelectAnyOptionScreen(),false);
                 }),
               ),
 

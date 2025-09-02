@@ -97,17 +97,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           .build(),
     );
     setUpSocketListener();
-    getStoredData();
     _loadCustomCategories();
   }
 
-  void getStoredData()async{
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // String? defaultBack = prefs.getString('custom_categories');
-    // print("defaultBack");
-    // print(defaultBack);
-
-  }
 
   void _addCurrentUserToMembers() {
     final String currentUserId = userController.userId.value;
@@ -196,14 +188,21 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       setState(() {
          categories.clear(); 
           categories.addAll(customCategories);
-         categoriesEdit.clear(); 
+          categoriesEdit.clear(); 
           categoriesEdit.addAll(categories);
           categories.forEach((element){
               controllers.add(TextEditingController(text: element['name'].toString()));
           });
-
       });
       _calculateShares();
+    }else
+    {
+       categoriesEdit.clear(); 
+          categoriesEdit.addAll(categories);
+          categories.forEach((element){
+              controllers.add(TextEditingController(text: element['name'].toString()));
+          });
+        _calculateShares();
     }
     }catch(e){
       print(e);
