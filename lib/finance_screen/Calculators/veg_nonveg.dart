@@ -217,10 +217,10 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> namesList=[];
     categories.forEach((e){
-      namesList.add(e['name']);
+      namesList.add(e['name'].toString().trim());
     });
 
-    await prefs.setString(target, jsonEncode(namesList.join("--")));
+    await prefs.setString(target, jsonEncode(namesList.join("--").toString().trim()));
 
     }catch(e)
     {
