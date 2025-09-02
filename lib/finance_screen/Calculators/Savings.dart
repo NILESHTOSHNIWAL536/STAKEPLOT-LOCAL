@@ -261,16 +261,16 @@ class _SavingsState extends State<Savings> {
                               border: Border.all(color: Colors.white, width: 1),
                             ),
                             child: SingleChildScrollView(
-                              child: Text(
-                                "The Credit Card Payoff Calculator helps you estimate how long it will take to pay off your credit card balance. Adjust the sliders to input your current balance, interest rate, and monthly payment to see the payoff time and total interest paid.",
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: AppColors.primaryColor,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                             child: Text(
+  "The Savings Goal Calculator helps you estimate how much you can save towards your financial goal. Adjust the sliders to input your target amount, current savings, monthly contribution, timeframe in months, and annual interest rate to see the projected end balance, interest earned, and progress towards your goal.",
+  style: FontManager().getTextStyle(
+    context,
+    lWeight: FontWeight.w400,
+    fontSize: 14,
+    color: AppColors.primaryColor,
+  ),
+  textAlign: TextAlign.center,
+),
                             ),
                           )
                         : SizedBox.shrink(),

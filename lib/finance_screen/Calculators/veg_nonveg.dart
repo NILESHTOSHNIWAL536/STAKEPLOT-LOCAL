@@ -1252,7 +1252,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                 return Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 8),
+                                        horizontal: 12, vertical: 6),
                                     child: _buildInputColumn(
                                       category["name"],
                                       category["controller"],
@@ -1269,27 +1269,31 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                         // const SizedBox(height: 10),
 
                         // Newly added categories (if any) below the row
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: List.generate(
-                            categories.length > 3
-                                ? categories.length - 3
-                                : 0, // only extra ones
-                            (index) {
-                              final category = categories[index + 3];
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 6.0),
-                                child: _buildInputColumn(
-                                  category["name"],
-                                  category["controller"],
-                                  index + 3,
-                                  category["isCustom"],
-                                ),
-                              );
-                            },
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Row(
+                           mainAxisAlignment: MainAxisAlignment.start,
+                            children: List.generate(
+                              categories.length > 3
+                                  ? categories.length - 3
+                                  : 0, // only extra ones
+                              (index) {
+                                final category = categories[index + 3];
+                                return Padding(
+                                   padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 6),
+                                  child: _buildInputColumn(
+                                    category["name"],
+                                    category["controller"],
+                                    index + 3,
+                                    category["isCustom"],
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
+                     
                       ],
                     )),
                 // Search bar
@@ -1299,7 +1303,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                 ),
                 // Scrollable section
                 Container(
-                  height: MediaQuery.sizeOf(context).height / 2.4,
+                  height: categories.length > 3 ? MediaQuery.sizeOf(context).height / 3.2 : MediaQuery.sizeOf(context).height / 2.4,
                   child: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),

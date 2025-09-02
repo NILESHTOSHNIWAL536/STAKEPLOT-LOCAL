@@ -218,16 +218,16 @@ class _EmiState extends State<Emi> {
                               border: Border.all(color: Colors.white, width: 1),
                             ),
                             child: SingleChildScrollView(
-                              child: Text(
-                                "The Credit Card Payoff Calculator helps you estimate how long it will take to pay off your credit card balance. Adjust the sliders to input your current balance, interest rate, and monthly payment to see the payoff time and total interest paid.",
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: AppColors.primaryColor,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                              child:Text(
+  "The EMI Calculator helps you estimate your monthly loan repayment amount. Adjust the sliders to input your loan amount, annual interest rate, and loan tenure in months to see the monthly EMI and total interest paid.",
+  style: FontManager().getTextStyle(
+    context,
+    lWeight: FontWeight.w400,
+    fontSize: 14,
+    color: AppColors.primaryColor,
+  ),
+  textAlign: TextAlign.center,
+),
                             ),
                           )
                         : SizedBox.shrink(),

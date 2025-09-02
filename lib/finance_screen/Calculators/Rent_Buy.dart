@@ -287,15 +287,15 @@ bool _isInfoVisible = false; // Controls visibility of the container
                             ),
                             child: SingleChildScrollView(
                               child: Text(
-                                "The Credit Card Payoff Calculator helps you estimate how long it will take to pay off your credit card balance. Adjust the sliders to input your current balance, interest rate, and monthly payment to see the payoff time and total interest paid.",
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: AppColors.primaryColor,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+  "The Rent vs. Buy Calculator helps you compare the costs of renting versus buying a home. Adjust the sliders to input the home price, down payment, loan interest rate, loan tenure, property tax rate, maintenance cost, home appreciation rate, monthly rent, and rent increase rate to see the total costs of renting and buying.",
+  style: FontManager().getTextStyle(
+    context,
+    lWeight: FontWeight.w400,
+    fontSize: 14,
+    color: AppColors.primaryColor,
+  ),
+  textAlign: TextAlign.center,
+),
                             ),
                           )
                         : SizedBox.shrink(),

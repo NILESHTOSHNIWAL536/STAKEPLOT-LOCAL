@@ -86,20 +86,21 @@ class _SIPCalculatorState extends State<SIPCalculator> {
     });
   }
 
-  void calculateSIPDetails() {
-    double monthlyRate = expectedReturnRate / 12 / 100;
-    double months = investmentPeriod * 12;
-    if (monthlyRate == 0) {
-      futureValue = monthlyInvestment * months;
-    } else {
-      futureValue = monthlyInvestment *
-          ((pow(1 + monthlyRate, months) - 1) / monthlyRate) *
-          (1 + monthlyRate);
-    }
-    totalInvested = monthlyInvestment * months;
-    totalReturns = futureValue - totalInvested;
-    totalReturns = totalReturns < 0 ? 0 : totalReturns;
+ void calculateSIPDetails() {
+  double annualRate = expectedReturnRate / 100;
+  double monthlyRate = pow(1 + annualRate, 1 / 12) - 1;
+  double months = investmentPeriod * 12;
+  if (monthlyRate == 0) {
+    futureValue = monthlyInvestment * months;
+  } else {
+    futureValue = monthlyInvestment *
+        ((pow(1 + monthlyRate, months) - 1) / monthlyRate) *
+        (1 + monthlyRate);
   }
+  totalInvested = monthlyInvestment * months;
+  totalReturns = futureValue - totalInvested;
+  totalReturns = totalReturns < 0 ? 0 : totalReturns;
+}
 
   @override
   void dispose() {
@@ -193,7 +194,9 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                             ),
                             child: SingleChildScrollView(
                               child: Text(
-                                "The SIP Calculator helps you estimate the future value of your Systematic Investment Plan. Adjust the sliders to input your monthly investment, expected annual return rate, and investment period to see the total invested amount and returns.",
+                                
+  "The SIP Calculator helps you estimate the future value of your Systematic Investment Plan. Adjust the sliders to input your monthly investment, expected annual return rate (net of fees), and investment period to see the total invested amount and returns.",
+  
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w400,

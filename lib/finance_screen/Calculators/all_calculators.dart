@@ -34,21 +34,21 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
       'svgPath': 'assets/icons/financeScreen/f4.svg',
       'screen': RentBuy(),
     },
-    {
-      'name': 'Savings Goal',
-      'svgPath': 'assets/icons/financeScreen/f3.svg',
-      'screen': Savings(),
-    },
-    {
-      'name': 'Auto Loan',
-      'svgPath': 'assets/icons/financeScreen/f2.svg',
-      'screen': AutoLoan(),
-    },
-    {
-      'name': 'Cost',
-      'svgPath': 'assets/icons/financeScreen/f1.svg',
-      'screen': TripCost(),
-    },
+    // {
+    //   'name': 'Savings Goal',
+    //   'svgPath': 'assets/icons/financeScreen/f3.svg',
+    //   'screen': Savings(),
+    // },
+    // {
+    //   'name': 'Auto Loan',
+    //   'svgPath': 'assets/icons/financeScreen/f2.svg',
+    //   'screen': AutoLoan(),
+    // },
+    // {
+    //   'name': 'Cost',
+    //   'svgPath': 'assets/icons/financeScreen/f1.svg',
+    //   'screen': TripCost(),
+    // },
     {
       'name': 'SIP',
       'svgPath': 'assets/icons/financeScreen/f1.svg',
