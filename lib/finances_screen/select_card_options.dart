@@ -54,10 +54,9 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
         padding: EdgeInsets.symmetric(horizontal: w * 0.07),
         child: Column(
           children: [
-            SizedBox(height: 10),
-            // Custom Stepper
-            CustomStepper(activeStep: -1),
-            SizedBox(height: 22),
+
+            const SizedBox(height:40),
+            
             // Option Buttons
             for (int i = 0; i < 3; i++) ...[
               InkWell(
