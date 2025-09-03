@@ -52,5 +52,6 @@ class AppColors {
   static const Color autoPay4 = Color(0xFFCC9EBD);
   static const Color autoPay5 = Color(0xFFBACC9E);
   static const Color amtCal = Color(0xFF8586A6);
+  static const Color budgetSearch = Color(0xFFF9FAFB);
   static const Color white = Colors.white;
 }

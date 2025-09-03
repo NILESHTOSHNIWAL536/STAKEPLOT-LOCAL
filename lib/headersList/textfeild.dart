@@ -552,12 +552,12 @@ class TextFeildWidgetCustom2 extends StatelessWidget {
                     fontSize: 14,
                     color: AppColors.bg3),
                 enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(6),
                     borderSide: BorderSide(color: AppColors.accentColor)),
                 focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(6),
                     borderSide: BorderSide(color: AppColors.primaryColor)),
-                fillColor: AppColors.button,
+                fillColor: AppColors.budgetSearch,
                 border: InputBorder.none,
                 prefixIcon: flag
                     ? PrefixIcon(

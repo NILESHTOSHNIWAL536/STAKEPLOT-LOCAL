@@ -82,9 +82,33 @@ class _BudgetSearchState extends State<BudgetSearch> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    
 
     return 
       Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.white,
+          title:Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                 
+                  textStyle(
+                    context: context,
+                    text:  PlotFinanceStaticData().budgetPlannerTitle,
+                    fontsize: 20 ,
+                    fontWeight: FontWeight.w700,
+                    c: AppColors.primaryColor,
+                  ),
+                ],
+              ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        
         body: SafeArea(child: getBudgetUiScreen(height, width)),
         // bottomNavigationBar: BottomNavigations(data: 1),
       
@@ -95,7 +119,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
     return Container(
       width: width,
       height: height / 1.1,
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         // boxShadow: [
@@ -115,11 +139,11 @@ class _BudgetSearchState extends State<BudgetSearch> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 15),
+                 
                   textStyle(
                     context: context,
                     text: PlotFinanceStaticData().chooseCategoryTitle,
-                    fontsize: 18,
+                    fontsize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                   SizedBox(height: 10),
@@ -138,17 +162,20 @@ class _BudgetSearchState extends State<BudgetSearch> {
               ),
             ),
           ),
-          Center(
-            child: InkWell(
-              onTap: () {
-                if (categoriesSeleted.isEmpty) {
-                  // Show Snackbar if no category is selected
-                  snackBarCalledfail(context, SnackbarData().emptycategoryList);
-                } else {
-                  calculateBudget(widget.amount, widget.name, widget.period);
-                }
-              },
-              child: getButton(context, PlotFinanceStaticData().continueButton),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Center(
+              child: InkWell(
+                onTap: () {
+                  if (categoriesSeleted.isEmpty) {
+                    // Show Snackbar if no category is selected
+                    snackBarCalledfail(context, SnackbarData().emptycategoryList);
+                  } else {
+                    calculateBudget(widget.amount, widget.name, widget.period);
+                  }
+                },
+                child: getButton(context, PlotFinanceStaticData().continueButton),
+              ),
             ),
           ),
         ],
