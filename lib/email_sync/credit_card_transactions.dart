@@ -1,34 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 
 import '../Home_Screen/helper.dart';
 
 class CreditCardTransaction {
   final String bank;
+  final String bankName;
   final String date;
   final String transactionId;
   final String amount;
   final String cardNumber;
   final String merchant;
+  final String logo;
 
   CreditCardTransaction({
     required this.bank,
+    required this.bankName,
     required this.date,
     required this.transactionId,
     required this.amount,
     required this.cardNumber,
     required this.merchant,
+    required this.logo,
   });
 
   // Factory to create from JSON
   factory CreditCardTransaction.fromJson(Map<String, dynamic> json) {
     return CreditCardTransaction(
-      bank: json['bank'] ?? 'Axis Bank Credit Card',
+      bank: json['bank'] ?? '',
+      bankName: json['bank'] ?? '',
       date: json['date'] ?? '',
       transactionId: json['transaction_id'] ?? '',
       amount: json['amount'] ?? '',
       cardNumber: json['card_number'] ?? '',
       merchant: json['merchant'] ?? '-',
+      logo: json['logo'] ?? '-',
     );
   }
 }
@@ -42,103 +51,160 @@ class CreditCardTransactionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // For logo, store an asset at assets/axis_logo.png
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Color(0xFFEAEAEA), width: 1),
-        boxShadow: [
-          BoxShadow(
-              blurRadius: 3,
-              color: Colors.black.withOpacity(0.02),
-              offset: Offset(1, 2))
-        ],
-      ),
-      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-      margin: EdgeInsets.all(9),
+      margin: EdgeInsets.symmetric(vertical: 8),
+      // width: MediaQuery.of(context).size.width,
+      // color: Colorcodes.billBody,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Logo Row
-          Row(
-            children: [
-              Image.network(
-                "", // store your Axis Bank logo here
-                height: 32,
-                width: 32,
-                fit: BoxFit.contain,
-                 errorBuilder: getErrorBankLogo()  
+          Padding(
+            padding: const EdgeInsets.only(left: 7),
+            child: Row(
+              children: [
+                Image.network(
+                  txn.logo, // store your Axis Bank logo here
+                  height: 32,
+                  width: 32,
+                  fit: BoxFit.contain,
+                   errorBuilder: getErrorBankLogo()  
+                ),
+                SizedBox(width: 9),
+                Container(
+                  width: MediaQuery.of(context).size.width/1.4,
+                  child: Text(
+                    txn.bank,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      // color: AppColors.primaryColor,
+                      fontSize: 16,
+                      letterSpacing: 1.1,
+                      overflow: TextOverflow.ellipsis
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 4),
+          Divider(
+            thickness: 1,
+            color: Colorcodes.greyLight.withOpacity(0.8),
+            endIndent: 0,
+            indent: 0,
+          ),
+          SizedBox(height: 4),
+    //       Text(
+    //         "Credit Card Transaction",
+    //         style:
+    //            FontManager().getTextStyle(
+    //  context,fontSize: 15, lWeight: FontWeight.w600, color: Colors.black87),
+    //       ),
+    //       SizedBox(height: 12),
+          // Table(
+          //   columnWidths: {0: FixedColumnWidth(100), 1: FlexColumnWidth()},
+          //   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          //   children: [
+          //     TableRow(children: [
+          //       Text("Date", style: rowLabelStyle(context)),
+          //       Text(" :  ${txn.date}", style:  rowValueStyle(context)),
+          //     ]),
+          //     TableRow(children: [
+          //       Text("Transaction ID", style: rowLabelStyle(context)),
+          //       Text(" :  ${txn.transactionId}", style:  rowValueStyle(context)),
+          //     ]),
+          //     TableRow(children: [
+          //       Text("Amount", style: rowLabelStyle(context)),
+          //       Text(" :  ${parseAmount(txn.amount)}", style:  rowValueStyle(context)),
+          //     ]),
+          //     TableRow(children: [
+          //       Text("Card Number", style: rowLabelStyle(context)),
+          //       Text(
+          //         " :  ************${txn.cardNumber}", 
+          //         style:  rowValueStyle(context),
+          //       ),
+          //     ]),
+          //     TableRow(children: [
+          //       Text("Merchant", style: rowLabelStyle(context)),
+          //       Text(
+          //         " :  ${txn.merchant ?? '-'}", 
+          //         style: rowValueStyle(context),
+          //       ),
+          //     ]),
+          //   ],
+          // ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+                children: [
+                  buildRow("Date", txn.date, context),
+                  buildRow("Transaction ID", txn.transactionId, context),
+                  buildRow("Amount", parseAmount(txn.amount), context),
+                  buildRow("Card Number", "************${txn.cardNumber}", context),
+                  buildRow("Merchant", txn.merchant ?? '-', context),
+                ],
               ),
-              SizedBox(width: 9),
-              Text(
-                "AXIS BANK",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFFD02149),
-                  fontSize: 16,
-                  letterSpacing: 1.1,
-                  fontFamily: "Arial",
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 18),
-          Text(
-            "Credit Card Transaction",
-            style:
-                TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black87),
-          ),
-          SizedBox(height: 12),
-          Table(
-            columnWidths: {0: FixedColumnWidth(90), 1: FlexColumnWidth()},
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            children: [
-              TableRow(children: [
-                Text("Date", style: rowLabelStyle),
-                Text(" :  ${txn.date}", style: rowValueStyle),
-              ]),
-              TableRow(children: [
-                Text("Transaction ID", style: rowLabelStyle),
-                Text(" :  ${txn.transactionId}", style: rowValueStyle),
-              ]),
-              TableRow(children: [
-                Text("Amount", style: rowLabelStyle),
-                Text(" :  ${parseAmount(txn.amount)}", style: rowValueStyle),
-              ]),
-              TableRow(children: [
-                Text("Card Number", style: rowLabelStyle),
-                Text(
-                  " :  ************${txn.cardNumber}", 
-                  style: rowValueStyle,
-                ),
-              ]),
-              TableRow(children: [
-                Text("Merchant", style: rowLabelStyle),
-                Text(
-                  " :  ${txn.merchant ?? '-'}", 
-                  style: rowValueStyle,
-                ),
-              ]),
-            ],
-          ),
+          )
         ],
       ),
     );
   }
 }
 
+
+Widget buildRow(String title, String value, BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 3,
+          child: Text(
+            title,
+            style: rowLabelStyle(context),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Text(
+            " : ",
+            style: rowValueStyle(context),
+          ),
+        ),
+        Expanded(
+          flex: 4,
+          child: Text(
+            value,
+            style: rowValueStyle(context),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
 // Style helpers
-final rowLabelStyle = TextStyle(
-  fontWeight: FontWeight.w500,
-  fontSize: 13,
+TextStyle rowLabelStyle(context) => FontManager().getTextStyle(
+     context,
+  lWeight: FontWeight.w600,
+  fontSize: 15,
+  lineHeight: 1.3,
   color: Colors.black87,
-  fontFamily: "Arial",
+  overflow: TextOverflow.ellipsis
 );
 
-final rowValueStyle = TextStyle(
-  fontWeight: FontWeight.w400,
-  fontSize: 13,
+// final rowValueStyle = TextStyle(
+TextStyle rowValueStyle(context) => FontManager().getTextStyle(
+     context,
+  lWeight: FontWeight.w500,
+  fontSize: 15,
+  lineHeight: 1.3,
   color: Colors.black87,
-  fontFamily: "Arial",
+  overflow: TextOverflow.ellipsis
 );
 
 // Helper for formatting amount like 25,689

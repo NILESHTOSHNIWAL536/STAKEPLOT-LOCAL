@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +11,7 @@ import 'google_auth_token.dart';
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleAuthToken.googleToken;
 
-  Future<Map<String, dynamic>?> signInWithGoogle(context) async {
+  Future<Map<String, dynamic>?> signInWithGoogle(context,{flag=true}) async {
     try {
       // Trigger Google Sign-In
       await _googleSignIn.signOut();
@@ -23,21 +24,26 @@ class AuthService {
       final String? idToken = googleAuth.idToken;     // final String? accessToken = googleAuth.accessToken;
       if (idToken == null)return null; 
 
-      final response = await http.post(Uri.parse('$url/user/google-auth'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'idToken': idToken}),
-      );
-
-        final String? authCode = await googleUser.serverAuthCode;
+       final String? authCode = await googleUser.serverAuthCode;
 
         if (authCode != null) 
         {
-            await http.post(
+          final response =  await http.post(
               Uri.parse('$url/user/google-gmail-auth'),
               headers: {'Content-Type': 'application/json'},
               body: jsonEncode({'idToken':  authCode}),
             );
+             printData(response);
+             if(!flag)return {};
         }
+
+      
+      final response = await http.post(Uri.parse('$url/user/google-auth'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'idToken': idToken}),
+      );
+        
+       
         if (response.statusCode == 200)return json.decode(response.body);
     } catch (e)
      {

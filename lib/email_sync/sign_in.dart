@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lottie/lottie.dart';
 
 import '../animated/booleanFlag.dart';
 import '../avatarProfile.dart';
@@ -23,11 +26,8 @@ class SignInScreen extends StatelessWidget {
           elevation: 0,
           backgroundColor: Colors.white,
           leading: leadIcon(context),
-          title: Text("Sign in",
-              style: TextStyle(
-                  color: Color(0xFF37344F),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18)),
+          title: textStyle(context: context,text: "Sign in",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 22),
+          
           centerTitle: false,
         ),
       ),
@@ -36,74 +36,64 @@ class SignInScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: h * 0.012),
+           
             CustomStepper(activeStep: 1),
-            SizedBox(height: 28),
             Center(
               child: SizedBox(
                 width: w * .95,
                 child: OutlinedButton.icon(
                   onPressed: ()async {
                     
-
                        if (googleSignInBool.value) return; // Prevent multiple clicks
                         googleSignInBool.value = true; // Set loading state
                         try {
-                          final userdata = await AuthService().signInWithGoogle(context);
-                          if (userdata != null && userdata['data']['accessToken'] != null) {
-                            loginCalledDataForApple(userdata, context);
-                          } else if (userdata != null) 
+                          final userdata = await AuthService().signInWithGoogle(context,flag:false);
+
+                          if (userdata != null)
                           {
                               pushnameToRoute(context,GettingDataScreen());
                           }
                         } finally {
                           googleSignInBool.value = false; // Reset loading state
                         }
-                      pushnameToRoute(context,GettingDataScreen());
+                       pushnameToRoute(context,GettingDataScreen());
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Color(0xFF37344F), width: 1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(7),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 13.5),
+                    padding: EdgeInsets.symmetric(vertical: 0.5),
                   ),
-                  icon: Icon(
-                    FontAwesomeIcons.google,
-                    color: Color(0xFF37344F),
-                    size: 27,
-                  ),
-                  label: Text(
-                    "Sign in with goggle",
-                    style: TextStyle(
-                      color: Color(0xFF37344F),
-                      fontSize: 16.2,
-                    ),
-                  ),
+                  icon:  AvatarProfileImage(url: svgIconPath.google2, width: 20, height: 20),
+                  // icon: Icon(
+                  //   FontAwesomeIcons.google,
+                  //   color: Color(0xFF37344F),
+                  //   size: 27,
+                  // ),
+                  label: textStyle(context: context,text: "Sign in with goggle",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 15),
+                  //  Text(
+                  //   "Sign in with goggle",
+                  //   style: TextStyle(
+                  //     color: Color(0xFF37344F),
+                  //     fontSize: 16.2,
+                  //   ),
+                  // ),
                 ),
               ),
             ),
             SizedBox(height: 25),
-            Text("Is it safe?",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15)),
+          
+           textStyle(context: context,text: "Is it safe?",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 15),
             SizedBox(height: 9),
-              Image.asset(
-                      svgIconPath.g_person2,
-                      width: w /1.1,
-                      fit: BoxFit.fitWidth,
-              ),
-              // AvatarProfileImage(url: svgIconPath.g_person, width: 10, height: 10),
+               AvatarProfileImage(url: svgIconPath.loading_google2, width: 10, height: 10),
             SizedBox(height: 13),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(Icons.check_box_rounded, color: Color(0xFF37344F), size: 19),
+                Icon(Icons.beenhere_rounded, color: Color(0xFF37344F), size: 19),
                 SizedBox(width: 8),
-                Text(
-                  'your data is safe with us',
-                  style:
-                      TextStyle(color: Color(0xFF38394A), fontSize: 14.0),
-                ),
+                textStyle(context: context,text: "your data is safe with us",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 17),
               ],
             ),
           ],

@@ -7,6 +7,7 @@ import '../backed_connections/apiAutomations/curd.dart';
 import '../backed_connections/apis_connect.dart';
 import '../email_sync/add_credit_card_bank.dart';
 import '../email_sync/data_loading.dart';
+import '../model/credit-card-bank.dart';
 import '../model/credit_card_model.dart';
 
 class CardDueController extends GetxController {
@@ -37,15 +38,21 @@ Future<void> fetchCardData() async {
   }
 }
 
-Future<void> LinkBankData() async {
+Future<void> LinkBankData(context) async {
   try {
     // API call (replace url with your actual base url)
-    var response = await getDataApiCall("${url}/user/readEmail/${selectedBankName.value+"-"+"HDFC Bank"+"-"+"Bank of India"}");
+    if(selectedBankId.value.isEmpty){
+      snackBarCalledfail(context, "Invalid Bank Id");
+      pushnameToRoute(context,AddCreditCardBankScreen());
+      return;
+    }
+    var response = await getDataApiCall("${url}/user/readEmail/${selectedBankId.value}");
 
-    if (getFlagOfResponse(response)) {
+    if (getFlagOfResponse(response)) 
+    {
       var data = jsonDecode(response.body);
       loadingBankdetails.value = true;
-
+      selectedBankId.value="";
     } 
   } catch (e) {
     print(e);
@@ -54,7 +61,21 @@ Future<void> LinkBankData() async {
   }
 }
 
+Future<void> getBanksListCrediCard() async {
+  try {
+    // API call (replace url with your actual base url)
+    var response = await getDataApiCall("${url}/email/get-banks/");
 
+    if (getFlagOfResponse(response))
+    {
+      var data = jsonDecode(response.body)['data'];
+      creditCardBankList.clear();
+      creditCardBankList.addAll(CreditCardBank.fromJsonList(data));
+    } 
 
-
+  } catch (e) {
+    print(e);
+    cardList.clear();
+  }
+}
 }
