@@ -38,7 +38,6 @@ Name: ${data['name']}
 Bank Name: ${data['bankName']}
 Account Number: ${data['maskedAccNumber']}
 IFSC Code: ${data['ifscCode']}
-Branch Address: ${data['branchAddress']}
 ${(data['address'] != null && !data['address'].toString().toLowerCase().contains("encrypted")) ? "User Address: ${data['address']}" : ""}
 Branch Address:  ${data['branchAddress']}
 """;
