@@ -349,7 +349,6 @@ void getforgotPassword(context, String name, String email) async {
   var responce =
       await postDataApiCallwithOutSharedPref('${url}/user/forgotPassword', {
     'email': email,
-    "name": name,
   });
 
   if (getFlagOfResponse(responce)) {

@@ -209,8 +209,10 @@ class svgIconPath {
    static String  dio3="assets/finance/dio3.svg";
    static String  g_person="assets/finance/g_person.svg";
    static String  loading_google="assets/finance/loading.svg";
-   static String  g_person2="assets/finance/g_person2.png";
-   static String  loading_google2="assets/finance/loading2.png";
+   static String  g_person2="assets/finance/person_2.svg";
+   static String  loading_google2="assets/finance/person_3.svg";
+   static String  check_circle="assets/finance/check.png";
+   static String  google2="assets/finance/google.svg";
 
   // send Tab Screen
   static String send1 = "assets/img/imgs/budgets.svg";

@@ -43,9 +43,8 @@ class CardDueCarousel extends StatelessWidget {
             itemBuilder: (context, index) {
               final card = controller.cardList[index];
               return Container(
-                width: MediaQuery.of(context).size.width * 0.8,
-                margin: const EdgeInsets.symmetric(vertical: 8,horizontal: 10),
-                padding: const EdgeInsets.all(16),
+                width: MediaQuery.of(context).size.width ,
+                margin: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -69,6 +68,8 @@ class CardDueCarousel extends StatelessWidget {
                         amount: card.amount,
                         cardNumber: card.cardNumber,
                         merchant: 'merchant',
+                        logo: card.logo,
+                        bankName: card.bankName,
                       ),
                      ),
                   ],

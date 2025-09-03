@@ -30,6 +30,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
     super.initState();
     fetchDebts();
     CardDueController().fetchCardData();
+    CardDueController().getBanksListCrediCard();
   }
 
   @override
@@ -42,109 +43,106 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
           child: BottomNavigations(
         data: 1,
       )),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Top Section with custom clipper and search bar
-              Container(
-                // color: AppColors.primaryColor,
-                padding: EdgeInsets.all(0),
-                height: size.height / 2,
-                width: MediaQuery.of(context).size.width,
-                // color: AppColors.primaryColor,
-                child: Stack(
-                  children: [
-                    // Background color with a wave shape at the bottom
-                    Center(
-                        child: Transform.translate(
-                      offset: const Offset(0, -15),
-                      child: AvatarProfileImageZero(
-                          url: svgIconPath.finance, width: 1, height: 2),
-                    )),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Top Section with custom clipper and search bar
+            Container(
+              // color: AppColors.primaryColor,
+              padding: EdgeInsets.all(0),
+              height: size.height / 2,
+              width: MediaQuery.of(context).size.width,
+              // color: AppColors.primaryColor,
+              child: Stack(
+                children: [
+                  // Background color with a wave shape at the bottom
+                  Center(
+                      child: Transform.translate(
+                    offset: const Offset(0, -15),
+                    child: AvatarProfileImageZero(
+                        url: svgIconPath.finance, width: 1, height: 2),
+                  )),
 
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // Main title "Plot your finances"
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        buildHeadingAndSearchBar(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // Main title "Plot your finances"
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      buildHeadingAndSearchBar(),
 
-                        Stack(
-                          children: [
-                            Transform.translate(
-                              offset: const Offset(0, -190),
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: AvatarProfileImageZero(
-                                    url: svgIconPath.finance_background,
-                                    width: 1,
-                                    height: 1.6),
-                              ),
+                      Stack(
+                        children: [
+                          Transform.translate(
+                            offset: const Offset(0, -180),
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: AvatarProfileImageZero(
+                                  url: svgIconPath.finance_background,
+                                  width: 1,
+                                  height: 1.6),
                             ),
-                            // Positioned(
-                            //   right: 20,
-                            //   top: 30,
-                            //   child: Container(
-                            //   alignment: Alignment.topRight,
-                            //   padding: const EdgeInsets.only(right: 10,top: 5),
-                            //   child: const Icon(
-                            //       Icons.more_horiz,
-                            //       color: Color(0xFFB8AECC),
-                            //       size: 30,
-                            //     ),
-                            // ),),
-                            Transform.translate(
-                              offset: const Offset(0, -60),
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.fromLTRB(5, 10, 10, 5),
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Center(child: FeatureGrid()),
-                                // child: Center(child: _buildFeatureCards(context)),
-                              ),
+                          ),
+                          // Positioned(
+                          //   right: 20,
+                          //   top: 30,
+                          //   child: Container(
+                          //   alignment: Alignment.topRight,
+                          //   padding: const EdgeInsets.only(right: 10,top: 5),
+                          //   child: const Icon(
+                          //       Icons.more_horiz,
+                          //       color: Color(0xFFB8AECC),
+                          //       size: 30,
+                          //     ),
+                          // ),),
+                          Transform.translate(
+                            offset: const Offset(0, -60),
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Center(child: FeatureGrid()),
+                              // child: Center(child: _buildFeatureCards(context)),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
+            ),
 
-              // Middle sections start here
-              const SizedBox(height: 24),
+            // Middle sections start here
+            const SizedBox(height: 24),
 
-              // "Heading" section with "View all"
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: _buildSectionHeader('Credit Cards', () {
-                  // showBudgetDebtCreditCard(context);
-                  pushnameToRoute(context, ShowCompleteInfo(), false);
-                  // pushnameToRoute(context, SelectAnyOptionScreen(),false);
-                }),
-              ),
+            // "Heading" section with "View all"
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: _buildSectionHeader('Credit Cards', () {
+                // showBudgetDebtCreditCard(context);
+                pushnameToRoute(context, ShowCompleteInfo(), false);
+                // pushnameToRoute(context, SelectAnyOptionScreen(),false);
+              }),
+            ),
 
-              const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: SliderAdddingFinances(),
-              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: SliderAdddingFinances(),
+            ),
 
-              // "Heading to Recieve / to Pay" section
-              const SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: TopayToreceive(),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
+            // "Heading to Recieve / to Pay" section
+            const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: TopayToreceive(),
+            ),
+            const SizedBox(height: 24),
+          ],
         ),
       ),
       // Bottom navigation bar

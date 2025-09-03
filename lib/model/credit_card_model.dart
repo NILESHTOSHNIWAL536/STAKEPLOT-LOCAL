@@ -12,6 +12,8 @@ class CardDueModel {
   String mode;
   String type;
   String bank;
+  String bankName;
+  String logo;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -26,7 +28,9 @@ class CardDueModel {
     required this.totalDue,
     required this.mode,
     required this.type,
+    required this.logo,
     required this.bank,
+    required this.bankName,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -43,6 +47,8 @@ class CardDueModel {
       totalDue: json["total_due"] ?? "",
       mode: json["mode"],
       type: json["type"] ?? "",
+      logo: json["logo"] ?? "",
+      bankName: json["bankName"] ?? "",
       bank: json["bank"],
       createdAt: DateTime.parse(json["createdAt"]),
       updatedAt: DateTime.parse(json["updatedAt"]),

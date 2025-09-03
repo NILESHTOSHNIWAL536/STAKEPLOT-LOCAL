@@ -3,10 +3,13 @@ import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart'
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
+import '../Constants/colors.dart';
 import '../avatarProfile.dart';
 import '../colorcodes.dart';
 import '../controllers/credit_card_controller.dart';
+import '../finance_screen/Budgets/Budget.dart';
 import '../finances_screen/creditCard_slider.dart';
 import 'add_credit_card_bank.dart';
 
@@ -25,7 +28,7 @@ class _GettingDataScreenState extends State<GettingDataScreen> {
   void initState() {
     super.initState();
     loadingBankdetails.value = false;
-    CardDueController().LinkBankData();
+    CardDueController().LinkBankData(context);
   }
 
 
@@ -47,35 +50,42 @@ class _GettingDataScreenState extends State<GettingDataScreen> {
               SizedBox(height: 30),
               CustomStepper(activeStep: 2),
               SizedBox(height: 20),
-              InkWell(
-                onTap: () {
-                   pushnameToRoute(context,CardDueCarousel());
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      svgIconPath.loading_google2,
-                      width: w /1.1,
-                      fit: BoxFit.fitWidth,
-                    ),
-                    SizedBox(height: 40),
-                    Text(
-                      "We are getting your data",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Color(0xFF37344F),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 40),
-                 Obx(()=>  !loadingBankdetails.value ?Loader():
-                   InkWell(
-                    onTap: () => pushnameToRoute(context,CardDueCarousel()),
-                    child: Icon(Icons.check_circle, color: Colors.green, size: 50))),
-                    
-                  ],
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Image.asset(
+                  //   svgIconPath.loading_google2,
+                  //   width: w /1.1,
+                  //   fit: BoxFit.fitWidth,
+                  // ),
+                    Container(
+              height: MediaQuery.of(context).size.height/3,
+              width: MediaQuery.of(context).size.width,
+               child: Lottie.asset(
+                       'assets/splashScreen/login_email.json',
+                       errorBuilder: (context, error, stackTrace) {
+                         return Icon(Icons.error); // fallback UI
+                       },
+                     ),
+                             ),
+                             
+                  SizedBox(height: 40),
+                textStyle(context: context,text:  "We are getting your data",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 20),
+                  // Text(
+                  //   "We are getting your data",
+                  //   style: TextStyle(
+                  //     fontSize: 18,
+                  //     color: Color(0xFF37344F),
+                  //     fontWeight: FontWeight.w500,
+                  //   ),
+                  // ),
+                  SizedBox(height: 40),
+               Obx(()=>  !loadingBankdetails.value ?Loader():
+                 InkWell(
+                  onTap: () => pushnameToRoute(context,CardDueCarousel()),
+                  child: Icon(Icons.check_circle, color: Colors.green, size: 50))),
+                  
+                ],
               ),
             ],
           ),
