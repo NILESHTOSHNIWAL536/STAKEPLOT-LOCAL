@@ -141,7 +141,10 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                           Navigator.pop(context);
                         },
                       ),
-                      GestureDetector(
+                      Container(
+                        width: MediaQuery.sizeOf(context).width/1.5,
+                        child: Center(
+                          child:GestureDetector(
                         onTap: () {
                           setState(() {
                             _isInfoVisible = true;
@@ -167,7 +170,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                             color: AppColors.backgroundColor,
                           ),
                         ),
-                      ),
+                      ),))
                     ],
                   ),
                   AnimatedOpacity(

@@ -152,8 +152,8 @@ class _EmiState extends State<Emi> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       IconButton(
                         icon: Icon(
@@ -164,31 +164,36 @@ class _EmiState extends State<Emi> {
                           Navigator.pop(context);
                         },
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isInfoVisible = true;
-                            _opacity = 1.0; // Fade in
-                            print('Showing container: opacity = $_opacity');
-                          });
-                          _timer?.cancel(); // Cancel any existing timer
-                          // Start a new timer to fade out after 5 seconds
-                          _timer = Timer(Duration(seconds: 2), () {
-                            if (mounted) {
+                      Container(
+                        width: MediaQuery.sizeOf(context).width/1.7,
+                        child: Center(
+                          child: GestureDetector(
+                            onTap: () {
                               setState(() {
-                                _opacity = 0.0; // Fade out
-                                print('Hiding container: opacity = $_opacity');
+                                _isInfoVisible = true;
+                                _opacity = 1.0; // Fade in
+                                print('Showing container: opacity = $_opacity');
                               });
-                            }
-                          });
-                        },
-                        child: Text(
-                          "EMI Calculator",
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: AppColors.backgroundColor,
+                              _timer?.cancel(); // Cancel any existing timer
+                              // Start a new timer to fade out after 5 seconds
+                              _timer = Timer(Duration(seconds: 2), () {
+                                if (mounted) {
+                                  setState(() {
+                                    _opacity = 0.0; // Fade out
+                                    print('Hiding container: opacity = $_opacity');
+                                  });
+                                }
+                              });
+                            },
+                            child: Text(
+                              "EMI Calculator",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 18,
+                                color: AppColors.backgroundColor,
+                              ),
+                            ),
                           ),
                         ),
                       ),

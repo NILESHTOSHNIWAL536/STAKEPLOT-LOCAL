@@ -1,15 +1,18 @@
-
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/financeWidgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../colorcodes.dart';
 import 'creditCard_slider.dart';
 
 class ShowCompleteInfo extends StatefulWidget {
-   int index=0;
-  ShowCompleteInfo({ Key? key,this.index=0 }) : super(key: key);
+  int index = 0;
+  ShowCompleteInfo({Key? key, this.index = 0}) : super(key: key);
 
   @override
   State<ShowCompleteInfo> createState() => _ShowCompleteInfoState();
@@ -28,110 +31,148 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
     "/debt",
   ];
 
-    final List<String> svgs = [
-      svgIconPath.dio1,
-      svgIconPath.dio2,
-      svgIconPath.dio3,
+  final List<String> svgs = [
+    svgIconPath.dio1,
+    svgIconPath.dio2,
+    svgIconPath.dio3,
   ];
 
   int selectedIndex = 0;
 
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     selectedIndex = widget.index;
   }
 
-
-
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Complete Info"),
-        backgroundColor: Colors.blue,
-      ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height/1.1,
-        child: Column(
-           children: [
-             getTabs(context),
-             getCardContent()
-           ],
-         ),
-      )
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: AppColors.backgroundColor,
+              size: 20,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: Text(
+            "Complete Info",
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w600,
+              fontSize: 18,
+              overflow: TextOverflow.ellipsis,
+              color: AppColors.backgroundColor,
+            ),
+          ),
+          backgroundColor: AppColors.primaryColor,
+        ),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 1.1,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 12,
+              ),
+              getTabs(context),
+              getCardContent()
+            ],
+          ),
+        ));
+  }
+
+  void _navigateToDebtDetailsScreen(Debt debt) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DebtDetailsScreen(debt: debt)),
     );
   }
 
-
-  Widget getCardContent()
-  {
-    switch (selectedIndex)
-    {
+  Widget getCardContent() {
+    switch (selectedIndex) {
       case 0:
-        return Expanded(child: CardDueCarousel(flag: false,));
+        return Expanded(
+            child: CardDueCarousel(
+          flag: false,
+        ));
       case 1:
-        return Center(child: Text("Create Budget Content"));
+        return Center(
+          child: FinanceWidgets.budgetHorizontalList2(context),
+        );
       case 2:
-        return Center(child: Text("Add Debt Content"));
+        return Center(
+          child: FinanceWidgets.debtsPicture2(
+              context, debts, _navigateToDebtDetailsScreen),
+        );
       default:
         return Center(child: Text("Unknown Content"));
     }
-    
   }
 
   Widget getTabs(BuildContext context) {
-
-  return Row(
-    children: [
-      const SizedBox(height: 22),
-      // Option Buttons
-      for (int i = 0; i < routes.length; i++) ...[
-        InkWell(
-          borderRadius: BorderRadius.circular(9),
-          onTap: () {
-            setState(() => selectedIndex = i);
-            // Navigator.pushNamed(context, routes[i]);
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width / 3.4,
-            
-            decoration: BoxDecoration(
-              color: selectedIndex == i ? const Color(0xFF635D8F) : Colors.white,
-              borderRadius: BorderRadius.circular(9),
-              border: selectedIndex == i
-                  ? null
-                  : Border.all(color: const Color(0xFF635D8F), width: 1),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 10),
-            margin: const EdgeInsets.all(5),
-            child: Column(
-              children: [
-                SvgPicture.asset(
-                  svgs[i],
-                  width: 32,
-                  height: 32,
-                  color: selectedIndex == i ? Colors.white : const Color(0xFF635D8F),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  titles[i],
-                  style: TextStyle(
-                    fontSize: 15.5,
-                    fontWeight: FontWeight.w500,
-                    color: selectedIndex == i ? Colors.white : const Color(0xFF37344F),
+    return Row(
+      children: [
+        const SizedBox(height: 22),
+        // Option Buttons
+        for (int i = 0; i < routes.length; i++) ...[
+          InkWell(
+            borderRadius: BorderRadius.circular(9),
+            onTap: () {
+              setState(() => selectedIndex = i);
+              // Navigator.pushNamed(context, routes[i]);
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width / 3.4,
+              height: MediaQuery.sizeOf(context).height / 9,
+              decoration: BoxDecoration(
+                color:
+                    selectedIndex == i ? const Color(0xFF635D8F) : Colors.white,
+                borderRadius: BorderRadius.circular(9),
+                border: selectedIndex == i
+                    ? null
+                    : Border.all(color: const Color(0xFF635D8F), width: 1),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+              margin: const EdgeInsets.all(5),
+              child: Column(
+                children: [
+                  SvgPicture.asset(
+                    svgs[i],
+                    width: 32,
+                    height: 32,
+                    color: selectedIndex == i
+                        ? Colors.white
+                        : const Color(0xFF635D8F),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    titles[i],
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 14,
+                      overflow: TextOverflow.ellipsis,
+                      color: selectedIndex == i
+                          ? Colors.white
+                          : AppColors.primaryColor,
+                    ),
+                    // style: TextStyle(
+                    //   fontSize: 15.5,
+                    //   fontWeight: FontWeight.w500,
+                    //   color: selectedIndex == i
+                    //       ? Colors.white
+                    //       : const Color(0xFF37344F),
+                    // ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ],
-    ],
-  );
-}
-
-
+    );
+  }
 }

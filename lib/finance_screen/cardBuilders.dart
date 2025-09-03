@@ -18,23 +18,23 @@ class CardBuilders {
       onTap: () => onTap(debt),
       child: Container(
         // margin: const EdgeInsets.symmetric(vertical: 8.0),
-        height: MediaQuery.sizeOf(context).height/5,
-        width: MediaQuery.sizeOf(context).width/4,
+        height: MediaQuery.sizeOf(context).height / 5,
+        width: MediaQuery.sizeOf(context).width / 4,
         decoration: BoxDecoration(
-                  color: AppColors.backgroundColor,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Color(0xFFF3F4F6),
-                    width: 1,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.05),
-                      offset: Offset(0, 1),
-                      blurRadius: 2,
-                    ),
-                  ],
-                ),
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Color(0xFFF3F4F6),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.05),
+              offset: Offset(0, 1),
+              blurRadius: 2,
+            ),
+          ],
+        ),
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () => onTap(debt),
@@ -45,11 +45,8 @@ class CardBuilders {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                 AvatarProfileImageZero(
-           url: Finance.debtIcon,
-           width: 1, 
-           height: 26
-        ),
+                AvatarProfileImageZero(
+                    url: Finance.debtIcon, width: 1, height: 26),
                 globalText(
                   context: context,
                   text: debt.name,
@@ -73,12 +70,11 @@ class CardBuilders {
                 Row(
                   children: [
                     globalText(
-                      context: context,
-                      text: PlotFinanceStaticData().debtPrefix,
-                      fontWeight: FontWeight.w600,
-                      fontsize: 14,
-                      color: AppColors.grey
-                    ),
+                        context: context,
+                        text: PlotFinanceStaticData().debtPrefix,
+                        fontWeight: FontWeight.w600,
+                        fontsize: 14,
+                        color: AppColors.grey),
                     Flexible(
                       child: globalText(
                         context: context,
@@ -93,6 +89,108 @@ class CardBuilders {
                   ],
                 ),
                 const SizedBox(height: 4),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  static Widget debtCard2(
+    BuildContext context,
+    Debt debt,
+    Function(Debt) onTap,
+  ) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      constraints: BoxConstraints(
+        minHeight: 140,
+        maxWidth: MediaQuery.of(context).size.width * 0.85,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFFF3F4F6),
+          width: 1,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.05),
+            offset: Offset(0, 1),
+            blurRadius: 2,
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(20),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => onTap(debt), // Only one tap handler
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  // <-- Added to prevent overflow
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      globalText(
+                        context: context,
+                        text: debt.name,
+                        fontWeight: FontWeight.w700,
+                        fontsize: 18,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        color: AppColors.accentColor,
+                      ),
+                      const SizedBox(height: 6),
+                      globalText(
+                        context: context,
+                        text: PlotFinanceStaticData().amountLabel,
+                        fontWeight: FontWeight.w500,
+                        fontsize: 13,
+                        color: Colors.grey[600]!,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          globalText(
+                            context: context,
+                            text: PlotFinanceStaticData().debtPrefix,
+                            fontWeight: FontWeight.w600,
+                            fontsize: 14,
+                            color: AppColors.accentColor.withOpacity(0.9),
+                          ),
+                          Flexible(
+                            child: globalText(
+                              context: context,
+                              text:
+                                  '₹${formatMoneyIndian(debt.amount.toStringAsFixed(2))}',
+                              fontWeight: FontWeight.w600,
+                              fontsize: 14,
+                              color: AppColors.primaryColor,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                AvatarProfileImageZero(
+                  url: Finance.debtIcon,
+                  width: 1,
+                  height: 12,
+                ),
               ],
             ),
           ),
@@ -126,13 +224,12 @@ class CardBuilders {
 
     return GestureDetector(
       onTap: () {
-       
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyBudgetScreen(
-            data: data,
-            
-          )),
+          MaterialPageRoute(
+              builder: (context) => MyBudgetScreen(
+                    data: data,
+                  )),
         );
       },
       child: Container(
@@ -142,16 +239,19 @@ class CardBuilders {
           maxWidth: MediaQuery.of(context).size.width * 0.85,
         ),
         decoration: BoxDecoration(
-          color: AppColors.mt,
-          borderRadius: BorderRadius.circular(20),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.black.withOpacity(0.08),
-          //     blurRadius: 10,
-          //     offset: const Offset(0, 4),
-          //     spreadRadius: 2,
-          //   ),
-          // ],
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Color(0xFFF3F4F6),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.05),
+              offset: Offset(0, 1),
+              blurRadius: 2,
+            ),
+          ],
         ),
         child: Material(
           color: Colors.transparent,
@@ -159,7 +259,6 @@ class CardBuilders {
           child: InkWell(
             borderRadius: BorderRadius.circular(20),
             onTap: () {
-                
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -180,7 +279,8 @@ class CardBuilders {
                       children: [
                         globalText(
                           context: context,
-                          text: data['name']?.toString() ??PlotFinanceStaticData().unnamedBudget,
+                          text: data['name']?.toString() ??
+                              PlotFinanceStaticData().unnamedBudget,
                           fontWeight: FontWeight.w700,
                           fontsize: 18,
                           overflow: TextOverflow.ellipsis,
@@ -245,9 +345,14 @@ class CardBuilders {
                           ],
                         ),
                         const SizedBox(height: 8),
-                         globalText(
+                        globalText(
                           context: context,
-                          text: PlotFinanceStaticData().percentageSpent.replaceFirst('{percentage}', percentageSpent.toStringAsFixed(1)), // Updated
+                          text: PlotFinanceStaticData()
+                              .percentageSpent
+                              .replaceFirst(
+                                  '{percentage}',
+                                  percentageSpent
+                                      .toStringAsFixed(1)), // Updated
                           fontWeight: FontWeight.w500,
                           fontsize: 12,
                           color: percentageSpent > 80
@@ -302,6 +407,7 @@ class CardBuilders {
       ),
     );
   }
+
   static Widget budgetCard2(BuildContext context, dynamic data) {
     double budgetAmount =
         double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
@@ -327,13 +433,12 @@ class CardBuilders {
 
     return GestureDetector(
       onTap: () {
-       
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyBudgetScreen(
-            data: data,
-            
-          )),
+          MaterialPageRoute(
+              builder: (context) => MyBudgetScreen(
+                    data: data,
+                  )),
         );
       },
       child: Container(
@@ -342,28 +447,27 @@ class CardBuilders {
         //   minHeight: 140,
         //   maxWidth: MediaQuery.of(context).size.width * 0.85,
         // ),
-         decoration: BoxDecoration(
-                  color: AppColors.backgroundColor,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Color(0xFFF3F4F6),
-                    width: 1,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.05),
-                      offset: Offset(0, 1),
-                      blurRadius: 2,
-                    ),
-                  ],
-                ),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Color(0xFFF3F4F6),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.05),
+              offset: Offset(0, 1),
+              blurRadius: 2,
+            ),
+          ],
+        ),
         child: Material(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           child: InkWell(
             borderRadius: BorderRadius.circular(20),
             onTap: () {
-                
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -375,12 +479,9 @@ class CardBuilders {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   AvatarProfileImageZero(
-           url: Finance.debtIcon,
-           width: 1, 
-           height: 26
-        ),
-        const SizedBox(height: 10),
+                  AvatarProfileImageZero(
+                      url: Finance.debtIcon, width: 1, height: 26),
+                  const SizedBox(height: 10),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -393,7 +494,8 @@ class CardBuilders {
                           children: [
                             globalText(
                               context: context,
-                              text: data['name']?.toString() ??PlotFinanceStaticData().unnamedBudget,
+                              text: data['name']?.toString() ??
+                                  PlotFinanceStaticData().unnamedBudget,
                               fontWeight: FontWeight.w500,
                               fontsize: 16,
                               overflow: TextOverflow.ellipsis,
@@ -401,7 +503,6 @@ class CardBuilders {
                               color: AppColors.accentColor,
                             ),
                             const SizedBox(height: 10),
-                            
                             Row(
                               children: [
                                 Flexible(
@@ -429,13 +530,9 @@ class CardBuilders {
                               ],
                             ),
                             const SizedBox(height: 4),
-                            
-                           
                           ],
                         ),
                       ),
-                      
-                    
                     ],
                   ),
                 ],
@@ -462,7 +559,7 @@ class CardBuilders {
     );
 
     return Container(
-       decoration: BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white, // or AppColors.mt
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
@@ -476,13 +573,10 @@ class CardBuilders {
       ),
       child: Stack(
         children: [
-           AvatarProfileImageZero(
-             url: svgIconPath.financepayReceive,
-             width: 1, 
-             height: 8
-          ),
+          AvatarProfileImageZero(
+              url: svgIconPath.financepayReceive, width: 1, height: 8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             decoration: BoxDecoration(
               // color: AppColors.mt,
               borderRadius: BorderRadius.circular(16),
@@ -506,9 +600,10 @@ class CardBuilders {
                   fontWeight: FontWeight.bold,
                 ),
                 const SizedBox(height: 6),
-                 globalText(
+                globalText(
                   context: context,
-                  text: PlotFinanceStaticData().pendingItems.replaceFirst('{count}', pendingItems.length.toString()), // Updated
+                  text: PlotFinanceStaticData().pendingItems.replaceFirst(
+                      '{count}', pendingItems.length.toString()), // Updated
                   fontsize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey[600],

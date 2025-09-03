@@ -194,6 +194,35 @@ class FinanceWidgets {
           ));
   }
 
+  static Widget debtsPicture2(
+      BuildContext context, RxList<Debt> debts, Function(Debt) onDebtTap) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSingleDebt = debts.length == 1;
+
+    return Obx(() => debts.isEmpty
+        ? SizedBox.shrink()
+        : Center(
+            child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.74,
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: debts.length,
+                  itemBuilder: (context, index) {
+                    final debt = debts[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: SizedBox(
+                        width: isSingleDebt
+                            ? screenWidth * 0.9
+                            : screenWidth * 0.8,
+                        child: CardBuilders.debtCard2(context, debt, onDebtTap),
+                      ),
+                    );
+                  },
+                )),
+          ));
+  }
+
   static Widget budgetHorizontalList(BuildContext context) {
     return Obx(() {
       final sortedBudgets = budgetList.toList()
@@ -217,6 +246,39 @@ class FinanceWidgets {
                             ? screenWidth * 0.5
                             : screenWidth * 0.5,
                         child: CardBuilders.budgetCard2(
+                            context, sortedBudgets[index]),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+    });
+  }
+
+  static Widget budgetHorizontalList2(BuildContext context) {
+    return Obx(() {
+      final sortedBudgets = budgetList.toList()
+        ..sort(
+            (a, b) => (b['createdAt'] ?? '').compareTo(a['createdAt'] ?? ''));
+      final isSingleBudget = sortedBudgets.length == 1;
+      final screenWidth = MediaQuery.of(context).size.width;
+      return sortedBudgets.isEmpty
+          ? SizedBox.shrink()
+          : SizedBox(
+              height: MediaQuery.of(context).size.height / 1.5,
+              child: Center(
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: sortedBudgets.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: SizedBox(
+                        width: isSingleBudget
+                            ? screenWidth * 0.9
+                            : screenWidth * 0.8,
+                        child: CardBuilders.budgetCard(
                             context, sortedBudgets[index]),
                       ),
                     );

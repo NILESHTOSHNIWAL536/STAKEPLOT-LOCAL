@@ -232,7 +232,10 @@ bool _isInfoVisible = false; // Controls visibility of the container
                             Navigator.pop(context);
                           },
                         ),
-                        GestureDetector(
+                        Container(
+                        width: MediaQuery.sizeOf(context).width/1.5,
+                        child: Center(
+                          child:GestureDetector(
                            onTap: () {
                           setState(() {
                             _isInfoVisible = true;
@@ -260,6 +263,7 @@ bool _isInfoVisible = false; // Controls visibility of the container
                             ),
                           ),
                         ),
+                        ))
                       ],
                     ),
                    AnimatedOpacity(

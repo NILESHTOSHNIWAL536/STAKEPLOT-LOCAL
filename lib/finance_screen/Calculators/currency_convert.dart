@@ -560,7 +560,7 @@
 //                           controller: amountController,
 //                           keyboardType: TextInputType.number,
 //                           textInputAction: TextInputAction.done,
-                          
+
 //                           decoration: InputDecoration(
 //                             filled: true,
 //                             fillColor: Color.fromRGBO(255, 255, 255, 0.23),
@@ -694,8 +694,7 @@
 //                                   crossAxisAlignment: CrossAxisAlignment.center,
 //                                   mainAxisAlignment: MainAxisAlignment.center,
 //                                   children: [
-                                   
-                                  
+
 //                                     ...recentConversions.map((conversion) =>
 //                                         Center(
 //                                           child: Container(
@@ -761,7 +760,8 @@ class CurrencyConverterScreen extends StatefulWidget {
   const CurrencyConverterScreen({super.key});
 
   @override
-  State<CurrencyConverterScreen> createState() => _CurrencyConverterScreenState();
+  State<CurrencyConverterScreen> createState() =>
+      _CurrencyConverterScreenState();
 }
 
 class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
@@ -783,6 +783,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
   @override
   void initState() {
     super.initState();
+    
     fetchCurrencies();
     loadPreferences();
     baseSearchController.addListener(_filterBaseCurrencies);
@@ -795,22 +796,26 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
       recentConversions = prefs.getStringList('recentConversions') ?? [];
       baseCurrency = prefs.getString('baseCurrency');
       targetCurrency = prefs.getString('targetCurrency');
-      if (baseCurrency != null) {
-        baseSearchController.text =
-            "${baseCurrency!.toUpperCase()} - ${currencies[baseCurrency] ?? ''}";
-      }
-      if (targetCurrency != null) {
-        targetSearchController.text =
-            "${targetCurrency!.toUpperCase()} - ${currencies[targetCurrency] ?? ''}";
-      }
+       baseSearchController.text = "";
+      targetSearchController.text = "";
+      // if (baseCurrency != null) {
+      //   baseSearchController.text =
+      //       "${baseCurrency!.toUpperCase()} - ${currencies[baseCurrency] ?? ''}";
+      // }
+      // if (targetCurrency != null) {
+      //   targetSearchController.text =
+      //       "${targetCurrency!.toUpperCase()} - ${currencies[targetCurrency] ?? ''}";
+      // }
     });
   }
 
   Future<void> savePreferences() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('recentConversions', recentConversions);
-    if (baseCurrency != null) await prefs.setString('baseCurrency', baseCurrency!);
-    if (targetCurrency != null) await prefs.setString('targetCurrency', targetCurrency!);
+    if (baseCurrency != null)
+      await prefs.setString('baseCurrency', baseCurrency!);
+    if (targetCurrency != null)
+      await prefs.setString('targetCurrency', targetCurrency!);
   }
 
   Future<void> clearPreferences() async {
@@ -930,19 +935,29 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
 
   void swapCurrencies() {
     setState(() {
-      final temp = baseCurrency;
-      baseCurrency = targetCurrency;
-      targetCurrency = temp;
-      baseSearchController.text = targetCurrency != null
-          ? "${targetCurrency!.toUpperCase()} - ${currencies[targetCurrency] ?? ''}"
+      // Store both values before swapping
+      final tempBase = baseCurrency;
+      final tempTarget = targetCurrency;
+
+      // Swap the currency codes
+      baseCurrency = tempTarget;
+      targetCurrency = tempBase;
+
+      // Update the search field texts using the temporary values
+      baseSearchController.text = tempTarget != null
+          ? "${tempTarget.toUpperCase()} - ${currencies[tempTarget] ?? ''}"
           : "";
-      targetSearchController.text = temp != null
-          ? "${temp.toUpperCase()} - ${currencies[temp] ?? ''}"
+      targetSearchController.text = tempBase != null
+          ? "${tempBase.toUpperCase()} - ${currencies[tempBase] ?? ''}"
           : "";
+
+      // Hide suggestion lists
       isBaseSearchActive = false;
       isTargetSearchActive = false;
+
+      // Save swapped currencies to SharedPreferences
+      savePreferences();
     });
-    savePreferences();
   }
 
   void _showSnackBar(String message) {
@@ -1049,12 +1064,13 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                       // Search Field for Base Currency
                       TextField(
                         controller: baseSearchController,
-                          style: FontManager().getTextStyle(
-    context,
-    lWeight: FontWeight.w600,
-    fontSize: 14,
-    color: AppColors.backgroundColor, // Set text color to white
-  ),
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: AppColors
+                              .backgroundColor, // Set text color to white
+                        ),
                         decoration: InputDecoration(
                           isDense: true,
                           filled: true,
@@ -1098,7 +1114,8 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         },
                       ),
                       // Suggestions for Base Currency
-                      if (isBaseSearchActive && filteredBaseCurrencies.isNotEmpty)
+                      if (isBaseSearchActive &&
+                          filteredBaseCurrencies.isNotEmpty)
                         Container(
                           constraints: BoxConstraints(
                             maxHeight: 150,
@@ -1167,12 +1184,13 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                       // Search Field for Target Currency
                       TextField(
                         controller: targetSearchController,
-                          style: FontManager().getTextStyle(
-    context,
-    lWeight: FontWeight.w600,
-    fontSize: 14,
-    color: AppColors.backgroundColor, // Set text color to white
-  ),
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: AppColors
+                              .backgroundColor, // Set text color to white
+                        ),
                         decoration: InputDecoration(
                           isDense: true,
                           filled: true,
@@ -1198,7 +1216,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                               width: 1,
                             ),
                           ),
-                          hintText: "Search currency...",
+                          hintText: "Search currency",
                           hintStyle: FontManager().getTextStyle(
                             context,
                             lWeight: FontWeight.normal,
@@ -1216,7 +1234,8 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         },
                       ),
                       // Suggestions for Target Currency
-                      if (isTargetSearchActive && filteredTargetCurrencies.isNotEmpty)
+                      if (isTargetSearchActive &&
+                          filteredTargetCurrencies.isNotEmpty)
                         Container(
                           constraints: BoxConstraints(
                             maxHeight: 150,
@@ -1270,12 +1289,13 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                       TextField(
                         controller: amountController,
                         keyboardType: TextInputType.number,
-                         style: FontManager().getTextStyle(
-    context,
-    lWeight: FontWeight.normal,
-    fontSize: 14,
-    color: AppColors.backgroundColor, // Set text color to white
-  ),
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 14,
+                          color: AppColors
+                              .backgroundColor, // Set text color to white
+                        ),
                         textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
                           filled: true,
@@ -1311,7 +1331,8 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 12, horizontal: 16),
                           errorText: amountController.text.isNotEmpty &&
-                                  double.tryParse(amountController.text.trim()) ==
+                                  double.tryParse(
+                                          amountController.text.trim()) ==
                                       null
                               ? "Invalid number"
                               : null,
@@ -1354,7 +1375,8 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                   baseCurrency == null ||
                                   targetCurrency == null ||
                                   amountController.text.trim().isEmpty ||
-                                  double.tryParse(amountController.text.trim()) ==
+                                  double.tryParse(
+                                          amountController.text.trim()) ==
                                       null
                               ? null
                               : convertCurrency,
@@ -1407,9 +1429,11 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                 children: recentConversions
                                     .map((conversion) => Center(
                                           child: Container(
-                                            width: MediaQuery.sizeOf(context).width/1.4,
-                                            margin:
-                                                const EdgeInsets.only(bottom: 6),
+                                            width: MediaQuery.sizeOf(context)
+                                                    .width /
+                                                1.4,
+                                            margin: const EdgeInsets.only(
+                                                bottom: 6),
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 8, horizontal: 8),
                                             decoration: BoxDecoration(
@@ -1421,7 +1445,8 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                             child: Center(
                                               child: Text(
                                                 conversion,
-                                                style: FontManager().getTextStyle(
+                                                style:
+                                                    FontManager().getTextStyle(
                                                   context,
                                                   lWeight: FontWeight.normal,
                                                   fontSize: 14,

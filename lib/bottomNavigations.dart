@@ -33,7 +33,12 @@ class BottomNavigations extends StatefulWidget {
   int data;
   final VoidCallback? onCommunityDoubleTap;
   final VoidCallback? onHomeDoubleTap;
-  BottomNavigations({Key? key, required this.data, this.onCommunityDoubleTap, this.onHomeDoubleTap}) : super(key: key);
+  BottomNavigations(
+      {Key? key,
+      required this.data,
+      this.onCommunityDoubleTap,
+      this.onHomeDoubleTap})
+      : super(key: key);
 
   @override
   _BottomNavigationsState createState() => _BottomNavigationsState();
@@ -48,61 +53,51 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       try {
         if (widget.data >= 0 && widget.data < _tabNames.length) {
           ScreenTimeTracker().switchTab(_tabNames[widget.data]);
-         
         }
         handleWidgetNavigation();
-      } catch (e) {
-       
-      }
+      } catch (e) {}
     });
   }
 
   void handleWidgetNavigation() async {
-   
     try {
       // Android intent
       final route =
           await SystemChannels.platform.invokeMethod('getInitialRoute');
-   
+
       if (route != null && route is Map) {
         if (route['navigate_to_tab'] == 'finance') {
-       
           setState(() {
             widget.data = 1;
           });
           ScreenTimeTracker().switchTab(_tabNames[1]);
           pushName(PlotFinance());
-         
         }
       }
 
       // iOS deep link (for future support)
       const channel = MethodChannel('com.stakeplot.pfa/navigation');
       channel.setMethodCallHandler((call) async {
-       
         if (call.method == 'navigateToFinance') {
           setState(() {
             widget.data = 1;
           });
           ScreenTimeTracker().switchTab(_tabNames[1]);
           pushName(PlotFinance());
-          
         }
       });
-    } catch (e) {
-     
-    }
+    } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
     //int selectedIndex = 0;
-       final userController = ControllerManagement.userController;
+    final userController = ControllerManagement.userController;
 
     return Container(
       height: Colorcodes.paddingSize * 2.5,
-      color:AppColors.backgroundColor,
-     // padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 2),
+      color: AppColors.backgroundColor,
+      // padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -129,7 +124,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   Widget imageurl(String url, int index) {
     bool isSelected = widget.data == index;
     String iconPath = url; // Default to the passed url
-   UserController userController=ControllerManagement.userController;
+    UserController userController = ControllerManagement.userController;
     // Toggle icons based on selection
     if (url == NavBarIcons.home) {
       iconPath = isSelected ? NavBarIcons.home : NavBarIcons.home1;
@@ -145,12 +140,18 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     bool ifAvatar = index == 3 || index == 4;
 
     return Center(
-      child: ifAvatar? Obx(()=> AvatarProfile(name:userController. userName.value, width: 5, height: 14,background: userController.avatarBackGround.value))
-          
+      child: ifAvatar
+          ? Obx(() => AvatarProfile(
+              name: userController.userName.value,
+              width: 5,
+              height: 14,
+              background: userController.avatarBackGround.value))
           : SvgPicture.asset(
               iconPath,
-              width: MediaQuery.of(context).size.width /30, // Adjust the multiplier as needed
-              height: MediaQuery.of(context).size.height /30, // Adjust the multiplier as needed
+              width: MediaQuery.of(context).size.width /
+                  30, // Adjust the multiplier as needed
+              height: MediaQuery.of(context).size.height /
+                  30, // Adjust the multiplier as needed
               // colorFilter: isSelected
               //     ? ColorFilter.mode(AppColors.finSpaceColor, BlendMode.srcIn)
               //     : ColorFilter.mode(
@@ -162,7 +163,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   Widget getContainer(url, i) {
     bool isSelected =
         widget.data == i; // Check if the current index is selected
-int communityIndex = sizeRoom ? 3 : 2;
+    int communityIndex = sizeRoom ? 3 : 2;
     return GestureDetector(
       //  onDoubleTap: () {
       //   if (i == communityIndex && isSelected) {
@@ -181,39 +182,41 @@ int communityIndex = sizeRoom ? 3 : 2;
         if (i == 0 && isSelected) {
           // Single tap on already selected Home tab
           HapticFeedback.lightImpact();
-          widget.onHomeDoubleTap?.call(); // Call the Home scroll-to-top callback
+          widget.onHomeDoubleTap
+              ?.call(); // Call the Home scroll-to-top callback
           return;
         }
-         if (i == communityIndex && isSelected) {
+        if (i == communityIndex && isSelected) {
           // Single tap on already selected Community tab
           HapticFeedback.lightImpact();
           widget.onCommunityDoubleTap?.call();
           return;
         }
-      
+
         if (widget.data == i) return;
-         HapticFeedback.heavyImpact();
+        HapticFeedback.heavyImpact();
         try {
           String tabName = _tabNames[i];
           ScreenTimeTracker().switchTab(tabName);
           // added
-          
-         
+
           if (i == 0)
             pushName(HomePage());
           // else if (i == 1) pushName(Connections());
-          else if (i == 1) pushName(FinanceDashboard());
+          else if (i == 1)
+            pushName(FinanceDashboard());
           // else if (i == 1) pushName(PlotFinance());
-        
-           else if (i == 2) pushName(ControllerManagement.userController.interestedTags.isEmpty? WelcomeScreen():Community());
-           else if (i == 3) pushName(ProfileScreenDart());
+
+          else if (i == 2)
+            pushName(ControllerManagement.userController.interestedTags.isEmpty
+                ? WelcomeScreen()
+                : Community());
+          else if (i == 3) pushName(ProfileScreenDart());
 
           setState(() {
             widget.data = i; // Update selected index
           });
-        } catch (e) {
-         
-        }
+        } catch (e) {}
       },
       child: Container(
         child: imageurl(url, i),
@@ -221,24 +224,23 @@ int communityIndex = sizeRoom ? 3 : 2;
     );
   }
 
-void pushName(Widget widgetName, [bool flag = false]) {
-  final route = PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => widgetName,
-  );
+  void pushName(Widget widgetName, [bool flag = false]) {
+    final route = PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => widgetName,
+    );
 
-  if (flag) {
-    Navigator.push(context, route);
-  } else {
-    Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+    if (flag) {
+      Navigator.push(context, route);
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+    }
   }
 }
-}
 
-
-Widget showUserData(BuildContext context){
+Widget showUserData(BuildContext context) {
   double width = MediaQuery.of(context).size.width;
   double height = MediaQuery.of(context).size.height;
-  UserController userController=ControllerManagement.userController;
+  UserController userController = ControllerManagement.userController;
 
   List<String> loginUsers = loginUsersList.keys.toList();
   loginUsers.remove(userController.userName.value);
@@ -283,24 +285,23 @@ Widget showUserData(BuildContext context){
 
                     return InkWell(
                       onTap: () async {
-                           clearGetX();
-                        TextEditingController emailController =TextEditingController(text: user['email']);
+                        clearGetX();
+                        TextEditingController emailController =
+                            TextEditingController(text: user['email']);
                         TextEditingController passwordController =
                             TextEditingController(text: user['password']);
                         final SharedPreferences _pref =
                             await SharedPreferences.getInstance();
                         String userId = user['accessToken'] ?? user['email'];
-                       
+
                         await ScreenTimeTracker().setUser(userId);
                         _pref.remove("accessToken").then((_) {
                           _pref.setString("accessToken", user['accessToken']);
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               '/', (Route<dynamic> route) => false);
                           Navigator.pushReplacementNamed(context, '/home');
-                        }).catchError((error) {
-                        });
+                        }).catchError((error) {});
 
-                     
                         loginUser(emailController, passwordController, context);
                       },
                       child: Container(
@@ -321,15 +322,16 @@ Widget showUserData(BuildContext context){
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Obx(() => user['name'] ==userController.userName.value
-                                ? Container(
-                                    alignment: Alignment.centerRight,
-                                    child: Icon(
-                                      Icons.check_circle_outlined,
-                                      color: Colorcodes.budgetDarkGreen,
-                                    ),
-                                  )
-                                : SizedBox.shrink()),
+                            Obx(() =>
+                                user['name'] == userController.userName.value
+                                    ? Container(
+                                        alignment: Alignment.centerRight,
+                                        child: Icon(
+                                          Icons.check_circle_outlined,
+                                          color: Colorcodes.budgetDarkGreen,
+                                        ),
+                                      )
+                                    : SizedBox.shrink()),
                           ],
                         ),
                       ),
@@ -382,23 +384,21 @@ Widget logoutWidget(context, [flag = false]) {
           InkWell(
             onTap: () async {
               try {
-              
                 clearServarData(context);
                 await ScreenTimeTracker().clearUserData();
                 final SharedPreferences _pref =
                     await SharedPreferences.getInstance();
                 String? userId = _pref.getString('accessToken') ?? '';
                 await _pref.remove("accessToken");
-                await _pref.remove('login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId');
+                await _pref.remove(
+                    'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId');
                 await _pref.remove('login_history_$userId');
-                
+
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     '/', (Route<dynamic> route) => false);
                 Navigator.pushReplacementNamed(context, '/');
                 clearGetX();
-              } catch (e) {
-                
-              }
+              } catch (e) {}
             },
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 8),

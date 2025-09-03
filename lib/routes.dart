@@ -16,7 +16,6 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Tr
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/all_calculators.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/loan_affordable_calculator.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';

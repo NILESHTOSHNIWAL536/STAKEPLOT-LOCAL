@@ -43,7 +43,7 @@
 //                         child: Row(
 //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                           children: [
-                            
+
 //                             Text(
 //                               "select any option",
 //                               style: TextStyle(
@@ -53,11 +53,11 @@
 //                               ),
 //                               textAlign: TextAlign.center,
 //                             ),
-                        
+
 //                             InkWell(
 //                               onTap: () => Navigator.of(context).pop(),
 //                               child: Icon(Icons.close, color: Color(0xFF8A7FA7), size: 20)),
-                        
+
 //                           ],
 //                         ),
 //                       ),
@@ -149,11 +149,11 @@
 //                                 }else{
 //                                     options="/debt";
 //                                 }
-                              
+
 //                               Navigator.of(context).pop();
 //                               Navigator.pushNamed(context2, "/FinanceDashboard");
 //                               Navigator.pushNamed(context2, options);
-                               
+
 //                           },
 //                           child: Text("Done"),
 //                         ),
@@ -170,14 +170,13 @@
 //   );
 // }
 
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../colorcodes.dart';
-
 
 class SelectAnyOptionScreen extends StatefulWidget {
   const SelectAnyOptionScreen({Key? key}) : super(key: key);
@@ -216,14 +215,14 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
         child: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
-          leading:leadIcon(context),
+          leading: leadIcon(context),
           title: Text(
-            "select any option",
-            style: TextStyle(
-              fontFamily: "Inter",
-              color: Color(0xFF37344F),
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
+            "Select any option",
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w600,
+              fontSize: 16,
+              color: AppColors.primaryColor,
             ),
             textAlign: TextAlign.center,
           ),
@@ -237,34 +236,31 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
           children: [
             SizedBox(height: 10),
             // Custom Stepper
-             CustomStepper(activeStep: -1),  
+            CustomStepper(activeStep: -1),
             SizedBox(height: 22),
             // Option Buttons
             for (int i = 0; i < 3; i++) ...[
               InkWell(
                 borderRadius: BorderRadius.circular(9),
                 onTap: () {
-                   setState(() => selectedIndex = i);
-                               String options="";
-                                if(i==0)
-                                {
-                                    options="/addcreditCard";
-                                }
-                                else if(i== 1)
-                                {
-                                    options="/Budget";
-                                }else{
-                                    options="/debt";
-                                }
-                              // Navigator.of(context).pop();
-                              // Navigator.pushNamed(context2, "/FinanceDashboard");
+                  setState(() => selectedIndex = i);
+                  String options = "";
+                  if (i == 0) {
+                    options = "/addcreditCard";
+                  } else if (i == 1) {
+                    options = "/Budget";
+                  } else {
+                    options = "/debt";
+                  }
+                  // Navigator.of(context).pop();
+                  // Navigator.pushNamed(context2, "/FinanceDashboard");
                   Navigator.pushNamed(context, options);
-                 
                 },
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: selectedIndex == i ? Color(0xFF635D8F) : Colors.white,
+                    color:
+                        selectedIndex == i ? Color(0xFF635D8F) : Colors.white,
                     borderRadius: BorderRadius.circular(9),
                     border: selectedIndex == i
                         ? null
@@ -278,7 +274,9 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
                         svgs[i],
                         width: 32,
                         height: 32,
-                        color: selectedIndex == i ? Colors.white : Color(0xFF635D8F),
+                        color: selectedIndex == i
+                            ? Colors.white
+                            : Color(0xFF635D8F),
                       ),
                       SizedBox(height: 4),
                       Text(
@@ -286,7 +284,9 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
                         style: TextStyle(
                           fontSize: 15.5,
                           fontWeight: FontWeight.w500,
-                          color: selectedIndex == i ? Colors.white : Color(0xFF37344F),
+                          color: selectedIndex == i
+                              ? Colors.white
+                              : Color(0xFF37344F),
                         ),
                       ),
                       SizedBox(height: 2),
@@ -295,7 +295,9 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 12.5,
-                          color: selectedIndex == i ? Colors.white70 : Color(0xFF474575),
+                          color: selectedIndex == i
+                              ? Colors.white70
+                              : Color(0xFF474575),
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -310,5 +312,3 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
     );
   }
 }
-
-

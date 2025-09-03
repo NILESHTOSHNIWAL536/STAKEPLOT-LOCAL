@@ -171,12 +171,9 @@
 //                         ),
 //                       ],
 //                     ),
-                   
-                  
-                  
 
 //               child: Column(
-                
+
 //                 crossAxisAlignment: CrossAxisAlignment.start,
 //                 children: [
 //                   Padding(
@@ -187,8 +184,7 @@
 //                     width: MediaQuery.sizeOf(context).width/1.2,
 //                     height: MediaQuery.sizeOf(context).height/2.2,
 //                     padding: EdgeInsets.symmetric(horizontal: 12.0,vertical: 12.0),
-                   
-                    
+
 //                     child: SingleChildScrollView(
 //                       child: Column(
 //                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,8 +337,7 @@
 //                               return null;
 //                             },
 //                           ),
-                          
-                        
+
 //                         ],
 //                       ),
 //                     ),
@@ -497,7 +492,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
   double _interest = 0.0;
   String _name = '';
   int _durationMonths = 0;
-  final RxList<Debt> _debts = <Debt>[].obs; // Reactive list to store debts
+  // final RxList<Debt> _debts = <Debt>[].obs; // Reactive list to store debts
 
   @override
   void initState() {
@@ -507,8 +502,8 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
 
   // Fetch debts from API
   void _fetchDebts() async {
-    final debts = await DebtService.fetchDebts();
-    _debts.assignAll(debts); // Update reactive list
+    final debts2 = await DebtService.fetchDebts();
+    debts.assignAll(debts2); // Update reactive list
   }
 
   void _showLoanTypeModal() async {
@@ -592,7 +587,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
               durationMonths: _durationMonths,
               date: _date,
             );
-            _debts.add(newDebt); // Add new debt to the reactive list
+            debts.add(newDebt); // Add new debt to the reactive list
             Navigator.pop(context, newDebt);
             snackBarCalled(context, SnackbarData().debtCreatedSuccess);
           }
@@ -623,18 +618,20 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
             children: [
               // Display existing debts
               Text(
-                          "Recent History",
-                          style: FontManager().getTextStyle(
-                            context,
-                            fontSize: 16,
-                            color: AppColors.grey,
-                            lWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 10,),
+                "Recent History",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 16,
+                  color: AppColors.grey,
+                  lWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               FinanceWidgets.debtsPicture(
                 context,
-                _debts,
+                debts,
                 (Debt debt) {
                   Navigator.push(
                     context,
@@ -647,11 +644,14 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
               SizedBox(height: 16.0), // Space between debts and form
               // Form container
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0,),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                ),
                 child: Container(
                   width: MediaQuery.sizeOf(context).width / 1.2,
                   height: MediaQuery.sizeOf(context).height / 1.6,
-                  padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: AppColors.backgroundColor,
@@ -693,8 +693,8 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                               horizontal: 12.0, vertical: 12.0),
                           child: Scrollbar(
                             thumbVisibility: true, // Always show the scrollbar
-    thickness: 4.0, // Adjust thickness
-    radius: Radius.circular(8.0),
+                            thickness: 4.0, // Adjust thickness
+                            radius: Radius.circular(8.0),
                             child: SingleChildScrollView(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -710,13 +710,14 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                   ),
                                   SizedBox(height: 8.0),
                                   CustomFormField(
-                                    hintText: PlotFinanceStaticData().enterDebtName,
+                                    hintText:
+                                        PlotFinanceStaticData().enterDebtName,
                                     onChanged: (value) =>
                                         setState(() => _name = value),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return PlotFinanceStaticData().enterDebtName
-                                            ; // Fixed validator
+                                        return PlotFinanceStaticData()
+                                            .enterDebtName; // Fixed validator
                                       }
                                       return null;
                                     },
@@ -761,11 +762,12 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                   ),
                                   SizedBox(height: 8.0),
                                   CustomFormField(
-                                    hintText: PlotFinanceStaticData().enterDebtAmount,
-                                    
+                                    hintText:
+                                        PlotFinanceStaticData().enterDebtAmount,
                                     keyboardType: TextInputType.number,
                                     onChanged: (value) => setState(() =>
-                                        _amount = double.tryParse(value) ?? 0.0),
+                                        _amount =
+                                            double.tryParse(value) ?? 0.0),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return PlotFinanceStaticData()
@@ -791,11 +793,12 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                   ),
                                   SizedBox(height: 8.0),
                                   CustomFormField(
-                                    hintText:
-                                        PlotFinanceStaticData().enterInterestRate,
+                                    hintText: PlotFinanceStaticData()
+                                        .enterInterestRate,
                                     keyboardType: TextInputType.number,
                                     onChanged: (value) => setState(() =>
-                                        _interest = double.tryParse(value) ?? 0.0),
+                                        _interest =
+                                            double.tryParse(value) ?? 0.0),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return PlotFinanceStaticData()
@@ -820,10 +823,12 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                   ),
                                   SizedBox(height: 8.0),
                                   CustomFormField(
-                                    hintText: PlotFinanceStaticData().enterDuration,
+                                    hintText:
+                                        PlotFinanceStaticData().enterDuration,
                                     keyboardType: TextInputType.number,
                                     onChanged: (value) => setState(() {
-                                      _durationMonths = int.tryParse(value) ?? 0;
+                                      _durationMonths =
+                                          int.tryParse(value) ?? 0;
                                     }),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -849,7 +854,8 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                   ),
                                   SizedBox(height: 8.0),
                                   CustomFormField(
-                                    hintText: PlotFinanceStaticData().selectDate,
+                                    hintText:
+                                        PlotFinanceStaticData().selectDate,
                                     readOnly: true,
                                     onTap: _showDatePicker,
                                     controller: TextEditingController(
@@ -858,7 +864,8 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                     suffixIcon: Icon(Icons.calendar_today),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return PlotFinanceStaticData().validateDate;
+                                        return PlotFinanceStaticData()
+                                            .validateDate;
                                       }
                                       return null;
                                     },
@@ -868,7 +875,6 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                             ),
                           ),
                         ),
-                       
                         GestureDetector(
                           onTap: () {
                             if (createDebtBool.value) return;
@@ -877,8 +883,8 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                           },
                           child: Obx(() => createDebtBool.value
                               ? getspinner(context)
-                              : getButton(
-                                  context, PlotFinanceStaticData().continueButton)),
+                              : getButton(context,
+                                  PlotFinanceStaticData().continueButton)),
                         ),
                       ],
                     ),
