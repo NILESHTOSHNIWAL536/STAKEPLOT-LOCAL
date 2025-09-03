@@ -39,6 +39,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
 
     return Scaffold(
       // backgroundColor: AppColors.primaryColor,
+
       bottomNavigationBar: SafeArea(
           child: BottomNavigations(
         data: 1,
@@ -58,12 +59,13 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                   // Background color with a wave shape at the bottom
                   Center(
                       child: Transform.translate(
-                    offset: const Offset(0, -15),
+                    offset: const Offset(0, -20),
                     child: AvatarProfileImageZero(
                         url: svgIconPath.finance, width: 1, height: 2),
                   )),
 
                   Column(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       // Main title "Plot your finances"
