@@ -1320,13 +1320,19 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                   height: categories.length > 3
                       ? MediaQuery.sizeOf(context).height / 3.2
                       : MediaQuery.sizeOf(context).height / 2.4,
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Column(
-                        children: [
-                          vegNonvegdata(),
-                        ],
+                  child: Scrollbar(
+                    thumbVisibility: true, // Makes the scrollbar always visible
+                    thickness:
+                        6.0, // Optional: Adjust the thickness of the scrollbar
+                    radius: const Radius.circular(10),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Column(
+                          children: [
+                            vegNonvegdata(),
+                          ],
+                        ),
                       ),
                     ),
                   ),

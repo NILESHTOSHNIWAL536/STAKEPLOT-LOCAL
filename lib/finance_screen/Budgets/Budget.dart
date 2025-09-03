@@ -77,19 +77,18 @@ class _BudgetState extends State<Budget> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: AppColors.white,
-          title:Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                 
-                  textStyle(
-                    context: context,
-                    text:  PlotFinanceStaticData().budgetPlannerTitle,
-                    fontsize: 20 ,
-                    fontWeight: FontWeight.w700,
-                    c: AppColors.primaryColor,
-                  ),
-                ],
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              textStyle(
+                context: context,
+                text: PlotFinanceStaticData().budgetPlannerTitle,
+                fontsize: 20,
+                fontWeight: FontWeight.w700,
+                c: AppColors.primaryColor,
               ),
+            ],
+          ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
             onPressed: () {
@@ -109,180 +108,208 @@ class _BudgetState extends State<Budget> {
             },
           ),
         ),
-       // bottomNavigationBar: BottomNavigations(data: 1),
+        // bottomNavigationBar: BottomNavigations(data: 1),
       ),
     );
   }
 
- Widget getBudgetUiScreen(double height, double width, BuildContext context) {
-  double responsivePadding = width > 600 ? 32 : 24; // Larger padding for tablets
-  double fontScale = width > 600 ? 1.2 : 1.0; // Scale fonts for larger screens
+  Widget getBudgetUiScreen(double height, double width, BuildContext context) {
+    double responsivePadding =
+        width > 600 ? 32 : 24; // Larger padding for tablets
+    double fontScale =
+        width > 600 ? 1.2 : 1.0; // Scale fonts for larger screens
 
-  return Column(
-    children: [
-       Padding(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Recent History",
+          style: FontManager().getTextStyle(
+            context,
+            fontSize: 16,
+            color: AppColors.grey,
+            lWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: FinanceWidgets.budgetHorizontalList(context),
         ),
-      Container(
-        width: MediaQuery.sizeOf(context).width / 1.2,
-        height: MediaQuery.sizeOf(context).height / 1.7,
-        // padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Color(0xFFF3F4F6),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.05),
-              offset: Offset(0, 1),
-              blurRadius: 2,
+        Container(
+          width: MediaQuery.sizeOf(context).width / 1.2,
+          height: MediaQuery.sizeOf(context).height / 1.7,
+          // padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: AppColors.backgroundColor,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Color(0xFFF3F4F6),
+              width: 1,
             ),
-          ],
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                 Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8.0, vertical: 12.0),
-                              child: Text(
-                                "Add budget",
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromRGBO(0, 0, 0, 0.05),
+                offset: Offset(0, 1),
+                blurRadius: 2,
+              ),
+            ],
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                    child: Text(
+                      "Add budget",
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 18,
+                        color: AppColors.accentColor,
+                        lWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFeildWidgetCustom(
+                          textEditingController: nameController,
+                          heading: PlotFinanceStaticData().nameLabel,
+                          keyBoard: TextInputType.emailAddress,
+                          lableText:
+                              PlotFinanceStaticData().enterBudgetNameHint,
+                          icon: Icons.person,
+                        ),
+                        SizedBox(height: 10),
+                        TextFeildWidgetCustom(
+                          textEditingController: amountController,
+                          heading: PlotFinanceStaticData().amountLabelBudget,
+                          keyBoard: TextInputType.number,
+                          lableText:
+                              PlotFinanceStaticData().enterAmountHintBudget,
+                          icon: Icons.currency_rupee_rounded,
+                          needAmountFormat: true,
+                        ),
+                        SizedBox(height: 10),
+                        textStyle(
+                          context: context,
+                          text: PlotFinanceStaticData().durationLabel,
+                          fontsize: 16 * fontScale,
+                          fontWeight: FontWeight.bold,
+                          c: AppColors.accentColor,
+                        ),
+                        SizedBox(height: 10),
+                        // Improved Dropdown for duration selection
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 1),
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: AppColors.mt,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.border),
+                          ),
+                          child: Obx(() => DropdownButton<String>(
+                                value:
+                                    period.value.isEmpty ? null : period.value,
+                                hint: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 10),
+                                    child: textStyle(
+                                      context: context,
+                                      text: "Select Duration",
+                                      fontsize: 14 * fontScale,
+                                      fontWeight: FontWeight.w300,
+                                      c: AppColors.bg6,
+                                    ),
+                                  ),
+                                ),
+                                isExpanded: true,
+                                underline:
+                                    SizedBox(), // Remove default underline
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: AppColors.accentColor,
+                                  size: 24 * fontScale,
+                                ),
+                                dropdownColor: Colors.white,
+                                items: [
+                                  PlotFinanceStaticData().weeklyPeriod,
+                                  PlotFinanceStaticData().monthlyPeriod,
+                                  PlotFinanceStaticData().yearlyPeriod,
+                                ].map((String periodItem) {
+                                  return DropdownMenuItem<String>(
+                                    value: periodItem,
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: textStyle(
+                                          context: context,
+                                          text: periodItem,
+                                          fontsize: 16 * fontScale,
+                                          fontWeight: FontWeight.w500,
+                                          c: AppColors.accentColor,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  if (newValue != null) {
+                                    period.value = newValue;
+                                    boolFlag.value = !boolFlag.value;
+                                    period.refresh();
+                                  }
+                                },
                                 style: FontManager().getTextStyle(
                                   context,
-                                  fontSize: 18,
-                                  color: AppColors.accentColor,
-                                  lWeight: FontWeight.w600,
+                                  fontSize: 14 * fontScale,
+                                  lWeight: FontWeight.w500,
+                                  color: AppColors.bg3,
                                 ),
-                              ),
-                            ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFeildWidgetCustom(
-                        textEditingController: nameController,
-                        heading: PlotFinanceStaticData().nameLabel,
-                        keyBoard: TextInputType.emailAddress,
-                        lableText: PlotFinanceStaticData().enterBudgetNameHint,
-                        icon: Icons.person,
-                      ),
-                      SizedBox(height: 10),
-                      TextFeildWidgetCustom(
-                        textEditingController: amountController,
-                        heading: PlotFinanceStaticData().amountLabelBudget,
-                        keyBoard: TextInputType.number,
-                        lableText: PlotFinanceStaticData().enterAmountHintBudget,
-                        icon: Icons.currency_rupee_rounded,
-                        needAmountFormat: true,
-                      ),
-                      SizedBox(height: 10),
-                      textStyle(
-                        context: context,
-                        text: PlotFinanceStaticData().durationLabel,
-                        fontsize: 16 * fontScale,
-                        fontWeight: FontWeight.bold,
-                        c: AppColors.accentColor,
-                      ),
-                     SizedBox(height: 10),
-                      // Improved Dropdown for duration selection
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AppColors.mt,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.border),
-                          
+                                itemHeight: 48, // Consistent item height
+                                menuMaxHeight:
+                                    200, // Limit dropdown menu height
+                              )),
                         ),
-                        child: Obx(() => DropdownButton<String>(
-                              value: period.value.isEmpty ? null : period.value,
-                              hint: Center(
-                                child: Padding(
-                                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                                  child: textStyle(
-                                    context: context,
-                                    text: "Select Duration",
-                                    fontsize: 14 * fontScale,
-                                    fontWeight: FontWeight.w300,
-                                    c: AppColors.bg6,
-                                  ),
-                                ),
-                              ),
-                              isExpanded: true,
-                              underline: SizedBox(), // Remove default underline
-                              icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: AppColors.accentColor,
-                                size: 24 * fontScale,
-                              ),
-                              dropdownColor: Colors.white,
-                              items: [
-                                PlotFinanceStaticData().weeklyPeriod,
-                                PlotFinanceStaticData().monthlyPeriod,
-                                PlotFinanceStaticData().yearlyPeriod,
-                              ].map((String periodItem) {
-                                return DropdownMenuItem<String>(
-                                  value: periodItem,
-                                  child: textStyle(
-                                    context: context,
-                                    text: periodItem,
-                                    fontsize: 14 * fontScale,
-                                    fontWeight: FontWeight.w500,
-                                    c: AppColors.bg3,
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  period.value = newValue;
-                                  boolFlag.value = !boolFlag.value;
-                                  period.refresh();
-                                }
-                              },
-                              style: FontManager().getTextStyle(
-                                context,
-                                fontSize: 14 * fontScale,
-                                lWeight: FontWeight.w500,
-                                color: AppColors.bg3,
-                              ),
-                              itemHeight: 48, // Consistent item height
-                              menuMaxHeight: 200, // Limit dropdown menu height
-                            )),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                InkWell(
-                  onTap: () {
-                    bedgetCalculator();
-                  },
-                  child: getButton(context, PlotFinanceStaticData().continueButton),
-                ),
-                SizedBox(height: 20), // Extra padding at bottom for scroll
-              ],
+                  SizedBox(height: 20),
+                  InkWell(
+                    onTap: () {
+                      bedgetCalculator();
+                    },
+                    child: getButton(
+                        context, PlotFinanceStaticData().continueButton),
+                  ),
+                  SizedBox(height: 20), // Extra padding at bottom for scroll
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
+
   Widget rowPer(double width) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-       getPeriod(PlotFinanceStaticData().weeklyPeriod, width), // Updated
+        getPeriod(PlotFinanceStaticData().weeklyPeriod, width), // Updated
         getPeriod(PlotFinanceStaticData().monthlyPeriod, width), // Updated
-        getPeriod(PlotFinanceStaticData().yearlyPeriod, width), 
+        getPeriod(PlotFinanceStaticData().yearlyPeriod, width),
       ],
     );
   }
@@ -332,7 +359,8 @@ class _BudgetState extends State<Budget> {
     if (nameController.text == "" ||
         amountController.text == "" ||
         period.value == "") {
-      snackBarCalledfail(context,SnackbarData().fillAllRequiredFields, Colorcodes.red);
+      snackBarCalledfail(
+          context, SnackbarData().fillAllRequiredFields, Colorcodes.red);
       return;
     }
     Navigator.push(
@@ -355,7 +383,7 @@ Widget textStyle({
   Color c = AppColors.bg1,
   FontWeight fontWeight = FontWeight.w500,
   bool iswrap = false,
-  double lineHeight=1.0 ,
+  double lineHeight = 1.0,
 }) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -364,12 +392,12 @@ Widget textStyle({
       const SizedBox(width: 7),
       Text(
         text.toString(),
-        style: FontManager().getTextStyle(
-              context,
-              lWeight: fontWeight, fontSize: fontsize, color: c,
-              lineHeight: lineHeight
-            ),
-        overflow: iswrap? TextOverflow.visible:TextOverflow.ellipsis,
+        style: FontManager().getTextStyle(context,
+            lWeight: fontWeight,
+            fontSize: fontsize,
+            color: c,
+            lineHeight: lineHeight),
+        overflow: iswrap ? TextOverflow.visible : TextOverflow.ellipsis,
       ),
     ],
   );
@@ -383,17 +411,17 @@ Widget textStyleImage({
   FontWeight fontWeight = FontWeight.w500,
   bool iswrap = false,
   bool isCenter = false,
-  double lineHeight=1.0 ,
+  double lineHeight = 1.0,
 }) {
   return Text(
     text.toString(),
-    style: FontManager().getTextStyle(
-          context,
-          lWeight: fontWeight, fontSize: fontsize, color: c,
-          lineHeight: lineHeight,
-          textAlign: isCenter ? TextAlign.center : TextAlign.start
-        ),
-    overflow: iswrap? TextOverflow.visible:TextOverflow.ellipsis,
+    style: FontManager().getTextStyle(context,
+        lWeight: fontWeight,
+        fontSize: fontsize,
+        color: c,
+        lineHeight: lineHeight,
+        textAlign: isCenter ? TextAlign.center : TextAlign.start),
+    overflow: iswrap ? TextOverflow.visible : TextOverflow.ellipsis,
   );
 }
 
