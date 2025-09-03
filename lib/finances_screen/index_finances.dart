@@ -118,7 +118,6 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
             ),
 
             // Middle sections start here
-            const SizedBox(height: 24),
 
             // "Heading" section with "View all"
             Padding(
