@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 
+import '../Constants/app_styles.dart';
 import '../animated/booleanFlag.dart';
 import '../avatarProfile.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
@@ -65,12 +66,12 @@ class SignInScreen extends StatelessWidget {
                     ),
                     padding: EdgeInsets.symmetric(vertical: 0.5),
                   ),
-                  icon:  AvatarProfileImage(url: svgIconPath.google2, width: 20, height: 20),
-                  // icon: Icon(
-                  //   FontAwesomeIcons.google,
-                  //   color: Color(0xFF37344F),
-                  //   size: 27,
-                  // ),
+                  // icon:  AvatarProfileImage(url: svgIconPath.google2, width: 20, height: 20),
+                  icon: AvatarProfileImage(
+                  url: Sign.googleIcon,
+                      width: 40,
+                      height: 30,
+                    ),
                   label: textStyle(context: context,text: "Sign in with goggle",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 15),
                   //  Text(
                   //   "Sign in with goggle",
