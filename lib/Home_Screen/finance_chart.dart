@@ -260,6 +260,7 @@ class _FinancePageState extends State<FinancePage> {
   void initState() {
     super.initState();
     selectedButton.value = 'Month';
+    
     _fetchData();
   }
 

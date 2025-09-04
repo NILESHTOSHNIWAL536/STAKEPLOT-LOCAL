@@ -113,7 +113,7 @@ class _MyAppState extends State<MyApp> {
           scaffoldBackgroundColor: AppColors.backgroundColor,
         ),
         debugShowCheckedModeBanner: false,
-        initialRoute: '/',
+        initialRoute: '/splash',
         routes: routes,
         // Attach updateNavigatorKey to a nested Navigator if needed (optional)
         builder: (context, child) {

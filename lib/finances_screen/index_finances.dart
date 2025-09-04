@@ -114,7 +114,6 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
               ),
             ),
 
-            // Middle sections start here
 
             // "Heading" section with "View all"
             Padding(
