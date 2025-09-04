@@ -11,7 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 // Your FontManager class (assumed imported)
 
-
 // Sanitize string inputs
 String displayString(dynamic str) =>
     (str ?? '').toString().replaceAll(RegExp(r'<.*?>'), '');
@@ -22,7 +21,6 @@ class LoanCalculatorScreen extends StatefulWidget {
 }
 
 class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
- 
   final TextEditingController _incomeController = TextEditingController();
   final TextEditingController _emiController = TextEditingController();
 
@@ -48,9 +46,9 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
           "$apiUrl/transactionauto/get-income-average-monthly-category-expenses");
       if (getFlagOfResponse(response)) {
         var data = json.decode(response.body)["data"];
-      
+
         setState(() {
-         income = (data['income'] is String)
+          income = (data['income'] is String)
               ? int.tryParse(data['income']) ?? 0
               : (data['income'] as num?)?.toInt() ?? 0;
           expenses = Map<String, dynamic>.from(
@@ -103,7 +101,8 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
       // handle error here
     }
   }
-num safeNum(dynamic value) {
+
+  num safeNum(dynamic value) {
     if (value == null) return 0;
     if (value is num) return value;
     if (value is String) return num.tryParse(value) ?? 0;
@@ -132,6 +131,12 @@ num safeNum(dynamic value) {
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
+
+    // Responsive offsets based on screen height
+    double headerOffset = height * 0.035; // ~30px on standard screens
+    double shapeOffset = height * 0.095; // ~80px on standard screens
+    double contentOffset = height * 0.1; // ~85px on standard screens
+
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       body: SafeArea(
@@ -139,7 +144,7 @@ num safeNum(dynamic value) {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Transform.translate(
-                offset: const Offset(0, 30),
+                offset: Offset(0, headerOffset),
                 child: Container(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,12 +195,11 @@ num safeNum(dynamic value) {
                   ),
                 )),
           ),
-         
           Padding(
             //
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Transform.translate(
-              offset: const Offset(0, 80),
+              offset: Offset(0, shapeOffset),
               // SvgPicture.asset(
               //     'assets/icons/financeScreen/currency.svg',
               //     width: double.infinity,   // Full width
@@ -207,9 +211,8 @@ num safeNum(dynamic value) {
               ),
             ),
           ),
-          
           Transform.translate(
-            offset: const Offset(0, 85),
+            offset: Offset(0, contentOffset),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: Container(
@@ -268,7 +271,6 @@ num safeNum(dynamic value) {
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             value: _selectedCreditScore,
-                            
                             dropdownColor: const Color(0xFF656399),
                             icon: const Icon(Icons.expand_more,
                                 color: Colors.white),
@@ -346,7 +348,7 @@ num safeNum(dynamic value) {
                           ));
                         }).toList(),
                       ),
-                       SizedBox(height: height * 0.02),
+                      SizedBox(height: height * 0.02),
                       Center(
                         child: SizedBox(
                           width: width * 0.37,
@@ -397,8 +399,7 @@ num safeNum(dynamic value) {
                                         loanCalcResponse?['safeEmiRange']),
                                     context)),
                             SizedBox(width: width * 0.025),
-                            
-                           safeNum(loanCalcResponse?[
+                            safeNum(loanCalcResponse?[
                                         'maxSuggestedLoanAmount']) >
                                     0
                                 ? Expanded(
@@ -408,7 +409,6 @@ num safeNum(dynamic value) {
                                             'maxSuggestedLoanAmount']),
                                         context))
                                 : SizedBox.shrink(),
-                          
                           ],
                         ),
                         SizedBox(height: height * 0.011),

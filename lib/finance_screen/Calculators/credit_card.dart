@@ -398,7 +398,7 @@ class _CreditCardState extends State<CreditCard> {
 
   @override
   void dispose() {
-    _timer?.cancel(); // Cancel the timer to prevent memory leaks
+    _timer?.cancel();
     for (var slider in slidersList) {
       slider['controller'].dispose();
     }
@@ -427,7 +427,7 @@ class _CreditCardState extends State<CreditCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.arrow_back,
                           color: AppColors.backgroundColor,
                         ),
@@ -440,15 +440,13 @@ class _CreditCardState extends State<CreditCard> {
                           setState(() {
                             _isInfoVisible = true;
                             _opacity = 1.0; // Fade in
-                            print('Showing container: opacity = $_opacity');
                           });
-                          _timer?.cancel(); // Cancel any existing timer
-                          // Start a new timer to fade out after 5 seconds
+                          _timer?.cancel(); 
+                         
                           _timer = Timer(Duration(seconds: 2), () {
                             if (mounted) {
                               setState(() {
                                 _opacity = 0.0; // Fade out
-                                print('Hiding container: opacity = $_opacity');
                               });
                             }
                           });

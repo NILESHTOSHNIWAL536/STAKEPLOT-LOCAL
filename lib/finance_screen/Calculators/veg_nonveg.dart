@@ -445,7 +445,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
                 blurRadius: 5,
-                offset: const Offset(0, 3),
+                offset: Offset(0,
+                    MediaQuery.sizeOf(context).height * 0.005), // 3/640 = 0.005
               ),
             ],
           ),
@@ -873,7 +874,10 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Transform.translate(
-                offset: const Offset(0, 30),
+                offset: Offset(
+                    0,
+                    MediaQuery.of(context).size.height *
+                        0.03), // Responsive offset based on screen height
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
@@ -1226,7 +1230,10 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             //
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Transform.translate(
-              offset: const Offset(0, 80),
+              offset: Offset(
+                  0,
+                  MediaQuery.of(context).size.height *
+                      0.08), // Responsive offset based on screen height
               // SvgPicture.asset(
               //     'assets/icons/financeScreen/currency.svg',
               //     width: double.infinity,   // Full width
@@ -1239,7 +1246,10 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             ),
           ),
           Transform.translate(
-            offset: const Offset(0, 90),
+            offset: Offset(
+                0,
+                MediaQuery.of(context).size.height *
+                    0.09), // Responsive offset based on screen height
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

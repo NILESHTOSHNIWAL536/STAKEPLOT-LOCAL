@@ -184,7 +184,7 @@ class SliderAdddingFinances extends StatelessWidget {
         height: cardHeight,
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: Color(0xFFF3F4F6),
             width: 1,

@@ -9,10 +9,9 @@ import '../colorcodes.dart';
 import '../controllers/credit_card_controller.dart';
 import '../finance_screen/Budgets/Budget.dart';
 import './FeatureGrid.dart';
-import 'creditCard_slider.dart';
-import 'dilogbox.dart';
+
 import 'searchfinance.dart';
-import 'select_card_options.dart';
+
 import 'show_complete_info.dart';
 import 'slider_addding_finances.dart';
 import 'topay_toreceive.dart';
@@ -59,7 +58,10 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                   // Background color with a wave shape at the bottom
                   Center(
                       child: Transform.translate(
-                    offset: const Offset(0, -20),
+                    offset: Offset(
+                        0,
+                        -size.height *
+                            0.025), // Responsive offset based on screen height
                     child: AvatarProfileImageZero(
                         url: svgIconPath.finance, width: 1, height: 2),
                   )),
@@ -77,7 +79,10 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                       Stack(
                         children: [
                           Transform.translate(
-                            offset: const Offset(0, -180),
+                            offset: Offset(
+                                0,
+                                -size.height *
+                                    0.225), // Responsive offset based on screen height
                             child: Container(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
@@ -100,7 +105,10 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                           //     ),
                           // ),),
                           Transform.translate(
-                            offset: const Offset(0, -60),
+                            offset: Offset(
+                                0,
+                                -size.height *
+                                    0.075), // Responsive offset based on screen height
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
                               margin:
@@ -122,7 +130,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
             // "Heading" section with "View all"
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: _buildSectionHeader('Credit Cards', () {
+              child: _buildSectionHeader('', () {
                 // showBudgetDebtCreditCard(context);
                 pushnameToRoute(context, ShowCompleteInfo(), false);
                 // pushnameToRoute(context, SelectAnyOptionScreen(),false);
@@ -164,21 +172,41 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
         ),
         GestureDetector(
           onTap: onTap,
-          child: Row(
-            children: [
-              Text(
-                'View all',
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: AppColors.grey),
-              ),
-              // Icon(
-              //   Icons.arrow_forward_ios,
-              //   color: Color(0xFF8A7FA7),
-              //   size: 14,
-              // ),
-            ],
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Color(0xFFF3F4F6),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.05),
+              offset: Offset(0, 1),
+              blurRadius: 2,
+            ),
+          ],
+        ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'View all',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.primaryColor),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: AppColors.primaryColor,
+                  size: 14,
+                ),
+              ],
+            ),
           ),
         ),
       ],
