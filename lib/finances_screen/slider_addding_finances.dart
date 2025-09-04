@@ -206,6 +206,19 @@ class SliderAdddingFinances extends StatelessWidget {
                     horizontal: 16.0, vertical: 12.0),
                 child: Row(
                   children: [
+                       Container(
+              margin: const EdgeInsets.only(right: 16.0),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.primaryColor,
+              ),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
                     // Icon
 
                     // Text
@@ -227,19 +240,7 @@ class SliderAdddingFinances extends StatelessWidget {
               ),
             ),
             // Right side: Plus Button
-            Container(
-              margin: const EdgeInsets.only(right: 16.0),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.primaryColor,
-              ),
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 24,
-              ),
-            ),
+         
           ],
         ),
       ),

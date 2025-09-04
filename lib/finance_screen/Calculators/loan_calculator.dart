@@ -7,8 +7,6 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/ve
 import 'dart:convert';
 import '../../backed_connections/apiAutomations/curd.dart';
 
-import 'package:google_fonts/google_fonts.dart';
-
 // Your FontManager class (assumed imported)
 
 // Sanitize string inputs
@@ -37,7 +35,9 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
   @override
   void initState() {
     super.initState();
-    fetchIncomeAndExpenses();
+    // _incomeController.clear();
+    // _emiController.clear();
+    // fetchIncomeAndExpenses();
   }
 
   Future<void> fetchIncomeAndExpenses() async {
@@ -222,7 +222,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //  const SizedBox(height: 10),
-                      Text('Income',
+                      Text('Income (Per month)',
                           style: FontManager().getTextStyle(context,
                               color: Colors.white.withOpacity(0.85),
                               fontSize: 15.3)),
@@ -354,7 +354,37 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                           width: width * 0.37,
                           height: height * 0.052,
                           child: ElevatedButton(
-                            onPressed: calculateLoan,
+                            onPressed: () {
+                              if (_incomeController.text.trim().isEmpty) {
+                                  snackBarCalledfail(
+                                    context,  "Please enter your income");
+                               
+                                return;
+                              }
+                              if (_emiController.text.trim().isEmpty) {
+                                 snackBarCalledfail(
+                                    context,  "Please enter your existing EMI");
+                               
+                                return;
+                              }
+                              if (_selectedCreditScore.isEmpty) {
+                                 snackBarCalledfail(
+                                    context, "Please select a credit score");
+                               
+                                return;
+                              }
+                              if (_loanType.isEmpty) {
+                                snackBarCalledfail(
+                                    context, "Please select a loan type");
+                               
+                                return;
+                              }
+
+                              calculateLoan();
+                            },
+
+                            // onPressed: calculateLoan,
+
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryColor,
                               foregroundColor: AppColors.backgroundColor,

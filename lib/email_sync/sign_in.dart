@@ -72,7 +72,7 @@ class SignInScreen extends StatelessWidget {
                       width: 40,
                       height: 30,
                     ),
-                  label: textStyle(context: context,text: "Sign in with goggle",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 15),
+                  label: textStyle(context: context,text: "Sign in with Google",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 15),
                   //  Text(
                   //   "Sign in with goggle",
                   //   style: TextStyle(
@@ -94,7 +94,7 @@ class SignInScreen extends StatelessWidget {
               children: [
                 Icon(Icons.beenhere_rounded, color: Color(0xFF37344F), size: 19),
                 SizedBox(width: 8),
-                textStyle(context: context,text: "your data is safe with us",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 17),
+                textStyle(context: context,text: "Your data is safe with us",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 17),
               ],
             ),
           ],

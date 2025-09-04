@@ -222,6 +222,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Re
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Savings.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/inflation_calculator.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/sip_calculator.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -258,11 +259,11 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
     //   'svgPath': 'assets/icons/financeScreen/f2.svg',
     //   'screen': AutoLoan(),
     // },
-    // {
-    //   'name': 'Cost',
-    //   'svgPath': 'assets/icons/financeScreen/f1.svg',
-    //   'screen': TripCost(),
-    // },
+    {
+      'name': 'Inflation',
+      'svgPath': 'assets/icons/financeScreen/f3.svg',
+      'screen': InflationCalculator(),
+    },
     {
       'name': 'SIP',
       'svgPath': 'assets/icons/financeScreen/f1.svg',

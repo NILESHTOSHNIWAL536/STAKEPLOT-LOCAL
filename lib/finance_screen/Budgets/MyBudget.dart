@@ -379,10 +379,21 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         : 0.0;
     return Container(
       padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.mt,
-        borderRadius: BorderRadius.circular(16),
-      ),
+       decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Color(0xFFF3F4F6),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.05),
+              offset: Offset(0, 1),
+              blurRadius: 2,
+            ),
+          ],
+        ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -472,6 +483,10 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(12),
+         border: Border.all(
+            color: Color(0xFFF3F4F6),
+            width: 1,
+          ),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
@@ -496,13 +511,20 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
                       margin: EdgeInsets.only(bottom: 8),
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor
-                            .withOpacity(0.2), // Light blue background
-                        borderRadius: BorderRadius.circular(8),
-                        // border: Border.all(color: Colors.blue.shade200),
-                        border: Border.all(
-                            color: AppColors.primaryColor.withOpacity(0.1)),
-                      ),
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Color(0xFFF3F4F6),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.05),
+              offset: Offset(0, 1),
+              blurRadius: 2,
+            ),
+          ],
+        ),
                       // child: Text(
                       //   insightsList[index],
                       //   style: TextStyle(fontSize: 16, color: Colors.black87),

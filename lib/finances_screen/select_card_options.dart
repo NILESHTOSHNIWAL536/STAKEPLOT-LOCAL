@@ -18,14 +18,14 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
   int selectedIndex = 0;
 
   final List<String> titles = [
-    "Credit Card",
+    "Add Credit Card",
     "Create Budget",
     "Add Debt",
   ];
   final List<String> subtitles = [
     "Securely link your card to track expenses with ease.",
-    "Securely link your card to track expenses with ease.",
-    "Securely link your card to track expenses with ease.",
+    "Set spending limits and track your financial goals.",
+    "Manage and track your outstanding debts and loans.",
   ];
   final List<String> svgs = [
     svgIconPath.dio1,
@@ -44,8 +44,13 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
         child: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
-          leading:leadIcon(context),
-          title: textStyleImage(context: context,text: "select any option",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 20),
+          leading: leadIcon(context),
+          title: textStyleImage(
+              context: context,
+              text: "Get Started",
+              c: AppColors.primaryColor,
+              fontWeight: FontWeight.w600,
+              fontsize: 20),
           centerTitle: true,
           actions: [SizedBox(width: 38)], // for symmetry
         ),
@@ -54,9 +59,8 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
         padding: EdgeInsets.symmetric(horizontal: w * 0.07),
         child: Column(
           children: [
+            const SizedBox(height: 40),
 
-            const SizedBox(height:40),
-            
             // Option Buttons
             for (int i = 0; i < 3; i++) ...[
               InkWell(
@@ -98,10 +102,23 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
                             : Color(0xFF635D8F),
                       ),
                       SizedBox(height: 4),
-                      textStyleImage(context: context,text: titles[i],c:selectedIndex == i ? Colors.white :AppColors.primaryColor,fontWeight: FontWeight.w500,fontsize: 18),
+                      textStyleImage(
+                          context: context,
+                          text: titles[i],
+                          c: selectedIndex == i
+                              ? Colors.white
+                              : AppColors.primaryColor,
+                          fontWeight: FontWeight.w500,
+                          fontsize: 18),
                       SizedBox(height: 4),
-                      textStyleImage(context: context,text: subtitles[i],c:selectedIndex == i ? Colors.white :AppColors.primaryColor,fontWeight: FontWeight.w400,fontsize: 12),
-                     
+                      textStyleImage(
+                          context: context,
+                          text: subtitles[i],
+                          c: selectedIndex == i
+                              ? Colors.white
+                              : AppColors.primaryColor,
+                          fontWeight: FontWeight.w400,
+                          fontsize: 12),
                     ],
                   ),
                 ),

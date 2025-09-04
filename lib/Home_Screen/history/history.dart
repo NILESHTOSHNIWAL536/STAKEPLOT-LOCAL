@@ -13,8 +13,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
-import 'components/action_icon.dart';
-import 'components/category_splitIcons.dart';
+
 
 RxMap<String, String> redioButton = <String, String>{}.obs;
 RxMap<String, int> redioButtonIndex = <String, int>{}.obs;

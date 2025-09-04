@@ -49,7 +49,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
             // Top Section with custom clipper and search bar
             Container(
               // color: AppColors.primaryColor,
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               height: size.height / 2,
               width: MediaQuery.of(context).size.width,
               // color: AppColors.primaryColor,
@@ -92,18 +92,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                                   height: 1.6),
                             ),
                           ),
-                          // Positioned(
-                          //   right: 20,
-                          //   top: 30,
-                          //   child: Container(
-                          //   alignment: Alignment.topRight,
-                          //   padding: const EdgeInsets.only(right: 10,top: 5),
-                          //   child: const Icon(
-                          //       Icons.more_horiz,
-                          //       color: Color(0xFFB8AECC),
-                          //       size: 30,
-                          //     ),
-                          // ),),
+                         
                           Transform.translate(
                             offset: Offset(
                                 0,
@@ -113,7 +102,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                               padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Center(child: FeatureGrid()),
+                              child: const Center(child: FeatureGrid()),
                               // child: Center(child: _buildFeatureCards(context)),
                             ),
                           ),
@@ -139,15 +128,15 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
 
             const SizedBox(height: 16),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          const  Padding(
+              padding:  EdgeInsets.symmetric(horizontal: 24.0),
               child: SliderAdddingFinances(),
             ),
 
             // "Heading to Recieve / to Pay" section
             const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            const Padding(
+              padding:  EdgeInsets.symmetric(horizontal: 24.0),
               child: TopayToreceive(),
             ),
             const SizedBox(height: 24),
@@ -178,10 +167,10 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Color(0xFFF3F4F6),
+            color:const  Color(0xFFF3F4F6),
             width: 1,
           ),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.05),
               offset: Offset(0, 1),

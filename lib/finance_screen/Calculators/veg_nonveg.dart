@@ -232,26 +232,12 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     bool isCustom,
   ) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.32,
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+       width: MediaQuery.of(context).size.width * 0.24,
+      // padding: const EdgeInsets.symmetric(horizontal: 5,),
       child: Column(
         children: [
           // Show the category name as a label (not editable here anymore)
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  label,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: AppColors.backgroundColor),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
+         SizedBox(height: 10,),
           TextField(
             controller: controller,
             keyboardType: TextInputType.number,
@@ -263,6 +249,13 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             ),
             decoration: InputDecoration(
               filled: true,
+              hintText: label,
+              hintStyle:  FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w400,
+                    fontSize: 14,
+                    color: AppColors.backgroundColor.withValues(),
+                  ),
               fillColor: const Color.fromARGB(59, 255, 255, 255),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
@@ -434,134 +427,143 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         String? friendId = friend['id']?.toString();
         bool isCurrentUser = friendId == userController.userId.value;
 
-        return Container(
-          margin: const EdgeInsets.symmetric(
-              vertical: 6, horizontal: 12), // Spacing between items
-          padding: const EdgeInsets.all(0), // Inner padding for each container
-          decoration: BoxDecoration(
-            color: Colors.white, // Background color for each block
-            borderRadius: BorderRadius.circular(12), // Rounded corners
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 5,
-                offset: Offset(0,
-                    MediaQuery.sizeOf(context).height * 0.005), // 3/640 = 0.005
-              ),
-            ],
-          ),
-          child: ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Stack(
-                      alignment: Alignment.topRight,
-                      children: [
-                        AvatarProfile(
-                          background: friend['avatarBackGround'] ??
-                              defaultBackGround.value,
-                          width: 8,
-                          height: 18,
-                          name: friend['name'] ?? 'Unknown',
-                        ),
-                        if (!isCurrentUser)
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                addedMembers.removeWhere(
-                                    (member) => member['id'] == friendId);
-                                addedUser.remove(friendId);
-                                selectedOptions.remove(friendId);
-                                _calculateShares();
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      friend['name'] ?? 'Unknown',
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: AppColors.bg1,
-                      ),
-                    ),
-                  ],
-                ),
-                Text(
-                  '₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: AppColors.bg3,
-                  ),
+        return Stack(
+          children:[
+            
+            Container(
+            margin: const EdgeInsets.symmetric(
+                vertical: 6, horizontal: 12), // Spacing between items
+            padding: const EdgeInsets.all(0), // Inner padding for each container
+            decoration: BoxDecoration(
+              color: Colors.white, // Background color for each block
+              borderRadius: BorderRadius.circular(12), // Rounded corners
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 5,
+                  offset: Offset(0,
+                      MediaQuery.sizeOf(context).height * 0.005), // 3/640 = 0.005
                 ),
               ],
             ),
-            subtitle: Wrap(
-              spacing: 4.0,
-              children: categories.map((category) {
-                String option = category['name'];
-                bool isSelected =
-                    selectedOptions[friendId]?.contains(option) == true;
-                bool isDisabled = category['controller'].text.isEmpty;
-                return ChoiceChip(
-                  label: Text(
-                    option,
+            child: ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      AvatarProfile(
+                        background: friend['avatarBackGround'] ??
+                            defaultBackGround.value,
+                        width: 8,
+                        height: 18,
+                        name: friend['name'] ?? 'Unknown',
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        friend['name'] ?? 'Unknown',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: AppColors.bg1,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
                     style: FontManager().getTextStyle(
                       context,
-                      lWeight: FontWeight.w700,
-                      fontSize: 14,
-                      color: isSelected
-                          ? AppColors.backgroundColor
-                          : AppColors.accentColor,
+                      lWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: AppColors.bg3,
                     ),
                   ),
-                  selected: isSelected,
-                  showCheckmark: false,
-                  selectedColor: AppColors.primaryColor,
-                  backgroundColor: AppColors.mt,
-                  onSelected: isDisabled
-                      ? null
-                      : (selected) {
-                          setState(() {
-                            if (friendId != null) {
-                              selectedOptions.putIfAbsent(friendId, () => []);
-                              if (selected) {
-                                selectedOptions[friendId]!.add(option);
-                              } else {
-                                selectedOptions[friendId]!.remove(option);
-                                if (selectedOptions[friendId]!.isEmpty) {
-                                  selectedOptions.remove(friendId);
+                ],
+              ),
+              subtitle: Wrap(
+                spacing: 4.0,
+                children: categories.map((category) {
+                  String option = category['name'];
+                  bool isSelected =
+                      selectedOptions[friendId]?.contains(option) == true;
+                  bool isDisabled = category['controller'].text.isEmpty;
+                  return ChoiceChip(
+                    label: Text(
+                      option,
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: isSelected
+                            ? AppColors.backgroundColor
+                            : AppColors.accentColor,
+                      ),
+                    ),
+                    selected: isSelected,
+                    showCheckmark: false,
+                    selectedColor: AppColors.primaryColor,
+                    backgroundColor: AppColors.mt,
+                    onSelected: isDisabled
+                        ? null
+                        : (selected) {
+                            setState(() {
+                              if (friendId != null) {
+                                selectedOptions.putIfAbsent(friendId, () => []);
+                                if (selected) {
+                                  selectedOptions[friendId]!.add(option);
+                                } else {
+                                  selectedOptions[friendId]!.remove(option);
+                                  if (selectedOptions[friendId]!.isEmpty) {
+                                    selectedOptions.remove(friendId);
+                                  }
                                 }
+                                _calculateShares();
                               }
-                              _calculateShares();
-                            }
-                          });
-                        },
-                );
-              }).toList(),
+                            });
+                          },
+                  );
+                }).toList(),
+              ),
             ),
+          
           ),
+            if (!isCurrentUser)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 2, bottom: 6),
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    addedMembers.removeWhere(
+                                        (member) => member['id'] == friendId);
+                                    addedUser.remove(friendId);
+                                    selectedOptions.remove(friendId);
+                                    _calculateShares();
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.primaryColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.close,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                     
+          ],
+        
         );
       },
     );
@@ -923,6 +925,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                           ],
                         ),
                       ),
+                      
                       Container(
                         width: MediaQuery.sizeOf(context).width / 7,
                         child: IconButton(
@@ -1222,6 +1225,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                           },
                         ),
                       ),
+                   
                     ],
                   ),
                 )),
@@ -1328,8 +1332,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                 // Scrollable section
                 Container(
                   height: categories.length > 3
-                      ? MediaQuery.sizeOf(context).height / 3.2
-                      : MediaQuery.sizeOf(context).height / 2.4,
+                      ? MediaQuery.sizeOf(context).height / 2.75
+                      : MediaQuery.sizeOf(context).height / 2.2,
                   child: Scrollbar(
                     thumbVisibility: true, // Makes the scrollbar always visible
                     thickness:
