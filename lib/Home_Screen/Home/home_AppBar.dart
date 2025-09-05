@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:get/get.dart';
 
 PreferredSizeWidget getAppBar(context) {
@@ -34,11 +35,21 @@ PreferredSizeWidget getAppBar(context) {
             mainAxisAlignment: MainAxisAlignment.center,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Obx(() => AvatarProfile(
-                    name: userController.userName.value,
-                    width: 30,
-                    height: 13,
-                    background: userController.avatarBackGround.value,
+              Obx(() => GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditDetails(),
+                        ),
+                      );
+                    },
+                    child: AvatarProfile(
+                      name: userController.userName.value,
+                      width: 30,
+                      height: 13,
+                      background: userController.avatarBackGround.value,
+                    ),
                   )),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -182,7 +193,7 @@ PreferredSizeWidget historyAppBar(context) {
             //  else if (len == 1) {
             //   accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
             //   showModalForPdfDownload(context);
-            // } 
+            // }
             else {
               accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
               showModalForPdfDownloadBankUiCheckBox(context);

@@ -356,24 +356,81 @@ class _BudgetState extends State<Budget> {
   }
 
   void bedgetCalculator() {
-    if (nameController.text == "" ||
-        amountController.text == "" ||
-        period.value == "") {
+    if (nameController.text.isEmpty ||
+        amountController.text.isEmpty ||
+        period.value.isEmpty) {
       snackBarCalledfail(
           context, SnackbarData().fillAllRequiredFields, Colorcodes.red);
       return;
     }
+
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => BudgetSearch(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => BudgetSearch(
           amount: amountController.text,
           name: nameController.text,
           period: period.value,
         ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0); // Start from bottom
+          const end = Offset.zero; // End at normal position
+          const curve = Curves.easeInOut;
+
+          // Animation for the new screen (sliding up from bottom)
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var slideAnimation = animation.drive(tween);
+
+          // Animation for the old screen (sliding up and out)
+          var secondaryTween =
+              Tween(begin: Offset.zero, end: const Offset(0.0, -1.0))
+                  .chain(CurveTween(curve: curve));
+          var secondarySlideAnimation =
+              secondaryAnimation.drive(secondaryTween);
+
+          return Stack(
+            children: [
+              SlideTransition(
+                position: secondarySlideAnimation,
+                child: Container(
+                  color: AppColors
+                      .backgroundColor, // Match your screen's background
+                  child: const Budget(), // Current screen sliding out
+                ),
+              ),
+              SlideTransition(
+                position: slideAnimation,
+                child: child, // New screen sliding in
+              ),
+            ],
+          );
+        },
+        transitionDuration:
+            const Duration(milliseconds: 300), // Animation duration
       ),
     );
+  
   }
+  // void bedgetCalculator() {
+  //   if (nameController.text == "" ||
+  //       amountController.text == "" ||
+  //       period.value == "") {
+  //     snackBarCalledfail(
+  //         context, SnackbarData().fillAllRequiredFields, Colorcodes.red);
+  //     return;
+  //   }
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => BudgetSearch(
+  //         amount: amountController.text,
+  //         name: nameController.text,
+  //         period: period.value,
+  //       ),
+  //     ),
+  //   );
+  // }
 }
 
 Widget textStyle({

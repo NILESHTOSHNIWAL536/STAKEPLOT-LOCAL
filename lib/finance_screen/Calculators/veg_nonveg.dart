@@ -232,12 +232,14 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     bool isCustom,
   ) {
     return Container(
-       width: MediaQuery.of(context).size.width * 0.24,
+      width: MediaQuery.of(context).size.width * 0.24,
       // padding: const EdgeInsets.symmetric(horizontal: 5,),
       child: Column(
         children: [
           // Show the category name as a label (not editable here anymore)
-         SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           TextField(
             controller: controller,
             keyboardType: TextInputType.number,
@@ -250,12 +252,12 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             decoration: InputDecoration(
               filled: true,
               hintText: label,
-              hintStyle:  FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: AppColors.backgroundColor.withValues(),
-                  ),
+              hintStyle: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w400,
+                fontSize: 14,
+                color: AppColors.backgroundColor.withValues(),
+              ),
               fillColor: const Color.fromARGB(59, 255, 255, 255),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
@@ -428,142 +430,142 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         bool isCurrentUser = friendId == userController.userId.value;
 
         return Stack(
-          children:[
-            
+          children: [
             Container(
-            margin: const EdgeInsets.symmetric(
-                vertical: 6, horizontal: 12), // Spacing between items
-            padding: const EdgeInsets.all(0), // Inner padding for each container
-            decoration: BoxDecoration(
-              color: Colors.white, // Background color for each block
-              borderRadius: BorderRadius.circular(12), // Rounded corners
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 5,
-                  offset: Offset(0,
-                      MediaQuery.sizeOf(context).height * 0.005), // 3/640 = 0.005
-                ),
-              ],
-            ),
-            child: ListTile(
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      AvatarProfile(
-                        background: friend['avatarBackGround'] ??
-                            defaultBackGround.value,
-                        width: 8,
-                        height: 18,
-                        name: friend['name'] ?? 'Unknown',
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        friend['name'] ?? 'Unknown',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: AppColors.bg1,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    '₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: AppColors.bg3,
-                    ),
+              margin: const EdgeInsets.symmetric(
+                  vertical: 6, horizontal: 12), // Spacing between items
+              padding:
+                  const EdgeInsets.all(0), // Inner padding for each container
+              decoration: BoxDecoration(
+                color: Colors.white, // Background color for each block
+                borderRadius: BorderRadius.circular(12), // Rounded corners
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 5,
+                    offset: Offset(
+                        0,
+                        MediaQuery.sizeOf(context).height *
+                            0.005), // 3/640 = 0.005
                   ),
                 ],
               ),
-              subtitle: Wrap(
-                spacing: 4.0,
-                children: categories.map((category) {
-                  String option = category['name'];
-                  bool isSelected =
-                      selectedOptions[friendId]?.contains(option) == true;
-                  bool isDisabled = category['controller'].text.isEmpty;
-                  return ChoiceChip(
-                    label: Text(
-                      option,
+              child: ListTile(
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        AvatarProfile(
+                          background: friend['avatarBackGround'] ??
+                              defaultBackGround.value,
+                          width: 8,
+                          height: 18,
+                          name: friend['name'] ?? 'Unknown',
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          friend['name'] ?? 'Unknown',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: AppColors.bg1,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
                       style: FontManager().getTextStyle(
                         context,
-                        lWeight: FontWeight.w700,
-                        fontSize: 14,
-                        color: isSelected
-                            ? AppColors.backgroundColor
-                            : AppColors.accentColor,
+                        lWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: AppColors.bg3,
                       ),
                     ),
-                    selected: isSelected,
-                    showCheckmark: false,
-                    selectedColor: AppColors.primaryColor,
-                    backgroundColor: AppColors.mt,
-                    onSelected: isDisabled
-                        ? null
-                        : (selected) {
-                            setState(() {
-                              if (friendId != null) {
-                                selectedOptions.putIfAbsent(friendId, () => []);
-                                if (selected) {
-                                  selectedOptions[friendId]!.add(option);
-                                } else {
-                                  selectedOptions[friendId]!.remove(option);
-                                  if (selectedOptions[friendId]!.isEmpty) {
-                                    selectedOptions.remove(friendId);
+                  ],
+                ),
+                subtitle: Wrap(
+                  spacing: 4.0,
+                  children: categories.map((category) {
+                    String option = category['name'];
+                    bool isSelected =
+                        selectedOptions[friendId]?.contains(option) == true;
+                    bool isDisabled = category['controller'].text.isEmpty;
+                    return ChoiceChip(
+                      label: Text(
+                        option,
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: isSelected
+                              ? AppColors.backgroundColor
+                              : AppColors.accentColor,
+                        ),
+                      ),
+                      selected: isSelected,
+                      showCheckmark: false,
+                      selectedColor: AppColors.primaryColor,
+                      backgroundColor: AppColors.mt,
+                      onSelected: isDisabled
+                          ? null
+                          : (selected) {
+                              setState(() {
+                                if (friendId != null) {
+                                  selectedOptions.putIfAbsent(
+                                      friendId, () => []);
+                                  if (selected) {
+                                    selectedOptions[friendId]!.add(option);
+                                  } else {
+                                    selectedOptions[friendId]!.remove(option);
+                                    if (selectedOptions[friendId]!.isEmpty) {
+                                      selectedOptions.remove(friendId);
+                                    }
                                   }
+                                  _calculateShares();
                                 }
-                                _calculateShares();
-                              }
-                            });
-                          },
-                  );
-                }).toList(),
+                              });
+                            },
+                    );
+                  }).toList(),
+                ),
               ),
             ),
-          
-          ),
             if (!isCurrentUser)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 2, bottom: 6),
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    addedMembers.removeWhere(
-                                        (member) => member['id'] == friendId);
-                                    addedUser.remove(friendId);
-                                    selectedOptions.remove(friendId);
-                                    _calculateShares();
-                                  });
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(6),
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.primaryColor,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.close,
-                                    size: 18,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                     
+              Padding(
+                padding: const EdgeInsets.only(right: 2, bottom: 6),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        addedMembers
+                            .removeWhere((member) => member['id'] == friendId);
+                        addedUser.remove(friendId);
+                        selectedOptions.remove(friendId);
+                        _calculateShares();
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primaryColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
-        
         );
       },
     );
@@ -925,7 +927,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                           ],
                         ),
                       ),
-                      
                       Container(
                         width: MediaQuery.sizeOf(context).width / 7,
                         child: IconButton(
@@ -943,6 +944,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                     top: Radius.circular(20)),
                               ),
                               builder: (context) {
+                                // Initialize customCategoryCount
                                 int customCategoryCount = categories.length - 3;
 
                                 return StatefulBuilder(
@@ -978,14 +980,15 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                                 ),
                                               ),
                                               InkWell(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    size: 25,
-                                                    color: Colorcodes.white,
-                                                  ))
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Icon(
+                                                  Icons.close,
+                                                  size: 25,
+                                                  color: Colorcodes.white,
+                                                ),
+                                              ),
                                             ],
                                           ),
                                           const SizedBox(height: 16),
@@ -1054,77 +1057,162 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                                           Icons.delete,
                                                           color: Colors.red),
                                                       onPressed: () {
-                                                        setState(() {
-                                                          categories
-                                                              .removeAt(index);
-                                                          controllers
-                                                              .removeAt(index);
-                                                          if (index <
-                                                              categoriesEdit
-                                                                  .length)
-                                                            categoriesEdit
+                                                        modalSetState(() {
+                                                          setState(() {
+                                                            categories.removeAt(
+                                                                index);
+                                                            controllers
                                                                 .removeAt(
                                                                     index);
-                                                          customCategoryCount--;
-                                                          _saveCustomCategories();
-                                                          _calculateShares();
+                                                            if (index <
+                                                                categoriesEdit
+                                                                    .length) {
+                                                              categoriesEdit
+                                                                  .removeAt(
+                                                                      index);
+                                                            }
+                                                            customCategoryCount--;
+                                                            _saveCustomCategories();
+                                                            _calculateShares();
+                                                          });
                                                         });
-
-                                                        modalSetState(() {});
                                                       },
                                                     ),
                                                 ],
                                               ),
                                             );
                                           }),
-                                          // New category input
+                                          // New category input with Add button
                                           if (customCategoryCount < 2)
                                             Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       vertical: 8.0),
-                                              child: TextField(
-                                                controller:
-                                                    newCategoryController,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                decoration: InputDecoration(
-                                                  hintText: 'Add new category',
-                                                  hintStyle: const TextStyle(
-                                                      color: Colors.white70),
-                                                  filled: true,
-                                                  fillColor:
-                                                      const Color.fromARGB(
-                                                          59, 255, 255, 255),
-                                                  contentPadding:
-                                                      const EdgeInsets
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: TextField(
+                                                      controller:
+                                                          newCategoryController,
+                                                      style: const TextStyle(
+                                                          color: Colors.white),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        hintText:
+                                                            'Add new category',
+                                                        hintStyle:
+                                                            const TextStyle(
+                                                                color: Colors
+                                                                    .white70),
+                                                        filled: true,
+                                                        fillColor: const Color
+                                                            .fromARGB(
+                                                            59, 255, 255, 255),
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          vertical: 10.0,
+                                                          horizontal: 12.0,
+                                                        ),
+                                                        enabledBorder:
+                                                            OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0),
+                                                          borderSide:
+                                                              const BorderSide(
+                                                            color: Colors.white,
+                                                            width: 1,
+                                                          ),
+                                                        ),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0),
+                                                          borderSide:
+                                                              const BorderSide(
+                                                            color: Colors.white,
+                                                            width: 1,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      if (newCategoryController
+                                                          .text.isNotEmpty) {
+                                                        modalSetState(() {
+                                                          setState(() {
+                                                            categories.add({
+                                                              'name':
+                                                                  newCategoryController
+                                                                      .text
+                                                                      .trim(),
+                                                              'controller':
+                                                                  TextEditingController(),
+                                                              'isCustom': true,
+                                                            });
+                                                            controllers.add(
+                                                              TextEditingController(
+                                                                text:
+                                                                    newCategoryController
+                                                                        .text
+                                                                        .trim(),
+                                                              ),
+                                                            );
+                                                            categoriesEdit.add({
+                                                              'name':
+                                                                  newCategoryController
+                                                                      .text
+                                                                      .trim(),
+                                                              'controller':
+                                                                  TextEditingController(),
+                                                              'isCustom': true,
+                                                            });
+                                                            customCategoryCount++;
+                                                            newCategoryController
+                                                                .clear();
+                                                            _saveCustomCategories();
+                                                            _calculateShares();
+                                                          });
+                                                        });
+                                                      }
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor: AppColors
+                                                          .backgroundColor,
+                                                      padding: const EdgeInsets
                                                           .symmetric(
-                                                    vertical: 10.0,
-                                                    horizontal: 12.0,
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                      color: Colors.white,
-                                                      width: 1,
+                                                        horizontal: 16,
+                                                        vertical: 12,
+                                                      ),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      'Add',
+                                                      style: FontManager()
+                                                          .getTextStyle(
+                                                        context,
+                                                        lWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color: AppColors
+                                                            .primaryColor,
+                                                      ),
                                                     ),
                                                   ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                      color: Colors.white,
-                                                      width: 1,
-                                                    ),
-                                                  ),
-                                                ),
+                                                ],
                                               ),
                                             ),
                                           const SizedBox(height: 16),
@@ -1132,58 +1220,29 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                           Center(
                                             child: ElevatedButton(
                                               onPressed: () {
-                                                // RxList<Map<String, dynamic>> updatedCategories = <Map<String, dynamic>>[].obs;
+                                                // Update categories with edited names
                                                 categories.clear();
-
                                                 controllers
                                                     .asMap()
                                                     .entries
                                                     .forEach((entry) {
-                                                  final index =
-                                                      entry.key; // index
-                                                  final control = entry
-                                                      .value; // actual controller
+                                                  final index = entry.key;
+                                                  final control = entry.value;
                                                   categories.add({
                                                     'name': control.text,
                                                     'controller':
                                                         TextEditingController(),
-                                                    'isCustom': false,
-                                                    'index': index >
-                                                        2, // 👈 store index if needed
+                                                    'isCustom': index > 2,
                                                   });
                                                 });
-
-                                                if (newCategoryController
-                                                    .text.isNotEmpty) {
-                                                  categories.add({
-                                                    'name':
-                                                        newCategoryController
-                                                            .text
-                                                            .trim(),
-                                                    'controller':
-                                                        TextEditingController(),
-                                                    'isCustom': true,
-                                                  });
-                                                  customCategoryCount++;
-                                                  controllers.add(
-                                                      TextEditingController(
-                                                          text:
-                                                              newCategoryController
-                                                                  .text
-                                                                  .trim()));
-                                                  newCategoryController.clear();
-                                                }
 
                                                 setState(() {
                                                   categoriesEdit.clear();
                                                   categoriesEdit
                                                       .addAll(categories);
-
                                                   _calculateShares();
                                                 });
                                                 _saveCustomCategories();
-
-                                                // Dispose modal controllers
 
                                                 Navigator.pop(context);
                                               },
@@ -1220,12 +1279,299 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                 );
                               },
                             ).whenComplete(() {
-                              // No additional cleanup needed here since controllers are disposed in Done button
+                              // No additional cleanup needed here
                             });
+                            // showModalBottomSheet(
+                            //   context: context,
+                            //   isScrollControlled: true,
+                            //   backgroundColor: AppColors.primaryColor,
+                            //   shape: const RoundedRectangleBorder(
+                            //     borderRadius: BorderRadius.vertical(
+                            //         top: Radius.circular(20)),
+                            //   ),
+                            //   builder: (context) {
+                            //     int customCategoryCount = categories.length - 3;
+
+                            //     return StatefulBuilder(
+                            //       builder: (BuildContext context,
+                            //           StateSetter modalSetState) {
+                            //         return Padding(
+                            //           padding: EdgeInsets.only(
+                            //             bottom: MediaQuery.of(context)
+                            //                 .viewInsets
+                            //                 .bottom,
+                            //             left: 16,
+                            //             right: 16,
+                            //             top: 16,
+                            //           ),
+                            //           child: Column(
+                            //             mainAxisSize: MainAxisSize.min,
+                            //             crossAxisAlignment:
+                            //                 CrossAxisAlignment.start,
+                            //             children: [
+                            //               Row(
+                            //                 mainAxisAlignment:
+                            //                     MainAxisAlignment.spaceBetween,
+                            //                 children: [
+                            //                   Text(
+                            //                     'Edit Categories',
+                            //                     style:
+                            //                         FontManager().getTextStyle(
+                            //                       context,
+                            //                       lWeight: FontWeight.w600,
+                            //                       fontSize: 18,
+                            //                       color:
+                            //                           AppColors.backgroundColor,
+                            //                     ),
+                            //                   ),
+                            //                   InkWell(
+                            //                       onTap: () {
+                            //                         Navigator.pop(context);
+                            //                       },
+                            //                       child: Icon(
+                            //                         Icons.close,
+                            //                         size: 25,
+                            //                         color: Colorcodes.white,
+                            //                       ))
+                            //                 ],
+                            //               ),
+                            //               const SizedBox(height: 16),
+                            //               // Existing categories
+                            //               ...List.generate(categories.length,
+                            //                   (index) {
+                            //                 return Padding(
+                            //                   padding:
+                            //                       const EdgeInsets.symmetric(
+                            //                           vertical: 8.0),
+                            //                   child: Row(
+                            //                     children: [
+                            //                       Expanded(
+                            //                         child: TextField(
+                            //                           controller:
+                            //                               controllers[index],
+                            //                           onChanged: (value) {
+                            //                             categoriesEdit[index]
+                            //                                 ['name'] = value;
+                            //                           },
+                            //                           style: const TextStyle(
+                            //                               color: Colors.white),
+                            //                           decoration:
+                            //                               InputDecoration(
+                            //                             filled: true,
+                            //                             fillColor: const Color
+                            //                                 .fromARGB(
+                            //                                 59, 255, 255, 255),
+                            //                             contentPadding:
+                            //                                 const EdgeInsets
+                            //                                     .symmetric(
+                            //                               vertical: 10.0,
+                            //                               horizontal: 12.0,
+                            //                             ),
+                            //                             enabledBorder:
+                            //                                 OutlineInputBorder(
+                            //                               borderRadius:
+                            //                                   BorderRadius
+                            //                                       .circular(
+                            //                                           12.0),
+                            //                               borderSide:
+                            //                                   const BorderSide(
+                            //                                 color: Colors.white,
+                            //                                 width: 1,
+                            //                               ),
+                            //                             ),
+                            //                             focusedBorder:
+                            //                                 OutlineInputBorder(
+                            //                               borderRadius:
+                            //                                   BorderRadius
+                            //                                       .circular(
+                            //                                           12.0),
+                            //                               borderSide:
+                            //                                   const BorderSide(
+                            //                                 color: Colors.white,
+                            //                                 width: 1,
+                            //                               ),
+                            //                             ),
+                            //                           ),
+                            //                         ),
+                            //                       ),
+                            //                       if (categories[index]
+                            //                           ['isCustom'])
+                            //                         IconButton(
+                            //                           icon: const Icon(
+                            //                               Icons.delete,
+                            //                               color: Colors.red),
+                            //                           onPressed: () {
+                            //                             setState(() {
+                            //                               categories
+                            //                                   .removeAt(index);
+                            //                               controllers
+                            //                                   .removeAt(index);
+                            //                               if (index <
+                            //                                   categoriesEdit
+                            //                                       .length)
+                            //                                 categoriesEdit
+                            //                                     .removeAt(
+                            //                                         index);
+                            //                               customCategoryCount--;
+                            //                               _saveCustomCategories();
+                            //                               _calculateShares();
+                            //                             });
+
+                            //                             modalSetState(() {});
+                            //                           },
+                            //                         ),
+                            //                     ],
+                            //                   ),
+                            //                 );
+                            //               }),
+                            //               // New category input
+                            //               if (customCategoryCount < 2)
+                            //                 Padding(
+                            //                   padding:
+                            //                       const EdgeInsets.symmetric(
+                            //                           vertical: 8.0),
+                            //                   child: TextField(
+                            //                     controller:
+                            //                         newCategoryController,
+                            //                     style: const TextStyle(
+                            //                         color: Colors.white),
+                            //                     decoration: InputDecoration(
+                            //                       hintText: 'Add new category',
+                            //                       hintStyle: const TextStyle(
+                            //                           color: Colors.white70),
+                            //                       filled: true,
+                            //                       fillColor:
+                            //                           const Color.fromARGB(
+                            //                               59, 255, 255, 255),
+                            //                       contentPadding:
+                            //                           const EdgeInsets
+                            //                               .symmetric(
+                            //                         vertical: 10.0,
+                            //                         horizontal: 12.0,
+                            //                       ),
+                            //                       enabledBorder:
+                            //                           OutlineInputBorder(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                                 12.0),
+                            //                         borderSide:
+                            //                             const BorderSide(
+                            //                           color: Colors.white,
+                            //                           width: 1,
+                            //                         ),
+                            //                       ),
+                            //                       focusedBorder:
+                            //                           OutlineInputBorder(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                                 12.0),
+                            //                         borderSide:
+                            //                             const BorderSide(
+                            //                           color: Colors.white,
+                            //                           width: 1,
+                            //                         ),
+                            //                       ),
+                            //                     ),
+                            //                   ),
+                            //                 ),
+                            //               const SizedBox(height: 16),
+                            //               // Done button
+                            //               Center(
+                            //                 child: ElevatedButton(
+                            //                   onPressed: () {
+                            //                     // RxList<Map<String, dynamic>> updatedCategories = <Map<String, dynamic>>[].obs;
+                            //                     categories.clear();
+
+                            //                     controllers
+                            //                         .asMap()
+                            //                         .entries
+                            //                         .forEach((entry) {
+                            //                       final index =
+                            //                           entry.key; // index
+                            //                       final control = entry
+                            //                           .value; // actual controller
+                            //                       categories.add({
+                            //                         'name': control.text,
+                            //                         'controller':
+                            //                             TextEditingController(),
+                            //                         'isCustom': false,
+                            //                         'index': index >
+                            //                             2, // 👈 store index if needed
+                            //                       });
+                            //                     });
+
+                            //                     if (newCategoryController
+                            //                         .text.isNotEmpty) {
+                            //                       categories.add({
+                            //                         'name':
+                            //                             newCategoryController
+                            //                                 .text
+                            //                                 .trim(),
+                            //                         'controller':
+                            //                             TextEditingController(),
+                            //                         'isCustom': true,
+                            //                       });
+                            //                       customCategoryCount++;
+                            //                       controllers.add(
+                            //                           TextEditingController(
+                            //                               text:
+                            //                                   newCategoryController
+                            //                                       .text
+                            //                                       .trim()));
+                            //                       newCategoryController.clear();
+                            //                     }
+
+                            //                     setState(() {
+                            //                       categoriesEdit.clear();
+                            //                       categoriesEdit
+                            //                           .addAll(categories);
+
+                            //                       _calculateShares();
+                            //                     });
+                            //                     _saveCustomCategories();
+
+                            //                     // Dispose modal controllers
+
+                            //                     Navigator.pop(context);
+                            //                   },
+                            //                   style: ElevatedButton.styleFrom(
+                            //                     backgroundColor:
+                            //                         AppColors.backgroundColor,
+                            //                     padding:
+                            //                         const EdgeInsets.symmetric(
+                            //                       horizontal: 32,
+                            //                       vertical: 12,
+                            //                     ),
+                            //                     shape: RoundedRectangleBorder(
+                            //                       borderRadius:
+                            //                           BorderRadius.circular(12),
+                            //                     ),
+                            //                   ),
+                            //                   child: Text(
+                            //                     'Done',
+                            //                     style:
+                            //                         FontManager().getTextStyle(
+                            //                       context,
+                            //                       lWeight: FontWeight.bold,
+                            //                       fontSize: 16,
+                            //                       color: AppColors.primaryColor,
+                            //                     ),
+                            //                   ),
+                            //                 ),
+                            //               ),
+                            //               const SizedBox(height: 16),
+                            //             ],
+                            //           ),
+                            //         );
+                            //       },
+                            //     );
+                            //   },
+                            // ).whenComplete(() {
+                            //   // No additional cleanup needed here since controllers are disposed in Done button
+                            // });
                           },
                         ),
                       ),
-                   
                     ],
                   ),
                 )),
