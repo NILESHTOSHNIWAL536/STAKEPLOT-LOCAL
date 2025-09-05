@@ -47,7 +47,20 @@ Future<void> fetchYearlyData(int year) async {
   String period = 'Year';
   String startDate = DateFormat('yyyy-MM-dd').format(DateTime(year, 1, 1));
   String? endDate = null; // Year view doesn’t use endDate
-   List<String> labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  List<String> labels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
 
   // Try loading from Hive first
   final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
@@ -70,7 +83,7 @@ Future<void> fetchYearlyData(int year) async {
     // isLoading.value = false;
     return;
   }
-  
+
   try {
     // isLoading.value = true;
     String yearString = year.toString().padLeft(4, '0');
@@ -107,18 +120,18 @@ Future<void> fetchYearlyData(int year) async {
               totalExpandedValue.value =
                   data['data']['totalCredit']?.toDouble() ?? 500.0;
               if (maxYValue.value == 0) maxYValue.value = 500.0;
-               await FinanceLocalStorage.cacheFinanceDataLocally(
-          period: period,
-          startDate: startDate,
-          endDate: endDate,
-          labels: labels,
-          debited: yearlyData['debited']!,
-          credited: yearlyData['credited']!,
-          totalDebitValue: totalExpandedValue.value,
-          totalDebitValuePercent: totalDebitValuePercent.value,
-          maxYValue: maxYValue.value,
-          accountId: accountId.value,
-        );
+              await FinanceLocalStorage.cacheFinanceDataLocally(
+                period: period,
+                startDate: startDate,
+                endDate: endDate,
+                labels: labels,
+                debited: yearlyData['debited']!,
+                credited: yearlyData['credited']!,
+                totalDebitValue: totalExpandedValue.value,
+                totalDebitValuePercent: totalDebitValuePercent.value,
+                maxYValue: maxYValue.value,
+                accountId: accountId.value,
+              );
             } else {
               throw Exception('Invalid data structure received from API');
             }
@@ -155,12 +168,12 @@ Future<void> fetchYearlyData(int year) async {
       'credited': List.filled(12, 0.0),
       'debited': List.filled(12, 0.0),
     };
-     final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
-    accountId.value,
-    period,
-    startDate,
-    endDate,
-  );
+    final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+      accountId.value,
+      period,
+      startDate,
+      endDate,
+    );
   } finally {
     isLoading.value = false;
   }
@@ -169,9 +182,11 @@ Future<void> fetchYearlyData(int year) async {
 Future<void> fetchMonthlyData(int year, int month) async {
   String period = 'Month';
   String startDate = DateFormat('yyyy-MM-dd').format(DateTime(year, month, 1));
-  String endDate = DateFormat('yyyy-MM-dd').format(DateTime(year, month + 1, 0));
+  String endDate =
+      DateFormat('yyyy-MM-dd').format(DateTime(year, month + 1, 0));
   int daysInMonth = getDaysInMonthExpanded(year, month);
-  List<String> labels = List.generate(daysInMonth, (index) => DateFormat('MMM d').format(DateTime(year, month, index + 1)));
+  List<String> labels = List.generate(daysInMonth,
+      (index) => DateFormat('MMM d').format(DateTime(year, month, index + 1)));
 
   // Try loading from Hive first
   final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
@@ -194,7 +209,7 @@ Future<void> fetchMonthlyData(int year, int month) async {
     isLoading.value = false;
     return;
   }
-   try {
+  try {
     // isLoading.value = true;
     String formattedDate = DateFormat('yyyy-MM').format(DateTime(year, month));
     var response = await getDataApiCall(
@@ -258,11 +273,11 @@ Future<void> fetchMonthlyData(int year, int month) async {
       'debited': List.filled(daysInMonth, 0.0),
     };
     final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
-    accountId.value,
-    period,
-    startDate,
-    endDate,
-  );
+      accountId.value,
+      period,
+      startDate,
+      endDate,
+    );
   } finally {
     isLoading.value = false;
   }

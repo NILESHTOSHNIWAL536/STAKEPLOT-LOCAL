@@ -58,6 +58,7 @@ void getCategoryData(context) async {
     processChartData();
   }
 }
+
 // void getCategoryData(context) async {
 //   try {
 //     // API call inside try

@@ -92,7 +92,6 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                                   height: 1.6),
                             ),
                           ),
-                         
                           Transform.translate(
                             offset: Offset(
                                 0,
@@ -114,7 +113,6 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
               ),
             ),
 
-
             // "Heading" section with "View all"
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -127,15 +125,15 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
 
             const SizedBox(height: 16),
 
-          const  Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 24.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
               child: SliderAdddingFinances(),
             ),
 
             // "Heading to Recieve / to Pay" section
             const SizedBox(height: 24),
             const Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 24.0),
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
               child: TopayToreceive(),
             ),
             const SizedBox(height: 24),
@@ -163,20 +161,20 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color:const  Color(0xFFF3F4F6),
-            width: 1,
-          ),
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.05),
-              offset: Offset(0, 1),
-              blurRadius: 2,
+              color: AppColors.backgroundColor,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: const Color(0xFFF3F4F6),
+                width: 1,
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.05),
+                  offset: Offset(0, 1),
+                  blurRadius: 2,
+                ),
+              ],
             ),
-          ],
-        ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

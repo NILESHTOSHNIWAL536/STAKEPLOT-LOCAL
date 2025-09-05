@@ -12,14 +12,14 @@ class FeatureGrid extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildFeatureIcon(
-            Icons.calculate, 'Calculators', 0, context, "/AllCalculator",svgIconPath.financecal),
-        _buildFeatureIcon(
-            Icons.fastfood, 'Foodie\nFund', 1, context, "/VegNonveg",svgIconPath.financefood),
+        _buildFeatureIcon(Icons.calculate, 'Calculators', 0, context,
+            "/AllCalculator", svgIconPath.financecal),
+        _buildFeatureIcon(Icons.fastfood, 'Foodie\nFund', 1, context,
+            "/VegNonveg", svgIconPath.financefood),
         _buildFeatureIcon(Icons.account_balance, 'Loan\nAffordability', 2,
-            context, "/LoanCalculatorUI",svgIconPath.financeloan),
+            context, "/LoanCalculatorUI", svgIconPath.financeloan),
         _buildFeatureIcon(Icons.currency_exchange, 'Currency\nConverter', 3,
-            context, "/currencyConverterScreen",svgIconPath.financeCurrency),
+            context, "/currencyConverterScreen", svgIconPath.financeCurrency),
       ],
     );
   }
@@ -27,13 +27,13 @@ class FeatureGrid extends StatelessWidget {
 
 // Individual circular icon widget with text
 Widget _buildFeatureIcon(IconData icon, String text, int index,
-    BuildContext context, String routerName,String urlPath) {
+    BuildContext context, String routerName, String urlPath) {
   return InkWell(
     onTap: () {
       Navigator.pushNamed(context, routerName);
     },
     child: Padding(
-      padding: const EdgeInsets.only(top: 25),
+      padding: const EdgeInsets.only(top: 30),
       child: Column(
         children: [
           Padding(
@@ -59,13 +59,12 @@ Widget _buildFeatureIcon(IconData icon, String text, int index,
           ),
           const SizedBox(height: 4),
           textStyleImage(
-            text: text,
-            context: context,
-            c: Colorcodes.white,
-            fontsize: 12,
-            lineHeight: 1.2,
-            isCenter: true
-          ),
+              text: text,
+              context: context,
+              c: Colorcodes.white,
+              fontsize: 12,
+              lineHeight: 1.2,
+              isCenter: true),
         ],
       ),
     ),

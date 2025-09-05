@@ -31,6 +31,7 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
     super.initState();
     filteredBanks.clear();
     filteredBanks.addAll(creditCardBankList);
+    print("all cards $filteredBanks");
     // controller.text = selectedBankName.value;
   }
 
@@ -46,7 +47,12 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
           elevation: 0,
           backgroundColor: Colors.white,
           leading: leadIcon(context),
-          title:  textStyle(context: context,text: "Add Credit Card Bank Name",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 18),
+          title: textStyle(
+              context: context,
+              text: "Add Credit Card Bank Name",
+              c: AppColors.primaryColor,
+              fontWeight: FontWeight.bold,
+              fontsize: 18),
           //  Text(
           //   "Add Credit Card Bank Name",
           //   style: TextStyle(
@@ -79,44 +85,46 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                 });
               },
               decoration: InputDecoration(
-
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 hintText: 'Select bank',
-                hintStyle:  TextStyle(
+                hintStyle: TextStyle(
                   color: AppColors.primaryColor,
                   fontSize: 16,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
-                  borderSide: BorderSide(color: AppColors.primaryColor.withOpacity(0.4)),
+                  borderSide: BorderSide(
+                      color: AppColors.primaryColor.withOpacity(0.4)),
                 ),
               ),
             ),
             SizedBox(height: 5),
             Expanded(
-              child:  ListView.separated(  
+              child: ListView.separated(
                 separatorBuilder: (context, index) => Divider(
                   color: Colors.grey.withOpacity(0.5), // Set your divider color
-                  height: 1,          // Space the divider consumes
-                  thickness: 1,       // Divider line thickness    // End margin
+                  height: 1, // Space the divider consumes
+                  thickness: 1, // Divider line thickness    // End margin
                 ),
-                
-                itemCount: filteredBanks.length,  
+                itemCount: filteredBanks.length,
                 itemBuilder: (_, i) => Container(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                   decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.2), 
-                    borderRadius: BorderRadius.only(
-                       topLeft: i==0?Radius.circular(10):Radius.zero,
-                       topRight: i==0?Radius.circular(10):Radius.zero,
-                       bottomLeft: i==filteredBanks.length-1?Radius.circular(10):Radius.zero,
-                       bottomRight: i==filteredBanks.length-1?Radius.circular(10):Radius.zero,
-                    )
-                  ),
+                      color: Colors.grey.withOpacity(0.2),
+                      borderRadius: BorderRadius.only(
+                        topLeft: i == 0 ? Radius.circular(10) : Radius.zero,
+                        topRight: i == 0 ? Radius.circular(10) : Radius.zero,
+                        bottomLeft: i == filteredBanks.length - 1
+                            ? Radius.circular(10)
+                            : Radius.zero,
+                        bottomRight: i == filteredBanks.length - 1
+                            ? Radius.circular(10)
+                            : Radius.zero,
+                      )),
                   child: ListTile(
                     dense: true,
-                            
+
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     leading: Image.network(
@@ -126,7 +134,12 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                       fit: BoxFit.fitWidth,
                       errorBuilder: getErrorBankLogo(),
                     ),
-                    title:  textStyle(context: context,text: filteredBanks[i].name,c: AppColors.primaryColor,fontWeight: FontWeight.w500,fontsize: 18),
+                    title: textStyle(
+                        context: context,
+                        text: filteredBanks[i].name,
+                        c: AppColors.primaryColor,
+                        fontWeight: FontWeight.w500,
+                        fontsize: 18),
                     // Text(
                     //   filteredBanks[i].name,
                     //   style: TextStyle(
@@ -138,7 +151,7 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                     onTap: () {
                       controller.text = filteredBanks[i].name;
                       selectedBankName.value = filteredBanks[i].name;
-                       selectedBankId.value = filteredBanks[i].id;
+                      selectedBankId.value = filteredBanks[i].id;
                     },
                   ),
                 ),
@@ -151,7 +164,8 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                 height: 44,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (selectedBankName.value.isEmpty || selectedBankId.value.isEmpty) {
+                    if (selectedBankName.value.isEmpty ||
+                        selectedBankId.value.isEmpty) {
                       snackBarCalledfail(context, "Please select bank name");
                     } else {
                       googleSignInBool.value = false; // Set loading state
@@ -164,8 +178,12 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: textStyleImage(context: context,text:"Done",c: AppColors.white,fontWeight: FontWeight.w500,fontsize: 18),
-                 
+                  child: textStyleImage(
+                      context: context,
+                      text: "Done",
+                      c: AppColors.white,
+                      fontWeight: FontWeight.w500,
+                      fontsize: 18),
                 ),
               ),
             ),

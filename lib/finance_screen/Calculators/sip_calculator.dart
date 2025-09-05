@@ -52,7 +52,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
 
   void getslidersList() {
     slidersList = [
-      getJsonBodyObj("Monthly Investment", 5000.0, 1000.0, 50000.0, (value) {
+      getJsonBodyObj("Monthly Investment", 5000.0, 1000.0, 100000.0, (value) {
         updateSliderValue(0, value);
       }, TextEditingController(text: '5000')),
       getJsonBodyObj("Expected Return Rate(%)", 12.0, 1.0, 20.0, (value) {
@@ -86,21 +86,21 @@ class _SIPCalculatorState extends State<SIPCalculator> {
     });
   }
 
- void calculateSIPDetails() {
-  double annualRate = expectedReturnRate / 100;
-  double monthlyRate = pow(1 + annualRate, 1 / 12) - 1;
-  double months = investmentPeriod * 12;
-  if (monthlyRate == 0) {
-    futureValue = monthlyInvestment * months;
-  } else {
-    futureValue = monthlyInvestment *
-        ((pow(1 + monthlyRate, months) - 1) / monthlyRate) *
-        (1 + monthlyRate);
+  void calculateSIPDetails() {
+    double annualRate = expectedReturnRate / 100;
+    double monthlyRate = pow(1 + annualRate, 1 / 12) - 1;
+    double months = investmentPeriod * 12;
+    if (monthlyRate == 0) {
+      futureValue = monthlyInvestment * months;
+    } else {
+      futureValue = monthlyInvestment *
+          ((pow(1 + monthlyRate, months) - 1) / monthlyRate) *
+          (1 + monthlyRate);
+    }
+    totalInvested = monthlyInvestment * months;
+    totalReturns = futureValue - totalInvested;
+    totalReturns = totalReturns < 0 ? 0 : totalReturns;
   }
-  totalInvested = monthlyInvestment * months;
-  totalReturns = futureValue - totalInvested;
-  totalReturns = totalReturns < 0 ? 0 : totalReturns;
-}
 
   @override
   void dispose() {
@@ -142,35 +142,38 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                         },
                       ),
                       Container(
-                        width: MediaQuery.sizeOf(context).width/1.5,
-                        child: Center(
-                          child:GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isInfoVisible = true;
-                            _opacity = 1.0;
-                            print('Showing container: opacity = $_opacity');
-                          });
-                          _timer?.cancel();
-                          _timer = Timer(Duration(seconds: 2), () {
-                            if (mounted) {
-                              setState(() {
-                                _opacity = 0.0;
-                                print('Hiding container: opacity = $_opacity');
-                              });
-                            }
-                          });
-                        },
-                        child: Text(
-                          "SIP Calculator",
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: AppColors.backgroundColor,
-                          ),
-                        ),
-                      ),))
+                          width: MediaQuery.sizeOf(context).width / 1.5,
+                          child: Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _isInfoVisible = true;
+                                  _opacity = 1.0;
+                                  print(
+                                      'Showing container: opacity = $_opacity');
+                                });
+                                _timer?.cancel();
+                                _timer = Timer(Duration(seconds: 2), () {
+                                  if (mounted) {
+                                    setState(() {
+                                      _opacity = 0.0;
+                                      print(
+                                          'Hiding container: opacity = $_opacity');
+                                    });
+                                  }
+                                });
+                              },
+                              child: Text(
+                                "SIP Calculator",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                  color: AppColors.backgroundColor,
+                                ),
+                              ),
+                            ),
+                          ))
                     ],
                   ),
                   AnimatedOpacity(
@@ -197,9 +200,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                             ),
                             child: SingleChildScrollView(
                               child: Text(
-                                
-  "The SIP Calculator helps you estimate the future value of your Systematic Investment Plan. Adjust the sliders to input your monthly investment, expected annual return rate (net of fees), and investment period to see the total invested amount and returns.",
-  
+                                "The SIP Calculator helps you estimate the future value of your Systematic Investment Plan. Adjust the sliders to input your monthly investment, expected annual return rate (net of fees), and investment period to see the total invested amount and returns.",
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w400,
@@ -279,7 +280,8 @@ class _SIPCalculatorState extends State<SIPCalculator> {
           'value': totalInvested,
         },
         {
-          'title': 'Returns: ₹${formatMoneyIndian(totalReturns.toStringAsFixed(0))}',
+          'title':
+              'Returns: ₹${formatMoneyIndian(totalReturns.toStringAsFixed(0))}',
           'value': totalReturns,
         },
       ],

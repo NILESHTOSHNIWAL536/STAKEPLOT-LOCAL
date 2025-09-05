@@ -15,7 +15,6 @@ import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
-
 class ExpandedChartView extends StatefulWidget {
   final Map<String, List<double>> chartData;
   final List days;
@@ -37,33 +36,30 @@ class ExpandedChartView extends StatefulWidget {
 }
 
 class _ExpandedChartViewState extends State<ExpandedChartView> {
+  final ScrollController scrollController = ScrollController();
 
-   final ScrollController scrollController = ScrollController();
-   
- 
   @override
   void initState() {
     super.initState();
-     currentPage=1;
-     hasMoreData = true;
-     currentDays.value = List.from(widget.days);
-     getAllTransactionHistory(context, true, isYearView.value,isRefreshing: true);
-    
-     updateMonthLabels();
-     filterDataForSelectedMonth();
-     scrollController.addListener(_onScroll);
+    currentPage = 1;
+    hasMoreData = true;
+    currentDays.value = List.from(widget.days);
+    getAllTransactionHistory(context, true, isYearView.value,
+        isRefreshing: true);
+
+    updateMonthLabels();
+    filterDataForSelectedMonth();
+    scrollController.addListener(_onScroll);
   }
 
-
-  void callBackApi()
-  {
-      currentPage = 1;
-      isLoadingMore.value=false;
-      String currentMonth = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  void callBackApi() {
+    currentPage = 1;
+    isLoadingMore.value = false;
+    String currentMonth = DateFormat('yyyy-MM-dd').format(DateTime.now());
     getAutoMationsTransactionsCustom(currentMonth, context, 'month');
-      getAllTransactionHistory(context,false,false,isRefreshing: true);
+    getAllTransactionHistory(context, false, false, isRefreshing: true);
   }
-  
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -71,60 +67,55 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
     double fontSizeFactor = screenWidth * 0.01;
 
     return WillPopScope(
-           onWillPop: () async {
-            callBackApi();
-             return true;
-       },
+      onWillPop: () async {
+        callBackApi();
+        return true;
+      },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        appBar: appbarWidget(),
-        body:  SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                children: [
-                   Padding(
-                     padding: const EdgeInsets.all(8.0),
-                     child: _buildMonthYearSelector(fontSizeFactor, screenWidth),
-                   ),
-              
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Obx(()=> isLoading.value ? Center(child: Spinner(size: 30,)) :  getLineGraph(screenHeight,screenWidth)),
-                  ),
-              
-                 const SizedBox(
-                    height: 10,
-                  ),
-                    
-                  transactionsHistoryList(),
-                       
-                ],
-              ),
-            )),
+          backgroundColor: AppColors.backgroundColor,
+          appBar: appbarWidget(),
+          body: SingleChildScrollView(
+            controller: scrollController,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _buildMonthYearSelector(fontSizeFactor, screenWidth),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Obx(() => isLoading.value
+                      ? Center(
+                          child: Spinner(
+                          size: 30,
+                        ))
+                      : getLineGraph(screenHeight, screenWidth)),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                transactionsHistoryList(),
+              ],
+            ),
+          )),
     );
   }
 
-
-
-Widget getLineGraph(screenHeight,screenWidth){
-    return  Container(
-                        height: screenHeight / 2.6,
-                        width: screenWidth /1.1,
-                        child: LineChartWidget(
-                          chartData: currentChartData.value,
-                          days: isYearView.value ? monthLabels : currentDays,
-                          selectedButton: selectedButton,
-                          daysInMonth: isYearView.value
-                              ? 12
-                              : getDaysInMonthExpanded(
-                                  selectedYear.value, selectedMonth.value),
-                          isExpandedView: true,
-                        ),
-     );
-}
-
-
-  
+  Widget getLineGraph(screenHeight, screenWidth) {
+    return Container(
+      height: screenHeight / 2.6,
+      width: screenWidth / 1.1,
+      child: LineChartWidget(
+        chartData: currentChartData.value,
+        days: isYearView.value ? monthLabels : currentDays,
+        selectedButton: selectedButton,
+        daysInMonth: isYearView.value
+            ? 12
+            : getDaysInMonthExpanded(selectedYear.value, selectedMonth.value),
+        isExpandedView: true,
+      ),
+    );
+  }
 
   Widget _buildMonthYearSelector(double fontSizeFactor, double screenWidth) {
     return Column(
@@ -140,15 +131,13 @@ Widget getLineGraph(screenHeight,screenWidth){
         SizedBox(height: 10),
         Row(
           children: [
-          Obx(()=> Text(
-              '₹${formatMoneyIndian(doubleToFixed(totalExpandedValue.toString()))}'
-              ,
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold,
-                  fontSize: fontSizeFactor * 4,
-                  color: AppColors.accentColor),
-            )),
-           
+            Obx(() => Text(
+                  '₹${formatMoneyIndian(doubleToFixed(totalExpandedValue.toString()))}',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.bold,
+                      fontSize: fontSizeFactor * 4,
+                      color: AppColors.accentColor),
+                )),
           ],
         ),
         Row(
@@ -180,9 +169,10 @@ Widget getLineGraph(screenHeight,screenWidth){
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.normal,
                                 fontSize: fontSizeFactor * 3.4,
-                                 color: !isYearView.value
-                                  ? AppColors.primaryColor // Contrast text color for highlight
-                                  : AppColors.accentColor),
+                                color: !isYearView.value
+                                    ? AppColors
+                                        .primaryColor // Contrast text color for highlight
+                                    : AppColors.accentColor),
                           )),
                     ),
                   ),
@@ -196,7 +186,7 @@ Widget getLineGraph(screenHeight,screenWidth){
                     width: screenWidth * 0.2,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      color:  AppColors.button,
+                      color: AppColors.button,
                     ),
                     child: Center(
                       child: Obx(() => Text(
@@ -204,9 +194,10 @@ Widget getLineGraph(screenHeight,screenWidth){
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.normal,
                                 fontSize: fontSizeFactor * 3.4,
-                               color: isYearView.value
-                                  ? AppColors.primaryColor // Contrast text color for highlight
-                                  : AppColors.accentColor),
+                                color: isYearView.value
+                                    ? AppColors
+                                        .primaryColor // Contrast text color for highlight
+                                    : AppColors.accentColor),
                           )),
                     ),
                   ),
@@ -218,50 +209,47 @@ Widget getLineGraph(screenHeight,screenWidth){
       ],
     );
   }
-  
- AppBar appbarWidget() {
-    return AppBar(
-          leading: InkWell(
-            onTap: () {
-                Navigator.pop(context);
 
-                 callBackApi();
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: AppColors.accentColor,
-            ),
-          ),
-          title: Text( HomepageStringsDart().detailedChartView),
-          backgroundColor: AppColors.backgroundColor,
-        );
+  AppBar appbarWidget() {
+    return AppBar(
+      leading: InkWell(
+        onTap: () {
+          Navigator.pop(context);
+
+          callBackApi();
+        },
+        child: Icon(
+          Icons.arrow_back,
+          color: AppColors.accentColor,
+        ),
+      ),
+      title: Text(HomepageStringsDart().detailedChartView),
+      backgroundColor: AppColors.backgroundColor,
+    );
   }
 
   void _onScroll() {
-    scrollController.addListener(() async{
-          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50)
-          {
-               getAllTransactionHistory(context, true, isYearView.value);
-          }
+    scrollController.addListener(() async {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 50) {
+        getAllTransactionHistory(context, true, isYearView.value);
+      }
     });
-}
-
-Widget  transactionsHistoryList() {
-    return  Obx(() => loadChatdataOnChnage.value
-                        ? TransactionHistory(
-                            isYearView: isYearView.value,
-                            isflag: true,
-                            showIcon: true,
-                            expandedPage: true,
-                          )
-                        : TransactionHistory(
-                            isYearView: isYearView.value,
-                            isflag: true,
-                             showIcon: true,
-                            expandedPage: true,
-                          ));
   }
 
+  Widget transactionsHistoryList() {
+    return Obx(() => loadChatdataOnChnage.value
+        ? TransactionHistory(
+            isYearView: isYearView.value,
+            isflag: true,
+            showIcon: true,
+            expandedPage: true,
+          )
+        : TransactionHistory(
+            isYearView: isYearView.value,
+            isflag: true,
+            showIcon: true,
+            expandedPage: true,
+          ));
+  }
 }
-
-

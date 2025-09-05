@@ -130,11 +130,27 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
               decoration: BoxDecoration(
                 color:
                     selectedIndex == i ? const Color(0xFF635D8F) : Colors.white,
-                borderRadius: BorderRadius.circular(9),
-                border: selectedIndex == i
-                    ? null
-                    : Border.all(color: const Color(0xFF635D8F), width: 1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: Color(0xFFF3F4F6),
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.05),
+                    offset: Offset(0, 1),
+                    blurRadius: 1,
+                  ),
+                ],
               ),
+              // decoration: BoxDecoration(
+              //   color:
+              //       selectedIndex == i ? const Color(0xFF635D8F) : Colors.white,
+              //   borderRadius: BorderRadius.circular(9),
+              //   border: selectedIndex == i
+              //       ? null
+              //       : Border.all(color: const Color(0xFF635D8F), width: 1),
+              // ),
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
               margin: const EdgeInsets.all(5),
               child: Column(
