@@ -31,6 +31,9 @@ void getCategoryData(context) async {
       categoriesListWeek.clear();
       frequentPaymentsWeek.clear();
       moreDrasticChangeWeek.clear();
+      //  spendingsOnCategories.clear();
+      // throw Error();
+
       //month
       categoriesList.addAll(data["data"]['categorized']);
       frequentPayments.addAll(data["data"]['frequentPayments']);
@@ -53,89 +56,92 @@ void getCategoryData(context) async {
       frequentPaymentsWeek.refresh();
       moreDrasticChangeWeek.refresh();
       setDonectChat.value = !setDonectChat.value;
-    } catch (e) {}
+      await CategoryStorage.cacheCardInsightsDataLocally();
+    } catch (e) {
+     await CategoryStorage.loadCardInsightsDataFromHive();
+    }
     isFinoraVisible.value = !isFinoraVisible.value;
     processChartData();
   }
 }
 
-// void getCategoryData(context) async {
-//   try {
-//     // API call inside try
-//     var res = await getDataApiCall("${url}/transactionauto/categorize");
+void getCategoryData2(context) async {
+  try {
+    // API call inside try
+    var res = await getDataApiCall("${url}/transactionauto/categorize");
 
-//     if (getFlagOfResponse(res)) {
-//       var data = jsonDecode(res.body);
-//       categoriesList.clear();
-//       frequentPayments.clear();
-//       moreDrasticChange.clear();
-//       categoriesListWeek.clear();
-//       frequentPaymentsWeek.clear();
-//       moreDrasticChangeWeek.clear();
-//       // spendingsOnCategories.clear();
-//       // throw Error();
-//       categoriesList.addAll(
-//         (data["data"]['categorized'] as List<dynamic>)
-//             .map((e) => e as Map<String, dynamic>)
-//             .toList(),
-//       );
+    if (getFlagOfResponse(res)) {
+      var data = jsonDecode(res.body);
+      categoriesList.clear();
+      frequentPayments.clear();
+      moreDrasticChange.clear();
+      categoriesListWeek.clear();
+      frequentPaymentsWeek.clear();
+      moreDrasticChangeWeek.clear();
+      // spendingsOnCategories.clear();
+      // throw Error();
+      categoriesList.addAll(
+        (data["data"]['categorized'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
 
-//       // frequentPayments.addAll(data["data"]['frequentPayments']);
-//       // moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
-//       frequentPayments.addAll(
-//         (data["data"]['frequentPayments'] as List<dynamic>)
-//             .map((e) => e as Map<String, dynamic>)
-//             .toList(),
-//       );
+      // frequentPayments.addAll(data["data"]['frequentPayments']);
+      // moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
+      frequentPayments.addAll(
+        (data["data"]['frequentPayments'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
 
-//       moreDrasticChange.addAll(
-//         (data["data"]['moreDrasticChange'] as List<dynamic>)
-//             .map((e) => e as Map<String, dynamic>)
-//             .toList(),
-//       );
+      moreDrasticChange.addAll(
+        (data["data"]['moreDrasticChange'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
 
-//       totalDebitThisMonth.value = double.parse(
-//           doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
+      totalDebitThisMonth.value = double.parse(
+          doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
 
-//       // week
-//       // categoriesListWeek.addAll(data["data"]['week']['categorized']);
-//       // frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
-//       // moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
-//       // totalDebitThisWeek.value = double.parse(doubleToFixed(
-//       //     data["data"]['week']['totalDebitThisMonth'].toString()));
-//       categoriesListWeek.addAll(
-//         (data["data"]['week']['categorized'] as List<dynamic>)
-//             .map((e) => e as Map<String, dynamic>)
-//             .toList(),
-//       );
-//       frequentPaymentsWeek.addAll(
-//         (data["data"]['week']['frequentPayments'] as List<dynamic>)
-//             .map((e) => e as Map<String, dynamic>)
-//             .toList(),
-//       );
-//       moreDrasticChangeWeek.addAll(
-//         (data["data"]['week']['moreDrasticChange'] as List<dynamic>)
-//             .map((e) => e as Map<String, dynamic>)
-//             .toList(),
-//       );
+      // week
+      // categoriesListWeek.addAll(data["data"]['week']['categorized']);
+      // frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
+      // moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
+      // totalDebitThisWeek.value = double.parse(doubleToFixed(
+      //     data["data"]['week']['totalDebitThisMonth'].toString()));
+      categoriesListWeek.addAll(
+        (data["data"]['week']['categorized'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
+      frequentPaymentsWeek.addAll(
+        (data["data"]['week']['frequentPayments'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
+      moreDrasticChangeWeek.addAll(
+        (data["data"]['week']['moreDrasticChange'] as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList(),
+      );
 
-//       // Refresh reactive lists
-//       categoriesList.refresh();
-//       frequentPayments.refresh();
-//       moreDrasticChange.refresh();
-//       categoriesListWeek.refresh();
-//       frequentPaymentsWeek.refresh();
-//       moreDrasticChangeWeek.refresh();
-//       isFinoraVisible.value = !isFinoraVisible.value;
-//       setDonectChat.value = !setDonectChat.value;
-//       processChartData();
-//       await CategoryStorage.cacheCardInsightsDataLocally();
-//     }
-//   } catch (e) {
-//      await CategoryStorage.loadCardInsightsDataFromHive();
-//      processChartData();
-//   }
-// }
+      // Refresh reactive lists
+      categoriesList.refresh();
+      frequentPayments.refresh();
+      moreDrasticChange.refresh();
+      categoriesListWeek.refresh();
+      frequentPaymentsWeek.refresh();
+      moreDrasticChangeWeek.refresh();
+      isFinoraVisible.value = !isFinoraVisible.value;
+      setDonectChat.value = !setDonectChat.value;
+      processChartData();
+      await CategoryStorage.cacheCardInsightsDataLocally();
+    }
+  } catch (e) {
+     await CategoryStorage.loadCardInsightsDataFromHive();
+     processChartData();
+  }
+}
 
 void getSummary() async {
   var res = await getDataApiCall("${url}/transactionauto/user-details");
