@@ -250,6 +250,7 @@ Future<void> getAllTransactionHistory(
             startDate: hasDate ? startDateController.text : "",
             endDate: hasDate ? endDateController.text : "",
           );
+    print("id for acc ${accountId.value}");
     print("repsonse for month ${response.body}");
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
