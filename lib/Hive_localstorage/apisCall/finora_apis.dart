@@ -15,6 +15,7 @@ static Future<void> cacheCardInsightsDataLocally() async {
   HiveHelper.openBoxIfNot<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
     final box = await HiveStorage.cardInsightsBox;
     await box.clear();
+    try{
     final cardInsightsData = CardInsightsModel(
       totalDebitThisMonth: totalDebitThisMonth.value,
       totalDebitThisWeek: totalDebitThisWeek.value,
@@ -25,6 +26,9 @@ static Future<void> cacheCardInsightsDataLocally() async {
       categoriesList: categoriesList.cast<Map<String, dynamic>>(),
     );
     await box.add(cardInsightsData);
+    }catch(e){
+      print(e);
+    }
   }
 
   static Future<void> loadCardInsightsDataFromHive() async {

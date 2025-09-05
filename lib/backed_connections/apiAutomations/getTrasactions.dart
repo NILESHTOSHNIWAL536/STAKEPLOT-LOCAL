@@ -632,17 +632,18 @@ void processChartData() {
       String percentage = item["total_debit_percentage"] ?? "";
       double value = item["total_debit"].toDouble();
       Color color = categoryColors[category] ?? Colors.grey; // Default color
-
       newData.add(ChartData(category, value, color, percentage));
-      newTotalValue += value;
+      // totalValue.value += value;
     }
-
-    spendingsOnCategories.value =
-        newData.isNotEmpty ? newData : spendingsOnCategories;
-    totalValue.value = newTotalValue;
+   
+    if(newData.isNotEmpty){
+         spendingsOnCategories.clear();
+         spendingsOnCategories.addAll(newData);
+    }
   } catch (e) {
+    print("e-----------------");
     print(e);
-    print(e);
+    print("e-----------------");
   }
 }
 
