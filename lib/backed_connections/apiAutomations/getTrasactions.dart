@@ -270,18 +270,18 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
       accountId.value, storedPeriod, formattedDate, endDate);
   if (cachedFinance != null) {
     // Set data from cache
-    transactionChatGraph['debited'] = cachedFinance.debited ?? [];
-    transactionChatGraph['credited'] = cachedFinance.credited ?? [];
-    labels.assignAll(cachedFinance.labels ?? []);
-    totalDebitValue.value = cachedFinance.totalDebitValue ?? 0;
-    totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent ?? 0;
-    maxYValue.value = cachedFinance.maxYValue ?? 500.0;
-    getGraphData.value = true;
+    // transactionChatGraph['debited'] = cachedFinance.debited ?? [];
+    // transactionChatGraph['credited'] = cachedFinance.credited ?? [];
+    // labels.assignAll(cachedFinance.labels ?? []);
+    // totalDebitValue.value = cachedFinance.totalDebitValue ?? 0;
+    // totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent ?? 0;
+    // maxYValue.value = cachedFinance.maxYValue ?? 500.0;
+    // getGraphData.value = true;
     return;
   }
 
   // Show loading state
-  getGraphData.value = false;
+  // getGraphData.value = false;
   List<String> labelsLocal = [];
   List<double> debitList = [];
   List<double> creditList = [];
@@ -385,6 +385,7 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
     _setEmptyState(weekORmonth, formattedDate, endDate);
   }
 }
+
 // Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
 //     [String weekORmonth = 'month', String? endDate]) async {
 //   if (accountId.value.trim().isEmpty) {
