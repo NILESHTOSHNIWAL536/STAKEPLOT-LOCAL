@@ -125,7 +125,13 @@ android {
 
         // Add MultiDex support
          multiDexEnabled true
+          externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+            }
+        }
     }
+    
     packagingOptions {
     jniLibs {
         useLegacyPackaging false
