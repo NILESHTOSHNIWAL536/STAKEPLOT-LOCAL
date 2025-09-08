@@ -28,7 +28,6 @@ Mobile: ${data['mobile']}
 ${(data['address'] != null && !data['address'].toString().toLowerCase().contains("encrypted")) ? "User Address: ${data['address']}" : ""}
 Branch Address:  ${data['branchAddress']}
 ifscCode:  ${data['ifscCode']}
-
 """;
 
   final String bankInfo2 = """
