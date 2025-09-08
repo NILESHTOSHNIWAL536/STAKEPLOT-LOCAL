@@ -16,7 +16,8 @@ part 'snackBars.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.9" : "localhost";
-String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost =
+    !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 UserController get userController => Get.find<UserController>();
@@ -164,9 +165,9 @@ RxDouble maxYValue = 0.0.obs;
 RxList<TransactionModel> hiddentrasactionsHistory = <TransactionModel>[].obs;
 RxList<TransactionModel> topThreeTransactions = <TransactionModel>[].obs;
 RxList<TransactionModel> transactionsHistory = <TransactionModel>[].obs;
-RxMap lastWeekjson={}.obs;
-RxMap lastmonthjson={}.obs;
-RxList<String> matchedKeywords=<String>[].obs;
+RxMap lastWeekjson = {}.obs;
+RxMap lastmonthjson = {}.obs;
+RxList<String> matchedKeywords = <String>[].obs;
 RxBool getHiddenHistory = false.obs;
 RxBool getTopThreeHistory = false.obs;
 RxBool isYearView = false.obs;
@@ -208,10 +209,10 @@ RxBool isFinoraVisible = false.obs;
 UserActivity? userActivity;
 RxMap<String, List<dynamic>> couponRequestMap = <String, List<dynamic>>{}.obs;
 
- TextEditingController minController=TextEditingController();
- TextEditingController maxController=TextEditingController();
+TextEditingController minController = TextEditingController();
+TextEditingController maxController = TextEditingController();
 
- final TextEditingController startDateController = TextEditingController();
+final TextEditingController startDateController = TextEditingController();
 final TextEditingController endDateController = TextEditingController();
 RxBool showAmountFilter = false.obs;
 RxBool showDateFilter = false.obs;
@@ -219,3 +220,11 @@ RxBool showDateFilter = false.obs;
 // ---------------- Toggle functions ----------------
 void toggleAmountFilter() => showAmountFilter.value = !showAmountFilter.value;
 void toggleDateFilter() => showDateFilter.value = !showDateFilter.value;
+
+RxDouble originalAmount = 0.0.obs;
+RxDouble inflatedYears = 0.0.obs;
+RxDouble inflatedFutureValue = 0.0.obs;
+final RxList<Map<String, dynamic>> inflationPredictions =
+    <Map<String, dynamic>>[].obs;
+var showResults = false.obs;
+RxBool isLoadingInflation = false.obs;
