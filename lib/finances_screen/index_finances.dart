@@ -4,6 +4,11 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/add_credit_card_bank.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:get/get.dart';
+import '../backed_connections/apis_connect.dart';
 import '../bottomNavigations.dart';
 import '../colorcodes.dart';
 import '../controllers/credit_card_controller.dart';
@@ -24,18 +29,51 @@ class FinanceDashboard extends StatefulWidget {
 }
 
 class _FinanceDashboardState extends State<FinanceDashboard> {
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
     fetchDebts();
-    CardDueController().fetchCardData();
-    CardDueController().getBanksListCrediCard();
+    Get.put(CardDueController());
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    try {
+      final cardController = Get.find<CardDueController>();
+      await Future.wait([
+        cardController.fetchCardData(),
+        cardController.getBanksListCrediCard(),
+        fetchDebts(), // Assuming fetchDebts is async
+      ]);
+      print('FinanceDashboard: Data fetching completed');
+    } catch (e) {
+      print('FinanceDashboard: Error fetching data: $e');
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  bool _hasFinancialData() {
+    final cardController = CardDueController();
+    final hasCreditCards = cardController.cardList?.isNotEmpty ?? false;
+    print("card list is ${cardController.cardList}");
+    final hasBudgets = budgetList?.isNotEmpty ?? false; // Check budgetList
+    final hasDebts = debts?.isNotEmpty ?? false; // Check debts
+    return hasCreditCards || hasBudgets || hasDebts;
+  }
+
+  void _navigateToDebtDetailsScreen(Debt debt) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DebtDetailsScreen(debt: debt)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
+    final bool hasData = isLoading ? false : _hasFinancialData();
     return Scaffold(
       // backgroundColor: AppColors.primaryColor,
 
@@ -114,21 +152,33 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
             ),
 
             // "Heading" section with "View all"
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: _buildSectionHeader('', () {
-                // showBudgetDebtCreditCard(context);
-                pushnameToRoute(context, ShowCompleteInfo(), false);
-                // pushnameToRoute(context, SelectAnyOptionScreen(),false);
-              }),
-            ),
+            if (hasData)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: _buildSectionHeader('', () {
+                  pushnameToRoute(context, ShowCompleteInfo(), false);
+                }),
+              ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            //   child: _buildSectionHeader('', () {
+            //     // showBudgetDebtCreditCard(context);
+            //     pushnameToRoute(context, ShowCompleteInfo(), false);
+            //     // pushnameToRoute(context, SelectAnyOptionScreen(),false);
+            //   }),
+            // ),
 
             const SizedBox(height: 16),
 
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
-              child: SliderAdddingFinances(),
-            ),
+            isLoading
+                ? Center(child: Spinner())
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: SliderAdddingFinances(
+                      hasData: hasData,
+                      onDebtTap: _navigateToDebtDetailsScreen,
+                    ),
+                  ),
 
             // "Heading to Recieve / to Pay" section
             const SizedBox(height: 24),

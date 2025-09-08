@@ -213,6 +213,7 @@
 //     );
 //   }
 // }
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -249,16 +250,6 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
       'svgPath': 'assets/icons/financeScreen/f4.svg',
       'screen': RentBuy(),
     },
-    // {
-    //   'name': 'Savings Goal',
-    //   'svgPath': 'assets/icons/financeScreen/f3.svg',
-    //   'screen': Savings(),
-    // },
-    // {
-    //   'name': 'Auto Loan',
-    //   'svgPath': 'assets/icons/financeScreen/f2.svg',
-    //   'screen': AutoLoan(),
-    // },
     {
       'name': 'Inflation',
       'svgPath': 'assets/icons/financeScreen/f3.svg',
@@ -302,11 +293,8 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
       : isMediumScreen
           ? 70.0
           : 80.0;
-  double get gridOffset => isSmallScreen
-      ? 80.0
-      : isMediumScreen
-          ? 75.0
-          : 85.0;
+  double get gridOffset => 80.0;
+
   double get gridHorizontalPadding => isSmallScreen
       ? 40.0
       : isMediumScreen
@@ -333,23 +321,25 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
           ? 17.0
           : 18.0;
 
-  // Responsive grid configuration
-  int get crossAxisCount {
-    if (isLargeScreen) return 2;
-    if (isMediumScreen) return 2;
-    return 2;
-  }
-
-  double get childAspectRatio {
-    if (isLargeScreen) return 0.9;
-    if (isMediumScreen) return 0.85;
-    return 0.75;
-  }
+  // Container dimensions
+  double get containerWidth => isSmallScreen
+      ? 150.0
+      : isMediumScreen
+          ? 180.0
+          : 200.0;
+  double get containerHeight => isSmallScreen
+      ? 150.0
+      : isMediumScreen
+          ? 180.0
+          : 200.0;
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
+
+    // Calculate max width for 2 containers per row with spacing
+    double maxContainerWidth =
+        (width - (gridHorizontalPadding * 2) - gridSpacing) / 2;
 
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
@@ -427,27 +417,25 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
               ),
             ),
 
-            // Grid Section
+            // Wrap Section
             Transform.translate(
               offset: Offset(0, gridOffset),
               child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: gridHorizontalPadding,
-                    vertical: responsivePadding),
-                child: Container(
-                  height: height / (isLandscape ? 1.15 : 1.4),
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: gridSpacing,
-                      mainAxisSpacing: gridSpacing,
-                      childAspectRatio: childAspectRatio,
-                    ),
-                    itemCount: calculators.length,
-                    itemBuilder: (context, index) {
+                    vertical: responsivePadding * 4),
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    spacing: gridSpacing,
+                    runSpacing: gridSpacing,
+                    alignment: WrapAlignment.start,
+                    runAlignment: WrapAlignment.start,
+                    children: calculators.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      Map<String, dynamic> calculator = entry.value;
                       Widget? screen;
                       try {
-                        screen = calculators[index]['screen'];
+                        screen = calculator['screen'];
                       } catch (e) {
                         // Handle error silently
                       }
@@ -467,7 +455,7 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
                                   appBar: AppBar(title: Text('Error')),
                                   body: Center(
                                     child: Text(
-                                        'Screen not implemented for ${calculators[index]['name']}'),
+                                        'Screen not implemented for ${calculator['name']}'),
                                   ),
                                 ),
                               ),
@@ -475,6 +463,10 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
                           }
                         },
                         child: Container(
+                          width: containerWidth > maxContainerWidth
+                              ? maxContainerWidth
+                              : containerWidth,
+                          height: containerHeight,
                           decoration: BoxDecoration(
                             color: Color.fromRGBO(255, 255, 255, 0.23),
                             border: Border.all(
@@ -488,7 +480,7 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SvgPicture.asset(
-                                calculators[index]['svgPath'],
+                                calculator['svgPath'],
                                 width: iconSize,
                                 height: iconSize,
                               ),
@@ -497,7 +489,7 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8),
                                   child: Text(
-                                    calculators[index]['name'],
+                                    calculator['name'],
                                     style: FontManager().getTextStyle(
                                       context,
                                       lWeight: FontWeight.w500,
@@ -514,7 +506,7 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
                           ),
                         ),
                       );
-                    },
+                    }).toList(),
                   ),
                 ),
               ),
