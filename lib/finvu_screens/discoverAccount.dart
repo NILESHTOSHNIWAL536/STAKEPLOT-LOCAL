@@ -167,7 +167,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
          
           InkWell(
             onTap: (){
-               addBackToList(isSeletedBankAccout.contains(bankData.fipId), bankData);
+               addBackToList(!isSeletedBankAccout.contains(bankData.fipId), bankData);
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -185,7 +185,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
           Expanded(
             child:   InkWell(
             onTap: (){
-               addBackToList(isSeletedBankAccout.contains(bankData.fipId), bankData);
+               addBackToList(!isSeletedBankAccout.contains(bankData.fipId), bankData);
             },
               child: Text(
                 bankData.productName.toString(),
