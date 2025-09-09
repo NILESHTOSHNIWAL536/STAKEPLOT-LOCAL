@@ -4,18 +4,15 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-
 /// Example page using the offline-aware scaffold
 class Connections extends StatelessWidget {
-   Connections({super.key});
+  Connections({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 1)),
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 1)),
 
-      
-    
       // title: 'Dashboard',
       // onBack: () => Navigator.maybePop(context),
       body: ListView(
@@ -68,8 +65,7 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
   ConnectivityResult _connectivity = ConnectivityResult.mobile;
 
   bool get _isCompletelyOffline =>
-      !_isInternetConnected ||
-      _connectivity == ConnectivityResult.none;
+      !_isInternetConnected || _connectivity == ConnectivityResult.none;
 
   @override
   void initState() {
@@ -89,7 +85,8 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
       checkTimeout: const Duration(seconds: 3),
       checkInterval: const Duration(seconds: 4),
     ).onStatusChange.listen((status) {
-      setState(() => _isInternetConnected = status == InternetConnectionStatus.connected);
+      setState(() =>
+          _isInternetConnected = status == InternetConnectionStatus.connected);
     });
   }
 
@@ -119,7 +116,8 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final showBottomBar = !_isInternetConnected || _connectivity == ConnectivityResult.none;
+    final showBottomBar =
+        !_isInternetConnected || _connectivity == ConnectivityResult.none;
 
     return Scaffold(
       appBar: AppBar(
@@ -136,9 +134,8 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
         duration: const Duration(milliseconds: 350),
         switchInCurve: Curves.easeOut,
         switchOutCurve: Curves.easeIn,
-        child: _isCompletelyOffline
-            ? const _OfflineBeautifulState()
-            : widget.body,
+        child:
+            _isCompletelyOffline ? const _OfflineBeautifulState() : widget.body,
       ),
 
       // No Stack used: we use bottomNavigationBar to host the status bar.
@@ -151,7 +148,7 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
           boxShadow: showBottomBar
               ? [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.12),
+                    color: Color.fromARGB(31, 0, 0, 0),
                     blurRadius: 12,
                     offset: const Offset(0, -4),
                   )
@@ -234,14 +231,16 @@ class _OfflineBeautifulState extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
+                      color: Color.fromARGB(64, 0, 0, 0)
+,
                       blurRadius: 24,
                       spreadRadius: 2,
                     )
                   ],
                 ),
                 child: const Center(
-                  child: Icon(Icons.wifi_off_rounded, size: 64, color: Colors.white),
+                  child: Icon(Icons.wifi_off_rounded,
+                      size: 64, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 28),
@@ -289,7 +288,8 @@ class _OfflineBeautifulState extends StatelessWidget {
                       // Open platform network settings (you can use app_settings package if you want)
                       // For now, show a hint.
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Open device network settings')),
+                        const SnackBar(
+                            content: Text('Open device network settings')),
                       );
                     },
                   ),

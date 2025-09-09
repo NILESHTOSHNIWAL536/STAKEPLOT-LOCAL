@@ -142,14 +142,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
       children: [
         textStyle(
             context: context,
-            text: 'Create Account',
+            text: 'Create an Account',
             fontWeight: FontWeight.bold,
-            fontsize: 32,
+            fontsize: 26,
             c: Colorcodes.white),
         const SizedBox(height: 8),
         textStyle(
             context: context,
-            text: 'to get started now',
+            text: 'to get started',
             fontWeight: FontWeight.w300,
             fontsize: 18,
             c: Colorcodes.white),
@@ -162,7 +162,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
       ),
       child: TextField(
         controller: usernameController,
@@ -176,7 +176,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ],
         decoration: InputDecoration(
           hintText: 'Username',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          hintStyle: TextStyle(color: AppColors.whiteOpacity07),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -192,7 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
       ),
       child: TextField(
         controller: dobController,
@@ -201,7 +201,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         onTap: () => _selectDate(context),
         decoration: InputDecoration(
           hintText: 'Date of Birth',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          hintStyle: TextStyle(color: AppColors.whiteOpacity07),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -209,7 +209,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           suffixIcon: Icon(
             Icons.calendar_today,
-            color: Colors.white.withOpacity(0.7),
+            color: AppColors.whiteOpacity07,
             size: 20,
           ),
         ),
@@ -261,7 +261,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
       ),
       child: TextField(
         controller: emailController,
@@ -272,7 +272,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         },
         decoration: InputDecoration(
           hintText: 'Email',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          hintStyle: TextStyle(color: AppColors.whiteOpacity07),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -288,7 +288,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
       ),
       child: TextField(
         controller: passwordController,
@@ -299,7 +299,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         },
         decoration: InputDecoration(
           hintText: 'Password',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          hintStyle: TextStyle(color: AppColors.whiteOpacity07),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -308,7 +308,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           suffixIcon: IconButton(
             icon: Icon(
               _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-              color: Colors.white.withOpacity(0.7),
+              color: AppColors.whiteOpacity07,
             ),
             onPressed: () {
               setState(() {
@@ -326,7 +326,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
       ),
       child: TextField(
         controller: confirmPasswordController,
@@ -337,7 +337,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Confirm Password',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          hintStyle: TextStyle(color: AppColors.whiteOpacity07),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -348,7 +348,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               _isConfirmPasswordVisible
                   ? Icons.visibility
                   : Icons.visibility_off,
-              color: Colors.white.withOpacity(0.7),
+              color: AppColors.whiteOpacity07,
             ),
             onPressed: () {
               setState(() {
@@ -400,7 +400,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Expanded(
           child: Container(
             height: 1,
-            color: Colors.white.withOpacity(0.3),
+            color: AppColors.whiteOpacity03,
           ),
         ),
         Padding(
@@ -408,7 +408,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Text(
             'Or login with',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
+              color: AppColors.whiteOpacity07,
               fontSize: 14,
             ),
           ),
@@ -416,7 +416,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Expanded(
           child: Container(
             height: 1,
-            color: Colors.white.withOpacity(0.3),
+            color: AppColors.whiteOpacity03,
           ),
         ),
       ],
@@ -430,7 +430,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Text(
           "Already have an account? ",
           style: TextStyle(
-            color: Colors.white.withOpacity(0.7),
+            color: AppColors.whiteOpacity07,
             fontSize: 14,
           ),
         ),
@@ -563,10 +563,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
         'otp': "opts",
       }),
     );
-
+   
     var responce = jsonDecode(response.body);
+   
 
     bool boolvar = responce['success'];
+    if (response.statusCode == 409) {
+      // Specific case: user already exists
+      snackBarCalledfail(context, responce['error']['explanation'], Colors.red);
+      flag.value = false;
+      return;
+    }
 
     if (!boolvar && responce['error'] == "Invalid Otp") {
       flag.value = false;

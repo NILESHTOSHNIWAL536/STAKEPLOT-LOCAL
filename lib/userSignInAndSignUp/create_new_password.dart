@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/opt_email.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -131,7 +132,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
         ),
         decoration: InputDecoration(
           hintText: 'New password',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          hintStyle: TextStyle(color: AppColors.whiteOpacity07),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -140,7 +141,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
           suffixIcon: IconButton(
             icon: Icon(
               _isNewPasswordVisible ? Icons.visibility : Icons.visibility_off,
-              color: Colors.white.withOpacity(0.7),
+              color: AppColors.whiteOpacity07,
             ),
             onPressed: () {
               setState(() {
@@ -168,7 +169,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
         ),
         decoration: InputDecoration(
           hintText: 'Confirm Password',
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          hintStyle: TextStyle(color: AppColors.whiteOpacity07),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
@@ -177,7 +178,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
           suffixIcon: IconButton(
             icon: Icon(
               _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
-              color: Colors.white.withOpacity(0.7),
+              color: AppColors.whiteOpacity07,
             ),
             onPressed: () {
               setState(() {

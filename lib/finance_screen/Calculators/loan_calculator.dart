@@ -224,7 +224,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                       //  const SizedBox(height: 10),
                       Text('Income (Per month)',
                           style: FontManager().getTextStyle(context,
-                              color: Colors.white.withOpacity(0.85),
+                              color: AppColors.whiteOpacity085,
                               fontSize: 15.3)),
                       SizedBox(height: height * 0.008),
                       TextField(
@@ -240,7 +240,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                       SizedBox(height: height * 0.015),
                       Text('Existing Emi',
                           style: FontManager().getTextStyle(context,
-                              color: Colors.white.withOpacity(0.85),
+                              color: AppColors.whiteOpacity085,
                               fontSize: 15.3)),
                       SizedBox(height: height * 0.008),
                       TextField(
@@ -256,7 +256,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                       SizedBox(height: height * 0.015),
                       Text('Credit score',
                           style: FontManager().getTextStyle(context,
-                              color: Colors.white.withOpacity(0.85),
+                              color: AppColors.whiteOpacity085,
                               fontSize: 15.3)),
                       SizedBox(height: height * 0.008),
                       Container(
@@ -297,7 +297,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                       SizedBox(height: height * 0.015),
                       Text('Loan type',
                           style: FontManager().getTextStyle(context,
-                              color: Colors.white.withOpacity(0.85),
+                              color: AppColors.whiteOpacity085,
                               fontSize: 15.3)),
                       SizedBox(height: height * 0.008),
                       Row(
@@ -317,7 +317,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                               border: Border.all(
                                   color: isSelected
                                       ? Colors.white
-                                      : Colors.white.withOpacity(0.15),
+                                      : Color(0x26FFFFFF),
                                   width: 1.3),
                             ),
                             child: TextButton(
@@ -356,27 +356,27 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (_incomeController.text.trim().isEmpty) {
-                                  snackBarCalledfail(
-                                    context,  "Please enter your income");
-                               
+                                snackBarCalledfail(
+                                    context, "Please enter your income");
+
                                 return;
                               }
                               if (_emiController.text.trim().isEmpty) {
-                                 snackBarCalledfail(
-                                    context,  "Please enter your existing EMI");
-                               
+                                snackBarCalledfail(
+                                    context, "Please enter your existing EMI");
+
                                 return;
                               }
                               if (_selectedCreditScore.isEmpty) {
-                                 snackBarCalledfail(
+                                snackBarCalledfail(
                                     context, "Please select a credit score");
-                               
+
                                 return;
                               }
                               if (_loanType.isEmpty) {
                                 snackBarCalledfail(
                                     context, "Please select a loan type");
-                               
+
                                 return;
                               }
 
@@ -406,7 +406,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                       if (loanCalcResponse != null) ...[
                         Text('Suggested Timeline',
                             style: FontManager().getTextStyle(context,
-                                color: Colors.white.withOpacity(0.92),
+                                color: Color(0xEBFFFFFF),
                                 lWeight: FontWeight.w600,
                                 fontSize: 16)),
                         SizedBox(height: height * 0.015),
@@ -545,7 +545,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
           Text(
             title,
             style: FontManager().getTextStyle(context,
-                color: Colors.white.withOpacity(0.8),
+                color: Color(0xCCFFFFFF),
                 fontSize: 12,
                 lWeight: FontWeight.w600),
           ),
