@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -33,6 +34,13 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor:
+          AppColors.primaryColor, // Replace with AppColors.primaryColor
+      statusBarIconBrightness:
+          Brightness.light, // Light icons for dark background
+      statusBarBrightness: Brightness.dark, // For iOS
+    ));
     fetchDebts();
     Get.put(CardDueController());
     _loadData();
@@ -81,113 +89,118 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
           child: BottomNavigations(
         data: 1,
       )),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Top Section with custom clipper and search bar
-            Container(
-              // color: AppColors.primaryColor,
-              padding: const EdgeInsets.all(0),
-              height: size.height / 2,
-              width: MediaQuery.of(context).size.width,
-              // color: AppColors.primaryColor,
-              child: Stack(
-                children: [
-                  // Background color with a wave shape at the bottom
-                  Center(
-                      child: Transform.translate(
-                    offset: Offset(
-                        0,
-                        -size.height *
-                            0.025), // Responsive offset based on screen height
-                    child: AvatarProfileImageZero(
-                        url: svgIconPath.finance, width: 1, height: 2),
-                  )),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Top Section with custom clipper and search bar
 
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      // Main title "Plot your finances"
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      buildHeadingAndSearchBar(),
+              Container(
+                // color: AppColors.primaryColor,
+                padding: const EdgeInsets.all(0),
+                height: size.height / 2,
+                width: MediaQuery.of(context).size.width,
+                // color: AppColors.primaryColor,
+                child: Stack(
+                  children: [
+                    // Background color with a wave shape at the bottom
 
-                      Stack(
-                        children: [
-                          Transform.translate(
-                            offset: Offset(
-                                0,
-                                -size.height *
-                                    0.225), // Responsive offset based on screen height
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: AvatarProfileImageZero(
-                                  url: svgIconPath.finance_background,
-                                  width: 1,
-                                  height: 1.6),
+                    Center(
+                        child: Transform.translate(
+                      offset: Offset(
+                          0,
+                          -size.height *
+                              0.025), // Responsive offset based on screen height
+                      child: AvatarProfileImageZero(
+                          url: svgIconPath.finance, width: 1, height: 2),
+                    )),
+
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // Main title "Plot your finances"
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        buildHeadingAndSearchBar(),
+
+                        Stack(
+                          children: [
+                            Transform.translate(
+                              offset: Offset(
+                                  0,
+                                  -size.height *
+                                      0.225), // Responsive offset based on screen height
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: AvatarProfileImageZero(
+                                    url: svgIconPath.finance_background,
+                                    width: 1,
+                                    height: 1.6),
+                              ),
                             ),
-                          ),
-                          Transform.translate(
-                            offset: Offset(
-                                0,
-                                -size.height *
-                                    0.075), // Responsive offset based on screen height
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: const Center(child: FeatureGrid()),
-                              // child: Center(child: _buildFeatureCards(context)),
+                            Transform.translate(
+                              offset: Offset(
+                                  0,
+                                  -size.height *
+                                      0.075), // Responsive offset based on screen height
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(5, 10, 10, 5),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: const Center(child: FeatureGrid()),
+                                // child: Center(child: _buildFeatureCards(context)),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // "Heading" section with "View all"
-            if (hasData)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: _buildSectionHeader('', () {
-                  pushnameToRoute(context, ShowCompleteInfo(), false);
-                }),
-              ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            //   child: _buildSectionHeader('', () {
-            //     // showBudgetDebtCreditCard(context);
-            //     pushnameToRoute(context, ShowCompleteInfo(), false);
-            //     // pushnameToRoute(context, SelectAnyOptionScreen(),false);
-            //   }),
-            // ),
-
-            const SizedBox(height: 16),
-
-            isLoading
-                ? Center(child: Spinner())
-                : Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: SliderAdddingFinances(
-                      hasData: hasData,
-                      onDebtTap: _navigateToDebtDetailsScreen,
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
+                  ],
+                ),
+              ),
 
-            // "Heading to Recieve / to Pay" section
-            const SizedBox(height: 24),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
-              child: TopayToreceive(),
-            ),
-            const SizedBox(height: 24),
-          ],
+              // "Heading" section with "View all"
+              if (hasData)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: _buildSectionHeader('', () {
+                    pushnameToRoute(context, ShowCompleteInfo(), false);
+                  }),
+                ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              //   child: _buildSectionHeader('', () {
+              //     // showBudgetDebtCreditCard(context);
+              //     pushnameToRoute(context, ShowCompleteInfo(), false);
+              //     // pushnameToRoute(context, SelectAnyOptionScreen(),false);
+              //   }),
+              // ),
+
+              const SizedBox(height: 16),
+
+              isLoading
+                  ? Center(child: Spinner())
+                  : Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: SliderAdddingFinances(
+                        hasData: hasData,
+                        onDebtTap: _navigateToDebtDetailsScreen,
+                      ),
+                    ),
+
+              // "Heading to Recieve / to Pay" section
+              const SizedBox(height: 24),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                child: TopayToreceive(),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
       // Bottom navigation bar
