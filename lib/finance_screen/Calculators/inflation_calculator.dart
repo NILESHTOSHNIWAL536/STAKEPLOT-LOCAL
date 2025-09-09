@@ -92,15 +92,6 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    "Note: This calculation is an estimate and not accurate for all scenarios.",
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: AppColors.backgroundColor.withOpacity(0.6),
-                    ),
-                  ),
                   const SizedBox(height: 24),
                   TextField(
                     controller: amountController,
@@ -279,17 +270,8 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                               color: AppColors.primaryColor,
                             ),
                           ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'Disclaimer: These results are based on an assumed inflation rate and may not reflect actual future values.',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: AppColors.primaryColor.withOpacity(0.7),
-                            ),
-                          ),
-                          const SizedBox(height: 24),
+
+                          const SizedBox(height: 18),
                           // Syncfusion Line Chart for Future Values
                           // if (inflationPredictions.isNotEmpty)
                           //   SizedBox(
@@ -367,6 +349,17 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                                             ),
                                           ),
                                         )),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'Disclaimer: These results are based on an assumed inflation rate and may not reflect actual future values.',
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color:
+                                        AppColors.primaryColor.withOpacity(0.7),
+                                  ),
+                                ),
                               ],
                             ),
                         ],

@@ -107,7 +107,18 @@ class _BudgetSearchState extends State<BudgetSearch> {
         ),
       ),
 
-      body: SafeArea(child: getBudgetUiScreen(height, width)),
+      body: GestureDetector(
+        onTap: () {
+          // Unfocus the search field when tapping outside
+          if (_isSearchFocused) {
+            _searchFocusNode.unfocus();
+          }
+        },
+        // Prevent taps inside the search bar or container from unfocusing
+        behavior: HitTestBehavior.opaque,
+        child: SafeArea(child: getBudgetUiScreen(height, width)),
+      ),
+
       // bottomNavigationBar: BottomNavigations(data: 1),
     );
   }

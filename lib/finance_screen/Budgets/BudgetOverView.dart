@@ -344,7 +344,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                                 inputFormatters: allowDecimalInput(),
                                 // keyboardType: TextInputType.,
                                 decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(
+                                contentPadding: EdgeInsets.symmetric(
                                     vertical: 0,
                                     horizontal: 4,
                                   ),
