@@ -50,44 +50,91 @@ void getFinoraPreviousMonthData() async {
 }
 
 Future<List<CardData>> getAutoPayInfo() async {
-  try {
-    // Fetch both false and true auto pay info
-    final responses = await Future.wait([
-      getDataApiCall("${url}/transactionauto/get-recurring-payments/false"),
-      getDataApiCall("${url}/transactionauto/get-recurring-payments/true"),
-    ]);
+  // 1️⃣ Always load cache first
+  await CardsLocalStorage.loadCardsFromHive();
+  isAutoPayFected.value = !isAutoPayFected.value;
 
-    //throw Error();
+  // 2️⃣ Fetch from API in background
+  Future(() async {
+    try {
+      final responses = await Future.wait([
+        getDataApiCall("$url/transactionauto/get-recurring-payments/false"),
+        getDataApiCall("$url/transactionauto/get-recurring-payments/true"),
+      ]);
 
-    allAutoPayData.clear();
-    for (int i = 0; i < responses.length; i++) {
-      final response = responses[i];
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        if (jsonData['success'] == true) {
-          final List<dynamic> autoPayDataInfo = jsonData['data'];
-          allAutoPayData.addAll(
-            autoPayDataInfo.asMap().entries.map((entry) {
-              final index = entry.key;
-              final data = entry.value as Map<String, dynamic>;
-              return CardData.fromJson(
-                  {...data, 'index': allAutoPayData.length + index});
-            }),
-          );
+      List<CardData> freshData = [];
+      for (int i = 0; i < responses.length; i++) {
+        final response = responses[i];
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          final jsonData = jsonDecode(response.body);
+          if (jsonData['success'] == true) {
+            final List<dynamic> autoPayDataInfo = jsonData['data'];
+            freshData.addAll(
+              autoPayDataInfo.asMap().entries.map((entry) {
+                final index = entry.key;
+                final data = entry.value as Map<String, dynamic>;
+                return CardData.fromJson(
+                    {...data, 'index': freshData.length + index});
+              }),
+            );
+          }
         }
       }
-    }
 
-    await CardsLocalStorage.saveCardsToHive(cardList: allAutoPayData);
-    isAutoPayFected.value = !isAutoPayFected.value;
+      if (freshData.isNotEmpty) {
+        allAutoPayData
+          ..clear()
+          ..addAll(freshData);
+        await CardsLocalStorage.saveCardsToHive(cardList: allAutoPayData);
+        isAutoPayFected.value = !isAutoPayFected.value;
+      }
+    } catch (e) {}
+  });
 
-    return allAutoPayData;
-  } catch (e) {
-    isAutoPayFected.value = !isAutoPayFected.value;
-    await CardsLocalStorage.loadCardsFromHive();
-    return allAutoPayData;
-  }
+  // 3️⃣ Return cached data immediately (UI shows it instantly)
+  return allAutoPayData;
 }
+
+// Future<List<CardData>> getAutoPayInfo() async {
+//   try {
+//     // Fetch both false and true auto pay info
+
+//     final responses = await Future.wait([
+//       getDataApiCall("${url}/transactionauto/get-recurring-payments/false"),
+//       getDataApiCall("${url}/transactionauto/get-recurring-payments/true"),
+//     ]);
+
+//     //throw Error();
+
+//     allAutoPayData.clear();
+//     for (int i = 0; i < responses.length; i++) {
+//       final response = responses[i];
+//       if (response.statusCode == 200 || response.statusCode==201) {
+//         final jsonData = jsonDecode(response.body);
+//         if (jsonData['success'] == true) {
+//           final List<dynamic> autoPayDataInfo = jsonData['data'];
+//           allAutoPayData.addAll(
+//             autoPayDataInfo.asMap().entries.map((entry) {
+//               final index = entry.key;
+//               final data = entry.value as Map<String, dynamic>;
+//               return CardData.fromJson(
+//                   {...data, 'index': allAutoPayData.length + index});
+//             }),
+//           );
+//         }
+//       }
+//     }
+
+//     await CardsLocalStorage.saveCardsToHive(cardList: allAutoPayData);
+//     isAutoPayFected.value = !isAutoPayFected.value;
+
+//     return allAutoPayData;
+//   } catch (e) {
+//     isAutoPayFected.value = !isAutoPayFected.value;
+//     await CardsLocalStorage.loadCardsFromHive();
+//     return allAutoPayData;
+//   }
+// }
 
 Future<bool> addRecurringPayment(String id, bool isActive) async {
   try {

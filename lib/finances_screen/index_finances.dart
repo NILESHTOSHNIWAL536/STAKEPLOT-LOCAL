@@ -91,7 +91,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
               Container(
                 color: AppColors.backgroundColor,
                 padding: const EdgeInsets.all(0),
-                height: size.height / 2,
+                height: size.height / 2.1,
                 width: MediaQuery.of(context).size.width,
                 // color: AppColors.primaryColor,
                 child: Stack(
@@ -177,7 +177,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                     //     // pushnameToRoute(context, SelectAnyOptionScreen(),false);
                     //   }),
                     // ),
-                    const SizedBox(height: 16),
+                    // const SizedBox(height: 16),
                     Skeletonizer(
                       enabled: isLoading,
                       child: Padding(

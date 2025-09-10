@@ -58,7 +58,7 @@ void getCategoryData(context) async {
       setDonectChat.value = !setDonectChat.value;
       await CategoryStorage.cacheCardInsightsDataLocally();
     } catch (e) {
-     await CategoryStorage.loadCardInsightsDataFromHive();
+      await CategoryStorage.loadCardInsightsDataFromHive();
     }
     isFinoraVisible.value = !isFinoraVisible.value;
     processChartData();
@@ -138,8 +138,8 @@ void getCategoryData2(context) async {
       await CategoryStorage.cacheCardInsightsDataLocally();
     }
   } catch (e) {
-     await CategoryStorage.loadCardInsightsDataFromHive();
-     processChartData();
+    await CategoryStorage.loadCardInsightsDataFromHive();
+    processChartData();
   }
 }
 
