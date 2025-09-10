@@ -15,7 +15,7 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 part 'snackBars.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.11" : "localhost";
+String portNo = flag ? "192.168.1.2" : "localhost";
 String urlWithLocallHost =
     !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";

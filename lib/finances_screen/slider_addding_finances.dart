@@ -286,18 +286,25 @@ class SliderAdddingFinances extends StatelessWidget {
                 child: Container(
                   width: 52,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
+                    color: AppColors.backgroundColor,
+                    borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: Color(0xFFE4E2F0),
-                      width: 1.2,
+                      color: Color(0xFFF3F4F6),
+                      width: 1,
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromRGBO(0, 0, 0, 0.05),
+                        offset: Offset(0, 1),
+                        blurRadius: 2,
+                      ),
+                    ],
                   ),
                   child: const Center(
                     child: Text(
                       '+',
                       style: TextStyle(
-                        color: Color(0xFF635D8F),
+                        color: AppColors.primaryColor,
                         fontSize: 32,
                         fontWeight: FontWeight.w500,
                       ),
@@ -314,7 +321,7 @@ class SliderAdddingFinances extends StatelessWidget {
               )
             else ...[
               // Display Credit Cards
-              ...creditCards.map((card) => Padding(
+              ...creditCards.take(2).toList().map((card) => Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
                     child: SizedBox(
@@ -334,7 +341,7 @@ class SliderAdddingFinances extends StatelessWidget {
                     ),
                   )),
               // Display Budgets
-              ...budgets.map((budget) => Padding(
+              ...budgets.take(2).toList().map((budget) => Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
                     child: SizedBox(
@@ -343,7 +350,7 @@ class SliderAdddingFinances extends StatelessWidget {
                     ),
                   )),
               // Display Debts
-              ...debts.map((debt) => Padding(
+              ...debts.take(2).toList().map((debt) => Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
                     child: SizedBox(
@@ -392,7 +399,7 @@ class SliderAdddingFinances extends StatelessWidget {
                     child: Center(
                       child: Icon(
                         Icons.receipt_long,
-                        color: Color(0xFF635D8F),
+                        color: AppColors.primaryColor,
                         size: 36,
                       ),
                     ),
@@ -404,12 +411,12 @@ class SliderAdddingFinances extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  color: Color(0xFF807CA3),
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16.2,
-                  letterSpacing: 0.1,
-                ),
+                style: FontManager().getTextStyle(contextGlobal,
+                    color: Color(0xFF807CA3),
+                    lWeight: FontWeight.w400,
+                    fontSize: 16.2,
+                    letterSpacing: 0.1,
+                    lineHeight: 1.2),
               ),
             ),
           ],

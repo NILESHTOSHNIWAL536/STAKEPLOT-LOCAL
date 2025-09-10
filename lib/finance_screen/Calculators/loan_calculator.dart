@@ -133,8 +133,8 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
     double width = MediaQuery.sizeOf(context).width;
 
     // Responsive offsets based on screen height
-    double headerOffset = height * 0.035; // ~30px on standard screens
-    double shapeOffset = height * 0.095; // ~80px on standard screens
+    double headerOffset = height * 0.02; // ~30px on standard screens
+    double shapeOffset = height * 0.08; // ~80px on standard screens
     double contentOffset = height * 0.1; // ~85px on standard screens
 
     return Scaffold(

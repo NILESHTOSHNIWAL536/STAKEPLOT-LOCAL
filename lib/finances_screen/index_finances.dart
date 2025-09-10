@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDe
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../backed_connections/apis_connect.dart';
 import '../bottomNavigations.dart';
 import '../colorcodes.dart';
@@ -34,13 +35,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor:
-          AppColors.primaryColor, // Replace with AppColors.primaryColor
-      statusBarIconBrightness:
-          Brightness.light, // Light icons for dark background
-      statusBarBrightness: Brightness.dark, // For iOS
-    ));
+
     fetchDebts();
     Get.put(CardDueController());
     _loadData();
@@ -54,9 +49,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
         cardController.getBanksListCrediCard(),
         fetchDebts(), // Assuming fetchDebts is async
       ]);
-      print('FinanceDashboard: Data fetching completed');
     } catch (e) {
-      print('FinanceDashboard: Error fetching data: $e');
     } finally {
       setState(() => isLoading = false);
     }
@@ -65,7 +58,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
   bool _hasFinancialData() {
     final cardController = CardDueController();
     final hasCreditCards = cardController.cardList?.isNotEmpty ?? false;
-    print("card list is ${cardController.cardList}");
+
     final hasBudgets = budgetList?.isNotEmpty ?? false; // Check budgetList
     final hasDebts = debts?.isNotEmpty ?? false; // Check debts
     return hasCreditCards || hasBudgets || hasDebts;
@@ -83,7 +76,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
     final Size size = MediaQuery.of(context).size;
     final bool hasData = isLoading ? false : _hasFinancialData();
     return Scaffold(
-      // backgroundColor: AppColors.primaryColor,
+      backgroundColor: AppColors.primaryColor,
 
       bottomNavigationBar: SafeArea(
           child: BottomNavigations(
@@ -96,7 +89,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
               // Top Section with custom clipper and search bar
 
               Container(
-                // color: AppColors.primaryColor,
+                color: AppColors.backgroundColor,
                 padding: const EdgeInsets.all(0),
                 height: size.height / 2,
                 width: MediaQuery.of(context).size.width,
@@ -164,41 +157,58 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
               ),
 
               // "Heading" section with "View all"
-              if (hasData)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: _buildSectionHeader('', () {
-                    pushnameToRoute(context, ShowCompleteInfo(), false);
-                  }),
-                ),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              //   child: _buildSectionHeader('', () {
-              //     // showBudgetDebtCreditCard(context);
-              //     pushnameToRoute(context, ShowCompleteInfo(), false);
-              //     // pushnameToRoute(context, SelectAnyOptionScreen(),false);
-              //   }),
-              // ),
 
-              const SizedBox(height: 16),
-
-              isLoading
-                  ? Center(child: Spinner())
-                  : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      child: SliderAdddingFinances(
-                        hasData: hasData,
-                        onDebtTap: _navigateToDebtDetailsScreen,
+              Container(
+                color: AppColors.backgroundColor,
+                child: Column(
+                  children: [
+                    if (hasData)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: _buildSectionHeader('', () {
+                          pushnameToRoute(context, ShowCompleteInfo(), false);
+                        }),
+                      ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    //   child: _buildSectionHeader('', () {
+                    //     // showBudgetDebtCreditCard(context);
+                    //     pushnameToRoute(context, ShowCompleteInfo(), false);
+                    //     // pushnameToRoute(context, SelectAnyOptionScreen(),false);
+                    //   }),
+                    // ),
+                    const SizedBox(height: 16),
+                    Skeletonizer(
+                      enabled: isLoading,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: SliderAdddingFinances(
+                          hasData: hasData,
+                          onDebtTap: _navigateToDebtDetailsScreen,
+                        ),
                       ),
                     ),
 
-              // "Heading to Recieve / to Pay" section
-              const SizedBox(height: 24),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.0),
-                child: TopayToreceive(),
+                    // isLoading
+                    //     ? Center(child: Spinner())
+                    //     : Padding(
+                    //         padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    //         child: SliderAdddingFinances(
+                    //           hasData: hasData,
+                    //           onDebtTap: _navigateToDebtDetailsScreen,
+                    //         ),
+                    //       ),
+
+                    // "Heading to Recieve / to Pay" section
+                    const SizedBox(height: 24),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.0),
+                      child: TopayToreceive(),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
               ),
-              const SizedBox(height: 24),
             ],
           ),
         ),

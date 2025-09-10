@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
@@ -8,24 +7,25 @@ import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class TabBarUser extends StatefulWidget {
   final List<PostModel> userPostList;
-   TabBarUser({Key? key, required this.userPostList}) : super(key: key);
+  TabBarUser({Key? key, required this.userPostList}) : super(key: key);
 
   @override
   State<TabBarUser> createState() => _TabBarUserState();
 }
 
 class _TabBarUserState extends State<TabBarUser> {
-    RxBool isLoading = true.obs;
+  RxBool isLoading = true.obs;
 
   @override
   void initState() {
     super.initState();
     // Show spinner for 2 seconds
     Future.delayed(const Duration(seconds: 1), () {
-        isLoading.value = false;
+      isLoading.value = false;
     });
   }
 
@@ -51,7 +51,8 @@ class _TabBarUserState extends State<TabBarUser> {
                 Tab(
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
@@ -68,7 +69,8 @@ class _TabBarUserState extends State<TabBarUser> {
                 Tab(
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
@@ -80,26 +82,45 @@ class _TabBarUserState extends State<TabBarUser> {
             ),
           ),
           SizedBox(
-             height: MediaQuery.of(context).size.height / 1.4,
+            height: MediaQuery.of(context).size.height / 1.4,
             child: TabBarView(
               children: [
-                Obx(()=>isLoading.value?Center(
-              child: SizedBox(
-                // width: 50, // Adjust width as needed
-                // height: 50, // Adjust height as needed
-                child: Spinner(size: 20), // Ensure Spinner respects the size
-              ),
-            ): Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child:      pollWidgets(),
-                )),
-                 Obx(()=>isLoading.value?Center(
-              child: SizedBox(
-                // width: 50, // Adjust width as needed
-                // height: 50, // Adjust height as needed
-                child: Spinner(size: 20), // Ensure Spinner respects the size
-              ),
-            ): feedWidgets()),
+                Obx(() => Skeletonizer(
+                      enabled: isLoading.value,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: pollWidgets(),
+                      ),
+                    )),
+
+                Obx(() => Skeletonizer(
+                      enabled: isLoading.value,
+                      child: feedWidgets(),
+                    )),
+
+                // Obx(() => isLoading.value
+                //     ? Center(
+                //         child: SizedBox(
+                //           // width: 50, // Adjust width as needed
+                //           // height: 50, // Adjust height as needed
+                //           child: Spinner(
+                //               size: 20), // Ensure Spinner respects the size
+                //         ),
+                //       )
+                //     : Padding(
+                //         padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                //         child: pollWidgets(),
+                //       )),
+                // Obx(() => isLoading.value
+                //     ? Center(
+                //         child: SizedBox(
+                //           // width: 50, // Adjust width as needed
+                //           // height: 50, // Adjust height as needed
+                //           child: Spinner(
+                //               size: 20), // Ensure Spinner respects the size
+                //         ),
+                //       )
+                //     : feedWidgets()),
               ],
             ),
           ),
@@ -111,11 +132,10 @@ class _TabBarUserState extends State<TabBarUser> {
   Widget feedWidgets() {
     // Filter posts with postType other than "write" or "poll" (media posts)
     final validPosts = widget.userPostList
-        .where((item) => item.postType.name != 'write' && item.postType.name != 'poll')
+        .where((item) =>
+            item.postType.name != 'write' && item.postType.name != 'poll')
         .toList();
     final hasPosts = validPosts.isNotEmpty;
-
-   
 
     if (!hasPosts) {
       return buildEmptyState('No Media Found');
@@ -139,26 +159,27 @@ class _TabBarUserState extends State<TabBarUser> {
           imageUrl = item.images.first;
         }
 
-       
         // Fallback to image field if images list is invalid or empty
-        imageUrl ??=  item.image != 'none' ? item.image: null;
-
+        imageUrl ??= item.image != 'none' ? item.image : null;
 
         return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => TribeUnique(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    TribeUnique(
                   id: item.id,
                   dataObj: item,
                   popBox: false.obs,
                 ),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
                   const begin = Offset(1.0, 0.0);
                   const end = Offset.zero;
                   const curve = Curves.easeInOut;
-                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                  var tween = Tween(begin: begin, end: end)
+                      .chain(CurveTween(curve: curve));
                   return SlideTransition(
                     position: animation.drive(tween),
                     child: child,
@@ -176,7 +197,8 @@ class _TabBarUserState extends State<TabBarUser> {
               boxFit: BoxFit.cover,
               image: imageUrl != null
                   ? NetworkImage(imageUrl)
-                  : const AssetImage('assets/icons/maskAvatars/profileIcon11.png'), // Ensure this asset exists
+                  : const AssetImage(
+                      'assets/icons/maskAvatars/profileIcon11.png'), // Ensure this asset exists
               colorFilter: null,
               color: Colors.transparent,
               border: Border.all(color: AppColors.grey.withOpacity(0.1)),
@@ -192,14 +214,15 @@ class _TabBarUserState extends State<TabBarUser> {
   Widget pollWidgets() {
     // Filter posts with postType "write" or "poll"
     final validPosts = widget.userPostList
-        .where((PostModel item) => item.postType.name == 'write' || item.postType.name == 'poll')
+        .where((PostModel item) =>
+            item.postType.name == 'write' || item.postType.name == 'poll')
         .toList();
     final hasPosts = validPosts.isNotEmpty;
 
-  
-
     if (!hasPosts) {
-      return buildEmptyState('No Posts Found',);
+      return buildEmptyState(
+        'No Posts Found',
+      );
     }
 
     return ListView.builder(
@@ -220,19 +243,19 @@ class _TabBarUserState extends State<TabBarUser> {
           Icon(
             Icons.info_outline,
             size: 60,
-            color: AppColors.bg1.withOpacity(0.5),
+            color: AppColors.primaryColor,
           ),
           const SizedBox(height: 16),
           Text(
             title,
-            style: TextStyle(
+            style: FontManager().getTextStyle(
+              context,
               fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: AppColors.bg1,
+              lWeight: FontWeight.w600,
+              color: AppColors.accentColor,
             ),
           ),
           const SizedBox(height: 8),
-         
         ],
       ),
     );

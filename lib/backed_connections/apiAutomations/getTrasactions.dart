@@ -783,10 +783,10 @@ void processChartData() {
       newData.add(ChartData(category, value, color, percentage));
       // totalValue.value += value;
     }
-   
-    if(newData.isNotEmpty){
-         spendingsOnCategories.clear();
-         spendingsOnCategories.addAll(newData);
+
+    if (newData.isNotEmpty) {
+      spendingsOnCategories.clear();
+      spendingsOnCategories.addAll(newData);
     }
   } catch (e) {
     print("e-----------------");
