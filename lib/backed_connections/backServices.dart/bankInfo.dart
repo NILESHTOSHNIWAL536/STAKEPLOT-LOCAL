@@ -20,7 +20,7 @@ RxString accountName = "Bank Name : ".obs;
 RxString accountNo = "XXXXXXXX".obs;
 RxString selectedBank = "".obs;
 
-void getCategoryData(context) async {
+void getCategoryData2(context) async {
   var res = await getDataApiCall("${url}/transactionauto/categorize");
   if (getFlagOfResponse(res)) {
     try {
@@ -65,7 +65,7 @@ void getCategoryData(context) async {
   }
 }
 
-void getCategoryData2(context) async {
+void getCategoryData(context) async {
   try {
     // API call inside try
     var res = await getDataApiCall("${url}/transactionauto/categorize");

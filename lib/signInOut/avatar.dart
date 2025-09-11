@@ -21,7 +21,7 @@ import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-RxString changeAvater =  ControllerManagement.userController.avatar.value.obs;
+RxString changeAvater = ControllerManagement.userController.avatar.value.obs;
 
 class Avatar extends StatefulWidget {
   var data;
@@ -48,14 +48,12 @@ class _SigninState extends State<Avatar> {
   //   "assets/avatar/womenp3.svg",
   //   "assets/avatar/womenp4.svg",
   // ];
-   List<String> images = [
+  List<String> images = [
     "assets/onboarding/Avatar1.png",
     "assets/onboarding/Avatar2.png",
-   "assets/onboarding/Avatar3.png",
+    "assets/onboarding/Avatar3.png",
     "assets/onboarding/Avatar4.png",
-   "assets/onboarding/Avatar6.png",
-   
-   
+    "assets/onboarding/Avatar6.png",
   ];
 
   int activePage = 3;
@@ -168,23 +166,22 @@ class _SigninState extends State<Avatar> {
 
                 InkWell(
                   onTap: () {
-                  
-                    if (widget.isEdit)
-                    {
+                    if (widget.isEdit) {
                       changeAvater.value = images[activePage];
-                      ControllerManagement.userController.avatar.value = changeAvater.value;
+                      ControllerManagement.userController.avatar.value =
+                          changeAvater.value;
                       Navigator.pop(context);
                       return;
                     }
-                   
+
                     getOTP(context, widget.data['name'], widget.data['email']);
-        
+
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => conform(
                           data: widget.data,
-                          url:  "assets/avatar/FRAME-2.svg",
+                          url: "assets/avatar/FRAME-2.svg",
                         ),
                       ),
                     );
@@ -221,7 +218,6 @@ class _SigninState extends State<Avatar> {
           return conform(data: widget.data, url: images[activePage]);
         });
   }
-
 }
 
 Widget avatarSlider() {
@@ -276,23 +272,44 @@ void storeData(context, data, String opt, Avatarurl) async {
   String password = data['userpassword'];
   String conform = data['confirmPassword'];
   String dob = data['dob'];
-  String colorString=avatarBackGroundList[getRandomValue(avatarBackGroundList)];
+  String colorString =
+      avatarBackGroundList[getRandomValue(avatarBackGroundList)];
+
+  // final response = await http.post(
+  //   Uri.parse('${url}/user/register'),
+  //   headers: <String, String>{
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //   },
+  //   body: jsonEncode({
+  //     'name': name,
+  //     'email': email,
+  //     'userpassword': password,
+  //     'confirmPassword': conform,
+  //     'dob': dob,
+
+  //     'otp': opt,
+
+  //   }),
+  // );
+  final Map<String, dynamic> body = {
+    'name': name,
+    'email': email,
+    'userpassword': password,
+    'confirmPassword': conform,
+    'otp': opt,
+  };
+
+// Add dob only if it’s not empty
+  if (dob.trim().isNotEmpty) {
+    body['dob'] = dob.trim();
+  }
 
   final response = await http.post(
-    Uri.parse('${url}/user/register'),
-    headers: <String, String>{
+    Uri.parse('$url/user/register'),
+    headers: {
       'Content-Type': 'application/json; charset=UTF-8',
     },
-    body: jsonEncode({
-      'name': name,
-      'email': email,
-      'userpassword': password,
-      'confirmPassword': conform,
-      'dob': dob,
-      'avatarType': "",
-      'otp': opt,
-      'avatarBackGround': colorString
-    }),
+    body: jsonEncode(body),
   );
 
   try {

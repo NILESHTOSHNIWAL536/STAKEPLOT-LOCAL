@@ -146,6 +146,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                       if (!showFilter.value) {
                                         searchTextController.value = "";
                                         searchController.text = "";
+                                        startDateController.text = "";
+                                        endDateController.text = "";
+                                        showDateFilter.value =
+                                            false; // Reset date filter UI state
+                                        showAmountFilter.value = false;
                                         onChanedAutoTransactionStatus(context);
                                       }
 
@@ -287,7 +292,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         onChanged: (value) {
           isDateSummaryView.value = false;
           allOrGroupTransactionsName.value = StringConstant.allTransactions;
-             searchItemClicked.value=false;
+          searchItemClicked.value = false;
           if (_debounce?.isActive ?? false) _debounce!.cancel();
           // Start a new debounce timer
           _debounce = Timer(const Duration(milliseconds: 500), () {

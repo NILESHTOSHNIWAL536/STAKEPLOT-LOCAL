@@ -44,7 +44,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     super.initState();
     selectedIndex.value = -1;
     // initChartData();
-     getCategoryData(context);
+    getCategoryData(context);
     catWidgetBindUpdate(context);
   }
 
@@ -67,10 +67,9 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                   color: AppColors.bg3,
                 ),
               ),
-                Obx(() =>   spendingsOnCategoriesBool.value
-              ? checkFlagCount()
-              : checkFlagCount())
-              
+              Obx(() => spendingsOnCategoriesBool.value
+                  ? checkFlagCount()
+                  : checkFlagCount())
             ],
           ),
           const SizedBox(
@@ -84,50 +83,50 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
           const SizedBox(
             height: 10,
           ),
-          Obx(() =>   spendingsOnCategoriesBool.value
-              ? checkFlag()
-              : checkFlag()),
+          Obx(() =>
+              spendingsOnCategoriesBool.value ? checkFlag() : checkFlag()),
         ],
       ),
     );
   }
 
-  Widget checkFlagCount(){
-   return spendingsOnCategories.length >= 7
-                  ? TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AllCategoriesPage(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        HomepageStringsDart().moreButton,
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: AppColors.bg3,
-                        ),
-                      ))
-                  : const SizedBox.shrink();
+  Widget checkFlagCount() {
+    return spendingsOnCategories.length >= 7
+        ? TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AllCategoriesPage(),
+                ),
+              );
+            },
+            child: Text(
+              HomepageStringsDart().moreButton,
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w500,
+                fontSize: 14,
+                color: AppColors.bg3,
+              ),
+            ))
+        : const SizedBox.shrink();
   }
 
-
-  Widget checkFlag(){
-      return spendingsOnCategories.isEmpty ? Center(
-                  child: Text(
-                  HomepageStringsDart().noSpendingsAvailable,
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: AppColors.bg3.withOpacity(0.8),
-                    ),
-                  ),
-                ): buildCategoryCards();
+  Widget checkFlag() {
+    return spendingsOnCategories.isEmpty
+        ? Center(
+            child: Text(
+              HomepageStringsDart().noSpendingsAvailable,
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.bg3.withOpacity(0.8),
+              ),
+            ),
+          )
+        : buildCategoryCards();
   }
 
   Widget buildCategoryCards() {

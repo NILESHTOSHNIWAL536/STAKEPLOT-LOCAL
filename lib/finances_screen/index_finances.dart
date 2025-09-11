@@ -200,12 +200,12 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                     //       ),
 
                     // "Heading to Recieve / to Pay" section
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 10),
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24.0),
                       child: TopayToreceive(),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 100),
                   ],
                 ),
               ),

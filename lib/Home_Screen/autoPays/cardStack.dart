@@ -646,8 +646,7 @@ class _CardStackScreenState extends State<CardStackScreen>
                     ),
                     itemBuilder: (context, index) {
                       final selectedDay = index + 1;
-                      bool isToday = selectedDay == currentDay &&
-                          currentMonth == now.month;
+                      
 
                       return ElevatedButton(
                         style: ElevatedButton.styleFrom(

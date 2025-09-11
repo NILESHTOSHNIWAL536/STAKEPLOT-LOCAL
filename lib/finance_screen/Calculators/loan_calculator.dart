@@ -83,7 +83,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
     final jsonData = {
       "income": int.tryParse(_incomeController.text) ?? income,
       "existingEmi": int.tryParse(_emiController.text) ?? 0,
-      "loanType": _loanType,
+      "loanType": _loanType.toLowerCase(),
       "creditScore": _selectedCreditScore,
       "expenses": expenses,
     };
@@ -92,7 +92,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
           "$apiUrl/transactionauto/get-loan-calculation", jsonData);
       if (getFlagOfResponse(response)) {
         var data = json.decode(response.body)['data'];
-        print("Calculated data $data");
+
         setState(() {
           loanCalcResponse = data;
         });
@@ -216,287 +216,292 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: Container(
-                height: height / 1.32,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //  const SizedBox(height: 10),
-                      Text('Income (Per month)',
-                          style: FontManager().getTextStyle(context,
-                              color: AppColors.whiteOpacity085,
-                              fontSize: 15.3)),
-                      SizedBox(height: height * 0.008),
-                      TextField(
-                        controller: _incomeController,
-                        keyboardType: TextInputType.number,
-                        style: FontManager().getTextStyle(context,
-                            color: Colors.white,
-                            fontSize: 15,
-                            lWeight: FontWeight.w500),
-                        cursorColor: Colors.white,
-                        decoration: inputDecoration("₹ 3000.00"),
-                      ),
-                      SizedBox(height: height * 0.015),
-                      Text('Existing Emi',
-                          style: FontManager().getTextStyle(context,
-                              color: AppColors.whiteOpacity085,
-                              fontSize: 15.3)),
-                      SizedBox(height: height * 0.008),
-                      TextField(
-                        controller: _emiController,
-                        keyboardType: TextInputType.number,
-                        style: FontManager().getTextStyle(context,
-                            color: Colors.white,
-                            fontSize: 15,
-                            lWeight: FontWeight.w500),
-                        cursorColor: Colors.white,
-                        decoration: inputDecoration(""),
-                      ),
-                      SizedBox(height: height * 0.015),
-                      Text('Credit score',
-                          style: FontManager().getTextStyle(context,
-                              color: AppColors.whiteOpacity085,
-                              fontSize: 15.3)),
-                      SizedBox(height: height * 0.008),
-                      Container(
-                        height: height * 0.06,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(59, 255, 255, 255),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.white70, width: 1),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: _selectedCreditScore,
-                            dropdownColor: const Color(0xFF656399),
-                            icon: const Icon(Icons.expand_more,
-                                color: Colors.white),
+                height: height / 1.38,
+                child: Scrollbar(
+                  // thumbVisibility: true,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //  const SizedBox(height: 10),
+                        Text('Income (Per month)',
                             style: FontManager().getTextStyle(context,
-                                color: Colors.white, fontSize: 15.2),
-                            onChanged: (String? newVal) {
-                              setState(() {
-                                if (newVal != null)
-                                  _selectedCreditScore = newVal;
-                              });
-                            },
-                            items: creditScores
-                                .map<DropdownMenuItem<String>>((score) =>
-                                    DropdownMenuItem<String>(
-                                      value: score,
-                                      child: Text(score,
-                                          style:
-                                              TextStyle(color: Colors.white)),
-                                    ))
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: height * 0.015),
-                      Text('Loan type',
+                                color: AppColors.whiteOpacity085,
+                                fontSize: 15.3)),
+                        SizedBox(height: height * 0.008),
+                        TextField(
+                          controller: _incomeController,
+                          keyboardType: TextInputType.number,
                           style: FontManager().getTextStyle(context,
-                              color: AppColors.whiteOpacity085,
-                              fontSize: 15.3)),
-                      SizedBox(height: height * 0.008),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: loanTypes.map((type) {
-                          final isSelected = _loanType == type;
-                          return Expanded(
-                              child: Container(
-                            margin:
-                                EdgeInsets.symmetric(horizontal: width * 0.013),
-                            height: height * 0.055,
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? Colors.white
-                                  : const Color.fromARGB(59, 255, 255, 255),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Color(0x26FFFFFF),
-                                  width: 1.3),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
+                              color: Colors.white,
+                              fontSize: 15,
+                              lWeight: FontWeight.w500),
+                          cursorColor: Colors.white,
+                          decoration: inputDecoration("₹ 3000.00"),
+                        ),
+                        SizedBox(height: height * 0.015),
+                        Text('Existing Emi',
+                            style: FontManager().getTextStyle(context,
+                                color: AppColors.whiteOpacity085,
+                                fontSize: 15.3)),
+                        SizedBox(height: height * 0.008),
+                        TextField(
+                          controller: _emiController,
+                          keyboardType: TextInputType.number,
+                          style: FontManager().getTextStyle(context,
+                              color: Colors.white,
+                              fontSize: 15,
+                              lWeight: FontWeight.w500),
+                          cursorColor: Colors.white,
+                          decoration: inputDecoration(""),
+                        ),
+                        SizedBox(height: height * 0.015),
+                        Text('Credit score',
+                            style: FontManager().getTextStyle(context,
+                                color: AppColors.whiteOpacity085,
+                                fontSize: 15.3)),
+                        SizedBox(height: height * 0.008),
+                        Container(
+                          height: height * 0.06,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(59, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white70, width: 1),
+                          ),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * 0.04),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: _selectedCreditScore,
+                              dropdownColor: const Color(0xFF656399),
+                              icon: const Icon(Icons.expand_more,
+                                  color: Colors.white),
+                              style: FontManager().getTextStyle(context,
+                                  color: Colors.white, fontSize: 15.2),
+                              onChanged: (String? newVal) {
                                 setState(() {
-                                  _loanType = type;
+                                  if (newVal != null)
+                                    _selectedCreditScore = newVal;
                                 });
                               },
-                              child: Text(
-                                type,
-                                style: FontManager().getTextStyle(context,
-                                    color: isSelected
-                                        ? const Color(0xFF656399)
-                                        : Colors.white,
-                                    lWeight: isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                    fontSize: 15.4),
-                              ),
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                minimumSize: Size.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                alignment: Alignment.center,
-                                backgroundColor: Colors.transparent,
-                              ),
+                              items: creditScores
+                                  .map<DropdownMenuItem<String>>((score) =>
+                                      DropdownMenuItem<String>(
+                                        value: score,
+                                        child: Text(score,
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                      ))
+                                  .toList(),
                             ),
-                          ));
-                        }).toList(),
-                      ),
-                      SizedBox(height: height * 0.02),
-                      Center(
-                        child: SizedBox(
-                          width: width * 0.37,
-                          height: height * 0.052,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_incomeController.text.trim().isEmpty) {
-                                snackBarCalledfail(
-                                    context, "Please enter your income");
-
-                                return;
-                              }
-                              if (_emiController.text.trim().isEmpty) {
-                                snackBarCalledfail(
-                                    context, "Please enter your existing EMI");
-
-                                return;
-                              }
-                              if (_selectedCreditScore.isEmpty) {
-                                snackBarCalledfail(
-                                    context, "Please select a credit score");
-
-                                return;
-                              }
-                              if (_loanType.isEmpty) {
-                                snackBarCalledfail(
-                                    context, "Please select a loan type");
-
-                                return;
-                              }
-
-                              calculateLoan();
-                            },
-
-                            // onPressed: calculateLoan,
-
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryColor,
-                              foregroundColor: AppColors.backgroundColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              textStyle: FontManager().getTextStyle(
-                                context,
-                                color: AppColors.backgroundColor,
-                                lWeight: FontWeight.w600,
-                                fontSize: 16,
-                              ),
-                            ),
-                            child: const Text('Calculate'),
                           ),
                         ),
-                      ),
-                      SizedBox(height: height * 0.03),
-                      if (loanCalcResponse != null) ...[
-                        Text('Suggested Timeline',
-                            style: FontManager().getTextStyle(context,
-                                color: Color(0xEBFFFFFF),
-                                lWeight: FontWeight.w600,
-                                fontSize: 16)),
                         SizedBox(height: height * 0.015),
-                        ...((loanCalcResponse?['suggestedTimeline'] ?? [])
-                                as List<dynamic>)
-                            .map(
-                          (timeline) => Padding(
-                            padding: EdgeInsets.only(bottom: height * 0.016),
-                            child:
-                                suggestionBox(displayString(timeline), context),
+                        Text('Loan type',
+                            style: FontManager().getTextStyle(context,
+                                color: AppColors.whiteOpacity085,
+                                fontSize: 15.3)),
+                        SizedBox(height: height * 0.008),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: loanTypes.map((type) {
+                            final isSelected = _loanType == type;
+                            return Expanded(
+                                child: Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: width * 0.013),
+                              height: height * 0.055,
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? Colors.white
+                                    : const Color.fromARGB(59, 255, 255, 255),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Color(0x26FFFFFF),
+                                    width: 1.3),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _loanType = type;
+                                  });
+                                },
+                                child: Text(
+                                  type,
+                                  style: FontManager().getTextStyle(context,
+                                      color: isSelected
+                                          ? const Color(0xFF656399)
+                                          : Colors.white,
+                                      lWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      fontSize: 15.4),
+                                ),
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  alignment: Alignment.center,
+                                  backgroundColor: Colors.transparent,
+                                ),
+                              ),
+                            ));
+                          }).toList(),
+                        ),
+                        SizedBox(height: height * 0.02),
+                        Center(
+                          child: SizedBox(
+                            width: width * 0.37,
+                            height: height * 0.052,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_incomeController.text.trim().isEmpty) {
+                                  snackBarCalledfail(
+                                      context, "Please enter your income");
+
+                                  return;
+                                }
+                                if (_emiController.text.trim().isEmpty) {
+                                  snackBarCalledfail(context,
+                                      "Please enter your existing EMI");
+
+                                  return;
+                                }
+                                if (_selectedCreditScore.isEmpty) {
+                                  snackBarCalledfail(
+                                      context, "Please select a credit score");
+
+                                  return;
+                                }
+                                if (_loanType.isEmpty) {
+                                  snackBarCalledfail(
+                                      context, "Please select a loan type");
+
+                                  return;
+                                }
+
+                                calculateLoan();
+                              },
+
+                              // onPressed: calculateLoan,
+
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryColor,
+                                foregroundColor: AppColors.backgroundColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                textStyle: FontManager().getTextStyle(
+                                  context,
+                                  color: AppColors.backgroundColor,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              child: const Text('Calculate'),
+                            ),
                           ),
                         ),
                         SizedBox(height: height * 0.03),
-                        Row(
-                          children: [
-                            Expanded(
-                                child: infoBox(
-                                    'Safe EMI Range',
-                                    displayString(
-                                        loanCalcResponse?['safeEmiRange']),
-                                    context)),
-                            SizedBox(width: width * 0.025),
-                            safeNum(loanCalcResponse?[
-                                        'maxSuggestedLoanAmount']) >
-                                    0
-                                ? Expanded(
-                                    child: infoBox(
-                                        'Max Loan Amount',
-                                        displayString(loanCalcResponse?[
-                                            'maxSuggestedLoanAmount']),
-                                        context))
-                                : SizedBox.shrink(),
-                          ],
-                        ),
-                        SizedBox(height: height * 0.011),
-                        Row(
-                          children: [
-                            Expanded(
-                                child: infoBox(
-                                    'Expected EMI',
-                                    displayString(
-                                        loanCalcResponse?['expectedEmi']),
-                                    context)),
-                            SizedBox(width: width * 0.025),
-                            Expanded(
-                                child: infoBox(
-                                    'Interest Bracket',
-                                    displayString(
-                                        loanCalcResponse?['interestBracket']),
-                                    context)),
-                          ],
-                        ),
-                        SizedBox(height: height * 0.03),
-                        ...List.generate(
-                          (loanCalcResponse?['bonusInsights'] ?? []).length,
-                          (idx) => Padding(
-                            padding: EdgeInsets.only(
-                                bottom: height * 0.015, left: 2),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 3, right: 10),
-                                  child: Icon(
-                                    Icons.radio_button_checked,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    displayString(
-                                        loanCalcResponse?['bonusInsights']
-                                            [idx]),
-                                    style: FontManager().getTextStyle(
-                                      context,
+                        if (loanCalcResponse != null) ...[
+                          Text('Suggested Timeline',
+                              style: FontManager().getTextStyle(context,
+                                  color: Color(0xEBFFFFFF),
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 16)),
+                          SizedBox(height: height * 0.015),
+                          ...((loanCalcResponse?['suggestedTimeline'] ?? [])
+                                  as List<dynamic>)
+                              .map(
+                            (timeline) => Padding(
+                              padding: EdgeInsets.only(bottom: height * 0.016),
+                              child: suggestionBox(
+                                  displayString(timeline), context),
+                            ),
+                          ),
+                          SizedBox(height: height * 0.03),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: infoBox(
+                                      'Safe EMI Range',
+                                      displayString(
+                                          loanCalcResponse?['safeEmiRange']),
+                                      context)),
+                              SizedBox(width: width * 0.025),
+                              safeNum(loanCalcResponse?[
+                                          'maxSuggestedLoanAmount']) >
+                                      0
+                                  ? Expanded(
+                                      child: infoBox(
+                                          'Max Loan Amount',
+                                          displayString(loanCalcResponse?[
+                                              'maxSuggestedLoanAmount']),
+                                          context))
+                                  : SizedBox.shrink(),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.011),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: infoBox(
+                                      'Expected EMI',
+                                      displayString(
+                                          loanCalcResponse?['expectedEmi']),
+                                      context)),
+                              SizedBox(width: width * 0.025),
+                              Expanded(
+                                  child: infoBox(
+                                      'Interest Bracket',
+                                      displayString(
+                                          loanCalcResponse?['interestBracket']),
+                                      context)),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.03),
+                          ...List.generate(
+                            (loanCalcResponse?['bonusInsights'] ?? []).length,
+                            (idx) => Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: height * 0.015, left: 2),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 3, right: 10),
+                                    child: Icon(
+                                      Icons.radio_button_checked,
                                       color: Colors.white,
-                                      lWeight: FontWeight.w400,
-                                      fontSize: 14,
-                                      lineHeight: 1.5,
+                                      size: 20,
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Expanded(
+                                    child: Text(
+                                      displayString(
+                                          loanCalcResponse?['bonusInsights']
+                                              [idx]),
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        color: Colors.white,
+                                        lWeight: FontWeight.w400,
+                                        fontSize: 14,
+                                        lineHeight: 1.5,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        )
+                          )
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),

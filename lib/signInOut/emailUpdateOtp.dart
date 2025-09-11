@@ -75,13 +75,14 @@ class _emailUpdationState extends State<emailUpdation> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.primaryColor,
-        body: Container(
+    return Scaffold(
+      backgroundColor: Colorcodes.white,
+      body: SafeArea(
+        child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
+            color: AppColors.backgroundColor,
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -170,12 +171,6 @@ class _emailUpdationState extends State<emailUpdation> {
             acceptReset.value = true;
             try {
               // Show loading indicator
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) =>
-                    Center(child: CircularProgressIndicator()),
-              );
 
               // Verify OTP
 
@@ -291,8 +286,9 @@ class _emailUpdationState extends State<emailUpdation> {
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: 12,
-                    color:
-                        canResendOtp2.value ? Colorcodes.black : Colors.black,
+                    color: canResendOtp2.value
+                        ? AppColors.backgroundColor
+                        : AppColors.backgroundColor,
                   ),
                 ),
               ),

@@ -490,7 +490,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     String email = emailController.text;
     String password = passwordController.text;
     String conform = confirmPasswordController.text;
-    String phone = "0";
+    String phone = "";
     // String dob = dobController.text;
 
     if (name.isEmpty) {
@@ -547,22 +547,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     flag.value = true;
+    final Map<String, dynamic> body = {
+      'name': usernameController.text,
+      'email': emailController.text,
+      'userpassword': passwordController.text,
+      'confirmPassword': confirmPasswordController.text,
+      'otp': 'opts',
+    };
+
+// Add dob only if not empty
+    if (dobController.text.trim().isNotEmpty) {
+      body['dob'] = dobController.text.trim();
+    }
+
+// Add phone only if not empty
+    if (phone.trim().isNotEmpty) {
+      print("heyy $phone");
+      body['phone'] = phone.trim();
+    }
+
     final response = await http.post(
-      Uri.parse('${url}/user/register'),
-      headers: <String, String>{
+      Uri.parse('$url/user/register'),
+      headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode({
-        'name': usernameController.text,
-        'email': emailController.text,
-        'userpassword': passwordController.text,
-        'phone': phone,
-        'confirmPassword': confirmPasswordController.text,
-        'dob': dobController.text,
-        'avatarType': url,
-        'otp': "opts",
-      }),
+      body: jsonEncode(body),
     );
+
+    // final response = await http.post(
+    //   Uri.parse('${url}/user/register'),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode({
+    //     'name': usernameController.text,
+    //     'email': emailController.text,
+    //     'userpassword': passwordController.text,
+    //     'phone': phone,
+    //     'confirmPassword': confirmPasswordController.text,
+    //     'dob': dobController.text,
+    //     'otp': "opts",
+    //   }),
+    // );
 
     var responce = jsonDecode(response.body);
 

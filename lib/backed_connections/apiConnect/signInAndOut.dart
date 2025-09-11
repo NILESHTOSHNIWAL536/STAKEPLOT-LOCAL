@@ -55,9 +55,9 @@ Future<void> userVerification(TextEditingController emailController,
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
     });
-    print("resposnse $response");
+
     var decodedResponse = json.decode(response.body);
-    print("resposnse $decodedResponse");
+    
 
     if (response.statusCode == 409) {
       forceLoginShowModal(

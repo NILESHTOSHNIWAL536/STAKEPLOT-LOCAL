@@ -222,6 +222,7 @@ Future<bool> ignoreRecurringPayment(String id) async {
         await deleteDataApiCall("$url/transactionauto/recurring-payments/$id");
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
+      await getAutoPayInfo(forceApi: true);
       return jsonData['success'] == true;
     } else {
       return false;
@@ -845,7 +846,8 @@ void processChartData() {
       double value = item["total_debit"].toDouble();
       Color color = categoryColors[category] ?? Colors.grey; // Default color
       newData.add(ChartData(category, value, color, percentage));
-      // totalValue.value += value;
+     
+      totalValue.value += value;
     }
 
     if (newData.isNotEmpty) {

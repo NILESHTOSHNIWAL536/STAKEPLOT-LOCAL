@@ -256,7 +256,7 @@ class SliderAdddingFinances extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double containerWidth = MediaQuery.of(context).size.width;
-    double cardHeight = MediaQuery.of(context).size.height / 4.8;
+    double cardHeight = MediaQuery.of(context).size.height / 4.5;
 
     // Get data from controllers
     final cardController =
