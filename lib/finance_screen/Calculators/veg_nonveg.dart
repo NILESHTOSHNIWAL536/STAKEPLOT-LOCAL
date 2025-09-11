@@ -256,7 +256,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                 context,
                 lWeight: FontWeight.w400,
                 fontSize: 14,
-                color: AppColors.backgroundColor.withValues(),
+                color: AppColors.backgroundColor,
               ),
               fillColor: const Color.fromARGB(59, 255, 255, 255),
               contentPadding:

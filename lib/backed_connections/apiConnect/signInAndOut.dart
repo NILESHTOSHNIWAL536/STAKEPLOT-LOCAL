@@ -373,11 +373,9 @@ void addThisDeviceToBackendDevice(SharedPreferences pref, context) async {
 }
 
 Future<void> addThisDeviceToBackend(deviceData, context) async {
-  try {
-    var response =
-        await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
-    if (getFlagOfResponse(response)) {}
-  } catch (e) {}
+   try {
+     await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
+   } catch (e) {}
 }
 
 Future<Widget> checkAuthAndNavigate() async {
