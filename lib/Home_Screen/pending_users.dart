@@ -13,7 +13,6 @@ import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
 
-
 class UserListScreen extends StatefulWidget {
   final bool isPayable; // true for amounts to pay, false for amounts to receive
 
@@ -120,7 +119,7 @@ class _UserListScreenState extends State<UserListScreen> {
                       // Avatar
                       ClipOval(
                         child: AvatarProfile(
-                            name: data['name'],
+                            name: data['name'] ?? data['userName'] ?? 'Unknown',
                             width: 12,
                             height: 12,
                             background: data['avatarBackGround'] ??
@@ -186,46 +185,49 @@ class _UserListScreenState extends State<UserListScreen> {
                                   //here
                                   InkWell(
                                     onTap: () async {
-                                      
-                                      if(data['isPaid'])return;
+                                      if (data['isPaid']) return;
                                       String message;
                                       if (isDue) {
                                         // Handle "Settle Now" for due amounts
                                         int index = dueAmountRemainders
                                             .indexWhere((element) =>
                                                 element['_id'] == data['_id']);
-                                        if (index != -1)
-                                        {
+                                        if (index != -1) {
                                           duesPaid(context, index);
-                                          dueAmountRemainders[index]['isPaid'] = true;
-                                          dueAmountRemainders[index]['billApproved'] = true;
+                                          dueAmountRemainders[index]['isPaid'] =
+                                              true;
+                                          dueAmountRemainders[index]
+                                              ['billApproved'] = true;
                                           dueAmountRemainders.refresh();
-                                          message =SnackbarData().paymentsInit;
+                                          message = SnackbarData().paymentsInit;
                                         } else {
-                                          message = SnackbarData().paymentsError;
+                                          message =
+                                              SnackbarData().paymentsError;
                                         }
                                       } else {
                                         // Handle "Send Reminder" for lend amounts
-                                        int index = lendAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
+                                        int index = lendAmountRemainders
+                                            .indexWhere((element) =>
+                                                element['_id'] == data['_id']);
                                         if (index != -1) {
                                           lendAmountRemainders[index]
                                               ['reminderSent'] = true;
                                           lendAmountRemainders.refresh();
-                                          message = SnackbarData().remainder ;//'Reminder sent successfully!';
+                                          message = SnackbarData()
+                                              .remainder; //'Reminder sent successfully!';
                                         } else {
-                                          message = SnackbarData().remainderError; //'Error: Reminder not found.';
+                                          message = SnackbarData()
+                                              .remainderError; //'Error: Reminder not found.';
                                         }
                                       }
-
-                                     
 
                                       // Send notification
                                       sendNotificationsToDevice(
                                         data['payerId'] ?? data['receiverId'],
                                         context,
                                         isDue
-                                            ? 'Successfully paid your bill of ${data['amount'] ?? "0000"} to ${ userController.userName.value}.'
-                                            : 'You need to pay ${data['amount'] ?? "0000"} to ${ userController.userName.value}.',
+                                            ? 'Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userController.userName.value}.'
+                                            : 'You need to pay ${data['amount'] ?? "0000"} to ${userController.userName.value}.',
                                         "/remainder",
                                         "",
                                         "",
@@ -330,14 +332,16 @@ class _UserListScreenState extends State<UserListScreen> {
                                   ),
                                 ),
                               ),
-                             
                               if (isLendAmount && data['dueDate'] != null) ...[
                                 const SizedBox(height: 4),
                                 Text(
                                   () {
-                                    final dueDate = DateTime.parse(data['dueDate']);
+                                    final dueDate =
+                                        DateTime.parse(data['dueDate']);
                                     final today = DateTime.now();
-                                    final isToday = dueDate.year == today.year && dueDate.month == today.month &&
+                                    final isToday =
+                                        dueDate.year == today.year &&
+                                            dueDate.month == today.month &&
                                             dueDate.day == today.day;
                                     final isOverdue =
                                         dueDate.isBefore(today) && !isToday;
@@ -359,8 +363,6 @@ class _UserListScreenState extends State<UserListScreen> {
                                   ),
                                 ),
                               ],
-
-                        
                             ],
                           ),
                         ),
@@ -504,7 +506,7 @@ class _UserListScreenState extends State<UserListScreen> {
       );
     } catch (e) {
       Navigator.pop(context); // Dismiss loading dialog
-      snackBarCalledfail(context,SnackbarData().fetchingError);
+      snackBarCalledfail(context, SnackbarData().fetchingError);
     }
   }
 
