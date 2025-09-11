@@ -225,16 +225,14 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
         Text(
           title,
           style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.w600,
-              fontSize: 16,
-              color: AppColors.accentColor),
+              lWeight: FontWeight.w500, fontSize: 16, color: AppColors.grey),
         ),
         GestureDetector(
           onTap: onTap,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.backgroundColor,
+              color: AppColors.primaryColor,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: const Color(0xFFF3F4F6),
@@ -254,15 +252,9 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                 Text(
                   'View all',
                   style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: AppColors.primaryColor),
-                ),
-                const SizedBox(width: 4),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: AppColors.primaryColor,
-                  size: 14,
+                      lWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: AppColors.backgroundColor),
                 ),
               ],
             ),

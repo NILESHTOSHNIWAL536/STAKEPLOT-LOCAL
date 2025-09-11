@@ -563,9 +563,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         'otp': "opts",
       }),
     );
-   
+
     var responce = jsonDecode(response.body);
-   
 
     bool boolvar = responce['success'];
     if (response.statusCode == 409) {

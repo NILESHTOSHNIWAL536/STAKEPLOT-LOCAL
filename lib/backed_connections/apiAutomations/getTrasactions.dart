@@ -49,13 +49,15 @@ void getFinoraPreviousMonthData() async {
   } else {}
 }
 
-Future<List<CardData>> getAutoPayInfo() async {
-  // 1️⃣ Always load cache first
-  await CardsLocalStorage.loadCardsFromHive();
-  isAutoPayFected.value = !isAutoPayFected.value;
+Future<List<CardData>> getAutoPayInfo({bool forceApi = false}) async {
+  if (!forceApi) {
+    // 1️⃣ Load cache first (for instant UI)
+    await CardsLocalStorage.loadCardsFromHive();
+    isAutoPayFected.value = !isAutoPayFected.value;
+  }
 
-  // 2️⃣ Fetch from API in background
-  Future(() async {
+  // 2️⃣ Fetch from API (foreground if forceApi=true, else background)
+  Future<void> fetchApi() async {
     try {
       final responses = await Future.wait([
         getDataApiCall("$url/transactionauto/get-recurring-payments/false"),
@@ -74,7 +76,8 @@ Future<List<CardData>> getAutoPayInfo() async {
                 final index = entry.key;
                 final data = entry.value as Map<String, dynamic>;
                 return CardData.fromJson(
-                    {...data, 'index': freshData.length + index});
+                  {...data, 'index': freshData.length + index},
+                );
               }),
             );
           }
@@ -88,11 +91,24 @@ Future<List<CardData>> getAutoPayInfo() async {
         await CardsLocalStorage.saveCardsToHive(cardList: allAutoPayData);
         isAutoPayFected.value = !isAutoPayFected.value;
       }
-    } catch (e) {}
-  });
+    } catch (e) {
+      if (forceApi) {
+        // 3️⃣ If forced API fails → fallback to cache
+        await CardsLocalStorage.loadCardsFromHive();
+        isAutoPayFected.value = !isAutoPayFected.value;
+      }
+    }
+  }
 
-  // 3️⃣ Return cached data immediately (UI shows it instantly)
-  return allAutoPayData;
+  if (forceApi) {
+    // Call API immediately, return fresh data
+    await fetchApi();
+    return allAutoPayData;
+  } else {
+    // Load API in background, return cached data instantly
+    fetchApi();
+    return allAutoPayData;
+  }
 }
 
 // Future<List<CardData>> getAutoPayInfo() async {
@@ -109,7 +125,7 @@ Future<List<CardData>> getAutoPayInfo() async {
 //     allAutoPayData.clear();
 //     for (int i = 0; i < responses.length; i++) {
 //       final response = responses[i];
-//       if (response.statusCode == 200 || response.statusCode==201) {
+//       if (response.statusCode == 200 || response.statusCode == 201) {
 //         final jsonData = jsonDecode(response.body);
 //         if (jsonData['success'] == true) {
 //           final List<dynamic> autoPayDataInfo = jsonData['data'];
@@ -158,6 +174,7 @@ Future<bool> addRecurringPaymentForDaily(String id, bool isDaily) async {
         "$url/transactionauto/recurring-payments/$id", {'isDaily': isDaily});
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
+      await getAutoPayInfo(forceApi: true);
       return jsonData['success'] == true;
     } else {
       return false;
@@ -168,7 +185,7 @@ Future<bool> addRecurringPaymentForDaily(String id, bool isDaily) async {
 }
 
 Future<bool> updateRecurringPaymentDate(
-    String id, DateTime reminderDate) async {
+    String id, DateTime reminderDate, bool isActive) async {
   try {
     // Format the DateTime to ISO 8601 with fixed time (9:00 AM UTC)
     final formattedDate = DateTime.utc(
@@ -183,7 +200,7 @@ Future<bool> updateRecurringPaymentDate(
 
     final response = await updateDataApiCall2(
       "$url/transactionauto/recurring-payments/$id",
-      {'nextReminderAt': formattedDate},
+      {'nextReminderAt': formattedDate, 'isActive': isActive},
     );
 
     // Debug prints for response
