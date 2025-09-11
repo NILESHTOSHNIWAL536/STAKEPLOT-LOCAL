@@ -260,22 +260,22 @@ class _FinancePageState extends State<FinancePage> {
   void initState() {
     super.initState();
     selectedButton.value = 'Month';
-    
+
     _fetchData();
   }
 
-    Future<void> _fetchData() async {
+  Future<void> _fetchData() async {
     try {
       // Ensure financeBox is open
-      if (accountId.value.isEmpty)
-      {
+      if (accountId.value.isEmpty) {
         accountId.value = userController.selectedBank.value;
       }
-       getAutoMationsTransactionsCustom( getFormattedDate(), context,'Month');
+      getAutoMationsTransactionsCustom(getFormattedDate(), context, 'Month');
     } catch (e) {
       // _setEmptyState('Month', getFormattedDate(), null);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -684,7 +684,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
                   navToExpanded();
-                  
                 },
                 child: Container(
                   padding: EdgeInsets.all(4),
@@ -718,7 +717,21 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       while (labels.length < dataLength) {
         labels.add((labels.length + 1).toString().padLeft(2, '0'));
       }
-      labels = labels.sublist(0, dataLength);
+      labels = labels.sublist(0, dataLength).map((label) {
+        if (widget.selectedButton.value == 'Custom') {
+          // For Custom, keep the full label (e.g., "Aug 12")
+          return label;
+        } else {
+          // For Month, show only the day number (e.g., "12")
+          if (label.contains(' ')) {
+            return label
+                .split(' ')[1]
+                .padLeft(2, '0'); // Extract day number and pad with zero
+          }
+          return label.padLeft(2, '0'); // Ensure two-digit format
+        }
+      }).toList();
+      // labels = labels.sublist(0, dataLength);
     }
 
     List<ChartData> creditedData = List.generate(dataLength, (index) {
@@ -903,7 +916,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               yValueMapper: (ChartData data, _) => data.y,
               //color: const Color.fromARGB(255, 167, 187, 191),
               //use pollselected
-              color: AppColors.primaryColor.withOpacity(0.1),
+              color: AppColors.primaryColorOpacity,
               borderWidth: 0,
               enableTooltip: false,
               splineType: SplineType.cardinal,
@@ -947,7 +960,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               dataSource: debitedData,
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
-              color: AppColors.accentColor.withOpacity(0.1),
+              color: AppColors.accentColorOpacity,
               borderWidth: 0,
               enableTooltip: false,
               splineType: SplineType.cardinal,

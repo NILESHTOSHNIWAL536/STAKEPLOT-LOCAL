@@ -237,7 +237,8 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+        border: Border.all(color: AppColors.whiteOpacity03
+, width: 1),
       ),
       child: TextField(
         controller: emailController,
@@ -268,7 +269,8 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+        border: Border.all(color:AppColors.whiteOpacity03
+, width: 1),
       ),
       child: TextField(
         controller: passwordController,
@@ -296,7 +298,7 @@ class _LoginScreenState extends State<LoginScreen> {
           suffixIcon: IconButton(
             icon: Icon(
               _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-              color: Colors.white.withOpacity(0.7),
+              color: AppColors.whiteOpacity07,
             ),
             onPressed: () {
               setState(() {
@@ -383,7 +385,8 @@ class _LoginScreenState extends State<LoginScreen> {
         Expanded(
           child: Container(
             height: 1,
-            color: Colors.white.withOpacity(0.3),
+            color: AppColors.whiteOpacity03
+,
           ),
         ),
         Padding(
@@ -391,7 +394,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Text(
             'Or login with',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
+              color: AppColors.whiteOpacity07,
               fontSize: 14,
             ),
           ),
@@ -399,7 +402,8 @@ class _LoginScreenState extends State<LoginScreen> {
         Expanded(
           child: Container(
             height: 1,
-            color: Colors.white.withOpacity(0.3),
+            color: AppColors.whiteOpacity03
+,
           ),
         ),
       ],

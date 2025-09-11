@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 
 RxList addedUser = [].obs;
 RxList addedMembers = [].obs;
+
 class NewFriendsUi extends StatefulWidget {
   final bool showContinueButton;
   final double totalAmount;
@@ -163,7 +164,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                 //         ),
                 //       )
                 //     : const SizedBox.shrink(),
-                 commentedData(),
+                commentedData(),
                 if (widget.showContinueButton)
                   Center(
                     child: InkWell(
@@ -270,7 +271,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 1),
       child: SizedBox(
-        height: MediaQuery.of(context).size.width/1.6,
+        height: MediaQuery.of(context).size.width / 1.6,
         width: MediaQuery.of(context).size.width,
         child: userController.friendsList.isEmpty
             ? Center(
@@ -283,18 +284,16 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                 ),
               )
             : GridView.builder(
-                
                 itemCount: userController.friendsList.length,
                 itemBuilder: (context, index) {
-                  String values =
-                      userController.friendsList[index]['_id'];
+                  String values = userController.friendsList[index]['_id'];
                   return GestureDetector(
                     onTap: () {
                       setState(() {
                         if (addedUser.contains(values)) {
                           addedUser.remove(values);
-                          addedMembers.removeWhere((element) =>
-                              element['id'] == values);
+                          addedMembers.removeWhere(
+                              (element) => element['id'] == values);
                         } else if (widget.isLendMode &&
                             addedMembers.isNotEmpty) {
                           // For lend mode, replace the current selection
@@ -302,40 +301,33 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                           addedMembers.clear();
                           addedUser.add(values);
                           addedMembers.add({
-                            "name": userController
-                                .friendsList[index]['name'],
+                            "name": userController.friendsList[index]['name'],
                             "id": values,
-                            'avatar': userController
-                                .friendsList[index]['avatar'],
-                            'avatarBackGround':
-                                userController.friendsList[index]
-                                        ['avatarBackGround'] ??
-                                    defaultBackGround.value,
+                            'avatar': userController.friendsList[index]
+                                ['avatar'],
+                            'avatarBackGround': userController
+                                    .friendsList[index]['avatarBackGround'] ??
+                                defaultBackGround.value,
                             "balance": 200,
                           });
                         } else {
                           addedUser.add(values);
                           addedMembers.add({
-                            "name": userController
-                                .friendsList[index]['name'],
+                            "name": userController.friendsList[index]['name'],
                             "id": values,
-                            'avatar': userController
-                                .friendsList[index]['avatar'],
-                            'avatarBackGround':
-                                userController.friendsList[index]
-                                        ['avatarBackGround'] ??
-                                    defaultBackGround.value,
+                            'avatar': userController.friendsList[index]
+                                ['avatar'],
+                            'avatarBackGround': userController
+                                    .friendsList[index]['avatarBackGround'] ??
+                                defaultBackGround.value,
                             "balance": 200,
                           });
                         }
                       });
                     },
                     child: Container(
-                     
                       margin: EdgeInsets.all(2),
-                     
-                          decoration: BoxDecoration(
-                            
+                      decoration: BoxDecoration(
                         border: addedUser.contains(values)
                             ? Border.all(
                                 color: AppColors.buttonBorder,
@@ -345,46 +337,39 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                 color: Colors.transparent,
                                 width: 0.0,
                               ),
-                        borderRadius: BorderRadius.circular(8.0), // Optional: for rounded corners
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Optional: for rounded corners
                       ),
                       padding: const EdgeInsets.all(4.0),
-                     
-                      
-                            child: Column(
-                              children: [
-                                AvatarProfile(
-                                    name: userController
-                                        .friendsList[index]['name'],
-                                    width: 12,
-                                    height: 12,
-                                    background: userController
-                                                .friendsList[index]
-                                            ['avatarBackGround'] ??
-                                        defaultBackGround.value),
-                                         Text(
-                    userController.friendsList[index]['name'],
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: AppColors.bg1,
-                     
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                              ],
+                      child: Column(
+                        children: [
+                          AvatarProfile(
+                              name: userController.friendsList[index]['name'],
+                              width: 12,
+                              height: 12,
+                              background: userController.friendsList[index]
+                                      ['avatarBackGround'] ??
+                                  defaultBackGround.value),
+                          Text(
+                            userController.friendsList[index]['name'],
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: AppColors.bg1,
                             ),
-                          
-                          
-                      
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
-               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4, // Number of columns
-            crossAxisSpacing: 0.0, // Spacing between columns
-            mainAxisSpacing: 0.0, // Spacing between rows
-          ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4, // Number of columns
+                  crossAxisSpacing: 0.0, // Spacing between columns
+                  mainAxisSpacing: 0.0, // Spacing between rows
+                ),
               ),
       ),
     );
@@ -395,7 +380,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
     return Center(
       child: Container(
         color: AppColors.backgroundColor,
-        width: MediaQuery.of(context).size.width / 1.1,
+        width: MediaQuery.sizeOf(context).width / 1.07,
+        height: MediaQuery.sizeOf(context).width * (32 / 348),
         child: TextFormField(
           keyboardType: keyboardType,
           controller: controller,
@@ -420,22 +406,17 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
             }
           },
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
             filled: true,
-            hintText: labelText,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(24),
-              borderSide:
-                  const BorderSide(color: Color.fromRGBO(249, 246, 238, 1)),
+            enabled: false,
+            hintText: "Search",
+            fillColor: AppColors.backgroundColor,
+            hintStyle: FontManager().getTextStyle(context,
+                lWeight: FontWeight.normal, fontSize: 14, color: Colors.black),
+            prefixIcon: Icon(Icons.search),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(24),
-              borderSide:
-                  const BorderSide(color: Color.fromRGBO(246, 246, 246, 1)),
-            ),
-            fillColor: AppColors.button,
-            border: InputBorder.none,
           ),
         ),
       ),

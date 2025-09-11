@@ -480,6 +480,7 @@
 //   }
 // }
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -525,7 +526,7 @@ class AllCardsScreen extends StatelessWidget {
           child: Obx(() {
             // Group non-active cards by title (case-insensitive)
             final Map<String, List<CardData>> groupedCards = {};
-            
+
             for (var card in cards) {
               if (!card.isActive) {
                 final titleLower = card.title.toLowerCase();
@@ -626,8 +627,8 @@ class AllCardsScreen extends StatelessWidget {
                                       child: Container(
                                         // color: Colors.green,
                                         child: Icon(
-                                          Icons
-                                              .list, // or Icons.expand_more / Icons.apps
+                                          CupertinoIcons
+                                              .arrow_right_circle, // or Icons.expand_more / Icons.apps
                                           color: AppColors.primaryColor,
                                           size: 26,
                                         ),
@@ -708,7 +709,12 @@ class SimilarCardsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "$title Cards",
-          style: TextStyle(fontSize: 20 * fontScale),
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w600,
+            fontSize: 18 * fontScale,
+            color: AppColors.accentColor,
+          ),
         ),
         backgroundColor: AppColors.backgroundColor,
       ),
@@ -726,6 +732,22 @@ class SimilarCardsScreen extends StatelessWidget {
 
             return Column(
               children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 16.0 * fontScale,
+                    right: 16.0 * fontScale,
+                  ),
+                  child: Text(
+                    "We’ve grouped similar payments for you.",
+                    textAlign: TextAlign.center,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 14 * fontScale,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.all(16.0 * fontScale),
                   child: Container(

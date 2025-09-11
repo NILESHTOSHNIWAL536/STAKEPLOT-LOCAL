@@ -364,6 +364,7 @@ class _CardStackScreenState extends State<CardStackScreen>
   Future<void> _fetchAutoPayData() async {
     isLoading.value = true;
     final fetchedCards = await getAutoPayInfo();
+   
     isAutoPayFected.value = !isAutoPayFected.value;
     allCards.clear();
     allCards.assignAll(fetchedCards);

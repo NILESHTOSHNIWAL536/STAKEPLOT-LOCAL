@@ -228,10 +228,8 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Transform.translate(
-                offset: Offset(
-                    0,
-                    MediaQuery.sizeOf(context).height *
-                        0.047), // 30/640 = 0.047
+                offset: Offset(0,
+                    MediaQuery.sizeOf(context).height * 0.03), // 30/640 = 0.047
                 child: Container(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,10 +283,8 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
               //
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Transform.translate(
-                offset: Offset(
-                    0,
-                    MediaQuery.sizeOf(context).height *
-                        0.125), // 80/640 = 0.125
+                offset: Offset(0,
+                    MediaQuery.sizeOf(context).height * 0.1), // 80/640 = 0.125
                 // SvgPicture.asset(
                 //     'assets/icons/financeScreen/currency.svg',
                 //     width: double.infinity,   // Full width
@@ -301,10 +297,10 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
               ),
             ),
             Transform.translate(
-              offset: Offset(0,
-                  MediaQuery.sizeOf(context).height * 0.125), // 80/640 = 0.125
+              offset: Offset(
+                  0, MediaQuery.sizeOf(context).height * 0.1), // 80/640 = 0.125
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 child: Container(
                   height: MediaQuery.sizeOf(context).height / 1.3,
                   padding: const EdgeInsets.all(16),

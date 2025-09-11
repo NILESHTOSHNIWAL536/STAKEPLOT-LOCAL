@@ -881,7 +881,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                 offset: Offset(
                     0,
                     MediaQuery.of(context).size.height *
-                        0.03), // Responsive offset based on screen height
+                        0.02), // Responsive offset based on screen height
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
@@ -1599,7 +1599,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             offset: Offset(
                 0,
                 MediaQuery.of(context).size.height *
-                    0.09), // Responsive offset based on screen height
+                    0.1), // Responsive offset based on screen height
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1678,8 +1678,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                 // Scrollable section
                 Container(
                   height: categories.length > 3
-                      ? MediaQuery.sizeOf(context).height / 2.75
-                      : MediaQuery.sizeOf(context).height / 2.2,
+                      ? MediaQuery.sizeOf(context).height / 2.85
+                      : MediaQuery.sizeOf(context).height / 2.3,
                   child: Scrollbar(
                     thumbVisibility: true, // Makes the scrollbar always visible
                     thickness:

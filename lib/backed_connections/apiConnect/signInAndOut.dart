@@ -55,7 +55,7 @@ Future<void> userVerification(TextEditingController emailController,
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
     });
-     print("resposnse $response");
+    print("resposnse $response");
     var decodedResponse = json.decode(response.body);
     print("resposnse $decodedResponse");
 
@@ -320,6 +320,7 @@ Future<void> forceLogoutUser(
       "userpassword": userpassword,
       "deviceInfo": deviceData.value,
     });
+    print("resson of force logon ${response.body}");
     if (getFlagOfResponse(response)) {
       final body = jsonDecode(response.body);
       // Notify the logged-out device (if applicable)

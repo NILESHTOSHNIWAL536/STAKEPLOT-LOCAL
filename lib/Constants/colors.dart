@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const Color primaryColor = Color(0xFF4B4D73);
+  static const Color primaryColorOpacity = Color(0x1A4B4D73)
+;
   static const Color primaryColorHeader = Color(0xFF404266);
   // static const Color primaryColor =  Color(0xFF004856);
   static const Color accentColor = Color(0xFF1E1E1E);
+  static const Color accentColorOpacity = Color(0x1A1E1E1E);
   static const Color mt = Color(0xFFF4F4F4); // for app bg
   static const Color button = Color(0xFFE6EAEB); // for buttons bg and using for
   static const Color bg1 = Color(0xFF000000);
@@ -54,4 +57,10 @@ class AppColors {
   static const Color amtCal = Color(0xFF8586A6);
   static const Color budgetSearch = Color(0xFFF9FAFB);
   static const Color white = Colors.white;
+  static const Color whiteOpacity07 = Color.fromARGB(179, 255, 255, 255); //0.7
+  static const Color whiteOpacity03 = Color.fromARGB(77, 255, 255, 255); //0.3
+  static const Color whiteOpacity085 = Color(0xD9FFFFFF); 
+  static const Color whiteOpacity015 = Color(0x26FFFFFF); 
+  static const Color whiteOpacity092 = Color(0xEBFFFFFF); 
+  static const Color whiteOpacity08 = Color(0xCCFFFFFF); 
 }
