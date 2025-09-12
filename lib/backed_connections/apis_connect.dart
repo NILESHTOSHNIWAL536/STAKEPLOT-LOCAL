@@ -222,7 +222,6 @@ RxBool showDateFilter = false.obs;
 void toggleAmountFilter() => showAmountFilter.value = !showAmountFilter.value;
 void toggleDateFilter() {
   showDateFilter.value = !showDateFilter.value;
-  
 }
 
 RxDouble originalAmount = 0.0.obs;

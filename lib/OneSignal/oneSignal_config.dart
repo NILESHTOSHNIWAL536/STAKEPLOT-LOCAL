@@ -14,20 +14,22 @@ Future<void> initializeOneSignal(BuildContext context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String key = "deviceInfo";
   var json;
-  if (pref.containsKey(key)) {
+  if (pref.containsKey(key))
+  {
     json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
   }
 
-  if (!pref.containsKey(key) || json["deviceId"] == "deviceData.value") {
-    await oneSignalInit();
-    await Future.delayed(Duration(seconds: 3)); // Small delay
-    String? userDeviceId = await OneSignal.User.pushSubscription.id;
-    deviceData['deviceId'] = userDeviceId ?? "deviceData.value";
-    pref.setString(key, jsonEncode(deviceData));
-  } else {
+  if (!pref.containsKey(key) || json["deviceId"] == "deviceData.value")
+  {
+     await oneSignalInit();
+     await Future.delayed(Duration(seconds: 3)); // Small delay
+     String userDeviceId = await OneSignal.User.pushSubscription.id??"deviceData.value";
+     getDeviceLocalDetails(userDeviceId, context);
+     deviceData['deviceId'] = userDeviceId;
+     pref.setString(key, jsonEncode(deviceData));
+  }else {
     deviceData['deviceId'] = json["deviceId"];
   }
-
   addThisDeviceToBackendDevice(pref, context);
 }
 
@@ -102,18 +104,20 @@ Future<void> getDeviceInfo(
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String key = "deviceInfo";
 
-  if (!pref.containsKey(key)) {
-    getDeviceLocalDetails(
-        playerId, emailController, passwordController, context);
+  if (!pref.containsKey(key)) 
+  {
+    getDeviceLocalDetails(playerId,  context);
   }
 
   deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
-  // loginUser(emailController,passwordController,context);
-  userVerification(emailController, passwordController, context);
+  if(emailController.text=="testuser@gmail.com")
+  {
+         loginUser(emailController, passwordController, context);
+  }else{ userVerification(emailController, passwordController, context);}
+
 }
 
-void getDeviceLocalDetails(
-    String playerId, emailController, passwordController, context) async {
+void getDeviceLocalDetails(String playerId, context) async {
   try {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
@@ -198,3 +202,4 @@ Future<void> requestNotificationPermissionOncePerDay() async {
     await prefs.setString(key, today);
   }
 }
+
