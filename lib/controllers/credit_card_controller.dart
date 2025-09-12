@@ -53,6 +53,7 @@ Future<void> LinkBankData(context) async {
       var data = jsonDecode(response.body);
       loadingBankdetails.value = true;
       selectedBankId.value="";
+      
     } 
   } catch (e) {
     print(e);

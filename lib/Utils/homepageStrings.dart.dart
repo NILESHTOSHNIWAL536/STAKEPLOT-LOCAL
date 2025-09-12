@@ -140,6 +140,7 @@ class HomepageStringsDart {
   String messageHint = "e.g., Lunch at Cafe";
   String connectBankButton = "Connect Bank Account";
   String madeWithLove = "Made in India with ❤️";
+  String creditcardSigninData = "We only fetch your bank credit card emails, nothing else. Your all other conversations stay completely private. Signing in just helps us pull those credit-related mails and neatly organize them here, so you can track your spends easily. Plus, we store only your credit card email data in encrypted form for security , and we don't save any other data.";
   Future<bool> fetchConstants() async {
     try {
       final response = await getDataApiCall("$url/constant/homepage");
@@ -147,7 +148,7 @@ class HomepageStringsDart {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};
-
+        creditcardSigninData = data['creditcardSigninData'] ?? creditcardSigninData;
         madeWithLove = data['madeWithLove'] ?? madeWithLove;
         fetchingInProgress = data['fetchingInProgress'] ?? fetchingInProgress;
         nextFetchLabel = data['nextFetchLabel'] ?? nextFetchLabel;

@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 
 import '../Constants/app_styles.dart';
+import '../Utils/homepageStrings.dart.dart';
 import '../animated/booleanFlag.dart';
 import '../avatarProfile.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
@@ -27,8 +28,12 @@ class SignInScreen extends StatelessWidget {
           elevation: 0,
           backgroundColor: Colors.white,
           leading: leadIcon(context),
-          title: textStyle(context: context,text: "Sign in",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 22),
-          
+          title: textStyle(
+              context: context,
+              text: "Sign in",
+              c: AppColors.primaryColor,
+              fontWeight: FontWeight.bold,
+              fontsize: 22),
           centerTitle: false,
         ),
       ),
@@ -37,27 +42,26 @@ class SignInScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           
             CustomStepper(activeStep: 1),
             Center(
               child: SizedBox(
                 width: w * .95,
                 child: OutlinedButton.icon(
-                  onPressed: ()async {
-                    
-                       if (googleSignInBool.value) return; // Prevent multiple clicks
-                        googleSignInBool.value = true; // Set loading state
-                        try {
-                          final userdata = await AuthService().signInWithGoogle(context,flag:false);
+                  onPressed: () async {
+                    if (googleSignInBool.value)
+                      return; // Prevent multiple clicks
+                    googleSignInBool.value = true; // Set loading state
+                    try {
+                      final userdata = await AuthService()
+                          .signInWithGoogle(context, flag: false);
 
-                          if (userdata != null)
-                          {
-                              pushnameToRoute(context,GettingDataScreen());
-                          }
-                        } finally {
-                          googleSignInBool.value = false; // Reset loading state
-                        }
-                       pushnameToRoute(context,GettingDataScreen());
+                      if (userdata != null) {
+                        pushnameToRoute(context, GettingDataScreen());
+                      }
+                    } finally {
+                      googleSignInBool.value = false; // Reset loading state
+                    }
+                    pushnameToRoute(context, GettingDataScreen());
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Color(0xFF37344F), width: 1),
@@ -68,11 +72,16 @@ class SignInScreen extends StatelessWidget {
                   ),
                   // icon:  AvatarProfileImage(url: svgIconPath.google2, width: 20, height: 20),
                   icon: AvatarProfileImage(
-                  url: Sign.googleIcon,
-                      width: 40,
-                      height: 30,
-                    ),
-                  label: textStyle(context: context,text: "Sign in with Google",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 15),
+                    url: Sign.googleIcon,
+                    width: 40,
+                    height: 30,
+                  ),
+                  label: textStyle(
+                      context: context,
+                      text: "Sign in with Google",
+                      c: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontsize: 15),
                   //  Text(
                   //   "Sign in with goggle",
                   //   style: TextStyle(
@@ -84,17 +93,36 @@ class SignInScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 25),
-          
-           textStyle(context: context,text: "Is it safe?",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 15),
+
+            textStyle(
+                context: context,
+                text: "Is it safe?",
+                c: AppColors.primaryColor,
+                fontWeight: FontWeight.bold,
+                fontsize: 15),
             SizedBox(height: 9),
-               AvatarProfileImage(url: svgIconPath.loading_google2, width: 10, height: 10),
+            textStyleImage(
+                context: context,
+                text: HomepageStringsDart().creditcardSigninData,
+                c: AppColors.grey,
+                fontWeight: FontWeight.w400,
+                fontsize: 14,
+                iswrap: true),
+
+            //  AvatarProfileImage(url: svgIconPath.loading_google2, width: 10, height: 10),
             SizedBox(height: 13),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(Icons.beenhere_rounded, color: Color(0xFF37344F), size: 19),
+                Icon(Icons.beenhere_rounded,
+                    color: Color(0xFF37344F), size: 19),
                 SizedBox(width: 8),
-                textStyle(context: context,text: "Your data is safe with us",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 17),
+                textStyle(
+                    context: context,
+                    text: "Your data is safe with us",
+                    c: AppColors.primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontsize: 17),
               ],
             ),
           ],
