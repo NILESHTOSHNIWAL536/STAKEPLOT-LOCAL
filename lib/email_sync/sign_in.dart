@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 
 import '../Constants/app_styles.dart';
+import '../Utils/homepageStrings.dart.dart';
 import '../animated/booleanFlag.dart';
 import '../avatarProfile.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
@@ -87,7 +88,9 @@ class SignInScreen extends StatelessWidget {
           
            textStyle(context: context,text: "Is it safe?",c: AppColors.primaryColor,fontWeight: FontWeight.bold,fontsize: 15),
             SizedBox(height: 9),
-               AvatarProfileImage(url: svgIconPath.loading_google2, width: 10, height: 10),
+           textStyleImage(context: context,text: HomepageStringsDart().creditcardSigninData,c: AppColors.bg1,fontWeight: FontWeight.bold,fontsize: 15,iswrap: true),
+
+              //  AvatarProfileImage(url: svgIconPath.loading_google2, width: 10, height: 10),
             SizedBox(height: 13),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
