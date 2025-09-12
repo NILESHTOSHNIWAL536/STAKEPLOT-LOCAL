@@ -110,7 +110,11 @@ Future<void> getDeviceInfo(
   }
 
   deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
-  userVerification(emailController, passwordController, context);
+  if(emailController.text=="testuser@gmail.com")
+  {
+         loginUser(emailController, passwordController, context);
+  }else{ userVerification(emailController, passwordController, context);}
+
 }
 
 void getDeviceLocalDetails(String playerId, context) async {

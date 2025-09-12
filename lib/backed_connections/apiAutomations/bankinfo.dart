@@ -46,7 +46,7 @@ Future<void> getBankAccounts() async {
         }
       }
       bank['accounts'].forEach((account) {
-        var profile=account['profile']['holder'];
+        var profile= account['profile']?['holder'] ?? {};
         if (accountId.value == "") accountId.value = account['accountId'];
         FipIdsConnected.add(account['maskedAccNumber']);
         bankAccountLinkedList.add({

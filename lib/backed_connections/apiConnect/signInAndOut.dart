@@ -50,8 +50,7 @@ Future<void> userVerification(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
   try {
-    var response =
-        await postDataApiCallwithOutSharedPref('${url}/user/verify', {
+    var response = await postDataApiCallwithOutSharedPref('${url}/user/verify', {
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
     });
