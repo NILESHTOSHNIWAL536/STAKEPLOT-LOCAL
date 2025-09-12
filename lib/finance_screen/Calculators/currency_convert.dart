@@ -1,3 +1,743 @@
+// import 'dart:convert';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+// import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+// import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+// import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
+// import 'package:flutter_application_code_stakeplot/loader.dart';
+// import 'package:flutter_svg/svg.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:shared_preferences/shared_preferences.dart';
+
+// class CurrencyConverterScreen extends StatefulWidget {
+//   const CurrencyConverterScreen({super.key});
+
+//   @override
+//   State<CurrencyConverterScreen> createState() =>
+//       _CurrencyConverterScreenState();
+// }
+
+// class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
+//   Map<String, String> currencies = {};
+//   String? baseCurrency;
+//   String? targetCurrency;
+//   final TextEditingController amountController = TextEditingController();
+//   final TextEditingController baseSearchController = TextEditingController();
+//   final TextEditingController targetSearchController = TextEditingController();
+//   String result = "";
+//   bool isLoading = false;
+//   bool isFetchingCurrencies = true;
+//   List<String> recentConversions = [];
+//   List<MapEntry<String, String>> filteredBaseCurrencies = [];
+//   List<MapEntry<String, String>> filteredTargetCurrencies = [];
+//   bool isBaseSearchActive = false;
+//   bool isTargetSearchActive = false;
+
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     fetchCurrencies();
+//     loadPreferences();
+//     baseSearchController.addListener(_filterBaseCurrencies);
+//     targetSearchController.addListener(_filterTargetCurrencies);
+//   }
+
+//   Future<void> loadPreferences() async {
+//     final prefs = await SharedPreferences.getInstance();
+//     setState(() {
+//       recentConversions = prefs.getStringList('recentConversions') ?? [];
+//       baseCurrency = prefs.getString('baseCurrency');
+//       targetCurrency = prefs.getString('targetCurrency');
+//       baseSearchController.text = "";
+//       targetSearchController.text = "";
+//       // if (baseCurrency != null) {
+//       //   baseSearchController.text =
+//       //       "${baseCurrency!.toUpperCase()} - ${currencies[baseCurrency] ?? ''}";
+//       // }
+//       // if (targetCurrency != null) {
+//       //   targetSearchController.text =
+//       //       "${targetCurrency!.toUpperCase()} - ${currencies[targetCurrency] ?? ''}";
+//       // }
+//     });
+//   }
+
+//   Future<void> savePreferences() async {
+//     final prefs = await SharedPreferences.getInstance();
+//     await prefs.setStringList('recentConversions', recentConversions);
+//     if (baseCurrency != null)
+//       await prefs.setString('baseCurrency', baseCurrency!);
+//     if (targetCurrency != null)
+//       await prefs.setString('targetCurrency', targetCurrency!);
+//   }
+
+//   Future<void> clearPreferences() async {
+//     final prefs = await SharedPreferences.getInstance();
+//     await prefs.remove('baseCurrency');
+//     await prefs.remove('targetCurrency');
+//   }
+
+//   Future<void> fetchCurrencies() async {
+//     try {
+//       final response = await http.get(Uri.parse(
+//           "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json"));
+//       if (response.statusCode == 200) {
+//         final data = jsonDecode(response.body) as Map<String, dynamic>;
+//         setState(() {
+//           currencies = data
+//               .map((key, value) => MapEntry(key.toString(), value.toString()));
+//           filteredBaseCurrencies = currencies.entries.toList();
+//           filteredTargetCurrencies = currencies.entries.toList();
+//           isFetchingCurrencies = false;
+//           // Update search fields if currencies were previously selected
+//           if (baseCurrency != null) {
+//             baseSearchController.text =
+//                 "${baseCurrency!.toUpperCase()} - ${currencies[baseCurrency] ?? ''}";
+//           }
+//           if (targetCurrency != null) {
+//             targetSearchController.text =
+//                 "${targetCurrency!.toUpperCase()} - ${currencies[targetCurrency] ?? ''}";
+//           }
+//         });
+//       } else {
+//         _showSnackBar("Failed to load currencies.");
+//         setState(() => isFetchingCurrencies = false);
+//       }
+//     } catch (e) {
+//       _showSnackBar("Error fetching currencies: $e");
+//       setState(() => isFetchingCurrencies = false);
+//     }
+//   }
+
+//   void _filterBaseCurrencies() {
+//     final query = baseSearchController.text.toLowerCase();
+//     setState(() {
+//       isBaseSearchActive = query.isNotEmpty;
+//       filteredBaseCurrencies = currencies.entries
+//           .where((entry) =>
+//               entry.key.toLowerCase().contains(query) ||
+//               entry.value.toLowerCase().contains(query))
+//           .toList();
+//     });
+//   }
+
+//   void _filterTargetCurrencies() {
+//     final query = targetSearchController.text.toLowerCase();
+//     setState(() {
+//       isTargetSearchActive = query.isNotEmpty;
+//       filteredTargetCurrencies = currencies.entries
+//           .where((entry) =>
+//               entry.key.toLowerCase().contains(query) ||
+//               entry.value.toLowerCase().contains(query))
+//           .toList();
+//     });
+//   }
+
+//   Future<void> convertCurrency() async {
+//     if (baseCurrency == null ||
+//         targetCurrency == null ||
+//         amountController.text.trim().isEmpty) {
+//       _showSnackBar("Please select currencies and enter an amount.");
+//       return;
+//     }
+
+//     final amount = double.tryParse(amountController.text.trim());
+//     if (amount == null) {
+//       _showSnackBar("Please enter a valid number.");
+//       return;
+//     }
+
+//     setState(() {
+//       isLoading = true;
+//       result = "";
+//     });
+
+//     try {
+//       final url =
+//           "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/$baseCurrency.json";
+//       final response = await http.get(Uri.parse(url));
+
+//       if (response.statusCode == 200) {
+//         final data = jsonDecode(response.body);
+//         if (!data.containsKey(baseCurrency) ||
+//             !data[baseCurrency].containsKey(targetCurrency)) {
+//           _showSnackBar("Conversion failed: Invalid currency.");
+//           return;
+//         }
+
+//         final rate = data[baseCurrency][targetCurrency];
+//         final converted = amount * rate;
+
+//         setState(() {
+//           result =
+//               "$amount ${baseCurrency!.toUpperCase()} = ${converted.toStringAsFixed(2)} ${targetCurrency!.toUpperCase()}";
+//           recentConversions.insert(0,
+//               "$amount ${baseCurrency!.toUpperCase()} → ${converted.toStringAsFixed(2)} ${targetCurrency!.toUpperCase()} ");
+//           if (recentConversions.length > 3) recentConversions.removeLast();
+//           savePreferences();
+//         });
+//       } else {
+//         _showSnackBar("Error fetching conversion.");
+//       }
+//     } catch (e) {
+//       _showSnackBar("Error: $e");
+//     } finally {
+//       setState(() => isLoading = false);
+//     }
+//   }
+
+//   void swapCurrencies() {
+//     setState(() {
+//       // Store both values before swapping
+//       final tempBase = baseCurrency;
+//       final tempTarget = targetCurrency;
+
+//       // Swap the currency codes
+//       baseCurrency = tempTarget;
+//       targetCurrency = tempBase;
+
+//       // Update the search field texts using the temporary values
+//       baseSearchController.text = tempTarget != null
+//           ? "${tempTarget.toUpperCase()} - ${currencies[tempTarget] ?? ''}"
+//           : "";
+//       targetSearchController.text = tempBase != null
+//           ? "${tempBase.toUpperCase()} - ${currencies[tempBase] ?? ''}"
+//           : "";
+
+//       // Hide suggestion lists
+//       isBaseSearchActive = false;
+//       isTargetSearchActive = false;
+
+//       // Save swapped currencies to SharedPreferences
+//       savePreferences();
+//     });
+//   }
+
+//   void _showSnackBar(String message) {
+//     snackBarCalledfail(context, message);
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: AppColors.primaryColor,
+//       body: SafeArea(
+//         child: Stack(
+//           children: [
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 12),
+//               child: Transform.translate(
+//                 offset: Offset(0,
+//                     MediaQuery.sizeOf(context).height * 0.03), // 30/640 = 0.047
+//                 child: Container(
+//                   child: Row(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       Container(
+//                         width: MediaQuery.sizeOf(context).width / 1.6,
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                           crossAxisAlignment: CrossAxisAlignment.center,
+//                           children: [
+//                             IconButton(
+//                               icon: Icon(
+//                                 Icons.arrow_back,
+//                                 color: AppColors.backgroundColor,
+//                               ),
+//                               onPressed: () {
+//                                 Navigator.pop(context);
+//                               },
+//                             ),
+//                             Text(
+//                               "Currency Converter",
+//                               style: FontManager().getTextStyle(
+//                                 context,
+//                                 lWeight: FontWeight.w600,
+//                                 fontSize: 18,
+//                                 color: AppColors.backgroundColor,
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   height: 150,
+//                   decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(20),
+//                     gradient: LinearGradient(
+//                       begin: Alignment.topCenter,
+//                       end: Alignment.bottomCenter,
+//                       colors: [
+//                         const Color(0xE6061F35),
+//                         const Color(0x00061F35),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             Padding(
+//               //
+//               padding: const EdgeInsets.symmetric(horizontal: 10),
+//               child: Transform.translate(
+//                 offset: Offset(0,
+//                     MediaQuery.sizeOf(context).height * 0.1), // 80/640 = 0.125
+//                 // SvgPicture.asset(
+//                 //     'assets/icons/financeScreen/currency.svg',
+//                 //     width: double.infinity,   // Full width
+//                 //     height: double.infinity,  // Full height
+//                 //     //  fit: BoxFit.cover,        // Make it cover the whole screen
+//                 //   ),
+//                 child: CustomPaint(
+//                   painter: CustomShapePainter(),
+//                 ),
+//               ),
+//             ),
+//             Transform.translate(
+//               offset: Offset(
+//                   0, MediaQuery.sizeOf(context).height * 0.1), // 80/640 = 0.125
+//               child: Padding(
+//                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+//                 child: Container(
+//                   height: MediaQuery.sizeOf(context).height / 1.3,
+//                   padding: const EdgeInsets.all(16),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       // Base Currency Picker
+//                       Text(
+//                         "Base Currency",
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.normal,
+//                           fontSize: 14,
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 12),
+//                       // Search Field for Base Currency
+//                       TextField(
+//                         controller: baseSearchController,
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.w600,
+//                           fontSize: 14,
+//                           color: AppColors
+//                               .backgroundColor, // Set text color to white
+//                         ),
+//                         decoration: InputDecoration(
+//                           isDense: true,
+//                           filled: true,
+//                           fillColor: Color(0x3AFFFFFF),
+//                           border: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(6),
+//                             borderSide: const BorderSide(
+//                               color: Colors.white,
+//                               width: 1,
+//                             ),
+//                           ),
+//                           enabledBorder: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(6),
+//                             borderSide: const BorderSide(
+//                               color: Colors.white,
+//                               width: 1,
+//                             ),
+//                           ),
+//                           focusedBorder: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(6),
+//                             borderSide: const BorderSide(
+//                               color: Colors.white,
+//                               width: 1,
+//                             ),
+//                           ),
+//                           hintText: "Search currency...",
+//                           hintStyle: FontManager().getTextStyle(
+//                             context,
+//                             lWeight: FontWeight.normal,
+//                             fontSize: 14,
+//                             color: AppColors.backgroundColor,
+//                           ),
+//                           contentPadding: const EdgeInsets.symmetric(
+//                               vertical: 12, horizontal: 16),
+//                         ),
+//                         onTap: () {
+//                           setState(() {
+//                             isBaseSearchActive = true;
+//                             _filterBaseCurrencies();
+//                           });
+//                         },
+//                       ),
+//                       // Suggestions for Base Currency
+//                       if (isBaseSearchActive &&
+//                           filteredBaseCurrencies.isNotEmpty)
+//                         Container(
+//                           constraints: BoxConstraints(
+//                             maxHeight: 150,
+//                           ),
+//                           decoration: BoxDecoration(
+//                             color: Colors.white,
+//                             borderRadius: BorderRadius.circular(6),
+//                             border: Border.all(color: Colors.white),
+//                           ),
+//                           child: ListView.builder(
+//                             shrinkWrap: true,
+//                             itemCount: filteredBaseCurrencies.length,
+//                             itemBuilder: (context, index) {
+//                               final entry = filteredBaseCurrencies[index];
+//                               return ListTile(
+//                                 title: Text(
+//                                   "${entry.key.toUpperCase()} - ${entry.value}",
+//                                   style: FontManager().getTextStyle(
+//                                     context,
+//                                     lWeight: FontWeight.normal,
+//                                     fontSize: 14,
+//                                     color: AppColors.primaryColor,
+//                                   ),
+//                                   overflow: TextOverflow.ellipsis,
+//                                 ),
+//                                 onTap: () {
+//                                   setState(() {
+//                                     baseCurrency = entry.key;
+//                                     baseSearchController.text =
+//                                         "${entry.key.toUpperCase()} - ${entry.value}";
+//                                     isBaseSearchActive = false;
+//                                     savePreferences();
+//                                   });
+//                                 },
+//                               );
+//                             },
+//                           ),
+//                         ),
+//                       const SizedBox(height: 12),
+//                       // Swap Button
+//                       Center(
+//                         child: GestureDetector(
+//                           onTap: swapCurrencies,
+//                           child: Container(
+//                             padding: const EdgeInsets.all(10),
+//                             child: const Icon(
+//                               Icons.swap_vert,
+//                               color: Colors.white,
+//                               size: 24,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                       const SizedBox(height: 12),
+//                       // Target Currency Picker
+//                       Text(
+//                         "Converted Currency",
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.normal,
+//                           fontSize: 14,
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 12),
+//                       // Search Field for Target Currency
+//                       TextField(
+//                         controller: targetSearchController,
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.w600,
+//                           fontSize: 14,
+//                           color: AppColors
+//                               .backgroundColor, // Set text color to white
+//                         ),
+//                         decoration: InputDecoration(
+//                           isDense: true,
+//                           filled: true,
+//                           fillColor: Color.fromRGBO(255, 255, 255, 0.23),
+//                           border: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(6),
+//                             borderSide: const BorderSide(
+//                               color: Colors.white,
+//                               width: 1,
+//                             ),
+//                           ),
+//                           enabledBorder: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(6),
+//                             borderSide: const BorderSide(
+//                               color: Colors.white,
+//                               width: 1,
+//                             ),
+//                           ),
+//                           focusedBorder: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(6),
+//                             borderSide: const BorderSide(
+//                               color: Colors.white,
+//                               width: 1,
+//                             ),
+//                           ),
+//                           hintText: "Search currency",
+//                           hintStyle: FontManager().getTextStyle(
+//                             context,
+//                             lWeight: FontWeight.normal,
+//                             fontSize: 14,
+//                             color: AppColors.backgroundColor,
+//                           ),
+//                           contentPadding: const EdgeInsets.symmetric(
+//                               vertical: 12, horizontal: 16),
+//                         ),
+//                         onTap: () {
+//                           setState(() {
+//                             isTargetSearchActive = true;
+//                             _filterTargetCurrencies();
+//                           });
+//                         },
+//                       ),
+//                       // Suggestions for Target Currency
+//                       if (isTargetSearchActive &&
+//                           filteredTargetCurrencies.isNotEmpty)
+//                         Container(
+//                           constraints: BoxConstraints(
+//                             maxHeight: 150,
+//                           ),
+//                           decoration: BoxDecoration(
+//                             color: Colors.white,
+//                             borderRadius: BorderRadius.circular(6),
+//                             border: Border.all(color: Colors.white),
+//                           ),
+//                           child: ListView.builder(
+//                             shrinkWrap: true,
+//                             itemCount: filteredTargetCurrencies.length,
+//                             itemBuilder: (context, index) {
+//                               final entry = filteredTargetCurrencies[index];
+//                               return ListTile(
+//                                 title: Text(
+//                                   "${entry.key.toUpperCase()} - ${entry.value}",
+//                                   style: FontManager().getTextStyle(
+//                                     context,
+//                                     lWeight: FontWeight.normal,
+//                                     fontSize: 14,
+//                                     color: AppColors.primaryColor,
+//                                   ),
+//                                   overflow: TextOverflow.ellipsis,
+//                                 ),
+//                                 onTap: () {
+//                                   setState(() {
+//                                     targetCurrency = entry.key;
+//                                     targetSearchController.text =
+//                                         "${entry.key.toUpperCase()} - ${entry.value}";
+//                                     isTargetSearchActive = false;
+//                                     savePreferences();
+//                                   });
+//                                 },
+//                               );
+//                             },
+//                           ),
+//                         ),
+//                       const SizedBox(height: 16),
+//                       // Amount Field
+//                       Text(
+//                         "Amount",
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.normal,
+//                           fontSize: 14,
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 12),
+//                       TextField(
+//                         controller: amountController,
+//                         keyboardType: TextInputType.number,
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.normal,
+//                           fontSize: 14,
+//                           color: AppColors
+//                               .backgroundColor, // Set text color to white
+//                         ),
+//                         textInputAction: TextInputAction.done,
+//                         decoration: InputDecoration(
+//                           filled: true,
+//                           fillColor: Color.fromRGBO(255, 255, 255, 0.23),
+//                           border: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(6),
+//                             borderSide: const BorderSide(
+//                               color: Colors.white,
+//                               width: 1,
+//                             ),
+//                           ),
+//                           enabledBorder: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(6),
+//                             borderSide: const BorderSide(
+//                               color: Colors.white,
+//                               width: 1,
+//                             ),
+//                           ),
+//                           hintText: "Enter amount",
+//                           hintStyle: FontManager().getTextStyle(
+//                             context,
+//                             lWeight: FontWeight.w500,
+//                             fontSize: 14,
+//                             color: AppColors.backgroundColor,
+//                           ),
+//                           focusedBorder: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(6),
+//                             borderSide: const BorderSide(
+//                               color: Colors.white,
+//                               width: 1,
+//                             ),
+//                           ),
+//                           contentPadding: const EdgeInsets.symmetric(
+//                               vertical: 12, horizontal: 16),
+//                           errorText: amountController.text.isNotEmpty &&
+//                                   double.tryParse(
+//                                           amountController.text.trim()) ==
+//                                       null
+//                               ? "Invalid number"
+//                               : null,
+//                         ),
+//                         onChanged: (value) => setState(() {}),
+//                       ),
+//                       const SizedBox(height: 30),
+//                       // Result Display
+//                       if (result.isNotEmpty)
+//                         Center(
+//                           child: Container(
+//                             width: MediaQuery.sizeOf(context).width / 1.1,
+//                             padding: const EdgeInsets.symmetric(
+//                                 vertical: 12, horizontal: 8),
+//                             decoration: BoxDecoration(
+//                               color: const Color.fromRGBO(255, 255, 255, 0.231),
+//                               border: Border.all(
+//                                 color: Colors.white,
+//                                 width: 1,
+//                               ),
+//                               borderRadius: BorderRadius.circular(6),
+//                             ),
+//                             child: Text(
+//                               result,
+//                               style: FontManager().getTextStyle(
+//                                 context,
+//                                 lWeight: FontWeight.w500,
+//                                 fontSize: 14,
+//                                 color: AppColors.backgroundColor,
+//                               ),
+//                               textAlign: TextAlign.center,
+//                             ),
+//                           ),
+//                         ),
+//                       const SizedBox(height: 24),
+//                       // Convert Button
+//                       Center(
+//                         child: ElevatedButton(
+//                           onPressed: isLoading ||
+//                                   baseCurrency == null ||
+//                                   targetCurrency == null ||
+//                                   amountController.text.trim().isEmpty ||
+//                                   double.tryParse(
+//                                           amountController.text.trim()) ==
+//                                       null
+//                               ? null
+//                               : convertCurrency,
+//                           style: ElevatedButton.styleFrom(
+//                             padding: const EdgeInsets.symmetric(
+//                                 vertical: 14, horizontal: 12),
+//                             backgroundColor: AppColors.backgroundColor,
+//                             foregroundColor: AppColors.primaryColor,
+//                             shape: RoundedRectangleBorder(
+//                               borderRadius: BorderRadius.circular(8),
+//                             ),
+//                             elevation: 0,
+//                           ),
+//                           child: isLoading
+//                               ? Spinner()
+//                               : Text(
+//                                   "Convert",
+//                                   style: FontManager().getTextStyle(
+//                                     context,
+//                                     lWeight: FontWeight.w600,
+//                                     fontSize: 14,
+//                                     color: AppColors.primaryColor,
+//                                   ),
+//                                 ),
+//                         ),
+//                       ),
+//                       const SizedBox(height: 24),
+//                       // Recent Conversions
+//                       if (recentConversions.isNotEmpty)
+//                         Container(
+//                           decoration: BoxDecoration(
+//                             borderRadius: BorderRadius.circular(16),
+//                           ),
+//                           child: Column(
+//                             crossAxisAlignment: CrossAxisAlignment.start,
+//                             children: [
+//                               Text(
+//                                 "Recent Conversions",
+//                                 style: FontManager().getTextStyle(
+//                                   context,
+//                                   lWeight: FontWeight.normal,
+//                                   fontSize: 16,
+//                                   color: AppColors.backgroundColor,
+//                                 ),
+//                               ),
+//                               const SizedBox(height: 8),
+//                               Column(
+//                                 crossAxisAlignment: CrossAxisAlignment.center,
+//                                 mainAxisAlignment: MainAxisAlignment.center,
+//                                 children: recentConversions
+//                                     .map((conversion) => Center(
+//                                           child: Container(
+//                                             width: MediaQuery.sizeOf(context)
+//                                                     .width /
+//                                                 1.4,
+//                                             margin: const EdgeInsets.only(
+//                                                 bottom: 6),
+//                                             padding: const EdgeInsets.symmetric(
+//                                                 vertical: 8, horizontal: 8),
+//                                             decoration: BoxDecoration(
+//                                               color: Color.fromRGBO(
+//                                                   255, 255, 255, 0.23),
+//                                               borderRadius:
+//                                                   BorderRadius.circular(6),
+//                                             ),
+//                                             child: Center(
+//                                               child: Text(
+//                                                 conversion,
+//                                                 style:
+//                                                     FontManager().getTextStyle(
+//                                                   context,
+//                                                   lWeight: FontWeight.normal,
+//                                                   fontSize: 14,
+//                                                   color:
+//                                                       AppColors.backgroundColor,
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ),
+//                                         ))
+//                                     .toList(),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   // @override
+//   // void dispose() {
+//   //   baseSearchController.dispose();
+//   //   targetSearchController.dispose();
+//   //   amountController.dispose();
+//   //   super.dispose();
+//   // }
+// }
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
@@ -34,10 +774,14 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
   bool isBaseSearchActive = false;
   bool isTargetSearchActive = false;
 
+  // Track last conversion inputs
+  String? lastBaseCurrency;
+  String? lastTargetCurrency;
+  String? lastAmount;
+
   @override
   void initState() {
     super.initState();
-
     fetchCurrencies();
     loadPreferences();
     baseSearchController.addListener(_filterBaseCurrencies);
@@ -52,14 +796,6 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
       targetCurrency = prefs.getString('targetCurrency');
       baseSearchController.text = "";
       targetSearchController.text = "";
-      // if (baseCurrency != null) {
-      //   baseSearchController.text =
-      //       "${baseCurrency!.toUpperCase()} - ${currencies[baseCurrency] ?? ''}";
-      // }
-      // if (targetCurrency != null) {
-      //   targetSearchController.text =
-      //       "${targetCurrency!.toUpperCase()} - ${currencies[targetCurrency] ?? ''}";
-      // }
     });
   }
 
@@ -90,7 +826,6 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
           filteredBaseCurrencies = currencies.entries.toList();
           filteredTargetCurrencies = currencies.entries.toList();
           isFetchingCurrencies = false;
-          // Update search fields if currencies were previously selected
           if (baseCurrency != null) {
             baseSearchController.text =
                 "${baseCurrency!.toUpperCase()} - ${currencies[baseCurrency] ?? ''}";
@@ -148,6 +883,14 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
       return;
     }
 
+    // Check if inputs have changed since the last conversion
+    if (baseCurrency == lastBaseCurrency &&
+        targetCurrency == lastTargetCurrency &&
+        amountController.text.trim() == lastAmount) {
+      // _showSnackBar("No changes to convert again.");
+      return;
+    }
+
     setState(() {
       isLoading = true;
       result = "";
@@ -175,6 +918,12 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
           recentConversions.insert(0,
               "$amount ${baseCurrency!.toUpperCase()} → ${converted.toStringAsFixed(2)} ${targetCurrency!.toUpperCase()} ");
           if (recentConversions.length > 3) recentConversions.removeLast();
+          
+          // Update last conversion inputs
+          lastBaseCurrency = baseCurrency;
+          lastTargetCurrency = targetCurrency;
+          lastAmount = amountController.text.trim();
+
           savePreferences();
         });
       } else {
@@ -189,27 +938,18 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
 
   void swapCurrencies() {
     setState(() {
-      // Store both values before swapping
       final tempBase = baseCurrency;
       final tempTarget = targetCurrency;
-
-      // Swap the currency codes
       baseCurrency = tempTarget;
       targetCurrency = tempBase;
-
-      // Update the search field texts using the temporary values
       baseSearchController.text = tempTarget != null
           ? "${tempTarget.toUpperCase()} - ${currencies[tempTarget] ?? ''}"
           : "";
       targetSearchController.text = tempBase != null
           ? "${tempBase.toUpperCase()} - ${currencies[tempBase] ?? ''}"
           : "";
-
-      // Hide suggestion lists
       isBaseSearchActive = false;
       isTargetSearchActive = false;
-
-      // Save swapped currencies to SharedPreferences
       savePreferences();
     });
   }
@@ -228,8 +968,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Transform.translate(
-                offset: Offset(0,
-                    MediaQuery.sizeOf(context).height * 0.03), // 30/640 = 0.047
+                offset: Offset(0, MediaQuery.sizeOf(context).height * 0.03),
                 child: Container(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,25 +1019,16 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
               ),
             ),
             Padding(
-              //
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Transform.translate(
-                offset: Offset(0,
-                    MediaQuery.sizeOf(context).height * 0.1), // 80/640 = 0.125
-                // SvgPicture.asset(
-                //     'assets/icons/financeScreen/currency.svg',
-                //     width: double.infinity,   // Full width
-                //     height: double.infinity,  // Full height
-                //     //  fit: BoxFit.cover,        // Make it cover the whole screen
-                //   ),
+                offset: Offset(0, MediaQuery.sizeOf(context).height * 0.1),
                 child: CustomPaint(
                   painter: CustomShapePainter(),
                 ),
               ),
             ),
             Transform.translate(
-              offset: Offset(
-                  0, MediaQuery.sizeOf(context).height * 0.1), // 80/640 = 0.125
+              offset: Offset(0, MediaQuery.sizeOf(context).height * 0.1),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 child: Container(
@@ -307,7 +1037,6 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Base Currency Picker
                       Text(
                         "Base Currency",
                         style: FontManager().getTextStyle(
@@ -318,15 +1047,13 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      // Search Field for Base Currency
                       TextField(
                         controller: baseSearchController,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w600,
                           fontSize: 14,
-                          color: AppColors
-                              .backgroundColor, // Set text color to white
+                          color: AppColors.backgroundColor,
                         ),
                         decoration: InputDecoration(
                           isDense: true,
@@ -370,9 +1097,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           });
                         },
                       ),
-                      // Suggestions for Base Currency
-                      if (isBaseSearchActive &&
-                          filteredBaseCurrencies.isNotEmpty)
+                      if (isBaseSearchActive && filteredBaseCurrencies.isNotEmpty)
                         Container(
                           constraints: BoxConstraints(
                             maxHeight: 150,
@@ -412,7 +1137,6 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           ),
                         ),
                       const SizedBox(height: 12),
-                      // Swap Button
                       Center(
                         child: GestureDetector(
                           onTap: swapCurrencies,
@@ -427,7 +1151,6 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      // Target Currency Picker
                       Text(
                         "Converted Currency",
                         style: FontManager().getTextStyle(
@@ -438,15 +1161,13 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      // Search Field for Target Currency
                       TextField(
                         controller: targetSearchController,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w600,
                           fontSize: 14,
-                          color: AppColors
-                              .backgroundColor, // Set text color to white
+                          color: AppColors.backgroundColor,
                         ),
                         decoration: InputDecoration(
                           isDense: true,
@@ -490,9 +1211,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           });
                         },
                       ),
-                      // Suggestions for Target Currency
-                      if (isTargetSearchActive &&
-                          filteredTargetCurrencies.isNotEmpty)
+                      if (isTargetSearchActive && filteredTargetCurrencies.isNotEmpty)
                         Container(
                           constraints: BoxConstraints(
                             maxHeight: 150,
@@ -532,7 +1251,6 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           ),
                         ),
                       const SizedBox(height: 16),
-                      // Amount Field
                       Text(
                         "Amount",
                         style: FontManager().getTextStyle(
@@ -550,8 +1268,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           context,
                           lWeight: FontWeight.normal,
                           fontSize: 14,
-                          color: AppColors
-                              .backgroundColor, // Set text color to white
+                          color: AppColors.backgroundColor,
                         ),
                         textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
@@ -588,16 +1305,13 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 12, horizontal: 16),
                           errorText: amountController.text.isNotEmpty &&
-                                  double.tryParse(
-                                          amountController.text.trim()) ==
-                                      null
+                                  double.tryParse(amountController.text.trim()) == null
                               ? "Invalid number"
                               : null,
                         ),
                         onChanged: (value) => setState(() {}),
                       ),
                       const SizedBox(height: 30),
-                      // Result Display
                       if (result.isNotEmpty)
                         Center(
                           child: Container(
@@ -625,16 +1339,13 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           ),
                         ),
                       const SizedBox(height: 24),
-                      // Convert Button
                       Center(
                         child: ElevatedButton(
                           onPressed: isLoading ||
                                   baseCurrency == null ||
                                   targetCurrency == null ||
                                   amountController.text.trim().isEmpty ||
-                                  double.tryParse(
-                                          amountController.text.trim()) ==
-                                      null
+                                  double.tryParse(amountController.text.trim()) == null
                               ? null
                               : convertCurrency,
                           style: ElevatedButton.styleFrom(
@@ -661,7 +1372,6 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      // Recent Conversions
                       if (recentConversions.isNotEmpty)
                         Container(
                           decoration: BoxDecoration(
@@ -686,29 +1396,22 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                 children: recentConversions
                                     .map((conversion) => Center(
                                           child: Container(
-                                            width: MediaQuery.sizeOf(context)
-                                                    .width /
-                                                1.4,
-                                            margin: const EdgeInsets.only(
-                                                bottom: 6),
+                                            width: MediaQuery.sizeOf(context).width / 1.4,
+                                            margin: const EdgeInsets.only(bottom: 6),
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 8, horizontal: 8),
                                             decoration: BoxDecoration(
-                                              color: Color.fromRGBO(
-                                                  255, 255, 255, 0.23),
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
+                                              color: Color.fromRGBO(255, 255, 255, 0.23),
+                                              borderRadius: BorderRadius.circular(6),
                                             ),
                                             child: Center(
                                               child: Text(
                                                 conversion,
-                                                style:
-                                                    FontManager().getTextStyle(
+                                                style: FontManager().getTextStyle(
                                                   context,
                                                   lWeight: FontWeight.normal,
                                                   fontSize: 14,
-                                                  color:
-                                                      AppColors.backgroundColor,
+                                                  color: AppColors.backgroundColor,
                                                 ),
                                               ),
                                             ),
@@ -729,12 +1432,4 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
       ),
     );
   }
-
-  // @override
-  // void dispose() {
-  //   baseSearchController.dispose();
-  //   targetSearchController.dispose();
-  //   amountController.dispose();
-  //   super.dispose();
-  // }
 }

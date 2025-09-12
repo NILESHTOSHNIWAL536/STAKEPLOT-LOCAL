@@ -156,7 +156,9 @@ class InsightsController extends GetxController {
       }
     });
   }
+
 }
+
 
 Future<Map<String, dynamic>> getUserStats() async {
   final pref = await SharedPreferences.getInstance();

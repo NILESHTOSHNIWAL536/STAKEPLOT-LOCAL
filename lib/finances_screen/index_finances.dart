@@ -124,7 +124,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                               offset: Offset(
                                   0,
                                   -size.height *
-                                      0.225), // Responsive offset based on screen height
+                                      0.24), // Responsive offset based on screen height
                               child: Container(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
@@ -138,7 +138,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                               offset: Offset(
                                   0,
                                   -size.height *
-                                      0.075), // Responsive offset based on screen height
+                                      0.085), // Responsive offset based on screen height
                               child: Container(
                                 padding:
                                     const EdgeInsets.fromLTRB(5, 10, 10, 5),

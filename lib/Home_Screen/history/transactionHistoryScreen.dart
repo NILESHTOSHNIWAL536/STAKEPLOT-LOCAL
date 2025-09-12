@@ -77,19 +77,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.sizeOf(context).height;
 
-    // double calculatedHeight;
-
-    // if (showFilter.value || redioButton.isNotEmpty) {
-    //   calculatedHeight = screenHeight / 1.52;
-    // } else if (showFilter.value && !isDateSummaryView.value) {
-    //   calculatedHeight = screenHeight / 1.5;
-    // } else {
-    //   calculatedHeight =
-    //       (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
-    //           ? screenHeight / 1.35
-    //           : screenHeight / 1.25;
-    // }
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(

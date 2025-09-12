@@ -501,56 +501,64 @@ class _CreditCardState extends State<CreditCard> {
                           )
                         : SizedBox.shrink(),
                   ),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                 
+                  child:Column(
+                    children: [
+                      SliderPage(
+                        slidersList: slidersList,
+                        onSliderValueChanged: updateSliderValue,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.backgroundColor,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: graph(),
+                      ),
+                      SizedBox(height: 10),
+                      CustomExpansionTile(
+                        howToUseContent: [
+                          ListItemModel(
+                            title: "Card Balance:",
+                            description:
+                                "Adjust the slider to set your current credit card balance (e.g., ₹2000).",
+                          ),
+                          ListItemModel(
+                            title: "Interest Rate:",
+                            description:
+                                "Adjust the slider to set your annual interest rate (e.g., 7.5%).",
+                          ),
+                          ListItemModel(
+                            title: "Monthly Payment:",
+                            description:
+                                "Adjust the slider to set your monthly payment amount (e.g., ₹600).",
+                          ),
+                        ],
+                        howItWorksContent: [
+                          ListItemModel(
+                            title: "Monthly Interest Rate:",
+                            description:
+                                "Annual rate divided by 12 and converted to decimal.",
+                          ),
+                          ListItemModel(
+                            title: "Payoff Time:",
+                            description:
+                                "Calculated using a logarithmic formula based on balance, rate, and payment.",
+                          ),
+                          ListItemModel(
+                            title: "Total Interest:",
+                            description:
+                                "Sum of monthly interest payments until balance is cleared.",
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 
-                  SliderPage(
-                    slidersList: slidersList,
-                    onSliderValueChanged: updateSliderValue,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: graph(),
-                  ),
-                  SizedBox(height: 10),
-                  CustomExpansionTile(
-                    howToUseContent: [
-                      ListItemModel(
-                        title: "Card Balance:",
-                        description:
-                            "Adjust the slider to set your current credit card balance (e.g., ₹2000).",
-                      ),
-                      ListItemModel(
-                        title: "Interest Rate:",
-                        description:
-                            "Adjust the slider to set your annual interest rate (e.g., 7.5%).",
-                      ),
-                      ListItemModel(
-                        title: "Monthly Payment:",
-                        description:
-                            "Adjust the slider to set your monthly payment amount (e.g., ₹600).",
-                      ),
-                    ],
-                    howItWorksContent: [
-                      ListItemModel(
-                        title: "Monthly Interest Rate:",
-                        description:
-                            "Annual rate divided by 12 and converted to decimal.",
-                      ),
-                      ListItemModel(
-                        title: "Payoff Time:",
-                        description:
-                            "Calculated using a logarithmic formula based on balance, rate, and payment.",
-                      ),
-                      ListItemModel(
-                        title: "Total Interest:",
-                        description:
-                            "Sum of monthly interest payments until balance is cleared.",
-                      ),
-                    ],
-                  ),
-                ],
+              )],
               ),
             ),
           ),

@@ -331,19 +331,19 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
   }
 
   // Try loading from Hive first
-  final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
-      accountId.value, storedPeriod, formattedDate, endDate);
-  if (cachedFinance != null) {
-    // Set data from cache
-    // transactionChatGraph['debited'] = cachedFinance.debited ?? [];
-    // transactionChatGraph['credited'] = cachedFinance.credited ?? [];
-    // labels.assignAll(cachedFinance.labels ?? []);
-    // totalDebitValue.value = cachedFinance.totalDebitValue ?? 0;
-    // totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent ?? 0;
-    // maxYValue.value = cachedFinance.maxYValue ?? 500.0;
-    // getGraphData.value = true;
-    return;
-  }
+  // final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
+  //     accountId.value, storedPeriod, formattedDate, endDate);
+  // if (cachedFinance != null) {
+  //   // Set data from cache
+  //   // transactionChatGraph['debited'] = cachedFinance.debited ?? [];
+  //   // transactionChatGraph['credited'] = cachedFinance.credited ?? [];
+  //   // labels.assignAll(cachedFinance.labels ?? []);
+  //   // totalDebitValue.value = cachedFinance.totalDebitValue ?? 0;
+  //   // totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent ?? 0;
+  //   // maxYValue.value = cachedFinance.maxYValue ?? 500.0;
+  //   // getGraphData.value = true;
+  //   return;
+  // }
 
   // Show loading state
   // getGraphData.value = false;
@@ -441,12 +441,16 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
           _setEmptyState(weekORmonth, formattedDate, endDate);
         }
       } catch (e) {
+        await FinanceLocalStorage.loadFinanceFromHive(
+            accountId.value, storedPeriod, formattedDate, endDate);
         _setEmptyState(weekORmonth, formattedDate, endDate);
       }
     } else {
       _setEmptyState(weekORmonth, formattedDate, endDate);
     }
   } catch (e) {
+    await FinanceLocalStorage.loadFinanceFromHive(
+        accountId.value, storedPeriod, formattedDate, endDate);
     _setEmptyState(weekORmonth, formattedDate, endDate);
   }
 }
@@ -846,7 +850,7 @@ void processChartData() {
       double value = item["total_debit"].toDouble();
       Color color = categoryColors[category] ?? Colors.grey; // Default color
       newData.add(ChartData(category, value, color, percentage));
-     
+
       totalValue.value += value;
     }
 
