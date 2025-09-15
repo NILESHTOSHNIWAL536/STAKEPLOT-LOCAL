@@ -28,72 +28,60 @@ class _InflationCalculatorState extends State<InflationCalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-            padding: const EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: AppColors.primaryColorHeader,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+          padding: const EdgeInsets.all(12.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: AppColors.primaryColor,
+                        size: 28,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14),
+                      child: Text(
+                        "Inflation Calculator",
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w800,
+                          fontSize: 40,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
                 ),
-              ],
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: AppColors.backgroundColor,
-                          size: 28,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      Container(
-                        // color: Colors.amber,
-                        width: MediaQuery.sizeOf(context).width / 1.8,
-                        child: Center(
-                          child: Text(
-                            "Inflation Calculator",
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w700,
-                              fontSize: 20,
-                              color: AppColors.backgroundColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 48),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: Text(
                     "Calculate the impact of inflation on your money",
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w500,
                       fontSize: 16,
-                      color: AppColors.backgroundColor.withOpacity(0.8),
+                      color: AppColors.primaryColor.withOpacity(0.8),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  const SizedBox(height: 24),
-                  TextField(
+                ),
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: TextField(
                     controller: amountController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -102,13 +90,13 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                         context,
                         lWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: AppColors.backgroundColor.withOpacity(0.7),
+                        color: AppColors.primaryColor.withOpacity(0.7),
                       ),
                       floatingLabelStyle: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w500,
                         fontSize: 14,
-                        color: AppColors.backgroundColor,
+                        color: AppColors.primaryColor,
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       contentPadding: const EdgeInsets.symmetric(
@@ -118,37 +106,40 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.backgroundColor.withOpacity(0.5),
+                          color: AppColors.primaryColor.withOpacity(0.5),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: const BorderSide(
-                          color: AppColors.backgroundColor,
+                          color: AppColors.primaryColor,
                           width: 2,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.backgroundColor.withOpacity(0.3),
+                          color: AppColors.primaryColor.withOpacity(0.3),
                         ),
                       ),
                       filled: true,
-                      fillColor: AppColors.backgroundColor.withOpacity(0.1),
+                      fillColor: AppColors.primaryColor.withOpacity(0.1),
                     ),
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w400,
                       fontSize: 16,
-                      color: AppColors.backgroundColor,
+                      color: AppColors.primaryColor,
                     ),
                     onChanged: (value) {
                       originalAmount.value = double.tryParse(value) ?? 10000.0;
                     },
                   ),
-                  const SizedBox(height: 16),
-                  TextField(
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: TextField(
                     controller: yearsController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -157,13 +148,13 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                         context,
                         lWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: AppColors.backgroundColor.withOpacity(0.7),
+                        color: AppColors.primaryColor.withOpacity(0.7),
                       ),
                       floatingLabelStyle: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w500,
                         fontSize: 14,
-                        color: AppColors.backgroundColor,
+                        color: AppColors.primaryColor,
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       contentPadding: const EdgeInsets.symmetric(
@@ -173,201 +164,151 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.backgroundColor.withOpacity(0.5),
+                          color: AppColors.primaryColor.withOpacity(0.5),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: const BorderSide(
-                          color: AppColors.backgroundColor,
+                          color: AppColors.primaryColor,
                           width: 2,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.backgroundColor.withOpacity(0.3),
+                          color: AppColors.primaryColor.withOpacity(0.3),
                         ),
                       ),
                       filled: true,
-                      fillColor: AppColors.backgroundColor.withOpacity(0.1),
+                      fillColor: AppColors.primaryColor.withOpacity(0.1),
                     ),
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w400,
                       fontSize: 16,
-                      color: AppColors.backgroundColor,
+                      color: AppColors.primaryColor,
                     ),
                     onChanged: (value) {
                       inflatedYears.value = double.tryParse(value) ?? 5.0;
                     },
                   ),
-                  const SizedBox(height: 24),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: isLoadingInflation.value
-                          ? null
-                          : () => calculateInflation(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.backgroundColor,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 14,
-                          horizontal: 32,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 2,
+                ),
+                const SizedBox(height: 24),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: isLoadingInflation.value
+                        ? null
+                        : () => calculateInflation(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 14,
+                        horizontal: 32,
                       ),
-                      child: Text(
-                        'Calculate',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: AppColors.primaryColor,
-                        ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
+                    ),
+                    child: Text(
+                      'Calculate',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: AppColors.backgroundColor,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  Obx(() {
-                    if (!showResults.value) {
-                      return SizedBox.shrink(); // empty widget when not showing
-                    }
-                    return Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppColors.backgroundColor,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
+                ),
+                const SizedBox(height: 24),
+                Obx(() {
+                  if (!showResults.value) {
+                    return SizedBox.shrink(); // empty widget when not showing
+                  }
+                  return Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundColor,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Calculation Results',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: AppColors.primaryColor,
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Calculation Results',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: AppColors.primaryColor,
-                            ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Future Value: ₹${inflatedFutureValue.value.toStringAsFixed(2)}',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: AppColors.primaryColor,
                           ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Future Value: ₹${inflatedFutureValue.value.toStringAsFixed(2)}',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: AppColors.primaryColor,
-                            ),
-                          ),
-
-                          const SizedBox(height: 18),
-                          // Syncfusion Line Chart for Future Values
-                          // if (inflationPredictions.isNotEmpty)
-                          //   SizedBox(
-                          //     height: 200,
-                          //     child: SfCartesianChart(
-                          //       primaryXAxis: NumericAxis(
-                          //         title: AxisTitle(
-                          //           text: 'Year',
-                          //           textStyle: FontManager().getTextStyle(
-                          //             context,
-                          //             fontSize: 12,
-                          //             color: AppColors.primaryColor,
-                          //           ),
-                          //         ),
-                          //         majorGridLines: MajorGridLines(width: 0),
-                          //         interval: 1,
-                          //       ),
-                          //       primaryYAxis: NumericAxis(
-                          //         title: AxisTitle(
-                          //           text: 'Future Value (₹)',
-                          //           textStyle: FontManager().getTextStyle(
-                          //             context,
-                          //             fontSize: 12,
-                          //             color: AppColors.primaryColor,
-                          //           ),
-                          //         ),
-                          //         majorGridLines: MajorGridLines(width: 0.5),
-                          //       ),
-                          //       series: <ChartSeries>[
-                          //         LineSeries<Map<String, dynamic>, double>(
-                          //           dataSource: inflationPredictions,
-                          //           xValueMapper:
-                          //               (Map<String, dynamic> prediction,
-                          //                       _) =>
-                          //                   prediction['year'].toDouble(),
-                          //           yValueMapper: (Map<String, dynamic>
-                          //                       prediction,
-                          //                   _) =>
-                          //               prediction['future_value'].toDouble(),
-                          //           color: AppColors.primaryColor,
-                          //           width: 1,
-                          //           markerSettings:
-                          //               MarkerSettings(isVisible: true),
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // const SizedBox(height: 24),
-                          // List of Yearly Predictions
-                          if (inflationPredictions.isNotEmpty)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Yearly Predictions',
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: AppColors.primaryColor,
-                                  ),
+                        ),
+                        const SizedBox(height: 18),
+                        if (inflationPredictions.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Yearly Predictions',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: AppColors.primaryColor,
                                 ),
-                                const SizedBox(height: 12),
-                                ...inflationPredictions
-                                    .map((prediction) => Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 4),
-                                          child: Text(
-                                            'Year ${prediction['year']}: ₹${prediction['future_value'].toStringAsFixed(2)} (Inflation: ${prediction['predicted_inflation_percent']}%)',
-                                            style: FontManager().getTextStyle(
-                                              context,
-                                              lWeight: FontWeight.w400,
-                                              fontSize: 14,
-                                              color: AppColors.primaryColor,
-                                            ),
+                              ),
+                              const SizedBox(height: 12),
+                              ...inflationPredictions
+                                  .map((prediction) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 4),
+                                        child: Text(
+                                          'Year ${prediction['year']}: ₹${prediction['future_value'].toStringAsFixed(2)} (Inflation: ${prediction['predicted_inflation_percent']}%)',
+                                          style: FontManager().getTextStyle(
+                                            context,
+                                            lWeight: FontWeight.w400,
+                                            fontSize: 14,
+                                            color: AppColors.primaryColor,
                                           ),
-                                        )),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Disclaimer: These results are based on an assumed inflation rate and may not reflect actual future values.',
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color:
-                                        AppColors.primaryColor.withOpacity(0.7),
-                                  ),
+                                        ),
+                                      )),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Disclaimer: These results are based on an assumed inflation rate and may not reflect actual future values.',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color:
+                                      AppColors.primaryColor.withOpacity(0.7),
                                 ),
-                              ],
-                            ),
-                        ],
-                      ),
-                    );
-                  }),
-                ],
-              ),
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
             ),
           ),
         ),
