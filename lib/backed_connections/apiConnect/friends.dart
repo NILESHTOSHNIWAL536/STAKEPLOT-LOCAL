@@ -47,7 +47,7 @@ void   addUsersendRequest(id,name,context)async
    
    var urlPath='${url}/user/friend/sendRequest';
    var body={
-             'userName':name,
+            //  'userName':name,
              'friendUserId':id,
        };
     UserController controller =ControllerManagement.userController;
@@ -67,7 +67,7 @@ void  removeRequest(id,name,context)async
       
     var urlPath='${url}/user/friend/unsendRequest';
     var body={
-             'userName':name,
+            //  'userName':name,
              'friendUserId':id,
        };  
       var response=await postDataApiCall(urlPath, body);

@@ -646,7 +646,6 @@ class _CardStackScreenState extends State<CardStackScreen>
                     ),
                     itemBuilder: (context, index) {
                       final selectedDay = index + 1;
-                      
 
                       return ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -705,8 +704,7 @@ class _CardStackScreenState extends State<CardStackScreen>
                             true,
                           );
                           if (success) {
-                            await getAutoPayInfo(
-                                forceApi: true); // force fresh API update
+                            await getAutoPayInfo(); // force fresh API update
 
                             // final addSuccess =
                             //     await addRecurringPayment(cardId, true, );
