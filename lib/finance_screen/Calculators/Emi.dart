@@ -467,7 +467,7 @@ class _EmiState extends State<Emi> {
                           setState(() {
                             _isInfoVisible = true;
                             _opacity = 1.0; // Fade in
-                            print('Showing container: opacity = $_opacity');
+                           
                           });
                           _timer?.cancel(); // Cancel any existing timer
                           // Start a new timer to fade out after 5 seconds
@@ -475,7 +475,7 @@ class _EmiState extends State<Emi> {
                             if (mounted) {
                               setState(() {
                                 _opacity = 0.0; // Fade out
-                                print('Hiding container: opacity = $_opacity');
+                               
                               });
                             }
                           });

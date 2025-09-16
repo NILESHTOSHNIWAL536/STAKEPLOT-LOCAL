@@ -476,7 +476,8 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
                 ),
 
                 // Grid Content
-                Expanded(
+                Container(
+                  height: MediaQuery.sizeOf(context).height / 1.6,
                   child: FadeTransition(
                     opacity: _fadeAnimation,
                     child: Padding(
@@ -569,18 +570,16 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
 
                                       // FOREGROUND CONTENT
                                       Center(
-                                        child: Expanded(
-                                          child: Text(
-                                            calculator['name'],
-                                            style: FontManager().getTextStyle(
-                                              context,
-                                              lWeight: FontWeight.w800,
-                                              fontSize: 18,
-                                              color: AppColors.backgroundColor,
-                                            ),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
+                                        child: Text(
+                                          calculator['name'],
+                                          style: FontManager().getTextStyle(
+                                            context,
+                                            lWeight: FontWeight.w800,
+                                            fontSize: 18,
+                                            color: AppColors.backgroundColor,
                                           ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ],

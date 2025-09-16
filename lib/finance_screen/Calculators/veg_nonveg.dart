@@ -239,6 +239,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       await prefs.setString(
           target, jsonEncode(namesList.join("--").toString().trim()));
     } catch (e) {
+      
     }
   }
 
@@ -1269,7 +1270,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                       ),
                       child: SingleChildScrollView(
                         child: Text(
-                          "Foodie Funds helps you easily split expenses for meals and food with your friends. Add members, categorize expenses, and track who owes what for a hassle-free dining experience.",
+                          "Foodie Fund makes splitting bills with friends super simple—whether it's at a restaurant, or a weekend outing. You can split equally or enter custom shares so everyone pays exactly for what they consumed, not a rupee more or less.",
                           style: FontManager().getTextStyle(
                             context,
                             lWeight: FontWeight.w400,
@@ -1283,7 +1284,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                   )
                 : SizedBox.shrink(),
           ),
-          
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1360,8 +1360,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                 child: Container(
                   height: _isInfoVisible
                       ? (categories.length > 3
-                          ? MediaQuery.sizeOf(context).height / 3.3
-                          : MediaQuery.sizeOf(context).height / 3)
+                          ? MediaQuery.sizeOf(context).height / 3.4
+                          : MediaQuery.sizeOf(context).height / 3.1)
                       : (categories.length > 3
                           ? MediaQuery.sizeOf(context).height / 2.5
                           : MediaQuery.sizeOf(context).height / 2.2),

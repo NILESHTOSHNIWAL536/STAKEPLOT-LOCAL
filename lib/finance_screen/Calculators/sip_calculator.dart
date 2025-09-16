@@ -141,14 +141,14 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                           setState(() {
                             _isInfoVisible = true;
                             _opacity = 1.0;
-                            print('Showing container: opacity = $_opacity');
+                         
                           });
                           _timer?.cancel();
                           _timer = Timer(Duration(seconds: 2), () {
                             if (mounted) {
                               setState(() {
                                 _opacity = 0.0;
-                                print('Hiding container: opacity = $_opacity');
+                               
                               });
                             }
                           });
@@ -174,8 +174,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                     if (_opacity == 0.0 && mounted) {
                       setState(() {
                         _isInfoVisible = false;
-                        print(
-                            'Container hidden: _isInfoVisible = $_isInfoVisible');
+                       
                       });
                     }
                   },
