@@ -73,7 +73,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
             ],
           ),
           const SizedBox(
-            height: 3,
+            height: 8,
           ),
           textStyleImage(
               context: context,

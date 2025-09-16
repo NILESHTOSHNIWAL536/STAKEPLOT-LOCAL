@@ -238,8 +238,9 @@ class PlotFinanceStaticData {
         interestLabel = data['interestLabel'] ?? interestLabel;
         durationLabel = data['durationLabel'] ?? durationLabel;
         dateLabel = data['dateLabel'] ?? dateLabel;
- // MyBudgetScreen
-  budgetTitle = data['budgetTitle'] ?? budgetTitle;
+        
+        // MyBudgetScreen
+        budgetTitle = data['budgetTitle'] ?? budgetTitle;
         deleteBudgetTitle = data['deleteBudgetTitle'] ?? deleteBudgetTitle;
         deleteBudgetPrompt = data['deleteBudgetPrompt'] ?? deleteBudgetPrompt;
         budgetDeletedSuccess = data['budgetDeletedSuccess'] ?? budgetDeletedSuccess;

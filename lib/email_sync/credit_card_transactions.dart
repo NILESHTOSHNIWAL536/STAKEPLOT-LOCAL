@@ -140,7 +140,7 @@ class CreditCardTransactionCard extends StatelessWidget {
                 buildRow("Amount", parseAmount(txn.amount), context),
                 buildRow(
                     "Card Number", "************${txn.cardNumber}", context),
-                buildRow("Merchant", txn.merchant ?? '-', context),
+                // buildRow("Merchant", txn.merchant ?? '-', context),
               ],
             ),
           )
@@ -340,8 +340,8 @@ class CreditCardTransactionCard2 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildRow("Amount", parseAmount(txn.amount), context),
-                buildRow("Card", "****${txn.cardNumber}", context),
-                buildRow("Merchant", txn.merchant ?? '-', context),
+                buildRow("Card Number", "****${txn.cardNumber}", context),
+                buildRow("transactionId", "${txn.transactionId}", context),
               ],
             ),
           ),
@@ -356,19 +356,24 @@ class CreditCardTransactionCard2 extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 80,
+          Expanded(
+            flex: 2,
+            // width: 80,
             child: Text(
               title,
               style: rowLabelStyle(context),
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          Text(
-            ": ",
-            style: rowValueStyle(context),
+          Expanded(
+            flex: 1,
+            child: Text(
+              ": ",
+              style: rowValueStyle(context),
+            ),
           ),
           Expanded(
+            flex: 2,
             child: Text(
               value,
               style: rowValueStyle(context),
@@ -391,7 +396,7 @@ class CreditCardTransactionCard2 extends StatelessWidget {
 
   TextStyle rowValueStyle(BuildContext context) => FontManager().getTextStyle(
         context,
-        lWeight: FontWeight.w500,
+        lWeight: FontWeight.bold,
         fontSize: 14,
         lineHeight: 1.2,
         color: Colors.black87,

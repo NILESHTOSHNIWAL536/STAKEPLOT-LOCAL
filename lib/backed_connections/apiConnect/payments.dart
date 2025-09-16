@@ -41,6 +41,7 @@ Future<void> fetchDebts() async {
     } else {
       debts.clear();
     }
+    if(!getCreditCardBudgetDebts.value)getCreditCardBudgetDebts.value= debts.isNotEmpty;
   } catch (e) {
     Get.snackbar('Error', 'Failed to fetch debts: $e');
   }
@@ -56,6 +57,7 @@ void getBudget() async {
       budgetList.clear();
       budgetList.addAll(obj);
       budgetLength.value = obj.length;
+      if(!getCreditCardBudgetDebts.value)getCreditCardBudgetDebts.value=budgetList.isNotEmpty;
     }
   } catch (e) {}
 }

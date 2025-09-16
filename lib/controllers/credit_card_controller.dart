@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:get/get.dart';
 
+import '../Utils/credit_card.dart';
 import '../backed_connections/apiAutomations/curd.dart';
 import '../backed_connections/apis_connect.dart';
 import '../email_sync/add_credit_card_bank.dart';
@@ -16,6 +17,7 @@ class CardDueController extends GetxController {
 Future<void> fetchCardData() async {
   try {
     // API call (replace url with your actual base url)
+    if(!CreditCardScreenStrings().showCreditCard.value)return;
     var response = await getDataApiCall("${url}/email/");
 
     if (getFlagOfResponse(response)) {
@@ -26,6 +28,7 @@ Future<void> fetchCardData() async {
       cardList.addAll ((data as List)
           .map((e) => CardDueModel.fromJson(e))
           .toList());
+     if(!getCreditCardBudgetDebts.value)getCreditCardBudgetDebts.value= cardList.isNotEmpty;
     } else {
       // Handle failure case
       // debugPrint("❌ Failed to fetch card data: ${response.body}");

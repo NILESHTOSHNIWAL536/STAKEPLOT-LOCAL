@@ -16,7 +16,7 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 part 'snackBars.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.9" : "localhost";
+String portNo = flag ? "192.168.1.14" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
@@ -100,6 +100,7 @@ RxInt selectedYear = DateTime.now().year.obs;
 RxInt selectedMonth = DateTime.now().month.obs;
 RxList inSights = [].obs;
 RxBool getInsights = false.obs;
+RxBool getCreditCardBudgetDebts = false.obs;
 RxBool allOrGroupTransactions = true.obs;
 RxString accountId = "".obs;
 RxString searchAccountId = "".obs;

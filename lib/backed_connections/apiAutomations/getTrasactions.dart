@@ -360,7 +360,7 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
     if (getFlagOfResponse(response)) {
       final his = jsonDecode(response.body);
       transactionChatGraph.clear();
-
+   
       try {
         final data = his['data']['result'] as Map;
         totalDebitValuePercent.value = double.tryParse(
@@ -439,19 +439,23 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
           );
         } else {
           _setEmptyState(weekORmonth, formattedDate, endDate);
+           await FinanceLocalStorage.loadFinanceFromHive(
+        accountId.value, storedPeriod, formattedDate, endDate);
         }
       } catch (e) {
+        _setEmptyState(weekORmonth, formattedDate, endDate);
         await FinanceLocalStorage.loadFinanceFromHive(
             accountId.value, storedPeriod, formattedDate, endDate);
-        _setEmptyState(weekORmonth, formattedDate, endDate);
       }
     } else {
       _setEmptyState(weekORmonth, formattedDate, endDate);
+       await FinanceLocalStorage.loadFinanceFromHive(
+        accountId.value, storedPeriod, formattedDate, endDate);
     }
   } catch (e) {
+    _setEmptyState(weekORmonth, formattedDate, endDate);
     await FinanceLocalStorage.loadFinanceFromHive(
         accountId.value, storedPeriod, formattedDate, endDate);
-    _setEmptyState(weekORmonth, formattedDate, endDate);
   }
 }
 

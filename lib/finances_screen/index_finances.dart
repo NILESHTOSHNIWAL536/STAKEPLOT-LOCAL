@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_dis
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import '../Utils/credit_card.dart';
 import '../backed_connections/apis_connect.dart';
 import '../bottomNavigations.dart';
 import '../colorcodes.dart';
@@ -56,12 +57,12 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
   }
 
   bool _hasFinancialData() {
-    final cardController = CardDueController();
-    final hasCreditCards = cardController.cardList?.isNotEmpty ?? false;
+    // final cardController = CardDueController();
+    // final hasCreditCards = cardController.cardList?.isNotEmpty ?? false;
 
     final hasBudgets = budgetList?.isNotEmpty ?? false; // Check budgetList
     final hasDebts = debts?.isNotEmpty ?? false; // Check debts
-    return hasCreditCards || hasBudgets || hasDebts;
+    return  hasBudgets || hasDebts || CreditCardScreenStrings().showCreditCard.value?creditCardBankList.isNotEmpty:false;
   }
 
   void _navigateToDebtDetailsScreen(Debt debt) async {
@@ -74,7 +75,6 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final bool hasData = isLoading ? false : _hasFinancialData();
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
 
@@ -162,44 +162,22 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                 color: AppColors.backgroundColor,
                 child: Column(
                   children: [
-                    if (hasData)
+                    if (getCreditCardBudgetDebts.value)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24.0),
                         child: _buildSectionHeader('', () {
                           pushnameToRoute(context, ShowCompleteInfo(), false);
                         }),
                       ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    //   child: _buildSectionHeader('', () {
-                    //     // showBudgetDebtCreditCard(context);
-                    //     pushnameToRoute(context, ShowCompleteInfo(), false);
-                    //     // pushnameToRoute(context, SelectAnyOptionScreen(),false);
-                    //   }),
-                    // ),
-                    // const SizedBox(height: 16),
-                    Skeletonizer(
-                      enabled: isLoading,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: SliderAdddingFinances(
-                          hasData: hasData,
-                          onDebtTap: _navigateToDebtDetailsScreen,
-                        ),
+            
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: SliderAdddingFinances(
+                        // hasData: hasData,
+                        onDebtTap: _navigateToDebtDetailsScreen,
                       ),
                     ),
 
-                    // isLoading
-                    //     ? Center(child: Spinner())
-                    //     : Padding(
-                    //         padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    //         child: SliderAdddingFinances(
-                    //           hasData: hasData,
-                    //           onDebtTap: _navigateToDebtDetailsScreen,
-                    //         ),
-                    //       ),
-
-                    // "Heading to Recieve / to Pay" section
                     const SizedBox(height: 10),
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -264,11 +242,6 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
     );
   }
 
-  // Widget for the horizontal scrollable grid of cards
-
-  // Individual square card with an optional dashed border
-
-  // Widget for the bottom navigation bar
 
   Widget buildHeadingAndSearchBar() {
     return Container(
@@ -279,18 +252,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
           image: AssetImage(svgIconPath.financepayReceive2),
           fit: BoxFit.cover,
         ),
-        // gradient: LinearGradient(
-        //   begin: Alignment.topCenter,
-        //   end: Alignment.bottomCenter,
-        //   colors: [
-        //     Color(0x061F35E5)
-        //         .withOpacity(0.4), // top color with opacity
-        //     Color(0xFF061F35)
-        //         .withOpacity(0.2), // bottom softer
-        //     Color(0xFF061F35)
-        //         .withOpacity(0.1), // bottom softer
-        //   ],
-        // ),
+      
       ),
       child: Column(
         children: [

@@ -39,6 +39,8 @@ void callApi(context)async
     getGroupTransactions();
     getCustomCategory(context);
     getAutoPayInfo();
+    getAllTransactionHistory(context,false,false,isRefreshing: true);
+    getAllTransactionHistory(context,true,false,isRefreshing: true);
     custom = getthelist();
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     clearAllFlags();

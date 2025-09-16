@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_dis
 import 'package:flutter_application_code_stakeplot/finance_screen/financeWidgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../Utils/credit_card.dart';
 import '../colorcodes.dart';
 import 'creditCard_slider.dart';
 
@@ -19,14 +20,15 @@ class ShowCompleteInfo extends StatefulWidget {
 }
 
 class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
-  final List<String> titles = [
+  final List<String> titles =
+  [
     "Credit Card",
     "Budget",
     "Debt",
   ];
 
   final List<String> routes = [
-    "/addcreditCard",
+   "/addcreditCard",
     "/Budget",
     "/debt",
   ];
@@ -42,7 +44,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
   @override
   void initState() {
     super.initState();
-    selectedIndex = widget.index;
+    selectedIndex = CreditCardScreenStrings().showCreditCard.value?widget.index:1;
   }
 
   @override
@@ -117,7 +119,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
       children: [
         const SizedBox(height: 22),
         // Option Buttons
-        for (int i = 0; i < routes.length; i++) ...[
+        for (int i = CreditCardScreenStrings().showCreditCard.value? 0:1; i < routes.length; i++) ...[
           InkWell(
             borderRadius: BorderRadius.circular(9),
             onTap: () {

@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart'
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../Constants/colors.dart';
+import '../Utils/credit_card.dart';
 import '../colorcodes.dart';
 
 class SelectAnyOptionScreen extends StatefulWidget {
@@ -61,7 +62,7 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
           // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // Option Buttons
-            for (int i = 0; i < 3; i++) ...[
+            for (int i = CreditCardScreenStrings().showCreditCard.value? 0:1; i < 3; i++) ...[
               InkWell(
                 borderRadius: BorderRadius.circular(9),
                 onTap: () {

@@ -21,6 +21,7 @@ import 'package:page_transition/page_transition.dart';
 
 import '../Hive_localstorage/apisCall/init_hive.dart';
 import '../OneSignal/oneSignal_config.dart';
+import '../Utils/credit_card.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -67,6 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
     profileScreenStrings.fetchConstants();
     PdfStrings().fetchConstants();
     RewardScreenStrings().fetchConstants();
+    CreditCardScreenStrings().fetchConstants();
     await initAllHive();
   }
 
