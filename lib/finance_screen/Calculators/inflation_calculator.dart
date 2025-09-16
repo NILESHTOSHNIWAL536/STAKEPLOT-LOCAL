@@ -202,7 +202,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                             null;
                           }
                         : () {
-                            print("nully");
+                            
                             calculateInflation();
                           },
                     style: ElevatedButton.styleFrom(

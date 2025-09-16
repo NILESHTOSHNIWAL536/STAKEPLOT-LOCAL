@@ -212,7 +212,7 @@ class _SavingsState extends State<Savings> {
                           setState(() {
                             _isInfoVisible = true;
                             _opacity = 1.0; // Fade in
-                            print('Showing container: opacity = $_opacity');
+                           
                           });
                           _timer?.cancel(); // Cancel any existing timer
                           // Start a new timer to fade out after 5 seconds
@@ -220,7 +220,7 @@ class _SavingsState extends State<Savings> {
                             if (mounted) {
                               setState(() {
                                 _opacity = 0.0; // Fade out
-                                print('Hiding container: opacity = $_opacity');
+                               
                               });
                             }
                           });
@@ -246,8 +246,7 @@ class _SavingsState extends State<Savings> {
                       if (_opacity == 0.0 && mounted) {
                         setState(() {
                           _isInfoVisible = false;
-                          print(
-                              'Container hidden: _isInfoVisible = $_isInfoVisible');
+                         
                         });
                       }
                     },

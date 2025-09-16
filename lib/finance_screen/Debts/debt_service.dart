@@ -61,7 +61,7 @@ Future<void> calculateInflation() async {
       'amount': originalAmount.value,
       'years_ahead': inflatedYears.value,
     };
-    print("body $body");
+   
     var uri = Uri.parse(
         "https://predict.stakeplot.com/predict_inflation/"); // Ensure trailing slash
     var headers = {
@@ -89,6 +89,7 @@ Future<void> calculateInflation() async {
           redirectCount++;
           continue; // Follow the redirect
         } else {
+          
           return;
         }
       } else {

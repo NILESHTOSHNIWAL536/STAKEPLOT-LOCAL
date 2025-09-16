@@ -283,8 +283,7 @@ class _RentBuyState extends State<RentBuy> {
                     if (_opacity == 0.0 && mounted) {
                       setState(() {
                         _isInfoVisible = false;
-                        print(
-                            'Container hidden: _isInfoVisible = $_isInfoVisible');
+                     
                       });
                     }
                   },
