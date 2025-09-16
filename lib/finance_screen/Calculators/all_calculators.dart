@@ -7,6 +7,7 @@
 // import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Savings.dart';
 // import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
 // import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
+// import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/inflation_calculator.dart';
 // import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/sip_calculator.dart';
 // import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
@@ -33,21 +34,11 @@
 //       'svgPath': 'assets/icons/financeScreen/f4.svg',
 //       'screen': RentBuy(),
 //     },
-//     // {
-//     //   'name': 'Savings Goal',
-//     //   'svgPath': 'assets/icons/financeScreen/f3.svg',
-//     //   'screen': Savings(),
-//     // },
-//     // {
-//     //   'name': 'Auto Loan',
-//     //   'svgPath': 'assets/icons/financeScreen/f2.svg',
-//     //   'screen': AutoLoan(),
-//     // },
-//     // {
-//     //   'name': 'Cost',
-//     //   'svgPath': 'assets/icons/financeScreen/f1.svg',
-//     //   'screen': TripCost(),
-//     // },
+//     {
+//       'name': 'Inflation',
+//       'svgPath': 'assets/icons/financeScreen/f3.svg',
+//       'screen': InflationCalculator(),
+//     },
 //     {
 //       'name': 'SIP',
 //       'svgPath': 'assets/icons/financeScreen/f1.svg',
@@ -55,26 +46,102 @@
 //     },
 //   ];
 
+//   // Responsive breakpoints
+//   bool get isSmallScreen => MediaQuery.of(context).size.width < 600;
+//   bool get isMediumScreen =>
+//       MediaQuery.of(context).size.width >= 600 &&
+//       MediaQuery.of(context).size.width < 900;
+//   bool get isLargeScreen => MediaQuery.of(context).size.width >= 900;
+//   bool get isTablet => MediaQuery.of(context).size.width >= 600;
+//   bool get isLandscape =>
+//       MediaQuery.of(context).orientation == Orientation.landscape;
+
+//   // Responsive sizing methods
+//   double get responsivePadding => isSmallScreen
+//       ? 12.0
+//       : isMediumScreen
+//           ? 16.0
+//           : 20.0;
+//   double get headerHeight => isSmallScreen
+//       ? 120.0
+//       : isMediumScreen
+//           ? 140.0
+//           : 150.0;
+//   double get headerOffset => isSmallScreen
+//       ? 20.0
+//       : isMediumScreen
+//           ? 25.0
+//           : 30.0;
+//   double get shapeOffset => isSmallScreen
+//       ? 70.0
+//       : isMediumScreen
+//           ? 70.0
+//           : 80.0;
+//   double get gridOffset => 80.0;
+
+//   double get gridHorizontalPadding => isSmallScreen
+//       ? 40.0
+//       : isMediumScreen
+//           ? 25.0
+//           : 30.0;
+//   double get gridSpacing => isSmallScreen
+//       ? 20.0
+//       : isMediumScreen
+//           ? 24.0
+//           : 28.0;
+//   double get iconSize => isSmallScreen
+//       ? 50.0
+//       : isMediumScreen
+//           ? 55.0
+//           : 60.0;
+//   double get fontSize => isSmallScreen
+//       ? 14.0
+//       : isMediumScreen
+//           ? 13.0
+//           : 14.0;
+//   double get titleFontSize => isSmallScreen
+//       ? 18.0
+//       : isMediumScreen
+//           ? 17.0
+//           : 18.0;
+
+//   // Container dimensions
+//   double get containerWidth => isSmallScreen
+//       ? 150.0
+//       : isMediumScreen
+//           ? 180.0
+//           : 200.0;
+//   double get containerHeight => isSmallScreen
+//       ? 150.0
+//       : isMediumScreen
+//           ? 180.0
+//           : 200.0;
+
 //   @override
 //   Widget build(BuildContext context) {
-//     double height = MediaQuery.sizeOf(context).height;
-//     // double width = MediaQuery.sizeOf(context).width;
+//     double width = MediaQuery.sizeOf(context).width;
+
+//     // Calculate max width for 2 containers per row with spacing
+//     double maxContainerWidth =
+//         (width - (gridHorizontalPadding * 2) - gridSpacing) / 2;
+
 //     return Scaffold(
 //       backgroundColor: AppColors.primaryColor,
 //       body: SafeArea(
 //         child: Stack(
 //           children: [
+//             // Header Section
 //             Padding(
-//               padding: const EdgeInsets.symmetric(horizontal: 12),
+//               padding: EdgeInsets.symmetric(horizontal: responsivePadding),
 //               child: Transform.translate(
-//                 offset: const Offset(0, 30),
+//                 offset: Offset(0, headerOffset),
 //                 child: Container(
 //                   child: Row(
 //                     crossAxisAlignment: CrossAxisAlignment.start,
 //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                     children: [
 //                       Container(
-//                         width: MediaQuery.sizeOf(context).width / 1.6,
+//                         width: width / (isSmallScreen ? 1.8 : 1.6),
 //                         child: Row(
 //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -83,18 +150,22 @@
 //                               icon: Icon(
 //                                 Icons.arrow_back,
 //                                 color: AppColors.backgroundColor,
+//                                 size: isSmallScreen ? 20 : 24,
 //                               ),
 //                               onPressed: () {
 //                                 Navigator.pop(context);
 //                               },
 //                             ),
-//                             Text(
-//                               "Emi Calculators",
-//                               style: FontManager().getTextStyle(
-//                                 context,
-//                                 lWeight: FontWeight.w600,
-//                                 fontSize: 18,
-//                                 color: AppColors.backgroundColor,
+//                             Flexible(
+//                               child: Text(
+//                                 "EMI Calculators",
+//                                 style: FontManager().getTextStyle(
+//                                   context,
+//                                   lWeight: FontWeight.w600,
+//                                   fontSize: titleFontSize,
+//                                   color: AppColors.backgroundColor,
+//                                 ),
+//                                 overflow: TextOverflow.ellipsis,
 //                               ),
 //                             ),
 //                           ],
@@ -102,9 +173,10 @@
 //                       ),
 //                     ],
 //                   ),
-//                   height: 150,
+//                   height: headerHeight,
 //                   decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(20),
+//                     borderRadius:
+//                         BorderRadius.circular(isSmallScreen ? 16 : 20),
 //                     gradient: LinearGradient(
 //                       begin: Alignment.topCenter,
 //                       end: Alignment.bottomCenter,
@@ -117,36 +189,41 @@
 //                 ),
 //               ),
 //             ),
+
+//             // Custom Shape
 //             Padding(
-//               padding: const EdgeInsets.symmetric(horizontal: 10),
+//               padding: EdgeInsets.symmetric(horizontal: responsivePadding),
 //               child: Transform.translate(
-//                 offset: const Offset(0, 80),
+//                 offset: Offset(0, shapeOffset),
 //                 child: CustomPaint(
 //                   painter: CustomShapePainter(),
 //                 ),
 //               ),
 //             ),
+
+//             // Wrap Section
 //             Transform.translate(
-//               offset: const Offset(0, 85),
+//               offset: Offset(0, gridOffset),
 //               child: Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-//                 child: Container(
-//                   height: height / 1.32,
-//                   child: GridView.builder(
-//                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                       crossAxisCount: 2,
-//                       crossAxisSpacing: 16,
-//                       mainAxisSpacing: 16,
-//                       childAspectRatio: 1,
-//                     ),
-//                     itemCount: calculators.length,
-//                     itemBuilder: (context, index) {
+//                 padding: EdgeInsets.symmetric(
+//                     horizontal: gridHorizontalPadding,
+//                     vertical: responsivePadding * 4),
+//                 child: SingleChildScrollView(
+//                   child: Wrap(
+//                     spacing: gridSpacing,
+//                     runSpacing: gridSpacing,
+//                     alignment: WrapAlignment.start,
+//                     runAlignment: WrapAlignment.start,
+//                     children: calculators.asMap().entries.map((entry) {
+//                       int index = entry.key;
+//                       Map<String, dynamic> calculator = entry.value;
 //                       Widget? screen;
 //                       try {
-//                         screen = calculators[index]['screen'];
+//                         screen = calculator['screen'];
 //                       } catch (e) {
-
+//                         // Handle error silently
 //                       }
+
 //                       return GestureDetector(
 //                         onTap: () {
 //                           if (screen != null) {
@@ -155,7 +232,6 @@
 //                               MaterialPageRoute(builder: (context) => screen!),
 //                             );
 //                           } else {
-
 //                             Navigator.push(
 //                               context,
 //                               MaterialPageRoute(
@@ -163,7 +239,7 @@
 //                                   appBar: AppBar(title: Text('Error')),
 //                                   body: Center(
 //                                     child: Text(
-//                                         'Screen not implemented for ${calculators[index]['name']}'),
+//                                         'Screen not implemented for ${calculator['name']}'),
 //                                   ),
 //                                 ),
 //                               ),
@@ -171,38 +247,50 @@
 //                           }
 //                         },
 //                         child: Container(
+//                           width: containerWidth > maxContainerWidth
+//                               ? maxContainerWidth
+//                               : containerWidth,
+//                           height: containerHeight,
 //                           decoration: BoxDecoration(
 //                             color: Color.fromRGBO(255, 255, 255, 0.23),
 //                             border: Border.all(
 //                               color: Colors.white,
 //                               width: 1.0,
 //                             ),
-//                             borderRadius: BorderRadius.circular(6),
+//                             borderRadius:
+//                                 BorderRadius.circular(isSmallScreen ? 4 : 6),
 //                           ),
 //                           child: Column(
 //                             mainAxisAlignment: MainAxisAlignment.center,
 //                             children: [
 //                               SvgPicture.asset(
-//                                 calculators[index]['svgPath'],
-//                                 width: 50,
-//                                 height: 50,
+//                                 calculator['svgPath'],
+//                                 width: iconSize,
+//                                 height: iconSize,
 //                               ),
-//                               SizedBox(height: 8),
-//                               Text(
-//                                 calculators[index]['name'],
-//                                 style: FontManager().getTextStyle(
-//                                   context,
-//                                   lWeight: FontWeight.w500,
-//                                   fontSize: 14,
-//                                   color: AppColors.backgroundColor,
+//                               SizedBox(height: isSmallScreen ? 10 : 12),
+//                               Flexible(
+//                                 child: Padding(
+//                                   padding: EdgeInsets.symmetric(horizontal: 8),
+//                                   child: Text(
+//                                     calculator['name'],
+//                                     style: FontManager().getTextStyle(
+//                                       context,
+//                                       lWeight: FontWeight.w500,
+//                                       fontSize: fontSize,
+//                                       color: AppColors.backgroundColor,
+//                                     ),
+//                                     textAlign: TextAlign.center,
+//                                     maxLines: 2,
+//                                     overflow: TextOverflow.ellipsis,
+//                                   ),
 //                                 ),
-//                                 textAlign: TextAlign.center,
 //                               ),
 //                             ],
 //                           ),
 //                         ),
 //                       );
-//                     },
+//                     }).toList(),
 //                   ),
 //                 ),
 //               ),
@@ -213,6 +301,8 @@
 //     );
 //   }
 // }
+
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
@@ -233,32 +323,38 @@ class AllCalculatorScreen extends StatefulWidget {
   State<AllCalculatorScreen> createState() => _AllCalculatorScreenState();
 }
 
-class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
+class _AllCalculatorScreenState extends State<AllCalculatorScreen>
+    with SingleTickerProviderStateMixin {
   final List<Map<String, dynamic>> calculators = [
     {
-      'name': 'Credit Card Payoff',
+      'name': 'Credit Card',
       'svgPath': 'assets/icons/financeScreen/f6.svg',
       'screen': CreditCard(),
+      'icon': Icons.credit_card,
     },
     {
       'name': 'EMI',
       'svgPath': 'assets/icons/financeScreen/f5.svg',
       'screen': Emi(),
+      'icon': Icons.account_balance,
     },
     {
       'name': 'Rent vs Buy',
       'svgPath': 'assets/icons/financeScreen/f4.svg',
       'screen': RentBuy(),
+      'icon': Icons.home,
     },
     {
       'name': 'Inflation',
       'svgPath': 'assets/icons/financeScreen/f3.svg',
       'screen': InflationCalculator(),
+      'icon': Icons.trending_up,
     },
     {
       'name': 'SIP',
       'svgPath': 'assets/icons/financeScreen/f1.svg',
       'screen': SIPCalculator(),
+      'icon': Icons.savings,
     },
   ];
 
@@ -268,251 +364,240 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen> {
       MediaQuery.of(context).size.width >= 600 &&
       MediaQuery.of(context).size.width < 900;
   bool get isLargeScreen => MediaQuery.of(context).size.width >= 900;
-  bool get isTablet => MediaQuery.of(context).size.width >= 600;
-  bool get isLandscape =>
-      MediaQuery.of(context).orientation == Orientation.landscape;
 
   // Responsive sizing methods
-  double get responsivePadding => isSmallScreen
-      ? 12.0
-      : isMediumScreen
-          ? 16.0
-          : 20.0;
-  double get headerHeight => isSmallScreen
-      ? 120.0
-      : isMediumScreen
-          ? 140.0
-          : 150.0;
-  double get headerOffset => isSmallScreen
-      ? 20.0
-      : isMediumScreen
-          ? 25.0
-          : 30.0;
-  double get shapeOffset => isSmallScreen
-      ? 70.0
-      : isMediumScreen
-          ? 70.0
-          : 80.0;
-  double get gridOffset => 80.0;
+  double get responsivePadding => isSmallScreen ? 16.0 : 24.0;
+  double get iconSize => 20.0;
+  double get fontSize => isSmallScreen ? 14.0 : 16.0;
+  double get titleFontSize => isSmallScreen ? 24.0 : 28.0;
+  double get subtitleFontSize => isSmallScreen ? 16.0 : 18.0;
+  double get cardElevation => 8.0;
 
-  double get gridHorizontalPadding => isSmallScreen
-      ? 40.0
-      : isMediumScreen
-          ? 25.0
-          : 30.0;
-  double get gridSpacing => isSmallScreen
-      ? 20.0
-      : isMediumScreen
-          ? 24.0
-          : 28.0;
-  double get iconSize => isSmallScreen
-      ? 50.0
-      : isMediumScreen
-          ? 55.0
-          : 60.0;
-  double get fontSize => isSmallScreen
-      ? 14.0
-      : isMediumScreen
-          ? 13.0
-          : 14.0;
-  double get titleFontSize => isSmallScreen
-      ? 18.0
-      : isMediumScreen
-          ? 17.0
-          : 18.0;
+  // Animation state
+  int? _tappedIndex;
+  bool _isGridVisible = false;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _backgroundAnimation;
 
-  // Container dimensions
-  double get containerWidth => isSmallScreen
-      ? 150.0
-      : isMediumScreen
-          ? 180.0
-          : 200.0;
-  double get containerHeight => isSmallScreen
-      ? 150.0
-      : isMediumScreen
-          ? 180.0
-          : 200.0;
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1200),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+    _backgroundAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+          parent: _animationController,
+          curve: Interval(0.2, 1.0, curve: Curves.easeIn)),
+    );
+    Future.delayed(Duration(milliseconds: 200), () {
+      setState(() => _isGridVisible = true);
+      _animationController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.sizeOf(context).width;
-
-    // Calculate max width for 2 containers per row with spacing
-    double maxContainerWidth =
-        (width - (gridHorizontalPadding * 2) - gridSpacing) / 2;
+    double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // Header Section
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: responsivePadding),
-              child: Transform.translate(
-                offset: Offset(0, headerOffset),
-                child: Container(
-                  child: Row(
+      backgroundColor: Colors.white, // Clean, bright background
+      body: Stack(
+        children: [
+          // Animated Gradient Background with Finance Shapes
+
+          // Main Content
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Custom AppBar with Tagline
+                Container(
+                  padding: EdgeInsets.fromLTRB(
+                      responsivePadding, 20.0, responsivePadding, 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        width: width / (isSmallScreen ? 1.8 : 1.6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.arrow_back,
-                                color: AppColors.backgroundColor,
-                                size: isSmallScreen ? 20 : 24,
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: AppColors.primaryColor,
+                              size: isSmallScreen ? 28.0 : 32.0,
                             ),
-                            Flexible(
-                              child: Text(
-                                "EMI Calculators",
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w600,
-                                  fontSize: titleFontSize,
-                                  color: AppColors.backgroundColor,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                          // Expanded(
+                          //   child: Text(
+                          //     "Smart Calculators",
+                          //     style: FontManager().getTextStyle(
+                          //       context,
+                          //       lWeight: FontWeight.w900,
+                          //       fontSize: titleFontSize,
+                          //       color: AppColors.primaryColor,
+                          //     ),
+                          //     textAlign: TextAlign.center,
+                          //   ),
+                          // ),
+                          SizedBox(width: 48.0),
+                        ],
+                      ),
+                      SizedBox(height: 8.0),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: responsivePadding / 2),
+                        child: Text(
+                          "All Your Calculations, One Place",
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w800,
+                            fontSize: 50,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  height: headerHeight,
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(isSmallScreen ? 16 : 20),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        const Color(0xE6061F35),
-                        const Color(0x00061F35),
-                      ],
+                ),
+
+                // Grid Content
+                Expanded(
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: Padding(
+                      padding: EdgeInsets.all(responsivePadding),
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0,
+                          childAspectRatio: 1.6,
+                        ),
+                        itemCount: calculators.length,
+                        itemBuilder: (context, index) {
+                          final calculator = calculators[index];
+                          Widget? screen = calculator['screen'];
+
+                          return GestureDetector(
+                            onTapDown: (_) =>
+                                setState(() => _tappedIndex = index),
+                            onTapUp: (_) => setState(() => _tappedIndex = null),
+                            onTapCancel: () =>
+                                setState(() => _tappedIndex = null),
+                            onTap: () {
+                              if (screen != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => screen),
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Scaffold(
+                                      appBar: AppBar(title: Text('Error')),
+                                      body: Center(
+                                        child: Text(
+                                          'Screen not implemented for ${calculator['name']}',
+                                          style: TextStyle(
+                                              color: AppColors.primaryColor),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: AnimatedScale(
+                              scale: _tappedIndex == index ? 0.92 : 1.0,
+                              duration: Duration(milliseconds: 200),
+                              curve: Curves.easeInOut,
+                              child: Card(
+                                elevation: _tappedIndex == index
+                                    ? 12.0
+                                    : cardElevation,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppColors.primaryColor.withOpacity(0.8),
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        blurRadius: 10.0,
+                                        offset: Offset(4, 4),
+                                      ),
+                                      BoxShadow(
+                                        color: Colors.white.withOpacity(0.7),
+                                        blurRadius: 10.0,
+                                        offset: Offset(-4, -4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Stack(
+                                    alignment: Alignment.bottomLeft,
+                                    children: [
+                                      // BACKGROUND ICON (watermark)
+                                      Opacity(
+                                        opacity: 0.15, // faded background
+                                        child: SvgPicture.asset(
+                                          calculator['svgPath'],
+                                          width: 100,
+                                          height: 100,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+
+                                      // FOREGROUND CONTENT
+                                      Center(
+                                        child: Expanded(
+                                          child: Text(
+                                            calculator['name'],
+                                            style: FontManager().getTextStyle(
+                                              context,
+                                              lWeight: FontWeight.w800,
+                                              fontSize: 18,
+                                              color: AppColors.backgroundColor,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-
-            // Custom Shape
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: responsivePadding),
-              child: Transform.translate(
-                offset: Offset(0, shapeOffset),
-                child: CustomPaint(
-                  painter: CustomShapePainter(),
-                ),
-              ),
-            ),
-
-            // Wrap Section
-            Transform.translate(
-              offset: Offset(0, gridOffset),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: gridHorizontalPadding,
-                    vertical: responsivePadding * 4),
-                child: SingleChildScrollView(
-                  child: Wrap(
-                    spacing: gridSpacing,
-                    runSpacing: gridSpacing,
-                    alignment: WrapAlignment.start,
-                    runAlignment: WrapAlignment.start,
-                    children: calculators.asMap().entries.map((entry) {
-                      int index = entry.key;
-                      Map<String, dynamic> calculator = entry.value;
-                      Widget? screen;
-                      try {
-                        screen = calculator['screen'];
-                      } catch (e) {
-                        // Handle error silently
-                      }
-
-                      return GestureDetector(
-                        onTap: () {
-                          if (screen != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => screen!),
-                            );
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Scaffold(
-                                  appBar: AppBar(title: Text('Error')),
-                                  body: Center(
-                                    child: Text(
-                                        'Screen not implemented for ${calculator['name']}'),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                        child: Container(
-                          width: containerWidth > maxContainerWidth
-                              ? maxContainerWidth
-                              : containerWidth,
-                          height: containerHeight,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(255, 255, 255, 0.23),
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 1.0,
-                            ),
-                            borderRadius:
-                                BorderRadius.circular(isSmallScreen ? 4 : 6),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                calculator['svgPath'],
-                                width: iconSize,
-                                height: iconSize,
-                              ),
-                              SizedBox(height: isSmallScreen ? 10 : 12),
-                              Flexible(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Text(
-                                    calculator['name'],
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: fontSize,
-                                      color: AppColors.backgroundColor,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

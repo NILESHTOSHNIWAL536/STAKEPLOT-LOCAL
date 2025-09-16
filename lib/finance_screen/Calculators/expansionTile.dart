@@ -22,26 +22,30 @@ class CustomExpansionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildExpansionTile(
-          context,
-          title: "How to use the calculator?",
-          icon: Icons.timer_outlined,
-          content: howToUseContent
-              .map((item) => _buildStringListItem(context, item))
-              .toList(),
-        ),
-        const SizedBox(height: 10),
-        _buildExpansionTile(
-          context,
-          title: "How it works?",
-          icon: Icons.settings,
-          content: howItWorksContent
-              .map((item) => _buildListItem(context, item))
-              .toList(),
-        ),
-      ],
+    return Container(
+      margin: EdgeInsets.only(left: 4, right: 4, top: 0, bottom: 15),
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        children: [
+          _buildExpansionTile(
+            context,
+            title: "How to use the calculator?",
+            icon: Icons.timer_outlined,
+            content: howToUseContent
+                .map((item) => _buildStringListItem(context, item))
+                .toList(),
+          ),
+          const SizedBox(height: 10),
+          _buildExpansionTile(
+            context,
+            title: "How it works?",
+            icon: Icons.settings,
+            content: howItWorksContent
+                .map((item) => _buildListItem(context, item))
+                .toList(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -53,8 +57,9 @@ class CustomExpansionTile extends StatelessWidget {
     required List<Widget> content,
   }) {
     return Container(
-      color: AppColors
-          .amtCal, // Ensure the container background is set to your theme color
+      // Ensure the container background is set to your theme color
+      decoration: BoxDecoration(
+          color: AppColors.amtCal, borderRadius: BorderRadius.circular(8)),
       child: Theme(
         data: ThemeData(
           dividerColor:

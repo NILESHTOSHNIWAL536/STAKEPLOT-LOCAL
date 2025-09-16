@@ -408,41 +408,37 @@ class _CreditCardState extends State<CreditCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: AppColors.primaryColorHeader,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: AppColors.backgroundColor,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+          padding: const EdgeInsets.all(12.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: AppColors.primaryColor,
                       ),
-                      GestureDetector(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14),
+                      child: GestureDetector(
                         onTap: () {
                           setState(() {
                             _isInfoVisible = true;
                             _opacity = 1.0; // Fade in
                           });
-                          _timer?.cancel(); 
-                         
+                          _timer?.cancel();
+
                           _timer = Timer(Duration(seconds: 2), () {
                             if (mounted) {
                               setState(() {
@@ -455,63 +451,68 @@ class _CreditCardState extends State<CreditCard> {
                           "Credit Card Payoff Calculator",
                           style: FontManager().getTextStyle(
                             context,
-                            lWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: AppColors.backgroundColor,
+                            lWeight: FontWeight.w800,
+                            fontSize: 40,
+                            color: AppColors.primaryColor,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  AnimatedOpacity(
-                    opacity: _opacity,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                    onEnd: () {
-                      // Hide container after fade-out completes
-                      if (_opacity == 0.0 && mounted) {
-                        setState(() {
-                          _isInfoVisible = false;
-                          print(
-                              'Container hidden: _isInfoVisible = $_isInfoVisible');
-                        });
-                      }
-                    },
-                    child: _isInfoVisible
-                        ? Container(
-                            margin: EdgeInsets.symmetric(vertical: 4),
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppColors.backgroundColor.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white, width: 1),
-                            ),
-                            child: SingleChildScrollView(
-                              child: Text(
-                                "The Credit Card Payoff Calculator helps you estimate how long it will take to pay off your credit card balance. Adjust the sliders to input your current balance, interest rate, and monthly payment to see the payoff time and total interest paid.",
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: AppColors.primaryColor,
-                                ),
-                                textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                AnimatedOpacity(
+                  opacity: _opacity,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  onEnd: () {
+                    // Hide container after fade-out completes
+                    if (_opacity == 0.0 && mounted) {
+                      setState(() {
+                        _isInfoVisible = false;
+                        print(
+                            'Container hidden: _isInfoVisible = $_isInfoVisible');
+                      });
+                    }
+                  },
+                  child: _isInfoVisible
+                      ? Container(
+                          margin: EdgeInsets.symmetric(vertical: 4),
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white, width: 1),
+                          ),
+                          child: SingleChildScrollView(
+                            child: Text(
+                              "The Credit Card Payoff Calculator helps you estimate how long it will take to pay off your credit card balance. Adjust the sliders to input your current balance, interest rate, and monthly payment to see the payoff time and total interest paid.",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: AppColors.backgroundColor,
                               ),
+                              textAlign: TextAlign.center,
                             ),
-                          )
-                        : SizedBox.shrink(),
-                  ),
+                          ),
+                        )
+                      : SizedBox.shrink(),
+                ),
                 AnimatedContainer(
                   duration: Duration(milliseconds: 500),
                   curve: Curves.easeInOut,
-                 
-                  child:Column(
+                  child: Column(
                     children: [
                       SliderPage(
                         slidersList: slidersList,
                         onSliderValueChanged: updateSliderValue,
                       ),
                       Container(
+                        margin: EdgeInsets.only(
+                          left: 4,
+                          right: 4,
+                          top: 0,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.backgroundColor,
                           borderRadius: BorderRadius.circular(12),
@@ -557,9 +558,8 @@ class _CreditCardState extends State<CreditCard> {
                       ),
                     ],
                   ),
-                
-              )],
-              ),
+                )
+              ],
             ),
           ),
         ),
