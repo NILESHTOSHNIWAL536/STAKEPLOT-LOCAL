@@ -133,7 +133,7 @@ class _MyAppState extends State<MyApp> {
 // Update check function
 
 Future<void> checkForUpdate() async {
-  if (Platform.isAndroid) {
+  if (Platform.isAndroid) { 
     try {
       final updateInfo = await InAppUpdate.checkForUpdate();
       if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
