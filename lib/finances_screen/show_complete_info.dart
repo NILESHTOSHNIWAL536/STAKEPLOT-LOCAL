@@ -20,15 +20,14 @@ class ShowCompleteInfo extends StatefulWidget {
 }
 
 class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
-  final List<String> titles =
-  [
+  final List<String> titles = [
     "Credit Card",
     "Budget",
     "Debt",
   ];
 
   final List<String> routes = [
-   "/addcreditCard",
+    "/addcreditCard",
     "/Budget",
     "/debt",
   ];
@@ -44,7 +43,8 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
   @override
   void initState() {
     super.initState();
-    selectedIndex = CreditCardScreenStrings().showCreditCard.value?widget.index:1;
+    selectedIndex =
+        CreditCardScreenStrings().showCreditCard.value ? widget.index : 1;
   }
 
   @override
@@ -116,16 +116,18 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
 
   Widget getTabs(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 22),
+        // const SizedBox(height: 22),
         // Option Buttons
-        for (int i = CreditCardScreenStrings().showCreditCard.value? 0:1; i < routes.length; i++) ...[
+        for (int i = CreditCardScreenStrings().showCreditCard.value ? 0 : 1;
+            i < routes.length;
+            i++) ...[
           InkWell(
             borderRadius: BorderRadius.circular(9),
             onTap: () {
-              setState(() => selectedIndex = i);
+              setState(() => selectedIndex = i);  
               // Navigator.pushNamed(context, routes[i]);
             },
             child: Container(

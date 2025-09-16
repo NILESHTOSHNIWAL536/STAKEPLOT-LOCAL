@@ -87,7 +87,7 @@ Future<void> calculateInflation() async {
         if (redirectUrl != null) {
           uri = Uri.parse(redirectUrl);
           redirectCount++;
-          continue; // Follow the redirect
+          continue;
         } else {
           
           return;
