@@ -132,43 +132,43 @@ class _MyAppState extends State<MyApp> {
 
 // Update check function
 
-// Future<void> checkForUpdate() async {
-//   if (Platform.isAndroid) {
-//     try {
-//       final updateInfo = await InAppUpdate.checkForUpdate();
-//       if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-//         await InAppUpdate.performImmediateUpdate(); // Force update
-//       }
-//     } catch (e)
-//     {
-//     }
-//   } else if (Platform.isIOS) {
-//     final context = updateNavigatorKey.currentContext ?? Get.context;
-//     if (context != null) {
-//       try {
-//         // Check for updates using app_version_update
-//         final result = await AppVersionUpdate.checkForUpdates(
-//           appleId: 'com.stakeplot.pfa', // Replace with your iOS App Store bundle ID
-//         );
-//         // Check if result and canUpdate are non-null and true
-//         if (result.canUpdate == true) {
-//           // Show update dialog
-//           await AppVersionUpdate.showAlertUpdate(
-//             appVersionResult: result,
-//             context: context,
-//             backgroundColor: Colors.white,
-//             title: 'Update Available',
-//             content:
-//                 'A new version (${result.storeVersion ?? "unknown"}) is available. Please update the app.',
-//             updateButtonText: 'Update Now',
-//             cancelButtonText: 'Later',
-//             mandatory: false, // Set to true for forced update
-//           );
-//         } else {
-//         }
-//       } catch (e) {
-//       }
-//     } else {
-//     }
-//   }
-// }
+Future<void> checkForUpdate() async {
+  if (Platform.isAndroid) {
+    try {
+      final updateInfo = await InAppUpdate.checkForUpdate();
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        await InAppUpdate.performImmediateUpdate(); // Force update
+      }
+    } catch (e)
+    {
+    }
+  } else if (Platform.isIOS) {
+    final context = updateNavigatorKey.currentContext ?? Get.context;
+    if (context != null) {
+      try {
+        // Check for updates using app_version_update
+        final result = await AppVersionUpdate.checkForUpdates(
+          appleId: 'com.stakeplot.pfa', // Replace with your iOS App Store bundle ID
+        );
+        // Check if result and canUpdate are non-null and true
+        if (result.canUpdate == true) {
+          // Show update dialog
+          await AppVersionUpdate.showAlertUpdate(
+            appVersionResult: result,
+            context: context,
+            backgroundColor: Colors.white,
+            title: 'Update Available',
+            content:
+                'A new version (${result.storeVersion ?? "unknown"}) is available. Please update the app.',
+            updateButtonText: 'Update Now',
+            cancelButtonText: 'Later',
+            mandatory: false, // Set to true for forced update
+          );
+        } else {
+        }
+      } catch (e) {
+      }
+    } else {
+    }
+  }
+}
