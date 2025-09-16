@@ -370,7 +370,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                     icon: Icon(Icons.auto_fix_high,
                         color: AppColors.finSpaceColor),
                     onPressed: () async {
-                      print("res ");
+                      
                       await getMaskedNumber(context);
                     },
                   ),

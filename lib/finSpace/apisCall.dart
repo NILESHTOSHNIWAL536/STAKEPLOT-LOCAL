@@ -12,7 +12,7 @@ RxBool isListEnabled = false.obs;
 Future<void> getMaskedNumber(BuildContext context) async {
   maskNameController.clear();
   var response = await getDataApiCall("${url}/user/maskedName");
-  print("res ${response.body}");
+  
   if (getFlagOfResponse(response)) {
     var body = jsonDecode(response.body);
     if (body['data'] != null) {
