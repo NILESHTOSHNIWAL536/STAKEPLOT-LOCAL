@@ -46,6 +46,5 @@ Branch Address:  ${data['branchAddress']}
   try {
     Share.share(bankInfo2, subject: "My Bank Account Info");
   } catch (e) {
-    print(e);
   }
 }

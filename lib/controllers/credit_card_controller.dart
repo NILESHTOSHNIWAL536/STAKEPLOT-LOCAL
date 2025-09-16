@@ -55,8 +55,6 @@ Future<void> LinkBankData(context) async {
       
     } 
   } catch (e) {
-    print(e);
-    // debugPrint("⚠️ Error in fetchCardData: $e"
     cardList.clear();
   }
 }

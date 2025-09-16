@@ -33,7 +33,6 @@ class AuthService {
               headers: {'Content-Type': 'application/json'},
               body: jsonEncode({'idToken':  authCode}),
             );
-             printData(response);
              if(!flag)return {};
         }
 

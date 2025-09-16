@@ -133,7 +133,7 @@ class _TribeSearchState extends State<TribeSearch> {
         "Authorization": "$accessToken",
       },
        body: jsonEncode({
-          'userName':data['name'],
+          // 'userName':data['name'],
           'friendUserId':data['_id'],
        }),
     );

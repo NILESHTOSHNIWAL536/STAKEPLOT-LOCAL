@@ -318,7 +318,6 @@ Future<void> forceLogoutUser(
       "userpassword": userpassword,
       "deviceInfo": deviceData.value,
     });
-    print("resson of force logon ${response.body}");
     if (getFlagOfResponse(response)) {
       final body = jsonDecode(response.body);
       // Notify the logged-out device (if applicable)
