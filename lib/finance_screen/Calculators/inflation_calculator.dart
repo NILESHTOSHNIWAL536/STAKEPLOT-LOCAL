@@ -236,7 +236,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                   return Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
+                      color: AppColors.backgroundColor,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
