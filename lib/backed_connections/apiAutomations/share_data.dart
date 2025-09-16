@@ -1,7 +1,5 @@
 import 'package:share_plus/share_plus.dart';
 
-import 'package:share_plus/share_plus.dart';
-
 void shareBankData(Map<String, dynamic> data) {
   // Format the bank info
   final String bankInfo = """
