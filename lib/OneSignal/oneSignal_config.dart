@@ -117,7 +117,55 @@ Future<void> getDeviceInfo(
 
 }
 
+
 void getDeviceLocalDetails(String playerId, context) async {
+  try {
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+      deviceData.value = {
+        'deviceId': playerId,
+        'brand': androidInfo.brand,
+        'device': androidInfo.device,
+        'model': androidInfo.model,
+        'os': 'Android',
+      };
+    } else if (Platform.isIOS) {
+      // For iOS devices
+      final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      deviceData.value = {
+        'deviceId': playerId,
+        'device': iosInfo.name,
+        'brand': iosInfo.model == null ? 'Apple' : iosInfo.model,
+        'model': iosInfo.model == null ? 'iPhone' : iosInfo.model,
+        'os': 'iOS',
+        // 'osVersion': iosInfo.systemVersion
+      };
+    } else {
+      deviceData.value = {
+        'deviceId': (playerId == "" || playerId == null) ? "" : playerId,
+        'device': 'Unknown',
+        'os': 'Unknown',
+        'brand': '',
+        'model': '',
+        //'osVersion': 'Unknown',
+      };
+    }
+  } catch (e) {
+    deviceData.value = {
+      'deviceId': (playerId == "" || playerId == null) ? "" : playerId,
+      'device': 'Unknown',
+      'os': 'Unknown',
+      'brand': 'Unknown',
+      'osVersion': 'Unknown',
+    };
+  }
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  pref.setString('deviceInfo', jsonEncode(deviceData));
+}
+
+void getDeviceLocalDetails2(String playerId, context) async {
   try {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {

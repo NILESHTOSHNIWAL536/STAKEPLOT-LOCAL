@@ -62,56 +62,11 @@ Future<void> calculateInflation() async {
       'years_ahead': inflatedYears.value,
     };
    
-    var uri = Uri.parse(
-        "https://predict.stakeplot.com/predict_inflation/"); // Ensure trailing slash
-    var headers = {
-      'Content-Type': 'application/json; charset=UTF-8',
-    };
-    var requestBody = jsonEncode(body);
-    const maxRedirects = 5;
-    var redirectCount = 0;
-
-    http.Response? response;
-
-    // Follow redirects
-    while (redirectCount < maxRedirects) {
-      response = await http.post(
-        uri,
-        headers: headers,
-        body: requestBody,
-      );
-
-      // Check for redirect status codes (301, 302, 307, 308)
-      if ([301, 302, 307, 308].contains(response.statusCode)) {
-        final redirectUrl = response.headers['location'];
-        if (redirectUrl != null) {
-          uri = Uri.parse(redirectUrl);
-          redirectCount++;
-          continue;
-        } else {
-          
-          return;
-        }
-      } else {
-        break; // Not a redirect, exit loop
-      }
-    }
-
-    // Ensure we have a response before proceeding
-    if (response == null) {
-      return;
-    }
-
-    // Check for too many redirects
-    if (redirectCount >= maxRedirects) {
-      return;
-    }
-
-    // Process the final response
-    if (response!.statusCode == 200) {
+    var response=await postDataApiCall("${url}/user/inflation",body);
+   
+    if (getFlagOfResponse(response))
+    {
       final data = jsonDecode(response.body);
-
-      // Verify expected keys exist
       if (data.containsKey('final_future_value') &&
           data.containsKey('predictions')) {
         inflatedFutureValue.value =
