@@ -55,13 +55,13 @@ class DebtService {
 }
 
 Future<void> calculateInflation() async {
-  
   try {
-     isLoadingInflation.value = true;
+    isLoadingInflation.value = true;
     var body = {
       'amount': originalAmount.value,
       'years_ahead': inflatedYears.value,
     };
+    print("body $body");
     var uri = Uri.parse(
         "https://predict.stakeplot.com/predict_inflation/"); // Ensure trailing slash
     var headers = {
@@ -81,18 +81,14 @@ Future<void> calculateInflation() async {
         body: requestBody,
       );
 
-    
-
       // Check for redirect status codes (301, 302, 307, 308)
       if ([301, 302, 307, 308].contains(response.statusCode)) {
         final redirectUrl = response.headers['location'];
         if (redirectUrl != null) {
-       
           uri = Uri.parse(redirectUrl);
           redirectCount++;
           continue; // Follow the redirect
         } else {
-         
           return;
         }
       } else {
@@ -102,13 +98,11 @@ Future<void> calculateInflation() async {
 
     // Ensure we have a response before proceeding
     if (response == null) {
-     
       return;
     }
 
     // Check for too many redirects
     if (redirectCount >= maxRedirects) {
-     
       return;
     }
 
@@ -123,17 +117,11 @@ Future<void> calculateInflation() async {
             data['final_future_value']?.toDouble() ?? 0.0;
         inflationPredictions.value =
             List<Map<String, dynamic>>.from(data['predictions'] ?? []);
-             showResults.value = true;
-      } else {
-       
-      }
-    } else {
-     
-    }
+        showResults.value = true;
+      } else {}
+    } else {}
   } catch (e) {
-   
-  }
-   finally {
-    isLoadingInflation.value = false; 
+  } finally {
+    isLoadingInflation.value = false;
   }
 }

@@ -498,6 +498,7 @@ class _CreditCardState extends State<CreditCard> {
                         )
                       : SizedBox.shrink(),
                 ),
+                
                 AnimatedContainer(
                   duration: Duration(milliseconds: 500),
                   curve: Curves.easeInOut,

@@ -198,8 +198,13 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                 Center(
                   child: ElevatedButton(
                     onPressed: isLoadingInflation.value
-                        ? null
-                        : () => calculateInflation(),
+                        ? () {
+                            null;
+                          }
+                        : () {
+                            print("nully");
+                            calculateInflation();
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
                       padding: const EdgeInsets.symmetric(
@@ -227,10 +232,11 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                   if (!showResults.value) {
                     return SizedBox.shrink(); // empty widget when not showing
                   }
+
                   return Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.backgroundColor,
+                      color: AppColors.primaryColor,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
