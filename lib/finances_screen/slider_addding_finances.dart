@@ -83,7 +83,7 @@ class SliderAdddingFinances extends StatelessWidget {
             // Display data if it exists, otherwise show placeholder
             if (!getCreditCardBudgetDebts.value || totalItems == 0)
               getPlaceholderCard(
-                "Add a Credit Card, Budget, or Debt to get started.",
+                "Add Budget or Debt to get started.",
                 containerWidth,
               )
             else ...[

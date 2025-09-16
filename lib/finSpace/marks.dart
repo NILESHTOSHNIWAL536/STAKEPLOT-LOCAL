@@ -80,7 +80,7 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
 
 class HeaderWidget extends StatelessWidget {
   bool update;
-   HeaderWidget({Key? key,required this.update}) : super(key: key);
+  HeaderWidget({Key? key, required this.update}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -113,14 +113,14 @@ class HeaderWidget extends StatelessWidget {
         TextButton(
           onPressed: () {
             // Handle skip action
-            if(update){
-               Navigator.pop(context);
-            }
-           else Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => InterestSelectionScreen()),
-            );
+            if (update) {
+              Navigator.pop(context);
+            } else
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => InterestSelectionScreen()),
+              );
           },
           child: Text('Skip',
               style: FontManager2().getTextStyle(context,
@@ -202,13 +202,12 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
   @override
   void initState() {
     super.initState();
-    if (!maskedAvatarsList.contains(userController.avatar.value))
-    {
+    if (!maskedAvatarsList.contains(userController.avatar.value)) {
       userController.avatar.value = maskedAvatarsList[0];
     }
   }
 
- void _showAvatarSelectionSheet(BuildContext context) {
+  void _showAvatarSelectionSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -218,7 +217,8 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
         return SafeArea(
           child: Container(
             padding: EdgeInsets.all(16),
-             height: MediaQuery.sizeOf(context).height/2.5, // Adjust height as needed
+            height: MediaQuery.sizeOf(context).height /
+                2.5, // Adjust height as needed
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -232,7 +232,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                 ),
                 SizedBox(height: 16),
                 Container(
-                  height: MediaQuery.sizeOf(context).height/3.3,
+                  height: MediaQuery.sizeOf(context).height / 3.3,
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4, // 4 avatars per row
@@ -252,7 +252,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color:userController.avatar.value == avatarv
+                              color: userController.avatar.value == avatarv
                                   ? Colors.blue
                                   : Colors.transparent,
                               width: 1,
@@ -274,14 +274,10 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
     );
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    
+
     return Container(
       width: screenSize.width * 0.85,
       padding: EdgeInsets.all(12),
@@ -325,10 +321,8 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                 CircleAvatar(
                   radius: 40,
                   backgroundColor: AppColors.backgroundColor,
-                  child: Obx(()=>AvatarProfileImagePng(
-                      url:userController.avatar.value,
-                      width: 4,
-                      height: 4)),
+                  child: Obx(() => AvatarProfileImagePng(
+                      url: userController.avatar.value, width: 4, height: 4)),
                 ),
                 Positioned(
                   bottom: 7,
@@ -337,7 +331,8 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                     padding: EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.primaryColor, width: 1),
+                      border:
+                          Border.all(color: AppColors.primaryColor, width: 1),
                     ),
                     child: Icon(
                       Icons.edit,
@@ -355,34 +350,30 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
           // Mask name input field
           Center(
             child: Container(
-              
-                
               child: Row(
                 //  mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                 mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   //  SizedBox(width:90),
-                 Obx(()=> Container(
-                   width: screenSize.width / 3,
-                   
-                   child: Text(maskedNameLocal.value,
-                   style: FontManager2().getTextStyle(context,
-                    lWeight: FontWeight.w500,
-                    fontSize: widget.isSmallScreen ? 12 : 14,
-                    lineHeight: 1.4,
-                    color: AppColors.bg1)
-                   ),
-                 )),
-                  SizedBox(width:10),
+                  Obx(() => Container(
+                        width: screenSize.width / 3,
+                        child: Text(maskedNameLocal.value,
+                            style: FontManager2().getTextStyle(context,
+                                lWeight: FontWeight.w500,
+                                fontSize: widget.isSmallScreen ? 12 : 14,
+                                lineHeight: 1.4,
+                                color: AppColors.bg1)),
+                      )),
+                  SizedBox(width: 10),
                   IconButton(
                     icon: Icon(Icons.auto_fix_high,
                         color: AppColors.finSpaceColor),
                     onPressed: () async {
+                      
                       await getMaskedNumber(context);
                     },
                   ),
-                 
                 ],
               ),
               // child: TextField(

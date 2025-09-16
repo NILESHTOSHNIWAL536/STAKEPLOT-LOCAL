@@ -12,6 +12,7 @@ RxBool isListEnabled = false.obs;
 Future<void> getMaskedNumber(BuildContext context) async {
   maskNameController.clear();
   var response = await getDataApiCall("${url}/user/maskedName");
+  
   if (getFlagOfResponse(response)) {
     var body = jsonDecode(response.body);
     if (body['data'] != null) {
@@ -38,7 +39,8 @@ Future<void> addMyIntreastAndName(BuildContext context, var body,
         return;
       } else {
         userController.interestedTags.clear();
-        userController.interestedTags.addAll([...selectedSubCategories, ...selectedCategories]);
+        userController.interestedTags
+            .addAll([...selectedSubCategories, ...selectedCategories]);
         selectedSubCategories.clear();
         selectedCategories.clear();
       }
