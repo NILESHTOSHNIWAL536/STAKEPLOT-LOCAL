@@ -109,7 +109,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       // const SizedBox(height: 20),
                       // InkWell(
                       //   onTap: ()async{
-                      //         print(urlPathString.value);
                       //         if (await canLaunchUrl(Uri.parse(urlPathString.value))) {
                       //             await launchUrl(Uri.parse(urlPathString.value), mode: LaunchMode.externalApplication);
                       //           }

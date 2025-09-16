@@ -72,7 +72,6 @@ Future<void> getBankAccounts() async {
       });
     });
   }
-  print(bankAccountLinkedList);
   addBankApiCall();
   BankStorage.cacheBankDataLocally();
 }

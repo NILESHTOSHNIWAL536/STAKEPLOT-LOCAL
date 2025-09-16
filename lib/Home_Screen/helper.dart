@@ -1318,7 +1318,6 @@ bool checkRangeofDate(BuildContext context, [bool f = true]) {
     return true;
   } catch (e) {
     if (f) {
-      print("eroor $e");
       snackBarCalledfail(context, 'Invalid date format');
     }
     startDateController.text = '';

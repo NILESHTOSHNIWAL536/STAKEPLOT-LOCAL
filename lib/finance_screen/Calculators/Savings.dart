@@ -212,7 +212,6 @@ class _SavingsState extends State<Savings> {
                           setState(() {
                             _isInfoVisible = true;
                             _opacity = 1.0; // Fade in
-                            print('Showing container: opacity = $_opacity');
                           });
                           _timer?.cancel(); // Cancel any existing timer
                           // Start a new timer to fade out after 5 seconds

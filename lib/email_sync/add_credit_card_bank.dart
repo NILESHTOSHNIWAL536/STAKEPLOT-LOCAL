@@ -31,7 +31,6 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
     super.initState();
     filteredBanks.clear();
     filteredBanks.addAll(creditCardBankList);
-    print("all cards $filteredBanks");
     // controller.text = selectedBankName.value;
   }
 

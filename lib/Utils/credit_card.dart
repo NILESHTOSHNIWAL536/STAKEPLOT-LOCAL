@@ -21,7 +21,6 @@ class CreditCardScreenStrings {
             showCreditCard.value=data['showCreditCard'] ??  showCreditCard.value;
       } 
     } catch (e) {
-       print(e);
     }
   }
 

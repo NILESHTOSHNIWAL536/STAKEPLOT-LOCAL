@@ -8,7 +8,6 @@ class HiveHelper {
         Hive.registerAdapter(adapter);
       }
     } catch (e) {
-      debugPrint("⚠️ Adapter already registered: ${adapter.runtimeType}");
     }
   }
 
@@ -19,7 +18,6 @@ class HiveHelper {
         await Hive.openBox<T>(boxName);
       }
     } catch (e) {
-      debugPrint("❌ Error opening Hive box [$boxName]: $e");
     }
   }
 

@@ -116,6 +116,8 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
 
   Widget getTabs(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 22),
         // Option Buttons

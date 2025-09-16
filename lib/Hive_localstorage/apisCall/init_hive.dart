@@ -173,7 +173,6 @@ Future<void> init_post() async {
     );
   } catch (e)
   {
-    debugPrint("❌ Error initializing posts: $e");
   }
 }
 

@@ -490,9 +490,7 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
 
 //   try {
 //     final response = await getDataApiCall(urlPath);
-//     print("navigate ${response.body}");
 //     if (getFlagOfResponse(response)) {
-//       // print("navigate ${response.body}");
 //       final his = jsonDecode(response.body);
 //       transactionChatGraph.clear();
 
@@ -863,9 +861,6 @@ void processChartData() {
       spendingsOnCategories.addAll(newData);
     }
   } catch (e) {
-    print("e-----------------");
-    print(e);
-    print("e-----------------");
   }
 }
 

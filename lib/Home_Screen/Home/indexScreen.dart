@@ -101,7 +101,6 @@ class IndexScreen extends StatelessWidget {
   Widget GetFinora(double height) {
     return Obx(() {
       // Check if Hive has cached data
-      print('totalDebitThisMonth: ${totalDebitThisMonth.value}');
       return SizedBox(
         height: height * (totalDebitThisMonth.value <= 0 ? 0.54 : 0.21),
         child: totalDebitThisMonth.value <= 0

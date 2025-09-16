@@ -224,7 +224,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         _calculateShares();
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -240,7 +239,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       await prefs.setString(
           target, jsonEncode(namesList.join("--").toString().trim()));
     } catch (e) {
-      print(e);
     }
   }
 
@@ -1255,7 +1253,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               if (_opacity == 0.0 && mounted) {
                 setState(() {
                   _isInfoVisible = false;
-                  print('Container hidden: _isInfoVisible = $_isInfoVisible');
                 });
               }
             },

@@ -90,7 +90,6 @@ Future<void> userVerification(TextEditingController emailController,
     }
   } catch (e) {
     acceptReset.value = false;
-    print("errorrrr $e");
     snackBarCalledfail(context, SnackbarData().loginFailedTryAgain);
   }
 }

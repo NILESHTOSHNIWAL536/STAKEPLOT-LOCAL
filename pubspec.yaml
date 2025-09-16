@@ -85,9 +85,7 @@ dependencies:
   flutter_charts: ^0.5.2
   speech_to_text: ^7.0.0
   sign_in_with_apple: ^7.0.1
-  skeletonizer: ^1.4.3
-  googleapis: ^13.2.0
-  
+  skeletonizer: ^1.4.3  
   
   in_app_update: ^4.2.3
   app_version_update: ^6.1.3

@@ -47,9 +47,6 @@ class AuthService {
         if (response.statusCode == 200)return json.decode(response.body);
     } catch (e)
      {
-        print("Error --------------");
-        print(e);
-
     }
 
     return null;

@@ -395,7 +395,6 @@ Future<void> fetchMonthlyData(int year, int month) async {
 //       'debited': List.filled(12, 0.0),
 //     };
 //     currentDays.value = labels;
-//     print('Error in fetchYearlyData: $e');
 //     final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
 //       accountId.value,
 //       period,
@@ -461,7 +460,6 @@ Future<void> fetchMonthlyData(int year, int month) async {
 //               monthlyData['debited']![dayIndex] = getDouble(value['debit']);
 //             }
 //           } catch (e) {
-//             print('Error processing day index: $e');
 //           }
 //         });
 
@@ -508,7 +506,6 @@ Future<void> fetchMonthlyData(int year, int month) async {
 //     };
 
 //     currentDays.value = labels;
-//     print('Error in fetchMonthlyData: $e');
 //     final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
 //       accountId.value,
 //       period,

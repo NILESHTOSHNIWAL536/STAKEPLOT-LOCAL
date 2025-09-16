@@ -27,7 +27,6 @@ static Future<void> cacheCardInsightsDataLocally() async {
     );
     await box.add(cardInsightsData);
     }catch(e){
-      print(e);
     }
   }
 

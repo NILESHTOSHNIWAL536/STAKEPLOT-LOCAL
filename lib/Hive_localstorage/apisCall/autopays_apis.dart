@@ -51,10 +51,8 @@ class CardsLocalStorage {
           isActive: element.isActive,
           isDaily: element.isDaily,
         ));
-        print("autopay $box");
       }
     } catch (e) {
-      print("Error saving cards to Hive: $e");
     }
   }
 
@@ -102,7 +100,6 @@ class CardsLocalStorage {
       allAutoPayData.addAll(cardList);
       isAutoPayFected.value = !isAutoPayFected.value;
     } catch (e) {
-      print(e);
     }
   }
 }

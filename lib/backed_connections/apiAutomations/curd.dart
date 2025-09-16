@@ -150,7 +150,6 @@ Future<http.Response> getTransactionsWithAmount({
  
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
-  print('accessToken: ${accessToken != null ? "present" : "null"}');
 
   // Build the query params
   final queryParams = <String, String>{};

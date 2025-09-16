@@ -562,7 +562,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 // Add phone only if not empty
     if (phone.trim().isNotEmpty) {
-      print("heyy $phone");
       body['phone'] = phone.trim();
     }
 

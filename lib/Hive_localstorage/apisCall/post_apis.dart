@@ -27,7 +27,6 @@ class PostLocalStorage {
         box.add(PostObj.StorePost(element));
       });
     } catch (e) {
-      print("Error saving posts to Hive: $e");
     }
   }
 
@@ -77,7 +76,6 @@ class PostLocalStorage {
     });
 
     } catch (e) {
-      print("Error loading posts from Hive: $e");
     }
   }
 }

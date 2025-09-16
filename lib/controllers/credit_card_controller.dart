@@ -30,13 +30,9 @@ Future<void> fetchCardData() async {
           .toList());
      if(!getCreditCardBudgetDebts.value)getCreditCardBudgetDebts.value= cardList.isNotEmpty;
     } else {
-      // Handle failure case
-      // debugPrint("❌ Failed to fetch card data: ${response.body}");
       cardList.clear();
     }
   } catch (e) {
-    print(e);
-    // debugPrint("⚠️ Error in fetchCardData: $e"
     cardList.clear();
   }
 }
@@ -78,7 +74,6 @@ Future<void> getBanksListCrediCard() async {
     } 
 
   } catch (e) {
-    print(e);
     cardList.clear();
   }
 }
