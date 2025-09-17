@@ -19,7 +19,7 @@ Future<void> initializeOneSignal(BuildContext context) async {
     json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
   }
 
-  if (!pref.containsKey(key) || json["deviceId"] == "deviceData.value")
+  if (!pref.containsKey(key) || json["deviceId"] == "deviceData.value" || json["deviceId"] == "")
   {
      await oneSignalInit();
      await Future.delayed(Duration(seconds: 3)); // Small delay

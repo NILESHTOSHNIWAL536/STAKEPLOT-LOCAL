@@ -109,8 +109,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         'name': name,
         'email': email,
         'dob': dob,
-        'avatarType': avatarUrl,
-        'avatarBackGround': "",
         'isGoogleUser': true,
       }),
     );
@@ -331,8 +329,6 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
         'name': name,
         'email': email,
         'dob': dob,
-        'avatarType': avatarUrl,
-        'avatarBackGround': "",
         'isAppleUser': true,
         'appleUserId': data['appleUserId'],
       }),

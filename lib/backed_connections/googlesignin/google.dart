@@ -24,17 +24,17 @@ class AuthService {
       final String? idToken = googleAuth.idToken;     // final String? accessToken = googleAuth.accessToken;
       if (idToken == null)return null; 
 
-       final String? authCode = await googleUser.serverAuthCode;
+      //  final String? authCode = await googleUser.serverAuthCode;
 
-        if (authCode != null) 
-        {
-          final response =  await http.post(
-              Uri.parse('$url/user/google-gmail-auth'),
-              headers: {'Content-Type': 'application/json'},
-              body: jsonEncode({'idToken':  authCode}),
-            );
-             if(!flag)return {};
-        }
+      //   if (authCode != null) 
+      //   {
+      //     final response =  await http.post(
+      //         Uri.parse('$url/user/google-gmail-auth'),
+      //         headers: {'Content-Type': 'application/json'},
+      //         body: jsonEncode({'idToken':  authCode}),
+      //       );
+      //        if(!flag)return {};
+      //   }
 
       
       final response = await http.post(Uri.parse('$url/user/google-auth'),
