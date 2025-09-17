@@ -74,7 +74,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                       context,
                       lWeight: FontWeight.w500,
                       fontSize: 16,
-                      color: AppColors.primaryColor.withOpacity(0.8),
+                      color: AppColors.accentColor.withOpacity(0.8),
                     ),
                   ),
                 ),
@@ -90,13 +90,13 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                         context,
                         lWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: AppColors.primaryColor.withOpacity(0.7),
+                        color: AppColors.accentColor.withOpacity(0.7),
                       ),
                       floatingLabelStyle: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w500,
                         fontSize: 14,
-                        color: AppColors.primaryColor,
+                        color: AppColors.accentColor,
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       contentPadding: const EdgeInsets.symmetric(
@@ -129,7 +129,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                       context,
                       lWeight: FontWeight.w400,
                       fontSize: 16,
-                      color: AppColors.primaryColor,
+                      color: AppColors.accentColor,
                     ),
                     onChanged: (value) {
                       originalAmount.value = double.tryParse(value) ?? 10000.0;
@@ -148,13 +148,13 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                         context,
                         lWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: AppColors.primaryColor.withOpacity(0.7),
+                        color: AppColors.accentColor.withOpacity(0.7),
                       ),
                       floatingLabelStyle: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w500,
                         fontSize: 14,
-                        color: AppColors.primaryColor,
+                        color: AppColors.accentColor,
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       contentPadding: const EdgeInsets.symmetric(
@@ -187,7 +187,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                       context,
                       lWeight: FontWeight.w400,
                       fontSize: 16,
-                      color: AppColors.primaryColor,
+                      color: AppColors.accentColor,
                     ),
                     onChanged: (value) {
                       inflatedYears.value = double.tryParse(value) ?? 5.0;
@@ -202,7 +202,6 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                             null;
                           }
                         : () {
-                            
                             calculateInflation();
                           },
                     style: ElevatedButton.styleFrom(
@@ -265,7 +264,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                             context,
                             lWeight: FontWeight.w400,
                             fontSize: 14,
-                            color: AppColors.primaryColor,
+                            color: AppColors.accentColor,
                           ),
                         ),
                         const SizedBox(height: 18),
@@ -293,7 +292,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                                             context,
                                             lWeight: FontWeight.w400,
                                             fontSize: 14,
-                                            color: AppColors.primaryColor,
+                                            color: AppColors.accentColor,
                                           ),
                                         ),
                                       )),
