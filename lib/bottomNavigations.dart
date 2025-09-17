@@ -26,6 +26,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 
+import "auth_service/login_apis.dart";
 import "finances_screen/index_finances.dart";
 import "offline.dart";
 
@@ -302,7 +303,7 @@ Widget showUserData(BuildContext context) {
                           Navigator.pushReplacementNamed(context, '/home');
                         }).catchError((error) {});
 
-                        loginUser(emailController, passwordController, context);
+                     LoginService.loginUser(emailController, passwordController, context);
                       },
                       child: Container(
                         padding:

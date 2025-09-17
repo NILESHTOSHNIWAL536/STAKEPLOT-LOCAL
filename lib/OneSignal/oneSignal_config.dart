@@ -10,6 +10,8 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth_service/login_apis.dart';
+
 Future<void> initializeOneSignal(BuildContext context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String key = "deviceInfo";
@@ -73,25 +75,11 @@ void navigateScreens(context, screen) {
   }
 }
 
-// void navigateScreen(context) {
-//   OneSignal.Notifications.addClickListener((event) {
-//     String? screen = event.notification.additionalData?['screen'];
-//     if (screen != null) {
-//       Navigator.pushNamed(context, screen);
-//     } else {
-//     }
-//   });
-
-// }
-
 Future<void> oneSignalInit() async {
   try {
-    // 66bc1852-d40b-4ad0-8a11-5e3d0da698a2
-    // 66bc1852-d40b-4ad0-8a11-5e3d0da698a2
     String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
     OneSignal.initialize(appId);
-    // OneSignal.Notifications.requestPermission(true);
   } catch (e) {}
 }
 
@@ -112,8 +100,8 @@ Future<void> getDeviceInfo(
   deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
   if(emailController.text=="testuser@gmail.com")
   {
-         loginUser(emailController, passwordController, context);
-  }else{ userVerification(emailController, passwordController, context);}
+        LoginService.loginUser(emailController, passwordController, context);
+  }else{ LoginService.userVerification(emailController, passwordController, context);}
 
 }
 
@@ -132,7 +120,6 @@ void getDeviceLocalDetails(String playerId, context) async {
         'os': 'Android',
       };
     } else if (Platform.isIOS) {
-      // For iOS devices
       final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       deviceData.value = {
         'deviceId': playerId,
@@ -140,7 +127,6 @@ void getDeviceLocalDetails(String playerId, context) async {
         'brand': iosInfo.model == null ? 'Apple' : iosInfo.model,
         'model': iosInfo.model == null ? 'iPhone' : iosInfo.model,
         'os': 'iOS',
-        // 'osVersion': iosInfo.systemVersion
       };
     } else {
       deviceData.value = {
@@ -149,7 +135,6 @@ void getDeviceLocalDetails(String playerId, context) async {
         'os': 'Unknown',
         'brand': '',
         'model': '',
-        //'osVersion': 'Unknown',
       };
     }
   } catch (e) {

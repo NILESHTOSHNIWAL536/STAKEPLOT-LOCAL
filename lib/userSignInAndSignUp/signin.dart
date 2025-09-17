@@ -27,6 +27,8 @@ import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../auth_service/login_apis.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -138,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (userdataApple != null &&
                                         userdataApple['data']['accessToken'] !=
                                             null) {
-                                      loginCalledDataForApple(
+                                       LoginService.loginCalledData(
                                           userdataApple, context);
                                     } else if (userdataApple != null) {
                                       Navigator.push(
@@ -182,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           final userdata = await AuthService().signInWithGoogle(context);
           if (userdata != null && userdata['data']['accessToken'] != null) {
-            loginCalledDataForApple(userdata, context);
+             LoginService.loginCalledData(userdata, context);
           } else if (userdata != null) {
             Navigator.push(
               context,
