@@ -121,38 +121,41 @@ class _LoginScreenState extends State<LoginScreen> {
                           FontAwesomeIcons.google, Colorcodes.white, context),
                       // buildGoogleSignIn(),
                       const SizedBox(height: 20),
-                      // Platform.isAndroid
-                      //     ? Text('')
-                      //     : SignInWithAppleButton(
-                      //         onPressed: () async {
-                      //           if (appleSignInBool.value)
-                      //             return; // Prevent multiple clicks
-                      //           appleSignInBool.value =
-                      //               true; // Set loading state
-                      //           try {
-                      //             final userdataApple = await AuthService()
-                      //                 .signInWithApple(context);
-
-                      //             if (userdataApple != null &&
-                      //                 userdataApple['data']['accessToken'] !=
-                      //                     null) {
-                      //               loginCalledDataForApple(
-                      //                   userdataApple, context);
-                      //             } else if (userdataApple != null) {
-                      //               Navigator.push(
-                      //                 context,
-                      //                 MaterialPageRoute(
-                      //                     builder: (context) =>
-                      //                         UserDetailsPage2(
-                      //                             data: userdataApple)),
-                      //               );
-                      //             } else {}
-                      //           } finally {
-                      //             appleSignInBool.value =
-                      //                 false; // Reset loading state
-                      //           }
-                      //         },
-                      //       ),
+                      Platform.isAndroid
+                          ? Text('')
+                          : Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: SignInWithAppleButton(
+                                onPressed: () async {
+                                  if (appleSignInBool.value)
+                                    return; // Prevent multiple clicks
+                                  appleSignInBool.value =
+                                      true; // Set loading state
+                                  try {
+                                    final userdataApple = await AuthService()
+                                        .signInWithApple(context);
+                            
+                                    if (userdataApple != null &&
+                                        userdataApple['data']['accessToken'] !=
+                                            null) {
+                                      loginCalledDataForApple(
+                                          userdataApple, context);
+                                    } else if (userdataApple != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserDetailsPage2(
+                                                    data: userdataApple)),
+                                      );
+                                    } else {}
+                                  } finally {
+                                    appleSignInBool.value =
+                                        false; // Reset loading state
+                                  }
+                                },
+                              ),
+                          ),
 
                       // const Spacer(),
 
