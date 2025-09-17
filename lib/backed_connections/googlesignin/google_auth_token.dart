@@ -13,7 +13,7 @@ class GoogleAuthToken
    static List<String> scopes=[
         'email',
         'profile',
-        "https://www.googleapis.com/auth/gmail.readonly",
+        // "https://www.googleapis.com/auth/gmail.readonly",
         // "https://www.googleapis.com/auth/userinfo.email"
       ];
 
