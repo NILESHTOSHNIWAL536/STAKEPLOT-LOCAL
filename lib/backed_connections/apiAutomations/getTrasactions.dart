@@ -819,19 +819,23 @@ void addTransaction(String amount, String subCategory, String categories,
   };
   final response = await postDataApiCall("${url}/transaction/add", body);
   if (getFlagOfResponse(response)) {
-    final body = json.decode(response.body);
-    if (!isSplit && snackBar) {
-      snackBarCalled(
-          context, SnackbarData().transactionSuccess, AppColors.primaryColor);
-    }
-    transactionsHistory.insert(
-        0, TransactionModel.fromJson(body['data'][0]['data']));
+      final body = json.decode(response.body);
+      transactionsHistory.insert(0, TransactionModel.fromJson(body['data'][0]['data']));
+      Future.wait([
+        () async => getCategoryData(context),
+        () async => getAutoMationsTransactionsCustom(getFormattedDate(), context),
+        () async {
+          reloadHistory.value = !reloadHistory.value;
+          setDonectChat.value = !setDonectChat.value;
+          if (!isSplit && snackBar) {
+            snackBarCalled(context, SnackbarData().transactionSuccess, AppColors.primaryColor);
+          }
+          Navigator.pop(context);
+        }
+      ].map((fn) => fn())).then((_) {
+        // All actions are complete
+      });
 
-    reloadHistory.value = !reloadHistory.value;
-    getCategoryData(context);
-    setDonectChat.value = !setDonectChat.value;
-    getAutoMationsTransactionsCustom(getFormattedDate(), context);
-    Navigator.pop(context);
   } else {
     snackBarCalledfail(context, SnackbarData().transactionAddFail, Colors.red);
   }

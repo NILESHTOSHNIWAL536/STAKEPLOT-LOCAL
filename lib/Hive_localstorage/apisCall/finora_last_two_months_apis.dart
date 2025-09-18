@@ -1,24 +1,20 @@
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora_prev_months/finora_last_two_months_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-
 import '../../Home_Screen/finora_last2months_dashboard.dart';
 import 'init_hive.dart';
 
 class FinoraLastTwoMonthsStorage {
-  // static final RxMap<String, dynamic> finoraTransactionData =
-  //     <String, dynamic>{}.obs;
-
   static Future<void> cacheFinoraLastTwoMonthsDataLocally(
       Map<String, dynamic> data) async {
-          HiveHelper.openBoxIfNot<FinoraLastTwoMonthsModel>(HiveStorage.finoraLastTwoMonthsBoxName);
+    HiveHelper.openBoxIfNot<FinoraLastTwoMonthsModel>(
+        HiveStorage.finoraLastTwoMonthsBoxName);
     final box = await HiveStorage.finoraLastTwoMonthsBox;
     await box.clear();
     final model = FinoraLastTwoMonthsModel(
       month1Name: data['month1Name']?.toString(),
       month2Name: data['month2Name']?.toString(),
-      month1Avg: data['month1Avg'].toString() ,
+      month1Avg: data['month1Avg'].toString(),
       month2Avg: data['month2Avg'].toString(),
       month1DailySums: (data['month1DailySums'] as List<dynamic>?)
               ?.cast<Map<String, dynamic>>() ??
@@ -29,11 +25,11 @@ class FinoraLastTwoMonthsStorage {
     );
 
     await box.add(model);
-   
   }
 
   static Future<void> loadFinoraLastTwoMonthsDataFromHive() async {
-    HiveHelper.openBoxIfNot<FinoraLastTwoMonthsModel>(HiveStorage.finoraLastTwoMonthsBoxName);
+    HiveHelper.openBoxIfNot<FinoraLastTwoMonthsModel>(
+        HiveStorage.finoraLastTwoMonthsBoxName);
     final box = await HiveStorage.finoraLastTwoMonthsBox;
     if (box.isNotEmpty) {
       // Convert all values to a list

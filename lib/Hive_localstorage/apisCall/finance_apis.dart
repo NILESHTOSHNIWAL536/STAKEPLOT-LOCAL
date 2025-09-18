@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:hive/hive.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
 class FinanceLocalStorage {
   static Future<void> cacheFinanceDataLocally({

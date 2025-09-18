@@ -1,33 +1,28 @@
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_data/card_insights_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:hive/hive.dart';
-
-import 'package:flutter/material.dart';
-
 import 'init_hive.dart';
 
 class CategoryStorage {
-
   // finora
-static Future<void> cacheCardInsightsDataLocally() async {
-  HiveHelper.openBoxIfNot<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
+  static Future<void> cacheCardInsightsDataLocally() async {
+    HiveHelper.openBoxIfNot<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
     final box = await HiveStorage.cardInsightsBox;
     await box.clear();
-    try{
-    final cardInsightsData = CardInsightsModel(
-      totalDebitThisMonth: totalDebitThisMonth.value,
-      totalDebitThisWeek: totalDebitThisWeek.value,
-      moreDrasticChange: moreDrasticChange.cast<Map<String, dynamic>>(),
-      moreDrasticChangeWeek: moreDrasticChangeWeek.cast<Map<String, dynamic>>(),
-      frequentPayments: frequentPayments.cast<Map<String, dynamic>>(),
-      frequentPaymentsWeek: frequentPaymentsWeek.cast<Map<String, dynamic>>(),
-      categoriesList: categoriesList.cast<Map<String, dynamic>>(),
-    );
-    await box.add(cardInsightsData);
-    }catch(e){
-    }
+    try {
+      final cardInsightsData = CardInsightsModel(
+        totalDebitThisMonth: totalDebitThisMonth.value,
+        totalDebitThisWeek: totalDebitThisWeek.value,
+        moreDrasticChange: moreDrasticChange.cast<Map<String, dynamic>>(),
+        moreDrasticChangeWeek:
+            moreDrasticChangeWeek.cast<Map<String, dynamic>>(),
+        frequentPayments: frequentPayments.cast<Map<String, dynamic>>(),
+        frequentPaymentsWeek: frequentPaymentsWeek.cast<Map<String, dynamic>>(),
+        categoriesList: categoriesList.cast<Map<String, dynamic>>(),
+      );
+      await box.add(cardInsightsData);
+    } catch (e) {}
   }
 
   static Future<void> loadCardInsightsDataFromHive() async {
@@ -53,13 +48,13 @@ static Future<void> cacheCardInsightsDataLocally() async {
           List<Map<String, dynamic>>.from(latestData.categoriesList);
 
       isFinoraVisible.value = totalDebitThisMonth.value > 0;
-    } else {
-    }
+    } else {}
   }
 
   static Future<void> closeCardInsightsBox() async {
     if (Hive.isBoxOpen(HiveStorage.cardInsightsBoxName)) {
-      await Hive.box<CardInsightsModel>(HiveStorage.cardInsightsBoxName).close();
+      await Hive.box<CardInsightsModel>(HiveStorage.cardInsightsBoxName)
+          .close();
     }
   }
 }

@@ -2,8 +2,6 @@ import 'package:flutter_application_code_stakeplot/Hive_localstorage/insights_da
 import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
 import 'package:hive/hive.dart';
 import 'package:get/get.dart';
-
-import '../hive_storage.dart';
 import 'init_hive.dart';
 
 class InsightsLocalStorage {

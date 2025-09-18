@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    initializeData(context, mounted);
+    // initializeData(context, mounted);
     // getTopThreeTransactions(context);
     HomeWidgetBindUpdate();
     if (!Get.isRegistered<WeeklyPopupController>(

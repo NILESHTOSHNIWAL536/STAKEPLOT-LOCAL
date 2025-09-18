@@ -1,7 +1,6 @@
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/post_data.dart/post_hive_storage.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../model/post_model.dart'; 
 import '../hive_storage.dart';

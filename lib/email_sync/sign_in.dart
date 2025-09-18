@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lottie/lottie.dart';
-
 import '../Constants/app_styles.dart';
 import '../Utils/homepageStrings.dart.dart';
 import '../animated/booleanFlag.dart';
 import '../avatarProfile.dart';
-import '../backed_connections/apiConnect/signInAndOut.dart';
 import '../backed_connections/googlesignin/google.dart';
-import '../colorcodes.dart';
 import 'add_credit_card_bank.dart';
 import 'custom_steps.dart';
 import 'data_loading.dart';

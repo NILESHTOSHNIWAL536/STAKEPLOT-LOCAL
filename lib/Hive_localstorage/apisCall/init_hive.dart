@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/bank_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_last_two_months_apis.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storag
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/transactions_data/transaction.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../autopays_data/cards_data.dart';
 import '../bank_bata/bank_account_model.dart';
 import '../bank_bata/consent_detail_model.dart';
@@ -27,7 +25,6 @@ import 'autopays_apis.dart';
 import 'finora_apis.dart';
 import 'fipmetric_apis.dart';
 import 'transactions_apis.dart';
-
 part 'hive_helper.dart';
 
 /// ---------------------------------------------------------
@@ -175,6 +172,3 @@ Future<void> init_post() async {
   {
   }
 }
-
-
-

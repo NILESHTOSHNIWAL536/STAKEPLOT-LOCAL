@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/controllers/controllerManagem
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/two_factor_email_verification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/snackBar.dart';
+import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
 
 class LoginService {
@@ -98,12 +99,13 @@ class LoginService {
     String accessToken = body['data']['accessToken'];
     initGetControllers();
     pref.setString("accessToken", "Bearer " + accessToken);
-    await getBankAccounts();
+    // await getBankAccounts();
     await initializeOneSignal(context);
     userController.userId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
     acceptReset.value = false;
     getPhoneNo(body);
+    callApi(context);
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 
@@ -122,5 +124,3 @@ class LoginService {
     number.value = phone;
   }
 }
-
-

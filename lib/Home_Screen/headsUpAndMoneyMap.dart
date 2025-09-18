@@ -54,7 +54,8 @@ class _InsightsScreenState extends State<InsightsScreen>
   late Animation<double> _tiltAnimation;
   final InsightsController _controller = Get.put(InsightsController());
 
-  final List<Map<String, dynamic>> _navigationItems = [
+  final List<Map<String, dynamic>> _navigationItems =
+  [
     {
       'title': HomepageStringsDart().headsUp,
       'icon': Icons.send,
@@ -116,11 +117,6 @@ class _InsightsScreenState extends State<InsightsScreen>
       AppColors.autoPay3,
       AppColors.autoPay4,
       AppColors.autoPay5,
-
-      // Color.fromARGB(255, 36, 55, 57),
-      // Color.fromARGB(255, 150, 193, 108),
-      // Color.fromARGB(255, 224, 150, 86),
-      // Color.fromARGB(255, 77, 79, 217),
     ];
     return colors[index % colors.length];
   }

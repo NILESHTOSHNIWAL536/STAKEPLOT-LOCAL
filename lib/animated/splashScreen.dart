@@ -18,6 +18,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../Hive_localstorage/apisCall/init_hive.dart';
+import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../OneSignal/oneSignal_config.dart';
 import '../Utils/credit_card.dart';
 
@@ -36,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
     callApis();
     initGetControllers();
     initializeOneSignal(context);
+    initializeData(context, mounted);
   }
 
   Future<void> _checkForUpdatesAndNavigate() async {

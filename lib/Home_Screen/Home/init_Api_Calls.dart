@@ -41,6 +41,7 @@ void callApi(context)async
     getAutoPayInfo();
     getAllTransactionHistory(context,false,false,isRefreshing: true);
     getAllTransactionHistory(context,true,false,isRefreshing: true);
+    userController.fetchUserInfo(); 
     custom = getthelist();
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     clearAllFlags();

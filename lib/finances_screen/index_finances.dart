@@ -277,7 +277,3 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
     );
   }
 }
-
-// CustomClipper for the header wave. Improved to match the image's curve.
-
-// CustomClipper for the main card's complex shape. Improved for accuracy.
