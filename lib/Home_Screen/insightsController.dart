@@ -14,68 +14,6 @@ class InsightsController extends GetxController {
   final RxList<Map<String, dynamic>> totalInSightsMoneyMap =
       <Map<String, dynamic>>[].obs;
   final RxBool getTotalInsightsHistorytotalMoneyMap = false.obs;
-  // Future<void> getHomePageInsights(BuildContext context) async {
-  //   try {
-  //     final response =
-  //         await getDataApiCall("${url}/transactionauto/get-headsup-messages");
-  //     if (response.statusCode == 200) {
-  //       final his = jsonDecode(response.body);
-  //       final obj = his['data'] as List;
-  //       totalInSights.clear();
-  //       totalInSights
-  //           .addAll(obj.map((item) => item as Map<String, dynamic>).toList());
-  //       getTotalInsightsHistory.value = !getTotalInsightsHistory.value;
-
-  //       await InsightsLocalStorage.cacheInsightsData(
-  //         totalInSights: totalInSights,
-  //         totalInSightsMoneyMap: totalInSightsMoneyMap,
-  //       );
-  //     } else {
-  //       throw Exception('API failed: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     final cachedInsights = await InsightsLocalStorage.loadInsightsFromHive();
-  //     if (cachedInsights != null) {
-
-  //       totalInSights.assignAll(cachedInsights.totalInSights);
-  //       getTotalInsightsHistory.value = !getTotalInsightsHistory.value;
-  //       return;
-  //     }
-
-  //   }
-  // }
-
-  // Future<void> getHomePageMoneyMapInsights(BuildContext context) async {
-  //   try {
-  //     final response =
-  //         await getDataApiCall("${url}/transactionauto/get-money-map-messages");
-  //     if (response.statusCode == 200) {
-  //       final his = jsonDecode(response.body);
-  //       final obj = his['data'] as List;
-  //       totalInSightsMoneyMap.clear();
-  //       totalInSightsMoneyMap
-  //           .addAll(obj.map((item) => item as Map<String, dynamic>).toList());
-  //       getTotalInsightsHistorytotalMoneyMap.value =
-  //           !getTotalInsightsHistorytotalMoneyMap.value;
-
-  //       await InsightsLocalStorage.cacheInsightsData(
-  //         totalInSights: totalInSights,
-  //         totalInSightsMoneyMap: totalInSightsMoneyMap,
-  //       );
-  //     } else {
-  //       throw Exception('API failed: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     final cachedInsights = await InsightsLocalStorage.loadInsightsFromHive();
-  //     if (cachedInsights != null) {
-  //       totalInSightsMoneyMap.assignAll(cachedInsights.totalInSightsMoneyMap);
-  //       getTotalInsightsHistorytotalMoneyMap.value =
-  //           !getTotalInsightsHistorytotalMoneyMap.value;
-  //       return;
-  //     }
-
-  //   }
-  // }
 
   Future<void> getHomePageInsights(BuildContext context) async {
     // 1️⃣ Load cache first
@@ -123,6 +61,7 @@ class InsightsController extends GetxController {
       totalInSightsMoneyMap.assignAll(cachedInsights.totalInSightsMoneyMap);
       getTotalInsightsHistorytotalMoneyMap.value =
           !getTotalInsightsHistorytotalMoneyMap.value;
+      return;
     }
 
     // 2️⃣ Try API fetch in background

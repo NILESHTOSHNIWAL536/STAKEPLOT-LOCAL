@@ -46,7 +46,6 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
     currentDays.value = List.from(widget.days);
     getAllTransactionHistory(context, true, isYearView.value,
         isRefreshing: true);
-
     updateMonthLabels();
     filterDataForSelectedMonth();
     scrollController.addListener(_onScroll);
@@ -56,7 +55,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
     currentPage = 1;
     isLoadingMore.value = false;
     String currentMonth = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    getAutoMationsTransactionsCustom(currentMonth, context, 'month');
+    getWeeklyGraphAndCustomDateGraph(currentMonth, context, weekORmonth: 'month',isSplashScreen: true);
     getAllTransactionHistory(context, false, false, isRefreshing: true);
   }
 

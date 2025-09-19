@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -23,8 +21,6 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
   @override
   void initState() {
     super.initState();
-    
-    // initCardInsightsData();
   }
 
   @override

@@ -35,9 +35,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
 
   List lock = HomepageStringsDart().lockPatterns;
 
-  void initializeData() {
-    getBankAccounts();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -418,8 +416,7 @@ Widget setPinForAccountHide(context) {
             builder: (context) => ShareAccountLogin(),
           ),
         );
-        // Uncomment the line below if you want to fetch bank accounts after connecting
-        // getBankAccounts();
+     
       },
       child: Column(
         children: [

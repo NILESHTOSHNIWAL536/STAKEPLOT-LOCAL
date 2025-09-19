@@ -397,8 +397,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                   }
 
                   getCategoryData(context);
-                  tagBool.value =
-                      false; // if anything goes wrong in tag check here first
+                  tagBool.value =false;
                 },
                 child: Obx(() => tagBool.value
                     ? Spinner(

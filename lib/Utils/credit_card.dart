@@ -19,7 +19,7 @@ class CreditCardScreenStrings {
       if (response.statusCode == 200) 
       {
             var data = jsonDecode(response.body)['data'] ?? {};
-            showCreditCard.value= true //data['showCreditCard'] ??  showCreditCard.value;
+            showCreditCard.value= true; //data['showCreditCard'] ??  showCreditCard.value;
       } 
     } catch (e) {
     } 

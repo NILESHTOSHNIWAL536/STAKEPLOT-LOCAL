@@ -9,7 +9,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
@@ -17,7 +16,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:get/get.dart';
-
+import '../../backed_connections/backServices.dart/bankInfo.dart';
 import '../../controllers/user-controller.dart';
 
 void callApi(context)async
@@ -41,6 +40,8 @@ void callApi(context)async
     getAutoPayInfo();
     getAllTransactionHistory(context,false,false,isRefreshing: true);
     getAllTransactionHistory(context,true,false,isRefreshing: true);
+    getCategoryData(context);
+    getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,isSplashScreen: true);
     userController.fetchUserInfo(); 
     custom = getthelist();
     allOrGroupTransactionsName.value = StringConstant.allTransactions;

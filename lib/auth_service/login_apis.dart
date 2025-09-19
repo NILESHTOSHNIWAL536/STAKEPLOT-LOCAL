@@ -99,7 +99,6 @@ class LoginService {
     String accessToken = body['data']['accessToken'];
     initGetControllers();
     pref.setString("accessToken", "Bearer " + accessToken);
-    // await getBankAccounts();
     await initializeOneSignal(context);
     userController.userId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];

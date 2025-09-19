@@ -11,7 +11,6 @@ import 'package:flutter_application_code_stakeplot/Community_Page/widgets/buildb
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
-
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';

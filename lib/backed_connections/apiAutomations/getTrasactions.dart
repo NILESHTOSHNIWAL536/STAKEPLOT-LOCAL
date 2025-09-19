@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
+import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -305,9 +306,10 @@ void getAutoMationsTransactionsWeekly() async {
   }
 }
 
-Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
-    [String weekORmonth = 'month', String? endDate]) async {
-  if (accountId.value.trim().isEmpty) {
+Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
+    {String weekORmonth = 'month', String? endDate,bool isSplashScreen=false}) async {
+  if (accountId.value.trim().isEmpty)
+  {
     _setEmptyState(weekORmonth, date, endDate);
     return;
   }
@@ -328,6 +330,11 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
       // Fallback to current date if parsing fails
       formattedDate = DateFormat('yyyy-MM').format(DateTime.now());
     }
+  }
+
+  if((weekORmonth == 'month' || weekORmonth == 'Month') && !isSplashScreen)
+  {
+     await FinanceLocalStorage.loadFinanceFromHive(accountId.value, storedPeriod, formattedDate, endDate);
   }
 
   // Try loading from Hive first
@@ -459,126 +466,6 @@ Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
   }
 }
 
-// Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context,
-//     [String weekORmonth = 'month', String? endDate]) async {
-//   if (accountId.value.trim().isEmpty) {
-//     _setEmptyState(weekORmonth, date, endDate);
-//     return;
-//   }
-
-//   String storedPeriod = weekORmonth == 'month'
-//       ? 'Month'
-//       : weekORmonth == 'week'
-//           ? 'Week'
-//           : 'Custom';
-
-//   // Try loading from Hive first
-//   final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
-//       accountId.value, storedPeriod, date, endDate);
-//   if (cachedFinance != null) {
-//     return;
-//   }
-
-//   // Show loading state
-//   List<String> labelsLocal = [];
-//   List<double> debitList = [];
-//   List<double> creditList = [];
-
-//   String urlPath = endDate != null && weekORmonth == 'Custom'
-//       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
-//       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
-
-//   try {
-//     final response = await getDataApiCall(urlPath);
-//     if (getFlagOfResponse(response)) {
-//       final his = jsonDecode(response.body);
-//       transactionChatGraph.clear();
-
-//       try {
-//         final data = his['data']['result'] as Map;
-//         totalDebitValuePercent.value = double.tryParse(
-//                 his['data']['debitChangePercentage']?.toString() ?? '0') ??
-//             0;
-//         totalDebitValue.value =
-//             double.tryParse(his['data']['totalDebit']?.toString() ?? '0') ?? 0;
-//         maxYValue.value =
-//             double.tryParse(his['data']['maxAmount']?.toString() ?? '500') ??
-//                 500;
-//         if (maxYValue.value == 0) maxYValue.value = 500.0;
-
-//         if (weekORmonth == 'Custom' && endDate != null) {
-//           DateTime startDate = DateTime.parse(date);
-//           DateTime end = DateTime.parse(endDate);
-//           int daysDiff = end.difference(startDate).inDays + 1;
-//           debitList = List.filled(daysDiff, 0.0);
-//           creditList = List.filled(daysDiff, 0.0);
-
-//           for (int i = 0; i < daysDiff; i++) {
-//             DateTime currentDate = startDate.add(Duration(days: i));
-//             labelsLocal.add(DateFormat('MMM d').format(currentDate));
-//           }
-
-//           data.forEach((key, value) {
-//             DateTime txDate = DateTime.parse(key);
-//             if (txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
-//                 txDate.isBefore(end.add(Duration(days: 1)))) {
-//               int index = txDate.difference(startDate).inDays;
-//               if (index >= 0 && index < debitList.length) {
-//                 debitList[index] = getDouble(value['debit']);
-//                 creditList[index] = getDouble(value['credit']);
-//               }
-//             }
-//           });
-//         } else {
-//           data.forEach((key, value) {
-//             String label = weekORmonth == 'Custom'
-//                 ? key
-//                 : key.toString().substring(key.length - 2);
-//             labelsLocal.add(label);
-//             debitList.add(getDouble(value['debit']));
-//             creditList.add(getDouble(value['credit']));
-//           });
-//         }
-
-//         if (weekORmonth == 'Week') {
-//           labelsLocal = getWeekDays();
-//           if (debitList.length < 7) {
-//             debitList = List.filled(7, 0.0)
-//               ..setRange(0, debitList.length, debitList);
-//             creditList = List.filled(7, 0.0)
-//               ..setRange(0, creditList.length, creditList);
-//           }
-//         }
-
-//         transactionChatGraph['debited'] = debitList;
-//         transactionChatGraph['credited'] = creditList;
-//         labels.assignAll(labelsLocal);
-//         getGraphData.value = false;
-//         getGraphData.value = true;
-
-//         // Cache the data
-//         await FinanceLocalStorage.cacheFinanceDataLocally(
-//           period: storedPeriod,
-//           startDate: date,
-//           endDate: endDate,
-//           labels: labelsLocal,
-//           debited: debitList,
-//           credited: creditList,
-//           totalDebitValue: totalDebitValue.value,
-//           totalDebitValuePercent: totalDebitValuePercent.value,
-//           maxYValue: maxYValue.value,
-//           accountId: accountId.value,
-//         );
-//       } catch (e) {
-//         _setEmptyState(weekORmonth, date, endDate);
-//       }
-//     } else {
-//       _setEmptyState(weekORmonth, date, endDate);
-//     }
-//   } catch (e) {
-//     _setEmptyState(weekORmonth, date, endDate);
-//   }
-// }
 
 void _setEmptyState(String weekORmonth, String date, String? endDate) {
   List<String> labelsLocal = [];
@@ -823,7 +710,6 @@ void addTransaction(String amount, String subCategory, String categories,
       transactionsHistory.insert(0, TransactionModel.fromJson(body['data'][0]['data']));
       Future.wait([
         () async => getCategoryData(context),
-        () async => getAutoMationsTransactionsCustom(getFormattedDate(), context),
         () async {
           reloadHistory.value = !reloadHistory.value;
           setDonectChat.value = !setDonectChat.value;
@@ -926,7 +812,7 @@ void pickCustomDateRange(BuildContext context) async {
 
     String startDate = start.toIso8601String().split('T')[0];
     String endDate = end.toIso8601String().split('T')[0];
-    getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
+    getWeeklyGraphAndCustomDateGraph(startDate, context,weekORmonth:'Custom', endDate: endDate);
   }
 }
 
@@ -1180,6 +1066,4 @@ void pickCustomDateRangeoverall(BuildContext context) async {
   }
 }
 
-void overallTransactions(BuildContext context) {
-  getAutoMationsTransactionsCustomoverall(getFormattedDateoverall(), context);
-}
+

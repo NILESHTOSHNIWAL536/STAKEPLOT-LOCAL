@@ -124,17 +124,18 @@ void getWeeklyfetchData(
 }
 
 void calledFunctionToFetchData(context) async {
-  if (accountId.value.isEmpty) {
+  if (accountId.value.isEmpty)
+  {
     getGraphData.value = false;
     await getBankAccounts();
   }
 
   if (selectedButton.value == "Month") {
-    getAutoMationsTransactionsCustom(getFormattedDate(), context);
+    getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context);
   } else if (selectedButton.value == "Week") {
-    getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
+    getWeeklyGraphAndCustomDateGraph(getCurrentWeek(), context, weekORmonth: 'Week');
   } else {
-    getAutoMationsTransactionsCustom(getFormattedDate(), context, 'Custom');
+    getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,weekORmonth: 'Custom');
   }
 }
 

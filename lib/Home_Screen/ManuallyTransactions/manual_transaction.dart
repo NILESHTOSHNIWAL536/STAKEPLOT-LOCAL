@@ -60,9 +60,7 @@ class _ModalContentState extends State<ModalContent>
   @override
   void initState() {
     super.initState();
-
     getAllTransaction(context);
-    getCategoryData(context);
    filteredCategories = categories.entries
       .map((entry) => {
             'category': entry.key,

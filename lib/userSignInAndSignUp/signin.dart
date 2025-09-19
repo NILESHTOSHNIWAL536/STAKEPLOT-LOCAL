@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
@@ -10,23 +8,16 @@ import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.da
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/appleSignIn.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
-import 'dart:math' as math;
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../auth_service/login_apis.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -38,9 +29,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController =
-      TextEditingController(text: "");
+      TextEditingController(text: "nileshtoshniwal743@gmail.com");
   final TextEditingController passwordController =
-      TextEditingController(text: "");
+      TextEditingController(text: "Nilesh1234@");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override
@@ -126,8 +117,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       Platform.isAndroid
                           ? Text('')
                           : Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
-                            child: SignInWithAppleButton(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: SignInWithAppleButton(
                                 onPressed: () async {
                                   if (appleSignInBool.value)
                                     return; // Prevent multiple clicks
@@ -136,12 +127,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   try {
                                     final userdataApple = await AuthService()
                                         .signInWithApple(context);
-                            
+
                                     if (userdataApple != null &&
                                         userdataApple['data']['accessToken'] !=
                                             null) {
-                                       LoginService.loginCalledData(
-                                          userdataApple, context,flag: true);
+                                      LoginService.loginCalledData(
+                                          userdataApple, context,
+                                          flag: true);
                                     } else if (userdataApple != null) {
                                       Navigator.push(
                                         context,
@@ -157,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   }
                                 },
                               ),
-                          ),
+                            ),
 
                       // const Spacer(),
 
@@ -184,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           final userdata = await AuthService().signInWithGoogle(context);
           if (userdata != null && userdata['data']['accessToken'] != null) {
-             LoginService.loginCalledData(userdata, context,flag: true);
+            LoginService.loginCalledData(userdata, context, flag: true);
           } else if (userdata != null) {
             Navigator.push(
               context,
@@ -241,8 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.whiteOpacity03
-, width: 1),
+        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
       ),
       child: TextField(
         controller: emailController,
@@ -273,8 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color:AppColors.whiteOpacity03
-, width: 1),
+        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
       ),
       child: TextField(
         controller: passwordController,
@@ -389,8 +379,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Expanded(
           child: Container(
             height: 1,
-            color: AppColors.whiteOpacity03
-,
+            color: AppColors.whiteOpacity03,
           ),
         ),
         Padding(
@@ -406,8 +395,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Expanded(
           child: Container(
             height: 1,
-            color: AppColors.whiteOpacity03
-,
+            color: AppColors.whiteOpacity03,
           ),
         ),
       ],
