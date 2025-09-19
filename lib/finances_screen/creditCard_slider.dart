@@ -140,27 +140,6 @@ Widget NoCreditCardUi(BuildContext context)
             ),
 
             const SizedBox(height: 20),
-
-            // CTA button
-            ElevatedButton.icon(
-              onPressed: () {
-                // TODO: Navigate to add card screen
-
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade400,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              ),
-              icon: const Icon(Icons.add_card, color: Colors.white),
-              label: const Text(
-                "Add Credit Card",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
           ],
         ),
       ),

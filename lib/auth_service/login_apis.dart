@@ -93,9 +93,9 @@ class LoginService {
     }
   }
 
-  static void loginCalledData(response, context) async {
+  static void loginCalledData(response, context,{bool flag=false}) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    final body = json.decode(response.body);
+    final body = !flag ? json.decode(response.body):response;
     String accessToken = body['data']['accessToken'];
     initGetControllers();
     pref.setString("accessToken", "Bearer " + accessToken);

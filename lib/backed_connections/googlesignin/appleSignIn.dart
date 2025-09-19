@@ -58,7 +58,7 @@ class AppleSignIN {
       );
 
       if (response.statusCode == 200) {
-        LoginService.loginCalledData(response, context);
+        LoginService.loginCalledData(response, context,flag: true);
         return json.decode(response.body);
       } else {}
     } catch (e) {}

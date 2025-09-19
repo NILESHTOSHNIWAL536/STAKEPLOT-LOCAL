@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         userdataApple['data']['accessToken'] !=
                                             null) {
                                        LoginService.loginCalledData(
-                                          userdataApple, context);
+                                          userdataApple, context,flag: true);
                                     } else if (userdataApple != null) {
                                       Navigator.push(
                                         context,
@@ -184,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           final userdata = await AuthService().signInWithGoogle(context);
           if (userdata != null && userdata['data']['accessToken'] != null) {
-             LoginService.loginCalledData(userdata, context);
+             LoginService.loginCalledData(userdata, context,flag: true);
           } else if (userdata != null) {
             Navigator.push(
               context,
