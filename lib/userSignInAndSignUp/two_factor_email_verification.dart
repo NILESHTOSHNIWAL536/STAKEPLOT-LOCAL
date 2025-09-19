@@ -12,6 +12,8 @@ import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../auth_service/get_otp.dart';
+
 class TwoFactorEmailVerification extends StatefulWidget {
   final Map<String, dynamic> data;
 
@@ -278,7 +280,7 @@ class _TwoFactorEmailVerificationState
 
     acceptReset.value = true;
     // Verify OTP for login
-    bool isVerified = await verifyOTPForLogin(
+    bool isVerified = await OtpService.verifyOTPForLogin(
       context,
       widget.data['email'],
       widget.data['password'],

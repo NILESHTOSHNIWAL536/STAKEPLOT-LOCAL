@@ -27,6 +27,8 @@ import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../auth_service/login_apis.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -121,38 +123,41 @@ class _LoginScreenState extends State<LoginScreen> {
                           FontAwesomeIcons.google, Colorcodes.white, context),
                       // buildGoogleSignIn(),
                       const SizedBox(height: 20),
-                      // Platform.isAndroid
-                      //     ? Text('')
-                      //     : SignInWithAppleButton(
-                      //         onPressed: () async {
-                      //           if (appleSignInBool.value)
-                      //             return; // Prevent multiple clicks
-                      //           appleSignInBool.value =
-                      //               true; // Set loading state
-                      //           try {
-                      //             final userdataApple = await AuthService()
-                      //                 .signInWithApple(context);
-
-                      //             if (userdataApple != null &&
-                      //                 userdataApple['data']['accessToken'] !=
-                      //                     null) {
-                      //               loginCalledDataForApple(
-                      //                   userdataApple, context);
-                      //             } else if (userdataApple != null) {
-                      //               Navigator.push(
-                      //                 context,
-                      //                 MaterialPageRoute(
-                      //                     builder: (context) =>
-                      //                         UserDetailsPage2(
-                      //                             data: userdataApple)),
-                      //               );
-                      //             } else {}
-                      //           } finally {
-                      //             appleSignInBool.value =
-                      //                 false; // Reset loading state
-                      //           }
-                      //         },
-                      //       ),
+                      Platform.isAndroid
+                          ? Text('')
+                          : Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: SignInWithAppleButton(
+                                onPressed: () async {
+                                  if (appleSignInBool.value)
+                                    return; // Prevent multiple clicks
+                                  appleSignInBool.value =
+                                      true; // Set loading state
+                                  try {
+                                    final userdataApple = await AuthService()
+                                        .signInWithApple(context);
+                            
+                                    if (userdataApple != null &&
+                                        userdataApple['data']['accessToken'] !=
+                                            null) {
+                                       LoginService.loginCalledData(
+                                          userdataApple, context);
+                                    } else if (userdataApple != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserDetailsPage2(
+                                                    data: userdataApple)),
+                                      );
+                                    } else {}
+                                  } finally {
+                                    appleSignInBool.value =
+                                        false; // Reset loading state
+                                  }
+                                },
+                              ),
+                          ),
 
                       // const Spacer(),
 
@@ -179,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           final userdata = await AuthService().signInWithGoogle(context);
           if (userdata != null && userdata['data']['accessToken'] != null) {
-            loginCalledDataForApple(userdata, context);
+             LoginService.loginCalledData(userdata, context);
           } else if (userdata != null) {
             Navigator.push(
               context,

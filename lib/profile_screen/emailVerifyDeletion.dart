@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 
+import '../auth_service/get_otp.dart';
+
 class VerifyOtpScreen extends StatefulWidget {
   final String email;
   final String name;
@@ -62,7 +64,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
       _isLoading = true;
     });
     try {
-      await getOTPDeleteCall(context, widget.name, widget.email);
+      await OtpService.getOTPDeleteCall(context, widget.name, widget.email);
       setState(() {
         _isOtpSent = true;
       });
@@ -87,7 +89,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         snackBarCalledfail(context, 'Invalid OTP format', Colors.red);
         return;
       }
-      await verifyDeleteOTP(context, widget.email, otpInt);
+      await OtpService.verifyDeleteOTP(context, widget.email, otpInt);
       setState(() {
         _isOtpVerified = true;
       });

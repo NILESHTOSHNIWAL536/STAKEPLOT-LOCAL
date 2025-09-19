@@ -54,6 +54,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+import '../../auth_service/login_apis.dart';
+
 class AppleSignIN {
   Future<Map<String, dynamic>?> signInWithApple(BuildContext context) async {
     try {
@@ -111,7 +113,7 @@ class AppleSignIN {
       );
 
       if (response.statusCode == 200) {
-        loginCalledData(response, context);
+       LoginService.loginCalledData(response, context);
         return json.decode(response.body);
       } else {
       }

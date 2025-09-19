@@ -22,6 +22,8 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
+import '../auth_service/get_otp.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -627,7 +629,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     //     builder: (context) => Avatar(data: data),
     //   ),
     // );
-    getOTP(context, usernameController.text, emailController.text);
+   OtpService.getOTP(context, usernameController.text, emailController.text);
     // openShowModal();
     Navigator.pushReplacement(
       context,

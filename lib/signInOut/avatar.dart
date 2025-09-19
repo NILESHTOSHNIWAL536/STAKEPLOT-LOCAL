@@ -21,6 +21,8 @@ import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth_service/get_otp.dart';
+
 RxString changeAvater = ControllerManagement.userController.avatar.value.obs;
 
 class Avatar extends StatefulWidget {
@@ -174,7 +176,7 @@ class _SigninState extends State<Avatar> {
                       return;
                     }
 
-                    getOTP(context, widget.data['name'], widget.data['email']);
+                   OtpService.getOTP(context, widget.data['name'], widget.data['email']);
 
                     Navigator.pushReplacement(
                       context,

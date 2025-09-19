@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/two_factor_email_verification.dart';
 import 'package:get/get.dart';
+
+import '../auth_service/get_otp.dart';
 
 class UserLoginedAlready extends StatelessWidget {
   var data;
@@ -58,7 +59,7 @@ class UserLoginedAlready extends StatelessWidget {
               onTap: () {
                 isLoading.value = true;
 
-                getOTPForTwoFactorAuth(context, body['user']['name'], email.text.toString());
+              OtpService.getOTPForTwoFactorAuth(context, body['user']['name'], email.text.toString());
 
                 // Navigate to the OTP verification screen
                 Navigator.push(
