@@ -75,6 +75,7 @@ void getNotifications(context) async {
     var his = jsonDecode(response.body);
     notificationList.clear();
     notificationList.addAll(his['data']);
+    
     notificationList.forEach((req) {
       String type = req['notificationMessage']['type'];
       var e = req['notificationMessage'];

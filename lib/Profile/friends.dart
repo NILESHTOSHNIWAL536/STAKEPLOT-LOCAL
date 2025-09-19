@@ -15,12 +15,12 @@ import "package:flutter_application_code_stakeplot/profile_screen/usercommunityP
 import "package:get/get.dart";
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
-
 class Friends extends StatefulWidget {
-  bool isMasked=false;
-  bool isMaskedConnect=false;
+  bool isMasked = false;
+  bool isMaskedConnect = false;
 
-   Friends({Key? key,this.isMasked=false,this.isMaskedConnect=false}) : super(key: key);
+  Friends({Key? key, this.isMasked = false, this.isMaskedConnect = false})
+      : super(key: key);
 
   @override
   _FriendsState createState() => _FriendsState();
@@ -30,58 +30,64 @@ class _FriendsState extends State<Friends> {
   RxList frdsList = [].obs;
   bool frdsThere = true;
   final TextEditingController _searchController = TextEditingController();
-   final UserController userController = Get.find<UserController>();
+  final UserController userController = Get.find<UserController>();
 
   @override
   void initState() {
     super.initState();
     frdsList.clear();
-    frdsList.addAll(widget.isMasked ? widget.isMaskedConnect?userController.maskedConnected :userController.maskedConnections: userController.friendsList);
-  
+    frdsList.addAll(widget.isMasked
+        ? widget.isMaskedConnect
+            ? userController.maskedConnected
+            : userController.maskedConnections
+        : userController.friendsList);
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         extendBody: true,
         backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
           backgroundColor: AppColors.backgroundColor,
           title: textStyle(
-                  context: context,
-                  text: widget.isMasked? ProfileScreenStrings().friendsListTitle:ProfileScreenStrings().friendsListTitle,
-                  fontsize: 18,
-                  fontWeight: FontWeight.w600),
+              context: context,
+              text: widget.isMasked
+                  ? ProfileScreenStrings().friendsListTitle
+                  : ProfileScreenStrings().friendsListTitle,
+              fontsize: 18,
+              fontWeight: FontWeight.w600),
         ),
         //  bottomNavigationBar:logoutWidget(),
 
         body: SafeArea(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height/1.15,
-           // padding: EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
-          
+            height: MediaQuery.of(context).size.height / 1.15,
+            // padding: EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
+
             child: Column(
               children: [
                 GestureDetector(
                   onTap: () {
-                    if(userController.friendsList.isEmpty)
-                    {
-                      if(widget.isMasked){
-                         Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>TribeSearch(isMasked: true,),
-                        ),
-                      );
-                      }else Navigator.pushNamed(context, '/TribeSearch');
+                    if (userController.friendsList.isEmpty) {
+                      if (widget.isMasked) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TribeSearch(
+                              isMasked: true,
+                            ),
+                          ),
+                        );
+                      } else
+                        Navigator.pushNamed(context, '/TribeSearch');
                     }
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 18),
                     child: Container(
-                      width: MediaQuery.sizeOf(context).width ,
+                      width: MediaQuery.sizeOf(context).width,
                       height: 40,
                       child: TextField(
                         controller: _searchController,
@@ -90,30 +96,33 @@ class _FriendsState extends State<Friends> {
                         //     frdsList.addAll(getLastTenUsers(getSearchData(value,userController.friendsList )));
                         // },
                         onChanged: (value) {
-                  frdsList.clear();
-                  final sourceList = widget.isMasked 
-                      ? (widget.isMaskedConnect ? userController.maskedConnected : userController.maskedConnections) 
-                      : userController.friendsList;
-                  final filteredList = getSearchData(value, sourceList, widget.isMasked);
-                  frdsList.addAll(getLastTenUsers(filteredList));
-                },
+                          frdsList.clear();
+                          final sourceList = widget.isMasked
+                              ? (widget.isMaskedConnect
+                                  ? userController.maskedConnected
+                                  : userController.maskedConnections)
+                              : userController.friendsList;
+                          final filteredList =
+                              getSearchData(value, sourceList, widget.isMasked);
+                          frdsList.addAll(getLastTenUsers(filteredList));
+                        },
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 0),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                           filled: true,
-                          enabled:true,
+                          enabled: true,
                           // enabled: userController.friendsList.isEmpty,
-                          hintText:  ProfileScreenStrings().searchHint,
-                        
-                fillColor: AppColors.backgroundColor,
-                hintStyle: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: Colors.black),
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
+                          hintText: ProfileScreenStrings().searchHint,
+
+                          fillColor: AppColors.backgroundColor,
+                          hintStyle: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.normal,
+                              fontSize: 14,
+                              color: Colors.black),
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
                         ),
                       ),
                     ),
@@ -121,7 +130,7 @@ class _FriendsState extends State<Friends> {
                 ),
                 SizedBox(height: 10),
                 Obx(() => frdsList.isEmpty
-                    ? noFriend(context,"",widget.isMasked)
+                    ? noFriend(context, "", widget.isMasked)
                     : Column(
                         children: frdsList
                             .map((d) =>
@@ -135,45 +144,55 @@ class _FriendsState extends State<Friends> {
   }
 
   Widget profileContainer(data) {
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
       child: Center(
           child: GestureDetector(
         onTap: () {
-        
           Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,isMasked: widget.isMasked,isMaskedConnect: widget.isMaskedConnect,),
-                      ),
-                  );
+            context,
+            MaterialPageRoute(
+              builder: (context) => CommunityUserProfile(
+                data: data,
+                ids: [],
+                flag: true,
+                isMasked: widget.isMasked,
+                isMaskedConnect: widget.isMaskedConnect,
+              ),
+            ),
+          );
         },
         child: Container(
-          
           padding: EdgeInsets.symmetric(vertical: 2, horizontal: 3),
           decoration: BoxDecoration(
-            
+
               //  color:const Color.fromRGBO(249, 246, 238, 1),
               borderRadius: BorderRadius.circular(10)),
           width: MediaQuery.of(context).size.width / 1.1,
           child: Row(
-             mainAxisAlignment: MainAxisAlignment.start,
-             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // AvatarProfileImage(
               //     url:avaterUrlPath(data['name']), width: 15, height: 15),
 
-           widget.isMasked?  AvatarProfile2(url: data['avatarType'], width: 20, height: 20): AvatarProfile(name: data['name'], width: 30, height: 13,background:data['avatarBackGround'] ?? defaultBackGround.value,),
-             
+              widget.isMasked
+                  ? AvatarProfile2(
+                      url: data['avatarType'], width: 20, height: 20)
+                  : AvatarProfile(
+                      name: data['name'],
+                      width: 30,
+                      height: 13,
+                      background:
+                          data['avatarBackGround'] ?? defaultBackGround.value,
+                    ),
+
               // Text((data),
               Text((data['name']),
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w500,
                       fontSize: 18,
                       color: Colors.black)),
-             
-             
             ],
           ),
         ),
@@ -188,7 +207,7 @@ class _FriendsState extends State<Friends> {
         onTap: () {
           if (str == "Remove") {
             getRemoveFrds(context, data['_id']);
-            userController.fetchUserInfo();    
+            userController.fetchUserInfo();
           }
           Navigator.pop(context);
         },
