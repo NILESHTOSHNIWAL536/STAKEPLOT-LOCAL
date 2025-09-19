@@ -48,7 +48,7 @@ class SignInScreen extends StatelessWidget {
                     googleSignInBool.value = true; // Set loading state
                     try {
                       final userdata = await AuthService()
-                          .signInWithGoogle(context, flag: false);
+                          .signInWithGoogle(context, flag: false,isEmail: true);
 
                       if (userdata != null) {
                         pushnameToRoute(context, GettingDataScreen());

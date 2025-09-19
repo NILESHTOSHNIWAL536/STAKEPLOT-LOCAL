@@ -43,7 +43,7 @@ class CardDueCarousel extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: controller.cardList.isEmpty
-          ? Center(child: Spinner())
+          ? controller.loading.value? Center(child: Spinner()):NoCreditCardUi(context)
           : ListView.builder(
               scrollDirection: Axis.vertical,
               // padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -87,4 +87,84 @@ class CardDueCarousel extends StatelessWidget {
             ),
     );
   }
+  
+Widget NoCreditCardUi(BuildContext context)
+{
+  return Center(
+    child: Card(
+      elevation: 6,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icon or illustration
+            Container(
+              height: 100,
+              width: 100,
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.credit_card_off_rounded,
+                size: 60,
+                color: Colors.blue.shade400,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Title
+            Text(
+              "No Credit Card Found",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 10),
+
+            // Subtitle
+            Text(
+              "You don’t have any saved credit cards yet.\nAdd one to get started.",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 20),
+
+            // CTA button
+            ElevatedButton.icon(
+              onPressed: () {
+                // TODO: Navigate to add card screen
+
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade400,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+              icon: const Icon(Icons.add_card, color: Colors.white),
+              label: const Text(
+                "Add Credit Card",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
 }
