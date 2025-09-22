@@ -188,7 +188,6 @@ class _FriendsState extends State<Friends> {
         onTap: () {
           if (str == "Remove") {
             getRemoveFrds(context, data['_id']);
-            userController.fetchUserInfo();    
           }
           Navigator.pop(context);
         },

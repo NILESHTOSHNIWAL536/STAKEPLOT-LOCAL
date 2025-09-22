@@ -18,56 +18,57 @@ import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:get/get.dart';
 import '../../backed_connections/backServices.dart/bankInfo.dart';
 import '../../controllers/user-controller.dart';
+import '../insightsController.dart';
 
-void callApi(context)async
-  {
-    await Get.find<UserController>().fetchUserInfo();
-    getBankAccounts();
-    getPost(context);
-    getTranding(context);
-    getAck();
-    getBudget();
-    contextGlobal=context;
-    setUpSocketListenerMainPage(context);
-    getUserLend(context);
-    getBudget();
-    getHiddenTransactions(context);
-    getNotifications(context);
-    getAllAutoTransactions();
-    getAllContstant(context);
-    getGroupTransactions();
-    getCustomCategory(context);
-    getAutoPayInfo();
-    getAllTransactionHistory(context,false,false,isRefreshing: true);
-    getAllTransactionHistory(context,true,false,isRefreshing: true);
-    getCategoryData(context);
-    getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,isSplashScreen: true);
-    userController.fetchUserInfo(); 
-    custom = getthelist();
-    allOrGroupTransactionsName.value = StringConstant.allTransactions;
-    clearAllFlags();
-    await getRemainders(context);
-    await updateWidget();
-    lifecycleHandler = AppLifecycleHandler(userController.userId.value); // Replace with actual user ID
-    WidgetsBinding.instance.addObserver(lifecycleHandler);
+void callApi(context) async {
+  await Get.find<UserController>().fetchUserInfo();
+  final InsightsController _controller = Get.put(InsightsController());
+
+  getPost(context);
+  getTranding(context);
+  getAck();
+  getBudget();
+  contextGlobal = context;
+  setUpSocketListenerMainPage(context);
+  getUserLend(context);
+  getBudget();
+  getHiddenTransactions(context);
+  _controller.getHomePageInsights(context);
+  _controller.getHomePageMoneyMapInsights(context);
+  getNotifications(context);
+  getAllAutoTransactions();
+  getAllContstant(context);
+  getGroupTransactions();
+  getCustomCategory(context);
+  getAutoPayInfo();
+  getAllTransactionHistory(context, false, false, isRefreshing: true);
+  getAllTransactionHistory(context, true, false, isRefreshing: true);
+  getCategoryData(context);
+  getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,
+      isSplashScreen: true);
+  userController.fetchUserInfo();
+  custom = getthelist();
+  allOrGroupTransactionsName.value = StringConstant.allTransactions;
+  clearAllFlags();
+  getBankAccounts();
+  await getRemainders(context);
+  await updateWidget();
+  lifecycleHandler = AppLifecycleHandler(
+      userController.userId.value); // Replace with actual user ID
+  WidgetsBinding.instance.addObserver(lifecycleHandler);
+}
+
+void initializeData(context, mounted) {
+  isLoginAlreadLogin(context, mounted);
+  oneSignalAddClickListener(context);
+  sectionReached.value = false;
+}
+
+void isLoginAlreadLogin(context, mounted) async {
+  bool isHome = await check(context, "homeScreen");
+  if (isHome) {
+    await requestNotificationPermissionOncePerDay();
+    if (!mounted) return;
+    callApi(context);
   }
-
-
-    void initializeData(context,mounted)   
-  {
-    isLoginAlreadLogin(context,mounted);
-    oneSignalAddClickListener(context);
-    sectionReached.value=false;
-  }
-  
-  void isLoginAlreadLogin(context,mounted)async{
-       bool isHome=await check(context, "homeScreen");
-       if(isHome)
-       {
-          await requestNotificationPermissionOncePerDay();
-          if (!mounted) return;
-          callApi(context);
-       }
-  }
-
-  
+}

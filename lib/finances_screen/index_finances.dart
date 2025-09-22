@@ -33,7 +33,6 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
   @override
   void initState() {
     super.initState();
-    fetchDebts();
     Get.put(CardDueController());
     _loadData();
   }

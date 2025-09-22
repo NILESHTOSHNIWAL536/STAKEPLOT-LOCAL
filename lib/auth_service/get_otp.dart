@@ -141,7 +141,8 @@ class OtpService {
         }
         return true;
       } else {
-        snackBarCalledfail(context, 'Invalid OTP. Please try again.', Colors.red);
+        var json=jsonDecode(response);
+        snackBarCalledfail(context, json['body'] ?? "failed to login", Colors.red);
         return false;
       }
     } catch (e) {

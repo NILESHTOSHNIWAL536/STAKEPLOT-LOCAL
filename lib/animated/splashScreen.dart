@@ -16,7 +16,6 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
-
 import '../Hive_localstorage/apisCall/init_hive.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../OneSignal/oneSignal_config.dart';
@@ -49,7 +48,6 @@ class _SplashScreenState extends State<SplashScreen> {
     SignupData signup = SignupData();
     SnackbarData snackbarData = SnackbarData();
     SigninData signinData = SigninData();
-
     PlotFinanceStaticData plotFinanceStaticData = PlotFinanceStaticData();
     HomepageStringsDart homepageStringsDart = HomepageStringsDart();
     CommunityScreenStrings communityScreenStrings = CommunityScreenStrings();

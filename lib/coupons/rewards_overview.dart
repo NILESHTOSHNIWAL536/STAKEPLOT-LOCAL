@@ -674,7 +674,6 @@ class _RewardsOverviewState extends State<RewardsOverview>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    userController.fetchUserInfo();
     fetchClaimedCoupons();
     fetchCouponsCounts();
     getUserActity();

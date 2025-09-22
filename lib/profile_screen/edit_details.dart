@@ -58,8 +58,7 @@ class _EditDetailsState extends State<EditDetails> {
     _controllers[ProfileScreenStrings().numberLabel]!.text = number.value;
 
     checkBiometricsStatus();
-    userController.fetchUserInfo();
-  }
+ }
 
   @override
   void dispose() {

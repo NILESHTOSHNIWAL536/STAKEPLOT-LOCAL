@@ -6,34 +6,8 @@ import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-
-// Utility class for responsive sizing
-class ResponsiveUtils {
-  static double getCardWidth(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    if (width > 1200) return 500;
-    if (width > 600) return 450;
-    return width * 0.85;
-  }
-
-  static double getCardHeight(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return height * 0.25;
-  }
-
-  static double getFontSize(BuildContext context, double baseSize) {
-    final scale = MediaQuery.of(context).textScaler.scale(1.0);
-    return baseSize * scale;
-  }
-
-  static EdgeInsets getPadding(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return EdgeInsets.symmetric(
-      horizontal: width > 600 ? 12.0 : 8.0,
-      vertical: width > 600 ? 10.0 : 8.0,
-    );
-  }
-}
+import '../Utils/headup_moneymap_constant.dart';
+import '../Utils/responsiveUi.dart';
 
 class InsightsScreen extends StatefulWidget {
   const InsightsScreen({Key? key}) : super(key: key);
@@ -54,73 +28,6 @@ class _InsightsScreenState extends State<InsightsScreen>
   late Animation<double> _tiltAnimation;
   final InsightsController _controller = Get.put(InsightsController());
 
-  final List<Map<String, dynamic>> _navigationItems =
-  [
-    {
-      'title': HomepageStringsDart().headsUp,
-      'icon': Icons.send,
-      'color': AppColors.primaryColor,
-      'backgroundColor': AppColors.primaryColor,
-    },
-    {
-      'title': HomepageStringsDart().moneyMap,
-      'icon': Icons.currency_rupee_rounded,
-      'color': AppColors.primaryColor,
-      'backgroundColor': AppColors.primaryColor,
-    },
-  ];
-
-  IconData getIconForInsight(String title, String message) {
-    final lowerMessage = message.toLowerCase();
-    const keywordIconMap = {
-      'saved': Icons.savings,
-      'save': Icons.savings,
-      'savings': Icons.savings,
-      'shopping': Icons.shopping_cart,
-      'shop': Icons.shopping_cart,
-      'purchase': Icons.shopping_cart,
-      'purchases': Icons.shopping_cart,
-      'zomato': Icons.restaurant,
-      'swiggy': Icons.restaurant,
-      'dining': Icons.restaurant,
-      'food': Icons.restaurant,
-      'chef': Icons.restaurant,
-      'travel': Icons.flight,
-      'trip': Icons.flight,
-      'journey': Icons.flight,
-      'subscription': Icons.subscriptions,
-      'subscribe': Icons.subscriptions,
-      'warning': Icons.warning,
-      'overboard': Icons.warning,
-      'overspend': Icons.warning,
-      'expensive': Icons.currency_rupee_rounded,
-      'cost': Icons.currency_rupee_rounded,
-      'spent': Icons.currency_rupee_rounded,
-      'category': Icons.category,
-      'budget': Icons.account_balance_wallet,
-      'pocket': Icons.account_balance_wallet,
-      'money': Icons.account_balance_wallet,
-    };
-
-    for (final entry in keywordIconMap.entries) {
-      if (lowerMessage.contains(entry.key)) {
-        return entry.value;
-      }
-    }
-    return Icons.info;
-  }
-
-  Color getColorForInsight(int index) {
-    const colors = [
-      AppColors.autoPay1,
-      AppColors.autoPay2,
-      AppColors.autoPay3,
-      AppColors.autoPay4,
-      AppColors.autoPay5,
-    ];
-    return colors[index % colors.length];
-  }
-
   @override
   void initState() {
     super.initState();
@@ -135,37 +42,7 @@ class _InsightsScreenState extends State<InsightsScreen>
     _tiltAnimation = Tween<double>(begin: -0.03, end: 0.03).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-    _fetchInsights();
-    _fetchInsightsMoneyMap();
     _animationController.forward();
-  }
-
-  Future<void> _fetchInsights() async {
-    _isLoading.value = true;
-    _errorMessage.value = null;
-    _currentCardIndex.value = 0;
-    try {
-      await _controller.getHomePageInsights(context);
-      _isLoading.value = false;
-      _swiperController.move(0, animation: false);
-    } catch (e) {
-      _isLoading.value = false;
-      _errorMessage.value = HomepageStringsDart().insightsError;
-    }
-  }
-
-  Future<void> _fetchInsightsMoneyMap() async {
-    _isLoading.value = true;
-    _errorMessage.value = null;
-    _currentCardIndex.value = 0;
-    try {
-      await _controller.getHomePageMoneyMapInsights(context);
-      _isLoading.value = false;
-      _swiperController.move(0, animation: false);
-    } catch (e) {
-      _isLoading.value = false;
-      _errorMessage.value = HomepageStringsDart().moneyMapError;
-    }
   }
 
   @override
@@ -184,11 +61,6 @@ class _InsightsScreenState extends State<InsightsScreen>
     _swiperController.move(0, animation: false);
     _animationController.reset();
     _animationController.forward();
-    if (index == 0) {
-      _fetchInsights();
-    } else if (index == 1) {
-      _fetchInsightsMoneyMap();
-    }
   }
 
   @override
@@ -238,18 +110,6 @@ class _InsightsScreenState extends State<InsightsScreen>
 
   Widget _buildContent() {
     return Obx(() {
-      // Ensure _isLoading is observed
-      final isLoading = _isLoading.value;
-      if (isLoading) {
-        return _buildCustomLoading();
-      }
-
-      // Ensure _errorMessage is observed
-      final errorMessage = _errorMessage.value;
-      if (errorMessage != null) {
-        return _buildErrorWidget();
-      }
-
       // Ensure _selectedIndex is observed
       final selectedIndex = _selectedIndex.value;
       final insightsList = selectedIndex == 0
@@ -273,11 +133,11 @@ class _InsightsScreenState extends State<InsightsScreen>
         return Semantics(
           label: 'Insight card: $message',
           child: InsightCard(
-            title: _navigationItems[selectedIndex]['title'],
+            title: navigationItems[selectedIndex]['title'],
             message: message,
             color: getColorForInsight(0),
             icon: getIconForInsight(
-                _navigationItems[selectedIndex]['title'], message),
+                navigationItems[selectedIndex]['title'], message),
             width: ResponsiveUtils.getCardWidth(context),
           ),
         );
@@ -315,11 +175,11 @@ class _InsightsScreenState extends State<InsightsScreen>
                       );
                     },
                     child: InsightCard(
-                      title: _navigationItems[selectedIndex]['title'],
+                      title: navigationItems[selectedIndex]['title'],
                       message: message,
                       color: getColorForInsight(index),
                       icon: getIconForInsight(
-                          _navigationItems[selectedIndex]['title'], message),
+                          navigationItems[selectedIndex]['title'], message),
                       width: ResponsiveUtils.getCardWidth(context),
                     ),
                   );
@@ -358,59 +218,6 @@ class _InsightsScreenState extends State<InsightsScreen>
     );
   }
 
-  Widget _buildErrorWidget() {
-    return Obx(() {
-      // Ensure _errorMessage and _selectedIndex are observed
-      final errorMessage = _errorMessage.value;
-      final selectedIndex = _selectedIndex.value;
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.error_outline,
-              color: Colors.red,
-              size: ResponsiveUtils.getFontSize(context, 40),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              errorMessage ?? '',
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w600,
-                fontSize: ResponsiveUtils.getFontSize(context, 16),
-                color: Colors.red.withOpacity(0.9),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed:
-                  selectedIndex == 0 ? _fetchInsights : _fetchInsightsMoneyMap,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.bg3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              ),
-              child: Text(
-                HomepageStringsDart().retryButton,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.bold,
-                  fontSize: ResponsiveUtils.getFontSize(context, 14),
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    });
-  }
-
   Widget _buildEmptyState() {
     return Obx(() {
       // Ensure _selectedIndex is observed
@@ -444,14 +251,14 @@ class _InsightsScreenState extends State<InsightsScreen>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(
-            _navigationItems.length,
+            navigationItems.length,
             (index) => Expanded(
               child: NavItem(
-                title: _navigationItems[index]['title'],
-                icon: _navigationItems[index]['icon'],
+                title: navigationItems[index]['title'],
+                icon: navigationItems[index]['icon'],
                 isSelected: selectedIndex == index,
-                color: _navigationItems[index]['color'],
-                backgroundColor: _navigationItems[index]['backgroundColor'],
+                color: navigationItems[index]['color'],
+                backgroundColor: navigationItems[index]['backgroundColor'],
                 onTap: () => _onItemTapped(index),
               ),
             ),

@@ -32,6 +32,9 @@ class LoginService {
       } else if (response.statusCode == 500) {
         snackBarCalledfail(context, SnackbarData().serverError, Colors.red);
       } else if (getFlagOfResponse(response)) {
+      } else if (response.statusCode == 400) {
+        snackBarCalledfail(context,SnackbarData().invalidInfo , Colors.red);
+      } else if (getFlagOfResponse(response)) {
         loginCalledData(response, context);
         await screenDataLocalStorage();
         Navigator.pushReplacementNamed(context, '/home');

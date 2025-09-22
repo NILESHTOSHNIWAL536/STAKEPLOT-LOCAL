@@ -56,7 +56,6 @@ class _TribeSearchState extends State<TribeChats> {
   @override
   void initState() {
     super.initState();
-    userController.fetchUserInfo();    
     totalUnopenedMessages.value=0;
     // ismaskedUsers.value = false;
     getChatLoader(ismaskedUsers.value);

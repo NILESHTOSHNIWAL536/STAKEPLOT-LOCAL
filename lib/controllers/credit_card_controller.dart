@@ -1,8 +1,5 @@
 import 'dart:convert';
-
-import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:get/get.dart';
-
 import '../Utils/credit_card.dart';
 import '../backed_connections/apiAutomations/curd.dart';
 import '../backed_connections/apis_connect.dart';

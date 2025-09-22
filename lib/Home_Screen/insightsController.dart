@@ -63,7 +63,6 @@ class InsightsController extends GetxController {
           !getTotalInsightsHistorytotalMoneyMap.value;
       return;
     }
-
     // 2️⃣ Try API fetch in background
     Future(() async {
       try {

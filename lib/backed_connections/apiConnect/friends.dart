@@ -18,10 +18,9 @@ void addUserAsFrd(id,context,[type="friend"])async
       {
             if(type=="Masked"){
               sendNotificationsToDevice(id,context,"${controller.maskedName.value} has connected to you.","/friends");
-
             }
             else{
-                            sendNotificationsToDevice(id,context,"${controller.userName.value} has  accepted your friend request..","/friends");
+              sendNotificationsToDevice(id,context,"${controller.userName.value} has  accepted your friend request..","/friends");
             }
             
             snackBarCalled(context,SnackbarData().addingFriend,Colors.black);  

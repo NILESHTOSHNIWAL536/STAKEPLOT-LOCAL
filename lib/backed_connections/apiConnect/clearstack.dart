@@ -25,6 +25,8 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 
+import '../../controllers/credit_card_controller.dart';
+
 void clearStack(BuildContext context) {
   try {
     Navigator.of(context)
@@ -278,19 +280,23 @@ void clearInterest() {
 void initGetControllers() {
   Get.put(UserController());
   Get.put(PostController());
+  Get.put(CardDueController());
 }
 
 void deleteGetControllers() {
   Get.delete<UserController>();
   Get.delete<PostController>();
+  Get.delete<CardDueController>();
 }
 
 void initGetControllersIfisRegistered() {
   if (!Get.isRegistered<UserController>()) {
     Get.put(UserController());
   }
-
   if (!Get.isRegistered<PostController>()) {
     Get.put(PostController());
+  }
+  if (!Get.isRegistered<CardDueController>()) {
+    Get.put(CardDueController());
   }
 }

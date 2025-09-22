@@ -59,7 +59,6 @@ class InsightsLocalStorage {
         await controller.getHomePageInsights(Get.context!);
         await controller.getHomePageMoneyMapInsights(Get.context!);
       }
-
       return null;
     }
   }

@@ -509,24 +509,6 @@ void declineAmount(
   }
 }
 
-Future<void> getHomePageInsights(context) async {
-  try {
-    var response =
-        await getDataApiCall("${url}/transactionauto/get-headsup-messages");
-
-    if (response.statusCode == 200) {
-      var his = jsonDecode(response.body);
-
-      var obj = his['data'];
-
-      totalInSights.clear();
-      totalInSights.addAll(obj);
-
-      getTotalInsightsHistory.value = !getTotalInsightsHistory.value;
-    } else {}
-  } catch (e) {}
-}
-
 Future<void> hideTransaction(
     int index, bool hidden, BuildContext context, String id) async {
   final transaction = transactionsHistory[index];
