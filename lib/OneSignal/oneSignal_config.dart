@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dar
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,20 +17,21 @@ Future<void> initializeOneSignal(BuildContext context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String key = "deviceInfo";
   var json;
-  if (pref.containsKey(key))
-  {
+  if (pref.containsKey(key)) {
     json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
   }
 
-  if (!pref.containsKey(key) || json["deviceId"] == "deviceData.value" || json["deviceId"] == "")
-  {
-     await oneSignalInit();
-     await Future.delayed(Duration(seconds: 3)); // Small delay
-     String userDeviceId = await OneSignal.User.pushSubscription.id??"deviceData.value";
-     getDeviceLocalDetails(userDeviceId, context);
-     deviceData['deviceId'] = userDeviceId;
-     pref.setString(key, jsonEncode(deviceData));
-  }else {
+  if (!pref.containsKey(key) ||
+      json["deviceId"] == "deviceData.value" ||
+      json["deviceId"] == "") {
+    await oneSignalInit();
+    await Future.delayed(Duration(seconds: 3)); // Small delay
+    String userDeviceId =
+        await OneSignal.User.pushSubscription.id ?? "deviceData.value";
+    getDeviceLocalDetails(userDeviceId, context);
+    deviceData['deviceId'] = userDeviceId;
+    pref.setString(key, jsonEncode(deviceData));
+  } else {
     deviceData['deviceId'] = json["deviceId"];
   }
   addThisDeviceToBackendDevice(pref, context);
@@ -48,14 +50,11 @@ void navigateScreens(context, screen) {
     Navigator.pushNamed(context, '/TribeChats');
   } else if (screen.toString().contains("friends")) {
     Navigator.pushNamed(context, '/Friends');
-  } 
-  else if (screen.toString().contains("post")) {
+  } else if (screen.toString().contains("post")) {
     Navigator.pushNamed(context, '/post');
-  } 
-  else if (screen.toString().contains("coupons")) {
+  } else if (screen.toString().contains("coupons")) {
     Navigator.pushNamed(context, '/rewardsOverview');
-  } 
-  else if (screen.toString().contains("remainder") ||
+  } else if (screen.toString().contains("remainder") ||
       screen.toString().contains("remainders")) {
     Navigator.push(
       context,
@@ -92,19 +91,17 @@ Future<void> getDeviceInfo(
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String key = "deviceInfo";
 
-  if (!pref.containsKey(key)) 
-  {
-    getDeviceLocalDetails(playerId,  context);
+  if (!pref.containsKey(key)) {
+    getDeviceLocalDetails(playerId, context);
   }
 
   deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
-  if(emailController.text=="testuser@gmail.com")
-  {
-        LoginService.loginUser(emailController, passwordController, context);
-  }else{ LoginService.userVerification(emailController, passwordController, context);}
-
+  if (emailController.text == "testuser@gmail.com") {
+    LoginService.loginUser(emailController, passwordController, context);
+  } else {
+    LoginService.userVerification(emailController, passwordController, context);
+  }
 }
-
 
 void getDeviceLocalDetails(String playerId, context) async {
   try {
@@ -198,9 +195,14 @@ void getDeviceLocalDetails2(String playerId, context) async {
 }
 
 void oneSignalAddClickListener(context) {
+  print("check this ");
   try {
     OneSignal.Notifications.addClickListener((event) {
-      _handleNotificationClick(event, context);
+      print("check thisc $context");
+      print("check thise $event");
+      print("check thisg ${Get.context}");
+      _handleNotificationClick(event, Get.context ?? context);
+
     });
 
     OneSignal.Notifications.addForegroundWillDisplayListener((event) {
@@ -235,4 +237,3 @@ Future<void> requestNotificationPermissionOncePerDay() async {
     await prefs.setString(key, today);
   }
 }
-

@@ -89,23 +89,22 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
 
               Container(
                 color: AppColors.backgroundColor,
-                padding: const EdgeInsets.all(0),
-                height: size.height / 2.1,
+               
+                height: size.height / 2.15,
                 width: MediaQuery.of(context).size.width,
                 // color: AppColors.primaryColor,
                 child: Stack(
                   children: [
                     // Background color with a wave shape at the bottom
 
-                    Center(
-                        child: Transform.translate(
-                      offset: Offset(
-                          0,
-                          -size.height *
-                              0.025), // Responsive offset based on screen height
-                      child: AvatarProfileImageZero(
-                          url: svgIconPath.finance, width: 1, height: 2),
-                    )),
+                    Transform.translate(
+                                          offset: Offset(
+                      0,
+                      -size.height *
+                          0.025), // Responsive offset based on screen height
+                                          child: AvatarProfileImageZero(
+                      url: svgIconPath.finance, width: 1, height: 2),
+                                        ),
 
                     Column(
                       mainAxisSize: MainAxisSize.min,
@@ -123,14 +122,14 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
                               offset: Offset(
                                   0,
                                   -size.height *
-                                      0.24), // Responsive offset based on screen height
+                                      0.04), // Responsive offset based on screen height
                               child: Container(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
                                 child: AvatarProfileImageZero(
                                     url: svgIconPath.finance_background,
                                     width: 1,
-                                    height: 1.6),
+                                    height: 4.4),
                               ),
                             ),
                             Transform.translate(

@@ -213,9 +213,10 @@ class _InsightsScreenState extends State<InsightsScreen>
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: ResponsiveUtils.getFontSize(context, 18),
-                    color: AppColors.bg3.withOpacity(0.9),
+                    color: AppColors.bg3.withValues(alpha: 0.9),
                   ),
                   semanticsLabel: 'Your Insights',
+                  
                 ),
               ),
               Expanded(
@@ -383,7 +384,7 @@ class _InsightsScreenState extends State<InsightsScreen>
                 context,
                 lWeight: FontWeight.w600,
                 fontSize: ResponsiveUtils.getFontSize(context, 16),
-                color: Colors.red.withOpacity(0.9),
+                color: Colors.red.withValues(alpha: 0.9),
               ),
               textAlign: TextAlign.center,
             ),
@@ -428,7 +429,7 @@ class _InsightsScreenState extends State<InsightsScreen>
             context,
             lWeight: FontWeight.w600,
             fontSize: ResponsiveUtils.getFontSize(context, 14),
-            color: AppColors.bg3.withOpacity(0.7),
+            color: AppColors.bg3.withValues(alpha: 0.7),
           ),
           semanticsLabel: selectedIndex == 0
               ? HomepageStringsDart().noHeadsUpInsights
@@ -597,7 +598,7 @@ class InsightCard extends StatelessWidget {
                         lWeight: FontWeight.w600,
                         lineHeight: 1.2,
                         fontSize: ResponsiveUtils.getFontSize(context, 18),
-                        color: Colors.white.withOpacity(0.95),
+                        color: Colors.white.withValues(alpha: 0.95),
                       ),
                       maxLines: null,
                       overflow: TextOverflow.visible,

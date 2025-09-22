@@ -149,18 +149,20 @@ class _FriendsState extends State<Friends> {
       child: Center(
           child: GestureDetector(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CommunityUserProfile(
-                data: data,
-                ids: [],
-                flag: true,
-                isMasked: widget.isMasked,
-                isMaskedConnect: widget.isMaskedConnect,
-              ),
-            ),
-          );
+          widget.isMasked
+              ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CommunityUserProfile(
+                      data: data,
+                      ids: [],
+                      flag: true,
+                      isMasked: widget.isMasked,
+                      isMaskedConnect: widget.isMaskedConnect,
+                    ),
+                  ),
+                )
+              : null;
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 2, horizontal: 3),
