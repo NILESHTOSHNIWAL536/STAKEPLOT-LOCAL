@@ -84,6 +84,7 @@ class _InsightsScreenState extends State<InsightsScreen>
                     color: AppColors.bg3.withOpacity(0.9),
                   ),
                   semanticsLabel: 'Your Insights',
+                  
                 ),
               ),
               Expanded(
@@ -231,7 +232,7 @@ class _InsightsScreenState extends State<InsightsScreen>
             context,
             lWeight: FontWeight.w600,
             fontSize: ResponsiveUtils.getFontSize(context, 14),
-            color: AppColors.bg3.withOpacity(0.7),
+            color: AppColors.bg3..withOpacity(0.7),
           ),
           semanticsLabel: selectedIndex == 0
               ? HomepageStringsDart().noHeadsUpInsights

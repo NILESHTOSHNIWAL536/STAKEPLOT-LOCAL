@@ -57,8 +57,7 @@ void navigateScreens(context, screen, bool flag) {
   } else if (screen.toString().contains("friends")) {
     Navigator.pushNamed(context, '/Friends');
   } else if (screen.toString().contains("post")) {
-    Get.toNamed('/post');
-    // Navigator.pushNamed(context, '/post');
+    Navigator.pushNamed(context, '/post');
   } else if (screen.toString().contains("coupons")) {
     Navigator.pushNamed(context, '/rewardsOverview');
   } else if (screen.toString().contains("remainder") ||
@@ -203,10 +202,8 @@ void getDeviceLocalDetails2(String playerId, context) async {
 void oneSignalAddClickListener(context) {
   try {
     OneSignal.Notifications.addClickListener((event) {
-      if (context == null && Get.context == null) {
-        _handleNotificationClick(event, Get.context ?? context, true);
-      } else
-        _handleNotificationClick(event, Get.context ?? context, false);
+      _handleNotificationClick(event, Get.context ?? context,false);
+
     });
 
     OneSignal.Notifications.addForegroundWillDisplayListener((event) {

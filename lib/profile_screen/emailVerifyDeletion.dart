@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
@@ -115,11 +117,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         ),
         title: Text(
           'Verify Email',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+           style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: AppColors.accentColor,
+                        ),
         ),
         centerTitle: true,
       ),
@@ -160,20 +163,22 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           children: [
                             TextSpan(
                               text: 'Important: ',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              ),
+                               style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w800,
+                          fontSize: 16,
+                          color: AppColors.accentColor,
+                        ),
                             ),
                             TextSpan(
                               text:
                                   'To proceed with account deletion, verify your identity by entering the OTP sent to your email.',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                height: 1.4,
-                              ),
+                               style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 16,
+                          color: AppColors.accentColor,
+                        ),
                             ),
                           ],
                         ),
@@ -186,11 +191,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
               // Email Display
               Text(
                 'Email',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
+                 style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: AppColors.accentColor,
+                        ),
               ),
               SizedBox(height: 12),
               Container(
@@ -201,10 +207,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                 ),
                 child: Text(
                   widget.email,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                   style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: AppColors.accentColor,
+                        ),
                 ),
               ),
               SizedBox(height: 24),
@@ -229,11 +237,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           )
                         : Text(
                             'Get OTP',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
+                             style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: AppColors.backgroundColor,
+                        ),
                           ),
                   ),
                 ),
@@ -244,11 +253,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   children: [
                     Text(
                       'Enter OTP',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
+                      style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: AppColors.accentColor,
+                        ),
                     ),
                     SizedBox(height: 12),
                     Container(
@@ -294,13 +304,15 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           _canResend
                               ? 'Resend OTP'
                               : 'Resend OTP (${_resendCooldown}s)',
-                          style: TextStyle(
-                            color: _canResend && !_isLoading
+                               style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: _canResend && !_isLoading
                                 ? Color(0xFFDC2626)
-                                : Colors.grey[600],
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                                : Colors.grey,
+                        ),
+                         
                         ),
                       ),
                     ),
@@ -335,13 +347,15 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         )
                       : Text(
                           'Delete Account',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: _isOtpVerified && !_isLoading
+                           style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: _isOtpVerified && !_isLoading
                                 ? Colors.white
-                                : Colors.grey[600],
-                          ),
+                                : Colors.grey,
+                        )
+                         
                         ),
                   ),
                 ),

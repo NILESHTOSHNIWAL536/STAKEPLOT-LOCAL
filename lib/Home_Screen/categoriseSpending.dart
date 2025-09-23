@@ -2,18 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
+
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/untaggedcards.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
@@ -217,7 +214,7 @@ class CategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1), // Shadow color
+              color: Colors.black.withAlpha(26), // Shadow color
               spreadRadius: 2, // Spread radius
               blurRadius: 5, // Blur radius
               offset: Offset(0, 5), // Changes the position of the shadow
@@ -287,7 +284,8 @@ class CategoryCard extends StatelessWidget {
                             value: totalValue.value > 0
                                 ? amount / totalValue.value
                                 : 0.0,
-                            backgroundColor: AppColors.bg3.withOpacity(0.2),
+                            backgroundColor:
+                                AppColors.bg3.withOpacity(0.2),
                             valueColor: const AlwaysStoppedAnimation<Color>(
                                 AppColors
                                     .primaryColor), // Use the assigned color
