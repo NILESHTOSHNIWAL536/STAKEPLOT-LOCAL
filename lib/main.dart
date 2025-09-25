@@ -62,6 +62,7 @@ import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/in
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:in_app_update/in_app_update.dart';
@@ -75,9 +76,9 @@ final GlobalKey<NavigatorState> updateNavigatorKey =
     GlobalKey<NavigatorState>(); // New key for updates
 
 void main() async {
-  WidgetsFlutterBinding
-      .ensureInitialized(); // Ensure Flutter bindings are initialized
+  WidgetsFlutterBinding.ensureInitialized(); 
   checkFirebaseAndValidUser();
+  loadEnvs();
   runApp(const MyApp());
 }
 

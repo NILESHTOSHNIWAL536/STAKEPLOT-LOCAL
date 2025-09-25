@@ -25,9 +25,9 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/forgot.dart';
 
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/forgot.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signin.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signup.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/forgot.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/signin.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/signup.dart';
 import 'Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'email_sync/add_credit_card_bank.dart';

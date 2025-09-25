@@ -18,6 +18,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/firebase_options.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -153,6 +154,24 @@ void onPostDataCallWebSocket(data, context) {
     uploadRefreshCall(element, context);
   } catch (e) {}
 }
+
+Future<void> loadEnvs() async {
+  try {
+    // Print current working directory for debugging
+    print("Current working directory: ${Directory.current.path}");
+
+    // Load .env from project root
+    await dotenv.load(fileName: ".env"); // relative to project root
+    print("Loaded .env successfully");
+
+    // Optional: print a variable to test
+    print("ANDROID_CLIENT_ID: ${dotenv.env['GOOGLE_CLIENT_ID_ANDROID']}");
+  } catch (e) {
+    print("Error loading .env file: $e");
+  }
+}
+
+
 
 void checkFirebaseAndValidUser() async {
   WidgetsFlutterBinding.ensureInitialized();

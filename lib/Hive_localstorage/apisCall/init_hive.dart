@@ -33,8 +33,8 @@ part 'hive_helper.dart';
 Future<void> initAllHive() async {
   final dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
-  await init_user();
   await init_banks();
+  await init_user();
   await init_fips_metrics();
   await initCardsData();
   await init_Transactions();

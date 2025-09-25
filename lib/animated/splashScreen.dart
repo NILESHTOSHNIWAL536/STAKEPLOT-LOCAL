@@ -33,10 +33,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
      _checkForUpdatesAndNavigate();
-    callApis();
     initGetControllers();
     initializeOneSignal(context);
     initializeData(context, mounted);
+    callApis();
   }
 
   Future<void> _checkForUpdatesAndNavigate() async {
@@ -45,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void callApis()async {
+    await initAllHive();
     SignupData signup = SignupData();
     SnackbarData snackbarData = SnackbarData();
     SigninData signinData = SigninData();
@@ -67,7 +68,6 @@ class _SplashScreenState extends State<SplashScreen> {
     PdfStrings().fetchConstants();
     RewardScreenStrings().fetchConstants();
     CreditCardScreenStrings().fetchConstants();
-    await initAllHive();
   }
 
   @override

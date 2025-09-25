@@ -9,7 +9,6 @@ import 'init_hive.dart';
 
 class BankStorage {
 
-
 static Future<void>  cacheBankDataLocally() async {
 try{
  HiveHelper.openBoxIfNot<BankAccountModel>(HiveStorage.bankAccountsBoxName);
@@ -93,9 +92,8 @@ static Future<void> loadBankDataFromHive() async {
     });
   }
    addBankApiCall();
-   accountId.value=bankAccountLinkedList.isNotEmpty?bankAccountLinkedList.first['accountId']:"";
-    userController.selectedBank.value=accountId.value;
-   isBankLinked.value =false;
+  accountId.value=bankAccountLinkedList.isNotEmpty?bankAccountLinkedList.first['accountId']:"";
+  userController.selectedBank.value=accountId.value;
    isBankLinked.value = bankAccountLinkedList.isNotEmpty;
   }catch(e){
   }

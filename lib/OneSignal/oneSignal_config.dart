@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dar
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/credentials.dart';
 import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:page_transition/page_transition.dart';
@@ -82,7 +83,7 @@ void navigateScreens(context, screen, bool flag) {
 
 Future<void> oneSignalInit() async {
   try {
-    String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
+    String appId = Credentials.oneSignal;
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
     OneSignal.initialize(appId);
   } catch (e) {}

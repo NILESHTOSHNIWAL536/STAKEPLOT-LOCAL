@@ -134,10 +134,10 @@ bool getFlagOfResponse(response) {
 }
 
 void printData(response, [context = ""]) {
-  // print("response");
-  // print(response);
-  // print(response.statusCode);
-  // print(response.body);
+  print("response");
+  print(response);
+  print(response.statusCode);
+  print(response.body);
 }
 
 Future<http.Response> getTransactionsWithAmount({

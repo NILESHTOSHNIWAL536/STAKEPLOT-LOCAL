@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/two_factor_email_verification.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/two_factor_email_verification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/snackBar.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';

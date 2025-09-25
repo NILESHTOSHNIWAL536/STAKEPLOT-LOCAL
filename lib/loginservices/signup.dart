@@ -15,7 +15,7 @@ import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
