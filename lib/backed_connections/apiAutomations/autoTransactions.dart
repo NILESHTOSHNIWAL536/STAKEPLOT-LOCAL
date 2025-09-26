@@ -43,7 +43,6 @@ void updateTransactionsBalanceOut(context,transactionId,int index,double amount)
 Future<void> addTagToTransactions(context,transactionId,bool flag,int index)async
 {
 
-  // http://localhost:5000/api/v1/transactionauto/verify-pending-transaction/:transactionId/:isCorrect
    var res =await postDataApiCall("${url}/transactionauto/verify-pending-transaction/${transactionId}/${flag}",{
       "flag":flag
    });

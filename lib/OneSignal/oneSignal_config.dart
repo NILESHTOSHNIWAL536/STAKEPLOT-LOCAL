@@ -103,7 +103,7 @@ Future<void> getDeviceInfo(
   }
 
   deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
-  if (emailController.text == "testuser@gmail.com") {
+  if (emailController.text == Credentials.TestUser) {
     LoginService.loginUser(emailController, passwordController, context);
   } else {
     LoginService.userVerification(emailController, passwordController, context);

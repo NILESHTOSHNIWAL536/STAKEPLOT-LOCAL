@@ -19,7 +19,6 @@ Future<void> deleteEmailAccess(BuildContext context)async
     }
    } catch (e)
     {
-     print("error in deleting email access: $e"); 
      snackBarCalledfail(context, "Error in deleting email access");
    }
 }

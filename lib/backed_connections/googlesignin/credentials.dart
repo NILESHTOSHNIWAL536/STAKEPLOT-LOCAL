@@ -6,4 +6,6 @@ class Credentials
     static  String iosClientId = dotenv.env['GOOGLE_CLIENT_ID_IOS']??""; 
     static  String  serverClientId= dotenv.env['GOOGLE_CLIENT_ID_SERVER']??""; 
     static  String  oneSignal= dotenv.env['One_Signal_AppId']??""; 
+    static  String  LIVE_API= dotenv.env['API_URL'] ??""; 
+    static  String  TestUser= dotenv.env['TESTUSER'] ??""; 
 }

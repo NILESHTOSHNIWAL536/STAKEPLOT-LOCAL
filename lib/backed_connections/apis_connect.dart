@@ -12,11 +12,11 @@ import 'package:flutter_application_code_stakeplot/model/user_activity_model.dar
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'googlesignin/credentials.dart';
 part 'snackBars.dart';
 
 bool apis_flag = true;
-String portNo = apis_flag ? "192.168.1.4" : "localhost";
-String urlWithLocallHost = apis_flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = Credentials.LIVE_API;
 String url = "${urlWithLocallHost}api/v1";
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();

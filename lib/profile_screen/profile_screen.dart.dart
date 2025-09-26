@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.da
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
@@ -265,6 +266,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                 ..setJavaScriptMode(JavaScriptMode.unrestricted)
                                 ..loadRequest(Uri.parse(
                                     "https://stakeplot.com/Privacypolicy"));
+                              // redirectToUrl(context,  "https://stakeplot.com/Privacypolicy")
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

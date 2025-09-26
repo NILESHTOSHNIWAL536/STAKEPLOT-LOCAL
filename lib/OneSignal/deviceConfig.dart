@@ -24,6 +24,7 @@ import 'package:home_widget/home_widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+
 DateTime? _lastSent;
 Timer? snackbarTimer;
 
@@ -157,17 +158,9 @@ void onPostDataCallWebSocket(data, context) {
 
 Future<void> loadEnvs() async {
   try {
-    // Print current working directory for debugging
-    print("Current working directory: ${Directory.current.path}");
-
-    // Load .env from project root
     await dotenv.load(fileName: ".env"); // relative to project root
-    print("Loaded .env successfully");
-
     // Optional: print a variable to test
-    print("ANDROID_CLIENT_ID: ${dotenv.env['GOOGLE_CLIENT_ID_ANDROID']}");
   } catch (e) {
-    print("Error loading .env file: $e");
   }
 }
 

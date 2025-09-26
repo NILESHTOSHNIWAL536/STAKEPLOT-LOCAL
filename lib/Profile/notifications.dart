@@ -97,9 +97,7 @@ class _NotificationsState extends State<Notifications> {
               ),
               child: SingleChildScrollView(
                 child: Obx(() {
-                  print(
-                      "Building notification list, myNotificationBool: ${myNotificationBool.value}, notificationList: $notificationList"); // Debug log
-                  return myNotificationBool.value
+                   return myNotificationBool.value
                       ? _buildNotificationList()
                       : _buildNotificationList();
                 }),
@@ -252,8 +250,6 @@ class _NotificationsState extends State<Notifications> {
 
   void _handleNotificationTap(String type, Map<String, dynamic> data,
       Map<String, dynamic> notification) async {
-    print("data $data");
-    print("notification $notification");
     switch (type) {
       case "comment":
         try {

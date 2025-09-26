@@ -98,10 +98,7 @@ dependencies:
   connectivity_plus: ^6.0.5
   internet_connection_checker: ^1.0.0+1
   share_plus: ^11.1.0
-  flutter_dotenv: ^6.0.0
-  
- 
-  
+  flutter_dotenv: ^6.0.0  
 
 dev_dependencies:
   flutter_test:
