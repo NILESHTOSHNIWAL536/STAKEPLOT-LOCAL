@@ -37,8 +37,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController =
-      TextEditingController(text: "");
+  final TextEditingController emailController = TextEditingController(text: "");
   final TextEditingController passwordController =
       TextEditingController(text: "");
   bool _isPasswordVisible = false;
@@ -126,8 +125,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       Platform.isAndroid
                           ? Text('')
                           : Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
-                            child: SignInWithAppleButton(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: SignInWithAppleButton(
                                 onPressed: () async {
                                   if (appleSignInBool.value)
                                     return; // Prevent multiple clicks
@@ -136,11 +135,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   try {
                                     final userdataApple = await AuthService()
                                         .signInWithApple(context);
-                            
+
                                     if (userdataApple != null &&
                                         userdataApple['data']['accessToken'] !=
                                             null) {
-                                       LoginService.loginCalledData(
+                                      LoginService.loginCalledData(
                                           userdataApple, context);
                                     } else if (userdataApple != null) {
                                       Navigator.push(
@@ -157,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   }
                                 },
                               ),
-                          ),
+                            ),
 
                       // const Spacer(),
 
@@ -184,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           final userdata = await AuthService().signInWithGoogle(context);
           if (userdata != null && userdata['data']['accessToken'] != null) {
-             LoginService.loginCalledData(userdata, context);
+            LoginService.loginCalledData(userdata, context);
           } else if (userdata != null) {
             Navigator.push(
               context,
@@ -241,8 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.whiteOpacity03
-, width: 1),
+        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
       ),
       child: TextField(
         controller: emailController,
@@ -273,8 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: BoxDecoration(
         color: Color.fromRGBO(255, 255, 255, 0.23),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color:AppColors.whiteOpacity03
-, width: 1),
+        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
       ),
       child: TextField(
         controller: passwordController,
@@ -389,8 +386,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Expanded(
           child: Container(
             height: 1,
-            color: AppColors.whiteOpacity03
-,
+            color: AppColors.whiteOpacity03,
           ),
         ),
         Padding(
@@ -406,8 +402,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Expanded(
           child: Container(
             height: 1,
-            color: AppColors.whiteOpacity03
-,
+            color: AppColors.whiteOpacity03,
           ),
         ),
       ],

@@ -21,6 +21,8 @@ class AuthService {
       }
       // Get authentication details
       final GoogleSignInAuthentication googleAuth =await googleUser.authentication;
+      
+
       final String? idToken = googleAuth.idToken;     // final String? accessToken = googleAuth.accessToken;
       if (idToken == null)return null; 
 

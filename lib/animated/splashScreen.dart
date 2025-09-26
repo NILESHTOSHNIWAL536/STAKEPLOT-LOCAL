@@ -32,18 +32,18 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-     _checkForUpdatesAndNavigate();
+    _checkForUpdatesAndNavigate();
     callApis();
     initGetControllers();
     initializeOneSignal(context);
   }
 
   Future<void> _checkForUpdatesAndNavigate() async {
-      if(SnackbarData().showUpdatecall) await checkForUpdate();  
-      await checkAuthAndNavigate();  // only navigate after update check
+    if (SnackbarData().showUpdatecall) await checkForUpdate();
+    await checkAuthAndNavigate();
   }
 
-  void callApis()async {
+  void callApis() async {
     SignupData signup = SignupData();
     SnackbarData snackbarData = SnackbarData();
     SigninData signinData = SigninData();
@@ -72,24 +72,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-  final size = MediaQuery.of(context).size; 
+    final size = MediaQuery.of(context).size;
 
-  return AnimatedSplashScreen.withScreenFunction(
-    backgroundColor: Colors.white,
-    duration: 1800,
-    splashIconSize: size.height, 
-    splashTransition: SplashTransition.fadeTransition,
-    pageTransitionType: PageTransitionType.fade,
-    splash: SizedBox(
-      width: size.width,   
-      height: size.height, 
-      child: Lottie.asset(
-        "assets/splashScreen/appScreen.json",
-        fit: BoxFit.cover, 
+    return AnimatedSplashScreen.withScreenFunction(
+      backgroundColor: Colors.white,
+      duration: 1800,
+      splashIconSize: size.height,
+      splashTransition: SplashTransition.fadeTransition,
+      pageTransitionType: PageTransitionType.fade,
+      splash: SizedBox(
+        width: size.width,
+        height: size.height,
+        child: Lottie.asset(
+          "assets/splashScreen/appLogin.json",
+          fit: BoxFit.cover,
+        ),
       ),
-    ),
-    screenFunction: checkAuthAndNavigate,
-  );
-}
-
+      screenFunction: checkAuthAndNavigate,
+    );
+  }
 }
