@@ -8,4 +8,5 @@ class Credentials
     static  String  oneSignal= dotenv.env['One_Signal_AppId']??""; 
     static  String  LIVE_API= dotenv.env['API_URL'] ??""; 
     static  String  TestUser= dotenv.env['TESTUSER'] ??""; 
+    static  String  FinvuUrl= dotenv.env['FinvuUrl'] ??""; 
 }

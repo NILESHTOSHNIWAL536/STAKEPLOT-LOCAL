@@ -39,7 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
     callApis();
   }
 
-  Future<void> _checkForUpdatesAndNavigate() async {
+  Future<void> _checkForUpdatesAndNavigate() async 
+  {
       if(SnackbarData().showUpdatecall) await checkForUpdate();  
       await checkAuthAndNavigate();  // only navigate after update check
   }

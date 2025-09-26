@@ -156,6 +156,17 @@ void onPostDataCallWebSocket(data, context) {
   } catch (e) {}
 }
 
+
+bool securityCheck(){
+  assert(() {
+    debugPrint = (String? message, {int? wrapWidth}) {
+      print(message);
+    };
+    return true;
+  }());
+  return false;
+}
+
 Future<void> loadEnvs() async {
   try {
     await dotenv.load(fileName: ".env"); // relative to project root

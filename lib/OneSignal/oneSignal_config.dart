@@ -84,7 +84,7 @@ void navigateScreens(context, screen, bool flag) {
 Future<void> oneSignalInit() async {
   try {
     String appId = Credentials.oneSignal;
-    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+    OneSignal.Debug.setLogLevel(OSLogLevel.none);
     OneSignal.initialize(appId);
   } catch (e) {}
 }

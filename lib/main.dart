@@ -77,6 +77,7 @@ final GlobalKey<NavigatorState> updateNavigatorKey =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); 
+  securityCheck();
   checkFirebaseAndValidUser();
   loadEnvs();
   runApp(const MyApp());

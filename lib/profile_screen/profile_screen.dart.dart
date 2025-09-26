@@ -15,10 +15,8 @@ import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class ProfileScreenDart extends StatefulWidget {
   const ProfileScreenDart({super.key});
@@ -262,18 +260,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                           Divider(),
                           InkWell(
                             onTap: () {
-                              WebViewController controller = WebViewController()
-                                ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                                ..loadRequest(Uri.parse(
-                                    "https://stakeplot.com/Privacypolicy"));
-                              // redirectToUrl(context,  "https://stakeplot.com/Privacypolicy")
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      WebViewPage(controller: controller),
-                                ),
-                              );
+                             
+                              redirectToUrl(context,  "https://stakeplot.com/Privacypolicy");
+                    
                             },
                             child: _buildOption(
                               ProfileImage(url: ProfileIcons.terms),
