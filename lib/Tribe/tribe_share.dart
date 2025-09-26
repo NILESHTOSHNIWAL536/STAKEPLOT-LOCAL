@@ -47,7 +47,7 @@ class _TribeHomeState extends State<TribeShare> {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     final response = await http.get(
-      Uri.parse('https://stakeplot.in/api/v1/user/info'),
+      Uri.parse('${url}/user/info'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",

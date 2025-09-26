@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signin.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/signin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/snackBar.dart';
 

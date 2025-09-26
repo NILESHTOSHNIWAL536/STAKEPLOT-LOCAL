@@ -13,7 +13,6 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.da
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
 import '../../Utils/finspaceStrings.dart';
 
 void initFinvuManager(BuildContext context) async {

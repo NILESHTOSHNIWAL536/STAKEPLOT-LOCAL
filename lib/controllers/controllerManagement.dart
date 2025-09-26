@@ -8,5 +8,4 @@ class ControllerManagement {
   static UserController get userController => Get.find<UserController>();
   static PostController get postController => Get.find<PostController>();
   // final GlobalKey<CommunityState> communityKey = GlobalKey<CommunityState>();
-
 }

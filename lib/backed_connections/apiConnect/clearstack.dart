@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -26,6 +24,8 @@ import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
+
+import '../../controllers/credit_card_controller.dart';
 
 void clearStack(BuildContext context) {
   try {
@@ -280,19 +280,23 @@ void clearInterest() {
 void initGetControllers() {
   Get.put(UserController());
   Get.put(PostController());
+  Get.put(CardDueController());
 }
 
 void deleteGetControllers() {
   Get.delete<UserController>();
   Get.delete<PostController>();
+  Get.delete<CardDueController>();
 }
 
 void initGetControllersIfisRegistered() {
   if (!Get.isRegistered<UserController>()) {
     Get.put(UserController());
   }
-
   if (!Get.isRegistered<PostController>()) {
     Get.put(PostController());
+  }
+  if (!Get.isRegistered<CardDueController>()) {
+    Get.put(CardDueController());
   }
 }

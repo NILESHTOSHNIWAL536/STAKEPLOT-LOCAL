@@ -4,7 +4,6 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
@@ -15,14 +14,9 @@ import "package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
 import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
-import '../backed_connections/apiConnect/profileUser.dart';
 
 class ProfileScreenDart extends StatefulWidget {
   const ProfileScreenDart({super.key});
@@ -36,7 +30,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
   void initState() {
     super.initState();
     getHiddenTransactions(context);
-    userController.fetchUserInfo();
   }
 
   void authenticateUser(BuildContext context) async {
@@ -267,17 +260,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                           Divider(),
                           InkWell(
                             onTap: () {
-                              WebViewController controller = WebViewController()
-                                ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                                ..loadRequest(Uri.parse(
-                                    "https://stakeplot.com/Privacypolicy"));
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      WebViewPage(controller: controller),
-                                ),
-                              );
+                             
+                              redirectToUrl(context,  "https://stakeplot.com/Privacypolicy");
+                    
                             },
                             child: _buildOption(
                               ProfileImage(url: ProfileIcons.terms),

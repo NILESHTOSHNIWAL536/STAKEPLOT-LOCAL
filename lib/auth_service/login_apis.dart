@@ -9,9 +9,10 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/two_factor_email_verification.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/two_factor_email_verification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/snackBar.dart';
+import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
 
 class LoginService {
@@ -30,6 +31,9 @@ class LoginService {
         ForceLogout.forceLoginShowModal(context, response, emailController, passwordController);
       } else if (response.statusCode == 500) {
         snackBarCalledfail(context, SnackbarData().serverError, Colors.red);
+      } else if (getFlagOfResponse(response)) {
+      } else if (response.statusCode == 400) {
+        snackBarCalledfail(context,SnackbarData().invalidInfo , Colors.red);
       } else if (getFlagOfResponse(response)) {
         loginCalledData(response, context);
         await screenDataLocalStorage();
@@ -92,18 +96,18 @@ class LoginService {
     }
   }
 
-  static void loginCalledData(response, context) async {
+  static void loginCalledData(response, context,{bool flag=false}) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    final body = json.decode(response.body);
+    final body = !flag ? json.decode(response.body):response;
     String accessToken = body['data']['accessToken'];
     initGetControllers();
     pref.setString("accessToken", "Bearer " + accessToken);
-    await getBankAccounts();
     await initializeOneSignal(context);
     userController.userId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
     acceptReset.value = false;
     getPhoneNo(body);
+    callApi(context);
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 
@@ -122,5 +126,3 @@ class LoginService {
     number.value = phone;
   }
 }
-
-

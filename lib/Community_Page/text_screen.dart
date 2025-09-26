@@ -121,9 +121,9 @@ class _TextScreenState extends State<TextScreen> {
       }
 
       final Uint8List bytes = byteData.buffer.asUint8List();
-      final tempDir = await getTemporaryDirectory();
+      final tempDir = await getExternalStorageDirectory();
       final file = await File(
-              '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.png')
+              '${tempDir!.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.png')
           .writeAsBytes(bytes);
 
       return file;

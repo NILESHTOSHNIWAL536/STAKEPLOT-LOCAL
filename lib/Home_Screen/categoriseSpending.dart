@@ -40,8 +40,6 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   void initState() {
     super.initState();
     selectedIndex.value = -1;
-    // initChartData();
-    getCategoryData(context);
     catWidgetBindUpdate(context);
   }
 
@@ -119,7 +117,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                 context,
                 lWeight: FontWeight.bold,
                 fontSize: 16,
-                color: AppColors.bg3.withValues(alpha: 0.8),
+                color: AppColors.bg3.withOpacity(0.8),
               ),
             ),
           )
@@ -287,7 +285,7 @@ class CategoryCard extends StatelessWidget {
                                 ? amount / totalValue.value
                                 : 0.0,
                             backgroundColor:
-                                AppColors.bg3.withValues(alpha: 0.2),
+                                AppColors.bg3.withOpacity(0.2),
                             valueColor: const AlwaysStoppedAnimation<Color>(
                                 AppColors
                                     .primaryColor), // Use the assigned color
@@ -363,7 +361,7 @@ class AllCategoriesPage extends StatelessWidget {
                       context,
                       lWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: AppColors.bg3.withValues(alpha: 0.8),
+                      color: AppColors.bg3.withOpacity(0.8),
                     ),
                   ),
                 )

@@ -56,7 +56,6 @@ class _TribeSearchState extends State<TribeChats> {
   @override
   void initState() {
     super.initState();
-    userController.fetchUserInfo();    
     totalUnopenedMessages.value=0;
     // ismaskedUsers.value = false;
     getChatLoader(ismaskedUsers.value);
@@ -118,7 +117,7 @@ class _TribeSearchState extends State<TribeChats> {
   }
 
   void getChatsSplitAccounts(BuildContext context, String id) async {
-    var response = await getDataApiCall("${url}/split/pending-user");
+    var response = await getDataApiCall("${url}changePassword/pending-user");
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];

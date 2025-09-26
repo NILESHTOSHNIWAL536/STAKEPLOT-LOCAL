@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
@@ -10,23 +8,16 @@ import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.da
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/appleSignIn.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
-import 'dart:math' as math;
-
+import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../auth_service/login_apis.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -37,9 +28,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController(text: "");
+  final TextEditingController emailController =
+      TextEditingController(text: "nileshtoshniwal743@gmail.com");
   final TextEditingController passwordController =
-      TextEditingController(text: "");
+      TextEditingController(text: "Nilesh1234@");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override
@@ -140,7 +132,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         userdataApple['data']['accessToken'] !=
                                             null) {
                                       LoginService.loginCalledData(
-                                          userdataApple, context);
+                                          userdataApple, context,
+                                          flag: true);
                                     } else if (userdataApple != null) {
                                       Navigator.push(
                                         context,
@@ -183,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           final userdata = await AuthService().signInWithGoogle(context);
           if (userdata != null && userdata['data']['accessToken'] != null) {
-            LoginService.loginCalledData(userdata, context);
+            LoginService.loginCalledData(userdata, context, flag: true);
           } else if (userdata != null) {
             Navigator.push(
               context,

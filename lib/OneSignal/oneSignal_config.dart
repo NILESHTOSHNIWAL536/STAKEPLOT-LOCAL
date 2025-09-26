@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dar
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/credentials.dart';
 import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:page_transition/page_transition.dart';
@@ -29,7 +30,13 @@ Future<void> initializeOneSignal(BuildContext context) async {
     String userDeviceId =
         await OneSignal.User.pushSubscription.id ?? "deviceData.value";
     getDeviceLocalDetails(userDeviceId, context);
-    deviceData['deviceId'] = userDeviceId;
+    //  deviceData['deviceId'] = userDeviceId;
+    var deviceDataLocal = {
+      ...deviceData,
+      'deviceId': userDeviceId,
+    };
+    deviceData.clear();
+    deviceData.addAll(deviceDataLocal);
     pref.setString(key, jsonEncode(deviceData));
   } else {
     deviceData['deviceId'] = json["deviceId"];
@@ -38,14 +45,14 @@ Future<void> initializeOneSignal(BuildContext context) async {
 }
 
 void _handleNotificationClick(
-    OSNotificationClickEvent event, BuildContext context) {
+    OSNotificationClickEvent event, BuildContext context, bool flag) {
   try {
     String screen = event.notification.additionalData?['screen'];
-    navigateScreens(context, screen);
+    navigateScreens(context, screen, flag);
   } catch (e) {}
 }
 
-void navigateScreens(context, screen) {
+void navigateScreens(context, screen, bool flag) {
   if (screen.toString().contains("chat")) {
     Navigator.pushNamed(context, '/TribeChats');
   } else if (screen.toString().contains("friends")) {
@@ -76,8 +83,8 @@ void navigateScreens(context, screen) {
 
 Future<void> oneSignalInit() async {
   try {
-    String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
-    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+    String appId = Credentials.oneSignal;
+    OneSignal.Debug.setLogLevel(OSLogLevel.none);
     OneSignal.initialize(appId);
   } catch (e) {}
 }
@@ -96,7 +103,7 @@ Future<void> getDeviceInfo(
   }
 
   deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
-  if (emailController.text == "testuser@gmail.com") {
+  if (emailController.text == Credentials.TestUser) {
     LoginService.loginUser(emailController, passwordController, context);
   } else {
     LoginService.userVerification(emailController, passwordController, context);
@@ -108,7 +115,6 @@ void getDeviceLocalDetails(String playerId, context) async {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-
       deviceData.value = {
         'deviceId': playerId,
         'brand': androidInfo.brand,
@@ -195,25 +201,15 @@ void getDeviceLocalDetails2(String playerId, context) async {
 }
 
 void oneSignalAddClickListener(context) {
-  print("check this ");
   try {
     OneSignal.Notifications.addClickListener((event) {
-      print("check thisc $context");
-      print("check thise $event");
-      print("check thisg ${Get.context}");
-      _handleNotificationClick(event, Get.context ?? context);
+      _handleNotificationClick(event, Get.context ?? context,false);
 
     });
 
     OneSignal.Notifications.addForegroundWillDisplayListener((event) {
       String s = event.notification.body.toString().toLowerCase().trim();
-      String t1 =
-          "There is a problem with your bank server. Please try again later.";
-      String t2 =
-          "we couldn't able to fetch your bank details, try again later";
-      String t3 = "Your bank account data has been successfully fetched.";
       if (s == "you have been logged out from stakeplot!") {
-        //  logoutUserFromDevice(context);
         return;
       }
       if (s.contains("problem") ||

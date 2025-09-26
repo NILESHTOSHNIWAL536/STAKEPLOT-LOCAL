@@ -119,6 +119,7 @@ String budgetAmountMismatch = "Total amount is not equal to the sum of all categ
 
 
   String serverError = "Server Error!";
+  String invalidInfo = "Invalid device Informations Error!";
   String invalidCredentials = 'Invalid credentials';
   String loginFailedTryAgain = 'Login failed, Try again';
   String sentOtpToEmail = "Sent Otp To Email Id!";

@@ -16,12 +16,13 @@ class CreditCardScreenStrings {
    void fetchConstants() async {
     try {
       final response = await http.get(Uri.parse("$url/constant/creditCard"));
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200) 
+      {
             var data = jsonDecode(response.body)['data'] ?? {};
-            showCreditCard.value=data['showCreditCard'] ??  showCreditCard.value;
+            showCreditCard.value= true; //data['showCreditCard'] ??  showCreditCard.value;
       } 
     } catch (e) {
-    }
+    } 
   }
 
 }

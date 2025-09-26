@@ -510,7 +510,7 @@ class _RotatingIconState extends State<Nextfetch>
   }
 
   void checkAndFetchData() async {
-    await getBankAccounts();
+    // await getBankAccounts();
     setUpSocketListenerMainPage(context);
     if (consentAndHandleDetails.isNotEmpty) {
       consentAndHandleDetails.forEach((item) {

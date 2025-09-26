@@ -77,13 +77,14 @@ Future<void> getBankAccounts() async {
 }
 
 void addBankApiCall() {
-  if (bankAccountLinkedList.isNotEmpty) {
+  if (bankAccountLinkedList.isNotEmpty)
+   {
+    isBankLinked.value = true;
     LastFetchDate.value = bankAccountLinkedList[0]['lastFetch'].toString();
     nextFecthDate.value = bankAccountLinkedList[0]['nextFetch'].toString();
     fetchCount.value = bankAccountLinkedList[0]['fetchCount'].toString();
     BankName.value = bankAccountLinkedList[0]['bankName'].toString();
     BankUrl.value = bankAccountLinkedList[0]['bankLogo'].toString();
-    isBankLinked.value = true;
   }
   loadBanks.value = false;
   loadBalance.value = !loadBalance.value;
@@ -124,17 +125,18 @@ void getWeeklyfetchData(
 }
 
 void calledFunctionToFetchData(context) async {
-  if (accountId.value.isEmpty) {
+  if (accountId.value.isEmpty)
+  {
     getGraphData.value = false;
     await getBankAccounts();
   }
 
   if (selectedButton.value == "Month") {
-    getAutoMationsTransactionsCustom(getFormattedDate(), context);
+    getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context);
   } else if (selectedButton.value == "Week") {
-    getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
+    getWeeklyGraphAndCustomDateGraph(getCurrentWeek(), context, weekORmonth: 'Week');
   } else {
-    getAutoMationsTransactionsCustom(getFormattedDate(), context, 'Custom');
+    getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,weekORmonth: 'Custom');
   }
 }
 

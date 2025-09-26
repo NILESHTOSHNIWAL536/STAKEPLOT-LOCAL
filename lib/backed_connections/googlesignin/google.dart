@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -9,51 +8,50 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'google_auth_token.dart';
 
 class AuthService {
-  final GoogleSignIn _googleSignIn = GoogleAuthToken.googleToken;
+   GoogleSignIn _googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail:false );
 
-  Future<Map<String, dynamic>?> signInWithGoogle(context,{flag=true}) async {
+  Future<Map<String, dynamic>?> signInWithGoogle(context, {bool flag = true,bool isEmail=false}) async {
     try {
       // Trigger Google Sign-In
+      if(isEmail)_googleSignIn = GoogleAuthToken.createGoogleSignIn(isEmail:isEmail);
       await _googleSignIn.signOut();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         return null;
       }
       // Get authentication details
-      final GoogleSignInAuthentication googleAuth =await googleUser.authentication;
-      
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final String? idToken = googleAuth
+          .idToken; // final String? accessToken = googleAuth.accessToken;
+      if (idToken == null) return null;
 
-      final String? idToken = googleAuth.idToken;     // final String? accessToken = googleAuth.accessToken;
-      if (idToken == null)return null; 
+     //don't remove this code 
+       final String? authCode = await googleUser.serverAuthCode;
+        if (authCode != null)
+        {
+          final response =  await http.post(
+              Uri.parse('$url/user/google-gmail-auth'),
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode({'idToken':  authCode}),
+            );
+             if(!flag)return {};
+        }
 
-      //  final String? authCode = await googleUser.serverAuthCode;
-
-      //   if (authCode != null) 
-      //   {
-      //     final response =  await http.post(
-      //         Uri.parse('$url/user/google-gmail-auth'),
-      //         headers: {'Content-Type': 'application/json'},
-      //         body: jsonEncode({'idToken':  authCode}),
-      //       );
-      //        if(!flag)return {};
-      //   }
-
-      
-      final response = await http.post(Uri.parse('$url/user/google-auth'),
+      final response = await http.post(
+        Uri.parse('$url/user/google-auth'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'idToken': idToken}),
       );
-        
-       
-        if (response.statusCode == 200)return json.decode(response.body);
-    } catch (e)
-     {
-    }
+
+      if (response.statusCode == 200) return json.decode(response.body);
+    } catch (e) {}
 
     return null;
   }
+
   // Apple Sign-In (new method)
- Future<Map<String, dynamic>?> signInWithApple(context) async {
+  Future<Map<String, dynamic>?> signInWithApple(context) async {
     try {
       final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -72,7 +70,7 @@ class AuthService {
       if (idToken == null) {
         return null;
       }
-    
+
       final response = await http.post(
         Uri.parse('$url/user/apple-auth'),
         headers: {'Content-Type': 'application/json'},
@@ -91,10 +89,8 @@ class AuthService {
       // Check response status
       if (response.statusCode == 200) {
         return json.decode(response.body);
-      } else {
-      }
-    } catch (e) {
-    }
+      } else {}
+    } catch (e) {}
     return null;
   }
 }

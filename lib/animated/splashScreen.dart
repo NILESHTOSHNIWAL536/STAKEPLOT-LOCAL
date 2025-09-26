@@ -16,8 +16,8 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
-
 import '../Hive_localstorage/apisCall/init_hive.dart';
+import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../OneSignal/oneSignal_config.dart';
 import '../Utils/credit_card.dart';
 
@@ -33,9 +33,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _checkForUpdatesAndNavigate();
-    callApis();
     initGetControllers();
     initializeOneSignal(context);
+    initializeData(context, mounted);
+    callApis();
   }
 
   Future<void> _checkForUpdatesAndNavigate() async {
@@ -44,16 +45,17 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void callApis() async {
+    await initAllHive();
+
     SignupData signup = SignupData();
     SnackbarData snackbarData = SnackbarData();
     SigninData signinData = SigninData();
-
     PlotFinanceStaticData plotFinanceStaticData = PlotFinanceStaticData();
-    HomepageStringsDart homepageStringsDart = HomepageStringsDart();
     CommunityScreenStrings communityScreenStrings = CommunityScreenStrings();
     FinvuStrings finvuStrings = FinvuStrings();
     ProfileScreenStrings profileScreenStrings = ProfileScreenStrings();
     FinspaceStrings finspaceStrings = FinspaceStrings();
+    HomepageStringsDart homepageStringsDart = HomepageStringsDart();
 
     finspaceStrings.fetchConstants();
     signinData.fetchConstants();
@@ -67,7 +69,6 @@ class _SplashScreenState extends State<SplashScreen> {
     PdfStrings().fetchConstants();
     RewardScreenStrings().fetchConstants();
     CreditCardScreenStrings().fetchConstants();
-    await initAllHive();
   }
 
   @override

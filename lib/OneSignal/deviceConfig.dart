@@ -5,10 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/OneSignal/invalidUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -18,17 +16,14 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
-import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
 import 'package:flutter_application_code_stakeplot/firebase_options.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
-import 'package:flutter_application_code_stakeplot/onboarding_screens/onboarding_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-import '../Hive_localstorage/apisCall/init_hive.dart';
 
 DateTime? _lastSent;
 Timer? snackbarTimer;
@@ -160,6 +155,27 @@ void onPostDataCallWebSocket(data, context) {
     uploadRefreshCall(element, context);
   } catch (e) {}
 }
+
+
+bool securityCheck(){
+  assert(() {
+    debugPrint = (String? message, {int? wrapWidth}) {
+      print(message);
+    };
+    return true;
+  }());
+  return false;
+}
+
+Future<void> loadEnvs() async {
+  try {
+    await dotenv.load(fileName: ".env"); // relative to project root
+    // Optional: print a variable to test
+  } catch (e) {
+  }
+}
+
+
 
 void checkFirebaseAndValidUser() async {
   WidgetsFlutterBinding.ensureInitialized();

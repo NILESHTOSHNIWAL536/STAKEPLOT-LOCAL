@@ -138,9 +138,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   }
 
   void setUpSocketListener() {
-    socket.onConnect((_) => print('Socket connected'));
-    socket.onDisconnect((_) => print('Socket disconnected'));
-    socket.onError((error) => print('Socket error: $error'));
+    socket.onConnect((_) => {});
+    socket.onDisconnect((_) => {});
+    socket.onError((error) =>{});
   }
 
   void _calculateShares() {

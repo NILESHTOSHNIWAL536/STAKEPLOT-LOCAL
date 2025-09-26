@@ -18,6 +18,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/revoke_access.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/emailUpdateOtp.dart';
 import 'package:get/get.dart';
@@ -58,8 +59,7 @@ class _EditDetailsState extends State<EditDetails> {
     _controllers[ProfileScreenStrings().numberLabel]!.text = number.value;
 
     checkBiometricsStatus();
-    userController.fetchUserInfo();
-  }
+ }
 
   @override
   void dispose() {
@@ -98,6 +98,15 @@ class _EditDetailsState extends State<EditDetails> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => DeleteAccountScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.remember_me_outlined, color: Colors.red),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RevokeAccessScreen()),
               );
             },
           ),
