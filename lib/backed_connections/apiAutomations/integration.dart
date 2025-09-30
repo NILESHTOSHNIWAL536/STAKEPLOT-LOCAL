@@ -14,20 +14,15 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../Utils/finspaceStrings.dart';
+import '../googlesignin/credentials.dart';
 
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(   
-      finvuEndpoint: FinspaceStrings().liveIntegration? 'wss://wsslive.finvu.in/consentapi':'wss://webvwdev.finvu.in/consentapi',
-        //  finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
-      certificatePins: 
-      [
-            //  "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
-            //  "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
-      ],
+      finvuEndpoint: FinspaceStrings().liveIntegration? Credentials.Live_finvu_api:Credentials.Dev_finvu_api,
+      certificatePins: [],
     ),
   );
-
   await finvuManager.connect();
   var isConnected = await finvuManager.isConnected();
   if (!isConnected) {

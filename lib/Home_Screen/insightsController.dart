@@ -61,7 +61,7 @@ class InsightsController extends GetxController {
       totalInSightsMoneyMap.assignAll(cachedInsights.totalInSightsMoneyMap);
       getTotalInsightsHistorytotalMoneyMap.value =
           !getTotalInsightsHistorytotalMoneyMap.value;
-      return;
+      // return;
     }
     // 2️⃣ Try API fetch in background
     Future(() async {

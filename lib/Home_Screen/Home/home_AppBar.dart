@@ -40,7 +40,7 @@ PreferredSizeWidget getAppBar(context) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const SplashScreen(),
+                          builder: (context) => const EditDetails(),
                         ),
                       );
                     },

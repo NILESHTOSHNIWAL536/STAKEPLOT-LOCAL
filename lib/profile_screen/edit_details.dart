@@ -25,6 +25,7 @@ import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:intl/intl.dart';
 
+import '../Utils/credit_card.dart';
 import '../backed_connections/apiAutomations/share_data.dart';
 
 late BuildContext showSnackBarContext;
@@ -59,7 +60,7 @@ class _EditDetailsState extends State<EditDetails> {
     _controllers[ProfileScreenStrings().numberLabel]!.text = number.value;
 
     checkBiometricsStatus();
- }
+  }
 
   @override
   void dispose() {
@@ -101,15 +102,19 @@ class _EditDetailsState extends State<EditDetails> {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.remember_me_outlined, color: Colors.red),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RevokeAccessScreen()),
-              );
-            },
-          ),
+          !CreditCardScreenStrings().showRevokeScreen.value
+              ? SizedBox.shrink()
+              : IconButton(
+                  icon: Icon(Icons.remember_me_outlined,
+                      color: Colors.red, size: 25),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RevokeAccessScreen()),
+                    );
+                  },
+                ),
         ],
       ),
       body: SingleChildScrollView(
@@ -510,19 +515,18 @@ class _EditDetailsState extends State<EditDetails> {
           ),
         ),
       );
-
-  } else 
-  {
-    var body=jsonDecode(response.body);
-    snackBarCalledfail(showSnackBarContext,body['error']??"error", Colors.red);
+    } else {
+      var body = jsonDecode(response.body);
+      snackBarCalledfail(
+          showSnackBarContext, body['error'] ?? "error", Colors.red);
+    }
   }
-}
 
   Widget _buildAccountDetails(
       String bankName, String accountNumber, var data, String logo) {
     return InkWell(
-      onTap: (){
-        shareBankData(data);   
+      onTap: () {
+        shareBankData(data);
       },
       child: Card(
         elevation: 2,
@@ -585,7 +589,6 @@ class _EditDetailsState extends State<EditDetails> {
               );
             },
           ),
-         
         ),
       ),
     );

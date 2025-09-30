@@ -5,8 +5,8 @@ import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart'
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import '../../Utils/snackBar.dart';
-
-class OtpService {
+class OtpService
+{
   static void getOTP(context, String name, String email) async {
     var response = await postDataApiCallwithOutSharedPref('${url}/otp/send', {
       'email': email,

@@ -33,6 +33,9 @@ class ForceLogout {
       String existingDeviceId,
       String existingDeviceName) async {
     try {
+      if(deviceData['deviceId']==""){
+         deviceData['deviceId']=existingDeviceId.isEmpty?"123":existingDeviceId;
+      }
       var response =
           await postDataApiCallwithOutSharedPref('${url}/user/force-login', {
         "sessionId": sessionId,
@@ -43,7 +46,8 @@ class ForceLogout {
       if (getFlagOfResponse(response)) {
         final body = jsonDecode(response.body);
         // Notify the logged-out device (if applicable)
-        if (body['data']?['_id'] != null) {
+        if (body['data']?['_id'] != null)
+      {
           sendNotificationsToDevice(
             body['data']['_id'],
             context,
@@ -52,15 +56,14 @@ class ForceLogout {
         }
         LoginService.loginCalledData(response, context);
         await screenDataLocalStorage();
-        // Send OTP for the new login
-
         snackBarCalled(context, 'Existing session logged out.', Colors.green);
-      } else {
+      } 
+      else {
         snackBarCalledfail(context, 'Failed to log out existing session.', Colors.red);
       }
-    } catch (e) {
-      snackBarCalledfail(
-          context, 'Error during forced logout. Please try again.', Colors.red);
+    } catch (e)
+    {
+      snackBarCalledfail(context, 'Error during forced logout. Please try again.', Colors.red);
     }
   }
 }
