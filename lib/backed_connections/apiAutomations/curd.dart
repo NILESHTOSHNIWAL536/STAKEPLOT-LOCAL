@@ -134,6 +134,8 @@ bool getFlagOfResponse(response) {
 }
 
 void printData(response, [context = ""]) {
+  print("Response Data $context : ${response.body}");
+  print("Response Status Code  : ${response.statusCode}");  
 }
 
 Future<http.Response> getTransactionsWithAmount({

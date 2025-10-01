@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -59,8 +60,12 @@ class AuthService {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
+      print("credential");
+      print(credential);
       // Extract data
       final String? idToken = credential.identityToken;
+      print("idToken");
+      print(idToken);
       final String? authCode = credential.authorizationCode;
       String? email = credential.email;
       final String? fullName = credential.givenName != null
@@ -70,7 +75,6 @@ class AuthService {
       if (idToken == null) {
         return null;
       }
-
       final response = await http.post(
         Uri.parse('$url/user/apple-auth'),
         headers: {'Content-Type': 'application/json'},
@@ -81,7 +85,7 @@ class AuthService {
           'fullName': fullName,
         }),
       );
-
+      printData(response);
       if (response.statusCode == 400) {
         return null;
       }
@@ -90,7 +94,11 @@ class AuthService {
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {}
-    } catch (e) {}
+    } catch (e) {
+        print("error in apple signin---------------------------------------");
+        print(e);
+        print("error in apple signin---------------------------------------");
+    }
     return null;
   }
 }

@@ -127,7 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   try {
                                     final userdataApple = await AuthService()
                                         .signInWithApple(context);
-
+                                    print("userdataApple");
+                                    print(userdataApple);
                                     if (userdataApple != null &&
                                         userdataApple['data']['accessToken'] !=
                                             null) {
