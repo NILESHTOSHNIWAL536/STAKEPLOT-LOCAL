@@ -12,6 +12,7 @@ class CreditCardScreenStrings {
   CreditCardScreenStrings._internal();
 
    RxBool showCreditCard=false.obs;
+   RxBool showRevokeScreen=false.obs;
 
    void fetchConstants() async {
     try {
@@ -19,7 +20,8 @@ class CreditCardScreenStrings {
       if (response.statusCode == 200) 
       {
             var data = jsonDecode(response.body)['data'] ?? {};
-            showCreditCard.value= true; //data['showCreditCard'] ??  showCreditCard.value;
+            showCreditCard.value= data['showCreditCard'] ??  showCreditCard.value;
+            showRevokeScreen.value= data['showRevokeScreen'] ??  showRevokeScreen.value;
       } 
     } catch (e) {
     } 

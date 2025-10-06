@@ -16,7 +16,7 @@ import 'googlesignin/credentials.dart';
 part 'snackBars.dart';
 
 bool apis_flag = true;
-String urlWithLocallHost = Credentials.LIVE_API;
+String urlWithLocallHost = apis_flag? Credentials.LIVE_API:Credentials.LIVE_API_TEST;
 String url = "${urlWithLocallHost}api/v1";
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();

@@ -327,10 +327,8 @@ pw.Widget firstPage(
           children: [
             pw.Text("Account No: $accountNo"),
             pw.Text("Branch: ${summary['data']['branch']}"),
-            pw.Text(
-                "IFSC: ${summary['data']['ifscCode'] ?? summary['data']['ifsc']}"),
-            pw.Text(
-                "Opening Date: ${summary['data']['openingDate'].toString().split('T')[0]}"),
+            pw.Text("IFSC: ${summary['data']['ifscCode'] ?? summary['data']['ifsc']}"),
+            pw.Text("Opening Date: ${summary['data']['openingDate'].toString().split('T')[0]}"),
           ],
         ),
 

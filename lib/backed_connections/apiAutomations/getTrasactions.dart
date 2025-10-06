@@ -508,10 +508,10 @@ void updateTheTagOfTarnsactions2(
     'category': category,
     'subcategory': subCategory,
   });
-
   if (getFlagOfResponse(response)) {
     Navigator.pop(context);
     reloadHistory.value = !reloadHistory.value;
+    updateCatAndMoneyMap(context);
   } else {}
 }
 
@@ -646,11 +646,11 @@ void addTransaction(String amount, String subCategory, String categories,
     final body = json.decode(response.body);
     transactionsHistory.insert(
         0, TransactionModel.fromJson(body['data'][0]['data']));
-    final controller = Get.find<InsightsController>();
+    updateCatAndMoneyMap(context);
     Future.wait([
-      () async => controller.getHomePageInsights(Get.context!),
-      () async => controller.getHomePageMoneyMapInsights(Get.context!),
-      () async => getCategoryData(context),
+      // () async => controller.getHomePageInsights(Get.context!),
+      // () async => controller.getHomePageMoneyMapInsights(Get.context!),
+      // () async => getCategoryData(context),
       () async {
         reloadHistory.value = !reloadHistory.value;
         setDonectChat.value = !setDonectChat.value;
@@ -668,6 +668,14 @@ void addTransaction(String amount, String subCategory, String categories,
   }
 
   cashInAndOut.value = false;
+}
+
+
+void updateCatAndMoneyMap(BuildContext context) {
+  final controller = Get.find<InsightsController>();
+  controller.getHomePageInsights(context);
+  controller.getHomePageMoneyMapInsights(context);
+  getCategoryData(context);
 }
 
 void processChartData() {

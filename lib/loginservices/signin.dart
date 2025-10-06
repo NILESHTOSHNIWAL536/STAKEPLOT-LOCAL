@@ -29,9 +29,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController =
-      TextEditingController(text: "nileshtoshniwal743@gmail.com");
+      TextEditingController(text: "");
   final TextEditingController passwordController =
-      TextEditingController(text: "Nilesh1234@");
+      TextEditingController(text: "");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   @override
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   try {
                                     final userdataApple = await AuthService()
                                         .signInWithApple(context);
-
+                            
                                     if (userdataApple != null &&
                                         userdataApple['data']['accessToken'] !=
                                             null) {
