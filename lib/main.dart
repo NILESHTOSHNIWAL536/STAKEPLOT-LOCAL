@@ -48,7 +48,6 @@ void initializeGlobalErrorHandling() {
 
 /// Centralized error handling method
 void handleError(Object error, StackTrace? stack) {
-  print("Caught error: $error");
   if (stack != null) {
     print("Stack trace: $stack");
   }

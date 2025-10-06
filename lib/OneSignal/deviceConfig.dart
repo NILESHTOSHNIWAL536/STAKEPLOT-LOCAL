@@ -160,7 +160,6 @@ void onPostDataCallWebSocket(data, context) {
 bool securityCheck(){
   assert(() {
     debugPrint = (String? message, {int? wrapWidth}) {
-      print(message);
     };
     return true;
   }());

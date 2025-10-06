@@ -60,12 +60,8 @@ class AuthService {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
-      print("credential");
-      print(credential);
       // Extract data
       final String? idToken = credential.identityToken;
-      print("idToken");
-      print(idToken);
       final String? authCode = credential.authorizationCode;
       String? email = credential.email;
       final String? fullName = credential.givenName != null
@@ -95,9 +91,7 @@ class AuthService {
         return json.decode(response.body);
       } else {}
     } catch (e) {
-        print("error in apple signin---------------------------------------");
-        print(e);
-        print("error in apple signin---------------------------------------");
+      
     }
     return null;
   }
