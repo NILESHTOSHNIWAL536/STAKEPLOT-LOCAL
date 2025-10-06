@@ -5,6 +5,8 @@ import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 
+import '../Home_Screen/Home/init_Api_Calls.dart';
+
 Future<bool?> showSkipModal2(BuildContext context) {
   return showModalBottomSheet<bool>(
     context: context,
@@ -61,6 +63,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                         Navigator.of(context).pop(true); // User chose "Yes"
                         clearStack(context);
                         logoutAndDisconnect();
+                        callApi(context);
                         Navigator.of(context).pushNamed('/home');
           
                       },

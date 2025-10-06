@@ -14,7 +14,10 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
+import '../insightsController.dart';
 
 Widget getTab(BuildContext context) {
   return Obx(() => allOrGroupTransactionsName.value == StringConstant.allTransactions
@@ -287,6 +290,9 @@ void deletSelectedTransactions(BuildContext context) async {
   redioButtonIndex.clear(); // Optionally clear selection after hiding
   addManually.clear();
   getCategoryData(context);
+    final InsightsController _controller = Get.put(InsightsController());
+    _controller.getHomePageInsights(context);
+  _controller.getHomePageMoneyMapInsights(context);
   Navigator.pop(context);
 }
 

@@ -25,7 +25,7 @@ Future<void> getBankAccounts() async {
     var his = jsonDecode(response.body);
     consentAndHandleDetails.clear();
     bankAccountLinkedList.clear();
-
+    FipIdsConnected.clear();
     his['data'].forEach((bank) {
       if (bank['consentId'] != null && bank['consendHandleId'] != null) {
         if (!consentAndHandleDetails.any((item) =>

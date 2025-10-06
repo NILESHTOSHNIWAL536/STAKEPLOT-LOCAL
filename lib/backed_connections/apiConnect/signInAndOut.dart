@@ -56,6 +56,11 @@ void getforgotPassword(context, String name, String email) async {
   }
 }
 
+// void setToken() async {
+//   final SharedPreferences _pref = await SharedPreferences.getInstance();
+//    _pref.setString('accessToken',"Bearer "+ "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmRmZDAxMGVhMDY0OWZkZmEyMDcxMyIsImlhdCI6MTc1ODY5NjMzNCwiZXhwIjoxNzYzODgwMzM0fQ.5aR9Pp_tbwMD_yOoy56vU943pb60UcOqVa07YLJx-Bc");
+// }
+
 void addThisDeviceToBackendDevice(SharedPreferences pref, context) async 
 {
   await addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);

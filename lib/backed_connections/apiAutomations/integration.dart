@@ -28,7 +28,7 @@ void initFinvuManager(BuildContext context) async {
   if (!isConnected) {
     isConnected = await finvuManager.isConnected();
   }
-  
+
 }
 
 
