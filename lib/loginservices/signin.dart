@@ -19,6 +19,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../auth_service/login_apis.dart';
+import 'googl_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -168,45 +169,45 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget containerIconSiginWith(IconData icon, Color color, context) {
-    return InkWell(
-      onTap: () async {
-        if (googleSignInBool.value) return; // Prevent multiple clicks
-        googleSignInBool.value = true; // Set loading state
-        try {
-          final userdata = await AuthService().signInWithGoogle(context);
-          if (userdata != null && userdata['data']['accessToken'] != null) {
-            LoginService.loginCalledData(userdata, context, flag: true);
-          } else if (userdata != null) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => UserDetailsPage(data: userdata)),
-            );
-          } else {}
-        } finally {
-          googleSignInBool.value = false; // Reset loading state
-        }
-      },
-      child: Container(
-        width: MediaQuery.sizeOf(context).width / 5,
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Obx(
-          () => googleSignInBool.value
-              ? Spinner(size: 30) // Show spinner when loading
-              : AvatarProfileImage(
-                  url: Sign.googleIcon,
-                  width: 40,
-                  height: 30,
-                ), // Show icon when not loading
-        ),
-      ),
-    );
-  }
+  // Widget containerIconSiginWith(IconData icon, Color color, context) {
+  //   return InkWell(
+  //     onTap: () async {
+  //       if (googleSignInBool.value) return; // Prevent multiple clicks
+  //       googleSignInBool.value = true; // Set loading state
+  //       try {
+  //         final userdata = await AuthService().signInWithGoogle(context);
+  //         if (userdata != null && userdata['data']['accessToken'] != null) {
+  //           LoginService.loginCalledData(userdata, context, flag: true);
+  //         } else if (userdata != null) {
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(
+  //                 builder: (context) => UserDetailsPage(data: userdata)),
+  //           );
+  //         } else {}
+  //       } finally {
+  //         googleSignInBool.value = false; // Reset loading state
+  //       }
+  //     },
+  //     child: Container(
+  //       width: MediaQuery.sizeOf(context).width / 5,
+  //       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+  //       decoration: BoxDecoration(
+  //         color: AppColors.backgroundColor,
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       child: Obx(
+  //         () => googleSignInBool.value
+  //             ? Spinner(size: 30) // Show spinner when loading
+  //             : AvatarProfileImage(
+  //                 url: Sign.googleIcon,
+  //                 width: 40,
+  //                 height: 30,
+  //               ), // Show icon when not loading
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildWelcomeText() {
     return Column(

@@ -101,7 +101,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     String email = data['email'];
     String dob = data['dob'];
     final response = await http.post(
-      Uri.parse('${url}/user/google-auth'),
+      Uri.parse('${url}/user/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
