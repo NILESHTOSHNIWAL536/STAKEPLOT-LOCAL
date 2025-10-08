@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkForUpdatesAndNavigate() async {
-    if (SnackbarData().showUpdatecall) await checkForUpdate();
+    // if (SnackbarData().showUpdatecall) await checkForUpdate();
     await checkAuthAndNavigate();
   }
 

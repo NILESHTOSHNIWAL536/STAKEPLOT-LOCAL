@@ -31,6 +31,7 @@ class MainActivity : FlutterFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
         val intent = intent
         Log.d("MainActivity", "onCreate: Intent extras=${intent?.extras?.toString()}")
         intent?.getStringExtra("navigate_to_tab")?.let {
