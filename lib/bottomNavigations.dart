@@ -73,7 +73,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             widget.data = 1;
           });
           ScreenTimeTracker().switchTab(_tabNames[1]);
-          pushName(PlotFinance());
+          pushName(FinanceDashboard());
         }
       }
 
@@ -85,7 +85,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             widget.data = 1;
           });
           ScreenTimeTracker().switchTab(_tabNames[1]);
-          pushName(PlotFinance());
+          pushName(FinanceDashboard());
         }
       });
     } catch (e) {}

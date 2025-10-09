@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="To Receive"
             android:textSize="15sp"
-            android:textColor="#004856"
+            android:textColor="#4B4D73"
             android:textStyle="bold"
             android:layout_marginBottom="4dp"/>
 
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:text="To Pay"
             android:textSize="15sp"
-            android:textColor="#004856"
+            android:textColor="#4B4D73"
             android:textStyle="bold"
             android:layout_marginBottom="4dp"/>
 

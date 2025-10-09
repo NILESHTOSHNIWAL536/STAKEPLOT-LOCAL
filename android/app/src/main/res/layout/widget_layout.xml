@@ -27,7 +27,7 @@
             android:text="💸 Expenses"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#004856"/>
+            android:textColor="#4B4D73"/>
 
         <TextView
             android:id="@+id/widget_total_spending"
