@@ -96,7 +96,7 @@ class _TribeSearchState extends State<TribeSearch> {
     
     final response = await http.get(
       Uri.parse(
-          '${url}/user/connections/${data['_id']}'),
+          '${url}/user/connections/${data['_id']}/${widget.isMasked}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",

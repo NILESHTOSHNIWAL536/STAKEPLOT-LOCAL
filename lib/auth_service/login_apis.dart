@@ -26,7 +26,12 @@ class LoginService {
         'userpassword': passwordController.text.toString(),
         'deviceInfo': deviceData,
       });
-      if (response.statusCode == 409) 
+       if (getFlagOfResponse(response)) {
+        Navigator.pushReplacementNamed(context, '/home');
+        loginCalledData(response, context);
+        await screenDataLocalStorage();
+      }
+     else  if (response.statusCode == 409) 
       {
         ForceLogout.forceLoginShowModal(context, response, emailController, passwordController);
       } else if (response.statusCode == 500) {
@@ -34,11 +39,7 @@ class LoginService {
       } else if (getFlagOfResponse(response)) {
       } else if (response.statusCode == 400) {
         snackBarCalledfail(context,SnackbarData().invalidInfo , Colors.red);
-      } else if (getFlagOfResponse(response)) {
-        loginCalledData(response, context);
-        await screenDataLocalStorage();
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
+      }  else {
         acceptReset.value = false;
         snackBarCalledfail(context, SnackbarData().invalidCredentials);
       }
