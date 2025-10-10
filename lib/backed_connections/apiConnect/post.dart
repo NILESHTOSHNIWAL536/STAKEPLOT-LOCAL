@@ -178,6 +178,7 @@ Future<void> getPost(context) async {
   try{
   var response =
       await getDataApiCall('${url}/post/feed/${postController.currentPageFeed.value}');
+      print("get post response ${response.body}");
   expire(response, context);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);

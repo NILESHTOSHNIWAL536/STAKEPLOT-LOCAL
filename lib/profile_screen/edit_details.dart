@@ -263,9 +263,11 @@ class _EditDetailsState extends State<EditDetails> {
   }
 
   Widget getListOfBankConnected() {
+  
     return Container(
       child: Obx(() => Column(
             children: bankAccountLinkedList.map((e) {
+             
               return _buildAccountDetails(
                 e['bankName'],
                 e['maskedAccNumber'],

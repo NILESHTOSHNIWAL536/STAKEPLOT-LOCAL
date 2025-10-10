@@ -20,6 +20,8 @@ RxMap bankImagemap = {}.obs;
 
 Future<void> getBankAccounts() async {
   var response = await getDataApiCall("${url}/transactionauto/get-banks-linked/");
+  print( "get bank accountsi ${response.body}");
+ 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     consentAndHandleDetails.clear();

@@ -287,8 +287,8 @@ class _TribeSearchState extends State<TribeChats> {
       );   
  }
 
-  Widget getChatList() 
-  {  
+  Widget getChatList()
+  {
 
 
     return load.value
@@ -316,7 +316,6 @@ class _TribeSearchState extends State<TribeChats> {
                                     lineHeight: 1.2,
                                     fontSize: 20,
                                     color: AppColors.grey)),
-                                    
                       ],
                     ),
                   ),
@@ -358,21 +357,6 @@ class _TribeSearchState extends State<TribeChats> {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-            // decoration: InputDecoration(
-            //   prefixIcon: Icon(Icons.search),
-            //   // prefixIconColor: Colorcodes.budgetDarkGreen,
-            //   filled: true,
-            //   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
-            //   hintText: lableText,
-            //   enabledBorder: OutlineInputBorder(
-            //     borderRadius: BorderRadius.circular(24),
-            //   ),
-            //   focusedBorder: OutlineInputBorder(
-            //     borderRadius: BorderRadius.circular(24),
-            //   ),
-            //   fillColor: AppColors.button,
-            //   border: InputBorder.none,
-            // ),
           ),
         ),
       ),

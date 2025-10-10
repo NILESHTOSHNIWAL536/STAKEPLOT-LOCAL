@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/Home/noaccountSel
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/rewardsplashscreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     // initializeData(context, mounted);
     // getTopThreeTransactions(context);
+    
     HomeWidgetBindUpdate();
     if (!Get.isRegistered<WeeklyPopupController>(
         tag: 'weeklyPopup_${userController.userId.value}')) {
