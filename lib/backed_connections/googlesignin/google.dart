@@ -32,7 +32,7 @@ class AuthService {
         if (authCode != null)
         {
           final response =  await http.post(
-              Uri.parse('$url/user/google-gmail-auth'),
+              Uri.parse('$url/email/google-gmail-auth'),
               headers: {'Content-Type': 'application/json'},
               body: jsonEncode({'idToken':  authCode}),
             );

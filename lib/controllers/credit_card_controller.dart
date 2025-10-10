@@ -45,18 +45,16 @@ Future<void> LinkBankData(context) async {
       pushnameToRoute(context,AddCreditCardBankScreen());
       return;
     }
-    var response = await getDataApiCall("${url}/user/readEmail/${selectedBankId.value}");
+    var response = await getDataApiCall("${url}/email/readEmail/${selectedBankId.value}");
 
     if (getFlagOfResponse(response)) 
     {
       var data = jsonDecode(response.body);
       loadingBankdetails.value = true;
       selectedBankId.value="";
-
        Future.delayed(const Duration(seconds: 2), () {
         pushnameToRoute(context, CardDueCarousel());
       });
-      
     } 
   } catch (e) {
     cardList.clear();
