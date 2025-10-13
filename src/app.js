@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require('helmet');
 const cors = require("cors");
+const emailRoutes = require("./routes/email-routes");
 const app = express();
 
 app.set('trust proxy', 1);
@@ -20,6 +21,8 @@ app.use(cors({
   methods: "GET,POST,PUT,DELETE",
   allowedHeaders: "*",
 }));
+
+app.use("/api", emailRoutes);
 
 app.get("/", (req, res) => {
   res.send("server is running and healthy");

@@ -1,0 +1,47 @@
+[
+  {
+    "name": "HDFC Bank",
+    "logo": "https://cdn.finvu.in/finvulogos/hdfcbank_logo.jpg",
+    "bankId": "HDFCLtd-FIP"
+  },
+  {
+    "name": "ICICI Bank",
+    "logo": "https://cdn.finvu.in/finvulogos/icicibank_icon.jpg",
+    "bankId": "ICICI-FIP"
+  },
+  {
+    "name": "SBI Card",
+    "logo": "https://cdn.finvu.in/finvulogos/sbi_logo.png",
+    "bankId": "sbi-fip"
+  },
+  {
+    "name": "Axis Bank",
+    "logo": "https://cdn.finvu.in/finvulogos/axisbank_icon.jpg",
+    "bankId": "AXIS001"
+  },
+  {
+    "name": "Kotak Mahindra Bank",
+    "logo": "https://cdn.finvu.in/finvulogos/kotakbank_app_logo.png",
+    "bankId": "KotakMahindraBank-FIP"
+  },
+  {
+    "name": "Bank of Baroda",
+    "logo": "https://cdn.finvu.in/finvulogos/bank_of_baroda_logo_bob.png",
+    "bankId": "BARBFIP"
+  },
+  {
+    "name": "Yes Bank",
+    "logo": "https://cdn.finvu.in/finvulogos/yes_bank_logo.png",
+    "bankId": "YESB-FIP"
+  },
+  {
+    "name": "Union Bank",
+    "logo": "https://cdn.finvu.in/finvulogos/union_bank_india_icon.png",
+    "bankId": "UBI-FIP"
+  },
+  {
+    "name": "Slice",
+    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQs1-e5c-HqzxPVuT1q5ewV16V6gS8IPxWobw&s",
+    "bankId": "Slice-FIP"
+  }
+]
