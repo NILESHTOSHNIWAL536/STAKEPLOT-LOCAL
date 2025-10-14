@@ -67,6 +67,7 @@ class LoginService {
         snackBarCalledfail(context, decodedResponse['message'], Colors.red);
       } else if (getFlagOfResponse(response)) {
         // adding this for two factor auth
+        acceptReset.value = false;
         OtpService.getOTPForTwoFactorAuth(context,
             decodedResponse['user']['name'], emailController.text.toString());
 
@@ -95,6 +96,7 @@ class LoginService {
       acceptReset.value = false;
       snackBarCalledfail(context, SnackbarData().loginFailedTryAgain);
     }
+    acceptReset.value = false;
   }
 
   static void loginCalledData(response, context,{bool flag=false}) async {
