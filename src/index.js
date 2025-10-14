@@ -10,10 +10,18 @@ const startServer = async () => {
       Logger.info(`Server running on port: ${ServerConfig.PORT}`);
     });
 
-    await mongoose.connect(ServerConfig.MAIN_MONGO_URI, {
+    const mainDB = await mongoose.connect(ServerConfig.MAIN_MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+
+    const emailDB = await mongoose.createConnection(ServerConfig.EMAIL_MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    global.MainDB = mainDB;
+    global.EmailDB = emailDB;
     await RedisClient.connect();
   } catch (error) {
     console.error('Server Start Error:', error);
