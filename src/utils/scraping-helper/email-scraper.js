@@ -15,7 +15,7 @@ async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
   } else {
     bankFilters = ['HDFC', 'ICICI', 'Axis', 'Slice', 'SBI'];
   }
-  bankFilters = bankFilters.map((f) => (f || '').toString().toLowerCase().trim());
+  bankFilters = bankFilters.map((f) => f.toString().toLowerCase().trim());
   // Collect mails (raw) that match From header
   const mailsToProcess = [];
   let pageToken = null;

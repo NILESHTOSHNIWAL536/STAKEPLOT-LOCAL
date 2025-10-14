@@ -18,6 +18,10 @@ async function getGoogleTokenByUserId(userId) {
   return await GoogleAuth.findOne({ userId });
 }
 
+async function scrapeEmailsByBankId(scrapedEmails) {
+  return await ScrapedEmail.insertMany(scrapedEmails);
+}
+
 async function getScrapedEmailsByUserId(userId) {
   return await ScrapedEmail.find({ userId }).sort({ createdAt: -1 });
 }
@@ -43,4 +47,5 @@ module.exports = {
   getScrapedEmailsByUserId,
   getUnlinkedCreditCards,
   deleteGoogleTokenByUserId,
+  scrapeEmailsByBankId,
 };
