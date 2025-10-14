@@ -12,7 +12,6 @@ const googleAuthSchema = new mongoose.Schema(
       iv: { type: String, required: true },
       authTag: { type: String, required: true },
     },
-    googleId: { type: String },
   },
   { timestamps: true }
 );

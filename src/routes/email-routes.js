@@ -6,19 +6,19 @@ router.use(express.json());
 
 router.use(protect);
 
-router.post('/store', EmailController.storeEmailScraping);
-
-router.post('/google-gmail-auth', EmailController.googleEmailAuthToken);
-
-router.get('/', EmailController.getUserEmailScrapings);
-
-// *************** MOVE THIS CREDIT CARD ROUTE TO CONFIG FILE LATER ********************************
-router.get('/get-banks', creditCardController.getAllBanks);
+// generate access token and store it in the googleToken document
+router.post('/generate-token', EmailController.generateAccessToken);
 
 // read emails from user's gmail account based on the bank id provided
-router.get('/readEmail/:bankId', EmailController.getEmailsByBankId);
+router.post('/scrape/:bankId', EmailController.scrapeEmailsByBankId);
+
+// get all the scraped emails from the emailScrape collection
+router.get('/', EmailController.getScrapedEmails);
+
+// get all the unlinked credit cards from the user's creditCard collection
+router.get('/get-unLinked-cards', EmailController.getUnlinkedCreditCards);
 
 // remove the access token from the googleToken document
-router.delete('/remove-access', EmailController.removeAccessEmailToken);
+router.delete('/', EmailController.removeAccessToken);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 require('dotenv').config();
 const crypto = require('crypto');
-const googleAuth = require("../models/google-auth");
+const googleAuth = require('../models/google-auth');
 
 const ENCRYPTION_KEY = Buffer.from(process.env.ENCRYPTION_KEY, 'hex');
 const ALGORITHM = process.env.ALGORITHM;
@@ -40,18 +40,6 @@ async function decryptToken(encryptedData, iv, authTag) {
   }
 }
 
-async function getDecryptedRefreshToken(userId) {
-  const user = await googleAuth.findOne({
-    userId: userId, // the User's _id
-    'refreshToken.encryptedData': { $exists: true, $ne: '' }, // optional filter
-  });
-
-  if (!user || !user.refreshToken?.encryptedData) {
-    throw new Error('No refresh token found');
-  }
-  return decryptToken(user.refreshToken.encryptedData, user.refreshToken.iv, user.refreshToken.authTag);
-}
-
 async function migrateTokenById() {
   // Find all users with a non-empty googleRefreshToken
   const users = await googleAuth.find({
@@ -74,6 +62,5 @@ async function migrateTokenById() {
 module.exports = {
   encryptToken,
   decryptToken,
-  getDecryptedRefreshToken,
   migrateTokenById,
 };
