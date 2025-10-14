@@ -3,6 +3,7 @@ const AppError = require('../utils/app-error');
 const { StatusCodes } = require('http-status-codes');
 const { ErrorResponse } = require('../utils/api-response');
 const { ServerConfig } = require('../config');
+const {User}=require('../models/user-modal');
 
 const protect = async (req, res, next) => {
   try {
@@ -16,8 +17,10 @@ const protect = async (req, res, next) => {
 
     try {
       const decoded = jwt.verify(token, ServerConfig.JWT_SECRET);
-      const user = await mainDB.model('User').findOne({ _id: decoded.id }).select('-password');
+      const mainDB = global.mainDB;
 
+      const user = await  mainDB.model('User').findOne({ _id: decoded.id }).select('-password');
+       console.log('User Found:', user);
       if (!user) throw new AppError('User Not found', StatusCodes.UNAUTHORIZED);
 
       // Check if token is active in the session database
@@ -30,7 +33,8 @@ const protect = async (req, res, next) => {
       req.user = user;
       req.user.token = token;
       return next();
-    } catch {
+    } catch(error)
+    {
       ErrorResponse.error = 'JsonWebTokenError';
       return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
     }

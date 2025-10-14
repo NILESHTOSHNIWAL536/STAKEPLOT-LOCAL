@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
+const {userSchema} = require('./models/user-modal');
 const { ServerConfig, RedisClient, Logger } = require('./config');
 dotenv.config();
 
@@ -21,7 +22,12 @@ const startServer = async () => {
         useUnifiedTopology: true,
       });
 
+       mainDB.model('User',userSchema);
+
       Logger.info('Connected to both databases');
+      global.mainDB = mainDB; // ✅ make globally available
+      global.emailDB = emailDB;
+
       return { mainDB, emailDB };
     };
     connectDatabases();
