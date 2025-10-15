@@ -1,5 +1,5 @@
-const GoogleAuth = require('../models/google-auth');
-const ScrapedEmail = require('../models/scrape-result');
+const {GoogleAuth} = require('../models/google-auth');
+const {ScrapedEmail} = require('../models/scrape-result');
 const creditCards = require('../utils/credit-cards.json');
 
 async function upsertGoogleToken(userId, email, encryptedData, iv, authTag) {
@@ -14,8 +14,9 @@ async function upsertGoogleToken(userId, email, encryptedData, iv, authTag) {
   );
 }
 
-async function getGoogleTokenByUserId(userId) {
-  return await GoogleAuth.findOne({ userId });
+async function getGoogleTokenByUserId(userId)
+{
+  return await emailDB.model('googleAuth').findOne({ userId });
 }
 
 async function scrapeEmailsByBankId(scrapedEmails) {

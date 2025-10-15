@@ -17,4 +17,5 @@ const googleAuthSchema = new mongoose.Schema(
 );
 
 googleAuthSchema.index({ userId: 1 }, { unique: true });
-module.exports = mongoose.model('googleAuth', googleAuthSchema);
+const GoogleAuth = mongoose.model('googleAuth', googleAuthSchema);
+module.exports={GoogleAuth,googleAuthSchema};

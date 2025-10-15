@@ -7,9 +7,7 @@ async function generateAccessToken(req, res) {
   try {
     const userId = req.user._id;
     const { idToken } = req.body;
-
     const result = await EmailScrapingService.generateAccessToken(userId, idToken);
-
     SuccessResponse.data = result;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
@@ -28,6 +26,7 @@ async function scrapeEmailsByBankId(req, res) {
     SuccessResponse.data = response;
     return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
+    console.log(error);
     ErrorResponse.error = error;
     return res.status(error.statusCode).json(ErrorResponse);
   }

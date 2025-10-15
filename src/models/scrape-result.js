@@ -21,4 +21,5 @@ const scrapeResultSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('scrapeResult', scrapeResultSchema);
+const ScrapedEmail= mongoose.model('scrapeResult', scrapeResultSchema);
+module.exports={scrapeResultSchema,ScrapedEmail};

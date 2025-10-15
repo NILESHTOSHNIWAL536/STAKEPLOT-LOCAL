@@ -1,7 +1,9 @@
 const { performance } = require('perf_hooks');
+const {getNinetyDaysAgo,getNHoursAgo } = require('./get-time-date');
 const EmailServiceHelper = require('./scraping-helper');
 
 async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
+  
   const bankConfig = creditCard;
   const startTime = performance.now();
   const gmail = gmailClient;
@@ -16,6 +18,7 @@ async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
     bankFilters = ['HDFC', 'ICICI', 'Axis', 'Slice', 'SBI'];
   }
   bankFilters = bankFilters.map((f) => f.toString().toLowerCase().trim());
+   console.log(bankFilters);
   // Collect mails (raw) that match From header
   const mailsToProcess = [];
   let pageToken = null;

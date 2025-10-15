@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
-const { userSchema } = require('./models/user-model');
-const { sessionSchema } = require('./models/session-model');
+const connectDatabases = require('./dbConnections');
 const { ServerConfig, RedisClient, Logger } = require('./config');
+const {getModels}=require('./models/index-model');
+
 dotenv.config();
 
 const startServer = async () => {
@@ -12,27 +13,9 @@ const startServer = async () => {
       Logger.info(`Server running on port: ${ServerConfig.PORT}`);
     });
 
-    const connectDatabases = async () => {
-      const mainDB = await mongoose.createConnection(ServerConfig.MAIN_MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
-
-      const emailDB = await mongoose.createConnection(ServerConfig.EMAIL_MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
-
-      mainDB.model('User', userSchema);
-      mainDB.model('Session', sessionSchema);
-
-      Logger.info('Connected to both databases');
-      global.mainDB = mainDB; // ✅ make globally available
-      global.emailDB = emailDB;
-
-      return { mainDB, emailDB };
-    };
-    connectDatabases();
+    await connectDatabases();
+    // getModels();
+    
 
     await RedisClient.connect();
   } catch (error) {

@@ -17,7 +17,7 @@ const protect = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-      const decoded = jwt.verify(token, ServerConfig.JWT_SECRET);
+      const decoded = jwt.verify(token, "dciie01@1%$2834");
       const mainDB = global.mainDB;
 
       const user = await  mainDB.model('User').findOne({ _id: decoded.id }).select('-password');
@@ -36,6 +36,7 @@ const protect = async (req, res, next) => {
       return next();
     } catch(error)
     {
+      console.log(error);
       ErrorResponse.error = 'JsonWebTokenError';
       return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
     }
