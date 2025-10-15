@@ -15,8 +15,7 @@ const startServer = async () => {
 
     await connectDatabases();
     // getModels();
-    
-
+  
     await RedisClient.connect();
   } catch (error) {
     console.error('Server Start Error:', error);
