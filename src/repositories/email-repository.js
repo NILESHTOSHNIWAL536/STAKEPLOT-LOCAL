@@ -3,7 +3,7 @@ const {ScrapedEmail} = require('../models/scrape-result');
 const creditCards = require('../utils/credit-cards.json');
 
 async function upsertGoogleToken(userId, email, encryptedData, iv, authTag) {
-  return await GoogleAuth.findOneAndUpdate(
+  return await emailDB.model('googleAuth').findOneAndUpdate(
     { userId, email },
     {
       $set: {
@@ -20,11 +20,11 @@ async function getGoogleTokenByUserId(userId)
 }
 
 async function scrapeEmailsByBankId(scrapedEmails) {
-  return await ScrapedEmail.insertMany(scrapedEmails);
+  return await emailDB.model('scrapeResult').insertMany(scrapedEmails);
 }
 
 async function getScrapedEmailsByUserId(userId) {
-  return await ScrapedEmail.find({ userId }).sort({ createdAt: -1 });
+  return await emailDB.model('scrapeResult').find({ userId }).sort({ createdAt: -1 });
 }
 
 async function getUnlinkedCreditCards(userId) {
@@ -39,7 +39,7 @@ async function getUnlinkedCreditCards(userId) {
 }
 
 async function deleteGoogleTokenByUserId(userId) {
-  return await GoogleAuth.deleteOne({ userId });
+  return await emailDB.model('googleAuth').deleteOne({ userId });
 }
 
 module.exports = {
