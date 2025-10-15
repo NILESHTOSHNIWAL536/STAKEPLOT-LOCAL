@@ -21,11 +21,14 @@ const protect = async (req, res, next) => {
       const mainDB = global.mainDB;
 
       const user = await  mainDB.model('User').findOne({ _id: decoded.id }).select('-password');
-       console.log('User Found:', user);
+      //  console.log('User Found:', user);
+      console.log("user",user._id);
       if (!user) throw new AppError('User Not found', StatusCodes.UNAUTHORIZED);
 
       // Check if token is active in the session database
       const session = await mainDB.model('Session').findOne({ userId: user._id, token });
+      console.log("session");
+      console.log(session);
       if (!session) {
         ErrorResponse.error = 'JsonWebTokenError';
         return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
@@ -34,13 +37,22 @@ const protect = async (req, res, next) => {
       req.user = user;
       req.user.token = token;
       return next();
-    } catch(error)
+    } catch(err)
     {
-      console.log(error);
-      ErrorResponse.error = 'JsonWebTokenError';
+         console.log(err);
+          if (err.name === 'TokenExpiredError') {
+              ErrorResponse.error = 'TokenExpiredError';
+              return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
+            }
+            if (err.name === 'JsonWebTokenError') {
+              ErrorResponse.error = 'JsonWebTokenError';
+              return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
+            }
+      //  console.log(err);
       return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
     }
-  } catch {
+  } catch(error) {
+    console.log(error);
     ErrorResponse.error = 'AuthenticationError';
     return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
   }

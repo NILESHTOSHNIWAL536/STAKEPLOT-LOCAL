@@ -34,27 +34,19 @@ async function generateAccessToken(userId, idToken) {
 // scrape emails based on bank id
 async function scrapeEmailsByBankId(userId, bankId) {
   // Retrieve the stored Google token, and decrypt the refresh token
-  console.log(4);
   const response = await EmailRepository.getGoogleTokenByUserId(userId);
-  console.log(3);
-  console.log(response);
   const encryptedRefreshToken = response.refreshToken;
   const decryptedRefreshToken = await decryptToken(encryptedRefreshToken.encryptedData, encryptedRefreshToken.iv, encryptedRefreshToken.authTag);
-  console.log("decryptedRefreshToken");
-  console.log(decryptedRefreshToken);
   // based on the bank id, get the credit card details
   const creditCard = creditCards.find((card) => card.bankId === bankId);
-   console.log(2);
   // create Gmail client
   oauth2Client.setCredentials({ refresh_token: decryptedRefreshToken });
   const gmailClient = google.gmail({ version: 'v1', auth: oauth2Client });
-   console.log(1);
   // Scrape emails using the helper function
   const scrapeEmailsUsingParser = await emailScraperHelper(gmailClient, creditCard);
-  console.log("scrapeEmailsUsingParser");
-  console.log(scrapeEmailsUsingParser);
+ 
   // Store scraped emails in the database
-  const scrapedEmails = await EmailRepository.scrapeEmailsByBankId(scrapeEmailsUsingParser);
+  const scrapedEmails = await EmailRepository.scrapeEmailsByBankId(scrapeEmailsUsingParser,userId);
   return scrapedEmails;
 }
 
@@ -68,16 +60,20 @@ async function getUnlinkedCreditCards(userId) {
   return cards;
 }
 
-async function removeAccessToken(userId) {
-  await EmailRepository.deleteGoogleTokenByUserId(userId);
 
+
+
+async function removeAccessToken(userId) {
+  
   // Remove cached access token
   const cacheKey = `google_access_token_${userId}`;
   await RedisClient.del(cacheKey);
-
+  
   // Revoke token with Google
-  const token = await getDecryptedRefreshToken(userId);
+  const token = await EmailRepository.getDecryptedRefreshToken(userId);
   await axios.post(ServerConfig.REVOKE_URI, new URLSearchParams({ token }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+  
+  await EmailRepository.deleteGoogleTokenByUserId(userId);
 
   return { message: 'Access token removed successfully' };
 }

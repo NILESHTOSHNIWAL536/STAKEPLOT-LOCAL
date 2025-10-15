@@ -1,13 +1,14 @@
 const { performance } = require('perf_hooks');
 const {getNinetyDaysAgo,getNHoursAgo } = require('./get-time-date');
+const {extractWithPython } = require('./extract-with-python');
 const EmailServiceHelper = require('./scraping-helper');
 
 async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
-  
+
   const bankConfig = creditCard;
   const startTime = performance.now();
   const gmail = gmailClient;
-  const afterDate = mode === 'initial' ? getNinetyDaysAgo(1) : getNHoursAgo(12);
+  const afterDate = mode === 'initial' ? getNinetyDaysAgo(2) : getNHoursAgo(12);
 
   // fetch bank config
 
@@ -45,7 +46,7 @@ async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
           const subjectLower = subjectHeader.toLowerCase();
           const matches = bankFilters.some((f) => f && fromLower.includes(f.toLowerCase()));
           const matches2 = bankFilters.some((f) => f && subjectLower.includes(f.toLowerCase()));
-          if (!matches && !matches2) return null;
+          // if (!matches && !matches2) return null;
 
           // Get body + attachments
           const { body, attachments } = await EmailServiceHelper.extractEmailBody(gmail, msg, meta.data.payload);
@@ -98,6 +99,8 @@ async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
   }
 
   let results = [];
+  console.log("mailsToProcess");
+  console.log(mailsToProcess.length);
   for (const [index, mail] of mailsToProcess.entries()) {
     const extracted = await extractWithPython(mail, bankConfig.name);
     results.push(extracted);

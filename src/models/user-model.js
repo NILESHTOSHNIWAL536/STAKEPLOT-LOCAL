@@ -218,8 +218,7 @@ const userSchema = new mongoose.Schema(
     ],
     CreditCardLinkedBanks: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "CreditCardBank",
+        type: String,
       },
     ],
   },
