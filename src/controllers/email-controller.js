@@ -24,9 +24,7 @@ async function scrapeEmailsByBankId(req, res) {
   try {
     const userId = req.user._id;
     const { bankId } = req.params;
-
     const response = await EmailScrapingService.scrapeEmailsByBankId(userId, bankId);
-
     SuccessResponse.data = response;
     return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {

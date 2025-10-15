@@ -47,7 +47,7 @@ async function scrapeEmailsByBankId(userId, bankId) {
 
   // Scrape emails using the helper function
   const scrapeEmailsUsingParser = await emailScraperHelper(gmailClient, creditCard);
-
+  console.log(scrapeEmailsUsingParser);
   // Store scraped emails in the database
   const scrapedEmails = await EmailRepository.scrapeEmailsByBankId(scrapeEmailsUsingParser);
   return scrapedEmails;

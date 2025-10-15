@@ -4,6 +4,7 @@ const { StatusCodes } = require('http-status-codes');
 const { ErrorResponse } = require('../utils/api-response');
 const { ServerConfig } = require('../config');
 const {User}=require('../models/user-model');
+const {Session}=require('../models/session-model');
 
 const protect = async (req, res, next) => {
   try {

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
-const { userSchema } = require('./models/user-models');
+const { userSchema } = require('./models/user-model');
+const { sessionSchema } = require('./models/session-model');
 const { ServerConfig, RedisClient, Logger } = require('./config');
 dotenv.config();
 
@@ -23,6 +24,7 @@ const startServer = async () => {
       });
 
       mainDB.model('User', userSchema);
+      mainDB.model('Session', sessionSchema);
 
       Logger.info('Connected to both databases');
       global.mainDB = mainDB; // ✅ make globally available
