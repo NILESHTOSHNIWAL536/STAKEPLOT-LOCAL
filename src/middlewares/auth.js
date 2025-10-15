@@ -3,7 +3,7 @@ const AppError = require('../utils/app-error');
 const { StatusCodes } = require('http-status-codes');
 const { ErrorResponse } = require('../utils/api-response');
 const { ServerConfig } = require('../config');
-const {User}=require('../models/user-modal');
+const {User}=require('../models/user-model');
 
 const protect = async (req, res, next) => {
   try {
