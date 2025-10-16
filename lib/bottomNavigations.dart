@@ -303,7 +303,7 @@ Widget showUserData(BuildContext context) {
                           Navigator.pushReplacementNamed(context, '/home');
                         }).catchError((error) {});
 
-                     LoginService.loginUser(emailController, passwordController, context);
+                     LoginService.loginUser(emailController:  emailController,passwordController:  passwordController,context:  context,otp: "");
                       },
                       child: Container(
                         padding:

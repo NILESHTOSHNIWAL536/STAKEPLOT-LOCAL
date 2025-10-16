@@ -10,6 +10,7 @@ import '../backed_connections/apiConnect/signInAndOut.dart';
 class ForceLogout {
   static void forceLoginShowModal(
       context, response, emailController, passwordController) {
+     print(response);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -18,7 +19,7 @@ class ForceLogout {
       ),
       builder: (context) {
         return UserLoginedAlready(
-            data: response.body,
+            data: response['error'],
             email: emailController,
             userpassword: passwordController);
       },
@@ -26,22 +27,24 @@ class ForceLogout {
   }
 
   static Future<void> forceLogoutUser(
-      String sessionId,
-      String email,
-      String userpassword,
-      BuildContext context,
-      String existingDeviceId,
-      String existingDeviceName) async {
+      {
+       required String sessionId,
+       required String email,
+       required BuildContext context,
+       required String existingDeviceName,
+       required String otp
+      }
+    ) async {
     try {
       if(deviceData['deviceId']==""){
-         deviceData['deviceId']=existingDeviceId.isEmpty?"123":existingDeviceId;
+         deviceData['deviceId']="Niklewnknwk";
       }
       var response =
-          await postDataApiCallwithOutSharedPref('${url}/user/force-login', {
+          await postDataApiCallwithOutSharedPref('${url}/auth/force-login', {
         "sessionId": sessionId,
         "email": email,
-        "userpassword": userpassword,
-        "deviceInfo": deviceData.value,
+        "otp": otp.toString(),
+        "deviceInfo": deviceData,
       });
       if (getFlagOfResponse(response)) {
         final body = jsonDecode(response.body);

@@ -15,6 +15,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth_service/login_apis.dart';
+import '../backed_connections/googlesignin/credentials.dart';
+
+RxBool isValidUser=false.obs;
 class UserDetailsPage extends StatefulWidget {
   final Map<String, dynamic> data;
   const UserDetailsPage({Key? key, required this.data}) : super(key: key);
@@ -33,6 +37,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   void initState() {
     super.initState();
     // Autofill fields with Google Sign-In data
+    isValidUser.value=false;
     usernameController.text = widget.data['data']['name'].replaceAll(' ', '').toString().trim();
     dobController.text = widget.data['data']['dob'] ?? '1970-01-01';
     // Add listener for real-time username validation
@@ -64,7 +69,13 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     String username = usernameController.text;
     String dob = dobController.text;
 
+
+
     // Validate inputs
+    if (!isValidUser.value) {
+      snackBarCalledfail(context, SignupData().emptyUsernameValid, Colors.red);
+      return;
+    }
     if (username.isEmpty) {
       snackBarCalledfail(context, SignupData().emptyUsername, Colors.red);
       return;
@@ -77,16 +88,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       snackBarCalledfail(context, SignupData().shortUsername, Colors.red);
       return;
     }
-    if (dob.isEmpty) {
-      snackBarCalledfail(context, SignupData().emptyDob, Colors.red);
-      return;
-    }
+  
 
     // Prepare updated data for storeData
     final updatedData = {
       'name': username,
       'email': widget.data['data']['email'] ?? "heyooo@gmail.com",
-      'dob': dob,
     };
 
 
@@ -99,17 +106,17 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       context, Map<String, dynamic> data, String avatarUrl) async {
     String name = data['name'];
     String email = data['email'];
-    String dob = data['dob'];
+      updateDeviceData(deviceData);
     final response = await http.post(
-      Uri.parse('${url}/user/register'),
+      Uri.parse('${url}/auth/sign-up'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
         'name': name,
         'email': email,
-        'dob': dob,
-        'isGoogleUser': true,
+        'authorizationKey':Credentials.Sign_Up_Key,
+        'deviceInfo':deviceData
       }),
     );
 
@@ -166,13 +173,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextFeildWidget(
-                        textEditingController: usernameController,
-                        heading: SignupData().usernameLabel,
-                        keyBoard: TextInputType.name,
-                        lableText: SignupData().usernameSubLabel,
-                        icon: Icons.person_2_outlined,
-                      ),
+                    Obx(()=> isValidUser.value?getTextFeild():getTextFeild()),
                       Obx(() => usernameError.value.isNotEmpty
                           ? Padding(
                               padding: EdgeInsets.only(left: 20, top: 5),
@@ -183,30 +184,30 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                               ),
                             )
                           : SizedBox.shrink()),
-                      TextFeildCalender(
-                        textEditingController: dobController,
-                        heading: SignupData().dobLabel,
-                        keyBoard: TextInputType.datetime,
-                        lableText: SignupData().dobSubLabel,
-                      ),
+                      // TextFeildCalender(
+                      //   textEditingController: dobController,
+                      //   heading: SignupData().dobLabel,
+                      //   keyBoard: TextInputType.datetime,
+                      //   lableText: SignupData().dobSubLabel,
+                      // ),
                     ],
                   ),
                 ),
-                Center(
+             Obx(()=>   Center(
                   child: Container(
                     width: MediaQuery.of(context).size.width / 1.3,
                     margin: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 10),
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
+                      color: isValidUser.value? AppColors.primaryColor:AppColors.greyCard,
                       borderRadius:
                           BorderRadius.circular(Colorcodes.borderRadius30),
                     ),
                     child: InkWell(
                       onTap: submitDetails,
                       child: Obx(() => Center(
-                            child: flag.value
+                            child: !flag.value
                                 ? Spinner(
                                     size: 20,
                                     color: Colorcodes.white,
@@ -223,13 +224,23 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           )),
                     ),
                   ),
-                ),
+                )),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget getTextFeild(){
+    return TextFeildWidget(
+                        textEditingController: usernameController,
+                        heading: SignupData().usernameLabel,
+                        keyBoard: TextInputType.name,
+                        lableText: SignupData().usernameSubLabel,
+                        icon: Icons.person_2_outlined,
+                      );
   }
 }
 
@@ -281,7 +292,6 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
 
   void submitDetails() async {
     String username = usernameController.text;
-    String dob = dobController.text;
 
     // Validate inputs
     if (username.isEmpty) {
@@ -296,16 +306,12 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
       snackBarCalledfail(context, SignupData().shortUsername, Colors.red);
       return;
     }
-    if (dob.isEmpty) {
-      snackBarCalledfail(context, SignupData().emptyDob, Colors.red);
-      return;
-    }
+    
 
     // Prepare updated data for storeData
     final updatedData = {
       'name': username,
       'email': widget.data['data']['email'],
-      'dob': dob,
       'appleUserId': widget.data['data']['appleUserId'],
     };
 
@@ -319,18 +325,19 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
       context, Map<String, dynamic> data, String avatarUrl) async {
     String name = data['name'];
     String email = data['email'];
-    String dob = data['dob'];
+       updateDeviceData(deviceData);
     final response = await http.post(
-      Uri.parse('${url}/user/register'),
+      Uri.parse('${url}/auth/sign-up'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
         'name': name,
         'email': email,
-        'dob': dob,
         'isAppleUser': true,
         'appleUserId': data['appleUserId'],
+        'authorizationKey':Credentials.Sign_Up_Key,
+        'deviceInfo':deviceData
       }),
     );
 
@@ -403,12 +410,12 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
                               ),
                             )
                           : SizedBox.shrink()),
-                      TextFeildCalender(
-                        textEditingController: dobController,
-                        heading: SignupData().dobLabel,
-                        keyBoard: TextInputType.datetime,
-                        lableText: SignupData().dobSubLabel,
-                      ),
+                      // TextFeildCalender(
+                      //   textEditingController: dobController,
+                      //   heading: SignupData().dobLabel,
+                      //   keyBoard: TextInputType.datetime,
+                      //   lableText: SignupData().dobSubLabel,
+                      // ),
                     ],
                   ),
                 ),

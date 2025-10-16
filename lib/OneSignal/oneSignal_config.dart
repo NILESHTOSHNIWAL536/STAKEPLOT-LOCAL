@@ -103,11 +103,11 @@ Future<void> getDeviceInfo(
   }
 
   deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
-  if (emailController.text == Credentials.TestUser) {
-    LoginService.loginUser(emailController, passwordController, context);
-  } else {
+  // if (emailController.text == Credentials.TestUser) {
+  //   LoginService.loginUser(emailController, passwordController, context);
+  // } else {
     LoginService.userVerification(emailController, passwordController, context);
-  }
+  // }
 }
 
 void getDeviceLocalDetails(String playerId, context) async {

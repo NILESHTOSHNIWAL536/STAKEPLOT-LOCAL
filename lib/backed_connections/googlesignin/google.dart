@@ -32,7 +32,7 @@ class AuthService {
         if (authCode != null)
         {
           final response =  await http.post(
-              Uri.parse('$url/email/google-gmail-auth'),
+              Uri.parse('$EmailUrl/generate-token'),
               headers: {'Content-Type': 'application/json'},
               body: jsonEncode({'idToken':  authCode}),
             );
@@ -40,7 +40,7 @@ class AuthService {
         }
 
       final response = await http.post(
-        Uri.parse('$url/user/google-auth'),
+        Uri.parse('$url/auth/google-auth'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'idToken': idToken}),
       );
@@ -72,7 +72,7 @@ class AuthService {
         return null;
       }
       final response = await http.post(
-        Uri.parse('$url/user/apple-auth'),
+        Uri.parse('$url/auth/apple-auth'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'idToken': idToken,

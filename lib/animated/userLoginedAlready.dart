@@ -24,7 +24,7 @@ class UserLoginedAlready extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var body = jsonDecode(data);
+    var body = data;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       width: MediaQuery.of(context).size.width,
@@ -58,7 +58,7 @@ class UserLoginedAlready extends StatelessWidget {
               onTap: () {
                 isLoading.value = true;
 
-              OtpService.getOTPForTwoFactorAuth(context, body['user']['name'], email.text.toString());
+              OtpService.getOTPForTwoFactorAuth(context," body['user']['name']", email.text.toString());
 
                 // Navigate to the OTP verification screen
                 Navigator.push(
@@ -69,7 +69,8 @@ class UserLoginedAlready extends StatelessWidget {
                         'email': email.text.toString(),
                         'password': userpassword.text.toString(),
                         'response': body,
-                        'isForcedLogin': true
+                        'isForcedLogin': true,
+                        'newUser':false
                       },
                       // Pass the base URL
                     ),

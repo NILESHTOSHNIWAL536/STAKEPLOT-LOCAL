@@ -40,8 +40,8 @@ import 'onboarding_screens/onboarding_screen.dart';
 var routes =
  {  
       '/splash': (context) =>  const SplashScreen(),   
+      // '/': (context) =>  ResponsiveLoginScreen(),   
       '/': (context) =>  LoginScreen(),   
-      // '/signup': (context) => SignUp(),  
       '/signup': (context) => SignUpScreen(),  
       '/forgot': (context) => ForgotPasswordScreen(),  
       '/home': (context) => HomePage(),  

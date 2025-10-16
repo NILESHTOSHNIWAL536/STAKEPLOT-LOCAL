@@ -10,66 +10,92 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/two_factor_email_verification.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/snackBar.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
+import '../signInOut/userName.dart';
 
 class LoginService {
-  static Future<void> loginUser(TextEditingController emailController,
-      TextEditingController passwordController, BuildContext context,
-      [bool flag = false]) async {
+  static Future<void> loginUser({
+    required TextEditingController emailController,
+    required TextEditingController passwordController,
+    required BuildContext context,
+    required String otp,
+  }) async {
     try {
+      updateDeviceData(deviceData);
       var response =
-          await postDataApiCallwithOutSharedPref('${url}/user/login', {
+          await postDataApiCallwithOutSharedPref('${url}/auth/sign-in', {
         'email': emailController.text.toString(),
-        'userpassword': passwordController.text.toString(),
         'deviceInfo': deviceData,
+        "otp": otp.toString(),
       });
-       if (getFlagOfResponse(response)) {
+      if (getFlagOfResponse(response)) {
         Navigator.pushReplacementNamed(context, '/home');
         loginCalledData(response, context);
         await screenDataLocalStorage();
       }
-     else  if (response.statusCode == 409) 
-      {
-        ForceLogout.forceLoginShowModal(context, response, emailController, passwordController);
-      } else if (response.statusCode == 500) {
+      //  else  if (response.statusCode == 409)
+      //   {
+      //     ForceLogout.forceLoginShowModal(context, response, emailController, passwordController);
+      //   }
+      else if (response.statusCode == 500) {
         snackBarCalledfail(context, SnackbarData().serverError, Colors.red);
-      } else if (getFlagOfResponse(response)) {
       } else if (response.statusCode == 400) {
-        snackBarCalledfail(context,SnackbarData().invalidInfo , Colors.red);
-      }  else {
-        acceptReset.value = false;
+        snackBarCalledfail(context, SnackbarData().invalidInfo, Colors.red);
+      } else {
         snackBarCalledfail(context, SnackbarData().invalidCredentials);
       }
     } catch (e) {
-      acceptReset.value = false;
       snackBarCalledfail(context, SnackbarData().loginFailedTryAgain);
     }
+    acceptReset.value = false;
   }
 
-  static Future<void> userVerification(TextEditingController emailController,
-      TextEditingController passwordController, BuildContext context,
-      [bool flag = false]) async {
+  static Future<void> userVerification(
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    BuildContext context,
+  ) async {
     try {
       var response =
-          await postDataApiCallwithOutSharedPref('${url}/user/verify', {
+          await postDataApiCallwithOutSharedPref('${url}/auth/verify', {
         'email': emailController.text.toString(),
-        'userpassword': passwordController.text.toString(),
+        // 'userpassword': emailController.text.toString(),
       });
 
       var decodedResponse = json.decode(response.body);
-
+      print(decodedResponse);
       if (response.statusCode == 409) {
-        ForceLogout.forceLoginShowModal(context, response, emailController, passwordController);
-      } else if (response.statusCode == 500) {
-        snackBarCalledfail(context, decodedResponse['message'], Colors.red);
+        ForceLogout.forceLoginShowModal(
+            context, decodedResponse, emailController, passwordController);
+      } else if (response.statusCode == 400) {
+        snackBarCalledfail(context, decodedResponse['error'], Colors.red);
+        acceptReset.value = false;
+        OtpService.getOTPForTwoFactorAuth(
+            context, "MoneyMosaic", emailController.text.toString());
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TwoFactorEmailVerification(
+              data: {
+                'email': emailController.text.toString(),
+                'name': emailController.text.toString(),
+                'password': passwordController.text.toString(),
+                'response': response,
+                'isForcedLogin': false,
+                'newUser': true
+              },
+            ),
+          ),
+        );
       } else if (getFlagOfResponse(response)) {
         // adding this for two factor auth
         acceptReset.value = false;
         OtpService.getOTPForTwoFactorAuth(context,
-            decodedResponse['user']['name'], emailController.text.toString());
+            decodedResponse['data']['name'], emailController.text.toString());
 
         // Navigate to the OTP verification screen
         Navigator.push(
@@ -81,27 +107,39 @@ class LoginService {
                 'name': emailController.text.toString(),
                 'password': passwordController.text.toString(),
                 'response': response,
-                'isForcedLogin': false
+                'isForcedLogin': false,
+                'newUser': false
               },
-              // Pass the base URL
             ),
           ),
         );
       } else {
-        acceptReset.value = false;
-        snackBarCalledfail(context, (decodedResponse['message']!=null || decodedResponse['message']!="")? decodedResponse['message']:SnackbarData().invalidCredentials);
+        snackBarCalledfail(
+            context,
+            (decodedResponse['message'] != null ||
+                    decodedResponse['message'] != "")
+                ? decodedResponse['message']
+                : SnackbarData().invalidCredentials);
       }
-    } catch (e)
-    {
-      acceptReset.value = false;
+    } catch (e) {
       snackBarCalledfail(context, SnackbarData().loginFailedTryAgain);
     }
     acceptReset.value = false;
   }
 
-  static void loginCalledData(response, context,{bool flag=false}) async {
+  static void pushToRegister(context, email) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => UserDetailsPage(data: {
+                "data": {"name": "", "dob": ""}
+              })),
+    );
+  }
+
+  static void loginCalledData(response, context, {bool flag = false}) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    final body = !flag ? json.decode(response.body):response;
+    final body = !flag ? json.decode(response.body) : response;
     String accessToken = body['data']['accessToken'];
     initGetControllers();
     pref.setString("accessToken", "Bearer " + accessToken);
@@ -111,9 +149,9 @@ class LoginService {
     acceptReset.value = false;
     getPhoneNo(body);
     callApi(context);
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
-
 
   static void getPhoneNo(body) {
     List<dynamic> phoneList = body['data']['phone'] ?? [];
@@ -128,4 +166,30 @@ class LoginService {
     ControllerManagement.userController.phone.value = phone;
     number.value = phone;
   }
+}
+
+void updateDeviceData(RxMap deviceData) {
+  deviceData['deviceId'] =
+      (deviceData['deviceId']?.toString().trim().isNotEmpty ?? false)
+          ? deviceData['deviceId'].toString()
+          : 'UNKNOWN_DEVICE_ID';
+
+  deviceData['brand'] =
+      (deviceData['brand']?.toString().trim().isNotEmpty ?? false)
+          ? deviceData['brand'].toString()
+          : 'UNKNOWN_BRAND';
+
+  deviceData['device'] =
+      (deviceData['device']?.toString().trim().isNotEmpty ?? false)
+          ? deviceData['device'].toString()
+          : 'UNKNOWN_DEVICE';
+
+  deviceData['model'] =
+      (deviceData['model']?.toString().trim().isNotEmpty ?? false)
+          ? deviceData['model'].toString()
+          : 'UNKNOWN_MODEL';
+
+  deviceData['os'] = (deviceData['os']?.toString().trim().isNotEmpty ?? false)
+      ? deviceData['os'].toString()
+      : 'UNKNOWN_OS';
 }

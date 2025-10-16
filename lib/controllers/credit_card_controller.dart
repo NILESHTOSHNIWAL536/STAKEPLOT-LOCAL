@@ -17,7 +17,7 @@ Future<void> fetchCardData() async {
   try {
     // API call (replace url with your actual base url)
     if(!CreditCardScreenStrings().showCreditCard.value)return;
-    var response = await getDataApiCall("${url}/email/");
+    var response = await getDataApiCall("${EmailUrl}/");
     loading.value=true;
     if (getFlagOfResponse(response)) {
       var data = jsonDecode(response.body)['data'];
@@ -45,7 +45,7 @@ Future<void> LinkBankData(context) async {
       pushnameToRoute(context,AddCreditCardBankScreen());
       return;
     }
-    var response = await getDataApiCall("${url}/email/readEmail/${selectedBankId.value}");
+    var response = await postDataApiCall("${EmailUrl}/scrape/${selectedBankId.value}",{});
 
     if (getFlagOfResponse(response)) 
     {
@@ -64,7 +64,7 @@ Future<void> LinkBankData(context) async {
 Future<void> getBanksListCrediCard() async {
   try {
     // API call (replace url with your actual base url)
-    var response = await getDataApiCall("${url}/email/get-banks/");
+    var response = await getDataApiCall("${EmailUrl}/get-unLinked-cards/");
 
     if (getFlagOfResponse(response))
     {

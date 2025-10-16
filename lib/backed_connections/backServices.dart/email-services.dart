@@ -7,8 +7,7 @@ Future<void> deleteEmailAccess(BuildContext context)async
 {
   // implement the function to delete email access
    try {
-
-    var res = await deleteDataApiCall("${url}/email/remove-access/");
+    var res = await deleteDataApiCall("${EmailUrl}/remove-access/");
     printData(res);
     if (getFlagOfResponse(res))
     {

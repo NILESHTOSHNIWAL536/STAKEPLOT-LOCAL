@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/auth_service/force_logout.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import '../../Utils/snackBar.dart';
-class OtpService
-{
+import 'force_logout.dart';
+
+class OtpService {
   static void getOTP(context, String name, String email) async {
     var response = await postDataApiCallwithOutSharedPref('${url}/otp/send', {
       'email': email,
@@ -94,60 +94,99 @@ class OtpService
     }
   }
 
-  static Future<bool> verifyOTPForLogin(
-      BuildContext context,
-      String email,
-      String password,
-      String otp,
-      dynamic loginResponse,
-      bool isForcedLogin) async {
+  static Future<bool> verifyOTPForLogin(BuildContext context, String email,
+      String password, String otp, dynamic loginResponse, bool isForcedLogin,
+      {bool isNewUser = false}) async {
     try {
-      var response =
-          await postDataApiCallwithOutSharedPref('${url}/otp/verify-otp', {
-        'email': email,
-        'otp': otp,
-      });
-      if (getFlagOfResponse(response)) {
-        if (!isForcedLogin) {
-          LoginService.loginUser(
-            TextEditingController(text: email),
-            TextEditingController(text:password), // Password not available, adjust backend if needed
-            context,
-            apis_flag,
-          );
-        } else {
-          var loggedInDevice = loginResponse['loggedInDevice'];
-          if (loggedInDevice != null &&
-              loggedInDevice is Map<String, dynamic>) {
-            ForceLogout.forceLogoutUser(
-                loginResponse['existingSessionId'],
-                email,
-                password,
-                context,
-                loggedInDevice['deviceId'] ??
-                    "", // Check if deviceId exists and use it
-                (loggedInDevice['brand'] ?? "").toString() +
-                    " " +
-                    (loggedInDevice['device'] ?? "").toString());
-          } else {
-            ForceLogout.forceLogoutUser(
-                loginResponse['existingSessionId'],
-                email,
-                password,
-                context,
-                "", // Empty string if loggedInDevice is not a Map or is null
-                "");
-          }
-        }
-        return true;
-      } else {
-        var json=jsonDecode(response);
-        snackBarCalledfail(context, json['body'] ?? "failed to login", Colors.red);
-        return false;
+      if(isNewUser){
+
+        bool verify=await  OtpService.verifyDeleteOTP(context, email, otp);
+
+        if(verify)LoginService.pushToRegister(context, email);
+
       }
-    } catch (e) {
-      snackBarCalledfail(context, 'OTP verification failed. Please try again.', Colors.red);
+      else if (isForcedLogin)
+       {
+          ForceLogout.forceLogoutUser(
+            sessionId: loginResponse['existingSessionId'],
+            email: email,
+            context: context,
+            existingDeviceName: "",
+            otp: otp
+          );
+      } else
+       {
+        LoginService.loginUser(
+         emailController:  TextEditingController(text: email),
+         passwordController:  TextEditingController(
+              text:
+                  password), // Password not available, adjust backend if needed
+         context:  context,
+          otp: otp
+        );
+      }
+
+    } catch(error){}
+
       return false;
-    }
   }
+
+//   static Future<bool> verifyOTPForLogin2(BuildContext context, String email,
+//       String password, String otp, dynamic loginResponse, bool isForcedLogin,
+//       {bool isNewUser = false}) async {
+//     try {
+//       var response =
+//           await postDataApiCallwithOutSharedPref('${url}/otp/verify-otp', {
+//         'email': email,
+//         'otp': otp,
+//       });
+//       if (getFlagOfResponse(response)) {
+//         if (!isNewUser) {
+//           LoginService.pushToRegister(context, email);
+//         } else if (!isForcedLogin) {
+//           LoginService.loginUser(
+//             TextEditingController(text: email),
+//             TextEditingController(
+//                 text:
+//                     password), // Password not available, adjust backend if needed
+//             context,
+//             apis_flag,
+//           );
+//         } else {
+//           var loggedInDevice = loginResponse['loggedInDevice'];
+//           if (loggedInDevice != null &&
+//               loggedInDevice is Map<String, dynamic>) {
+//             ForceLogout.forceLogoutUser(
+//                 loginResponse['existingSessionId'],
+//                 email,
+//                 password,
+//                 context,
+//                 loggedInDevice['deviceId'] ??
+//                     "", // Check if deviceId exists and use it
+//                 (loggedInDevice['brand'] ?? "").toString() +
+//                     " " +
+//                     (loggedInDevice['device'] ?? "").toString());
+//           } else {
+//             ForceLogout.forceLogoutUser(
+//                 loginResponse['existingSessionId'],
+//                 email,
+//                 password,
+//                 context,
+//                 "", // Empty string if loggedInDevice is not a Map or is null
+//                 "");
+//           }
+//         }
+//         return true;
+//       } else {
+//         var json = jsonDecode(response);
+//         snackBarCalledfail(
+//             context, json['body'] ?? "failed to login", Colors.red);
+//         return false;
+//       }
+//     } catch (e) {
+//       snackBarCalledfail(
+//           context, 'OTP verification failed. Please try again.', Colors.red);
+//       return false;
+//     }
+//   }
 }

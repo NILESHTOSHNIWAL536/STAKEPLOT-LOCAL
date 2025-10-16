@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../auth_service/get_otp.dart';
+import '../auth_service/login_apis.dart';
 
 class TwoFactorEmailVerification extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -287,11 +288,14 @@ class _TwoFactorEmailVerificationState
       otpController.text,
       widget.data['response'],
       widget.data['isForcedLogin'], // Pass the login response
+      isNewUser:  widget.data['newUser'] ?? false, // Pass the login response
     );
 
-    if (!isVerified) {
+
+    if (!isVerified)
+    {
       isOtpWrong2.value = true;
-      acceptReset.value = false;
     }
+    acceptReset.value = false;
   }
 }

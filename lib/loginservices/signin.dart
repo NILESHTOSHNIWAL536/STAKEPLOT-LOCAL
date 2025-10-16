@@ -29,9 +29,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController =
-      TextEditingController(text: "nileshtoshniwal743@gmail.com");
-  final TextEditingController passwordController = TextEditingController(text: "Nilesh@123");
+  final TextEditingController emailController = TextEditingController(text: "nileshtoshniwal743@gmail.com");
+  final TextEditingController passwordController = TextEditingController(text: "Nilesh@1234");
   bool _isPasswordVisible = false;
   final AuthService authService = AuthService();
   
@@ -83,12 +82,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 20),
 
                       // Password Field
-                      _buildPasswordField(),
+                      // _buildPasswordField(),
 
-                      const SizedBox(height: 10),
+                      // const SizedBox(height: 10),
 
                       // Forgot Password
-                      _buildForgotPassword(),
+                      // _buildForgotPassword(),
 
                       const SizedBox(height: 10),
 
@@ -99,16 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       // Or login with
                       _buildDivider(),
-
-                      // const SizedBox(height: 20),
-                      // InkWell(
-                      //   onTap: ()async{
-                      //         if (await canLaunchUrl(Uri.parse(urlPathString.value))) {
-                      //             await launchUrl(Uri.parse(urlPathString.value), mode: LaunchMode.externalApplication);
-                      //           }
-                      //   },
-                      //   child: Text("urlPath")
-                      // ),
                       const SizedBox(height: 20),
                       // Google Sign In
                       containerIconSiginWith(
@@ -136,12 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           userdataApple, context,
                                           flag: true);
                                     } else if (userdataApple != null) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                UserDetailsPage2(
-                                                    data: userdataApple)),
+                                      Navigator.push(context,MaterialPageRoute(builder: (context) =>UserDetailsPage2(data: userdataApple)),
                                       );
                                     } else {}
                                   } finally {
@@ -155,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // const Spacer(),
 
                       // Sign Up Link
-                      buildSignUpLink(),
+                      // buildSignUpLink(),
                     ],
                   ),
                 ),
