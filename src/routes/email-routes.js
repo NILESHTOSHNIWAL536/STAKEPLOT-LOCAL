@@ -19,6 +19,6 @@ router.get('/', EmailController.getScrapedEmails);
 router.get('/get-unLinked-cards', EmailController.getUnlinkedCreditCards);
 
 // remove the access token from the googleToken document
-router.delete('/', EmailController.removeAccessToken);
+router.delete('/remove-access', EmailController.removeAccessToken);
 
 module.exports = router;

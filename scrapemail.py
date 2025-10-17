@@ -3,245 +3,110 @@ import json
 from datetime import datetime
 import spacy
 import sys
-import base64
-from io import BytesIO
 import traceback
 
-# PDF and Image processing imports
-try:
-    import PyPDF2
-    from pdf2image import convert_from_bytes
-    import pytesseract
-    from PIL import Image
-    PDF_AVAILABLE = True
-except ImportError:
-    PDF_AVAILABLE = False
-    print("⚠️ PDF/Image processing unavailable. Install: pip install PyPDF2 pdf2image pytesseract Pillow", file=sys.stderr)
-
-# Load spaCy model
 try:
     nlp = spacy.load("en_core_web_sm")
 except OSError:
-    raise OSError("⚠️ spaCy model 'en_core_web_sm' not found. Run: python -m spacy download en_core_web_sm")
+    raise OSError("spaCy model 'en_core_web_sm' not found. Run: python -m spacy download en_core_web_sm")
 
 # ========================================
-# REASON: Enhanced sanitization to handle more edge cases
-# IMPROVEMENT: Handles emojis, special unicode, and preserves rupee symbol
+# BANK IDENTIFIERS (for filtering emails)
 # ========================================
+BANK_IDENTIFIERS = {
+    'HDFC': {
+        'keywords': ['hdfc', 'hdfcbank', 'alerts@hdfcbank'],
+        'exclude_keywords': ['slice', 'axis', 'icici', 'sbi', 'citi']
+    },
+    'ICICI': {
+        'keywords': ['icici', 'icicibank'],
+        'exclude_keywords': ['hdfc', 'slice', 'axis', 'sbi']
+    },
+    'Axis': {
+        'keywords': ['axis', 'axisbank'],
+        'exclude_keywords': ['hdfc', 'slice', 'icici', 'sbi']
+    },
+    'SBI': {
+        'keywords': ['sbi', 'state bank'],
+        'exclude_keywords': ['hdfc', 'slice', 'axis', 'icici']
+    },
+    'Slice': {
+        'keywords': ['slice', 'sliceit', 'slicebank'],
+        'exclude_keywords': ['hdfc', 'axis', 'icici', 'sbi']
+    },
+}
+
+# ========================================
+# TRANSACTION TYPE KEYWORDS
+# ========================================
+TRANSACTION_KEYWORDS = {
+    'debit': ['debited', 'charged', 'deducted', 'withdrawn', 'spent', 'paid', 'transaction alert'],
+    'credit': ['credited', 'received', 'added', 'deposited', 'salary', 'refund', 'cashback'],
+    'statement': ['statement', 'bill generated', 'outstanding', 'due', 'summary'],
+    'loan': ['loan', 'borrow', 'emi', 'disbursed', 'sanctioned', 'transferred'],
+    'reward': ['reward', 'cashback', 'points', 'bonus', 'offer']
+}
+
 def sanitize_text(text: str) -> str:
+    """Clean and normalize text"""
     if not text:
         return ""
-    # Preserve currency symbols but remove other problematic unicode
-    text = text.replace('₹', 'Rs.')
+    # Replace all variants of rupee symbols
+    text = text.replace('₹', 'Rs').replace('â‚¹', 'Rs').replace('Rs.', 'Rs')
+    # Remove zero-width spaces and other hidden Unicode
+    text = re.sub(r'[\u200b\u200c\u200d\ufeff]', '', text)
+    # Decode and clean
     return text.encode("utf-8", "ignore").decode("utf-8", "ignore").strip()
 
-# ========================================
-# REASON: More comprehensive transaction classification
-# IMPROVEMENT: Added patterns for digital wallets, P2P, and international transactions
-# ========================================
-def classify_transaction(text: str):
+def belongs_to_bank(text: str, target_bank: str) -> bool:
+    """
+    Check if email belongs to the target bank.
+    This prevents Slice emails from being matched when searching for HDFC, etc.
+    """
+    if not target_bank or target_bank == 'unknown':
+        return True
+    
+    text_lower = text.lower()
+    bank_config = BANK_IDENTIFIERS.get(target_bank, {})
+    
+    # Check for excluding keywords first (stronger negative signal)
+    exclude_keywords = bank_config.get('exclude_keywords', [])
+    for keyword in exclude_keywords:
+        if keyword in text_lower:
+            return False
+    
+    # Check for include keywords
+    keywords = bank_config.get('keywords', [])
+    if keywords:
+        return any(keyword in text_lower for keyword in keywords)
+    
+    return True
+
+def classify_transaction(text: str) -> str:
+    """Classify transaction type"""
     clean = text.lower()
     
-    # Borrow/Loan patterns (check first as they're most specific)
-    if any(k in clean for k in ["loan disbursed", "borrowed", "sanctioned", "approved", 
-                                 "disbursal", "borrow order confirmed", "transferred to your bank", 
-                                 "borrow confirmation", "loan credited", "loan amount credited"]):
+    if any(k in clean for k in TRANSACTION_KEYWORDS['loan']):
         return "Borrow"
-    
-    # Repayment patterns
-    elif any(k in clean for k in ["repayment successful", "emi paid", "installment paid", 
-                                   "loan closed", "bill paid", "payment successful", "repaid",
-                                   "auto debit", "autopay successful", "bill payment confirmation"]):
+    elif any(k in clean for k in ["repayment", "emi paid", "installment paid", "loan closed", "payment successful"]):
         return "Repayment"
-    
-    # Statement patterns
-    elif any(k in clean for k in ["outstanding", "due", "minimum due", "bill generated", 
-                                   "statement", "monthly statement", "bill summary", 
-                                   "borrow statement", "credit card statement"]):
+    elif any(k in clean for k in TRANSACTION_KEYWORDS['statement']):
         return "Statement"
-    
-    # Debit patterns (expanded)
-    elif any(k in clean for k in ["debited", "withdrawn", "spent", "paid", "purchase", "atm",
-                                   "transaction alert", "debit alert", "charged", "payment made",
-                                   "pos transaction", "online purchase", "card used"]):
+    elif any(k in clean for k in TRANSACTION_KEYWORDS['debit']):
         return "Debit"
-    
-    # Credit patterns (expanded)
-    elif any(k in clean for k in ["credited", "received", "salary", "refund", "cashback", 
-                                   "credit alert", "deposit", "added", "reward points",
-                                   "reversal", "credit adjustment"]):
+    elif any(k in clean for k in TRANSACTION_KEYWORDS['credit']):
         return "Credit"
-    
+    elif any(k in clean for k in TRANSACTION_KEYWORDS['reward']):
+        return "Reward"
     else:
         return "Other"
 
-# ========================================
-# REASON: Extract text from password-protected PDFs
-# IMPROVEMENT: Handles encrypted PDFs with user-provided password
-# ========================================
-def extract_pdf_text(pdf_data: bytes, password: str = None) -> tuple:
-    """
-    Returns: (text_content, needs_password, error_message)
-    """
-    if not PDF_AVAILABLE:
-        return "", False, "PDF libraries not installed"
-    
-    try:
-        pdf_file = BytesIO(pdf_data)
-        pdf_reader = PyPDF2.PdfReader(pdf_file)
-        
-        # Check if PDF is encrypted
-        if pdf_reader.is_encrypted:
-            if password:
-                try:
-                    pdf_reader.decrypt(password)
-                except Exception as e:
-                    return "", True, f"Invalid password: {str(e)}"
-            else:
-                return "", True, "PDF is password-protected. Password required."
-        
-        # Extract text from all pages
-        text_parts = []
-        for page_num in range(len(pdf_reader.pages)):
-            try:
-                page = pdf_reader.pages[page_num]
-                text_parts.append(page.extract_text())
-            except Exception as e:
-                print(f"⚠️ Error extracting page {page_num}: {e}", file=sys.stderr)
-                continue
-        
-        extracted_text = "\n".join(text_parts)
-        
-        # If no text extracted, try OCR
-        if not extracted_text.strip():
-            print("📸 No text found in PDF, attempting OCR...", file=sys.stderr)
-            return extract_pdf_with_ocr(pdf_data), False, None
-        
-        return extracted_text, False, None
-        
-    except Exception as e:
-        return "", False, f"PDF extraction error: {str(e)}"
-
-# ========================================
-# REASON: Handle image-based PDFs and scanned documents
-# IMPROVEMENT: Uses OCR to extract text from images in PDFs
-# ========================================
-def extract_pdf_with_ocr(pdf_data: bytes) -> str:
-    """Extract text from image-based PDFs using OCR"""
-    if not PDF_AVAILABLE:
-        return ""
-    
-    try:
-        images = convert_from_bytes(pdf_data)
-        text_parts = []
-        
-        for i, image in enumerate(images):
-            try:
-                text = pytesseract.image_to_string(image)
-                text_parts.append(text)
-            except Exception as e:
-                print(f"⚠️ OCR failed for page {i}: {e}", file=sys.stderr)
-                continue
-        
-        return "\n".join(text_parts)
-    except Exception as e:
-        print(f"⚠️ PDF OCR failed: {e}", file=sys.stderr)
-        return ""
-
-# ========================================
-# REASON: Extract text from image attachments
-# IMPROVEMENT: Handles transaction screenshots and image-based notifications
-# ========================================
-def extract_image_text(image_data: bytes) -> str:
-    """Extract text from images using OCR"""
-    if not PDF_AVAILABLE:
-        return ""
-    
-    try:
-        image = Image.open(BytesIO(image_data))
-        text = pytesseract.image_to_string(image)
-        return text
-    except Exception as e:
-        print(f"⚠️ Image OCR failed: {e}", file=sys.stderr)
-        return ""
-
-# ========================================
-# REASON: Process all types of attachments
-# IMPROVEMENT: Centralized attachment processing with format detection
-# ========================================
-def process_attachments(attachments: list, pdf_password: str = None) -> dict:
-    """
-    Process all attachments and extract text content
-    Returns: {
-        'text': combined_text,
-        'needs_password': bool,
-        'password_error': str or None,
-        'processed_count': int
-    }
-    """
-    combined_text = []
-    needs_password = False
-    password_error = None
-    processed_count = 0
-    
-    for att in attachments:
-        filename = att.get('filename', '').lower()
-        mime_type = att.get('mimeType', '').lower()
-        data_b64 = att.get('data', '')
-        
-        if not data_b64:
-            continue
-        
-        try:
-            # Decode base64 data
-            file_data = base64.b64decode(data_b64)
-            
-            # Process PDFs
-            if 'pdf' in mime_type or filename.endswith('.pdf'):
-                print(f"📄 Processing PDF: {filename}", file=sys.stderr)
-                text, needs_pwd, error = extract_pdf_text(file_data, pdf_password)
-                
-                if needs_pwd:
-                    needs_password = True
-                    password_error = error
-                elif text:
-                    combined_text.append(text)
-                    processed_count += 1
-            
-            # Process images
-            elif any(img in mime_type for img in ['image/', 'png', 'jpg', 'jpeg']):
-                print(f"🖼️ Processing image: {filename}", file=sys.stderr)
-                text = extract_image_text(file_data)
-                if text:
-                    combined_text.append(text)
-                    processed_count += 1
-            
-        except Exception as e:
-            print(f"⚠️ Error processing {filename}: {e}", file=sys.stderr)
-            continue
-    
-    return {
-        'text': "\n\n".join(combined_text),
-        'needs_password': needs_password,
-        'password_error': password_error,
-        'processed_count': processed_count
-    }
-
-# ========================================
-# REASON: Enhanced date extraction with multiple format support
-# IMPROVEMENT: Handles Indian date formats, relative dates, and various separators
-# ========================================
-def extract_date(text: str, field_name: str = "date") -> str:
-    """Enhanced date extraction with multiple format support"""
-    
+def extract_date(text: str) -> str:
+    """Extract and normalize date from text"""
     patterns = [
-        # DD-MM-YYYY or DD/MM/YYYY
         r"\b(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})\b",
-        # Month DD, YYYY or DD Month YYYY
         r"([A-Za-z]{3,9}\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{2,4})",
-        # DD Month YYYY
         r"\b(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4})\b",
-        # YYYY-MM-DD (ISO format)
         r"\b(\d{4}[-/]\d{1,2}[-/]\d{1,2})\b",
     ]
     
@@ -250,12 +115,11 @@ def extract_date(text: str, field_name: str = "date") -> str:
         if match:
             date_str = match.group(1).replace("st", "").replace("nd", "").replace("rd", "").replace("th", "").replace(",", "").strip()
             
-            # Try multiple date formats
             date_formats = [
                 "%d-%m-%Y", "%d/%m/%Y", "%d %m %Y",
                 "%d-%m-%y", "%d/%m/%y",
                 "%d %B %Y", "%d %b %Y", "%B %d %Y", "%b %d %Y",
-                "%Y-%m-%d", "%Y/%m/%d"
+                "%Y-%m-%d", "%Y/%m/%d", "%b %d, %Y"
             ]
             
             for fmt in date_formats:
@@ -265,296 +129,271 @@ def extract_date(text: str, field_name: str = "date") -> str:
                 except ValueError:
                     continue
             
-            # If parsing fails, return raw string
             return date_str
     
     return None
 
-# ========================================
-# REASON: Comprehensive detail extraction with multiple fallback strategies
-# IMPROVEMENT: Uses regex, NLP, and context-aware extraction
-# ========================================
-def extract_details(text: str):
-    details = {}
-    clean_text = " ".join(sanitize_text(text).split())
-
-    # Category
-    details["category"] = classify_transaction(clean_text)
-
-    # ========================================
-    # REASON: Enhanced amount extraction with currency and decimal support
-    # ========================================
-    amt_patterns = [
-        r"(?:Amount|Rs\.?|INR|₹|Amt)[:\s]*(?:Rs\.?|INR|₹)?\s*([\d,]+\.?\d{0,2})",
-        r"(?:Rs\.?|INR|₹)\s*([\d,]+\.?\d{0,2})",
-        r"\b([\d,]{3,}\.?\d{0,2})\s*(?:debited|credited|paid|received)",
+def extract_primary_amount(text: str, category: str) -> str:
+    """
+    Extract PRIMARY transaction amount.
+    Handles amounts with formatting issues (commas, spaces, etc.)
+    """
+    # Clean text first - remove all hidden chars and normalize spaces
+    clean_text = re.sub(r'\s+', ' ', text)
+    
+    # Patterns for finding amounts with robust matching
+    patterns = [
+        # Pattern 1: "transferred ₹1,660" or "transferred Rs 1660"
+        r'(?:transferred|disbursed|credited)\s+(?:Rs|rupees|₹)\s*[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
+        
+        # Pattern 2: "Rs.1,660 debited/credited"
+        r'(?:Rs|rupees|₹)\s*[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?\s+(?:is\s+)?(?:debited|credited|charged|transferred)',
+        
+        # Pattern 3: "Amount: Rs 1660" or "Amount: Rs.1,660"
+        r'(?:amount|total)[:\s]+(?:Rs|rupees|₹)[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
+        
+        # Pattern 4: Generic number after Rs/rupees
+        r'(?:Rs|rupees|₹)[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
+        
+        r'(?:Rs|rupees|₹|INR)[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
     ]
     
-    for pattern in amt_patterns:
-        amt_match = re.search(pattern, clean_text, re.IGNORECASE)
-        if amt_match:
-            details["amount"] = amt_match.group(1).replace(",", "")
-            break
+    for pattern in patterns:
+        matches = re.finditer(pattern, clean_text, re.IGNORECASE)
+        for match in matches:
+            # Reconstruct the number from groups
+            groups = match.groups()
+            
+            if groups[0]:  # Main amount
+                main = groups[0]
+                
+                # Handle thousands
+                thousands = groups[1] if len(groups) > 1 and groups[1] else ''
+                
+                # Handle decimals
+                decimals = groups[2] if len(groups) > 2 and groups[2] else ''
+                
+                if thousands:
+                    amount_str = main + thousands
+                else:
+                    amount_str = main
+                
+                if decimals:
+                    amount_str = amount_str + '.' + decimals
+                
+                try:
+                    amount_val = float(amount_str)
+                    # Reasonable range for transactions
+                    if 1 <= amount_val <= 100000000:
+                        return amount_str
+                except ValueError:
+                    continue
+    
+    return ""
 
-    # Date
+def extract_card_number(text: str) -> str:
+    """Extract card number (usually last 4 digits)"""
+    patterns = [
+        r"(?:ending\s+(?:in|with)[:\s]*)(\d{4})",
+        r"(?:\*{2,}|\*\*)\s*(\d{4})",
+        r"(?:\*{4}[-\s]?){3}(\d{4})",
+    ]
+    
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            return match.group(1)
+    
+    return ""
+
+def extract_order_id(text: str) -> str:
+    """Extract Order ID, Txn ID, Reference ID"""
+    patterns = [
+        r"(?:order\s+id|order\s+no)[:\s]+([A-Za-z0-9]{6,})",
+        r"(?:txn(?:\s+ref)?|transaction\s+(?:id|ref)|reference\s+(?:no|number))[:\s]+([A-Za-z0-9\-]{6,})",
+        r"\b(BW[A-Za-z0-9]{15,})\b",
+        r"\b(RID-[A-Za-z0-9\-]{6,})\b",
+    ]
+    
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            val = match.group(1)
+            if val.lower() not in ["is", "no", "transaction", "reference", "purposes"]:
+                return val
+    
+    return ""
+
+def extract_mode(text: str) -> str:
+    """Extract payment mode"""
+    pattern = r"\b(UPI|IMPS|NEFT|RTGS|Net\s*Banking|Wallet|Credit\s*Card|Debit\s*Card|ATM|Auto\s*Debit|Cheque|Bank\s*Transfer|PhonePe|Google\s*Pay|Paytm|Amazon\s*Pay)\b"
+    match = re.search(pattern, text, re.IGNORECASE)
+    if match:
+        return match.group(0).replace(" ", "").upper()
+    return ""
+
+def is_financial_email(text: str) -> bool:
+    """Check if email is actually financial/banking related"""
+    financial_keywords = [
+        'bank', 'credit card', 'debit', 'credited', 'debited', 
+        'transaction', 'payment', 'amount', 'rs', 'rupees',
+        'loan', 'emi', 'statement', 'bill', 'alert', 'charged',
+        'borrow', 'transferred'
+    ]
+    
+    text_lower = text.lower()
+    count = sum(1 for keyword in financial_keywords if keyword in text_lower)
+    return count >= 2
+
+def extract_details(text: str, user_bank: str = None):
+    """Extract transaction details from email text"""
+    details = {}
+    clean_text = sanitize_text(text)
+    
+    # Check if email belongs to the target bank
+    if user_bank and not belongs_to_bank(clean_text, user_bank):
+        return {
+            "category": "Other",
+            "bank": user_bank,
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "confidence_score": 0,
+            "skipped": True,
+            "reason": "Email does not belong to selected bank"
+        }
+    
+    # Check if it's a financial email
+    if not is_financial_email(clean_text):
+        return {
+            "category": "Other",
+            "bank": user_bank if user_bank else "unknown",
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "confidence_score": 0,
+        }
+    
+    # Classify transaction
+    category = classify_transaction(clean_text)
+    details["category"] = category
+    details["bank"] = user_bank if user_bank else "unknown"
+    
+    # ========================================
+    # AMOUNT EXTRACTION
+    # ========================================
+    amount = extract_primary_amount(clean_text, category)
+    if amount:
+        details["amount"] = amount
+    
+    # ========================================
+    # DATE EXTRACTION
+    # ========================================
     date_result = extract_date(clean_text)
     if date_result:
         details["date"] = date_result
-
-    # Due Date
-    due_patterns = [
-        r"(?:Due Date|Payment Due|Repay By|Pay By)[:\- ]?\s*(.+?)(?:\.|$|\s{3,})",
-        r"(?:Due on|Pay before)[:\- ]?\s*(.+?)(?:\.|$|\s{3,})",
-    ]
     
-    for pattern in due_patterns:
-        match = re.search(pattern, clean_text, re.IGNORECASE)
-        if match:
-            due_date_result = extract_date(match.group(1))
-            if due_date_result:
-                details["due_date"] = due_date_result
-                break
-
     # ========================================
-    # REASON: Enhanced card number extraction with multiple patterns
+    # CARD NUMBER EXTRACTION
     # ========================================
-    card_patterns = [
-        r"(?:Card|card\s+ending|ending\s+with|last\s+4\s+digits?)[:\s\-]*[xX]{4,}(\d{4})",
-        r"[xX]{4,}[- ]?[xX]{4,}[- ]?[xX]{4,}[- ]?(\d{4})",
-        r"\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?(\d{4})\b",
-    ]
+    card_number = extract_card_number(clean_text)
+    if card_number:
+        details["card_number"] = card_number
     
-    for pattern in card_patterns:
-        card_match = re.search(pattern, clean_text, re.IGNORECASE)
-        if card_match:
-            details["card_number"] = card_match.group(1)
-            break
-
     # ========================================
-    # REASON: Enhanced transaction ID extraction
+    # ORDER/TRANSACTION ID EXTRACTION
     # ========================================
-    txn_patterns = [
-        r"(?:Txn(?:\s+Ref)?|Transaction\s+ID|Reference\s+(?:No|Number)|RID|Order\s+ID|UPI\s+Ref)[:\s\-]+([A-Za-z0-9\-]{6,})",
-        r"\b(RID-[A-Za-z0-9\-]{6,})\b",
-        r"\b([A-Z0-9]{10,})\b(?=\s*(?:is your|transaction))",
-    ]
+    order_id = extract_order_id(clean_text)
+    if order_id:
+        details["transaction_id"] = order_id
     
-    for pattern in txn_patterns:
-        txn_match = re.search(pattern, clean_text, re.IGNORECASE)
-        if txn_match:
-            val = txn_match.group(1)
-            if val.lower() not in ["is", "no", "transaction", "reference"]:
-                details["transaction_id"] = val
-                break
-
-    # Loan ID
-    loan_patterns = [
-        r"(?:Loan\s+(?:ID|Number)|Borrow\s+ID|Application\s+(?:ID|Number))[:\s\-]+([A-Za-z0-9\-]{4,})",
-    ]
-    
-    for pattern in loan_patterns:
-        loan_match = re.search(pattern, clean_text, re.IGNORECASE)
-        if loan_match:
-            details["loan_id"] = loan_match.group(1)
-            break
-
-    # Total Due / Outstanding
-    total_due_patterns = [
-        r"(?:Total\s+Due|Outstanding\s+Balance|Amount\s+Due|Statement\s+Balance|Total\s+Outstanding)[:\s]*(?:Rs\.?|INR|₹)?\s*([\d,]+\.?\d*)",
-    ]
-    
-    for pattern in total_due_patterns:
-        match = re.search(pattern, clean_text, re.IGNORECASE)
-        if match:
-            details["total_due"] = match.group(1).replace(",", "")
-            break
-
-    # Minimum Due
-    min_due_patterns = [
-        r"(?:Min(?:imum)?\s+Due|Minimum\s+Amount\s+Due|Min\s+Pay)[:\s]*(?:Rs\.?|INR|₹)?\s*([\d,]+\.?\d*)",
-    ]
-    
-    for pattern in min_due_patterns:
-        match = re.search(pattern, clean_text, re.IGNORECASE)
-        if match:
-            details["minimum_due"] = match.group(1).replace(",", "")
-            break
-
     # ========================================
-    # REASON: Enhanced payment mode detection
+    # PAYMENT MODE EXTRACTION
     # ========================================
-    mode_pattern = r"\b(UPI|IMPS|NEFT|RTGS|Net\s*banking|Wallet|Credit\s*Card|Debit\s*Card|ATM|Auto\s*Debit|Cheque|slice\s*borrow|Bank\s*Transfer|PhonePe|Google\s*Pay|Paytm|Amazon\s*Pay)\b"
-    mode_match = re.search(mode_pattern, clean_text, re.IGNORECASE)
-    if mode_match:
-        details["mode"] = mode_match.group(0).replace(" ", "").upper()
-
-    # Merchant/Vendor
-    merchant_patterns = [
-        r"(?:at|@|from|to)\s+([A-Z][A-Za-z0-9&\s]{2,30}?)(?:\s+on|\s+dated|\.|$)",
-        r"(?:merchant|vendor)[:\s]+([A-Z][A-Za-z0-9&\s]{2,30}?)(?:\.|$)",
-    ]
+    mode = extract_mode(clean_text)
+    if mode:
+        details["mode"] = mode
     
-    for pattern in merchant_patterns:
-        merchant_match = re.search(pattern, clean_text)
-        if merchant_match and len(merchant_match.group(1).strip()) > 3:
-            details["merchant"] = merchant_match.group(1).strip()
-            break
-
-    # User Name
-    user_patterns = [
-        r"(?:Hi|Dear|Hello)\s+([A-Z][a-z]+)\s*,",
-    ]
-    
-    for pattern in user_patterns:
-        user_match = re.search(pattern, clean_text)
-        if user_match:
-            details["user_name"] = user_match.group(1)
-            break
-
-    # Bank/Organization
-    bank_patterns = [
-        r"\b([A-Z][A-Za-z0-9&\s]{2,}(?:Bank|Credit\s*Card|Finance|Services|slice))\b",
-        r"from:\s*([A-Z][A-Za-z0-9&\s]{2,})",
-    ]
-    
-    for pattern in bank_patterns:
-        bank_match = re.search(pattern, clean_text)
-        if bank_match and len(bank_match.group(0)) > 5:
-            details["bank"] = bank_match.group(0).strip()
-            break
-
-    # ========================================
-    # REASON: NLP fallback for missed information
-    # IMPROVEMENT: Uses spaCy NER for entity extraction
-    # ========================================
-    try:
-        doc = nlp(clean_text[:10000])  # Limit text length for performance
-        
-        if "bank" not in details:
-            for ent in doc.ents:
-                if ent.label_ == "ORG" and len(ent.text) > 3:
-                    details["bank"] = ent.text
-                    break
-        
-        if "amount" not in details:
-            for ent in doc.ents:
-                if ent.label_ == "MONEY":
-                    amt_text = ent.text.replace(",", "").replace("Rs.", "").replace("INR", "").replace("₹", "").strip()
-                    if re.match(r"^\d+\.?\d*$", amt_text):
-                        details["amount"] = amt_text
-                        break
-        
-        if "date" not in details:
-            for ent in doc.ents:
-                if ent.label_ == "DATE":
-                    date_result = extract_date(ent.text)
-                    if date_result:
-                        details["date"] = date_result
-                        break
-        
-        if "user_name" not in details:
-            for ent in doc.ents:
-                if ent.label_ == "PERSON":
-                    details["user_name"] = ent.text
-                    break
-                    
-    except Exception as e:
-        details["nlp_error"] = str(e)
-        print(f"⚠️ NLP processing error: {e}", file=sys.stderr)
-
     return details
 
-# ========================================
-# REASON: Main scraping function with multi-source extraction
-# IMPROVEMENT: Extracts from subject, body, and all attachments
-# ========================================
-def scrape_email(email, pdf_password=None):
-    """
-    Main email scraping function with comprehensive extraction
-    """
-    subject = email.get("subject", "")
-    body = email.get("body", "")
-    attachments = email.get("attachments", [])
+def scrape_email(email, user_bank=None, pdf_password=None):
+    """Main email scraping function"""
+    subject = email.get("subject", "") or ""
+    body = email.get("body", "") or ""
     
-    # Process attachments first
-    attachment_result = process_attachments(attachments, pdf_password)
+    # Combine all text
+    full_text = f"{subject}\n\n{body}".strip()
     
-    # Combine all text sources
-    all_text_parts = []
-    if subject:
-        all_text_parts.append(f"SUBJECT: {subject}")
-    if body:
-        all_text_parts.append(f"BODY: {body}")
-    if attachment_result['text']:
-        all_text_parts.append(f"ATTACHMENTS: {attachment_result['text']}")
+    # If no text, return empty result
+    if not full_text or len(full_text) < 10:
+        return {
+            "category": "Other",
+            "bank": user_bank if user_bank else "unknown",
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "confidence_score": 0,
+            "sources_processed": {
+                "subject": bool(subject),
+                "body": bool(body),
+            }
+        }
     
-    full_text = "\n\n".join(all_text_parts)
+    # Extract details
+    details = extract_details(full_text, user_bank)
     
-    # Extract details from combined text
-    details = extract_details(full_text)
+    # Skip if email doesn't belong to bank
+    if details.get("skipped"):
+        return details
     
     # Add metadata
     details["sources_processed"] = {
         "subject": bool(subject),
         "body": bool(body),
-        "attachments_processed": attachment_result['processed_count'],
-        "needs_password": attachment_result['needs_password'],
-        "password_error": attachment_result['password_error']
+        "attachments_processed": 0,
+        "needs_password": False,
+        "password_error": None
     }
     
-    # Set defaults
-    if "bank" not in details:
-        details["bank"] = email.get("default_bank", "unknown")
+    # Set bank if not found
+    if "bank" not in details or details["bank"] == "unknown":
+        details["bank"] = user_bank if user_bank else "unknown"
     
-    if "transaction_id" not in details and email.get("messageId"):
-        details["transaction_id"] = email.get("messageId")
-    
+    # Set date if not found
     if "date" not in details:
         details["date"] = datetime.now().strftime("%Y-%m-%d")
     
-    # Use total_due or minimum_due as amount if amount is missing
-    if "amount" not in details:
-        if "total_due" in details:
-            details["amount"] = details["total_due"]
-        elif "minimum_due" in details:
-            details["amount"] = details["minimum_due"]
-    
-    # Convert amount to float
+    # Convert amount to numeric
     if "amount" in details:
         try:
             details["amount"] = float(str(details["amount"]).replace(",", ""))
         except (ValueError, TypeError):
-            pass
+            details.pop("amount", None)
     
-    # Add confidence score based on extracted fields
-    critical_fields = ["amount", "date", "category"]
-    extracted_critical = sum(1 for field in critical_fields if field in details and details[field])
-    details["confidence_score"] = round((extracted_critical / len(critical_fields)) * 100, 2)
+    # Confidence score
+    extracted_fields = sum(1 for k in ["amount", "date", "category"] if k in details and details[k])
+    details["confidence_score"] = round((extracted_fields / 3) * 100, 2)
     
     return details
 
 # ========================================
-# Main execution
+# MAIN EXECUTION
 # ========================================
 if __name__ == "__main__":
     try:
-        # Read JSON input from stdin
         email_data = json.load(sys.stdin)
+        user_bank = email_data.pop("user_bank", None)
         pdf_password = email_data.pop("pdf_password", None)
         
-        result = scrape_email(email_data, pdf_password)
+        result = scrape_email(email_data, user_bank, pdf_password)
         print(json.dumps(result, indent=2, ensure_ascii=False))
         
     except json.JSONDecodeError as e:
         error_result = {
             "error": f"Invalid JSON input: {str(e)}",
-            "traceback": traceback.format_exc()
+            "type": "json_error"
         }
         print(json.dumps(error_result, indent=2))
-        
+        sys.exit(1)
     except Exception as e:
         error_result = {
             "error": str(e),
-            "traceback": traceback.format_exc()
+            "traceback": traceback.format_exc(),
+            "type": "runtime_error"
         }
         print(json.dumps(error_result, indent=2))
+        sys.exit(1)
