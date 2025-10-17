@@ -30,11 +30,36 @@ import 'package:flutter_application_code_stakeplot/loginservices/signin.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/signup.dart';
 import 'Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
+import 'backed_connections/apis_connect.dart';
 import 'email_sync/add_credit_card_bank.dart';
 import 'finance_screen/Calculators/loan_calculator.dart';
 import 'finances_screen/creditCard_slider.dart';
 import 'finances_screen/index_finances.dart';
 import 'onboarding_screens/onboarding_screen.dart';
+
+
+class RouterApi
+{
+   static final String _urlPath=url;
+   static final String _emailPath=EmailUrl;
+   
+   static String login="$_urlPath/auth/sign-in";
+   static String verify="$_urlPath/auth/verify";
+   static String forceLogin="$_urlPath/auth/force-login";
+   static String appleAuth="$_urlPath/auth/apple-auth";
+   static String googleAuth="$_urlPath/auth/google-auth";
+   static String signUp="$_urlPath/auth/sign-up";
+   static String sendOtp="$_urlPath/otp/send";
+   static String resendOtp="$_urlPath/otp/resend-otp";
+   static String verifyOtp="$_urlPath/otp/verify-otp";
+
+   //generate-token Email part
+   static String generateToken="$_emailPath/generate-token";
+   static String getUnLinkedCards="$_emailPath/get-unLinked-cards";
+   static String revokeAccessToken="$_emailPath/remove-access";
+   static String scrape="$_emailPath/scrape";
+   static String getCreditCardList="$_emailPath/";
+}
 
 
 var routes =
@@ -104,3 +129,5 @@ var colorcodes=const {
     "snacks": Color(0xFF5D6D7E), // Muted Blue-Gray
     "UPI": Color(0xFF5D6D7E), // Muted Blue-Gray
   };
+
+

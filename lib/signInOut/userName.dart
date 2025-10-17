@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Constants/search.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -67,11 +65,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
   void submitDetails() async {
     String username = usernameController.text;
-    String dob = dobController.text;
-
-
-
-    // Validate inputs
     if (!isValidUser.value) {
       snackBarCalledfail(context, SignupData().emptyUsernameValid, Colors.red);
       return;
@@ -108,7 +101,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     String email = data['email'];
       updateDeviceData(deviceData);
     final response = await http.post(
-      Uri.parse('${url}/auth/sign-up'),
+      Uri.parse(RouterApi.signUp),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -327,7 +320,7 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
     String email = data['email'];
        updateDeviceData(deviceData);
     final response = await http.post(
-      Uri.parse('${url}/auth/sign-up'),
+      Uri.parse(RouterApi.signUp),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

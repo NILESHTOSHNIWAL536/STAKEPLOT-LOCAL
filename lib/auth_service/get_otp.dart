@@ -4,11 +4,12 @@ import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart'
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import '../../Utils/snackBar.dart';
+import '../routes.dart';
 import 'force_logout.dart';
 
 class OtpService {
   static void getOTP(context, String name, String email) async {
-    var response = await postDataApiCallwithOutSharedPref('${url}/otp/send', {
+    var response = await postDataApiCallwithOutSharedPref(RouterApi.sendOtp, {
       'email': email,
       'name': name,
     });
@@ -57,7 +58,7 @@ class OtpService {
       BuildContext context, String name, String email) async {
     try {
       var response = await postDataApiCallwithOutSharedPref(
-          '${url}/otp/resend-otp',
+          RouterApi.sendOtp,
           {'email': email, 'name': name, 'type': "deleteAccount"});
       if (getFlagOfResponse(response)) {
         snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
@@ -78,7 +79,7 @@ class OtpService {
       BuildContext context, String email, String deleteOtp) async {
     try {
       var response = await postDataApiCallwithOutSharedPref(
-          '${url}/otp/verify-otp', {'email': email, 'otp': deleteOtp});
+         RouterApi.verifyOtp, {'email': email, 'otp': deleteOtp});
       if (getFlagOfResponse(response)) {
         snackBarCalled(context, 'OTP verified successfully',
             Colors.black); // Adjusted message for clarity

@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/snackBar.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
+import '../routes.dart';
 import '../signInOut/userName.dart';
 
 class LoginService {
@@ -27,7 +28,7 @@ class LoginService {
     try {
       updateDeviceData(deviceData);
       var response =
-          await postDataApiCallwithOutSharedPref('${url}/auth/sign-in', {
+          await postDataApiCallwithOutSharedPref(RouterApi.login, {
         'email': emailController.text.toString(),
         'deviceInfo': deviceData,
         "otp": otp.toString(),
@@ -61,7 +62,7 @@ class LoginService {
   ) async {
     try {
       var response =
-          await postDataApiCallwithOutSharedPref('${url}/auth/verify', {
+          await postDataApiCallwithOutSharedPref(RouterApi.verify, {
         'email': emailController.text.toString(),
         // 'userpassword': emailController.text.toString(),
       });
@@ -132,7 +133,7 @@ class LoginService {
       context,
       MaterialPageRoute(
           builder: (context) => UserDetailsPage(data: {
-                "data": {"name": "", "dob": ""}
+                "data": {"name": "", "dob": "",'email':email}
               })),
     );
   }

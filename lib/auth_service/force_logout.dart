@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart'
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/routes.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
 
 class ForceLogout {
@@ -40,7 +41,7 @@ class ForceLogout {
          deviceData['deviceId']="Niklewnknwk";
       }
       var response =
-          await postDataApiCallwithOutSharedPref('${url}/auth/force-login', {
+          await postDataApiCallwithOutSharedPref(RouterApi.forceLogin, {
         "sessionId": sessionId,
         "email": email,
         "otp": otp.toString(),
