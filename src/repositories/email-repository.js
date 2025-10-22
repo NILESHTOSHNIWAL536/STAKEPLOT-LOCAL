@@ -27,14 +27,37 @@ async function getGoogleTokenByUserId(userId) {
 
 async function scrapeEmailsByBankId(scrapedEmails, userId) {
   try {
-   
-    const records = scrapedEmails.results.map((obj) => ({
-      userId,
-      ...obj,
-      logo:scrapedEmails.bankConfig.logo,
-      bankName: scrapedEmails.bankConfig.name,
-    }));
 
+     try{
+     if(scrapedEmails.results.length==0)return {};
+     }catch(e){}
+
+    // const records = scrapedEmails.results.map((obj) => ({
+    //   userId,
+    //   ...obj,
+    //   logo:scrapedEmails.bankConfig.logo,
+    //   bankName: scrapedEmails.bankConfig.name,
+    // }));
+
+const records = scrapedEmails.results.map((obj) => {
+  // Find bank in bankConfig array that matches obj.matched_bank (case-insensitive)
+  const matchedBank = scrapedEmails.bankConfig.find(
+    (b) => b.name.toLowerCase().includes(obj.matched_bank.toLowerCase())
+  );
+
+  // Fallback if no match is found
+  const bankInfo = matchedBank || { name: obj.matched_bank, logo: "", bankId: "" };
+
+  return {
+    ...obj,
+    userId,
+    logo: bankInfo.logo,
+    bankName: bankInfo.name,
+    bankId: bankInfo.bankId,
+  };
+});
+
+    console.log(records);
     await emailDB.model('scrapeResult').insertMany(records);
 
     if (scrapedEmails.bankConfig && scrapedEmails.bankConfig.bankId) {

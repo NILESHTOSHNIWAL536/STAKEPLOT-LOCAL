@@ -52,35 +52,63 @@ def sanitize_text(text: str) -> str:
     if not text:
         return ""
     # Replace all variants of rupee symbols
-    text = text.replace('₹', 'Rs').replace('â‚¹', 'Rs').replace('Rs.', 'Rs')
+    text = text.replace('â‚¹', 'Rs').replace('Ã¢â€šÂ¹', 'Rs').replace('Rs.', 'Rs')
     # Remove zero-width spaces and other hidden Unicode
     text = re.sub(r'[\u200b\u200c\u200d\ufeff]', '', text)
     # Decode and clean
     return text.encode("utf-8", "ignore").decode("utf-8", "ignore").strip()
 
-def belongs_to_bank(text: str, target_bank: str) -> bool:
+def normalize_bank_name(bank_name: str) -> str:
+    """Normalize bank name to match BANK_IDENTIFIERS keys"""
+    bank_lower = bank_name.lower().strip()
+    
+    # Map common variations to standardized names
+    bank_map = {
+        'hdfc bank': 'HDFC',
+        'hdfc': 'HDFC',
+        'icici bank': 'ICICI',
+        'icici': 'ICICI',
+        'axis bank': 'Axis',
+        'axis': 'Axis',
+        'sbi': 'SBI',
+        'sbi card': 'SBI',
+        'state bank': 'SBI',
+        'slice': 'Slice',
+        'slicebank': 'Slice',
+    }
+    
+    return bank_map.get(bank_lower, bank_name.upper())
+
+def belongs_to_any_bank(text: str, target_banks: list) -> tuple:
     """
-    Check if email belongs to the target bank.
-    This prevents Slice emails from being matched when searching for HDFC, etc.
+    Check if email belongs to any of the target banks.
+    Returns (matched_bank, belongs) tuple
     """
-    if not target_bank or target_bank == 'unknown':
-        return True
+    if not target_banks:
+        return (None, True)
     
     text_lower = text.lower()
-    bank_config = BANK_IDENTIFIERS.get(target_bank, {})
     
-    # Check for excluding keywords first (stronger negative signal)
-    exclude_keywords = bank_config.get('exclude_keywords', [])
-    for keyword in exclude_keywords:
-        if keyword in text_lower:
-            return False
+    for bank in target_banks:
+        normalized_bank = normalize_bank_name(bank)
+        bank_config = BANK_IDENTIFIERS.get(normalized_bank, {})
+        
+        # Check for excluding keywords first (stronger negative signal)
+        exclude_keywords = bank_config.get('exclude_keywords', [])
+        exclude_match = any(keyword in text_lower for keyword in exclude_keywords)
+        
+        # Check for include keywords
+        keywords = bank_config.get('keywords', [])
+        if keywords:
+            include_match = any(keyword in text_lower for keyword in keywords)
+        else:
+            include_match = True
+        
+        # If this bank matches and no exclude keywords found, return it
+        if include_match and not exclude_match:
+            return (normalized_bank, True)
     
-    # Check for include keywords
-    keywords = bank_config.get('keywords', [])
-    if keywords:
-        return any(keyword in text_lower for keyword in keywords)
-    
-    return True
+    return (None, False)
 
 def classify_transaction(text: str) -> str:
     """Classify transaction type"""
@@ -143,19 +171,19 @@ def extract_primary_amount(text: str, category: str) -> str:
     
     # Patterns for finding amounts with robust matching
     patterns = [
-        # Pattern 1: "transferred ₹1,660" or "transferred Rs 1660"
-        r'(?:transferred|disbursed|credited)\s+(?:Rs|rupees|₹)\s*[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
+        # Pattern 1: "transferred â‚¹1,660" or "transferred Rs 1660"
+        r'(?:transferred|disbursed|credited)\s+(?:Rs|rupees|â‚¹)\s*[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
         
         # Pattern 2: "Rs.1,660 debited/credited"
-        r'(?:Rs|rupees|₹)\s*[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?\s+(?:is\s+)?(?:debited|credited|charged|transferred)',
+        r'(?:Rs|rupees|â‚¹)\s*[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?\s+(?:is\s+)?(?:debited|credited|charged|transferred)',
         
         # Pattern 3: "Amount: Rs 1660" or "Amount: Rs.1,660"
-        r'(?:amount|total)[:\s]+(?:Rs|rupees|₹)[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
+        r'(?:amount|total)[:\s]+(?:Rs|rupees|â‚¹)[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
         
         # Pattern 4: Generic number after Rs/rupees
-        r'(?:Rs|rupees|₹)[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
+        r'(?:Rs|rupees|â‚¹)[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
         
-        r'(?:Rs|rupees|₹|INR)[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
+        r'(?:Rs|rupees|â‚¹|INR)[\s,]*(\d+)(?:[,\s]*(\d{3}))*(?:[.,](\d{2}))?',
     ]
     
     for pattern in patterns:
@@ -245,27 +273,37 @@ def is_financial_email(text: str) -> bool:
     count = sum(1 for keyword in financial_keywords if keyword in text_lower)
     return count >= 2
 
-def extract_details(text: str, user_bank: str = None):
-    """Extract transaction details from email text"""
+def extract_details(text: str, user_banks: list = None):
+    """Extract transaction details from email text for multiple banks"""
     details = {}
     clean_text = sanitize_text(text)
     
-    # Check if email belongs to the target bank
-    if user_bank and not belongs_to_bank(clean_text, user_bank):
+    # Normalize user_banks to handle various input formats
+    if user_banks is None:
+        user_banks = []
+    elif isinstance(user_banks, str):
+        user_banks = [user_banks]
+    
+    # Check if email belongs to any target bank
+    matched_bank, belongs = belongs_to_any_bank(clean_text, user_banks)
+    
+    if user_banks and not belongs:
         return {
             "category": "Other",
-            "bank": user_bank,
+            "banks_checked": user_banks,
+            "matched_bank": None,
             "date": datetime.now().strftime("%Y-%m-%d"),
             "confidence_score": 0,
             "skipped": True,
-            "reason": "Email does not belong to selected bank"
+            "reason": "Email does not belong to any selected bank"
         }
     
     # Check if it's a financial email
     if not is_financial_email(clean_text):
         return {
             "category": "Other",
-            "bank": user_bank if user_bank else "unknown",
+            "banks_checked": user_banks,
+            "matched_bank": matched_bank,
             "date": datetime.now().strftime("%Y-%m-%d"),
             "confidence_score": 0,
         }
@@ -273,7 +311,8 @@ def extract_details(text: str, user_bank: str = None):
     # Classify transaction
     category = classify_transaction(clean_text)
     details["category"] = category
-    details["bank"] = user_bank if user_bank else "unknown"
+    details["banks_checked"] = user_banks
+    details["matched_bank"] = matched_bank if matched_bank else "unknown"
     
     # ========================================
     # AMOUNT EXTRACTION
@@ -312,19 +351,26 @@ def extract_details(text: str, user_bank: str = None):
     
     return details
 
-def scrape_email(email, user_bank=None, pdf_password=None):
-    """Main email scraping function"""
+def scrape_email(email, user_banks=None, pdf_password=None):
+    """Main email scraping function supporting multiple banks"""
     subject = email.get("subject", "") or ""
     body = email.get("body", "") or ""
     
     # Combine all text
     full_text = f"{subject}\n\n{body}".strip()
     
+    # Normalize user_banks to handle various input formats
+    if user_banks is None:
+        user_banks = []
+    elif isinstance(user_banks, str):
+        user_banks = [user_banks]
+    
     # If no text, return empty result
     if not full_text or len(full_text) < 10:
         return {
             "category": "Other",
-            "bank": user_bank if user_bank else "unknown",
+            "banks_checked": user_banks,
+            "matched_bank": "unknown",
             "date": datetime.now().strftime("%Y-%m-%d"),
             "confidence_score": 0,
             "sources_processed": {
@@ -334,9 +380,9 @@ def scrape_email(email, user_bank=None, pdf_password=None):
         }
     
     # Extract details
-    details = extract_details(full_text, user_bank)
+    details = extract_details(full_text, user_banks)
     
-    # Skip if email doesn't belong to bank
+    # Skip if email doesn't belong to any bank
     if details.get("skipped"):
         return details
     
@@ -349,9 +395,9 @@ def scrape_email(email, user_bank=None, pdf_password=None):
         "password_error": None
     }
     
-    # Set bank if not found
-    if "bank" not in details or details["bank"] == "unknown":
-        details["bank"] = user_bank if user_bank else "unknown"
+    # Set matched_bank if not found
+    if "matched_bank" not in details or details["matched_bank"] == "unknown":
+        details["matched_bank"] = details.get("matched_bank", "unknown")
     
     # Set date if not found
     if "date" not in details:
@@ -376,10 +422,10 @@ def scrape_email(email, user_bank=None, pdf_password=None):
 if __name__ == "__main__":
     try:
         email_data = json.load(sys.stdin)
-        user_bank = email_data.pop("user_bank", None)
+        user_banks = email_data.pop("user_bank", None)
         pdf_password = email_data.pop("pdf_password", None)
         
-        result = scrape_email(email_data, user_bank, pdf_password)
+        result = scrape_email(email_data, user_banks, pdf_password)
         print(json.dumps(result, indent=2, ensure_ascii=False))
         
     except json.JSONDecodeError as e:

@@ -21,9 +21,9 @@ async function generateAccessToken(req, res) {
 // Scrape emails based on bank id
 async function scrapeEmailsByBankId(req, res) {
   try {
-    const userId = req.user._id;
-    const { bankId } = req.params;
-    const response = await EmailScrapingService.scrapeEmailsByBankId(userId, bankId);
+    const userId ="68789199baffb2d2af8be193"; //req.user._id;
+    const { bankIds } = req.body;
+    const response = await EmailScrapingService.scrapeEmailsByBankId(userId, bankIds);
     SuccessResponse.data = response;
     return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {

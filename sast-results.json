@@ -1,0 +1,74 @@
+{
+  "version": "1.139.0",
+  "results": [],
+  "errors": [],
+  "paths": {
+    "scanned": [
+      "src\\app.js",
+      "src\\config\\index.js",
+      "src\\config\\logger-config.js",
+      "src\\config\\redis-config.js",
+      "src\\config\\server-config.js",
+      "src\\controllers\\email-controller.js",
+      "src\\dbConnections.js",
+      "src\\index.js",
+      "src\\logger.js",
+      "src\\middlewares\\auth.js",
+      "src\\models\\google-auth.js",
+      "src\\models\\index-model.js",
+      "src\\models\\scrape-result.js",
+      "src\\models\\session-model.js",
+      "src\\models\\user-model.js",
+      "src\\repositories\\email-repository.js",
+      "src\\routes\\email-routes.js",
+      "src\\services\\email-service.js",
+      "src\\utils\\api-response.js",
+      "src\\utils\\app-error.js",
+      "src\\utils\\credit-cards.json",
+      "src\\utils\\encryption.js",
+      "src\\utils\\scraping-helper\\email-scraper.js",
+      "src\\utils\\scraping-helper\\extract-with-python.js",
+      "src\\utils\\scraping-helper\\get-time-date.js",
+      "src\\utils\\scraping-helper\\scraping-helper.js"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.234818696975708,
+    "profiling_times": { "config_time": 1.3390312194824219, "core_time": 0.8035190105438232, "ignores_time": 0.0, "total_time": 2.142550230026245 },
+    "parsing_time": { "total_time": 0.0, "per_file_time": { "mean": 0.0, "std_dev": 0.0 }, "very_slow_stats": { "time_ratio": 0.0, "count_ratio": 0.0 }, "very_slow_files": [] },
+    "scanning_time": {
+      "total_time": 0.19897842407226563,
+      "per_file_time": { "mean": 0.0038265081552358777, "std_dev": 5.281529759963093e-5 },
+      "very_slow_stats": { "time_ratio": 0.0, "count_ratio": 0.0 },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0.0,
+      "per_file_and_rule_time": { "mean": 0.0, "std_dev": 0.0 },
+      "very_slow_stats": { "time_ratio": 0.0, "count_ratio": 0.0 },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": { "mean": 0.0, "std_dev": 0.0 },
+      "very_slow_stats": { "time_ratio": 0.0, "count_ratio": 0.0 },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 0.9529837251356239,
+      "rules_selected_ratio": 0.059674502712477394,
+      "rules_matched_ratio": 0.059674502712477394
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 255516288
+  },
+  "engine_requested": "OSS",
+  "interfile_languages_used": [],
+  "skipped_rules": []
+}

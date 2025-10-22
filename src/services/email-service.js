@@ -32,13 +32,13 @@ async function generateAccessToken(userId, idToken) {
 }
 
 // scrape emails based on bank id
-async function scrapeEmailsByBankId(userId, bankId) {
+async function scrapeEmailsByBankId(userId, bankIds) {
   // Retrieve the stored Google token, and decrypt the refresh token
   const response = await EmailRepository.getGoogleTokenByUserId(userId);
   const encryptedRefreshToken = response.refreshToken;
   const decryptedRefreshToken = await decryptToken(encryptedRefreshToken.encryptedData, encryptedRefreshToken.iv, encryptedRefreshToken.authTag);
   // based on the bank id, get the credit card details
-  const creditCard = creditCards.find((card) => card.bankId === bankId);
+  const creditCard = creditCards.filter(card => bankIds.includes(card.bankId));
   // create Gmail client
   oauth2Client.setCredentials({ refresh_token: decryptedRefreshToken });
   const gmailClient = google.gmail({ version: 'v1', auth: oauth2Client });

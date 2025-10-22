@@ -1,6 +1,6 @@
 const { spawn } = require('child_process');
 
-function extractWithPython(mail, bankname) {
+function extractWithPython(mail, bankFilters) {
   return new Promise((resolve, reject) => {
     const py = spawn('python', ['scrapemail.py']);
     let data = '';
@@ -15,8 +15,9 @@ function extractWithPython(mail, bankname) {
       attachments: mail.attachments || [],
       messageId: mail.messageId || '',
       from: mail.from || '',
-      user_bank: bankname || 'unknown'  // FIX 2: Use user_bank instead of bankname
+      user_bank: bankFilters || []  // FIX 2: Use user_bank instead of bankname
     };
+
 
     // ========================================
     // FIX 3: Add data validation before sending

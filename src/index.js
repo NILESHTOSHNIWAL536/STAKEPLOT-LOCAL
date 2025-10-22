@@ -17,6 +17,7 @@ const startServer = async () => {
     // getModels();
   
     await RedisClient.connect();
+    require("./cron-jobs/index");
   } catch (error) {
     console.error('Server Start Error:', error);
     process.exit(1);

@@ -4,13 +4,13 @@ const EmailController = require('../controllers/email-controller');
 const router = express.Router();
 router.use(express.json());
 
-router.use(protect);
+//  router.use(protect);
 
 // generate access token and store it in the googleToken document
 router.post('/generate-token', EmailController.generateAccessToken);
 
 // read emails from user's gmail account based on the bank id provided
-router.post('/scrape/:bankId', EmailController.scrapeEmailsByBankId);
+router.post('/scrape/', EmailController.scrapeEmailsByBankId);
 
 // get all the scraped emails from the emailScrape collection
 router.get('/', EmailController.getScrapedEmails);
