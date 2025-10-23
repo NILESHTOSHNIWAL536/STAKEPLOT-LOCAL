@@ -20,20 +20,28 @@ async function getGoogleTokenByUserId(userId) {
   return await emailDB.model('googleAuth').findOne({ userId: { $eq: new mongoose.Types.ObjectId(userId) } });
 }
 
-// async function scrapeEmailsByBankId(scrapedEmails,userId)
-// {
-//   return await emailDB.model('scrapeResult').insertMany(scrapedEmails.results);
-// }
-
 async function scrapeEmailsByBankId(scrapedEmails, userId) {
   try {
-   
-    const records = scrapedEmails.results.map((obj) => ({
-      userId,
-      ...obj,
-      logo:scrapedEmails.bankConfig.logo,
-      bankName: scrapedEmails.bankConfig.name,
-    }));
+    if (!Array.isArray(scrapedEmails?.results) || scrapedEmails.results.length === 0) {
+      return {};
+    }
+
+    const records = scrapedEmails.results
+      .filter((obj) => obj.matched_bank != null)
+      .map((obj) => {
+        const matchedBank = scrapedEmails.bankConfig.find((b) => b.name.toLowerCase().includes(obj.matched_bank.toLowerCase()));
+
+        // Fallback if no match is found
+        const bankInfo = matchedBank || { name: obj.matched_bank, logo: '', bankId: '' };
+
+        return {
+          ...obj,
+          userId,
+          logo: bankInfo.logo,
+          bankName: bankInfo.name,
+          bankId: bankInfo.bankId,
+        };
+      });
 
     await emailDB.model('scrapeResult').insertMany(records);
 
@@ -85,7 +93,6 @@ async function getDecryptedRefreshToken(userId) {
   return decryptToken(user.refreshToken.encryptedData, user.refreshToken.iv, user.refreshToken.authTag);
 }
 
-
 module.exports = {
   getGoogleTokenByUserId,
   upsertGoogleToken,
@@ -93,5 +100,5 @@ module.exports = {
   getUnlinkedCreditCards,
   deleteGoogleTokenByUserId,
   scrapeEmailsByBankId,
-  getDecryptedRefreshToken
+  getDecryptedRefreshToken,
 };

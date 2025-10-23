@@ -14,9 +14,10 @@ const scrapeResultSchema = new mongoose.Schema(
     total_due: { type: String, default: '' },
     mode: { type: String, default: '' },
     type: { type: String, default: '' },
-    bank: { type: String, default: '' },
+    matched_bank: { type: String, default: '' },
     logo: { type: String, default: '' },
     bankName: { type: String, default: '' },
+    banks_checked: { type: [], default: '' },
   },
   { timestamps: true }
 );

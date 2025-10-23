@@ -10,7 +10,7 @@ router.use(protect);
 router.post('/generate-token', EmailController.generateAccessToken);
 
 // read emails from user's gmail account based on the bank id provided
-router.post('/scrape/:bankId', EmailController.scrapeEmailsByBankId);
+router.post('/scrape/', EmailController.scrapeEmailsByBankId);
 
 // get all the scraped emails from the emailScrape collection
 router.get('/', EmailController.getScrapedEmails);
@@ -19,6 +19,6 @@ router.get('/', EmailController.getScrapedEmails);
 router.get('/get-unLinked-cards', EmailController.getUnlinkedCreditCards);
 
 // remove the access token from the googleToken document
-router.delete('/', EmailController.removeAccessToken);
+router.delete('/remove-access', EmailController.removeAccessToken);
 
 module.exports = router;

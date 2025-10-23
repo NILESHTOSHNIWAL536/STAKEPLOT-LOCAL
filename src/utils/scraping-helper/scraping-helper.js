@@ -97,8 +97,7 @@ const extractEmailBody = async (gmail, msg, payload) => {
       body = decodeBase64(payload.body?.data || '');
     }
   } catch (e) {
-    console.log(e);
-  }
+   }
 
   return { body: body, attachments: attachments };
 };

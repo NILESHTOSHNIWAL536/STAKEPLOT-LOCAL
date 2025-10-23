@@ -1,26 +1,21 @@
 const { performance } = require('perf_hooks');
-const {getNinetyDaysAgo,getNHoursAgo } = require('./get-time-date');
-const {extractWithPython } = require('./extract-with-python');
+const { getNinetyDaysAgo, getNHoursAgo } = require('./get-time-date');
+const { extractWithPython } = require('./extract-with-python');
 const EmailServiceHelper = require('./scraping-helper');
+const fs = require('fs');
 
 async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
-
-  const bankConfig = creditCard;
   const startTime = performance.now();
   const gmail = gmailClient;
-  const afterDate = mode === 'initial' ? getNinetyDaysAgo(2) : getNHoursAgo(12);
+  const afterDate = mode === 'initial' ? getNinetyDaysAgo(45) : getNHoursAgo(12);
 
   // fetch bank config
-
+  const bankConfig = creditCard;
   let bankFilters = [];
-  if (bankConfig.name) {
-    bankFilters = [bankConfig.name];
-  } else {
-    bankFilters = ['HDFC', 'ICICI', 'Axis', 'Slice', 'SBI'];
-  }
-  bankFilters = bankFilters.map((f) => f.toString().toLowerCase().trim());
-   console.log(bankFilters);
-  // Collect mails (raw) that match From header
+
+  bankConfig.map((element) => {
+    bankFilters.push(element.name.toString().toLowerCase().trim());
+  });
   const mailsToProcess = [];
   let pageToken = null;
   let pageCount = 0;
@@ -42,7 +37,6 @@ async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
           const fromHeader = (headers.find((h) => h.name === 'From') || {}).value || '';
           const subjectHeader = (headers.find((h) => h.name === 'Subject') || {}).value || '';
           const fromLower = fromHeader.toLowerCase();
-          console.log('From:', fromLower, ' | Subject:', subjectHeader);
           const subjectLower = subjectHeader.toLowerCase();
           const matches = bankFilters.some((f) => f && fromLower.includes(f.toLowerCase()));
           const matches2 = bankFilters.some((f) => f && subjectLower.includes(f.toLowerCase()));
@@ -99,10 +93,35 @@ async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
   }
 
   let results = [];
-  console.log("mailsToProcess");
-  console.log(mailsToProcess.length);
-  for (const [index, mail] of mailsToProcess.entries()) {
-    const extracted = await extractWithPython(mail, bankConfig.name);
+
+  let output = '';
+  const mailsToProcess2 = [];
+  // for (let i = 0; i < mailsToProcess.length; i++) {
+  //   const body = mailsToProcess[i].body;
+  //   // ✅ Check if body contains the bank name
+  //   if (body && body.includes(bankConfig.name)) {
+  //     mailsToProcess2.push(mailsToProcess[i]); // Add the full mail object
+  //     output += body + "\n";
+  //   }
+  // }
+
+  for (let i = 0; i < mailsToProcess.length; i++) {
+    const body = mailsToProcess[i].body;
+
+    if (body) {
+      // ✅ Check if the mail body contains any bank name from the array
+      const hasBank = bankConfig.some((bank) => body.toLowerCase().includes(bank.name.toLowerCase()));
+
+      if (hasBank) {
+        mailsToProcess2.push(mailsToProcess[i]); // Add the full mail object
+        output += body + '\n';
+      }
+    }
+  }
+
+  fs.writeFileSync('output.txt', output, 'utf-8');
+  for (const [index, mail] of mailsToProcess2.entries()) {
+    const extracted = await extractWithPython(mail, bankFilters);
     results.push(extracted);
   }
   return { results, bankConfig };

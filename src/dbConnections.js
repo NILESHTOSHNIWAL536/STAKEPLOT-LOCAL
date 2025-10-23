@@ -18,7 +18,6 @@ const Logger = require('./logger');
 //     useUnifiedTopology: true,
 //   });
 
-//   Logger.info('Connected to both databases');
 //   return { mainDB, emailDB };
 // };
 

@@ -37,7 +37,6 @@ const protect = async (req, res, next) => {
       req.user.token = token;
       return next();
     } catch (err) {
-      console.log(err);
       if (err.name === 'TokenExpiredError') {
         ErrorResponse.error = 'TokenExpiredError';
         return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
@@ -46,11 +45,9 @@ const protect = async (req, res, next) => {
         ErrorResponse.error = 'JsonWebTokenError';
         return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
       }
-      //  console.log(err);
       return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
     }
   } catch (error) {
-    console.log(error);
     ErrorResponse.error = 'AuthenticationError';
     return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
   }
