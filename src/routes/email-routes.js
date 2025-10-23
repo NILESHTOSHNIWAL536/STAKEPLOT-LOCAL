@@ -4,7 +4,7 @@ const EmailController = require('../controllers/email-controller');
 const router = express.Router();
 router.use(express.json());
 
-//  router.use(protect);
+router.use(protect);
 
 // generate access token and store it in the googleToken document
 router.post('/generate-token', EmailController.generateAccessToken);

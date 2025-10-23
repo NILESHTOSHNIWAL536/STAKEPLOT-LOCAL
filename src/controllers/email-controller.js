@@ -7,12 +7,10 @@ async function generateAccessToken(req, res) {
   try {
     const userId = req.user._id;
     const { idToken } = req.body;
-    console.log(idToken);
     const result = await EmailScrapingService.generateAccessToken(userId, idToken);
     SuccessResponse.data = result;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    console.log(error);
     ErrorResponse.error = error.response.data.error || error;
     return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
   }
@@ -21,13 +19,12 @@ async function generateAccessToken(req, res) {
 // Scrape emails based on bank id
 async function scrapeEmailsByBankId(req, res) {
   try {
-    const userId ="68789199baffb2d2af8be193"; //req.user._id;
+    const userId =req.user._id;
     const { bankIds } = req.body;
     const response = await EmailScrapingService.scrapeEmailsByBankId(userId, bankIds);
     SuccessResponse.data = response;
     return res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
-    console.log(error);
     ErrorResponse.error = error;
     return res.status(error.statusCode).json(ErrorResponse);
   }
@@ -50,14 +47,11 @@ const getScrapedEmails = async (req, res) => {
 
 const getUnlinkedCreditCards = async (req, res) => {
   try {
-    console.log("userId");
     const userId = req.user._id;
-    console.log(userId);
     const response = await EmailScrapingService.getUnlinkedCreditCards(userId);
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
-    console.log(error);
     ErrorResponse.error = error;
     return res.status(error.statusCode).json(ErrorResponse);
   }

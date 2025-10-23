@@ -1,8 +1,6 @@
 const Queue = require('bull');
 const EmailScrapingService = require('../email-service');
 
-
-
 // Load Redis config from .env or fallback
 const REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
 const REDIS_PORT = process.env.REDIS_PORT || 6379;
@@ -14,22 +12,17 @@ const CreditCardQueue = new Queue('email-scraping', {
     host: REDIS_HOST,
     port: REDIS_PORT,
     password: REDIS_PASSWORD,
-  }
+  },
 });
 
-CreditCardQueue.process(async (job) => 
-{
-  const { userId,bankIds } = job.data;
+CreditCardQueue.process(async (job) => {
+  const { userId, bankIds } = job.data;
   try {
-     console.log("userId,bankIds");
-     console.log({userId,bankIds});
-     new Promise((resolve) => setTimeout(resolve, 4000));
-
-    //  await EmailScrapingService.scrapeEmailsByBankId(userId, bankIds);
+    //  new Promise((resolve) => setTimeout(resolve, 4000));
+    await EmailScrapingService.scrapeEmailsByBankId(userId, bankIds);
   } catch (error) {
     console.error(`Error processing user ${userId}:`, error);
   }
-
 });
 
 module.exports = CreditCardQueue;
