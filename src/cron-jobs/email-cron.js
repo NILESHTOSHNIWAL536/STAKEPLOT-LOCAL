@@ -1,8 +1,8 @@
 const cron = require('node-cron');
 const CreditCardQueue=require("../services/bull-queue-service/credit-card-transaction-queue");
 
-// cron.schedule('0 0 */12 * * *', async () => {
-cron.schedule('* * * * * *', async () => {
+cron.schedule('0 0 */12 * * *', async () => {
+// cron.schedule('* * * * * *', async () => {
 
   try {
     // Step 1: Find users having at least one linked credit card bank
