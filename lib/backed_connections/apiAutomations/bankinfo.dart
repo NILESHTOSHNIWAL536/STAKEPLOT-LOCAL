@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd_with_token.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
@@ -21,7 +22,63 @@ RxMap bankImagemap = {}.obs;
 Future<void> getBankAccounts() async {
   var response = await getDataApiCall("${url}/transactionauto/get-banks-linked/");
   if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
+    storeDataLocal(response);
+    // var his = jsonDecode(response.body);
+    // consentAndHandleDetails.clear();
+    // bankAccountLinkedList.clear();
+    // FipIdsConnected.clear();
+    // his['data'].forEach((bank) {
+    //   if (bank['consentId'] != null && bank['consendHandleId'] != null) {
+    //     if (!consentAndHandleDetails.any((item) =>
+    //         item['consentId'] == bank['consentId'] &&
+    //         item['consendHandleId'] == bank['consendHandleId'])) {
+    //       consentAndHandleDetails.add({
+    //         "consentId": bank['consentId'],
+    //         "consendHandleId": bank['consendHandleId'],
+    //         "sessionId": bank['sessionId'],
+    //         "custId": bank['custId'],
+    //         'lastFetch': bank['accounts'][0]['lastFetch'] ?? "",
+    //         'nextFetch': bank['accounts'][0]['nextFetch'] ?? "",
+    //         'fetchCount': bank['accounts'][0]['fetchCount'] ?? "0",
+    //         'accountId': bank['accounts'][0]['accountId'] ?? "accountId",
+    //         'bankName': bank['bankName'] ?? "BankName",
+    //         'fipId': bank['fipId'] ?? "fipId",
+    //       });
+    //     }
+    //   }
+    //   bank['accounts'].forEach((account) {
+    //     var profile= account['profile']?['holder'] ?? {};
+    //     if (accountId.value == "") accountId.value = account['accountId'];
+    //     FipIdsConnected.add(account['maskedAccNumber']);
+    //     bankAccountLinkedList.add({
+    //       'bankId': bank['bankId'],
+    //       'bankName': bank['bankName'],
+    //       'bankLogo': bank['bankLogo'] ?? bankImage,
+    //       'fipId': bank['fipId'],
+    //       'accountId': account['accountId'],
+    //       'maskedAccNumber': account['maskedAccNumber'],
+    //       'type': account['type'],
+    //       'currentBalance': account['currentBalance'],
+    //       'lastFetch': account['lastFetch'] ?? "",
+    //       'nextFetch': account['nextFetch'] ?? "",
+    //       'fetchCount': account['fetchCount'] ?? "0",
+    //       'name':  profile['name'] ?? "0",
+    //       'pan': profile['pan'] ?? "0",
+    //       'dob':    profile['dob'] ?? "0",
+    //       'mobile': profile['mobile'] ?? "0",
+    //       'address': profile['address'] ?? "0",
+    //       'ifscCode': account['ifscCode'] ?? "0",
+    //       'branchAddress': account['branchAddress'] ?? "0",
+    //     });
+    //   });
+    // });
+  }
+  addBankApiCall();
+  BankStorage.cacheBankDataLocally();
+}
+
+void storeDataLocal(response){
+   var his = jsonDecode(response.body);
     consentAndHandleDetails.clear();
     bankAccountLinkedList.clear();
     FipIdsConnected.clear();
@@ -70,13 +127,11 @@ Future<void> getBankAccounts() async {
         });
       });
     });
-  }
-  addBankApiCall();
-  BankStorage.cacheBankDataLocally();
 }
 
-void addBankApiCall() {
-  if (bankAccountLinkedList.isNotEmpty)
+
+void storeBankDataApi(){
+   if (bankAccountLinkedList.isNotEmpty)
    {
     isBankLinked.value = true;
     LastFetchDate.value = bankAccountLinkedList[0]['lastFetch'].toString();
@@ -87,6 +142,10 @@ void addBankApiCall() {
   }
   loadBanks.value = false;
   loadBalance.value = !loadBalance.value;
+}
+
+void addBankApiCall() {
+  storeBankDataApi();
   getFipAccountInfo();
 }
 
@@ -139,7 +198,7 @@ void calledFunctionToFetchData(context) async {
   }
 }
 
-Future<void> getFipAccountInfo() async
+Future<void> getFipAccountInfo([bool testing=false,String token=""]) async
 {
    try{ 
    List<String> fipIds=[];
@@ -149,17 +208,21 @@ Future<void> getFipAccountInfo() async
       bankNameMap[d["fipId"]]=d['bankName'];
    });
 
-
+     print("fipIds------------------------");
+     print(fipIds);
     if(fipIds.isEmpty)return;
     String urlPath=url+"/finvu/fip-details/";
     var body={
        "fipIds":fipIds
     };
-    var response=await postDataApiCall(urlPath,body);
-
+ 
+    var response=  (!testing?await postDataApiCall(urlPath,body): await postDataApiCallToken(urlPath, body, token));
+      print("Response Status Code:");
+      // printData(response);
     if(getFlagOfResponse(response))
     {
         var data=jsonDecode(response.body)['data'];
+  
         fipsMetricList.clear();
         List<FipsMetric> list = (data as List) .map((item) => FipsMetric.fromJson(item,bankNameMap[item['fip_id']]??"")).toList();
        
@@ -171,6 +234,7 @@ Future<void> getFipAccountInfo() async
     }
    }catch(e)
    {
+       print("Error in getFipAccountInfo: $e");
         FipsMetricLocalStorage.loadFipsMetricsFromHive();
    }
 

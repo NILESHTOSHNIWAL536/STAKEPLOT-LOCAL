@@ -46,7 +46,9 @@ Future<void> LinkBankData(context) async {
       pushnameToRoute(context,AddCreditCardBankScreen());
       return;
     }
-    var response = await postDataApiCall("${RouterApi.scrape}/${selectedBankId.value}",{});
+    var response = await postDataApiCall("${RouterApi.scrape}/",{
+         "bankIds":[selectedBankId.value]
+    });
 
     if (getFlagOfResponse(response)) 
     {
