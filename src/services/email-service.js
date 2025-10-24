@@ -5,6 +5,8 @@ const { ServerConfig, RedisClient } = require('../config/index');
 const EmailRepository = require('../repositories/email-repository');
 const creditCards = require('../utils/credit-cards.json');
 const emailScraperHelper = require('../utils/scraping-helper/email-scraper');
+const AppError = require('../utils/app-error');
+const { StatusCodes } = require('http-status-codes');
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
@@ -39,6 +41,10 @@ async function scrapeEmailsByBankId(userId, bankIds) {
   const decryptedRefreshToken = await decryptToken(encryptedRefreshToken.encryptedData, encryptedRefreshToken.iv, encryptedRefreshToken.authTag);
   // based on the bank id, get the credit card details
   const creditCard = creditCards.filter(card => bankIds.includes(card.bankId));
+
+  if(creditCard.length===0){
+    throw new AppError('No credit card found for the provided bank IDs',StatusCodes.BAD_REQUEST);
+  }
   // create Gmail client
   oauth2Client.setCredentials({ refresh_token: decryptedRefreshToken });
   const gmailClient = google.gmail({ version: 'v1', auth: oauth2Client });
