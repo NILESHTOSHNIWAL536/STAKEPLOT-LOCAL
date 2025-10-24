@@ -40,9 +40,7 @@ async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
           const subjectLower = subjectHeader.toLowerCase();
           const matches = bankFilters.some((f) => f && fromLower.includes(f.toLowerCase()));
           const matches2 = bankFilters.some((f) => f && subjectLower.includes(f.toLowerCase()));
-          // if (!matches && !matches2) return null;
-
-          // Get body + attachments
+          // if (!matches && !matches2) return null;          // Get body + attachments
           const { body, attachments } = await EmailServiceHelper.extractEmailBody(gmail, msg, meta.data.payload);
 
           // 🔑 Fetch attachments in parallel
@@ -118,7 +116,7 @@ async function emailScraperHelper(gmailClient, creditCard, mode = 'initial') {
       }
     }
   }
-
+    
   fs.writeFileSync('output.txt', output, 'utf-8');
   for (const [index, mail] of mailsToProcess2.entries()) {
     const extracted = await extractWithPython(mail, bankFilters);

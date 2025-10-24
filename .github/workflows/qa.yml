@@ -1,0 +1,56 @@
+name: QA CI/CD
+
+on:
+  push:
+    branches:
+      - qa # Trigger workflow on push to qa branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Install Docker & AWS CLI
+      - name: Install Docker & AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io awscli
+
+      # 3️⃣ Login to AWS ECR
+      - name: Login to ECR
+        env:
+          AWS_REGION: ap-south-1
+        run: |
+          aws ecr get-login-password --region $AWS_REGION \
+          | docker login --username AWS --password-stdin 058264382454.dkr.ecr.ap-south-1.amazonaws.com
+
+      # 4️⃣ Build Docker image for amd64
+      - name: Build Docker image (amd64)
+        run: |
+          docker build --platform linux/amd64 -t email-service:latest .
+
+      # 5️⃣ Tag & push to ECR
+      - name: Tag and push
+        run: |
+          docker tag email-service:latest 058264382454.dkr.ecr.ap-south-1.amazonaws.com/email-service:latest
+          docker push 058264382454.dkr.ecr.ap-south-1.amazonaws.com/email-service:latest
+
+      # 6️⃣ SSH to EC2 and deploy
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }} # Private key for EC2 SSH
+          port: 22
+          script: |
+            # Navigate to deployment folder
+            cd /home/ubuntu/devops-tools/
+            # Pull latest image and restart container
+            ./docker-control.sh down email-service
+
+            ./docker-control.sh up email-service
