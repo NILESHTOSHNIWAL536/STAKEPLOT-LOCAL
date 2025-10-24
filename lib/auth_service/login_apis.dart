@@ -14,11 +14,48 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/snackBar.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
+import '../Utils/signUp.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
+import '../backed_connections/googlesignin/credentials.dart';
 import '../routes.dart';
 import '../signInOut/userName.dart';
 
 class LoginService {
+
+  static  Future<void> signUp(
+      context, Map<String, dynamic> data, String avatarUrl) async {
+    String name = data['name'];
+    String email = data['email'];
+      updateDeviceData(deviceData);
+      final response= await postDataApiCall(RouterApi.signUp, {
+         'name': name,
+         'email': email,
+         'authorizationKey':Credentials.Sign_Up_Key,
+         'deviceInfo':deviceData
+       });
+
+    try {
+      var data2 = jsonDecode(response.body);
+      bool boolvar = data2['success'];
+
+      acceptReset.value = false;
+      if (!boolvar) {
+        snackBarCalledfail(
+            context, data2['error']['explanation'], Colors.red);
+        return;
+      }
+      final body = jsonDecode(response.body);
+
+      String accessToken = body['data'];
+      final SharedPreferences _pref = await SharedPreferences.getInstance();
+      _pref.setString("accessToken", "Bearer " + accessToken);
+      clearStack(context);
+      Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
+    } catch (e) {
+      snackBarCalledfail(context, SignupData().errorInvalidOtp, Colors.red);
+    }
+  }
+  
   static Future<void> loginUser({
     required TextEditingController emailController,
     required TextEditingController passwordController,

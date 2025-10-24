@@ -132,6 +132,43 @@ class OtpService {
       return false;
   }
 
+  // static Future<bool> verifyOTPForLoginTesting(String email,
+  //      String otp, dynamic loginResponse, bool isForcedLogin,
+  //     {bool isNewUser = false}) async {
+  //   try {
+  //     if(isNewUser){
+
+  //       bool verify=await  OtpService.verifyDeleteOTP(context, email, otp);
+
+  //       if(verify)LoginService.pushToRegister(context, email);
+
+  //     }
+  //     else if (isForcedLogin)
+  //      {
+  //         ForceLogout.forceLogoutUser(
+  //           sessionId: loginResponse['existingSessionId'],
+  //           email: email,
+  //           context: context,
+  //           existingDeviceName: "",
+  //           otp: otp
+  //         );
+  //     } else
+  //      {
+  //       LoginService.loginUser(
+  //        emailController:  TextEditingController(text: email),
+  //        passwordController:  TextEditingController(
+  //             text:
+  //                 password), // Password not available, adjust backend if needed
+  //        context:  context,
+  //         otp: otp
+  //       );
+  //     }
+
+  //   } catch(error){}
+
+  //     return false;
+  // }
+
 //   static Future<bool> verifyOTPForLogin2(BuildContext context, String email,
 //       String password, String otp, dynamic loginResponse, bool isForcedLogin,
 //       {bool isNewUser = false}) async {

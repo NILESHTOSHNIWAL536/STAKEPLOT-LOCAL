@@ -24,10 +24,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/forgot.dart';
-
 import 'package:flutter_application_code_stakeplot/loginservices/forgot.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/signin.dart';
-import 'package:flutter_application_code_stakeplot/loginservices/signup.dart';
 import 'Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'backed_connections/apis_connect.dart';
@@ -65,9 +63,7 @@ class RouterApi
 var routes =
  {  
       '/splash': (context) =>  const SplashScreen(),   
-      // '/': (context) =>  ResponsiveLoginScreen(),   
       '/': (context) =>  LoginScreen(),   
-      '/signup': (context) => SignUpScreen(),  
       '/forgot': (context) => ForgotPasswordScreen(),  
       '/home': (context) => HomePage(),  
       '/Notifications': (context) => Notifications(),  
