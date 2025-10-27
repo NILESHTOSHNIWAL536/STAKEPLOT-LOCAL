@@ -1,9 +1,9 @@
-name: QA CI/CD
+name: PROD CI/CD
 
 on:
   push:
     branches:
-      - qa
+      - prod
 
 jobs:
   build-and-deploy:
@@ -23,15 +23,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build, tag, and push Docker image
-        env:
-          ECR_REGISTRY: 058264382454.dkr.ecr.ap-south-1.amazonaws.com
-          ECR_REPOSITORY: email-service
-        run: |
-          docker build --platform linux/amd64 -t $ECR_REPOSITORY:latest .
-          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v0.1.7
