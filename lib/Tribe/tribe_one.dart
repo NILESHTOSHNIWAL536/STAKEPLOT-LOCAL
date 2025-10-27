@@ -22,6 +22,8 @@ import 'package:http/http.dart' as http;
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 
+import "../routers_api.dart";
+
 RxBool toggle = false.obs;
 RxList<Comments> commentList = <Comments>[].obs;
 RxList<int> indexArray = <int>[].obs;
@@ -147,15 +149,7 @@ class _TribeHomeState extends State<TribeUnique> {
   }
 
   void getInfo() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/user/info'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
+   var response=await getDataApiCall(UserRoutes.getInfo);
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];

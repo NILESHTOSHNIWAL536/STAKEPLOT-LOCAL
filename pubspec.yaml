@@ -89,14 +89,12 @@ dependencies:
   cupertino_icons: ^1.0.8
   coupon_uikit: ^0.2.1
   hive: ^2.2.3
-  hive_flutter: ^1.1.0
   carousel_slider: ^5.1.1
   keyboard_actions: ^4.2.0
   connectivity_plus: ^6.0.5
   internet_connection_checker: ^1.0.0+1
   share_plus: ^11.1.0
   flutter_dotenv: ^6.0.0  
-  mockito: ^5.4.4
 
 dev_dependencies:
   # flutter_test:

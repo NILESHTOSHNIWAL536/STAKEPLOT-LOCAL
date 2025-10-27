@@ -23,8 +23,6 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransactio
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/forgot.dart';
-import 'package:flutter_application_code_stakeplot/loginservices/forgot.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/signin.dart';
 import 'Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
@@ -36,35 +34,12 @@ import 'finances_screen/index_finances.dart';
 import 'onboarding_screens/onboarding_screen.dart';
 
 
-class RouterApi
-{
-   static final String _urlPath=url;
-   static final String _emailPath=EmailUrl;
-   
-   static String login="$_urlPath/auth/sign-in";
-   static String verify="$_urlPath/auth/verify";
-   static String forceLogin="$_urlPath/auth/force-login";
-   static String appleAuth="$_urlPath/auth/apple-auth";
-   static String googleAuth="$_urlPath/auth/google-auth";
-   static String signUp="$_urlPath/auth/sign-up";
-   static String sendOtp="$_urlPath/otp/send";
-   static String resendOtp="$_urlPath/otp/resend-otp";
-   static String verifyOtp="$_urlPath/otp/verify-otp";
-
-   //generate-token Email part
-   static String generateToken="$_emailPath/generate-token";
-   static String getUnLinkedCards="$_emailPath/get-unLinked-cards";
-   static String revokeAccessToken="$_emailPath/remove-access";
-   static String scrape="$_emailPath/scrape";
-   static String getCreditCardList="$_emailPath/";
-}
 
 
 var routes =
  {  
       '/splash': (context) =>  const SplashScreen(),   
       '/': (context) =>  LoginScreen(),   
-      '/forgot': (context) => ForgotPasswordScreen(),  
       '/home': (context) => HomePage(),  
       '/Notifications': (context) => Notifications(),  
       '/comment': (context) => Notifications(),  
@@ -85,7 +60,6 @@ var routes =
       '/TripCost':(context) => TripCost() ,
       '/VegNonveg':(context) => VegNonVegCalculator(),
       '/FetchTransaction':(context) => FetchTransaction() ,
-      '/ForgotPassword':(context) => ForgotPassword() ,
       '/OnboardingScreen':(context) => OnboardingScreen() ,
       '/editDetails':(context) => EditDetails() ,
       '/interestScreen':(context) => InterestSelectionScreen() ,

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/credentials.dart';
-import 'package:flutter_application_code_stakeplot/routes.dart';
+import 'package:flutter_application_code_stakeplot/routers_api.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:test/test.dart'; // NOT flutter_test
@@ -103,7 +103,7 @@ Future<void> sendOtp(String email, String name) async {
 Future<void> registerNewUser(String email, String name, String otp) async {
   print('--- Step 3: Verify OTP for New User ---');
   var response3 = await postDataApiCallwithOutSharedPref(
-      RouterApi.verifyOtp, {'email': email, 'otp': otp});
+      otpRoutes.verifyOtp, {'email': email, 'otp': otp});
 
   if (getFlagOfResponse(response3)) {
     print('--- Step 4: Register New User ---');

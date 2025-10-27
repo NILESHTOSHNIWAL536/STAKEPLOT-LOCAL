@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
-import 'package:flutter_application_code_stakeplot/routes.dart';
+import 'package:flutter_application_code_stakeplot/routers_api.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -30,6 +30,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   RxString usernameError = ''.obs;
+  RxBool fg=false.obs;
 
   @override
   void initState() {
@@ -91,7 +92,9 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
 
     flag.value = true;
+    fg.value=true;
     await storeData2(context, updatedData, 'assets/avatar/FRAME-2.svg');
+    fg.value=false;
     flag.value = false;
   }
 
@@ -200,7 +203,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     child: InkWell(
                       onTap: submitDetails,
                       child: Obx(() => Center(
-                            child: !flag.value
+                            child: !flag.value && fg.value
                                 ? Spinner(
                                     size: 20,
                                     color: Colorcodes.white,

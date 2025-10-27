@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/routers_api.dart';
 import 'package:get/get.dart';
 
 import '../../Hive_localstorage/apisCall/bank_apis.dart';
@@ -152,7 +153,7 @@ void addBankApiCall() {
 void getWeeklyfetchData(
     consentId, consendHandleId, sessionId, custId, last,bankName,fipId,fetchCount,accountId) async {
   final String apiUrl = "${url}/finvu/fetchWeekly";
-  final String userUrl = "${url}/user/updateFetchStatus";
+  final String userUrl = UserRoutes.updateFetchStatus;
   var body = {
     'handleId': consendHandleId,
     'custId': custId,
@@ -208,8 +209,6 @@ Future<void> getFipAccountInfo([bool testing=false,String token=""]) async
       bankNameMap[d["fipId"]]=d['bankName'];
    });
 
-     print("fipIds------------------------");
-     print(fipIds);
     if(fipIds.isEmpty)return;
     String urlPath=url+"/finvu/fip-details/";
     var body={

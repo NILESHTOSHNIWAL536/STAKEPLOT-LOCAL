@@ -95,7 +95,6 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 
     if (response.statusCode == 200) 
     {
-       final data = json.decode(response.body);
        logoutAndDisconnect();
     } else {
     
@@ -178,7 +177,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 
 Future<bool> verify(String otp, BuildContext context) async {
   try {
-    var login = await finvuManager.verifyLoginOtp(
+     await finvuManager.verifyLoginOtp(
       otp,
       otpReference,
     );

@@ -20,6 +20,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/model/post_model.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
+import "package:flutter_application_code_stakeplot/routers_api.dart";
 import "dart:convert";
 
 import "package:get/get.dart";
@@ -44,7 +45,7 @@ class _NotificationsState extends State<Notifications> {
 
   Future<void> deleteNotification(String? notifyId) async {
     if (notifyId == null) return;
-    String urlPath = '${url}/user/deleteNotifications/$notifyId';
+    String urlPath = '${UserRoutes.deleteNotifications}/$notifyId';
     var response = await getDataApiCall(urlPath);
     if (response.statusCode != 200) {
       snackBarCalledfail(context, SnackbarData().deleteNotificationFailed);
@@ -54,7 +55,7 @@ class _NotificationsState extends State<Notifications> {
   Future<PostModel?> fetchPostById(String postId, BuildContext context) async {
     try {
       final response = await getDataApiCall(
-          '$url/post/$postId'); // Adjust the endpoint based on your API);
+          '${PostRoutes.post}$postId'); // Adjust the endpoint based on your API);
       if (getFlagOfResponse(response)) {
         var jsonData = jsonDecode(response.body);
         // Adjust based on your API response structure, e.g., jsonData['data']

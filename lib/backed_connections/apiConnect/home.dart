@@ -14,11 +14,12 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
+import 'package:flutter_application_code_stakeplot/routers_api.dart';
 
 import '../../Hive_localstorage/apisCall/transactions_apis.dart';
 
 void getAck() async {
-  var response = await getDataApiCall('${url}/user/newNotifications');
+  var response = await getDataApiCall(UserRoutes.newNotifications);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -32,7 +33,7 @@ void setPasswordApiCalled(context, String password) async {
     return; // Exit the function without setting the PIN
   }
 
-  var urlPath = '${url}/user/cupertino/';
+  var urlPath = UserRoutes.cupertino;
   final response = await postDataApiCall(urlPath, {
     'pin': password.toString(),
   });
@@ -71,7 +72,7 @@ void pinPasswordVerify(
   _isVerifyingPin = true;
 
   try {
-    final response = await getDataApiCall("${url}/user/cupertino/$password");
+    final response = await getDataApiCall(UserRoutes.cupertino +"$password");
 
     if (response.statusCode == 200) {
       hideBackAccountPassword.value = true;
@@ -106,7 +107,7 @@ void pinPasswordVerify(
 }
 
 void seletedBankUpdateInfo(id, context) async {
-  var response = await getDataApiCall("${url}/user/selectedBank/${id}");
+  var response = await getDataApiCall(UserRoutes.selectedBank+"${id}");
   if (response.statusCode == 200 || response.statusCode == 200) {
   } else {}
 }

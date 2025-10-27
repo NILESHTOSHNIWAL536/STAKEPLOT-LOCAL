@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/controllers/post-controller.d
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:flutter_application_code_stakeplot/routers_api.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -113,7 +114,7 @@ Future<void> storeDeviceInfo(context) async {
   var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
   if (getFlagOfResponse(responce)) {}
   try {
-    await postDataApiCall("${url}/user/logout", {});
+    await postDataApiCall(UserRoutes.logout, {});
   } catch (e) {
       logoutUserFromDevice(context);
   }

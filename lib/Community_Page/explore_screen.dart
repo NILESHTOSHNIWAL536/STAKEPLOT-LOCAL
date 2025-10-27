@@ -25,6 +25,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../routers_api.dart';
+
 class ExploreModal extends StatefulWidget {
   final Function(Map<String, dynamic>) onPostCreated;
 
@@ -448,7 +450,7 @@ class _ExploreModalState extends State<ExploreModal> {
     try {
       var accessToken = await getToken();
       final response = await http.post(
-        Uri.parse('$url/post/'),
+        Uri.parse(PostRoutes.post),
         headers: {
           'Content-Type': 'application/json',
           "Authorization": "$accessToken",

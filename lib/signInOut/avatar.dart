@@ -277,22 +277,6 @@ void storeData(context, data, String opt, Avatarurl) async {
   String colorString =
       avatarBackGroundList[getRandomValue(avatarBackGroundList)];
 
-  // final response = await http.post(
-  //   Uri.parse('${url}/user/register'),
-  //   headers: <String, String>{
-  //     'Content-Type': 'application/json; charset=UTF-8',
-  //   },
-  //   body: jsonEncode({
-  //     'name': name,
-  //     'email': email,
-  //     'userpassword': password,
-  //     'confirmPassword': conform,
-  //     'dob': dob,
-
-  //     'otp': opt,
-
-  //   }),
-  // );
   final Map<String, dynamic> body = {
     'name': name,
     'email': email,
@@ -307,7 +291,7 @@ void storeData(context, data, String opt, Avatarurl) async {
   }
 
   final response = await http.post(
-    Uri.parse('$url/user/register'),
+    Uri.parse('$url/auth/sign-up'),
     headers: {
       'Content-Type': 'application/json; charset=UTF-8',
     },

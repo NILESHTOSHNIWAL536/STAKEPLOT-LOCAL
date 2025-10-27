@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart'
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/routes.dart';
+import 'package:flutter_application_code_stakeplot/routers_api.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
 
 class ForceLogout {

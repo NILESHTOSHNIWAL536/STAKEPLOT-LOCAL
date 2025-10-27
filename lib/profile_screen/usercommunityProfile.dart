@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
+import 'package:flutter_application_code_stakeplot/routers_api.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 
@@ -62,7 +63,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   void getDis() async {
     try {
       var response = await getDataApiCall(
-          '${url}/post/userDiscussions/${widget.data['_id']}');
+          '${PostRoutes.userDiscussions}/${widget.data['_id']}');
 
       if (getFlagOfResponse(response)) {
         var his = jsonDecode(response.body);
@@ -83,7 +84,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   void getConnections() async {
     try {
       var response = await getDataApiCall(
-          '${url}/user/connections/${widget.data['_id']}/${widget.isMasked}');
+          '${UserRoutes.connections}/${widget.data['_id']}/${widget.isMasked}');
 
       if (getFlagOfResponse(response)) {
         var his = jsonDecode(response.body);
@@ -95,7 +96,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
 
   void getStatus() async {
     var response =
-        await postDataApiCall("${url}/user/friend/acceptRequestStatus", {
+        await postDataApiCall(UserRoutes.acceptRequestStatus, {
       'userName': widget.data['name'],
       'friendUserId': widget.data['_id'],
     });

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/force_logout.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/get_otp.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -17,7 +16,7 @@ import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../Utils/signUp.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
 import '../backed_connections/googlesignin/credentials.dart';
-import '../routes.dart';
+import '../routers_api.dart';
 import '../signInOut/userName.dart';
 
 class LoginService {
@@ -75,10 +74,6 @@ class LoginService {
         loginCalledData(response, context);
         await screenDataLocalStorage();
       }
-      //  else  if (response.statusCode == 409)
-      //   {
-      //     ForceLogout.forceLoginShowModal(context, response, emailController, passwordController);
-      //   }
       else if (response.statusCode == 500) {
         snackBarCalledfail(context, SnackbarData().serverError, Colors.red);
       } else if (response.statusCode == 400) {

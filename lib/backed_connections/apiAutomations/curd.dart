@@ -89,8 +89,7 @@ Future<http.Response> updateDataApiCall3(String urlPath,
 
 Future<http.Response> getDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  var accessToken = pref.getString("accessToken");
-
+  var  accessToken= pref.getString("accessToken");
   final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{

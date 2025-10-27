@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 
 class CardDueModel {
   String id;
@@ -30,8 +29,8 @@ class CardDueModel {
     required this.mode,
     required this.type,
     required this.logo,
-     this.bank="",
-     this.matched_bank="",
+    this.bank="",
+    this.matched_bank="",
     required this.bankName,
     required this.createdAt,
     required this.updatedAt,
@@ -51,7 +50,7 @@ class CardDueModel {
       type: json["type"] ?? "",
       logo: json["logo"] ?? "",
       bankName: json["bankName"] ?? "",
-      bank: json["bank"] ?? "",
+      bank:  json["matched_bank"] ??  json["bank"] ?? "",
       matched_bank: json["matched_bank"] ?? "",
       createdAt: DateTime.parse(json["createdAt"]),
       updatedAt: DateTime.parse(json["updatedAt"]),

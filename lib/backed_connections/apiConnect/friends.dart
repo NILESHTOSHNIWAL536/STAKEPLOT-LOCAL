@@ -6,12 +6,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
+import 'package:flutter_application_code_stakeplot/routers_api.dart';
 
 
 void addUserAsFrd(id,context,[type="friend"])async
 {
     UserController controller =ControllerManagement.userController;
-    var urlPath='${url}/user/friend/add/${id}/${type}';
+    var urlPath='${UserRoutes.addFriend}/${id}/${type}';
 
     var response=await postDataApiCall(urlPath, {});
       if(getFlagOfResponse(response))
@@ -32,7 +33,7 @@ void addUserAsFrd(id,context,[type="friend"])async
 
 void  rejectFrdRequest(body,context)async
 {
-  var urlPath='${url}/user/friend/rejectRequest';
+  var urlPath=UserRoutes.rejectRequest;
   var response=await postDataApiCall(urlPath, {});
       if(!getFlagOfResponse(response))
       {
@@ -44,7 +45,7 @@ void  rejectFrdRequest(body,context)async
 void   addUsersendRequest(id,name,context)async
 {
    
-   var urlPath='${url}/user/friend/sendRequest';
+   var urlPath=UserRoutes.sendRequest;
    var body={
             //  'userName':name,
              'friendUserId':id,
@@ -64,7 +65,7 @@ void   addUsersendRequest(id,name,context)async
 void  removeRequest(id,name,context)async
 {
       
-    var urlPath='${url}/user/friend/unsendRequest';
+    var urlPath=UserRoutes.unsendRequest;
     var body={
             //  'userName':name,
              'friendUserId':id,
@@ -82,7 +83,7 @@ void  removeRequest(id,name,context)async
 
   void  getRemoveFrds(context,id,[type="friend"])async
 {   
-    var urlPath='${url}/user/friend/remove/${id}/${type}';
+    var urlPath='${UserRoutes.removeFriend}/${id}/${type}';
     var response=await postDataApiCall(urlPath, {});
       if(getFlagOfResponse(response))
       {
