@@ -17,7 +17,7 @@ async function upsertGoogleToken(userId, email, encryptedData, iv, authTag) {
 }
 
 async function getGoogleTokenByUserId(userId) {
-  return await emailDB.model('googleAuth').findOne({ userId: { $eq: new mongoose.Types.ObjectId(userId) } });
+  return await emailDB.model('googleAuth').findOne({ userId: new mongoose.Types.ObjectId(userId) });
 }
 
 async function scrapeEmailsByBankId(scrapedEmails, userId) {
