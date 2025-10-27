@@ -12,6 +12,7 @@ class CardDueModel {
   String mode;
   String type;
   String bank;
+  String matched_bank;
   String bankName;
   String logo;
   DateTime createdAt;
@@ -29,7 +30,8 @@ class CardDueModel {
     required this.mode,
     required this.type,
     required this.logo,
-    required this.bank,
+     this.bank="",
+     this.matched_bank="",
     required this.bankName,
     required this.createdAt,
     required this.updatedAt,
@@ -37,19 +39,20 @@ class CardDueModel {
 
   factory CardDueModel.fromJson(Map<String, dynamic> json) {
     return CardDueModel(
-      id: json["_id"],
-      userId: json["userId"],
-      category: json["category"],
-      amount: json["amount"].toString(),
-      date: json["date"],
-      cardNumber: json["card_number"],
-      transactionId: json["transaction_id"],
+      id: json["_id"]??"",
+      userId: json["userId"]??"",
+      category: json["category"]??"",
+      amount: json["amount"].toString()??"",
+      date: json["date"]??"",
+      cardNumber: json["card_number"]??"",
+      transactionId: json["transaction_id"]??"",
       totalDue: json["total_due"] ?? "",
-      mode: json["mode"],
+      mode: json["mode"]?? "",
       type: json["type"] ?? "",
       logo: json["logo"] ?? "",
       bankName: json["bankName"] ?? "",
-      bank: json["bank"],
+      bank: json["bank"] ?? "",
+      matched_bank: json["matched_bank"] ?? "",
       createdAt: DateTime.parse(json["createdAt"]),
       updatedAt: DateTime.parse(json["updatedAt"]),
     );

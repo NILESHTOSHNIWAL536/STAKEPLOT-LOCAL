@@ -44,6 +44,7 @@ void main() async {
 
 Future<Map<String, dynamic>> verifyUser(String email) async {
   print('--- Step 1: Verify User ---');
+  print(RouterApi.verify);
   final response = await postDataApiCallwithOutSharedPref(RouterApi.verify, {
     'email': email,
   });

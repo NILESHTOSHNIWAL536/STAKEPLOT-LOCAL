@@ -9,7 +9,7 @@ void main() async {
   await dotenv.load(fileName: ".env");
   const String email = "nileshtoshniwal743@gmail.com";
   String accessToken =
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Nzg5MTk5YmFmZmIyZDJhZjhiZTE5MyIsImlhdCI6MTc2MTI4NzkwOSwiZXhwIjoxNzY2NDcxOTA5fQ.ZJY6Dvu_3TwaEj1FwUaXJk08GCWiJQMg_ozygssVHKA";
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZmI2NTkxOTcyM2M2MzcwM2NlNmM0YiIsImlhdCI6MTc2MTMwODAxNiwiZXhwIjoxNzY2NDkyMDE2fQ.hM6mVEsBKOwSmM2gf1LL8uI5-XOnT-6EezK0JN6KaM8";
 
   print('================ Credit Card Mail Tests Start ================');
   print('Access Token: $accessToken\n');
@@ -91,6 +91,7 @@ void main() async {
 // --- Helper Functions ---
 Future<dynamic> getUnlinkedCards(String accessToken) async {
   print('Calling getUnlinkedCards API...');
+  print(RouterApi.getUnLinkedCards);
   final response = await getDataApiCallToken(RouterApi.getUnLinkedCards, accessToken);
   print('getUnlinkedCards API returned: ${response.statusCode}');
   return response;
@@ -98,6 +99,7 @@ Future<dynamic> getUnlinkedCards(String accessToken) async {
 
 Future<dynamic> scrapeBankData(String bankId, String accessToken) async {
   print('Calling scrapeBankData API for Bank ID: $bankId...');
+  print(RouterApi.scrape);
   final response = await postDataApiCallToken(
     "${RouterApi.scrape}/",
     {"bankIds": [bankId]},
