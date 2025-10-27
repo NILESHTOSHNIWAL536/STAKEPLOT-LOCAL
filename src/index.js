@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
+const connectDatabases = require('./dbConnections');
 const { ServerConfig, RedisClient, Logger } = require('./config');
+const {getModels}=require('./models/index-model');
+
 dotenv.config();
 
 const startServer = async () => {
@@ -10,11 +13,11 @@ const startServer = async () => {
       Logger.info(`Server running on port: ${ServerConfig.PORT}`);
     });
 
-    await mongoose.connect(ServerConfig.MAIN_MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await connectDatabases();
+    // getModels();
+  
     await RedisClient.connect();
+    require("./cron-jobs/");
   } catch (error) {
     console.error('Server Start Error:', error);
     process.exit(1);

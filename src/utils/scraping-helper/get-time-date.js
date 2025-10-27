@@ -1,0 +1,18 @@
+function getNinetyDaysAgo(dateRange) {
+  const date = new Date();
+  date.setDate(date.getDate() - dateRange);
+  return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+}
+
+function getNHoursAgo(hours = 12) {
+  const date = new Date();
+  date.setHours(date.getHours() - hours);
+  return Math.floor(date.getTime() / 1000);
+}
+
+
+module.exports = {
+    getNinetyDaysAgo,
+    getNHoursAgo
+
+}
