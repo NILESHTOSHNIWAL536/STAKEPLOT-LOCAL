@@ -1,14 +1,6 @@
  import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/loginservices/signin.dart';
 import 'dart:math' as math;
 
-
-// Widget buildBottomWave(context) {
-//     return CustomPaint(
-//       size: Size(MediaQuery.of(context).size.width, 100),
-//       painter: WavePainter(),
-//     );
-// }
 
  Widget buildBottomWaves(context) {
     return SizedBox(

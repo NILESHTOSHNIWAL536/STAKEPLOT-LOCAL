@@ -41,6 +41,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     super.initState();
     selectedIndex.value = -1;
     catWidgetBindUpdate(context);
+    if(spendingsOnCategories.isEmpty)getCategoryData(context);
   }
 
   @override

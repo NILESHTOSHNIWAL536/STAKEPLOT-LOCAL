@@ -1,13 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -29,9 +27,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController(text: "testuser2@gmail.com");
-  final TextEditingController passwordController = TextEditingController(text: "Nilesh@1234");
-  bool _isPasswordVisible = false;
+  final TextEditingController emailController = TextEditingController(text: "nileshtoshniwal743@gmail.com");
   final AuthService authService = AuthService();
   
   @override
@@ -81,13 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       const SizedBox(height: 20),
 
-                      // Password Field
-                      // _buildPasswordField(),
-
-                      // const SizedBox(height: 10),
-
-                      // Forgot Password
-                      // _buildForgotPassword(),
 
                       const SizedBox(height: 10),
 
@@ -135,11 +124,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                               ),
                             ),
-
-                      // const Spacer(),
-
-                      // Sign Up Link
-                      // buildSignUpLink(),
                     ],
                   ),
                 ),
@@ -153,46 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Widget containerIconSiginWith(IconData icon, Color color, context) {
-  //   return InkWell(
-  //     onTap: () async {
-  //       if (googleSignInBool.value) return; // Prevent multiple clicks
-  //       googleSignInBool.value = true; // Set loading state
-  //       try {
-  //         final userdata = await AuthService().signInWithGoogle(context);
-  //         if (userdata != null && userdata['data']['accessToken'] != null) {
-  //           LoginService.loginCalledData(userdata, context, flag: true);
-  //         } else if (userdata != null) {
-  //           Navigator.push(
-  //             context,
-  //             MaterialPageRoute(
-  //                 builder: (context) => UserDetailsPage(data: userdata)),
-  //           );
-  //         } else {}
-  //       } finally {
-  //         googleSignInBool.value = false; // Reset loading state
-  //       }
-  //     },
-  //     child: Container(
-  //       width: MediaQuery.sizeOf(context).width / 5,
-  //       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-  //       decoration: BoxDecoration(
-  //         color: AppColors.backgroundColor,
-  //         borderRadius: BorderRadius.circular(10),
-  //       ),
-  //       child: Obx(
-  //         () => googleSignInBool.value
-  //             ? Spinner(size: 30) // Show spinner when loading
-  //             : AvatarProfileImage(
-  //                 url: Sign.googleIcon,
-  //                 width: 40,
-  //                 height: 30,
-  //               ), // Show icon when not loading
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget _buildWelcomeText() {
     return Column(
       children: [
@@ -201,7 +145,10 @@ class _LoginScreenState extends State<LoginScreen> {
             text: 'Welcome',
             fontWeight: FontWeight.bold,
             fontsize: 32,
-            c: Colorcodes.white),
+            // c: Theme.of(context).appBarTheme.iconTheme?.color ??  Colorcodes.white
+            // c: Theme.of(context).textTheme.bodyMedium?.color ??  Colorcodes.white
+            c: Colorcodes.white
+          ),
         const SizedBox(height: 8),
         textStyle(
             context: context,
@@ -244,68 +191,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildPasswordField() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(255, 255, 255, 0.23),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
-      ),
-      child: TextField(
-        controller: passwordController,
-        onChanged: (c) {
-          acceptReset.value = false;
-        },
-        obscureText: !_isPasswordVisible,
-        cursorColor: Colors.white,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          fillColor: Color.fromRGBO(
-              255, 255, 255, 0.23), // same as rgba(255,255,255,0.23)
-
-          hintText: 'Password',
-          hintStyle: FontManager().getTextStyle(context,
-              lWeight: FontWeight.normal,
-              fontSize: 14,
-              color: AppColors.backgroundColor),
-          border: InputBorder.none,
-
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 16,
-          ),
-          suffixIcon: IconButton(
-            icon: Icon(
-              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-              color: AppColors.whiteOpacity07,
-            ),
-            onPressed: () {
-              setState(() {
-                _isPasswordVisible = !_isPasswordVisible;
-              });
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildForgotPassword() {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {
-          // Handle forgot password
-          Navigator.pushNamed(context, "/forgot");
-        },
-        child: Text('Forgot Password?',
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.normal,
-                fontSize: 14,
-                color: AppColors.backgroundColor)),
-      ),
-    );
-  }
 
   Widget _buildSignInButton() {
     return SizedBox(
@@ -316,8 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
             // Handle sign in
             if (acceptReset.value) return;
 
-            if (emailController.text.isEmpty ||
-                passwordController.text.isEmpty) {
+            if (emailController.text.isEmpty) {
               snackBarCalledfail(
                   context,
                   SnackbarData()
@@ -330,8 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
             await getDeviceInfo(
               "deviceData.value".toString(),
               context,
-              emailController,
-              passwordController,
+              emailController
             );
           },
           style: ElevatedButton.styleFrom(
@@ -387,30 +270,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget buildSignUpLink() {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, "/signup");
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "Don't have an account? ",
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.normal,
-                fontSize: 14,
-                color: AppColors.backgroundColor),
-          ),
-          Text(
-            'Sign Up Now',
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.bold,
-                fontSize: 16,
-                color: AppColors.backgroundColor),
-          ),
-        ],
-      ),
-    );
-  }
 }

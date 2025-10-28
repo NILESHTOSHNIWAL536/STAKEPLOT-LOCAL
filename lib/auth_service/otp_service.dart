@@ -95,7 +95,7 @@ class OtpService {
   }
 
   static Future<bool> verifyOTPForLogin(BuildContext context, String email,
-      String password, String otp, dynamic loginResponse, bool isForcedLogin,
+       String otp, dynamic loginResponse, bool isForcedLogin,
       {bool isNewUser = false}) async {
     try {
       if (isNewUser) {
@@ -112,9 +112,6 @@ class OtpService {
       } else {
         LoginService.loginUser(
             emailController: TextEditingController(text: email),
-            passwordController: TextEditingController(
-                text:
-                    password), // Password not available, adjust backend if needed
             context: context,
             otp: otp);
       }

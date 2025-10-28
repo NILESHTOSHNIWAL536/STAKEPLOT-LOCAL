@@ -21,7 +21,6 @@ import 'package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/routers_api.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
@@ -179,7 +178,6 @@ void clearGetX() {
   account = [];
   notificationList.clear();
   hasGetNewNotifications.value = false;
-  changeAvater = "Loading...".obs;
   targetString = "".obs;
   isBankAccountLink.value = true;
   trasactionsData.clear();

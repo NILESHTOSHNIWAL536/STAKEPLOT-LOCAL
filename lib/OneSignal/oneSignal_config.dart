@@ -93,7 +93,7 @@ Future<void> getDeviceInfo(
     String playerId,
     context,
     TextEditingController emailController,
-    TextEditingController passwordController) async {
+    ) async {
   deviceData.value = {};
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String key = "deviceInfo";
@@ -106,7 +106,7 @@ Future<void> getDeviceInfo(
   // if (emailController.text == Credentials.TestUser) {
   //   LoginService.loginUser(emailController, passwordController, context);
   // } else {
-    LoginService.userVerification(emailController, passwordController, context);
+    LoginService.userVerification(emailController, context);
   // }
 }
 

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/force_logout.dart';
-import 'package:flutter_application_code_stakeplot/auth_service/get_otp.dart';
+import 'package:flutter_application_code_stakeplot/auth_service/otp_service.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -13,7 +13,6 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/snackBar.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
-import '../Utils/signUp.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
 import '../backed_connections/googlesignin/credentials.dart';
 import '../routers_api.dart';
@@ -51,13 +50,12 @@ class LoginService {
       clearStack(context);
       Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
     } catch (e) {
-      snackBarCalledfail(context, SignupData().errorInvalidOtp, Colors.red);
+      snackBarCalledfail(context, "Server error", Colors.red);
     }
   }
   
   static Future<void> loginUser({
     required TextEditingController emailController,
-    required TextEditingController passwordController,
     required BuildContext context,
     required String otp,
   }) async {
@@ -89,7 +87,6 @@ class LoginService {
 
   static Future<void> userVerification(
     TextEditingController emailController,
-    TextEditingController passwordController,
     BuildContext context,
   ) async {
     try {
@@ -103,7 +100,7 @@ class LoginService {
       print(decodedResponse);
       if (response.statusCode == 409) {
         ForceLogout.forceLoginShowModal(
-            context, decodedResponse, emailController, passwordController);
+            context, decodedResponse, emailController);
       } else if (response.statusCode == 400) {
         snackBarCalledfail(context, decodedResponse['error'], Colors.red);
         acceptReset.value = false;
@@ -116,7 +113,6 @@ class LoginService {
               data: {
                 'email': emailController.text.toString(),
                 'name': emailController.text.toString(),
-                'password': passwordController.text.toString(),
                 'response': response,
                 'isForcedLogin': false,
                 'newUser': true
@@ -138,7 +134,6 @@ class LoginService {
               data: {
                 'email': emailController.text.toString(),
                 'name': emailController.text.toString(),
-                'password': passwordController.text.toString(),
                 'response': response,
                 'isForcedLogin': false,
                 'newUser': false

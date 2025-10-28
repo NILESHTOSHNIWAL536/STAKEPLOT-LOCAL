@@ -19,7 +19,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.da
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/revoke_access.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+// import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/emailUpdateOtp.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';

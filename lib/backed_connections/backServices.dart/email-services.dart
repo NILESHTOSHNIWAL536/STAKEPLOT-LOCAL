@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/routers_api.dart';
 
 import '../apiAutomations/curd.dart';
 
-Future<void> deleteEmailAccess(BuildContext context)async 
+Future<void> revokeEmailAccess(BuildContext context)async 
 {
   // implement the function to delete email access
    try {

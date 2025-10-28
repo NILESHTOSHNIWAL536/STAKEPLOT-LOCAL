@@ -4,15 +4,14 @@ import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
-import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:app_version_update/app_version_update.dart';
+
+import 'AppTheme.dart';
 
 FinvuManager finvuManager = FinvuManager();
 late IO.Socket mainPageWebSocket;
@@ -80,10 +79,13 @@ class _MyAppState extends State<MyApp> {
       data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
       child: MaterialApp(
         navigatorKey: navigatorKey,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
-          scaffoldBackgroundColor: AppColors.backgroundColor,
-        ),
+        // theme: ThemeData(
+        //   colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
+        //   scaffoldBackgroundColor: AppColors.backgroundColor,
+        // ),
+        theme: AppTheme.lightTheme,      // 👈 Light Theme
+        darkTheme: AppTheme.darkTheme,   // 👈 Dark Theme
+        themeMode: ThemeMode.system,     // 👈 Automatically switch based on device
         debugShowCheckedModeBanner: false,
         initialRoute: '/splash',
         routes: routes,

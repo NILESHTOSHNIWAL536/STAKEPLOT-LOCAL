@@ -10,6 +10,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:get/get.dart';
 
+import '../../Home_Screen/categoriseSpending.dart';
+
 RxString balance = "0".obs;
 RxString accountName = "Bank Name : ".obs;
 RxString accountNo = "XXXXXXXX".obs;
@@ -82,9 +84,9 @@ void getCategoryData(context) async {
       processChartData();
       await CategoryStorage.cacheCardInsightsDataLocally();
     }
-  } catch (e) {
+  } catch (e)
+  {
     await CategoryStorage.loadCardInsightsDataFromHive();
-    processChartData();
   }
 }
 

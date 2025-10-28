@@ -247,10 +247,9 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
     {String weekORmonth = 'month',
     String? endDate,
     bool isSplashScreen = false}) async {
-  if (accountId.value.trim().isEmpty) {
-    _setEmptyState(weekORmonth, date, endDate);
-    return;
-  }
+
+
+  
 
   String storedPeriod = weekORmonth == 'month'
       ? 'Month'
@@ -270,28 +269,17 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
     }
   }
 
+  // if (accountId.value.trim().isEmpty)
+  // {
+  //   _setEmptyState(weekORmonth, date, endDate);
+  //   return;
+  // }
+
   if ((weekORmonth == 'month' || weekORmonth == 'Month') && !isSplashScreen) {
     await FinanceLocalStorage.loadFinanceFromHive(
         accountId.value, storedPeriod, formattedDate, endDate);
   }
 
-  // Try loading from Hive first
-  // final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
-  //     accountId.value, storedPeriod, formattedDate, endDate);
-  // if (cachedFinance != null) {
-  //   // Set data from cache
-  //   // transactionChatGraph['debited'] = cachedFinance.debited ?? [];
-  //   // transactionChatGraph['credited'] = cachedFinance.credited ?? [];
-  //   // labels.assignAll(cachedFinance.labels ?? []);
-  //   // totalDebitValue.value = cachedFinance.totalDebitValue ?? 0;
-  //   // totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent ?? 0;
-  //   // maxYValue.value = cachedFinance.maxYValue ?? 500.0;
-  //   // getGraphData.value = true;
-  //   return;
-  // }
-
-  // Show loading state
-  // getGraphData.value = false;
   List<String> labelsLocal = [];
   List<double> debitList = [];
   List<double> creditList = [];
@@ -648,9 +636,6 @@ void addTransaction(String amount, String subCategory, String categories,
         0, TransactionModel.fromJson(body['data'][0]['data']));
     updateCatAndMoneyMap(context);
     Future.wait([
-      // () async => controller.getHomePageInsights(Get.context!),
-      // () async => controller.getHomePageMoneyMapInsights(Get.context!),
-      // () async => getCategoryData(context),
       () async {
         reloadHistory.value = !reloadHistory.value;
         setDonectChat.value = !setDonectChat.value;
@@ -671,7 +656,8 @@ void addTransaction(String amount, String subCategory, String categories,
 }
 
 
-void updateCatAndMoneyMap(BuildContext context) {
+void updateCatAndMoneyMap(BuildContext context)
+{
   final controller = Get.find<InsightsController>();
   controller.getHomePageInsights(context);
   controller.getHomePageMoneyMapInsights(context);
@@ -686,7 +672,7 @@ void processChartData() {
     Map<String, Color> categoryColors = colorcodes;
 
     for (var item in categoriesList) {
-      String category = item["category"];
+      String category = item["category"] ?? "Others";
       String percentage = item["total_debit_percentage"] ?? "";
       double value = item["total_debit"].toDouble();
       Color color = categoryColors[category] ?? Colors.grey; // Default color

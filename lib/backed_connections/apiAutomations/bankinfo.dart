@@ -21,61 +21,19 @@ RxList consentAndHandleDetails = [].obs;
 RxMap bankImagemap = {}.obs;
 
 Future<void> getBankAccounts() async {
-  var response = await getDataApiCall("${url}/transactionauto/get-banks-linked/");
-  if (getFlagOfResponse(response)) {
-    storeDataLocal(response);
-    // var his = jsonDecode(response.body);
-    // consentAndHandleDetails.clear();
-    // bankAccountLinkedList.clear();
-    // FipIdsConnected.clear();
-    // his['data'].forEach((bank) {
-    //   if (bank['consentId'] != null && bank['consendHandleId'] != null) {
-    //     if (!consentAndHandleDetails.any((item) =>
-    //         item['consentId'] == bank['consentId'] &&
-    //         item['consendHandleId'] == bank['consendHandleId'])) {
-    //       consentAndHandleDetails.add({
-    //         "consentId": bank['consentId'],
-    //         "consendHandleId": bank['consendHandleId'],
-    //         "sessionId": bank['sessionId'],
-    //         "custId": bank['custId'],
-    //         'lastFetch': bank['accounts'][0]['lastFetch'] ?? "",
-    //         'nextFetch': bank['accounts'][0]['nextFetch'] ?? "",
-    //         'fetchCount': bank['accounts'][0]['fetchCount'] ?? "0",
-    //         'accountId': bank['accounts'][0]['accountId'] ?? "accountId",
-    //         'bankName': bank['bankName'] ?? "BankName",
-    //         'fipId': bank['fipId'] ?? "fipId",
-    //       });
-    //     }
-    //   }
-    //   bank['accounts'].forEach((account) {
-    //     var profile= account['profile']?['holder'] ?? {};
-    //     if (accountId.value == "") accountId.value = account['accountId'];
-    //     FipIdsConnected.add(account['maskedAccNumber']);
-    //     bankAccountLinkedList.add({
-    //       'bankId': bank['bankId'],
-    //       'bankName': bank['bankName'],
-    //       'bankLogo': bank['bankLogo'] ?? bankImage,
-    //       'fipId': bank['fipId'],
-    //       'accountId': account['accountId'],
-    //       'maskedAccNumber': account['maskedAccNumber'],
-    //       'type': account['type'],
-    //       'currentBalance': account['currentBalance'],
-    //       'lastFetch': account['lastFetch'] ?? "",
-    //       'nextFetch': account['nextFetch'] ?? "",
-    //       'fetchCount': account['fetchCount'] ?? "0",
-    //       'name':  profile['name'] ?? "0",
-    //       'pan': profile['pan'] ?? "0",
-    //       'dob':    profile['dob'] ?? "0",
-    //       'mobile': profile['mobile'] ?? "0",
-    //       'address': profile['address'] ?? "0",
-    //       'ifscCode': account['ifscCode'] ?? "0",
-    //       'branchAddress': account['branchAddress'] ?? "0",
-    //     });
-    //   });
-    // });
+  try{
+    var response = await getDataApiCall("${url}/transactionauto/get-banks-linked/");
+    if (getFlagOfResponse(response))
+    {
+      storeDataLocal(response);
+    }
+    addBankApiCall();
+    BankStorage.cacheBankDataLocally();
+  }catch(e)
+  {
+    await BankStorage.loadBankDataFromHive();
+    addBankApiCall();
   }
-  addBankApiCall();
-  BankStorage.cacheBankDataLocally();
 }
 
 void storeDataLocal(response){

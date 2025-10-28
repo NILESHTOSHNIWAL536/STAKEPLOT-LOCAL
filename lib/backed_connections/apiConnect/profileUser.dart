@@ -9,7 +9,6 @@ import 'package:flutter_application_code_stakeplot/controllers/controllerManagem
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/routers_api.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';

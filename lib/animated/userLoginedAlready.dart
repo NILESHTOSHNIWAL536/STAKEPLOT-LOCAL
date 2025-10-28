@@ -6,12 +6,11 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/two_factor_email_verification.dart';
 import 'package:get/get.dart';
-import '../auth_service/get_otp.dart';
+import '../auth_service/otp_service.dart';
 
 class UserLoginedAlready extends StatelessWidget {
   var data;
   TextEditingController email;
-  TextEditingController userpassword;
 
   var isLoading = false.obs;
 
@@ -19,7 +18,7 @@ class UserLoginedAlready extends StatelessWidget {
       {Key? key,
       required this.data,
       required this.email,
-      required this.userpassword})
+    })
       : super(key: key);
 
   @override
@@ -67,7 +66,6 @@ class UserLoginedAlready extends StatelessWidget {
                     builder: (context) => TwoFactorEmailVerification(
                       data: {
                         'email': email.text.toString(),
-                        'password': userpassword.text.toString(),
                         'response': body,
                         'isForcedLogin': true,
                         'newUser':false

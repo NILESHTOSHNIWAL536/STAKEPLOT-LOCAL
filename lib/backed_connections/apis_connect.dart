@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/model/user_activity_model.dar
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import '../controllers/controllerManagement.dart';
 import 'googlesignin/credentials.dart';
 part 'snackBars.dart';
 
@@ -230,3 +231,4 @@ final RxList<Map<String, dynamic>> inflationPredictions =
     <Map<String, dynamic>>[].obs;
 var showResults = false.obs;
 RxBool isLoadingInflation = false.obs;
+RxString changeAvater = ControllerManagement.userController.avatar.value.obs;

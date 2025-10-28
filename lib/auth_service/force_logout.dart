@@ -10,7 +10,7 @@ import '../backed_connections/apiConnect/signInAndOut.dart';
 
 class ForceLogout {
   static void forceLoginShowModal(
-      context, response, emailController, passwordController) {
+      context, response, emailController) {
      print(response);
     showModalBottomSheet(
       context: context,
@@ -22,7 +22,7 @@ class ForceLogout {
         return UserLoginedAlready(
             data: response['error'],
             email: emailController,
-            userpassword: passwordController);
+          );
       },
     );
   }
