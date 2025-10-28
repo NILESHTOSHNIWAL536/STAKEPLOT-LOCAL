@@ -54,10 +54,6 @@ class CommunityState extends State<Community> {
     postController.currentPageTranding.value = 1;
     postController.currentPageFeed.value = 1;
     postController.isPostloading.value = false;
-    // if(postController.canRefresh){
-      // postController.trandingPostList.clear();
-      // postController.feedPostList.clear();
-    // }
     postController.hasMorePostTranding.value = true;
     postController.hasMorePostFeed.value = true;
     postController.isPost.value = false;
@@ -65,13 +61,8 @@ class CommunityState extends State<Community> {
     getPost(context);
     getTranding(context);
     setUpSocketListenerMainPage(context);
-    //     scrollController.addListener(_onScroll); //uncomment this if anything goes wrong
     scrollControllerPost.addListener(() {
-      // Scroll-to-top visibility
-
       showScrollToTop.value = scrollControllerPost.offset > 50;
-
-      // Pagination logic
       if (scrollControllerPost.position.pixels >=
               scrollControllerPost.position.maxScrollExtent - 50 &&
           !postController.isPostloading.value) {
@@ -85,22 +76,6 @@ class CommunityState extends State<Community> {
     });
   }
 
-//   void _onScroll() // uncomment
-//   {
-//     scrollController.addListener(() async {
-//       if (scrollController.position.pixels >=
-//               scrollController.position.maxScrollExtent - 50 &&
-//           ! postController.isPostloading.value) {
-//          postController.isPostloading.value = true;
-//         if ( postController.isTrending.value) {
-//           if ( postController.hasMorePostTranding.value) getTranding();
-//         } else {
-//           if ( postController.hasMorePostFeed.value) getPost();
-//         }
-//       }
-//     });
-//   }
-  // Scroll-to-top callback for BottomNavigations
   void _scrollToTop() {
     scrollControllerPost.animateTo(
       0,
@@ -108,14 +83,12 @@ class CommunityState extends State<Community> {
       curve: Curves.easeInOut,
     );
   }
-//
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: Obx(() =>
           postController.isTrending.value ? SizedBox.shrink() : PostImage()),
-      // bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
       bottomNavigationBar: SafeArea(
         child: BottomNavigations(
           data: 2,
@@ -194,7 +167,6 @@ class CommunityState extends State<Community> {
             ? Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: Container(
-                  //  color: Colors.amber,
                   height: MediaQuery.sizeOf(context).height / 3,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -359,7 +331,6 @@ class CommunityState extends State<Community> {
 
   // This is the modal function where we allow the user to pick an image
   Future<void> showModal(Map<String, dynamic> post) async {
-    int k = 0;
 
     showModalBottomSheet(
       context: context,
@@ -408,7 +379,6 @@ class CommunityState extends State<Community> {
                                   onPostCreated: (newPost) {
                                     setState(() {
                                       posts.add(newPost);
-                                      k = 1;
                                     });
                                   },
                                 ),

@@ -265,16 +265,19 @@ class _TwoFactorEmailVerificationState
     );
   }
 
-  void verifyEmail() async {
+  void verifyEmail() async 
+  {
     if (otpController.text.isEmpty) {
       snackBarCalledfail(context, 'Please enter the OTP');
       return;
     }
-    if (otpController.text.length != 6) {
+    if (otpController.text.length != 6)
+    {
       snackBarCalledfail(context, 'Please enter all 6 digits of the OTP');
       return;
     }
-    if (!RegExp(r'^[0-9]{6}$').hasMatch(otpController.text)) {
+    if (!RegExp(r'^[0-9]{6}$').hasMatch(otpController.text))
+    {
       snackBarCalledfail(context, 'Please enter only numeric digits');
       return;
     }
@@ -295,6 +298,6 @@ class _TwoFactorEmailVerificationState
     {
       isOtpWrong2.value = true;
     }
-    acceptReset.value = false;
+    // acceptReset.value = false;
   }
 }

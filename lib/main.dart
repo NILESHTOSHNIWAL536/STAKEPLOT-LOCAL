@@ -11,7 +11,10 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:app_version_update/app_version_update.dart';
 
-import 'AppTheme.dart';
+import 'appTheme.dart';
+import 'backed_connections/apiConnect/clearstack.dart';
+import 'controllers/controllerManagement.dart';
+import 'controllers/theme_controller.dart';
 
 FinvuManager finvuManager = FinvuManager();
 late IO.Socket mainPageWebSocket;
@@ -60,32 +63,28 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+   late ThemeController themeController;
   @override
   void initState() {
     super.initState();
-    // initPlatformState();
-    // Set status bar
+    initGetControllersIfisRegistered();
+    themeController = ControllerManagement.themeController;
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
   }
 
-  // Future<void> initPlatformState() async {
-  //   if (!mounted) return;
-  // }
 
   @override
   Widget build(BuildContext context) {
+
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-      child: MaterialApp(
+      child:Obx(()=> MaterialApp(
         navigatorKey: navigatorKey,
-        // theme: ThemeData(
-        //   colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
-        //   scaffoldBackgroundColor: AppColors.backgroundColor,
-        // ),
-        theme: AppTheme.lightTheme,      // 👈 Light Theme
-        darkTheme: AppTheme.darkTheme,   // 👈 Dark Theme
-        themeMode: ThemeMode.system,     // 👈 Automatically switch based on device
+         theme: AppTheme.lightTheme,      // 👈 Light Theme
+         darkTheme: AppTheme.darkTheme,   // 👈 Dark Theme
+        // themeMode: ThemeMode.system,     // 👈 Automatically switch based on device
+          themeMode: themeController.themeMode.value,
         debugShowCheckedModeBanner: false,
         initialRoute: '/splash',
         routes: routes,
@@ -99,7 +98,7 @@ class _MyAppState extends State<MyApp> {
             ),
           );
         },
-      ),
+      )),
     );
   }
 }

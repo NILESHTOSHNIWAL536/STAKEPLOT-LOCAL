@@ -177,8 +177,7 @@ class LoginService {
     acceptReset.value = false;
     getPhoneNo(body);
     callApi(context);
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 
   static void getPhoneNo(body) {

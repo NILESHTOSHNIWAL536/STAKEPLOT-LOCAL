@@ -100,9 +100,10 @@ class OtpService {
     try {
       if (isNewUser) {
         bool verify = await OtpService.verifyDeleteOTP(context, email, otp);
-
+        acceptReset.value = false;
         if (verify) LoginService.pushToRegister(context, email);
       } else if (isForcedLogin) {
+        acceptReset.value = false;
         ForceLogout.forceLogoutUser(
             sessionId: loginResponse['existingSessionId'],
             email: email,
@@ -117,6 +118,7 @@ class OtpService {
       }
     } catch (error) {}
 
+   acceptReset.value = false;
     return false;
   }
 }

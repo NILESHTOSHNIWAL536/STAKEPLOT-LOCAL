@@ -26,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 
 import '../../controllers/credit_card_controller.dart';
+import '../../controllers/theme_controller.dart';
 
 void clearStack(BuildContext context) {
   try {
@@ -113,8 +114,9 @@ Future<void> storeDeviceInfo(context) async {
   var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
   if (getFlagOfResponse(responce)) {}
   try {
-    await postDataApiCall(UserRoutes.logout, {});
-  } catch (e) {
+    await postDataApiCall(RouterApi.logout, {});
+  } catch (e)
+   {
       logoutUserFromDevice(context);
   }
 }
@@ -280,12 +282,14 @@ void initGetControllers() {
   Get.put(UserController());
   Get.put(PostController());
   Get.put(CardDueController());
+  Get.put(ThemeController());
 }
 
 void deleteGetControllers() {
   Get.delete<UserController>();
   Get.delete<PostController>();
   Get.delete<CardDueController>();
+  Get.delete<ThemeController>();
 }
 
 void initGetControllersIfisRegistered() {
@@ -297,5 +301,8 @@ void initGetControllersIfisRegistered() {
   }
   if (!Get.isRegistered<CardDueController>()) {
     Get.put(CardDueController());
+  }
+  if (!Get.isRegistered<ThemeController>()) {
+    Get.put(ThemeController());
   }
 }

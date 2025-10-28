@@ -40,6 +40,7 @@ class ForceLogout {
       if(deviceData['deviceId']==""){
          deviceData['deviceId']="Niklewnknwk";
       }
+      updateDeviceData(deviceData);
       var response =
           await postDataApiCallwithOutSharedPref(RouterApi.forceLogin, {
         "sessionId": sessionId,
@@ -51,12 +52,12 @@ class ForceLogout {
         final body = jsonDecode(response.body);
         // Notify the logged-out device (if applicable)
         if (body['data']?['_id'] != null)
-      {
-          sendNotificationsToDevice(
-            body['data']['_id'],
-            context,
-            "You have been logged out from StakePlot!",
-          );
+          {
+              sendNotificationsToDevice(
+                body['data']['_id'],
+                context,
+                "You have been logged out from StakePlot!",
+              );
         }
         LoginService.loginCalledData(response, context);
         await screenDataLocalStorage();

@@ -17,6 +17,7 @@ class RouterApi {
   static String appleAuth = "$_urlPath/auth/apple-auth";
   static String googleAuth = "$_urlPath/auth/google-auth";
   static String signUp = "$_urlPath/auth/sign-up";
+  static String logout = "$_urlPath/auth/logout";
 
   //generate-token Email part
   static String generateToken = "$_emailPath/generate-token";
