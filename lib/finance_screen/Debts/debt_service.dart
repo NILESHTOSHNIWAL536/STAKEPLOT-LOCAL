@@ -3,7 +3,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/routers_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 

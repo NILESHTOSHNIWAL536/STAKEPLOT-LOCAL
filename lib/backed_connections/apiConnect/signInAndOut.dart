@@ -36,10 +36,10 @@ Future<void> screenDataLocalStorage() async {
 
 void addThisDeviceToBackendDevice(SharedPreferences pref, context) async 
 {
-  await addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
+  await _addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
 }
 
-Future<void> addThisDeviceToBackend(deviceData, context) async {
+Future<void> _addThisDeviceToBackend(deviceData, context) async {
    try {
      await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
    } catch (e) {}

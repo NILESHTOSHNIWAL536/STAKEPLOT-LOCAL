@@ -26,15 +26,11 @@ import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.d
 import 'package:flutter_application_code_stakeplot/loginservices/login_screen.dart';
 import 'Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
-import 'backed_connections/apis_connect.dart';
 import 'email_sync/add_credit_card_bank.dart';
 import 'finance_screen/Calculators/loan_calculator.dart';
 import 'finances_screen/creditCard_slider.dart';
 import 'finances_screen/index_finances.dart';
 import 'onboarding_screens/onboarding_screen.dart';
-
-
-
 
 var routes =
  {  

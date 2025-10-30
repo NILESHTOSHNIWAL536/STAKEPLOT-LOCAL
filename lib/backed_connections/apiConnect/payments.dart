@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_ser
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../routes/route_transactions.dart';
 
 void getDebts() async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -322,7 +323,8 @@ void clearDebts(context, String id, String amount, String value) async {
   };
 
   final response = await http.post(
-    Uri.parse('${url}/transaction/add'),
+    Uri.parse(TransactionRoutes.addTransaction),
+    // Uri.parse('${url}/transaction/add'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
@@ -330,9 +332,7 @@ void clearDebts(context, String id, String amount, String value) async {
     body: jsonEncode(body),
   );
   if (response.statusCode == 200) {
-    final body = json.decode(response.body);
     snackBarCalled(context, SnackbarData().allDebtsCleared, Colors.black);
-    //  Navigator.pushReplacementNamed(context, '/home');
   } else {
     snackBarCalledfail(context, SnackbarData().debterror, Colors.red);
   }

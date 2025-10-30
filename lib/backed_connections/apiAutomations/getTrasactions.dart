@@ -6,11 +6,9 @@ import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
-import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -25,6 +23,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
 import '../../Hive_localstorage/apisCall/autopays_apis.dart';
 import '../../Home_Screen/insightsController.dart';
+import '../../routes/route_transactions.dart';
 
 double getDouble(data) {
   return double.parse(data.toString());
@@ -629,7 +628,7 @@ void addTransaction(String amount, String subCategory, String categories,
     'isSplit': isSplit,
     'isDebit': isDebit
   };
-  final response = await postDataApiCall("${url}/transaction/add", body);
+  final response = await postDataApiCall("${TransactionRoutes.addTransaction}", body);
   if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
     transactionsHistory.insert(
@@ -688,16 +687,7 @@ void processChartData() {
   } catch (e) {}
 }
 
-void getTransaction(context) async {
-  var response = await getDataApiCall("${url}/transaction/history");
 
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    trasactionsHistory.clear();
-    trasactionsHistory.addAll(obj);
-  } else {}
-}
 
 void pickCustomDateRange(BuildContext context) async {
   List<DateTime?> picked = await showCalendarDatePicker2Dialog(

@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../Utils/finspaceStrings.dart';
+import '../../routes/route_api.dart';
 import '../googlesignin/credentials.dart';
 
 void initFinvuManager(BuildContext context) async {
@@ -53,7 +54,7 @@ Future<String> login(context) async {
 Future<void> getConsentHandleId(context) async 
 {
 
-  final String apiUrl ="${url}/finvu/login"; 
+  final String apiUrl =FinvuRoutes.finvuLogin; 
   final String custId ="${number.value}@finvu"; 
   var body={"custId": custId,'number':number.value};
 
@@ -73,7 +74,7 @@ Future<void> getConsentHandleId(context) async
 Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
  try {
 
-    final String apiUrl ="${url}/finvu/fetchData"; 
+    final String apiUrl =FinvuRoutes.finvuFetchData; 
     final String custId ="${number.value}@finvu"; 
 
    final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -112,7 +113,8 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 //don't delete this function, it is used to store the map of images in the backend
  void storeMapOfImagesInBackend() async
  {
-    //  var urlPath = url +"/transaction/storeBankUrl/" ;
+    //  var urlPathw = url +"/transaction/storeBankUrl/" ;
+    //  var urlPath = TransactionRoutes.storeBankUrl ;
     //  var body = bankImageAndid ;
    
     //  var response =await postDataApiCall(urlPath, body);

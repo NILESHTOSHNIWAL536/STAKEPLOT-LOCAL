@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/routers_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
 import 'package:get/get.dart';
 
 import '../../Hive_localstorage/apisCall/bank_apis.dart';
@@ -108,10 +108,11 @@ void addBankApiCall() {
   getFipAccountInfo();
 }
 
-void getWeeklyfetchData(
-    consentId, consendHandleId, sessionId, custId, last,bankName,fipId,fetchCount,accountId) async {
-  final String apiUrl = "${url}/finvu/fetchWeekly";
+void getWeeklyfetchData(consentId, consendHandleId, sessionId, custId, last,bankName,fipId,fetchCount,accountId) async {
+  
+  final String apiUrl =FinvuRoutes.fetchWeekly;
   final String userUrl = UserRoutes.updateFetchStatus;
+
   var body = {
     'handleId': consendHandleId,
     'custId': custId,
@@ -168,7 +169,7 @@ Future<void> getFipAccountInfo([bool testing=false,String token=""]) async
    });
 
     if(fipIds.isEmpty)return;
-    String urlPath=url+"/finvu/fip-details/";
+    String urlPath=FinvuRoutes.fipDetails;
     var body={
        "fipIds":fipIds
     };

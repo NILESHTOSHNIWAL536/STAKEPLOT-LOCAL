@@ -14,13 +14,18 @@ import 'package:intl/intl.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 
+import '../routes/route_transactions.dart';
+
 RxInt startIndex = 0.obs;
 
 void getPdf(BuildContext context, RxString selectedValue,
     RxString selectedValueType) async {
   var response = await getDataApiCall(
+    // BankTransactionRoutes.getPreviousTransactions(accountId: accountIdPdf.value,date:getPreviousDate(int.parse(selectedValue.value), selectedValueType.value) ),
     "${url}/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}/${accountIdPdf.value}",
   );
+  
+
   startIndex.value = 0;
   bankLogo.value = getBankLogo();
 

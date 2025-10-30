@@ -6,7 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
-import 'package:flutter_application_code_stakeplot/routers_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
 
 
 void addUserAsFrd(id,context,[type="friend"])async

@@ -20,10 +20,12 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/model/post_model.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
-import "package:flutter_application_code_stakeplot/routers_api.dart";
+import "package:flutter_application_code_stakeplot/routes/route_api.dart";
 import "dart:convert";
 
 import "package:get/get.dart";
+
+import "../routes/route_post.dart";
 
 RxBool notificationsFlag = true.obs;
 

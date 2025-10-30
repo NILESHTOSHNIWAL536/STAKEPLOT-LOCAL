@@ -1,18 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postLoadFeed.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
-import 'package:flutter_application_code_stakeplot/routers_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/message.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../routes/route_post.dart';
 
 void getChats(data) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -258,34 +258,6 @@ void votePollInPost(context, String id, int index) async {
   } else {}
 }
 
-void updateRoom(
-    context, List expenses, List user, String name, String id, admin) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.patch(
-    Uri.parse('${url}/room/update/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      "admin": admin,
-      "name": name,
-      "users": user,
-      "expenses": expenses,
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    snackBarCalled(
-        context, "The room has been updated successfully!", Colors.black);
-  } else {
-    snackBarCalled(
-        context, "An error occurred while updating the room!", Colors.red);
-  }
-}
 
 void getChatLoader(bool flag) async {
 
@@ -354,27 +326,14 @@ void getChatLoader(bool flag) async {
 
 void addMessage(
     context, String messageType, String message, String id, var data) async {
-  var urlPath = Uri.parse('${url}/chat/');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${urlPath}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  var urlPath = '${url}/chat/';
+  await postDataApiCall(urlPath, {
       "messageType": messageType,
       "receiver": id,
       "message": message,
       "image": "base",
       "poll": id
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-  } else {}
+    });
 }
 
 void addChatSplitAmount(

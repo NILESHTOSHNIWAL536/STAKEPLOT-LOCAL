@@ -8,13 +8,14 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
-import 'package:flutter_application_code_stakeplot/routers_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 import '../../Hive_localstorage/apisCall/post_apis.dart';
 import '../../Hive_localstorage/hive_storage.dart';
+import '../../routes/route_post.dart';
 
 
 void approveBill(context, id, type, notifyId) async {

@@ -25,6 +25,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../animated/pdf3.dart';
+
 RxBool reloadHistory = false.obs;
 RxString selectedValue = "30".obs;
 RxString selectedValueType = "days".obs;
@@ -323,7 +325,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 child: InkWell(
                     onTap: () async {
                       getPdgLoader.value = true;
-                      getPdf(context, selectedValue, selectedValueType);
+                      getPdf3(context, selectedValue, selectedValueType);
                     },
                     child: Obx(() => getPdgLoader.value
                         ? getspinner(context, "")

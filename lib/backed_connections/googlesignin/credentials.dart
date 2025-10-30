@@ -10,6 +10,8 @@ class Credentials
     static  String  LIVE_API_TEST= dotenv.env['API_URL_Local'] ?? dotenv.env['API_URL'] ?? ""; 
     static  String  LIVE_API2= dotenv.env['EMAIL_API_URL'] ??""; 
     static  String  LIVE_API_TEST2= dotenv.env['EMAIL_API_URL_Local'] ?? dotenv.env['EMAIL_API_URL'] ?? ""; 
+    static  String  FINVU_LIVE= dotenv.env['Finvu_API_URL'] ??""; 
+    static  String  FINVU_TEST= dotenv.env['Finvu_API_URL_Local'] ?? dotenv.env['Finvu_API_URL'] ?? ""; 
     static  String  TestUser= dotenv.env['TESTUSER'] ??""; 
     static  String  FinvuUrl= dotenv.env['FinvuUrl'] ??""; 
     static  String  Live_finvu_api= dotenv.env['Live_finvu_api'] ?? ""; 

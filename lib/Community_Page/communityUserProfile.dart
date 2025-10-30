@@ -13,7 +13,7 @@ import 'package:flutter_application_code_stakeplot/finSpace/updateInterestScreen
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:get/get.dart';
 
-import '../routers_api.dart';
+import '../routes/route_api.dart';
 
 class CommunityUserProfileScreen extends StatefulWidget {
   const CommunityUserProfileScreen({Key? key}) : super(key: key);

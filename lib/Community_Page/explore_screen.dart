@@ -25,7 +25,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../routers_api.dart';
+import '../routes/route_api.dart';
+import '../routes/route_post.dart';
 
 class ExploreModal extends StatefulWidget {
   final Function(Map<String, dynamic>) onPostCreated;

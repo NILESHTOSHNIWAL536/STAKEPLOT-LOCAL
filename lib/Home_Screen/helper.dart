@@ -24,6 +24,7 @@ import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../animated/pdf3.dart';
 import 'history/amount_range.dart';
 
 List<PredictionEntry> getUniquePredictedCategories(
@@ -824,7 +825,7 @@ void showModalForPdfDownload(BuildContext context) {
                   child: InkWell(
                       onTap: () async {
                         getPdgLoader.value = true;
-                        getPdf(context, selectedValue, selectedValueType);
+                        getPdf3(context, selectedValue, selectedValueType);
                       },
                       child: Obx(() => getPdgLoader.value
                           ? getspinner(context, "")
