@@ -1,4 +1,4 @@
-const { TransactionRepository, AutoTransactionRepository } = require("../repositories");
+const { TransactionRepository, AutoTransactionRepository } = require("../respositories/index");
 const { StatusCodes } = require("http-status-codes");
 const AppError = require("../utils/errors/app-error");
 const redisClient = require("../config/redis-config");
