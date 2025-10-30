@@ -1,44 +1,25 @@
-const {
-  Transaction,
-  GroupedTransaction,
-  BankLogo,
-  TransactionRule,
-  HeadsUp,
-  MoneyMap,
-  PredictedCategories,
-  RecurringPayment,
-  User,
-  UserActivity,
-} = require("../../models/index");
-const {
-  categorizeTransactions,
-} = require("../../utils/helpers/categorizeTransactions");
-const {
-  getTransactions,
-} = require("../../utils/helpers/graphDataFromTransactions");
-const mongoose = require("mongoose");
-const CrudRepository = require("../crud-repository");
-const calculatePercentageChange = require("../../utils/helpers/comparePersentage");
-const {FipRepository} = require("../index");
-const {buildSearchFilter, getMatchedKeywords }= require("../../utils/helpers/transactionSearchFilter");
-const {
-  enrichTransactionWithBankDetails,
-} = require("../../utils/helpers/transactionBankLogo");
-const extractNarrationPattern = require("../../utils/helpers/extractNarrationPattern");
-const logger = require("../../utils/common/logger");
-const {
-  deduplicateTransactions,
-} = require("../../utils/helpers/de-duplicate-transactions");
-const deduplicateAllTransactions = require("../../utils/helpers/delete-transactions-from-db");
-const AppError = require("../../utils/errors/app-error");
-const { StatusCodes } = require("http-status-codes");
-const transactionWithPredictions = require("../../utils/helpers/transaction-category-prediction");
-const {handleDailyCounter,incrementScore,getCurrentDate} = require("../../utils/helpers/increment_score");
-const {scoreToAdd,scoreToGetReward}= require("../../utils/common/enums");
-const axios = require("axios");
-const dotenv = require("dotenv");
+const { Transaction, GroupedTransaction, BankLogo, TransactionRule, HeadsUp, MoneyMap, PredictedCategories, RecurringPayment } = require('../../models/index');
+const { categorizeTransactions } = require('../../utils/helpers/categorizeTransactions');
+const { getTransactions } = require('../../utils/helpers/graphDataFromTransactions');
+const mongoose = require('mongoose');
+const CrudRepository = require('../crud-repository');
+const calculatePercentageChange = require('../../utils/helpers/comparePersentage');
+const { FipRepository } = require('../autoTransactions-repository/bank');
+const { buildSearchFilter, getMatchedKeywords } = require('../../utils/helpers/transactionSearchFilter');
+const { enrichTransactionWithBankDetails } = require('../../utils/helpers/transactionBankLogo');
+const extractNarrationPattern = require('../../utils/helpers/extractNarrationPattern');
+const logger = require('../../utils/common/logger');
+const { deduplicateTransactions } = require('../../utils/helpers/de-duplicate-transactions');
+const deduplicateAllTransactions = require('../../utils/helpers/delete-transactions-from-db');
+const AppError = require('../../utils/errors/app-error');
+const { StatusCodes } = require('http-status-codes');
+const transactionWithPredictions = require('../../utils/helpers/transaction-category-prediction');
+const { handleDailyCounter, incrementScore, getCurrentDate } = require('../../utils/helpers/increment_score');
+const { scoreToAdd, scoreToGetReward } = require('../../utils/common/enums');
+const axios = require('axios');
+const dotenv = require('dotenv');
 const { startOfWeek, endOfWeek, subDays, startOfMonth, endOfMonth } = require('date-fns');
-const { calculateLoanEligibility } = require("../../utils/common/loanCalculator");
+const { calculateLoanEligibility } = require('../../utils/common/loanCalculator');
 
 dotenv.config();
 
@@ -59,21 +40,13 @@ class AutoTransactionRepository extends CrudRepository {
 
       // 2. Fetch rules for auto-categorization, and create a ruleMap out of it
       const rules = await TransactionRule.find({ userId }).lean();
-      const ruleMap = new Map(
-        rules.map((r) => [`${r.narrationPattern}_${r.amount}`, r])
-      );
+      const ruleMap = new Map(rules.map((r) => [`${r.narrationPattern}_${r.amount}`, r]));
 
       // 3. Remove the duplicate transactions from the fetched transactions
       const uniqueTransactions = deduplicateTransactions(transactionsData);
 
       // 4. Categorize transactions for category, subcategory
-      const categorizedTransactions = categorizeTransactions(
-        uniqueTransactions,
-        accountId,
-        userId,
-        bankId,
-        ruleMap
-      );
+      const categorizedTransactions = categorizeTransactions(uniqueTransactions, accountId, userId, bankId, ruleMap);
 
       // 5. Insert transactions in bulk with error tolerance
       const responses = await this.model.insertMany(categorizedTransactions, {
@@ -87,15 +60,15 @@ class AutoTransactionRepository extends CrudRepository {
       return {
         insertedCount: responses.insertedCount,
         insertedIds: responses.insertedIds,
-        message: "Transactions inserted, grouping queued if needed",
+        message: 'Transactions inserted, grouping queued if needed',
       };
     } catch (error) {
-      console.error("Error inserting transactions:", error);
+      console.error('Error inserting transactions:', error);
 
       if (error.code === 11000) {
-        console.warn("Duplicate transactions detected:", error);
+        console.warn('Duplicate transactions detected:', error);
         return {
-          message: "Some transactions were duplicates",
+          message: 'Some transactions were duplicates',
           insertedCount: error.result?.insertedCount || 0,
         };
       }
@@ -110,19 +83,11 @@ class AutoTransactionRepository extends CrudRepository {
       const skip = (page - 1) * limit;
 
       // 1. pull the page of transactions (already sorted newest-first)
-      const transactions = await this.model
-        .find({ userId, Hidden: false })
-        .sort({ transactionTimestamp: -1 })
-        .skip(skip)
-        .limit(limit)
-        .populate("accountId", "bankId");
+      const transactions = await this.model.find({ userId, Hidden: false }).sort({ transactionTimestamp: -1 }).skip(skip).limit(limit).populate('accountId', 'bankId');
 
       // 2. enrich with bank details
       const banks = await new FipRepository().getBank(userId);
-      const txWithBank = await enrichTransactionWithBankDetails(
-        transactions,
-        banks
-      );
+      const txWithBank = await enrichTransactionWithBankDetails(transactions, banks);
 
       // 3. add predictions **in place**, preserving order
       const txWithPredictions = await transactionWithPredictions(txWithBank);
@@ -130,23 +95,17 @@ class AutoTransactionRepository extends CrudRepository {
       return txWithPredictions;
     } catch (err) {
       logger.error(`Error fetching transactions: ${err.stack}`);
-      throw new AppError(
-        "Failed to fetch transactions",
-        StatusCodes.INTERNAL_SERVER_ERROR
-      );
+      throw new AppError('Failed to fetch transactions', StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async getSearchedTransactions(userId, page, search, isBankAccount,query) {
+  async getSearchedTransactions(userId, page, search, isBankAccount, query) {
     try {
       const limit = 20;
       const skip = (page - 1) * limit;
-      const searchFilter = isBankAccount == "Cash" ? [] : buildSearchFilter(search);
+      const searchFilter = isBankAccount == 'Cash' ? [] : buildSearchFilter(search);
       const objectUserId = new mongoose.Types.ObjectId(userId);
-      const objectAccountId =
-        isBankAccount !== "" && isBankAccount != "Cash"  && isBankAccount !== "-" 
-          ? new mongoose.Types.ObjectId(isBankAccount)
-          : undefined;
+      const objectAccountId = isBankAccount !== '' && isBankAccount != 'Cash' && isBankAccount !== '-' ? new mongoose.Types.ObjectId(isBankAccount) : undefined;
 
       const minAmount = query.minAmount ? Number(query.minAmount) : null;
       const maxAmount = query.maxAmount ? Number(query.maxAmount) : null;
@@ -157,16 +116,11 @@ class AutoTransactionRepository extends CrudRepository {
       const baseQuery = {
         userId: objectUserId,
         Hidden: false,
-        ...(isBankAccount === "Cash" ? { manualTransaction: true } : {}),
+        ...(isBankAccount === 'Cash' ? { manualTransaction: true } : {}),
         ...(searchFilter.length > 0 ? { $or: searchFilter } : {}),
-        ...(isBankAccount !== "" &&
-        isBankAccount !== "-" &&
-        isBankAccount !== "Credit" &&
-        isBankAccount !== "Debit" &&
-        isBankAccount != "Cash"
+        ...(isBankAccount !== '' && isBankAccount !== '-' && isBankAccount !== 'Credit' && isBankAccount !== 'Debit' && isBankAccount != 'Cash'
           ? { accountId: objectAccountId }
-          : {}
-        ),
+          : {}),
         ...(minAmount !== null || maxAmount !== null
           ? {
               amount: {
@@ -185,21 +139,19 @@ class AutoTransactionRepository extends CrudRepository {
           : {}),
       };
 
-
-    // const amountQuery = {
-    //       userId: objectUserId,
-    //       Hidden: false,
-    //       ...(minAmount !== undefined ? { amount: { $gte: minAmount } } : {}),
-    //       ...(maxAmount !== undefined
-    //         ? {
-    //             amount: {
-    //               ...(amountQuery.amount || {}),
-    //               $lte: maxAmount,
-    //             },
-    //           }
-    //         : {}),
-    //     };
-
+      // const amountQuery = {
+      //       userId: objectUserId,
+      //       Hidden: false,
+      //       ...(minAmount !== undefined ? { amount: { $gte: minAmount } } : {}),
+      //       ...(maxAmount !== undefined
+      //         ? {
+      //             amount: {
+      //               ...(amountQuery.amount || {}),
+      //               $lte: maxAmount,
+      //             },
+      //           }
+      //         : {}),
+      //     };
 
       const now = new Date();
 
@@ -222,40 +174,32 @@ class AutoTransactionRepository extends CrudRepository {
           { $match: match },
           {
             $group: {
-              _id: "$type",
-              total: { $sum: "$amount" },
+              _id: '$type',
+              total: { $sum: '$amount' },
             },
           },
         ]);
 
         const totals = { credit: 0, debit: 0 };
         result.forEach((r) => {
-          if (r._id === "CREDIT") totals.credit = Math.round(r.total);
-          if (r._id === "DEBIT") totals.debit = Math.round(r.total);
+          if (r._id === 'CREDIT') totals.credit = Math.round(r.total);
+          if (r._id === 'DEBIT') totals.debit = Math.round(r.total);
         });
         return totals;
       };
 
       // Get last week/month totals
       const lastWeekTotals = await getTotals(lastWeekStart, lastWeekEnd);
-      const currentMonthTotals = await getTotals(
-        currentMonthStart,
-        currentMonthEnd
-      );
+      const currentMonthTotals = await getTotals(currentMonthStart, currentMonthEnd);
 
       // Fetch paginated transactions
-      const transactions = await this.model
-        .find(baseQuery)
-        .sort({ transactionTimestamp: -1 })
-        .skip(skip)
-        .limit(limit)
-        .populate("accountId", "bankId");
+      const transactions = await this.model.find(baseQuery).sort({ transactionTimestamp: -1 }).skip(skip).limit(limit).populate('accountId', 'bankId');
 
       // Add Bank Logo's to the transactions
       const banks = await new FipRepository().getBank(userId);
       const txWithBank = await enrichTransactionWithBankDetails(
         transactions,
-        
+
         banks
       );
       const txWithPredictions = await transactionWithPredictions(txWithBank);
@@ -266,14 +210,11 @@ class AutoTransactionRepository extends CrudRepository {
         transactions: txWithPredictions,
         lastWeek: lastWeekTotals,
         lastMonth: currentMonthTotals,
-        matchedKeywords
+        matchedKeywords,
       };
     } catch (error) {
       logger.error(`Error from getSearchedTransactions: ${error}`);
-      throw new AppError(
-        "Failed to fetch searched transactions",
-        StatusCodes.INTERNAL_SERVER_ERROR
-      );
+      throw new AppError('Failed to fetch searched transactions', StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -302,19 +243,13 @@ class AutoTransactionRepository extends CrudRepository {
       }).lean();
       return response;
     } catch (error) {
-      logger.error(
-        `error from the getRecurringPayments from the repository: ${error}`
-      );
+      logger.error(`error from the getRecurringPayments from the repository: ${error}`);
       return error;
     }
   }
 
   async updateRecurringPayment(recurringPaymentId, userId, data) {
-    const response = await RecurringPayment.findOneAndUpdate(
-      { _id: recurringPaymentId, userId },
-      { $set: data },
-      { new: true, upsert: true }
-    );
+    const response = await RecurringPayment.findOneAndUpdate({ _id: recurringPaymentId, userId }, { $set: data }, { new: true, upsert: true });
     return response;
   }
 
@@ -327,42 +262,27 @@ class AutoTransactionRepository extends CrudRepository {
 
   async getGroupedTransactions(userId) {
     try {
-      const response = await GroupedTransaction.find({ userId })
-        .populate("transactions")
-        .sort({ count: -1 });
+      const response = await GroupedTransaction.find({ userId }).populate('transactions').sort({ count: -1 });
       return response;
     } catch (error) {
-      logger.error(
-        `error from getGroupedTransactions, respositories: ${error}`
-      );
+      logger.error(`error from getGroupedTransactions, respositories: ${error}`);
       throw error;
     }
   }
 
-  async categorizeGroupedTransaction(
-    userId,
-    groupId,
-    category,
-    subcategory,
-    removedTransactions
-  ) {
+  async categorizeGroupedTransaction(userId, groupId, category, subcategory, removedTransactions) {
     const group = await GroupedTransaction.findOne({ _id: groupId, userId });
-    if (!group) return { message: "Group not found" };
+    if (!group) return { message: 'Group not found' };
 
     // Extract all transaction IDs from the group
     const transactionIds = group.transactions.map((txn) => txn._id.toString());
 
     // Filter out removed transactions
-    const filteredIds = transactionIds.filter(
-      (id) => !removedTransactions.includes(id)
-    );
+    const filteredIds = transactionIds.filter((id) => !removedTransactions.includes(id));
 
     // Only update the filtered transactions
     if (filteredIds.length > 0) {
-      await Transaction.updateMany(
-        { _id: { $in: filteredIds } },
-        { $set: { category, subcategory } }
-      );
+      await Transaction.updateMany({ _id: { $in: filteredIds } }, { $set: { category, subcategory } });
     }
 
     // update the TransactionRule, for future transactions categorization
@@ -379,7 +299,7 @@ class AutoTransactionRepository extends CrudRepository {
         amount: group.totalAmount / group.count,
         category: category,
         subcategory: subcategory,
-        source: "group",
+        source: 'group',
       },
       { upsert: true }
     );
@@ -391,9 +311,7 @@ class AutoTransactionRepository extends CrudRepository {
 
   async getPendingForReviewTransactions(userId) {
     try {
-      const response = await this.model
-        .find({ userId, needsReview: true })
-        .sort({ transactionTimestamp: -1 });
+      const response = await this.model.find({ userId, needsReview: true }).sort({ transactionTimestamp: -1 });
       return response;
     } catch (error) {
       logger.debug(`response from the transactions repository: ${error}`);
@@ -407,12 +325,10 @@ class AutoTransactionRepository extends CrudRepository {
         _id: transactionId,
         userId,
       });
-      if (!transaction) return { message: "Transaction not found" };
+      if (!transaction) return { message: 'Transaction not found' };
 
-      isCorrect = String(isCorrect).toLowerCase() === "true";
-      const narrationPattern = extractNarrationPattern(
-        transaction.narration
-      ).toLowerCase();
+      isCorrect = String(isCorrect).toLowerCase() === 'true';
+      const narrationPattern = extractNarrationPattern(transaction.narration).toLowerCase();
 
       if (isCorrect) {
         transaction.needsReview = false;
@@ -429,14 +345,14 @@ class AutoTransactionRepository extends CrudRepository {
             narrationPattern,
             amount: transaction.amount,
             category: transaction.category,
-            subcategory: transaction.subcategory || "",
-            source: "manual",
+            subcategory: transaction.subcategory || '',
+            source: 'manual',
           },
           { upsert: true }
         );
       } else {
-        transaction.category = "Untagged";
-        transaction.subcategory = "";
+        transaction.category = 'Untagged';
+        transaction.subcategory = '';
         transaction.needsReview = false;
         await transaction.save();
 
@@ -447,7 +363,7 @@ class AutoTransactionRepository extends CrudRepository {
         });
       }
 
-      return { message: "Transaction categorized successfully" };
+      return { message: 'Transaction categorized successfully' };
     } catch (error) {
       logger.error(`response from the transactions repository: ${error}`);
       throw error;
@@ -467,7 +383,7 @@ class AutoTransactionRepository extends CrudRepository {
       endDate = new Date(Date.UTC(y, 11, 31, 18, 29, 59, 999)); // 31 Dec 23:59 IST
     } else if (/^\d{4}-\d{2}$/.test(type)) {
       // Month
-      const [year, month] = type.split("-");
+      const [year, month] = type.split('-');
       const y = parseInt(year, 10);
       const m = parseInt(month, 10) - 1;
 
@@ -488,15 +404,12 @@ class AutoTransactionRepository extends CrudRepository {
       .limit(limit);
 
     const banks = await new FipRepository().getBank(userId);
-    const txWithBank = await enrichTransactionWithBankDetails(
-      transactions,
-      banks
-    );
+    const txWithBank = await enrichTransactionWithBankDetails(transactions, banks);
 
     // 3. add predictions **in place**, preserving order
     const txWithPredictions = await transactionWithPredictions(txWithBank);
 
-    return { "transactions" :txWithPredictions};
+    return { transactions: txWithPredictions };
   }
 
   async getDayWiseTransactionsSummary(userId) {
@@ -510,19 +423,19 @@ class AutoTransactionRepository extends CrudRepository {
         $group: {
           _id: {
             $dateToString: {
-              format: "%Y-%m-%d",
-              date: "$transactionTimestamp",
+              format: '%Y-%m-%d',
+              date: '$transactionTimestamp',
             },
           },
           count: { $sum: 1 },
           creditAmount: {
             $sum: {
-              $cond: [{ $eq: ["$type", "CREDIT"] }, "$amount", 0],
+              $cond: [{ $eq: ['$type', 'CREDIT'] }, '$amount', 0],
             },
           },
           debitAmount: {
             $sum: {
-              $cond: [{ $eq: ["$type", "DEBIT"] }, "$amount", 0],
+              $cond: [{ $eq: ['$type', 'DEBIT'] }, '$amount', 0],
             },
           },
         },
@@ -531,7 +444,7 @@ class AutoTransactionRepository extends CrudRepository {
       {
         $project: {
           _id: 0,
-          date: "$_id",
+          date: '$_id',
           count: 1,
           creditAmount: 1,
           debitAmount: 1,
@@ -559,10 +472,7 @@ class AutoTransactionRepository extends CrudRepository {
     const transactions = await this.get(query, options);
 
     const banks = await new FipRepository().getBank(userId);
-    const txWithBank = await enrichTransactionWithBankDetails(
-      transactions,
-      banks
-    );
+    const txWithBank = await enrichTransactionWithBankDetails(transactions, banks);
 
     const txWithPredictions = await transactionWithPredictions(txWithBank);
 
@@ -571,11 +481,7 @@ class AutoTransactionRepository extends CrudRepository {
 
   async getTransactionsByCategory(userId, category) {
     const transactions = await this.get({ userId: userId });
-    const categoryTransactions = transactions.filter((transaction) =>
-      transaction.categorized_transactions.some(
-        (cat) => cat.category === category
-      )
-    );
+    const categoryTransactions = transactions.filter((transaction) => transaction.categorized_transactions.some((cat) => cat.category === category));
     return categoryTransactions;
   }
 
@@ -595,10 +501,10 @@ class AutoTransactionRepository extends CrudRepository {
       },
       {
         $lookup: {
-          from: "splits",
-          localField: "_id",
-          foreignField: "transactionId",
-          as: "splitData",
+          from: 'splits',
+          localField: '_id',
+          foreignField: 'transactionId',
+          as: 'splitData',
         },
       },
       {
@@ -606,9 +512,9 @@ class AutoTransactionRepository extends CrudRepository {
           userSplit: {
             $first: {
               $filter: {
-                input: "$splitData",
-                as: "split",
-                cond: { $eq: ["$$split.userId", userObjectId] },
+                input: '$splitData',
+                as: 'split',
+                cond: { $eq: ['$$split.userId', userObjectId] },
               },
             },
           },
@@ -618,9 +524,9 @@ class AutoTransactionRepository extends CrudRepository {
         $addFields: {
           userPaymentStatus: {
             $filter: {
-              input: { $ifNull: ["$userSplit.paymentStatus", []] },
-              as: "ps",
-              cond: { $eq: ["$$ps.member", userObjectId] },
+              input: { $ifNull: ['$userSplit.paymentStatus', []] },
+              as: 'ps',
+              cond: { $eq: ['$$ps.member', userObjectId] },
             },
           },
         },
@@ -630,52 +536,49 @@ class AutoTransactionRepository extends CrudRepository {
           computedAmount: {
             $cond: {
               if: {
-                $and: [
-                  { $eq: [{ $ifNull: ["$isBalanceOut", false] }, true] },
-                  { $ne: [{ $ifNull: ["$balanceOut", -1] }, -1] },
-                ],
+                $and: [{ $eq: [{ $ifNull: ['$isBalanceOut', false] }, true] }, { $ne: [{ $ifNull: ['$balanceOut', -1] }, -1] }],
               },
-              then: "$balanceOut",
+              then: '$balanceOut',
               else: {
                 $cond: [
-                  { $gt: [{ $size: "$userPaymentStatus" }, 0] },
+                  { $gt: [{ $size: '$userPaymentStatus' }, 0] },
                   {
                     $sum: {
                       $map: {
-                        input: "$userPaymentStatus",
-                        as: "s",
-                        in: { $ifNull: ["$$s.amount", 0] },
+                        input: '$userPaymentStatus',
+                        as: 's',
+                        in: { $ifNull: ['$$s.amount', 0] },
                       },
                     },
                   },
-                  "$amount",
+                  '$amount',
                 ],
               },
             },
           },
           category: {
-            $toLower: { $ifNull: ["$category", "untagged"] },
+            $toLower: { $ifNull: ['$category', 'untagged'] },
           },
         },
       },
       {
         $group: {
-          _id: "$category",
+          _id: '$category',
           total_debit: {
             $sum: {
-              $cond: [{ $eq: ["$type", "DEBIT"] }, "$computedAmount", 0],
+              $cond: [{ $eq: ['$type', 'DEBIT'] }, '$computedAmount', 0],
             },
           },
           total_credit: {
             $sum: {
-              $cond: [{ $eq: ["$type", "CREDIT"] }, "$computedAmount", 0],
+              $cond: [{ $eq: ['$type', 'CREDIT'] }, '$computedAmount', 0],
             },
           },
         },
       },
       {
         $project: {
-          category: "$_id",
+          category: '$_id',
           total_debit: 1,
           total_credit: 1,
           _id: 0,
@@ -691,35 +594,31 @@ class AutoTransactionRepository extends CrudRepository {
             $gte: new Date(startDate),
             $lte: new Date(endDate),
           },
-          type: "DEBIT",
+          type: 'DEBIT',
           narration: { $ne: null },
           manualTransaction: { $ne: true },
         },
       },
       {
         $addFields: {
-          splitByDash: { $split: ["$narration", "-"] },
-          splitBySlash: { $split: ["$narration", "/"] },
-          splitByPlus: { $split: ["$narration", "+"] },
-          splitBySpace: { $split: ["$narration", " "] },
+          splitByDash: { $split: ['$narration', '-'] },
+          splitBySlash: { $split: ['$narration', '/'] },
+          splitByPlus: { $split: ['$narration', '+'] },
+          splitBySpace: { $split: ['$narration', ' '] },
         },
       },
       {
         $addFields: {
           chosenSplit: {
             $cond: [
-              { $gt: [{ $size: "$splitByDash" }, 1] },
-              "$splitByDash",
+              { $gt: [{ $size: '$splitByDash' }, 1] },
+              '$splitByDash',
               {
                 $cond: [
-                  { $gt: [{ $size: "$splitBySlash" }, 1] },
-                  "$splitBySlash",
+                  { $gt: [{ $size: '$splitBySlash' }, 1] },
+                  '$splitBySlash',
                   {
-                    $cond: [
-                      { $gt: [{ $size: "$splitByPlus" }, 1] },
-                      "$splitByPlus",
-                      "$splitBySpace",
-                    ],
+                    $cond: [{ $gt: [{ $size: '$splitByPlus' }, 1] }, '$splitByPlus', '$splitBySpace'],
                   },
                 ],
               },
@@ -731,9 +630,9 @@ class AutoTransactionRepository extends CrudRepository {
         $addFields: {
           trimmedParts: {
             $map: {
-              input: "$chosenSplit",
-              as: "part",
-              in: { $trim: { input: "$$part" } },
+              input: '$chosenSplit',
+              as: 'part',
+              in: { $trim: { input: '$$part' } },
             },
           },
         },
@@ -742,24 +641,16 @@ class AutoTransactionRepository extends CrudRepository {
         $addFields: {
           probableName: {
             $cond: [
-              { $gte: [{ $size: "$trimmedParts" }, 4] },
+              { $gte: [{ $size: '$trimmedParts' }, 4] },
               {
-                $concat: [
-                  { $arrayElemAt: ["$trimmedParts", 2] },
-                  " ",
-                  { $arrayElemAt: ["$trimmedParts", 3] },
-                ],
+                $concat: [{ $arrayElemAt: ['$trimmedParts', 2] }, ' ', { $arrayElemAt: ['$trimmedParts', 3] }],
               },
               {
                 $cond: [
-                  { $gte: [{ $size: "$trimmedParts" }, 3] },
-                  { $arrayElemAt: ["$trimmedParts", 2] },
+                  { $gte: [{ $size: '$trimmedParts' }, 3] },
+                  { $arrayElemAt: ['$trimmedParts', 2] },
                   {
-                    $cond: [
-                      { $gte: [{ $size: "$trimmedParts" }, 2] },
-                      { $arrayElemAt: ["$trimmedParts", 1] },
-                      { $arrayElemAt: ["$trimmedParts", 0] },
-                    ],
+                    $cond: [{ $gte: [{ $size: '$trimmedParts' }, 2] }, { $arrayElemAt: ['$trimmedParts', 1] }, { $arrayElemAt: ['$trimmedParts', 0] }],
                   },
                 ],
               },
@@ -772,23 +663,20 @@ class AutoTransactionRepository extends CrudRepository {
           computedAmount: {
             $cond: {
               if: {
-                $and: [
-                  { $eq: [{ $ifNull: ["$isBalanceOut", false] }, true] },
-                  { $ne: [{ $ifNull: ["$balanceOut", -1] }, -1] },
-                ],
+                $and: [{ $eq: [{ $ifNull: ['$isBalanceOut', false] }, true] }, { $ne: [{ $ifNull: ['$balanceOut', -1] }, -1] }],
               },
-              then: "$balanceOut",
-              else: "$amount",
+              then: '$balanceOut',
+              else: '$amount',
             },
           },
         },
       },
       {
         $group: {
-          _id: "$probableName",
+          _id: '$probableName',
           count: { $sum: 1 },
-          totalAmount: { $sum: "$computedAmount" },
-          narrations: { $addToSet: "$narration" },
+          totalAmount: { $sum: '$computedAmount' },
+          narrations: { $addToSet: '$narration' },
         },
       },
       {
@@ -802,7 +690,7 @@ class AutoTransactionRepository extends CrudRepository {
       },
       {
         $project: {
-          name: "$_id",
+          name: '$_id',
           _id: 0,
           count: 1,
           totalAmount: 1,
@@ -812,9 +700,7 @@ class AutoTransactionRepository extends CrudRepository {
     ];
 
     // Fetch current month data
-    const currentData = await this.model.aggregate(
-      buildPipeline(startDate, endDate)
-    );
+    const currentData = await this.model.aggregate(buildPipeline(startDate, endDate));
 
     // Previous month dates
     const prevStartDate = new Date(startDate);
@@ -823,14 +709,10 @@ class AutoTransactionRepository extends CrudRepository {
     prevEndDate.setUTCMonth(prevEndDate.getUTCMonth() - 1);
 
     // Fetch previous month data
-    const prevData = await this.model.aggregate(
-      buildPipeline(prevStartDate, prevEndDate)
-    );
+    const prevData = await this.model.aggregate(buildPipeline(prevStartDate, prevEndDate));
 
     // Map previous month by lowercased category
-    const prevMap = new Map(
-      prevData.map((item) => [item.category.toLowerCase(), item])
-    );
+    const prevMap = new Map(prevData.map((item) => [item.category.toLowerCase(), item]));
 
     // Combine current + previous to compute percentage change
     const result = currentData
@@ -844,28 +726,16 @@ class AutoTransactionRepository extends CrudRepository {
           category: categoryKey,
           total_debit: current.total_debit,
           total_credit: current.total_credit,
-          total_debit_percentage: calculatePercentageChange(
-            current.total_debit,
-            previous.total_debit
-          ),
-          total_credit_percentage: calculatePercentageChange(
-            current.total_credit,
-            previous.total_credit
-          ),
+          total_debit_percentage: calculatePercentageChange(current.total_debit, previous.total_debit),
+          total_credit_percentage: calculatePercentageChange(current.total_credit, previous.total_credit),
           debit_diff: current.total_debit - previous.total_debit,
         };
       })
       // ✅ Filter out categories with zero debit but positive credit (e.g., pure income entries)
       .filter((item) => !(item.total_debit === 0 && item.total_credit > 0));
 
-    const totalDebitThisMonth = result.reduce(
-      (sum, item) => sum + item.total_debit,
-      0
-    );
-    const totalCreditThisMonth = result.reduce(
-      (sum, item) => sum + item.total_credit,
-      0
-    );
+    const totalDebitThisMonth = result.reduce((sum, item) => sum + item.total_debit, 0);
+    const totalCreditThisMonth = result.reduce((sum, item) => sum + item.total_credit, 0);
 
     const moreDrasticChange = [...result]
       .sort((a, b) => b.debit_diff - a.debit_diff)
@@ -891,45 +761,33 @@ class AutoTransactionRepository extends CrudRepository {
           userId,
           Hidden: true,
         })
-        .populate("accountId", "bankId");
+        .populate('accountId', 'bankId');
 
       // 2. enrich with bank details
       const banks = await new FipRepository().getBank(userId);
-      const txWithBank = await enrichTransactionWithBankDetails(
-        transactions,
-        banks
-      );
+      const txWithBank = await enrichTransactionWithBankDetails(transactions, banks);
 
       return txWithBank;
     } catch (error) {
       logger.error(`Error fetching hidden transactions: ${error.stack}`);
-      throw new AppError(
-        "Failed to fetch hidden transactions",
-        StatusCodes.INTERNAL_SERVER_ERROR
-      );
+      throw new AppError('Failed to fetch hidden transactions', StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
   async updateTransaction(updateData, userId, transactionId) {
     try {
-      const updatedTransaction = await Transaction.findOneAndUpdate(
-        { _id: transactionId, userId },
-        { $set: updateData },
-        { new: true }
-      );
+      const updatedTransaction = await Transaction.findOneAndUpdate({ _id: transactionId, userId }, { $set: updateData }, { new: true });
 
       if (!updatedTransaction) {
         return {
           success: false,
-          message: "Transaction not found",
+          message: 'Transaction not found',
         };
       }
 
       // check if the updateData has category, then update the TransactionRule collection
-      if (updatedTransaction && "category" in updateData) {
-        let narrationPattern = extractNarrationPattern(
-          updatedTransaction.narration
-        ).toLowerCase();
+      if (updatedTransaction && 'category' in updateData) {
+        let narrationPattern = extractNarrationPattern(updatedTransaction.narration).toLowerCase();
 
         try {
           //1. Create a transaction rule for future auto tagging
@@ -945,7 +803,7 @@ class AutoTransactionRepository extends CrudRepository {
               amount: updatedTransaction.amount,
               category: updatedTransaction.category,
               subcategory: updatedTransaction.subcategory,
-              source: "manual",
+              source: 'manual',
             },
             { upsert: true }
           );
@@ -959,20 +817,16 @@ class AutoTransactionRepository extends CrudRepository {
             });
           }
 
-            const id=updatedTransaction.userId;
-            await handleDailyCounter(id, 'dailyTags',1,transactionId,scoreToAdd.Tag,scoreToGetReward.Tag);
-           
-
+          const id = updatedTransaction.userId;
+          await handleDailyCounter(id, 'dailyTags', 1, transactionId, scoreToAdd.Tag, scoreToGetReward.Tag);
         } catch (error) {
-          logger.error(
-            `error from the update transaction in repositories: ${error} `
-          );
+          logger.error(`error from the update transaction in repositories: ${error} `);
         }
       }
 
       return {
         success: true,
-        message: "Transaction updated successfully",
+        message: 'Transaction updated successfully',
         data: updatedTransaction,
       };
     } catch (error) {
@@ -988,14 +842,14 @@ class AutoTransactionRepository extends CrudRepository {
       {
         $match: {
           userId: userId,
-          type: "DEBIT",
-          category: { $ne: "Untagged" },
+          type: 'DEBIT',
+          category: { $ne: 'Untagged' },
         },
       },
       {
         $group: {
-          _id: "$category",
-          totalDebit: { $sum: "$amount" },
+          _id: '$category',
+          totalDebit: { $sum: '$amount' },
         },
       },
       { $sort: { totalDebit: -1 } },
@@ -1003,7 +857,7 @@ class AutoTransactionRepository extends CrudRepository {
       {
         $project: {
           _id: 0,
-          category: "$_id",
+          category: '$_id',
         },
       },
     ];
@@ -1022,13 +876,13 @@ class AutoTransactionRepository extends CrudRepository {
             $gte: new Date(startDate),
             $lte: new Date(endDate),
           },
-          type: "DEBIT",
+          type: 'DEBIT',
         },
       },
       {
         $group: {
           _id: null,
-          totalDebit: { $sum: "$amount" },
+          totalDebit: { $sum: '$amount' },
         },
       },
     ];
@@ -1039,14 +893,12 @@ class AutoTransactionRepository extends CrudRepository {
 
   async getBudgetTransactions(userId, startDate, endDate, categories, groupBy) {
     let dateFormat;
-    if (groupBy === "monthly" || groupBy === "weekly") {
-      dateFormat = "%Y-%m-%d"; // Day-Month-Year for weekly & monthly
-    } else if (groupBy === "yearly") {
-      dateFormat = "%B"; // Full month name (e.g., January, February) for yearly
+    if (groupBy === 'monthly' || groupBy === 'weekly') {
+      dateFormat = '%Y-%m-%d'; // Day-Month-Year for weekly & monthly
+    } else if (groupBy === 'yearly') {
+      dateFormat = '%B'; // Full month name (e.g., January, February) for yearly
     } else {
-      throw new Error(
-        "Invalid groupBy value. Use 'monthly', 'weekly', or 'yearly'."
-      );
+      throw new Error("Invalid groupBy value. Use 'monthly', 'weekly', or 'yearly'.");
     }
 
     const transactions = await this.model.aggregate([
@@ -1068,45 +920,37 @@ class AutoTransactionRepository extends CrudRepository {
             date: {
               $dateToString: {
                 format: dateFormat,
-                date: "$transactionTimestamp",
+                date: '$transactionTimestamp',
               },
             },
-            type: "$type",
-            category: "$category",
+            type: '$type',
+            category: '$category',
           },
-          totalAmount: { $sum: "$amount" },
+          totalAmount: { $sum: '$amount' },
         },
       },
       // Reshape the output structure to group transactions by date and separate DEBIT & CREDIT
       {
         $group: {
-          _id: "$_id.date",
+          _id: '$_id.date',
           debit: {
             $push: {
-              $cond: [
-                { $eq: ["$_id.type", "DEBIT"] },
-                { k: "$_id.category", v: "$totalAmount" },
-                "$$REMOVE",
-              ],
+              $cond: [{ $eq: ['$_id.type', 'DEBIT'] }, { k: '$_id.category', v: '$totalAmount' }, '$$REMOVE'],
             },
           },
           credit: {
             $push: {
-              $cond: [
-                { $eq: ["$_id.type", "CREDIT"] },
-                { k: "$_id.category", v: "$totalAmount" },
-                "$$REMOVE",
-              ],
+              $cond: [{ $eq: ['$_id.type', 'CREDIT'] }, { k: '$_id.category', v: '$totalAmount' }, '$$REMOVE'],
             },
           },
           debitTotalAmount: {
             $sum: {
-              $cond: [{ $eq: ["$_id.type", "DEBIT"] }, "$totalAmount", 0],
+              $cond: [{ $eq: ['$_id.type', 'DEBIT'] }, '$totalAmount', 0],
             },
           },
           creditTotalAmount: {
             $sum: {
-              $cond: [{ $eq: ["$_id.type", "CREDIT"] }, "$totalAmount", 0],
+              $cond: [{ $eq: ['$_id.type', 'CREDIT'] }, '$totalAmount', 0],
             },
           },
         },
@@ -1115,8 +959,8 @@ class AutoTransactionRepository extends CrudRepository {
       {
         $project: {
           _id: 1,
-          debit: { $arrayToObject: "$debit" },
-          credit: { $arrayToObject: "$credit" },
+          debit: { $arrayToObject: '$debit' },
+          credit: { $arrayToObject: '$credit' },
           debitTotalAmount: 1,
           creditTotalAmount: 1,
         },
@@ -1144,18 +988,18 @@ class AutoTransactionRepository extends CrudRepository {
       },
       {
         $group: {
-          _id: { category: "$category", subcategory: "$subcategory" },
-          totalAmount: { $sum: "$amount" },
+          _id: { category: '$category', subcategory: '$subcategory' },
+          totalAmount: { $sum: '$amount' },
         },
       },
       {
         $group: {
-          _id: "$_id.category",
-          totalSpent: { $sum: "$totalAmount" },
+          _id: '$_id.category',
+          totalSpent: { $sum: '$totalAmount' },
           breakdown: {
             $push: {
-              name: "$_id.subcategory",
-              amount: "$totalAmount",
+              name: '$_id.subcategory',
+              amount: '$totalAmount',
             },
           },
         },
@@ -1163,7 +1007,7 @@ class AutoTransactionRepository extends CrudRepository {
       {
         $project: {
           _id: 0,
-          category: "$_id",
+          category: '$_id',
           totalSpent: 1,
           breakdown: 1,
         },
@@ -1208,7 +1052,7 @@ class AutoTransactionRepository extends CrudRepository {
       {
         $match: {
           userId: new mongoose.Types.ObjectId(userId),
-          type: "DEBIT",
+          type: 'DEBIT',
           category: { $in: categoryNames },
           transactionTimestamp: {
             $gte: new Date(startDate),
@@ -1218,32 +1062,29 @@ class AutoTransactionRepository extends CrudRepository {
       },
       {
         $group: {
-          _id: "$category",
-          totalSpending: { $sum: "$amount" },
+          _id: '$category',
+          totalSpending: { $sum: '$amount' },
         },
       },
       {
         $group: {
           _id: null,
           categories: {
-            $push: { category: "$_id", spending: "$totalSpending" },
+            $push: { category: '$_id', spending: '$totalSpending' },
           },
-          totalSpending: { $sum: "$totalSpending" },
+          totalSpending: { $sum: '$totalSpending' },
         },
       },
       {
-        $unwind: "$categories",
+        $unwind: '$categories',
       },
       {
         $project: {
           _id: 0,
-          category: "$categories.category",
-          spending: "$categories.spending",
+          category: '$categories.category',
+          spending: '$categories.spending',
           percentage: {
-            $multiply: [
-              { $divide: ["$categories.spending", "$totalSpending"] },
-              100,
-            ],
+            $multiply: [{ $divide: ['$categories.spending', '$totalSpending'] }, 100],
           },
         },
       },
@@ -1254,30 +1095,12 @@ class AutoTransactionRepository extends CrudRepository {
 
   // these are related to graphs:
   // 1. This function is used to get all transactions for a specific account
-  async getAllTransactionsByTimeLine(
-    userId,
-    accountId,
-    startDate,
-    endDate,
-    groupBy = "day"
-  ) {
-    return getTransactions(
-      this.model,
-      userId,
-      startDate,
-      endDate,
-      groupBy,
-      accountId
-    );
+  async getAllTransactionsByTimeLine(userId, accountId, startDate, endDate, groupBy = 'day') {
+    return getTransactions(this.model, userId, startDate, endDate, groupBy, accountId);
   }
 
   // 2. This function is used to get all transactions for all accounts including manual transactions
-  async getAllTransactionsForMainGraph(
-    userId,
-    startDate,
-    endDate,
-    groupBy = "day"
-  ) {
+  async getAllTransactionsForMainGraph(userId, startDate, endDate, groupBy = 'day') {
     return getTransactions(this.model, userId, startDate, endDate, groupBy);
   }
 
@@ -1287,7 +1110,7 @@ class AutoTransactionRepository extends CrudRepository {
       {
         $match: {
           userId: new mongoose.Types.ObjectId(userId),
-          category: "Untagged",
+          category: 'Untagged',
         },
       },
       {
@@ -1295,32 +1118,24 @@ class AutoTransactionRepository extends CrudRepository {
           narrationPattern: {
             $let: {
               vars: {
-                splitSlash: { $split: ["$narration", "/"] },
-                splitDash: { $split: ["$narration", "-"] },
+                splitSlash: { $split: ['$narration', '/'] },
+                splitDash: { $split: ['$narration', '-'] },
               },
               in: {
                 $trim: {
                   input: {
                     $cond: [
-                      { $gte: [{ $size: "$$splitSlash" }, 5] },
+                      { $gte: [{ $size: '$$splitSlash' }, 5] },
                       {
-                        $concat: [
-                          { $arrayElemAt: ["$$splitSlash", 3] },
-                          "/",
-                          { $arrayElemAt: ["$$splitSlash", 4] },
-                        ],
+                        $concat: [{ $arrayElemAt: ['$$splitSlash', 3] }, '/', { $arrayElemAt: ['$$splitSlash', 4] }],
                       },
                       {
                         $cond: [
-                          { $gte: [{ $size: "$$splitDash" }, 4] },
+                          { $gte: [{ $size: '$$splitDash' }, 4] },
                           {
-                            $concat: [
-                              { $arrayElemAt: ["$$splitDash", 2] },
-                              "-",
-                              { $arrayElemAt: ["$$splitDash", 3] },
-                            ],
+                            $concat: [{ $arrayElemAt: ['$$splitDash', 2] }, '-', { $arrayElemAt: ['$$splitDash', 3] }],
                           },
-                          "$narration", // fallback
+                          '$narration', // fallback
                         ],
                       },
                     ],
@@ -1334,15 +1149,15 @@ class AutoTransactionRepository extends CrudRepository {
       {
         $group: {
           _id: {
-            narrationPattern: "$narrationPattern",
-            amount: "$amount",
+            narrationPattern: '$narrationPattern',
+            amount: '$amount',
           },
-          transactions: { $push: "$_id" },
-          totalAmount: { $sum: "$amount" },
+          transactions: { $push: '$_id' },
+          totalAmount: { $sum: '$amount' },
           count: { $sum: 1 },
-          narrationPattern: { $first: "$narrationPattern" },
-          latestTimestamp: { $max: "$transactionTimestamp" },
-          suggestedCategory: { $first: "$category" },
+          narrationPattern: { $first: '$narrationPattern' },
+          latestTimestamp: { $max: '$transactionTimestamp' },
+          suggestedCategory: { $first: '$category' },
         },
       },
       {
@@ -1410,20 +1225,17 @@ class AutoTransactionRepository extends CrudRepository {
             $gte: previousFriday,
             $lte: lastFriday,
           },
-          type: "DEBIT",
+          type: 'DEBIT',
           manualTransaction: false,
           isExcluded: false,
         })
         .sort({ amount: -1 })
         .limit(3)
-        .populate("accountId", "bankId");
+        .populate('accountId', 'bankId');
 
       // Add Bank Logo's to the transactions
       const banks = await new FipRepository().getBank(userId);
-      const transactionsWithBankLogo = await enrichTransactionWithBankDetails(
-        transactions,
-        banks
-      );
+      const transactionsWithBankLogo = await enrichTransactionWithBankDetails(transactions, banks);
 
       return transactionsWithBankLogo;
     } catch (error) {
@@ -1436,14 +1248,14 @@ class AutoTransactionRepository extends CrudRepository {
       const now = new Date();
       const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    
+
       const results = await this.model.aggregate([
         {
           $match: {
             userId: userId,
             isExcluded: false,
-            transactionTimestamp: { $gte: startOfLastMonth } // only last month + current month
-          }
+            transactionTimestamp: { $gte: startOfLastMonth }, // only last month + current month
+          },
         },
         {
           $facet: {
@@ -1451,83 +1263,80 @@ class AutoTransactionRepository extends CrudRepository {
             income: [
               {
                 $match: {
-                  type: "CREDIT",
-                  transactionTimestamp: { $gte: startOfCurrentMonth }
-                }
+                  type: 'CREDIT',
+                  transactionTimestamp: { $gte: startOfCurrentMonth },
+                },
               },
               {
                 $group: {
                   _id: null,
-                  totalIncome: { $sum: "$amount" }
-                }
-              }
+                  totalIncome: { $sum: '$amount' },
+                },
+              },
             ],
-          
+
             // ---- CATEGORY SPENDING (debits grouped by category) ----
             categorySpending: [
               {
-                $match: { type: "DEBIT" }
+                $match: { type: 'DEBIT' },
               },
               {
                 $project: {
                   amount: 1,
                   category: 1,
-                  month: { $month: "$transactionTimestamp" },
-                  year: { $year: "$transactionTimestamp" }
-                }
+                  month: { $month: '$transactionTimestamp' },
+                  year: { $year: '$transactionTimestamp' },
+                },
               },
               {
                 $group: {
-                  _id: { category: "$category", month: "$month", year: "$year" },
-                  totalSpent: { $sum: "$amount" }
-                }
+                  _id: { category: '$category', month: '$month', year: '$year' },
+                  totalSpent: { $sum: '$amount' },
+                },
               },
               {
                 $group: {
-                  _id: "$_id.category",
+                  _id: '$_id.category',
                   months: {
                     $push: {
-                      month: "$_id.month",
-                      year: "$_id.year",
-                      spent: "$totalSpent"
-                    }
-                  }
-                }
+                      month: '$_id.month',
+                      year: '$_id.year',
+                      spent: '$totalSpent',
+                    },
+                  },
+                },
               },
               {
                 $project: {
                   average: {
-                    $divide: [
-                      { $sum: "$months.spent" },
-                      2
-                    ]
-                  }
-                }
-              }
-            ]
-          }
-        }
+                    $divide: [{ $sum: '$months.spent' }, 2],
+                  },
+                },
+              },
+            ],
+          },
+        },
       ]);
-    
+
       const income = results[0]?.income[0]?.totalIncome || 0;
       const categorySpendingRaw = results[0]?.categorySpending || [];
-    
+
       const averageCategorySpendingOfTwoMonths = {};
-      categorySpendingRaw.forEach(c => {
+      categorySpendingRaw.forEach((c) => {
         averageCategorySpendingOfTwoMonths[c._id] = c.average;
       });
-    
+
       return {
         income,
-        averageCategorySpendingOfTwoMonths
+        averageCategorySpendingOfTwoMonths,
       };
     } catch (error) {
       throw error;
     }
   }
-  
-  async getLoanCalculation(data){
-    const {income, existingEmi, creditScore, loanType, expenses} = data;
+
+  async getLoanCalculation(data) {
+    const { income, existingEmi, creditScore, loanType, expenses } = data;
     return calculateLoanEligibility({ income, existingEmi, creditScore, loanType, expenses });
   }
 
