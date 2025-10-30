@@ -36,7 +36,7 @@ const protect = async (req, res, next) => {
         if (!user) throw new AppError("User Not found", StatusCodes.UNAUTHORIZED);
 
         // Check if token is active in the session database
-        const session = await Session.findOne({ userId: user._id });
+        const session = await Session.findOne({ userId: user._id, token });
         if (!session) {
           ErrorResponse.error = "JsonWebTokenError";
           return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
@@ -63,7 +63,7 @@ const protect = async (req, res, next) => {
         }
 
         // Check if the Google token session is active
-        const session = await Session.findOne({ userId: user._id });
+        const session = await Session.findOne({ userId: user._id, token });
         if (!session) {
           throw new AppError("Google session expired. Please log in again.", StatusCodes.UNAUTHORIZED);
         }

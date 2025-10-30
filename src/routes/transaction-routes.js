@@ -1,7 +1,6 @@
 const express = require("express");
-const { Transaction } = require("../../models/");
-const { TransactionController } = require("../../controllers");
-const { AuthMiddlewares } = require("../../middlewares");
+const { TransactionController } = require("../controllers");
+const { AuthMiddlewares } = require("../middlewares");
 const router = express.Router();
 router.use(express.json());
 
