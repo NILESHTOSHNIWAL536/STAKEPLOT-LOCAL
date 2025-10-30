@@ -1,32 +1,29 @@
-module.exports = {
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const app = require("./app");
+const { ServerConfig } = require("./config");
+const logger = require("./utils/common/logger");
+const WebSocketService = require("./services/websocket-service");
+const { initCloudWatchLogs } = require("./utils/cloud-watch");
+const redisClient = require("./config/redis-config");
 
-  TransactionRepository: require('./transaction-repository'),
+dotenv.config({ path: `./config/.env.${process.env.NODE_ENV}` });
 
-  // Repositories related to posting content in the application
-  PostRepository: require('./post-repository'),
-  ReplyRepository: require('./reply-repository'),
-  UpvoteRepository: require('./upvote-repository'),
-  DownvoteRepository: require('./downvote-repository'),
-  CommentRepository: require('./comment-repository'),
+const startServer = async () => {
+  try {
+    const server = app.listen(ServerConfig.PORT, "0.0.0.0", async () => {
+      logger.info(`Server running on port: ${ServerConfig.PORT}`);
+    });
 
-  // Repositories related to setting up user profile, fipRecords, Summaries, BankTransaction
-  // UserProfileRepository: require("./autoTransactions-repositroy/userProfile"),
-  AutoTransactionRepository: require('./autoTransactions-repository/transaction'),
-  // SummaryRepository: require("./autoTransactions-repositroy/summaries"),
-  AccountRepository: require('./autoTransactions-repository/account'),
-  FipRepository: require('./autoTransactions-repository/bank'),
-  ProfileRespository: require('./autoTransactions-repository/profile'),
-  SummaryRepository: require('./autoTransactions-repository/summary'),
-
-
-  // Repositories related to polls, chats
-  PollRepository: require('./poll-repository'),
-  ChatRepository: require('./chat-repository'),
-
-  // Repositories related to debts, budgets, bills
-  DebtRepository: require('./debt-repository'),
-  BudgetRepository: require('./budget-repository'),
-  BillRepository: require('./bill-repository'),
-  SplitRepository: require('./split-repository'),
-
+    await mongoose.connect(ServerConfig.MONGO_URI);
+    await WebSocketService.initialize(server);
+    await initCloudWatchLogs();
+    await redisClient.connect();
+    require("./utils/cron-jobs");
+  } catch (error) {
+    console.error("Server Start Error:", error);
+    process.exit(1);
+  }
 };
+
+startServer();
