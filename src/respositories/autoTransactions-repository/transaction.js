@@ -19,7 +19,7 @@ const {
 const mongoose = require("mongoose");
 const CrudRepository = require("../crud-repository");
 const calculatePercentageChange = require("../../utils/helpers/comparePersentage");
-const FipRepository = require("../../repositories/autoTransactions-repository/bank");
+const {FipRepository} = require("../index");
 const {buildSearchFilter, getMatchedKeywords }= require("../../utils/helpers/transactionSearchFilter");
 const {
   enrichTransactionWithBankDetails,

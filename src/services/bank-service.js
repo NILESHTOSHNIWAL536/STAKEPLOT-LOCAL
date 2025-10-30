@@ -1,67 +1,66 @@
-const { StatusCodes } = require("http-status-codes");
-const AppError = require("../utils/errors/app-error");
-const { FipRepository, AccountRepository, ProfileRespository, SummaryRepository, AutoTransactionRepository } = require("../repositories/index");
+const { StatusCodes } = require('http-status-codes');
+const AppError = require('../utils/errors/app-error');
+const { FipRepository, AccountRepository, ProfileRespository, SummaryRepository, AutoTransactionRepository } = require('../respositories');
 // const { ErrorResponse } = require("../utils/common");
-const redisClient = require("../config/redis-config");
-const logger = require("../utils/common/logger");
-const {updateExistingAccounts, createNewBankAccount} = require("../utils/helpers/update-existing-accounts");
-const headsUpMessages = require("../utils/common/headsup-messages");
-const moneyMapMessages = require("../utils/common/money-map");
-const saveGroupedTransactions = require("../utils/helpers/saveGroupedTransactions");
-const {BankLogo,HeadsUp,MoneyMap,GroupedTransaction,Transaction} = require("../models/index");
-const mongoose = require("mongoose");
+const redisClient = require('../config/redis-config');
+const logger = require('../utils/common/logger');
+const { updateExistingAccounts, createNewBankAccount } = require('../utils/helpers/update-existing-accounts');
+const headsUpMessages = require('../utils/common/headsup-messages');
+const moneyMapMessages = require('../utils/common/money-map');
+const saveGroupedTransactions = require('../utils/helpers/saveGroupedTransactions');
+const { BankLogo, HeadsUp, MoneyMap, GroupedTransaction, Transaction } = require('../models/index');
+const mongoose = require('mongoose');
 
 async function createUserDetails(data, consentHandleId, userId) {
   try {
-      // createNewBankAccount
-      const response = await createNewBankAccount(data, consentHandleId, userId);
+    // createNewBankAccount
+    const response = await createNewBankAccount(data, consentHandleId, userId);
 
-      // When a new bank is added, clear the cache
-      const cacheKey = `banksWithAccountDetails:${userId}`;
-      const clearedBanksCache = await redisClient.del(cacheKey);
-      logger.debug(`cleared bank cached details: ${clearedBanksCache}`)
-      
-      return response;
+    // When a new bank is added, clear the cache
+    const cacheKey = `banksWithAccountDetails:${userId}`;
+    const clearedBanksCache = await redisClient.del(cacheKey);
+    logger.debug(`cleared bank cached details: ${clearedBanksCache}`);
+
+    return response;
   } catch (error) {
-      logger.error(`Error creating user details ${error}`);
-      throw new AppError("Error creating user details", StatusCodes.INTERNAL_SERVER_ERROR);
+    logger.error(`Error creating user details ${error}`);
+    throw new AppError('Error creating user details', StatusCodes.INTERNAL_SERVER_ERROR);
   }
 }
 
-async function getMap(userId){
-  try{
+async function getMap(userId) {
+  try {
     const response = await new AccountRepository().getMap(userId);
     return response;
-  }catch(error){
+  } catch (error) {
     logger.error(`Error from getBanksLinked: ${error}`);
     return { error: error.message };
   }
 }
 
 async function getUserDetails(userId) {
-    // Fetch Bank
-    const Bank = await new FipRepository().getBank(userId);
-     // Fetch accounts
-     const accounts = await new AccountRepository().getAccounts({bankId: Bank[0]._id});
-      
-      // Extract account IDs
-      const accountIds = accounts.map((acc) => acc._id);
-     
+  // Fetch Bank
+  const Bank = await new FipRepository().getBank(userId);
+  // Fetch accounts
+  const accounts = await new AccountRepository().getAccounts({ bankId: Bank[0]._id });
 
-    // Fetch profiles, summaries, and transactions in parallel
-    const [profiles, summaries] = await Promise.all([
-      new ProfileRespository().getProfile({ accountIds }),
-      new SummaryRepository().getSummary({ accountIds }),
-      // new AutoTransactionRepository().getTransactions({ accountIds })
-    ]);
+  // Extract account IDs
+  const accountIds = accounts.map((acc) => acc._id);
 
-    const response = {
-      Bank,
-      profiles,
-      summaries,
-      accounts,
-    };
-    return response;
+  // Fetch profiles, summaries, and transactions in parallel
+  const [profiles, summaries] = await Promise.all([
+    new ProfileRespository().getProfile({ accountIds }),
+    new SummaryRepository().getSummary({ accountIds }),
+    // new AutoTransactionRepository().getTransactions({ accountIds })
+  ]);
+
+  const response = {
+    Bank,
+    profiles,
+    summaries,
+    accounts,
+  };
+  return response;
 }
 
 async function getBanksLinkedAndAccounts(userId) {
@@ -79,7 +78,7 @@ async function getBanksLinkedAndAccounts(userId) {
       banks.map(async (bank) => {
         const bankAccounts = await new AccountRepository().getAccounts({ bankId: bank._id });
         if (!bankAccounts || bankAccounts.length === 0) {
-          return "";
+          return '';
         }
 
         const accountIds = bankAccounts.map((acc) => acc._id);
@@ -87,13 +86,9 @@ async function getBanksLinkedAndAccounts(userId) {
         const summaries = await new SummaryRepository().getSummary({ accountIds });
         const profiles = await new ProfileRespository().getProfile({ accountIds });
 
-        const balanceMap = new Map(
-          summaries.map((summary) => [summary.accountId.toString(), summary || null])
-        );
+        const balanceMap = new Map(summaries.map((summary) => [summary.accountId.toString(), summary || null]));
 
-        const profilesMap = new Map(
-          profiles.map((p) => [p.accountId.toString(), p])
-        );
+        const profilesMap = new Map(profiles.map((p) => [p.accountId.toString(), p]));
 
         // Find the respective bank logo
         const bankLogo = await BankLogo.findOne({ name: bank.fipId });
@@ -103,7 +98,7 @@ async function getBanksLinkedAndAccounts(userId) {
             const ifscResponse = await fetch(`https://ifsc.razorpay.com/${ifscCode}`);
             return await ifscResponse.json();
           } catch (ifscError) {
-            console.error("Error fetching IFSC data:", ifscError.message);
+            console.error('Error fetching IFSC data:', ifscError.message);
             return {};
           }
         }
@@ -126,7 +121,7 @@ async function getBanksLinkedAndAccounts(userId) {
               currentBalance: data?.currentBalance || null,
               ifscCode: ifscCode,
               branchAddress: branchAddress?.ADDRESS || null,
-              profile: profilesMap.get(acc._id.toString()) || null
+              profile: profilesMap.get(acc._id.toString()) || null,
             };
           })
         );
@@ -141,12 +136,12 @@ async function getBanksLinkedAndAccounts(userId) {
           sessionId: bank.sessionId,
           consendHandleId: bank.consentHandleId,
           custId: bank.custId,
-          accounts: accountsForBank
+          accounts: accountsForBank,
         };
       })
     );
 
-    accounts = accounts.filter(account => typeof account === 'object' && account !== null);
+    accounts = accounts.filter((account) => typeof account === 'object' && account !== null);
     // Step 3: Store result in Redis (cache for 1 hour)
     await redisClient.setEx(cacheKey, 3600, JSON.stringify(accounts));
 
@@ -158,13 +153,13 @@ async function getBanksLinkedAndAccounts(userId) {
 }
 
 async function getAllTransactions(userId, page) {
-    const response = await new AutoTransactionRepository().getTransactions(userId, page);
-    return response;
+  const response = await new AutoTransactionRepository().getTransactions(userId, page);
+  return response;
 }
 
-async function getSearchedTransactions(userId, page, search, isBankAccount,query) {
+async function getSearchedTransactions(userId, page, search, isBankAccount, query) {
   try {
-    const response = await new AutoTransactionRepository().getSearchedTransactions(userId, page, search, isBankAccount,query);
+    const response = await new AutoTransactionRepository().getSearchedTransactions(userId, page, search, isBankAccount, query);
     return response;
   } catch (error) {
     return error;
@@ -189,18 +184,18 @@ async function getAllTransactionsForAccount(userId, accountId, page) {
   }
 }
 
-async function getGroupedTransactions(userId){
-  try{
-  const response = await new AutoTransactionRepository().getGroupedTransactions(userId);
-  return response;
-  }catch(error){
+async function getGroupedTransactions(userId) {
+  try {
+    const response = await new AutoTransactionRepository().getGroupedTransactions(userId);
+    return response;
+  } catch (error) {
     logger.error(`error from getGroupedTransactions, bank-service: ${error}`);
     return error;
   }
 }
 
-async function categorizeGroupedTransaction(userId, groupId, category, subcategory, removedTransactions){
-  try{
+async function categorizeGroupedTransaction(userId, groupId, category, subcategory, removedTransactions) {
+  try {
     const response = await new AutoTransactionRepository().categorizeGroupedTransaction(userId, groupId, category, subcategory, removedTransactions);
 
     // delete from the cache, categorizedTransactions
@@ -209,27 +204,27 @@ async function categorizeGroupedTransaction(userId, groupId, category, subcatego
     logger.debug(`Deleted cache for key: ${cacheKey}, result: ${deleteCategorizedTransactions}`);
 
     return response;
-  }catch(error){
+  } catch (error) {
     logger.error(`error from categorizedGroupedTransaction, bank-service ${error}`);
     return error;
   }
 }
 
-async function getPendingForReviewTransactions(userId){
-  try{
+async function getPendingForReviewTransactions(userId) {
+  try {
     const response = await new AutoTransactionRepository().getPendingForReviewTransactions(userId);
     return response;
-  }catch(error){
+  } catch (error) {
     logger.debug(`error from getPendingForReviewTransactions: ${error}`);
     return error;
   }
 }
 
-async function verifyPendingTransaction(userId, transactionId, isCorrect){
-  try{
+async function verifyPendingTransaction(userId, transactionId, isCorrect) {
+  try {
     const response = await new AutoTransactionRepository().verifyPendingTransaction(userId, transactionId, isCorrect);
     return response;
-  }catch(error){
+  } catch (error) {
     logger.debug(`error from verifyPendingTransaction ${error}`);
     return error;
   }
@@ -246,12 +241,11 @@ async function getMonthlyTransactionsHistory(userId, type, page) {
 
 async function categorizeTransactions(userId) {
   try {
-
     // Start of the month (1st day at 12:00 AM)
     const startDate = new Date();
     startDate.setUTCDate(1);
     startDate.setUTCHours(0, 0, 0, 0);
-      
+
     // End of the month (last day at 11:59:59 PM)
     const endDate = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth() + 1, 0, 23, 59, 59, 999));
 
@@ -259,24 +253,19 @@ async function categorizeTransactions(userId) {
     const now = new Date();
     const currentDay = now.getUTCDay(); // Sunday=0 ... Friday=5
     const daysSinceFriday = (currentDay + 2) % 7; // Calculates how many days ago Friday was
-    const weekStartDate = new Date(Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate() - daysSinceFriday,
-      0, 0, 0, 0
-    ));
-    
+    const weekStartDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - daysSinceFriday, 0, 0, 0, 0));
+
     const weekEndDate = now;
 
     // 2. Fetch data from database
     const categorizedMonth = await new AutoTransactionRepository().categorizeTransactions(userId, startDate, endDate);
     const categorizedWeek = await new AutoTransactionRepository().categorizeTransactions(userId, weekStartDate, weekEndDate);
-    
+
     return {
-      'week':categorizedWeek,
-      ...categorizedMonth
-    }; 
-  } catch(error) {
+      week: categorizedWeek,
+      ...categorizedMonth,
+    };
+  } catch (error) {
     return error;
   }
 }
@@ -318,22 +307,22 @@ async function getHideTransactions(userId) {
   }
 }
 
-async function getRecurringPayments(userId, type){
-  try{
+async function getRecurringPayments(userId, type) {
+  try {
     const response = await new AutoTransactionRepository().getRecurringPayments(userId, type);
     return response;
-  }catch(error){
+  } catch (error) {
     logger.debug(`error from the bank-service getRecurringPayments: ${error}`);
-    return error
+    return error;
   }
 }
 
-async function updateRecurringPayment(recurringPaymentId, userId, data){
+async function updateRecurringPayment(recurringPaymentId, userId, data) {
   const response = await new AutoTransactionRepository().updateRecurringPayment(recurringPaymentId, userId, data);
   return response;
 }
 
-async function deleteRecurringPayment(recurringPaymentId){
+async function deleteRecurringPayment(recurringPaymentId) {
   const response = await new AutoTransactionRepository().deleteRecurringPayment(recurringPaymentId);
   return response;
 }
@@ -350,7 +339,7 @@ async function updateTransaction(updateData, userId, transactionId) {
     const ObjectId = new mongoose.Types.ObjectId(transactionId);
     const response = await new AutoTransactionRepository().updateTransaction(updateData, userId, ObjectId);
 
-    if(response){
+    if (response) {
       await headsUpMessages(response.data.userId);
       await moneyMapMessages(response.data.userId);
     }
@@ -361,38 +350,38 @@ async function updateTransaction(updateData, userId, transactionId) {
   }
 }
 
-async function getLastPeriodDebit(userId, accountId, startDate, endDate){
-  try{
+async function getLastPeriodDebit(userId, accountId, startDate, endDate) {
+  try {
     const response = await new AutoTransactionRepository().getLastPeriodDebit(userId, accountId, startDate, endDate);
     return response;
-  }catch(error){
+  } catch (error) {
     return error;
   }
 }
 
-async function categoryWiseSpendings(userId, categoryNames, startDate, endDate){
-  try{
+async function categoryWiseSpendings(userId, categoryNames, startDate, endDate) {
+  try {
     const response = await new AutoTransactionRepository().categoryWiseSpendings(userId, categoryNames, startDate, endDate);
     return response;
-  }catch(error){
+  } catch (error) {
     return error;
   }
 }
 
-async function getDayWiseTransactionsSummary(userId){
-  try{
+async function getDayWiseTransactionsSummary(userId) {
+  try {
     const response = await new AutoTransactionRepository().getDayWiseTransactionsSummary(userId);
     return response;
-  }catch(error){
+  } catch (error) {
     return error;
   }
 }
 
-async function getTransactionsByDate(userId, date){
-  try{
+async function getTransactionsByDate(userId, date) {
+  try {
     const response = await new AutoTransactionRepository().getTransactionsByDate(userId, date);
     return response;
-  }catch(error){
+  } catch (error) {
     return error;
   }
 }
@@ -404,15 +393,15 @@ async function updateUserDetails(data, consenthandleid, userId, accountId) {
     // When a new bank is added, clear the cache
     const cacheKey = `banksWithAccountDetails:${userId}`;
     const clearedCachedData = await redisClient.del(cacheKey);
-    logger.debug(`cleared the cached bank data from update call: ${clearedCachedData}`)
-    
+    logger.debug(`cleared the cached bank data from update call: ${clearedCachedData}`);
+
     return response;
   } catch (error) {
     return error;
   }
 }
 
-async function getBudgetTransactions(userId, startDate, endDate, categories,groupBy) {
+async function getBudgetTransactions(userId, startDate, endDate, categories, groupBy) {
   try {
     const response = await new AutoTransactionRepository().getBudgetTransactions(userId, startDate, endDate, categories, groupBy);
     return response;
@@ -429,16 +418,15 @@ async function getPreviousTransactions(userId, date, accountId) {
     const profile = await new ProfileRespository().getProfile({ accountIds });
     const account = await new AccountRepository().getAccountById(accountId);
 
-
     let ifscData = {};
     const ifscCode = summary[0].data.ifscCode || summary[0].data.ifsc;
     try {
       const ifscResponse = await fetch(`https://ifsc.razorpay.com/${ifscCode}`, {
-        method: 'GET'
-      });      
+        method: 'GET',
+      });
       ifscData = await ifscResponse.json();
     } catch (ifscError) {
-      console.error("Error fetching IFSC data:", ifscError.message);
+      console.error('Error fetching IFSC data:', ifscError.message);
     }
 
     const overData = {
@@ -446,42 +434,42 @@ async function getPreviousTransactions(userId, date, accountId) {
       profile,
       summary,
       account,
-      bankAddress: ifscData.ADDRESS || "",
-      bankName: ifscData.BANK || ""
+      bankAddress: ifscData.ADDRESS || '',
+      bankName: ifscData.BANK || '',
     };
 
     return overData;
   } catch (error) {
-    console.error("Error in getPreviousTransactions:", error);
+    console.error('Error in getPreviousTransactions:', error);
     return error;
   }
 }
 
-async function getHeadsUpMessages(userId){
-  try{
+async function getHeadsUpMessages(userId) {
+  try {
     const newUserId = new mongoose.Types.ObjectId(userId);
     const response = await new AutoTransactionRepository().getHeadsUpMessages(newUserId);
     return response;
-  }catch(error){
+  } catch (error) {
     return error;
   }
 }
 
-async function getMoneyMapMessages(userId){
-  try{
+async function getMoneyMapMessages(userId) {
+  try {
     const newUserId = new mongoose.Types.ObjectId(userId);
     const response = await new AutoTransactionRepository().getMoneyMapMessages(newUserId);
     return response;
-  }catch(error){
+  } catch (error) {
     return error;
   }
 }
 
-async function getTopThreeTransactionsOfWeek(userId){
+async function getTopThreeTransactionsOfWeek(userId) {
   return await new AutoTransactionRepository().getTopThreeTransactionsOfWeek(userId);
 }
 
-async function getIncomeAndCategorySpent(userId){
+async function getIncomeAndCategorySpent(userId) {
   return await new AutoTransactionRepository().getIncomeAndCategorySpent(userId);
 }
 
@@ -509,7 +497,6 @@ async function deleteBankAccount(userId, bankId, accountId) {
     // 5. Delete transactions data from the database
     const deleteTransactions = await new AutoTransactionRepository().deleteTransactions(userId, objectAccountId);
 
-    
     const cacheKey = `banksWithAccountDetails:${userId}`;
     // 6. Clear the cache for banksWithAccountDetails
     const deleteBanksWithAccountDetails = await redisClient.del(cacheKey);
@@ -518,12 +505,12 @@ async function deleteBankAccount(userId, bankId, accountId) {
     await HeadsUp.deleteMany({ userId: new mongoose.Types.ObjectId(userId) });
     await MoneyMap.deleteMany({ userId: new mongoose.Types.ObjectId(userId) });
     await GroupedTransaction.deleteMany({ userId: new mongoose.Types.ObjectId(userId) });
-    
-     // grouping the transactions function
-     await saveGroupedTransactions(userId);
-     // call the grouping, money-map messages
-     await headsUpMessages(userId);
-     await moneyMapMessages(userId);
+
+    // grouping the transactions function
+    await saveGroupedTransactions(userId);
+    // call the grouping, money-map messages
+    await headsUpMessages(userId);
+    await moneyMapMessages(userId);
 
     return { deleteBank, deleteAccount, deleteProfile, deleteSummary, deleteTransactions };
   } catch (error) {
@@ -531,7 +518,7 @@ async function deleteBankAccount(userId, bankId, accountId) {
   }
 }
 
-async function deleteWholeBankData(userId){
+async function deleteWholeBankData(userId) {
   try {
     // 1. Delete bank data from the database
     const deleteBank = await new FipRepository().deleteBank(userId);
@@ -554,13 +541,12 @@ async function deleteWholeBankData(userId){
   }
 }
 
-
 async function getUserSpending(userId) {
   try {
     // Get current date and calculate the last two months
     const currentDate = new Date(); // Today: July 23, 2025
     const months = [];
-    
+
     // Generate the last two months dynamically
     for (let i = 1; i <= 2; i++) {
       const date = new Date(currentDate);
@@ -589,42 +575,37 @@ async function getUserSpending(userId) {
             $gte: startDate,
             $lte: endDate,
           },
-          type: "DEBIT",
+          type: 'DEBIT',
         },
       },
       // Step 2: Group by month, year, and day to calculate daily totals
       {
         $group: {
           _id: {
-            month: { $month: "$transactionTimestamp" },
-            year: { $year: "$transactionTimestamp" },
-            day: { $dayOfMonth: "$transactionTimestamp" },
+            month: { $month: '$transactionTimestamp' },
+            year: { $year: '$transactionTimestamp' },
+            day: { $dayOfMonth: '$transactionTimestamp' },
           },
-          total: { $sum: "$amount" },
+          total: { $sum: '$amount' },
         },
       },
     ]);
 
     // Process the results to include all days with zeros
-    const monthNames = [
-      "", "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December",
-    ];
+    const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     const formattedResult = {
-      month1Name: "",
-      month1Avg: "0.00",
+      month1Name: '',
+      month1Avg: '0.00',
       month1DailySums: [],
-      month2Name: "",
-      month2Avg: "0.00",
+      month2Name: '',
+      month2Avg: '0.00',
       month2DailySums: [],
     };
 
     months.forEach((monthInfo, index) => {
       const { month, year, daysInMonth } = monthInfo;
-      const monthData = transactionData.filter(
-        (data) => data._id.month === month && data._id.year === year
-      );
+      const monthData = transactionData.filter((data) => data._id.month === month && data._id.year === year);
 
       // Create an array of all days (1 to daysInMonth) with zero amounts
       const dailySums = Array.from({ length: daysInMonth }, (_, i) => {
@@ -643,7 +624,7 @@ async function getUserSpending(userId) {
       // Format the daily sums
       const formattedDailySums = dailySums.map((d) => ({
         day: d.day,
-        amount: d.amount.toLocaleString("en-US", {
+        amount: d.amount.toLocaleString('en-US', {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }),
@@ -652,14 +633,14 @@ async function getUserSpending(userId) {
       // Assign to the result (month1 is the most recent, month2 is the earlier)
       if (index === 0) {
         formattedResult.month1Name = monthNames[month];
-        formattedResult.month1Avg = monthAvg.toLocaleString("en-US", {
+        formattedResult.month1Avg = monthAvg.toLocaleString('en-US', {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         });
         formattedResult.month1DailySums = formattedDailySums;
       } else {
         formattedResult.month2Name = monthNames[month];
-        formattedResult.month2Avg = monthAvg.toLocaleString("en-US", {
+        formattedResult.month2Avg = monthAvg.toLocaleString('en-US', {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         });
@@ -669,7 +650,7 @@ async function getUserSpending(userId) {
 
     return formattedResult;
   } catch (error) {
-    console.error("Error fetching user spending:", error);
+    console.error('Error fetching user spending:', error);
     throw error;
   }
 }
@@ -711,5 +692,5 @@ module.exports = {
   getTransactionsByDate,
   getUserSpending,
   getIncomeAndCategorySpent,
-  getLoanCalculation
+  getLoanCalculation,
 };

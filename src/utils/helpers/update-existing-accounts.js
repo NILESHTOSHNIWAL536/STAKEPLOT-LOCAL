@@ -7,7 +7,7 @@ const {
   SummaryRepository,
   FipRepository,
   AutoTransactionRepository,
-} = require("../../repositories/index");
+} = require("../../respositories");
 const {
   getNextFetch,
   getNextMonthFetch,

@@ -1,11 +1,14 @@
 const {getCurrentWeekRange, getCurrentMonthtRange, getLastMonthRange} = require("../helpers/getCurrentWeekRange");
-const getCustomDatesTransactions = require("../../repositories/autoTransactions-repository/get-custom-transactions");
+const { GetCustomDatesTransactions } = require('../../respositories/index');
 const { getMonthlySummaryForMoneyMap, getWeeklySummaryForMoneyMap } = require("../helpers/moneyMapSummaries");
 const mongoose = require("mongoose");
 const { MoneyMap } = require("../../models/index");
 const formatINR = require("../helpers/formatINR");
 const logger = require("../../utils/common/logger");
 const getRandomCalendarFact = require("../../utils/helpers/getRandomCalenderFacts");
+
+
+const getCustomDatesTransactions = new GetCustomDatesTransactions();
 
 // const userSpendingData = {
 //   currentMonth: {
@@ -275,8 +278,8 @@ async function moneyMapMessages(newUserId) {
   const { currentWeekStart, currentWeekEnd } = getCurrentWeekRange();  
   
   // 2. get transactions for the current month and week
-  const currentMonthTransactions = await getCustomDatesTransactions(userId, lastMonthStart, currentMonthEnd);
-  const currentWeekTransactions = await getCustomDatesTransactions(userId, currentWeekStart, currentWeekEnd);
+  const currentMonthTransactions = await getCustomDatesTransactions.getCustomDatesTransactions(userId, lastMonthStart, currentMonthEnd);
+  const currentWeekTransactions = await getCustomDatesTransactions.getCustomDatesTransactions(userId, currentWeekStart, currentWeekEnd);
 
   // 3. pass month and week transactions to moneymap function
   const getMonthlySummary = await getMonthlySummaryForMoneyMap(currentMonthTransactions);

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { GroupedTransaction } = require('../../models/index');
-const { AutoTransactionRepository } = require("../../repositories/index");
+const { AutoTransactionRepository } = require("../../respositories");
 
   
   async function saveGroupedTransactions(userId) {
