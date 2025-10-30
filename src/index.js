@@ -18,7 +18,7 @@ const startServer = async () => {
     await mongoose.connect(ServerConfig.MONGO_URI);
     await WebSocketService.initialize(server);
     await initCloudWatchLogs();
-    // await redisClient.connect();
+    await redisClient.connect();
     // require("./utils/cron-jobs");
   } catch (error) {
     console.error("Server Start Error:", error);
