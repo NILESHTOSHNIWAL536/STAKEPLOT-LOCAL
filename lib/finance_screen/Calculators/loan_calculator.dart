@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 
 import 'dart:convert';
 import '../../backed_connections/apiAutomations/curd.dart';
@@ -62,8 +63,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
 
   Future<void> fetchIncomeAndExpenses() async {
     try {
-      final response = await getDataApiCall(
-          "$apiUrl/transactionauto/get-income-average-monthly-category-expenses");
+      final response = await getDataApiCall(BankTransactionRoutes.getIncomeAndCategorySpent);
       if (getFlagOfResponse(response)) {
         var data = json.decode(response.body)["data"];
 
@@ -109,7 +109,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
     };
     try {
       final response = await postDataApiCall(
-          "$apiUrl/transactionauto/get-loan-calculation", jsonData);
+       BankTransactionRoutes.getLoanCalculation, jsonData);
       if (getFlagOfResponse(response)) {
         var data = json.decode(response.body)['data'];
 

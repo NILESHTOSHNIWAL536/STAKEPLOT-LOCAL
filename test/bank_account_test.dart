@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd_with_token.dart';
@@ -18,7 +19,7 @@ String accessToken =
 
     test('Fetch Bank Accounts and FIP Info', () async {
       print('\n--- Step 1: Call getBankAccounts() ---');
-      var response = await getDataApiCallToken("${url}/transactionauto/get-banks-linked/",accessToken);
+      var response = await getDataApiCallToken(BankTransactionRoutes.getBanksLinkedAndAccounts,accessToken);
       print('Bank Accounts API Status: ${response.statusCode}');
       expect(response.statusCode, anyOf([200, 201]));
 

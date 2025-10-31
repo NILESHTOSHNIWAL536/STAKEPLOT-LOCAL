@@ -14,11 +14,13 @@ import 'package:flutter_application_code_stakeplot/Utils/pdfStrings.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 
+import '../routes/route_transactions.dart';
+
 RxInt startIndex = 0.obs;
 
 void getPdf3(BuildContext context, RxString selectedValue, RxString selectedValueType) async {
   var response = await getDataApiCall(
-    "${url}/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}/${accountIdPdf.value}",
+     BankTransactionRoutes.getPreviousTransactions(accountId: accountIdPdf.value,date:getPreviousDate(int.parse(selectedValue.value), selectedValueType.value) ),
   );
 
   startIndex.value = 0;

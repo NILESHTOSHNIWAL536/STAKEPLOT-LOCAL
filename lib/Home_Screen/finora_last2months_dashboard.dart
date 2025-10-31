@@ -12,6 +12,8 @@ import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../routes/route_transactions.dart';
+
 Map<String, dynamic> finoraTransactionData = {};
 RxBool FinoraLoading = false.obs;
 
@@ -36,13 +38,10 @@ class _FinoraLastTwoMonthsDashboardState
     isLoading.value = true;
     FinoraLoading.value = false;
     try {
-      var response = await getDataApiCall(
-          "${url}/transactionauto/getUserMonthlySpending/");
+      var response = await getDataApiCall(BankTransactionRoutes.getUserMonthlySpending);
 
       if (getFlagOfResponse(response)) {
-        var data = jsonDecode(response.body)['data'] ?? {};
 
-        // Cache before updating UI
         try {
           await FinoraLastTwoMonthsStorage.cacheFinoraLastTwoMonthsDataLocally(
               jsonDecode(response.body)['data']);

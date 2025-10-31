@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'routes/route_user_login.dart';
 import 'signInOut/userName.dart';
 
 class ProfileImage extends StatelessWidget {
@@ -115,7 +116,7 @@ void checkIsUserNameValid(String val) async {
       isValidUser.value = false;
     else {
       var response =
-          await postDataApiCall("${url}/auth/validate-name", {"name": val});
+          await postDataApiCall("${AuthApiRoutes.validateName}", {"name": val});
       if (getFlagOfResponse(response)) {
         isValidUser.value = true;
       } else {

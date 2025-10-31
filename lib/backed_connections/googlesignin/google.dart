@@ -1,5 +1,5 @@
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -31,7 +31,7 @@ class AuthService {
         if (authCode != null)
         {
           final response =  await http.post(
-              Uri.parse(RouterApi.generateToken),
+              Uri.parse(AuthApiRoutes.generateToken),
               headers: {'Content-Type': 'application/json'},
               body: jsonEncode({'idToken':  authCode}),
             );
@@ -39,7 +39,7 @@ class AuthService {
         }
 
       final response = await http.post(
-        Uri.parse(RouterApi.googleAuth),
+        Uri.parse(AuthApiRoutes.googleAuth),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'idToken': idToken}),
       );
@@ -72,7 +72,7 @@ class AuthService {
       }
       final response = await http.post(
         // Uri.parse('$url/auth/apple-auth'),
-        Uri.parse(RouterApi.appleAuth),
+        Uri.parse(AuthApiRoutes.appleAuth),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'idToken': idToken,

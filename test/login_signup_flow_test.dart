@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/credentials.dart';
-import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:test/test.dart'; // NOT flutter_test
@@ -44,8 +44,8 @@ void main() async {
 
 Future<Map<String, dynamic>> verifyUser(String email) async {
   print('--- Step 1: Verify User ---');
-  print(RouterApi.verify);
-  final response = await postDataApiCallwithOutSharedPref(RouterApi.verify, {
+  print(AuthApiRoutes.verify);
+  final response = await postDataApiCallwithOutSharedPref(AuthApiRoutes.verify, {
     'email': email,
   });
 
@@ -83,10 +83,9 @@ Future<Map<String, dynamic>> verifyUser(String email) async {
 
 Future<void> sendOtp(String email, String name) async {
   print('--- Step 2: Send OTP ---');
-  print(url);
 
   var response = await postDataApiCallwithOutSharedPref(
-    '$url/otp/send',
+    otpRoutes.sendOtp,
     {
       'email': email,
       'name': name,
@@ -107,7 +106,7 @@ Future<void> registerNewUser(String email, String name, String otp) async {
 
   if (getFlagOfResponse(response3)) {
     print('--- Step 4: Register New User ---');
-    final response = await postDataApiCallwithOutSharedPref(RouterApi.signUp, {
+    final response = await postDataApiCallwithOutSharedPref(AuthApiRoutes.signUp, {
       'name': name,
       'email': email,
       'authorizationKey': Credentials.Sign_Up_Key,
@@ -129,7 +128,7 @@ Future<void> forceLogoutUser(
     String email, String otp, Map<String, dynamic> loginResponse) async {
   print('--- Step 4: Force Logout Existing Session ---');
 
-  var response = await postDataApiCallwithOutSharedPref(RouterApi.forceLogin, {
+  var response = await postDataApiCallwithOutSharedPref(AuthApiRoutes.forceLogin, {
     "sessionId": loginResponse["error"]?['existingSessionId'],
     "email": email,
     "otp": otp,
@@ -145,7 +144,7 @@ Future<void> forceLogoutUser(
 
 Future<void> normalLogin(String email, String otp) async {
   print('--- Step 4: Normal Login ---');
-  var response = await postDataApiCallwithOutSharedPref(RouterApi.login, {
+  var response = await postDataApiCallwithOutSharedPref(AuthApiRoutes.login, {
     'email': email,
     'deviceInfo': deviceData,
     'otp': otp,

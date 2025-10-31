@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart'
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import '../../Utils/snackBar.dart';
-import '../routes/route_api.dart';
+import '../routes/route_user_login.dart';
 import 'force_logout.dart';
 
 class OtpService {
@@ -26,7 +26,7 @@ class OtpService {
     String email,
   ) async {
     var response = await postDataApiCallwithOutSharedPref(
-      '$url/otp/send',
+      otpRoutes.sendOtp,
       {'email': email, 'name': name, 'isTwoFactor': true, "type": 'twoFactor'},
     );
 

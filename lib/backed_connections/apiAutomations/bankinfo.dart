@@ -7,12 +7,14 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:get/get.dart';
 
 import '../../Hive_localstorage/apisCall/bank_apis.dart';
 import '../../Hive_localstorage/apisCall/fipmetric_apis.dart';
 import '../../model/fips_metric_model.dart';
+import '../../routes/route_finvu.dart';
 
 
 RxList bankAccountLinkedList = [].obs;
@@ -22,7 +24,7 @@ RxMap bankImagemap = {}.obs;
 
 Future<void> getBankAccounts() async {
   try{
-    var response = await getDataApiCall("${url}/transactionauto/get-banks-linked/");
+     var response = await getDataApiCall(BankTransactionRoutes.getBanksLinkedAndAccounts);
     if (getFlagOfResponse(response))
     {
       storeDataLocal(response);
@@ -169,7 +171,7 @@ Future<void> getFipAccountInfo([bool testing=false,String token=""]) async
    });
 
     if(fipIds.isEmpty)return;
-    String urlPath=FinvuRoutes.fipDetails;
+    String urlPath=FinvuRoutes.getFipDetails;
     var body={
        "fipIds":fipIds
     };

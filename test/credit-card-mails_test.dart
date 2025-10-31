@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd_with_token.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:test/test.dart';
@@ -91,17 +91,17 @@ void main() async {
 // --- Helper Functions ---
 Future<dynamic> getUnlinkedCards(String accessToken) async {
   print('Calling getUnlinkedCards API...');
-  print(RouterApi.getUnLinkedCards);
-  final response = await getDataApiCallToken(RouterApi.getUnLinkedCards, accessToken);
+  print(AuthApiRoutes.getUnLinkedCards);
+  final response = await getDataApiCallToken(AuthApiRoutes.getUnLinkedCards, accessToken);
   print('getUnlinkedCards API returned: ${response.statusCode}');
   return response;
 }
 
 Future<dynamic> scrapeBankData(String bankId, String accessToken) async {
   print('Calling scrapeBankData API for Bank ID: $bankId...');
-  print(RouterApi.scrape);
+  print(AuthApiRoutes.scrape);
   final response = await postDataApiCallToken(
-    "${RouterApi.scrape}/",
+    "${AuthApiRoutes.scrape}/",
     {"bankIds": [bankId]},
     accessToken,
   );
@@ -111,7 +111,7 @@ Future<dynamic> scrapeBankData(String bankId, String accessToken) async {
 
 Future<dynamic> fetchCreditCardList(String accessToken) async {
   print('Calling fetchCreditCardList API...');
-  final response = await getDataApiCallToken(RouterApi.getCreditCardList, accessToken);
+  final response = await getDataApiCallToken(AuthApiRoutes.getCreditCardList, accessToken);
   print('fetchCreditCardList API returned: ${response.statusCode}');
   return response;
 }
@@ -119,7 +119,7 @@ Future<dynamic> fetchCreditCardList(String accessToken) async {
 Future<dynamic> revokeAccess(String email, String accessToken) async {
   print('Calling revokeAccess API for email: $email...');
   final response = await postDataApiCallToken(
-    RouterApi.revokeAccessToken,
+    AuthApiRoutes.revokeAccessToken,
     {"email": email},
     accessToken,
   );

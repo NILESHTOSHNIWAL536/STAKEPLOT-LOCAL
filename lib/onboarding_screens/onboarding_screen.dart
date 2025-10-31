@@ -54,8 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
     _animationController.forward();
     _updateProgress();
-    socket = IO.io(urlWithLocallHost,
-        IO.OptionBuilder().setTransports(['websocket']).build());
+    socket = IO.io(BankApiUrl,IO.OptionBuilder().setTransports(['websocket']).build());
     fetchedTrsacntionList.clear();
     setUpSocketListener();
   }

@@ -3,7 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionCalender.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_credit_debit.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_search_list.dart';

@@ -13,7 +13,7 @@ import '../../routes/route_transactions.dart';
 
 
 void getAllAutoTransactions() async {
-  var res = await getDataApiCall("${url}/transactionauto/pending-for-review-transactions/");
+  var res = await getDataApiCall(BankTransactionRoutes.getPendingForReviewTransactions);
   if (getFlagOfResponse(res))
    {
     var data = jsonDecode(res.body);
@@ -44,7 +44,7 @@ void updateTransactionsBalanceOut(context,transactionId,int index,double amount)
 Future<void> addTagToTransactions(context,transactionId,bool flag,int index)async
 {
 
-   var res =await postDataApiCall("${url}/transactionauto/verify-pending-transaction/${transactionId}/${flag}",{
+   var res =await postDataApiCall(BankTransactionRoutes.verifyPendingTransaction(transactionId: transactionId, isCorrect: flag),{
       "flag":flag
    });
   

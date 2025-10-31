@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
-import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -104,7 +104,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     String email = data['email'];
       updateDeviceData(deviceData);
     final response = await http.post(
-      Uri.parse(RouterApi.signUp),
+      Uri.parse(AuthApiRoutes.signUp),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -323,7 +323,7 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
     String email = data['email'];
        updateDeviceData(deviceData);
     final response = await http.post(
-      Uri.parse(RouterApi.signUp),
+      Uri.parse(AuthApiRoutes.signUp),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

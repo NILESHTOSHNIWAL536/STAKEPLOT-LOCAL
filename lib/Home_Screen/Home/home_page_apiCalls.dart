@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import "../../Hive_localstorage/apisCall/finance_apis.dart";
+import "../../routes/route_transactions.dart";
 
 // expanded finance apis and functions
 final Map<String, int> monthNameToIndex = {
@@ -87,8 +88,8 @@ Future<void> fetchYearlyData(int year) async {
   try {
     // isLoading.value = true;
     String yearString = year.toString().padLeft(4, '0');
-    String endpoint =
-        "${url}/transactionauto/getAllCustomTransactions/${accountId.value}/year/$yearString";
+    String endpoint = BankTransactionRoutes.getAllCustomTransactions(accountId: accountId.value, type: 'year', value: yearString);
+   
 
     var response = await getDataApiCall(endpoint);
 
@@ -212,8 +213,8 @@ Future<void> fetchMonthlyData(int year, int month) async {
   try {
     // isLoading.value = true;
     String formattedDate = DateFormat('yyyy-MM').format(DateTime(year, month));
-    var response = await getDataApiCall(
-        "${url}/transactionauto/getAllCustomTransactions/${accountId.value}/month/$formattedDate");
+    String endpoint = BankTransactionRoutes.getAllCustomTransactions(accountId: accountId.value, type: 'month', value: formattedDate);
+    var response = await getDataApiCall(endpoint);
 
     if (getFlagOfResponse(response)) {
       var data = jsonDecode(response.body);
@@ -512,7 +513,7 @@ void declineAmount(
 Future<void> hideTransaction(
     int index, bool hidden, BuildContext context, String id) async {
   final transaction = transactionsHistory[index];
-  final apiUrl = "$url/transactionauto/updateTransaction/$id";
+  final apiUrl = BankTransactionRoutes.updateTransaction(transactionId: id);
   try {
     final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
     // Debug print
@@ -537,20 +538,13 @@ Future<void> hideTransaction(
 
 Future<void> excludeCashFlowTransaction(
     int index, bool isExcluded, BuildContext context, String id) async {
-  final transaction = transactionsHistory[index];
-  final apiUrl = "$url/transactionauto/updateTransaction/$id";
+   final apiUrl = BankTransactionRoutes.updateTransaction(transactionId: id);
   try {
-    final response =
-        await updateDataApiCall2(apiUrl, {"isExcluded": isExcluded});
-    // Debug print
+    final response =  await updateDataApiCall2(apiUrl, {"isExcluded": isExcluded});
     if (getFlagOfResponse(response)) {
       (transactionsHistory[index]).isExcluded = isExcluded;
       transactionsHistory.refresh();
-      // snackBarCalled(context, SnackbarData().transactionHiddenSuccess);
-    } else {
-      // snackBarCalledfail(context, SnackbarData().transactionHideFailed);
-    }
+    } 
   } catch (e) {
-    // snackBarCalledfail(context, SnackbarData().errorHidingTransaction);
   }
 }

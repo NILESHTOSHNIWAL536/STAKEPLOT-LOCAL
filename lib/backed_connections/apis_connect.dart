@@ -18,11 +18,11 @@ part 'snackBars.dart';
 
 bool apis_flag = true;
 String urlWithLocallHost = !apis_flag ? Credentials.LIVE_API:Credentials.LIVE_API_TEST;
-String urlWithLocallHost2 = !apis_flag ? Credentials.LIVE_API2:Credentials.LIVE_API_TEST2;
+String urlWithLocallHost2 = apis_flag ? Credentials.LIVE_API2:Credentials.LIVE_API_TEST2;
 String urlWithLocallHost3 = !apis_flag ? Credentials.FINVU_LIVE:Credentials.FINVU_TEST;
 String url = "${urlWithLocallHost}api/v1";
 String EmailUrl = "${urlWithLocallHost2}api";
-String BankApiUrl = "${urlWithLocallHost3}api";
+String BankApiUrl = "${urlWithLocallHost3}";
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();
 RxMap deviceData = {}.obs;

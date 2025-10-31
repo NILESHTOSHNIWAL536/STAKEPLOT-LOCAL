@@ -18,7 +18,7 @@ import 'package:http/http.dart' as http;
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-import '../routes/route_api.dart';
+import '../routes/route_user_login.dart';
 
 class TribeShare extends StatefulWidget {
   var data;

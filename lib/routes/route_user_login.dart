@@ -7,7 +7,7 @@ class otpRoutes {
   static String verifyOtp = "$_urlPath/otp/verify-otp";
 }
 
-class RouterApi {
+class AuthApiRoutes {
   static final String _urlPath = url + "/auth";
   static final String _emailPath = EmailUrl;
 
@@ -18,6 +18,7 @@ class RouterApi {
   static String googleAuth = "$_urlPath/google-auth";
   static String signUp = "$_urlPath/sign-up";
   static String logout = "$_urlPath/logout";
+  static String validateName = "$_urlPath/validate-name";
 
   //generate-token Email part
   static String generateToken = "$_emailPath/generate-token";
@@ -55,13 +56,4 @@ class UserRoutes {
   static String getMaskedUsers = "$_urlPath/getMaskedUsers";
 }
 
-
-class FinvuRoutes
-{
-  static final String _urlPath = BankApiUrl + "/finvu";
-  static String finvuLogin = "$_urlPath/login";
-  static String finvuFetchData = "$_urlPath/fetchData";
-  static String fipDetails = "$_urlPath/fip-details";
-  static String fetchWeekly = "$_urlPath/fetchWeekly";
-}
 

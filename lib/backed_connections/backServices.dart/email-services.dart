@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 
 import '../apiAutomations/curd.dart';
 
@@ -8,7 +8,7 @@ Future<void> revokeEmailAccess(BuildContext context)async
 {
   // implement the function to delete email access
    try {
-    var res = await deleteDataApiCall(RouterApi.revokeAccessToken);
+    var res = await deleteDataApiCall(AuthApiRoutes.revokeAccessToken);
     printData(res);
     if (getFlagOfResponse(res))
     {

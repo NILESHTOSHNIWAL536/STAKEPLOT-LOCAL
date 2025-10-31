@@ -21,11 +21,9 @@ RxInt startIndex = 0.obs;
 void getPdf(BuildContext context, RxString selectedValue,
     RxString selectedValueType) async {
   var response = await getDataApiCall(
-    // BankTransactionRoutes.getPreviousTransactions(accountId: accountIdPdf.value,date:getPreviousDate(int.parse(selectedValue.value), selectedValueType.value) ),
-    "${url}/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}/${accountIdPdf.value}",
+    BankTransactionRoutes.getPreviousTransactions(accountId: accountIdPdf.value,date:getPreviousDate(int.parse(selectedValue.value), selectedValueType.value) ),
   );
   
-
   startIndex.value = 0;
   bankLogo.value = getBankLogo();
 

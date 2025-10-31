@@ -19,7 +19,7 @@ import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:get/get.dart";
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import "../routes/route_api.dart";
+import "../routes/route_user_login.dart";
 
 RxBool load = true.obs;
 RxBool reloadCharts = true.obs;

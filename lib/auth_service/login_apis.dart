@@ -15,7 +15,7 @@ import '../../Utils/snackBar.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
 import '../backed_connections/googlesignin/credentials.dart';
-import '../routes/route_api.dart';
+import '../routes/route_user_login.dart';
 import '../signInOut/userName.dart';
 
 class LoginService {
@@ -25,7 +25,7 @@ class LoginService {
     String name = data['name'];
     String email = data['email'];
       updateDeviceData(deviceData);
-      final response= await postDataApiCall(RouterApi.signUp, {
+      final response= await postDataApiCall(AuthApiRoutes.signUp, {
          'name': name,
          'email': email,
          'authorizationKey':Credentials.Sign_Up_Key,
@@ -62,7 +62,7 @@ class LoginService {
     try {
       updateDeviceData(deviceData);
       var response =
-          await postDataApiCallwithOutSharedPref(RouterApi.login, {
+          await postDataApiCallwithOutSharedPref(AuthApiRoutes.login, {
         'email': emailController.text.toString(),
         'deviceInfo': deviceData,
         "otp": otp.toString(),
@@ -91,7 +91,7 @@ class LoginService {
   ) async {
     try {
       var response =
-          await postDataApiCallwithOutSharedPref(RouterApi.verify, {
+          await postDataApiCallwithOutSharedPref(AuthApiRoutes.verify, {
         'email': emailController.text.toString(),
         // 'userpassword': emailController.text.toString(),
       });

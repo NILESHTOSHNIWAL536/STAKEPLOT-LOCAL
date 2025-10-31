@@ -20,7 +20,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/model/post_model.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
-import "package:flutter_application_code_stakeplot/routes/route_api.dart";
+import "package:flutter_application_code_stakeplot/routes/route_user_login.dart";
 import "dart:convert";
 
 import "package:get/get.dart";
@@ -49,7 +49,8 @@ class _NotificationsState extends State<Notifications> {
     if (notifyId == null) return;
     String urlPath = '${UserRoutes.deleteNotifications}/$notifyId';
     var response = await getDataApiCall(urlPath);
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200)
+    {
       snackBarCalledfail(context, SnackbarData().deleteNotificationFailed);
     }
   }

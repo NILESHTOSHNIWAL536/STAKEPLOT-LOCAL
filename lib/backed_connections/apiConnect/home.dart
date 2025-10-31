@@ -12,7 +12,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
-import 'package:flutter_application_code_stakeplot/routes/route_api.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 
 import '../../Hive_localstorage/apisCall/transactions_apis.dart';
 
@@ -70,7 +71,7 @@ void pinPasswordVerify(
   _isVerifyingPin = true;
 
   try {
-    final response = await getDataApiCall(UserRoutes.cupertino +"$password");
+    final response = await getDataApiCall(UserRoutes.cupertino + "$password");
 
     if (response.statusCode == 200) {
       hideBackAccountPassword.value = true;
@@ -105,14 +106,15 @@ void pinPasswordVerify(
 }
 
 void seletedBankUpdateInfo(id, context) async {
-  var response = await getDataApiCall(UserRoutes.selectedBank+"${id}");
+  var response = await getDataApiCall(UserRoutes.selectedBank + "${id}");
   if (response.statusCode == 200 || response.statusCode == 200) {
   } else {}
 }
 
 void getAllTransaction(context) async {
   var response = await getDataApiCall(
-      "${url}/transactionauto/getTransactions/${currentPage}/empty/-");
+      BankTransactionRoutes.getSearchedTransactions(
+          page: currentPage, search: "empty", isBankAccount: "-"));
   expire(response, context);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
@@ -142,7 +144,7 @@ void getInsights(context, String id) async {
 
 void getHiddenTransactions(context) async {
   var response =
-      await getDataApiCall("${url}/transactionauto/get-hide-transactions");
+      await getDataApiCall(BankTransactionRoutes.getHideTransactions);
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
@@ -158,7 +160,7 @@ Future<void> getTopThreeTransactions(BuildContext context,
   try {
     // Include userId in the API call (adjust endpoint as per your API)
     var response = await getDataApiCall(
-        "${url}/transactionauto/top-three-transactions-of-week?userId=$userId");
+        "${BankTransactionRoutes.getTopThreeTransactionsOfWeek}?userId=$userId");
     if (response.statusCode == 200) {
       var her = jsonDecode(response.body);
       var obj = her['data'];
@@ -172,7 +174,7 @@ Future<void> getTopThreeTransactions(BuildContext context,
 
 Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
   var response =
-      await getDataApiCall("${url}/transactionauto/get-day-wise-transactions");
+      await getDataApiCall(BankTransactionRoutes.getDayWiseTransactionsSummary);
 
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
@@ -187,7 +189,8 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
 Future<List<Map<String, dynamic>>> getDayWiseTransactionsForDate(
     context, String date) async {
   var response = await getDataApiCall(
-      "${url}/transactionauto/get-day-wise-transactions/$date");
+    BankTransactionRoutes.getTransactionsByDate(date: date),
+  );
 
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
@@ -216,8 +219,20 @@ Future<void> getAllTransactionHistory(
         ? "empty"
         : (searchController.text == "cash" ? "Cash" : searchController.text);
     String urlPath = flag
-        ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
-        : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${(accountSelected.value.isEmpty || bankAccountLinkedList.length == 1 || text.toLowerCase() == "cash") ? (text.toLowerCase() == "cash" ? "Cash" : "-") : accountSelected.value}";
+        ? BankTransactionRoutes.getMonthlyTransactionsHistory(
+            accountId: accountId.value,
+            type: type,
+            page: currentPage,
+          )
+        : BankTransactionRoutes.getSearchedTransactions(
+            page: currentPage,
+            search: text,
+            isBankAccount: (accountSelected.value.isEmpty ||
+                    bankAccountLinkedList.length == 1 ||
+                    text.toLowerCase() == "cash")
+                ? (text.toLowerCase() == "cash" ? "Cash" : "-")
+                : accountSelected.value,
+          );
 
     bool hasAmount = minController.text.trim().isNotEmpty &&
         maxController.text.trim().isNotEmpty &&
@@ -236,7 +251,7 @@ Future<void> getAllTransactionHistory(
             startDate: hasDate ? startDateController.text : "",
             endDate: hasDate ? endDateController.text : "",
           );
-   
+
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
