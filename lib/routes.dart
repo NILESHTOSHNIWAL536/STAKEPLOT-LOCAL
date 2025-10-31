@@ -23,11 +23,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransactio
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/forgot.dart';
-
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/forgot.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signin.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signup.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/login_screen.dart';
 import 'Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'email_sync/add_credit_card_bank.dart';
@@ -36,14 +32,10 @@ import 'finances_screen/creditCard_slider.dart';
 import 'finances_screen/index_finances.dart';
 import 'onboarding_screens/onboarding_screen.dart';
 
-
 var routes =
  {  
       '/splash': (context) =>  const SplashScreen(),   
       '/': (context) =>  LoginScreen(),   
-      // '/signup': (context) => SignUp(),  
-      '/signup': (context) => SignUpScreen(),  
-      '/forgot': (context) => ForgotPasswordScreen(),  
       '/home': (context) => HomePage(),  
       '/Notifications': (context) => Notifications(),  
       '/comment': (context) => Notifications(),  
@@ -64,7 +56,6 @@ var routes =
       '/TripCost':(context) => TripCost() ,
       '/VegNonveg':(context) => VegNonVegCalculator(),
       '/FetchTransaction':(context) => FetchTransaction() ,
-      '/ForgotPassword':(context) => ForgotPassword() ,
       '/OnboardingScreen':(context) => OnboardingScreen() ,
       '/editDetails':(context) => EditDetails() ,
       '/interestScreen':(context) => InterestSelectionScreen() ,
@@ -104,3 +95,5 @@ var colorcodes=const {
     "snacks": Color(0xFF5D6D7E), // Muted Blue-Gray
     "UPI": Color(0xFF5D6D7E), // Muted Blue-Gray
   };
+
+

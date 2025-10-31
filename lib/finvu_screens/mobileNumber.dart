@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,18 +8,16 @@ import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/credentials.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter_android/webview_flutter_android.dart';
-import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+
 
 RxBool loadConsentId=false.obs;
 RxBool isOtpWrong = false.obs;
@@ -45,9 +42,6 @@ class _MobileNumberState extends State<MobileNumber> {
   RxString _otpCode = "".obs; // Captured OTP code
   RxBool _isOtpValid = false.obs; // Validate OTP length
   TextEditingController otpController = TextEditingController();
-  final String termsUrl = "https://finvu.in/terms"; // Replace with actual URL
-
-  late final WebViewController controller;
   final RxBool show = true.obs;
   final regex = RegExp(r'^[0-9]*$');
 
@@ -56,42 +50,8 @@ class _MobileNumberState extends State<MobileNumber> {
     super.initState();
     initFinvuManager(context);
     loadConsentId.value=false;
-
-    // Step 1: Initialize WebView platform params
-    try {
-      late final PlatformWebViewControllerCreationParams params;
-      if (WebViewPlatform.instance is WebKitWebViewPlatform) {
-        params = WebKitWebViewControllerCreationParams(
-          allowsInlineMediaPlayback: true,
-          mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
-        );
-      } else {
-        params = const PlatformWebViewControllerCreationParams();
-      }
-
-      // Step 2: Create the WebViewController
-      controller = WebViewController.fromPlatformCreationParams(params)
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..loadRequest(Uri.parse("https://finvu.in/terms"));
-
-      // Step 3: Configure Android-specific settings
-      if (controller.platform is AndroidWebViewController) {
-        AndroidWebViewController.enableDebugging(true);
-        (controller.platform as AndroidWebViewController)
-            .setMediaPlaybackRequiresUserGesture(false);
-      }
-    } catch (e) {}
     if (widget.flag) {
       _phoneController.text = number.value.toString()=="0"?"":number.value.toString();
-    }
-  }
-
-  Future<void> _launchURL() async {
-    final Uri url = Uri.parse(termsUrl);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch $termsUrl';
     }
   }
 
@@ -274,13 +234,7 @@ class _MobileNumberState extends State<MobileNumber> {
 
 
   void click() {
-    // Step 4: Reuse the initialized controller instead of creating a new one
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => WebViewPage(controller: controller),
-      ),
-    );
+      redirectToUrl(context, Credentials.FinvuUrl);
   }
 
   Widget verifyaotp(context) {

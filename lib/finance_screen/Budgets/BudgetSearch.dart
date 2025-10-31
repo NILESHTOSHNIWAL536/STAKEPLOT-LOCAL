@@ -32,7 +32,8 @@ class BudgetSearch extends StatefulWidget {
 
 class _BudgetSearchState extends State<BudgetSearch> {
   TextEditingController nameController = TextEditingController(text: "");
-  String selectedValue =  categoriesSeleted.length>0? categoriesSeleted[0] : "";
+  String selectedValue =
+      categoriesSeleted.length > 0 ? categoriesSeleted[0] : "";
   RxList<String> filteredCategories = <String>[].obs;
   RxBool isCategoriesUpdated = false.obs;
   final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
@@ -82,36 +83,43 @@ class _BudgetSearchState extends State<BudgetSearch> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    
 
-    return 
-      Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.white,
-          title:Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                 
-                  textStyle(
-                    context: context,
-                    text:  PlotFinanceStaticData().budgetPlannerTitle,
-                    fontsize: 20 ,
-                    fontWeight: FontWeight.w700,
-                    c: AppColors.primaryColor,
-                  ),
-                ],
-              ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.white,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            textStyle(
+              context: context,
+              text: PlotFinanceStaticData().budgetPlannerTitle,
+              fontsize: 20,
+              fontWeight: FontWeight.w700,
+              c: AppColors.primaryColor,
+            ),
+          ],
         ),
-        
-        body: SafeArea(child: getBudgetUiScreen(height, width)),
-        // bottomNavigationBar: BottomNavigations(data: 1),
-      
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+
+      body: GestureDetector(
+        onTap: () {
+          // Unfocus the search field when tapping outside
+          if (_isSearchFocused) {
+            _searchFocusNode.unfocus();
+          }
+        },
+        // Prevent taps inside the search bar or container from unfocusing
+        behavior: HitTestBehavior.opaque,
+        child: SafeArea(child: getBudgetUiScreen(height, width)),
+      ),
+
+      // bottomNavigationBar: BottomNavigations(data: 1),
     );
   }
 
@@ -139,7 +147,6 @@ class _BudgetSearchState extends State<BudgetSearch> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 
                   textStyle(
                     context: context,
                     text: PlotFinanceStaticData().chooseCategoryTitle,
@@ -169,12 +176,14 @@ class _BudgetSearchState extends State<BudgetSearch> {
                 onTap: () {
                   if (categoriesSeleted.isEmpty) {
                     // Show Snackbar if no category is selected
-                    snackBarCalledfail(context, SnackbarData().emptycategoryList);
+                    snackBarCalledfail(
+                        context, SnackbarData().emptycategoryList);
                   } else {
                     calculateBudget(widget.amount, widget.name, widget.period);
                   }
                 },
-                child: getButton(context, PlotFinanceStaticData().continueButton),
+                child:
+                    getButton(context, PlotFinanceStaticData().continueButton),
               ),
             ),
           ),
@@ -470,14 +479,68 @@ class _BudgetSearchState extends State<BudgetSearch> {
   void push(data) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => BudgetOverView(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => BudgetOverView(
           amount: widget.amount,
           name: widget.name,
           period: widget.period,
           categoryList: data,
         ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0); // Start from bottom
+          const end = Offset.zero; // End at normal position
+          const curve = Curves.easeInOut;
+
+          // Animation for the new screen (sliding up from bottom)
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var slideAnimation = animation.drive(tween);
+
+          // Animation for the old screen (sliding up and out)
+          var secondaryTween =
+              Tween(begin: Offset.zero, end: const Offset(0.0, -1.0))
+                  .chain(CurveTween(curve: curve));
+          var secondarySlideAnimation =
+              secondaryAnimation.drive(secondaryTween);
+
+          return Stack(
+            children: [
+              SlideTransition(
+                position: secondarySlideAnimation,
+                child: Container(
+                  color: AppColors
+                      .backgroundColor, // Match BudgetSearch screen's background
+                  child: BudgetSearch(
+                    amount: widget.amount,
+                    name: widget.name,
+                    period: widget.period,
+                  ), // Current screen sliding out
+                ),
+              ),
+              SlideTransition(
+                position: slideAnimation,
+                child: child, // New screen sliding in
+              ),
+            ],
+          );
+        },
+        transitionDuration:
+            const Duration(milliseconds: 300), // Animation duration
       ),
     );
   }
+  // void push(data) {
+
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => BudgetOverView(
+  //         amount: widget.amount,
+  //         name: widget.name,
+  //         period: widget.period,
+  //         categoryList: data,
+  //       ),
+  //     ),
+  //   );
+  // }
 }

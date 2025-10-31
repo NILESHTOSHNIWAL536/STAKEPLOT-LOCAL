@@ -1,42 +1,22 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../model/autopay_model.dart';
 import '../autopays_data/cards_data.dart';
 import '../hive_storage.dart';
 import 'init_hive.dart';
 
-
 class CardsLocalStorage {
   /// Save all cards to Hive
-  static Future<void> saveCardsToHive({required List<CardData> cardList}) async {
+  static Future<void> saveCardsToHive(
+      {required List<CardData> cardList}) async {
     HiveHelper.openBoxIfNot<CardsData>(HiveStorage.autoPayBoxName);
-    final box = await HiveStorage.autoPays; 
+    final box = await HiveStorage.autoPays;
     await box.clear();
-
-    const  gradients =  [
-          LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF8B7ED8), Color(0xFF4A90E2)],
-          ),
-          LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF4ECDC4), Color(0xFF44A08D)],
-          ),
-          LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFFF8A80), Color(0xFFFF7043)],
-          ),
-        ];
-
     try {
       for (var element in cardList) {
         // Store index instead of LinearGradient
-    
+
         // final gradientIndex = gradients.indexWhere((g) => g.colors.first == element.gradient.colors.first);
         box.add(CardsData(
           id: element.id,
@@ -52,20 +32,16 @@ class CardsLocalStorage {
           isDaily: element.isDaily,
         ));
       }
-     
-    } catch (e) {
-      print("Error saving cards to Hive: $e");
-    }
+    } catch (e) {}
   }
 
   /// Load cards from Hive into RxList
   static Future<void> loadCardsFromHive() async {
-
     try {
-     HiveHelper.openBoxIfNot<CardsData>(HiveStorage.autoPayBoxName);
-    final box = await HiveStorage.autoPays;
-    RxList<CardData> cardList=<CardData>[].obs;
-   const   gradients =  [
+      HiveHelper.openBoxIfNot<CardsData>(HiveStorage.autoPayBoxName);
+      final box = await HiveStorage.autoPays;
+      RxList<CardData> cardList = <CardData>[].obs;
+      const gradients = [
         LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -101,10 +77,7 @@ class CardsLocalStorage {
 
       allAutoPayData.clear();
       allAutoPayData.addAll(cardList);
-      isAutoPayFected.value=!isAutoPayFected.value;
-
-    } catch (e) {
-      print(e);
-    }
+      isAutoPayFected.value = !isAutoPayFected.value;
+    } catch (e) {}
   }
 }

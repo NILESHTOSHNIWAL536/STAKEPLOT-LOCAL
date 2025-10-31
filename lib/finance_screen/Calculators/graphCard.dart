@@ -50,7 +50,8 @@ class _PieChartGraphState extends State<PieChartGraph> {
             child: textStyle(
                 context: context,
                 fontsize: 20,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w800,
+                c: AppColors.primaryColor,
                 text: widget.title),
           ),
           Padding(
@@ -116,10 +117,10 @@ class _PieChartGraphState extends State<PieChartGraph> {
                 Row(
                   children: [
                     textStyle(
-                      c: AppColors.userName,
                       context: context,
-                      fontsize: 14,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w300,
+                      fontsize: 16,
+                      c: AppColors.accentColor,
                       text: graphData[
                           'title'], // Title from graphData (PieChartSectionData)
                     ),
@@ -142,19 +143,19 @@ class _PieChartGraphState extends State<PieChartGraph> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           textStyle(
-              c: AppColors.userName,
               context: context,
-              fontsize: 14,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w300,
+              fontsize: 16,
+              c: AppColors.accentColor,
               text: data['title']),
           const SizedBox(
             width: 10,
           ),
           textStyle(
-              c: AppColors.userName,
               context: context,
-              fontsize: 14,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w300,
+              fontsize: 16,
+              c: AppColors.accentColor,
               text: data['amount'].toString()),
         ],
       ),

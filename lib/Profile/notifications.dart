@@ -1,4 +1,4 @@
-import "dart:convert";
+
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
@@ -7,7 +7,10 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart";
 import "package:flutter_application_code_stakeplot/Profile/autocategroies.dart";
+import "package:flutter_application_code_stakeplot/Tribe/tribe_one.dart";
+
 import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
@@ -15,8 +18,14 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
-import "package:flutter_application_code_stakeplot/userAvatar.dart";
+import "package:flutter_application_code_stakeplot/model/post_model.dart";
+import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
+import "package:flutter_application_code_stakeplot/routes/route_user_login.dart";
+import "dart:convert";
+
 import "package:get/get.dart";
+
+import "../routes/route_post.dart";
 
 RxBool notificationsFlag = true.obs;
 
@@ -32,14 +41,33 @@ class _NotificationsState extends State<Notifications> {
   void initState() {
     super.initState();
     getNotifications(context);
+
+    // Debug notification list on init
   }
 
   Future<void> deleteNotification(String? notifyId) async {
     if (notifyId == null) return;
-    String urlPath = '${url}/user/deleteNotifications/$notifyId';
+    String urlPath = '${UserRoutes.deleteNotifications}/$notifyId';
     var response = await getDataApiCall(urlPath);
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200)
+    {
       snackBarCalledfail(context, SnackbarData().deleteNotificationFailed);
+    }
+  }
+
+  Future<PostModel?> fetchPostById(String postId, BuildContext context) async {
+    try {
+      final response = await getDataApiCall(
+          '${PostRoutes.post}$postId'); // Adjust the endpoint based on your API);
+      if (getFlagOfResponse(response)) {
+        var jsonData = jsonDecode(response.body);
+        // Adjust based on your API response structure, e.g., jsonData['data']
+        return PostModel.fromJson(jsonData['data'][0] ?? jsonData);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
     }
   }
 
@@ -72,9 +100,11 @@ class _NotificationsState extends State<Notifications> {
                 vertical: constraints.maxHeight * 0.01,
               ),
               child: SingleChildScrollView(
-                child: Obx(() => myNotificationBool.value
-                    ? _buildNotificationList()
-                    : _buildNotificationList()),
+                child: Obx(() {
+                   return myNotificationBool.value
+                      ? _buildNotificationList()
+                      : _buildNotificationList();
+                }),
               ),
             );
           },
@@ -140,7 +170,6 @@ class _NotificationsState extends State<Notifications> {
                             _deleteNotification(notifyId);
                           },
                           background: Container(
-                            // Match the margin and decoration of the foreground card
                             margin: EdgeInsets.symmetric(
                                 vertical:
                                     MediaQuery.of(context).size.height * 0.008),
@@ -155,7 +184,6 @@ class _NotificationsState extends State<Notifications> {
                                 ),
                               ],
                             ),
-                            // Match padding with the foreground card
                             padding: EdgeInsets.all(
                                 MediaQuery.of(context).size.width * 0.03),
                             alignment: Alignment.centerRight,
@@ -179,48 +207,153 @@ class _NotificationsState extends State<Notifications> {
     String? type = e['notificationMessage']?['type'];
     var data = e['notificationMessage'] ?? {};
 
-    return Container(
-      margin: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.height * 0.008),
-      decoration: BoxDecoration(
-        color: AppColors.mt,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.015,
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  bottomLeft: Radius.circular(12),
-                ),
-              ),
-            ),
-
-            //SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-            Expanded(
-              child: Padding(
-                padding:
-                    EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
-                child: _getNotificationContent(
-                    type ?? "unknown", data, notifyId, time),
-              ),
+    return GestureDetector(
+      onTap: () => _handleNotificationTap(type ?? "unknown", data, e),
+      child: Container(
+        margin: EdgeInsets.symmetric(
+            vertical: MediaQuery.of(context).size.height * 0.008),
+        decoration: BoxDecoration(
+          color: AppColors.mt,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.015,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    bottomLeft: Radius.circular(12),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding:
+                      EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                  child: _getNotificationContent(
+                      type ?? "unknown", data, notifyId, time),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
+  }
+
+  void _handleNotificationTap(String type, Map<String, dynamic> data,
+      Map<String, dynamic> notification) async {
+    switch (type) {
+      case "comment":
+        try {
+          if (data['id'] == null || data['id'].isEmpty) {
+            snackBarCalledfail(context, "Cannot navigate: Invalid post ID");
+            return;
+          }
+          PostModel? postModel = await fetchPostById(data['id'], context);
+          if (postModel == null) {
+            return;
+          }
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  TribeUnique(
+                id: data['id'],
+                dataObj: postModel,
+                popBox: false.obs,
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                const begin = Offset(1.0, 0.0);
+                const end = Offset.zero;
+                const curve = Curves.easeInOut;
+                var tween = Tween(begin: begin, end: end)
+                    .chain(CurveTween(curve: curve));
+                var offsetAnimation = animation.drive(tween);
+                return SlideTransition(
+                  position: offsetAnimation,
+                  child: child,
+                );
+              },
+              transitionDuration: const Duration(milliseconds: 300),
+            ),
+          );
+        } catch (e) {
+          snackBarCalledfail(context, "Failed to navigate to post");
+        }
+        // No navigation for pending friend requests since they have buttons
+        break;
+      case "split":
+      case "roomBill":
+      case "splitApprovalRequest":
+      case "lendApprovalRequest":
+      case "deleteAccountSplit":
+      case "deleteAccountLend":
+      case "clearLend":
+      case "clearSplit":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserListScreen(isPayable: true),
+          ),
+        );
+        break;
+      case "lendAccepted":
+      case "rejectedLend":
+      case "lendSettled":
+      case "splitSettled":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserListScreen(isPayable: false),
+          ),
+        );
+        break;
+      case "friendRequest":
+        if (data['status'] == 'accepted') {
+          final userId = data['from_id'] as String? ?? "";
+
+          var dataObj = userController.maskedConnected
+              .firstWhere((e) => e['_id'] == userId);
+
+          if (userId.isNotEmpty &&
+              userId != "null" &&
+              data['isMaskedConnection'] == true) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CommunityUserProfile(
+                  data: dataObj,
+                  ids: [userId],
+                  flag: true,
+                  isMasked: true,
+                  isMaskedConnect: true,
+                ),
+              ),
+            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => Friends()),
+            // );
+          } else {
+            snackBarCalledfail(context, "Invalid user ID");
+          }
+        }
+        // No navigation for pending friend requests since they have buttons
+        break;
+    }
   }
 
   Widget _getNotificationContent(
@@ -234,7 +367,6 @@ class _NotificationsState extends State<Notifications> {
           var msg = e['isMaskedConnection']
               ? "connected to you"
               : "accepted your friend request";
-
           return _buildMessageCard(
               "${e['from_name'] ?? 'Someone'} $msg",
               e['from_id'] as String? ?? "",
@@ -271,9 +403,6 @@ class _NotificationsState extends State<Notifications> {
             time,
             false);
       case "comment":
-        // var notificationAvatar = e['isMaskedConnection']
-        //     ? e['avatarType']
-        //     : e['username'] as String?;
         return _buildMessageCard(
             "${e['username'] ?? 'Someone'} has commented on your post",
             e['id'] as String? ?? "",
@@ -295,8 +424,7 @@ class _NotificationsState extends State<Notifications> {
         return _buildMessageCard(
             "${e['username'] ?? 'Someone'} $status your Lent request for ${e['name'] ?? 'unknown'}, worth ₹${e['amount'] ?? '400'}",
             e['from_id'] as String? ?? "",
-            //modified here for user avtar from  -----
-            e['username'] as String? ?? "", //from_name
+            e['username'] as String? ?? "",
             time,
             false);
       case "lendSettled":
@@ -315,8 +443,11 @@ class _NotificationsState extends State<Notifications> {
             false);
       case "FetchedData":
         return _buildMessageCard(
-          e['message']??
-            "🔥 Data has been successfully fetched!", "", "", time, false);
+            e['message'] ?? "🔥 Data has been successfully fetched!",
+            "",
+            e['avatarType'],
+            time,
+            false);
       case "lendApprovalRequest":
         return _buildApprovalCard(
             "${e['from_name'] ?? 'Someone'} has requested approval for settling ${e['name'] ?? 'unknown'} with an amount of ${e['amount'] ?? '00'}",
@@ -326,7 +457,6 @@ class _NotificationsState extends State<Notifications> {
             "bill",
             e['from_to'] as String? ?? "",
             notifyId.toString());
-
       case "deleteAccountSplit":
         return _buildMessageCard(
             "${e['from_name'] ?? 'This user'} has deleted their account, but some split amounts are still pending.",
@@ -334,7 +464,6 @@ class _NotificationsState extends State<Notifications> {
             e['from_name'] as String? ?? "",
             time,
             false);
-
       case "deleteAccountLend":
         return _buildMessageCard(
             "${e['from_name'] ?? 'This user'} has deleted their account, but some lend amounts are still pending.",
@@ -342,7 +471,6 @@ class _NotificationsState extends State<Notifications> {
             e['from_name'] as String? ?? "",
             time,
             false);
-
       case "splitApprovalRequest":
         return _buildApprovalCard(
             "${e['from_name'] ?? 'Someone'} has requested approval for settling ${e['name'] ?? 'unknown'} with an amount of ${e['amount'] ?? '00'}",
@@ -352,14 +480,12 @@ class _NotificationsState extends State<Notifications> {
             "split",
             e['from_to'] as String? ?? "",
             notifyId.toString());
-
       case "clearLend":
       case "clearSplit":
         String ty = type == "clearLend" ? "lend" : "split";
         return _buildMessageCard(
             "You have cleared your $ty of ${(double.tryParse(e['amount']?.toString() ?? '0') ?? 0).toStringAsFixed(1)} for the item: ${e['name'] ?? 'unknown'}",
             e['id'] as String? ?? "",
-            // modified here from avatarType to from_name
             e['from_name'] as String? ?? "",
             time,
             false);
@@ -369,14 +495,28 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildMessageCard(
-      String message, String id, String avatar, String time, bool isMasked) {
-    bool isFetchedData =
-        message.contains("🔥 Data has been successfully fetched!");
+      String message, String id, avatar, String time, bool isMasked) {
+    bool isFetchedData = message.contains("Data has been successfully fetched");
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
+        if (isFetchedData)
+          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+        isFetchedData
+            ? Container(
+                child: Image.network(
+                avatar,
+                width: 30,
+                height: 30,
+                fit: BoxFit.fitWidth,
+                errorBuilder: (context, error, stackTrace) => const Icon(
+                  Icons.account_balance,
+                  size: 30,
+                  color: AppColors.primaryColor,
+                ),
+              ))
+            : SizedBox.shrink(),
         if (!isFetchedData && avatar.isNotEmpty)
           if (!isMasked)
             AvatarProfile(name: avatar, width: 20, height: 17, background: "")
@@ -386,6 +526,8 @@ class _NotificationsState extends State<Notifications> {
           SizedBox(width: MediaQuery.of(context).size.width * 0.06),
         if (!isFetchedData)
           SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+        if (isFetchedData)
+          SizedBox(width: MediaQuery.of(context).size.width * 0.06),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -418,11 +560,6 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //  UserAvatar(
-        //   url: avaterUrlPath(avatar),
-        //   width: MediaQuery.of(context).size.width * 0.06,
-        //   height: MediaQuery.of(context).size.width * 0.06,
-        // ),
         AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
         SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
@@ -482,11 +619,6 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // UserAvatar(
-        //   url: avaterUrlPath(avatar),
-        //   width: MediaQuery.of(context).size.width * 0.06,
-        //   height: MediaQuery.of(context).size.width * 0.06,
-        // ),
         AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
         SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
@@ -549,13 +681,7 @@ class _NotificationsState extends State<Notifications> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         avatar.isNotEmpty
-            ?
-            //  UserAvatar(
-            //         url: avaterUrlPath(avatar),
-            //         width: MediaQuery.of(context).size.width * 0.06,
-            //         height: MediaQuery.of(context).size.width * 0.06,
-            //       )
-            AvatarProfile(name: avatar, width: 20, height: 17, background: "")
+            ? AvatarProfile(name: avatar, width: 20, height: 17, background: "")
             : SizedBox(width: MediaQuery.of(context).size.width * 0.06),
         SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(

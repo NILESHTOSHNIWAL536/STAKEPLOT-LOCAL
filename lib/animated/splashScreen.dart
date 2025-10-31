@@ -12,14 +12,14 @@ import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
-import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
-import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
-
 import '../Hive_localstorage/apisCall/init_hive.dart';
+import '../Home_Screen/Home/init_Api_Calls.dart';
+import '../OneSignal/oneSignal_config.dart';
+import '../Utils/credit_card.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -32,27 +32,30 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-     _checkForUpdatesAndNavigate();
-    callApis();
+    initializeOneSignal(context);
+    _checkForUpdatesAndNavigate();
     initGetControllers();
+    initializeData(context, mounted);
+    callApis();
   }
 
   Future<void> _checkForUpdatesAndNavigate() async {
-      // if(SnackbarData().showUpdatecall) await checkForUpdate();  
-      await checkAuthAndNavigate();  // only navigate after update check
+    if (SnackbarData().showUpdatecall) await checkForUpdate();
+    await checkAuthAndNavigate();
   }
 
-  void callApis()async {
+  void callApis() async {
+    await initAllHive();
+
     SignupData signup = SignupData();
     SnackbarData snackbarData = SnackbarData();
     SigninData signinData = SigninData();
-
     PlotFinanceStaticData plotFinanceStaticData = PlotFinanceStaticData();
-    HomepageStringsDart homepageStringsDart = HomepageStringsDart();
     CommunityScreenStrings communityScreenStrings = CommunityScreenStrings();
     FinvuStrings finvuStrings = FinvuStrings();
     ProfileScreenStrings profileScreenStrings = ProfileScreenStrings();
     FinspaceStrings finspaceStrings = FinspaceStrings();
+    HomepageStringsDart homepageStringsDart = HomepageStringsDart();
 
     finspaceStrings.fetchConstants();
     signinData.fetchConstants();
@@ -65,29 +68,28 @@ class _SplashScreenState extends State<SplashScreen> {
     profileScreenStrings.fetchConstants();
     PdfStrings().fetchConstants();
     RewardScreenStrings().fetchConstants();
-    await initAllHive();
+    CreditCardScreenStrings().fetchConstants();
   }
 
   @override
   Widget build(BuildContext context) {
-  final size = MediaQuery.of(context).size; 
+    final size = MediaQuery.of(context).size;
 
-  return AnimatedSplashScreen.withScreenFunction(
-    backgroundColor: Colors.white,
-    duration: 1800,
-    splashIconSize: size.height, 
-    splashTransition: SplashTransition.fadeTransition,
-    pageTransitionType: PageTransitionType.fade,
-    splash: SizedBox(
-      width: size.width,   
-      height: size.height, 
-      child: Lottie.asset(
-        "assets/splashScreen/appScreen.json",
-        fit: BoxFit.cover, 
+    return AnimatedSplashScreen.withScreenFunction(
+      backgroundColor: Colors.white,
+      duration: 1800,
+      splashIconSize: size.height,
+      splashTransition: SplashTransition.fadeTransition,
+      pageTransitionType: PageTransitionType.fade,
+      splash: SizedBox(
+        width: size.width,
+        height: size.height,
+        child: Lottie.asset(
+          "assets/splashScreen/appScreen.json",
+          fit: BoxFit.cover,
+        ),
       ),
-    ),
-    screenFunction: checkAuthAndNavigate,
-  );
-}
-
+      screenFunction: checkAuthAndNavigate,
+    );
+  }
 }

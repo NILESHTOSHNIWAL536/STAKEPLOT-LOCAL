@@ -89,8 +89,7 @@ Future<http.Response> updateDataApiCall3(String urlPath,
 
 Future<http.Response> getDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  var accessToken = pref.getString("accessToken");
-
+  var  accessToken= pref.getString("accessToken");
   final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{
@@ -134,10 +133,8 @@ bool getFlagOfResponse(response) {
 }
 
 void printData(response, [context = ""]) {
-  // print("response");
-  // print(response);
-  // print(response.statusCode);
-  // print(response.body);
+   print("Response Data $context : ${response.body}");
+   print("Response Status Code  : ${response.statusCode}");  
 }
 
 Future<http.Response> getTransactionsWithAmount({
@@ -150,7 +147,6 @@ Future<http.Response> getTransactionsWithAmount({
  
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
-  print('accessToken: ${accessToken != null ? "present" : "null"}');
 
   // Build the query params
   final queryParams = <String, String>{};

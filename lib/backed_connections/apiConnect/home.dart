@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/date_range_filter.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -14,11 +12,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 
 import '../../Hive_localstorage/apisCall/transactions_apis.dart';
 
 void getAck() async {
-  var response = await getDataApiCall('${url}/user/newNotifications');
+  var response = await getDataApiCall(UserRoutes.newNotifications);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -32,7 +32,7 @@ void setPasswordApiCalled(context, String password) async {
     return; // Exit the function without setting the PIN
   }
 
-  var urlPath = '${url}/user/cupertino/';
+  var urlPath = UserRoutes.cupertino;
   final response = await postDataApiCall(urlPath, {
     'pin': password.toString(),
   });
@@ -71,7 +71,7 @@ void pinPasswordVerify(
   _isVerifyingPin = true;
 
   try {
-    final response = await getDataApiCall("${url}/user/cupertino/$password");
+    final response = await getDataApiCall(UserRoutes.cupertino + "$password");
 
     if (response.statusCode == 200) {
       hideBackAccountPassword.value = true;
@@ -106,14 +106,15 @@ void pinPasswordVerify(
 }
 
 void seletedBankUpdateInfo(id, context) async {
-  var response = await getDataApiCall("${url}/user/selectedBank/${id}");
+  var response = await getDataApiCall(UserRoutes.selectedBank + "${id}");
   if (response.statusCode == 200 || response.statusCode == 200) {
   } else {}
 }
 
 void getAllTransaction(context) async {
   var response = await getDataApiCall(
-      "${url}/transactionauto/getTransactions/${currentPage}/empty/-");
+      BankTransactionRoutes.getSearchedTransactions(
+          page: currentPage, search: "empty", isBankAccount: "-"));
   expire(response, context);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
@@ -143,7 +144,7 @@ void getInsights(context, String id) async {
 
 void getHiddenTransactions(context) async {
   var response =
-      await getDataApiCall("${url}/transactionauto/get-hide-transactions");
+      await getDataApiCall(BankTransactionRoutes.getHideTransactions);
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
@@ -159,7 +160,7 @@ Future<void> getTopThreeTransactions(BuildContext context,
   try {
     // Include userId in the API call (adjust endpoint as per your API)
     var response = await getDataApiCall(
-        "${url}/transactionauto/top-three-transactions-of-week?userId=$userId");
+        "${BankTransactionRoutes.getTopThreeTransactionsOfWeek}?userId=$userId");
     if (response.statusCode == 200) {
       var her = jsonDecode(response.body);
       var obj = her['data'];
@@ -173,7 +174,7 @@ Future<void> getTopThreeTransactions(BuildContext context,
 
 Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
   var response =
-      await getDataApiCall("${url}/transactionauto/get-day-wise-transactions");
+      await getDataApiCall(BankTransactionRoutes.getDayWiseTransactionsSummary);
 
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
@@ -188,7 +189,8 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactions(context) async {
 Future<List<Map<String, dynamic>>> getDayWiseTransactionsForDate(
     context, String date) async {
   var response = await getDataApiCall(
-      "${url}/transactionauto/get-day-wise-transactions/$date");
+    BankTransactionRoutes.getTransactionsByDate(date: date),
+  );
 
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
@@ -217,22 +219,21 @@ Future<void> getAllTransactionHistory(
         ? "empty"
         : (searchController.text == "cash" ? "Cash" : searchController.text);
     String urlPath = flag
-        ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
-        : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${(accountSelected.value.isEmpty || bankAccountLinkedList.length == 1 || text.toLowerCase() == "cash") ? (text.toLowerCase() == "cash" ? "Cash" : "-") : accountSelected.value}";
+        ? BankTransactionRoutes.getMonthlyTransactionsHistory(
+            accountId: accountId.value,
+            type: type,
+            page: currentPage,
+          )
+        : BankTransactionRoutes.getSearchedTransactions(
+            page: currentPage,
+            search: text,
+            isBankAccount: (accountSelected.value.isEmpty ||
+                    bankAccountLinkedList.length == 1 ||
+                    text.toLowerCase() == "cash")
+                ? (text.toLowerCase() == "cash" ? "Cash" : "-")
+                : accountSelected.value,
+          );
 
-    // var response = (flag ||
-    //         maxController.text.toString().trim().isEmpty ||
-    //         endDateController.text.toString().trim().isEmpty ||
-    //         !checkRangeofAmount(context, false) ||
-    //         !checkRangeofDate(context, false))
-    //     ? await getDataApiCall(urlPath)
-    //     : await getTransactionsWithAmount(
-    //         urlPath: urlPath,
-    //         minAmount: minController.text,
-    //         maxAmount: maxController.text,
-    //         startDate: startDateController.text,
-    //         endDate: endDateController.text,
-    //       );
     bool hasAmount = minController.text.trim().isNotEmpty &&
         maxController.text.trim().isNotEmpty &&
         checkRangeofAmount(context, false);

@@ -34,7 +34,7 @@ class _RentBuyState extends State<RentBuy> {
 
   double totalRentingCost = 0.0;
   double totalBuyingCost = 0.0;
-bool _isInfoVisible = false; // Controls visibility of the container
+  bool _isInfoVisible = false; // Controls visibility of the container
   double _opacity = 0.0; // Controls the fade effect
   Timer? _timer;
   @override
@@ -42,7 +42,7 @@ bool _isInfoVisible = false; // Controls visibility of the container
     super.initState();
     getslidersList();
     calculateRentVsBuy(); // Initial calculation
-     WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         setState(() {
           _isInfoVisible = true;
@@ -80,13 +80,15 @@ bool _isInfoVisible = false; // Controls visibility of the container
       getJsonBodyObj("Maintenance Cost (% per year)", 2.0, 0.0, 10.0, (value) {
         updateSliderValue(5, value);
       }, TextEditingController(text: '2.0'), false, "%"),
-      getJsonBodyObj("Home Appreciation Rate (% per year)", 3.0, 0.0, 20.0, (value) {
+      getJsonBodyObj("Home Appreciation Rate (% per year)", 3.0, 0.0, 20.0,
+          (value) {
         updateSliderValue(6, value);
       }, TextEditingController(text: '3.0'), false, "%"),
       getJsonBodyObj("Monthly Rent", 10000.0, 5000.0, 100000.0, (value) {
         updateSliderValue(7, value);
       }, TextEditingController(text: '10000')),
-      getJsonBodyObj("Rent Increase Rate (% per year)", 2.0, 0.0, 10.0, (value) {
+      getJsonBodyObj("Rent Increase Rate (% per year)", 2.0, 0.0, 10.0,
+          (value) {
         updateSliderValue(8, value);
       }, TextEditingController(text: '2.0'), false, "%"),
     ];
@@ -106,10 +108,17 @@ bool _isInfoVisible = false; // Controls visibility of the container
     }
     double totalLoanCost = emi * loanTenure;
 
-    double totalPropertyTax = (propertyTaxRate / 100) * homePrice * (loanTenure / 12);
-    double totalMaintenanceCost = (maintenanceCost / 100) * homePrice * (loanTenure / 12);
-    double appreciatedValue = homePrice * pow(1 + (homeAppreciationRate / 100), loanTenure / 12);
-    totalBuyingCost = downPaymentAmount + totalLoanCost + totalPropertyTax + totalMaintenanceCost - appreciatedValue;
+    double totalPropertyTax =
+        (propertyTaxRate / 100) * homePrice * (loanTenure / 12);
+    double totalMaintenanceCost =
+        (maintenanceCost / 100) * homePrice * (loanTenure / 12);
+    double appreciatedValue =
+        homePrice * pow(1 + (homeAppreciationRate / 100), loanTenure / 12);
+    totalBuyingCost = downPaymentAmount +
+        totalLoanCost +
+        totalPropertyTax +
+        totalMaintenanceCost -
+        appreciatedValue;
 
     totalRentingCost = 0;
     double currentRent = monthlyRent;
@@ -152,10 +161,12 @@ bool _isInfoVisible = false; // Controls visibility of the container
   final List<ListItemModel> howToUseContent = [
     ListItemModel(
         title: "Home Price:",
-        description: "Adjust the slider to set the price of the home (e.g., ₹2,000,000)."),
+        description:
+            "Adjust the slider to set the price of the home (e.g., ₹2,000,000)."),
     ListItemModel(
         title: "Down Payment (%):",
-        description: "Set the percentage of the home price for the down payment (e.g., 20%)."),
+        description:
+            "Set the percentage of the home price for the down payment (e.g., 20%)."),
     ListItemModel(
         title: "Loan Interest Rate (%):",
         description: "Set the annual loan interest rate (e.g., 4.5%)."),
@@ -167,7 +178,8 @@ bool _isInfoVisible = false; // Controls visibility of the container
         description: "Set the annual property tax rate (e.g., 1.0%)."),
     ListItemModel(
         title: "Maintenance Cost (% per year):",
-        description: "Set the annual maintenance cost percentage (e.g., 2.0%)."),
+        description:
+            "Set the annual maintenance cost percentage (e.g., 2.0%)."),
     ListItemModel(
         title: "Home Appreciation Rate (% per year):",
         description: "Set the annual home appreciation rate (e.g., 3.0%)."),
@@ -182,19 +194,22 @@ bool _isInfoVisible = false; // Controls visibility of the container
   final List<ListItemModel> howItWorksContent = [
     ListItemModel(
         title: "EMI Calculation:",
-        description: "Calculates monthly loan payment using the formula EMI = P × r × (1 + r)ⁿ / ((1 + r)ⁿ - 1)."),
+        description:
+            "Calculates monthly loan payment using the formula EMI = P × r × (1 + r)ⁿ / ((1 + r)ⁿ - 1)."),
     ListItemModel(
         title: "Total Buy Cost:",
-        description: "Includes down payment, loan cost, property tax, maintenance, minus home appreciation."),
+        description:
+            "Includes down payment, loan cost, property tax, maintenance, minus home appreciation."),
     ListItemModel(
         title: "Total Rent Cost:",
-        description: "Sums annual rent costs with yearly increases over the loan tenure."),
+        description:
+            "Sums annual rent costs with yearly increases over the loan tenure."),
     ListItemModel(
         title: "Comparison:",
         description: "Compares total buying vs. renting costs in a pie chart."),
   ];
-  
-@override
+
+  @override
   void dispose() {
     _timer?.cancel(); // Cancel the timer to prevent memory leaks
     for (var slider in slidersList) {
@@ -202,45 +217,39 @@ bool _isInfoVisible = false; // Controls visibility of the container
     }
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: AppColors.primaryColor,
+      backgroundColor: AppColors.backgroundColor,
       // appBar: appbarHeader("Rent vs Buy Calculator", context),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-             padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: AppColors.primaryColorHeader),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: AppColors.backgroundColor,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        Container(
-                        width: MediaQuery.sizeOf(context).width/1.5,
-                        child: Center(
-                          child:GestureDetector(
-                           onTap: () {
+          padding: const EdgeInsets.all(12.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: AppColors.primaryColor,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14),
+                      child: GestureDetector(
+                        onTap: () {
                           setState(() {
                             _isInfoVisible = true;
                             _opacity = 1.0; // Fade in
-                           
                           });
                           _timer?.cancel(); // Cancel any existing timer
                           // Start a new timer to fade out after 5 seconds
@@ -248,81 +257,82 @@ bool _isInfoVisible = false; // Controls visibility of the container
                             if (mounted) {
                               setState(() {
                                 _opacity = 0.0; // Fade out
-                               
                               });
                             }
                           });
                         },
-                          child: Text(
-                            "Rent vs Buy Calculator",
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: AppColors.backgroundColor,
-                            ),
+                        child: Text(
+                          "Rent vs Buy Calculator",
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w800,
+                            fontSize: 40,
+                            color: AppColors.primaryColor,
                           ),
                         ),
-                        ))
-                      ],
+                      ),
+                    )
+                  ],
+                ),
+                AnimatedOpacity(
+                  opacity: _opacity,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  onEnd: () {
+                    // Hide container after fade-out completes
+                    if (_opacity == 0.0 && mounted) {
+                      setState(() {
+                        _isInfoVisible = false;
+                     
+                      });
+                    }
+                  },
+                  child: _isInfoVisible
+                      ? Container(
+                          margin: EdgeInsets.symmetric(vertical: 4),
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white, width: 1),
+                          ),
+                          child: SingleChildScrollView(
+                            child: Text(
+                              "The Rent vs. Buy Calculator helps you compare the costs of renting versus buying a home. Adjust the sliders to input the home price, down payment, loan interest rate, loan tenure, property tax rate, maintenance cost, home appreciation rate, monthly rent, and rent increase rate to see the total costs of renting and buying.",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: AppColors.backgroundColor,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      : SizedBox.shrink(),
+                ),
+                SliderPage(
+                  slidersList: slidersList,
+                  onSliderValueChanged: updateSliderValue,
+                ),
+                Container(
+                    margin: EdgeInsets.only(
+                      left: 4,
+                      right: 4,
+                      top: 0,
                     ),
-                   AnimatedOpacity(
-                    opacity: _opacity,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                    onEnd: () {
-                      // Hide container after fade-out completes
-                      if (_opacity == 0.0 && mounted) {
-                        setState(() {
-                          _isInfoVisible = false;
-                          print(
-                              'Container hidden: _isInfoVisible = $_isInfoVisible');
-                        });
-                      }
-                    },
-                    child: _isInfoVisible
-                        ? Container(
-                            margin: EdgeInsets.symmetric(vertical: 4),
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppColors.backgroundColor.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white, width: 1),
-                            ),
-                            child: SingleChildScrollView(
-                              child: Text(
-  "The Rent vs. Buy Calculator helps you compare the costs of renting versus buying a home. Adjust the sliders to input the home price, down payment, loan interest rate, loan tenure, property tax rate, maintenance cost, home appreciation rate, monthly rent, and rent increase rate to see the total costs of renting and buying.",
-  style: FontManager().getTextStyle(
-    context,
-    lWeight: FontWeight.w400,
-    fontSize: 14,
-    color: AppColors.primaryColor,
-  ),
-  textAlign: TextAlign.center,
-),
-                            ),
-                          )
-                        : SizedBox.shrink(),
-                  ),
-                
-                  SliderPage(
-                    slidersList: slidersList,
-                    onSliderValueChanged: updateSliderValue,
-                  ),
-                  Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.backgroundColor,
-                            borderRadius: BorderRadius.circular(12)),
-                        child: graph()),
-                         SizedBox(
-                    height: 10,
-                  ),
-                  CustomExpansionTile(
-                    howToUseContent: howToUseContent,
-                    howItWorksContent: howItWorksContent,
-                  ),
-                ],
-              ),
+                    decoration: BoxDecoration(
+                        color: AppColors.backgroundColor,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: graph()),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomExpansionTile(
+                  howToUseContent: howToUseContent,
+                  howItWorksContent: howItWorksContent,
+                ),
+              ],
             ),
           ),
         ),
@@ -334,12 +344,26 @@ bool _isInfoVisible = false; // Controls visibility of the container
     return PieChartGraph(
       title: "Rent vs Buy Details:",
       graphData: [
-        {'title': 'Total Buy Cost: ₹${formatMoneyIndian(totalBuyingCost.toStringAsFixed(0))}', 'value': totalBuyingCost},
-        {'title': 'Total Renting Cost: ₹${formatMoneyIndian(totalRentingCost.toStringAsFixed(0))}', 'value': totalRentingCost},
+        {
+          'title':
+              'Total Buy Cost: ₹${formatMoneyIndian(totalBuyingCost.toStringAsFixed(0))}',
+          'value': totalBuyingCost
+        },
+        {
+          'title':
+              'Total Renting Cost: ₹${formatMoneyIndian(totalRentingCost.toStringAsFixed(0))}',
+          'value': totalRentingCost
+        },
       ],
       graphDisc: [
-        {'title': 'Total Cost of Renting:', 'amount': "₹${formatMoneyIndian(totalRentingCost.toStringAsFixed(0))}"},
-        {'title': 'Total Cost of Buying:', 'amount': "₹${formatMoneyIndian(totalBuyingCost.toStringAsFixed(0))}"},
+        {
+          'title': 'Total Cost of Renting:',
+          'amount': "₹${formatMoneyIndian(totalRentingCost.toStringAsFixed(0))}"
+        },
+        {
+          'title': 'Total Cost of Buying:',
+          'amount': "₹${formatMoneyIndian(totalBuyingCost.toStringAsFixed(0))}"
+        },
       ],
     );
   }
@@ -348,6 +372,7 @@ bool _isInfoVisible = false; // Controls visibility of the container
 PreferredSizeWidget appbarHeader(String title, BuildContext context) {
   return AppBar(
     centerTitle: true,
-    title: Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+    title: Text(title,
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
   );
 }

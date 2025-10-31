@@ -45,5 +45,6 @@ app.*.map.json
 /android/app/release
 /android/gradle.properties
 /android/credentials.properties
+flutter_*.log
 
 .codegpt

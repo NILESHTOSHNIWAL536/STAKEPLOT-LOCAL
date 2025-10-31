@@ -8,11 +8,12 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
 import '../../Constants/app_styles.dart';
+import '../../routes/route_transactions.dart';
 
 
 
 void getAllAutoTransactions() async {
-  var res = await getDataApiCall("${url}/transactionauto/pending-for-review-transactions/");
+  var res = await getDataApiCall(BankTransactionRoutes.getPendingForReviewTransactions);
   if (getFlagOfResponse(res))
    {
     var data = jsonDecode(res.body);
@@ -25,26 +26,25 @@ void getAllAutoTransactions() async {
 }
 
 
-void updateTransactionsBalanceOut(context,transactionId,int index,double amount)async{
-     var res =await postDataApiCall("${url}/transaction/updateGroupTransactions/${transactionId}",{
+void updateTransactionsBalanceOut(context,transactionId,int index,double amount)async
+{
+  // var res =await postDataApiCall("${url}/transaction/updateGroupTransactions/${transactionId}",{
+  var res =await postDataApiCall("${TransactionRoutes.updateGroupTransactions}/${transactionId}",{
       "amount":(amount).abs()
-   });
+  });
 
   if(getFlagOfResponse(res))
   {
               (transactionsHistory[index]).balanceOut = (amount).abs();
               (transactionsHistory[index]).isBalanceOut = true;
-              transactionsHistory.refresh();
-              
+              transactionsHistory.refresh();       
   }
-
 }
 
 Future<void> addTagToTransactions(context,transactionId,bool flag,int index)async
 {
 
-  // http://localhost:5000/api/v1/transactionauto/verify-pending-transaction/:transactionId/:isCorrect
-   var res =await postDataApiCall("${url}/transactionauto/verify-pending-transaction/${transactionId}/${flag}",{
+   var res =await postDataApiCall(BankTransactionRoutes.verifyPendingTransaction(transactionId: transactionId, isCorrect: flag),{
       "flag":flag
    });
   

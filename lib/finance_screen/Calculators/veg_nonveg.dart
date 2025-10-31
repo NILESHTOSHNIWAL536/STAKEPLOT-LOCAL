@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,7 +77,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   List<Map<dynamic, dynamic>> get friends => userController.friendsList
       .map((e) => e as Map<dynamic, dynamic>)
       .toList();
-
+  bool _isInfoVisible = false; // Controls visibility of the container
+  double _opacity = 0.0; // Controls the fade effect
+  Timer? _timer;
   @override
   void initState() {
     super.initState();
@@ -97,6 +99,22 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     );
     setUpSocketListener();
     _loadCustomCategories();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _isInfoVisible = true;
+          _opacity = 1.0; // Fade in
+        });
+        // Start timer to fade out after 5 seconds
+        _timer = Timer(Duration(seconds: 2), () {
+          if (mounted) {
+            setState(() {
+              _opacity = 0.0; // Fade out
+            });
+          }
+        });
+      }
+    });
   }
 
   void _addCurrentUserToMembers() {
@@ -120,9 +138,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   }
 
   void setUpSocketListener() {
-    socket.onConnect((_) => print('Socket connected'));
-    socket.onDisconnect((_) => print('Socket disconnected'));
-    socket.onError((error) => print('Socket error: $error'));
+    socket.onConnect((_) => {});
+    socket.onDisconnect((_) => {});
+    socket.onError((error) =>{});
   }
 
   void _calculateShares() {
@@ -205,7 +223,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         _calculateShares();
       }
     } catch (e) {
-      print(e);
     }
   }
 
@@ -221,7 +238,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       await prefs.setString(
           target, jsonEncode(namesList.join("--").toString().trim()));
     } catch (e) {
-      print(e);
+      
     }
   }
 
@@ -232,51 +249,46 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     bool isCustom,
   ) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.32,
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+      width: MediaQuery.of(context).size.width * 0.26,
+      // padding: const EdgeInsets.symmetric(horizontal: 5,),
       child: Column(
         children: [
           // Show the category name as a label (not editable here anymore)
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  label,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: AppColors.backgroundColor),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+          SizedBox(
+            height: 10,
           ),
-          const SizedBox(height: 8),
           TextField(
             controller: controller,
             keyboardType: TextInputType.number,
             onTapOutside: (event) => FocusScope.of(context).unfocus(),
             inputFormatters: allowDecimalInput(),
             onChanged: (value) => _calculateShares(),
-            style: const TextStyle(
-              color: Colors.white, // <-- Change text input color here
+            style: TextStyle(
+              color: AppColors.accentColor, // <-- Change text input color here
             ),
             decoration: InputDecoration(
               filled: true,
-              fillColor: const Color.fromARGB(59, 255, 255, 255),
+              hintText: label,
+              hintStyle: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w700,
+                fontSize: 14,
+                color: AppColors.grey,
+              ),
+              fillColor: AppColors.backgroundColor,
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(8.0),
                 borderSide: const BorderSide(
-                  color: Colors.white,
+                  color: Color(0xFFF3F4F6),
                   width: 1,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(8.0),
                 borderSide: const BorderSide(
-                  color: Colors.white,
+                  color: Color(0xFFF3F4F6),
                   width: 1,
                 ),
               ),
@@ -289,9 +301,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
   Widget calculation() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
             onTap: () {
@@ -322,7 +334,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               width: MediaQuery.of(context).size.width * 0.4,
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 14),
               decoration: BoxDecoration(
-                color: AppColors.backgroundColor,
+                color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
@@ -332,7 +344,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: 15,
-                    color: AppColors.primaryColor,
+                    color: AppColors.backgroundColor,
                   ),
                 ),
               ),
@@ -403,9 +415,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               width: MediaQuery.of(context).size.width * 0.4,
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 14),
               decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
+                  color: AppColors.backgroundColor,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white)),
+                  border: Border.all(color: AppColors.grey)),
               child: Center(
                 child: Text(
                   PlotFinanceStaticData().notifyButton,
@@ -413,7 +425,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: 15,
-                    color: AppColors.backgroundColor,
+                    color: AppColors.primaryColor,
                   ),
                 ),
               ),
@@ -433,32 +445,38 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         var friend = addedMembers[index];
         String? friendId = friend['id']?.toString();
         bool isCurrentUser = friendId == userController.userId.value;
-
-        return Container(
-          margin: const EdgeInsets.symmetric(
-              vertical: 6, horizontal: 12), // Spacing between items
-          padding: const EdgeInsets.all(0), // Inner padding for each container
-          decoration: BoxDecoration(
-            color: Colors.white, // Background color for each block
-            borderRadius: BorderRadius.circular(12), // Rounded corners
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 5,
-                offset: const Offset(0, 3),
+        double chipWidth = categories.length > 3
+            ? MediaQuery.sizeOf(context).width / 5
+            : MediaQuery.sizeOf(context).width / 4;
+        return Stack(
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(
+                  vertical: 6, horizontal: 12), // Spacing between items
+              padding:
+                  const EdgeInsets.all(0), // Inner padding for each container
+              decoration: BoxDecoration(
+                color: AppColors.backgroundColor,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: Color(0xFFF3F4F6),
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.05),
+                    offset: Offset(0, 1),
+                    blurRadius: 2,
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+              child: ListTile(
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Stack(
-                      alignment: Alignment.topRight,
+                    Row(
                       children: [
                         AvatarProfile(
                           background: friend['avatarBackGround'] ??
@@ -467,100 +485,81 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                           height: 18,
                           name: friend['name'] ?? 'Unknown',
                         ),
-                        if (!isCurrentUser)
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                addedMembers.removeWhere(
-                                    (member) => member['id'] == friendId);
-                                addedUser.remove(friendId);
-                                selectedOptions.remove(friendId);
-                                _calculateShares();
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Colors.red,
-                              ),
-                            ),
+                        const SizedBox(width: 8),
+                        Text(
+                          friend['name'] ?? 'Unknown',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: AppColors.bg1,
                           ),
+                        ),
                       ],
                     ),
-                    const SizedBox(width: 8),
                     Text(
-                      friend['name'] ?? 'Unknown',
+                      '₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: AppColors.bg1,
+                        color: AppColors.bg3,
                       ),
                     ),
                   ],
                 ),
-                Text(
-                  '₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: AppColors.bg3,
-                  ),
+                subtitle: Wrap(
+                  spacing: 8.0,
+                  alignment: WrapAlignment.spaceBetween,
+                  children: categories.map((category) {
+                    String option = category['name'];
+                    bool isSelected =
+                        selectedOptions[friendId]?.contains(option) == true;
+                    bool isDisabled = category['controller'].text.isEmpty;
+                    return SizedBox(
+                      // width: chipWidth,
+                      child: ChoiceChip(
+                        label: Text(
+                          option,
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: isSelected
+                                ? AppColors.backgroundColor
+                                : AppColors.accentColor,
+                          ),
+                        ),
+                        selected: isSelected,
+                        showCheckmark: false,
+                        selectedColor: AppColors.primaryColor,
+                        backgroundColor: AppColors.mt,
+                        onSelected: isDisabled
+                            ? null
+                            : (selected) {
+                                setState(() {
+                                  if (friendId != null) {
+                                    selectedOptions.putIfAbsent(
+                                        friendId, () => []);
+                                    if (selected) {
+                                      selectedOptions[friendId]!.add(option);
+                                    } else {
+                                      selectedOptions[friendId]!.remove(option);
+                                      if (selectedOptions[friendId]!.isEmpty) {
+                                        selectedOptions.remove(friendId);
+                                      }
+                                    }
+                                    _calculateShares();
+                                  }
+                                });
+                              },
+                      ),
+                    );
+                  }).toList(),
                 ),
-              ],
+              ),
             ),
-            subtitle: Wrap(
-              spacing: 4.0,
-              children: categories.map((category) {
-                String option = category['name'];
-                bool isSelected =
-                    selectedOptions[friendId]?.contains(option) == true;
-                bool isDisabled = category['controller'].text.isEmpty;
-                return ChoiceChip(
-                  label: Text(
-                    option,
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w700,
-                      fontSize: 14,
-                      color: isSelected
-                          ? AppColors.backgroundColor
-                          : AppColors.accentColor,
-                    ),
-                  ),
-                  selected: isSelected,
-                  showCheckmark: false,
-                  selectedColor: AppColors.primaryColor,
-                  backgroundColor: AppColors.mt,
-                  onSelected: isDisabled
-                      ? null
-                      : (selected) {
-                          setState(() {
-                            if (friendId != null) {
-                              selectedOptions.putIfAbsent(friendId, () => []);
-                              if (selected) {
-                                selectedOptions[friendId]!.add(option);
-                              } else {
-                                selectedOptions[friendId]!.remove(option);
-                                if (selectedOptions[friendId]!.isEmpty) {
-                                  selectedOptions.remove(friendId);
-                                }
-                              }
-                              _calculateShares();
-                            }
-                          });
-                        },
-                );
-              }).toList(),
-            ),
-          ),
+          ],
         );
       },
     );
@@ -570,7 +569,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     final limitedFriends = userController.friendsList.take(4).toList();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 7),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -624,12 +623,40 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                       margin: const EdgeInsets.symmetric(
                           horizontal: 4), // spacing between items
                       child: Container(
+                        //                  decoration: BoxDecoration(
+                        //   color: AppColors.backgroundColor,
+                        //   borderRadius: BorderRadius.circular(16),
+                        //   border: Border.all(
+                        //     color: Color(0xFFF3F4F6),
+                        //     width: 1,
+                        //   ),
+                        //   boxShadow: [
+                        //     BoxShadow(
+                        //       color: Color.fromRGBO(0, 0, 0, 0.05),
+                        //       offset: Offset(0, 1),
+                        //       blurRadius: 2,
+                        //     ),
+                        //   ],
+                        // ),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: isSelected
-                                ? Colors.white
-                                : AppColors.primaryColor,
-                            border: Border.all(color: Colors.white)),
+                          // borderRadius: BorderRadius.circular(10),
+                          color: !isSelected
+                              ? Colors.white
+                              : AppColors.primaryColor,
+
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Color(0xFFF3F4F6),
+                            width: 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.05),
+                              offset: Offset(0, 1),
+                              blurRadius: 2,
+                            ),
+                          ],
+                        ),
                         // elevation: 1,
 
                         child: Padding(
@@ -659,11 +686,11 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                 overflow: TextOverflow.ellipsis,
                                 style: FontManager().getTextStyle(
                                   context,
-                                  lWeight: FontWeight.w400,
+                                  lWeight: FontWeight.w500,
                                   fontSize: 14,
-                                  color: !isSelected
+                                  color: isSelected
                                       ? Colors.white
-                                      : AppColors.primaryColor,
+                                      : AppColors.accentColor,
                                 ),
                               ),
                             ],
@@ -867,480 +894,494 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
-      body: SafeArea(
-        child: Stack(children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Transform.translate(
-                offset: const Offset(0, 30),
-                child: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        const Color(
-                            0xE6061F35), // #061F35 with 0.9 opacity (E6 hex = 90%)
-                        const Color(0x00061F35), // fully transparent
-                      ],
-                    ),
+      backgroundColor: AppColors.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroundColor,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: AppColors.primaryColor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: [
+          Container(
+            width: MediaQuery.sizeOf(context).width / 7,
+            child: IconButton(
+              icon: const Icon(
+                Icons.edit,
+                color: AppColors.primaryColor,
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: AppColors.primaryColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: MediaQuery.sizeOf(context).width / 1.6,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.arrow_back,
-                                color: AppColors.backgroundColor,
+                  builder: (context) {
+                    // Initialize customCategoryCount
+                    int customCategoryCount = categories.length - 3;
+
+                    return StatefulBuilder(
+                      builder:
+                          (BuildContext context, StateSetter modalSetState) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                            left: 16,
+                            right: 16,
+                            top: 16,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Edit Categories',
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      color: AppColors.backgroundColor,
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Icon(
+                                      Icons.close,
+                                      size: 25,
+                                      color: Colorcodes.white,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            Text(
-                              PlotFinanceStaticData().foodieFundsTitle,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 18,
-                                color: AppColors.backgroundColor,
+                              const SizedBox(height: 16),
+                              // Existing categories
+                              ...List.generate(categories.length, (index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: controllers[index],
+                                          onChanged: (value) {
+                                            categoriesEdit[index]['name'] =
+                                                value;
+                                          },
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: const Color.fromARGB(
+                                                59, 255, 255, 255),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              vertical: 10.0,
+                                              horizontal: 12.0,
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                              borderSide: const BorderSide(
+                                                color: Colors.white,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                              borderSide: const BorderSide(
+                                                color: Colors.white,
+                                                width: 1,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      if (categories[index]['isCustom'])
+                                        IconButton(
+                                          icon: const Icon(Icons.delete,
+                                              color: Colors.red),
+                                          onPressed: () {
+                                            modalSetState(() {
+                                              setState(() {
+                                                categories.removeAt(index);
+                                                controllers.removeAt(index);
+                                                if (index <
+                                                    categoriesEdit.length) {
+                                                  categoriesEdit
+                                                      .removeAt(index);
+                                                }
+                                                customCategoryCount--;
+                                                _saveCustomCategories();
+                                                _calculateShares();
+                                              });
+                                            });
+                                          },
+                                        ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                              // New category input with Add button
+                              if (customCategoryCount < 2)
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: newCategoryController,
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                          decoration: InputDecoration(
+                                            hintText: 'Add new category',
+                                            hintStyle: const TextStyle(
+                                                color: Colors.white70),
+                                            filled: true,
+                                            fillColor: const Color.fromARGB(
+                                                59, 255, 255, 255),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              vertical: 10.0,
+                                              horizontal: 12.0,
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                              borderSide: const BorderSide(
+                                                color: Colors.white,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                              borderSide: const BorderSide(
+                                                color: Colors.white,
+                                                width: 1,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          if (newCategoryController
+                                              .text.isNotEmpty) {
+                                            modalSetState(() {
+                                              setState(() {
+                                                categories.add({
+                                                  'name': newCategoryController
+                                                      .text
+                                                      .trim(),
+                                                  'controller':
+                                                      TextEditingController(),
+                                                  'isCustom': true,
+                                                });
+                                                controllers.add(
+                                                  TextEditingController(
+                                                    text: newCategoryController
+                                                        .text
+                                                        .trim(),
+                                                  ),
+                                                );
+                                                categoriesEdit.add({
+                                                  'name': newCategoryController
+                                                      .text
+                                                      .trim(),
+                                                  'controller':
+                                                      TextEditingController(),
+                                                  'isCustom': true,
+                                                });
+                                                customCategoryCount++;
+                                                newCategoryController.clear();
+                                                _saveCustomCategories();
+                                                _calculateShares();
+                                              });
+                                            });
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              AppColors.backgroundColor,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 12,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Add',
+                                          style: FontManager().getTextStyle(
+                                            context,
+                                            lWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: AppColors.primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              const SizedBox(height: 16),
+                              // Done button
+                              Center(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    // Update categories with edited names
+                                    categories.clear();
+                                    controllers
+                                        .asMap()
+                                        .entries
+                                        .forEach((entry) {
+                                      final index = entry.key;
+                                      final control = entry.value;
+                                      categories.add({
+                                        'name': control.text,
+                                        'controller': TextEditingController(),
+                                        'isCustom': index > 2,
+                                      });
+                                    });
+
+                                    setState(() {
+                                      categoriesEdit.clear();
+                                      categoriesEdit.addAll(categories);
+                                      _calculateShares();
+                                    });
+                                    _saveCustomCategories();
+
+                                    Navigator.pop(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.backgroundColor,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 32,
+                                      vertical: 12,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Done',
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                              const SizedBox(height: 16),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ).whenComplete(() {
+                  // No additional cleanup needed here
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SizedBox(
+            height: 12,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isInfoVisible = true;
+                  _opacity = 1.0; // Fade in
+                });
+                _timer?.cancel();
+
+                _timer = Timer(Duration(seconds: 2), () {
+                  if (mounted) {
+                    setState(() {
+                      _opacity = 0.0; // Fade out
+                    });
+                  }
+                });
+              },
+              child: Text(
+                PlotFinanceStaticData().foodieFundsTitle,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w800,
+                  fontSize: 40,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          AnimatedOpacity(
+            opacity: _opacity,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            onEnd: () {
+              // Hide container after fade-out completes
+              if (_opacity == 0.0 && mounted) {
+                setState(() {
+                  _isInfoVisible = false;
+                });
+              }
+            },
+            child: _isInfoVisible
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 4),
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.white, width: 1),
                       ),
-                      Container(
-                        width: MediaQuery.sizeOf(context).width / 7,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.edit,
+                      child: SingleChildScrollView(
+                        child: Text(
+                          "Foodie Fund makes splitting bills with friends super simple—whether it's at a restaurant, or a weekend outing. You can split equally or enter custom shares so everyone pays exactly for what they consumed, not a rupee more or less.",
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 14,
                             color: AppColors.backgroundColor,
                           ),
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: AppColors.primaryColor,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20)),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink(),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Input fields for categories
+              Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // First Row with 3 default categories
+                      // SizedBox(height: 100,),
+                      inputDat(PlotFinanceStaticData().searchHint,
+                          TextInputType.name, searchController),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      commentedData(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: List.generate(
+                          3, // only first 3 categories
+                          (index) {
+                            final category = categories[index];
+                            return Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 0),
+                                child: _buildInputColumn(
+                                  category["name"],
+                                  category["controller"],
+                                  index,
+                                  category["isCustom"],
+                                ),
                               ),
-                              builder: (context) {
-                                int customCategoryCount = categories.length - 3;
+                            );
+                          },
+                        ),
+                      ),
 
-                                return StatefulBuilder(
-                                  builder: (BuildContext context,
-                                      StateSetter modalSetState) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom,
-                                        left: 16,
-                                        right: 16,
-                                        top: 16,
-                                      ),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Edit Categories',
-                                                style:
-                                                    FontManager().getTextStyle(
-                                                  context,
-                                                  lWeight: FontWeight.w600,
-                                                  fontSize: 18,
-                                                  color:
-                                                      AppColors.backgroundColor,
-                                                ),
-                                              ),
-                                              InkWell(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    size: 25,
-                                                    color: Colorcodes.white,
-                                                  ))
-                                            ],
-                                          ),
-                                          const SizedBox(height: 16),
-                                          // Existing categories
-                                          ...List.generate(categories.length,
-                                              (index) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 8.0),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: TextField(
-                                                      controller:
-                                                          controllers[index],
-                                                      onChanged: (value) {
-                                                        categoriesEdit[index]
-                                                            ['name'] = value;
-                                                      },
-                                                      style: const TextStyle(
-                                                          color: Colors.white),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        filled: true,
-                                                        fillColor: const Color
-                                                            .fromARGB(
-                                                            59, 255, 255, 255),
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          vertical: 10.0,
-                                                          horizontal: 12.0,
-                                                        ),
-                                                        enabledBorder:
-                                                            OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      12.0),
-                                                          borderSide:
-                                                              const BorderSide(
-                                                            color: Colors.white,
-                                                            width: 1,
-                                                          ),
-                                                        ),
-                                                        focusedBorder:
-                                                            OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      12.0),
-                                                          borderSide:
-                                                              const BorderSide(
-                                                            color: Colors.white,
-                                                            width: 1,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  if (categories[index]
-                                                      ['isCustom'])
-                                                    IconButton(
-                                                      icon: const Icon(
-                                                          Icons.delete,
-                                                          color: Colors.red),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          categories
-                                                              .removeAt(index);
-                                                          controllers
-                                                              .removeAt(index);
-                                                          if (index <
-                                                              categoriesEdit
-                                                                  .length)
-                                                            categoriesEdit
-                                                                .removeAt(
-                                                                    index);
-                                                          customCategoryCount--;
-                                                          _saveCustomCategories();
-                                                          _calculateShares();
-                                                        });
+                      // const SizedBox(height: 10),
 
-                                                        modalSetState(() {});
-                                                      },
-                                                    ),
-                                                ],
-                                              ),
-                                            );
-                                          }),
-                                          // New category input
-                                          if (customCategoryCount < 2)
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 8.0),
-                                              child: TextField(
-                                                controller:
-                                                    newCategoryController,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                decoration: InputDecoration(
-                                                  hintText: 'Add new category',
-                                                  hintStyle: const TextStyle(
-                                                      color: Colors.white70),
-                                                  filled: true,
-                                                  fillColor:
-                                                      const Color.fromARGB(
-                                                          59, 255, 255, 255),
-                                                  contentPadding:
-                                                      const EdgeInsets
-                                                          .symmetric(
-                                                    vertical: 10.0,
-                                                    horizontal: 12.0,
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                      color: Colors.white,
-                                                      width: 1,
-                                                    ),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                      color: Colors.white,
-                                                      width: 1,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          const SizedBox(height: 16),
-                                          // Done button
-                                          Center(
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                // RxList<Map<String, dynamic>> updatedCategories = <Map<String, dynamic>>[].obs;
-                                                categories.clear();
-
-                                                controllers
-                                                    .asMap()
-                                                    .entries
-                                                    .forEach((entry) {
-                                                  final index =
-                                                      entry.key; // index
-                                                  final control = entry
-                                                      .value; // actual controller
-                                                  categories.add({
-                                                    'name': control.text,
-                                                    'controller':
-                                                        TextEditingController(),
-                                                    'isCustom': false,
-                                                    'index': index >
-                                                        2, // 👈 store index if needed
-                                                  });
-                                                });
-
-                                                if (newCategoryController
-                                                    .text.isNotEmpty) {
-                                                  categories.add({
-                                                    'name':
-                                                        newCategoryController
-                                                            .text
-                                                            .trim(),
-                                                    'controller':
-                                                        TextEditingController(),
-                                                    'isCustom': true,
-                                                  });
-                                                  customCategoryCount++;
-                                                  controllers.add(
-                                                      TextEditingController(
-                                                          text:
-                                                              newCategoryController
-                                                                  .text
-                                                                  .trim()));
-                                                  newCategoryController.clear();
-                                                }
-
-                                                setState(() {
-                                                  categoriesEdit.clear();
-                                                  categoriesEdit
-                                                      .addAll(categories);
-
-                                                  _calculateShares();
-                                                });
-                                                _saveCustomCategories();
-
-                                                // Dispose modal controllers
-
-                                                Navigator.pop(context);
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    AppColors.backgroundColor,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 32,
-                                                  vertical: 12,
-                                                ),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                              ),
-                                              child: Text(
-                                                'Done',
-                                                style:
-                                                    FontManager().getTextStyle(
-                                                  context,
-                                                  lWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                  color: AppColors.primaryColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ).whenComplete(() {
-                              // No additional cleanup needed here since controllers are disposed in Done button
-                            });
+                      // Newly added categories (if any) below the row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: List.generate(
+                          categories.length > 3
+                              ? categories.length - 3
+                              : 0, // only extra ones
+                          (index) {
+                            final category = categories[index + 3];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 0),
+                              child: _buildInputColumn(
+                                category["name"],
+                                category["controller"],
+                                index + 3,
+                                category["isCustom"],
+                              ),
+                            );
                           },
                         ),
                       ),
                     ],
-                  ),
-                )),
-          ),
-          Padding(
-            //
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Transform.translate(
-              offset: const Offset(0, 80),
-              // SvgPicture.asset(
-              //     'assets/icons/financeScreen/currency.svg',
-              //     width: double.infinity,   // Full width
-              //     height: double.infinity,  // Full height
-              //     //  fit: BoxFit.cover,        // Make it cover the whole screen
-              //   ),
-              child: CustomPaint(
-                painter: CustomShapePainter(),
+                  )),
+              SizedBox(
+                height: 8,
               ),
-            ),
-          ),
-          Transform.translate(
-            offset: const Offset(0, 90),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Input fields for categories
-                Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // First Row with 3 default categories
-                        // SizedBox(height: 100,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: inputDat(PlotFinanceStaticData().searchHint,
-                              TextInputType.name, searchController),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: List.generate(
-                              3, // only first 3 categories
-                              (index) {
-                                final category = categories[index];
-                                return Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 6),
-                                    child: _buildInputColumn(
-                                      category["name"],
-                                      category["controller"],
-                                      index,
-                                      category["isCustom"],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
+              // Search bar
 
-                        // const SizedBox(height: 10),
-
-                        // Newly added categories (if any) below the row
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: List.generate(
-                              categories.length > 3
-                                  ? categories.length - 3
-                                  : 0, // only extra ones
-                              (index) {
-                                final category = categories[index + 3];
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 6),
-                                  child: _buildInputColumn(
-                                    category["name"],
-                                    category["controller"],
-                                    index + 3,
-                                    category["isCustom"],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-                // Search bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: commentedData(),
-                ),
-                // Scrollable section
-                Container(
-                  height: categories.length > 3
-                      ? MediaQuery.sizeOf(context).height / 3.2
-                      : MediaQuery.sizeOf(context).height / 2.4,
+              // Scrollable section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Container(
+                  height: _isInfoVisible
+                      ? (categories.length > 3
+                          ? MediaQuery.sizeOf(context).height / 3.4
+                          : MediaQuery.sizeOf(context).height / 3.1)
+                      : (categories.length > 3
+                          ? MediaQuery.sizeOf(context).height / 2.5
+                          : MediaQuery.sizeOf(context).height / 2.2),
                   child: Scrollbar(
                     thumbVisibility: true, // Makes the scrollbar always visible
                     thickness:
                         6.0, // Optional: Adjust the thickness of the scrollbar
                     radius: const Radius.circular(10),
                     child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Column(
-                          children: [
-                            vegNonvegdata(),
-                          ],
-                        ),
+                      child: Column(
+                        children: [
+                          vegNonvegdata(),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                // Calculation section
-                calculation(),
-              ],
-            ),
+              ),
+              // Calculation section
+              calculation(),
+            ],
           ),
         ]),
       ),

@@ -16,7 +16,6 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
@@ -25,6 +24,7 @@ import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../animated/pdf3.dart';
 import 'history/amount_range.dart';
 
 List<PredictionEntry> getUniquePredictedCategories(
@@ -825,7 +825,7 @@ void showModalForPdfDownload(BuildContext context) {
                   child: InkWell(
                       onTap: () async {
                         getPdgLoader.value = true;
-                        getPdf(context, selectedValue, selectedValueType);
+                        getPdf3(context, selectedValue, selectedValueType);
                       },
                       child: Obx(() => getPdgLoader.value
                           ? getspinner(context, "")
@@ -1005,37 +1005,69 @@ Widget filterTransaction(context) {
 
             Obx(
               () => Padding(
-               padding: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.only(top: 4),
                 child: GestureDetector(
-  onTap: toggleAmountFilter, // ✅ Entire container is tappable
-  child: Container(
-    child: DottedBorderBox(
-      dashWidth: 4,
-      space: 5,
-      dashHeight: 1,
-      color: AppColors.grey,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (showAmountFilter.value)
-              const Icon(Icons.check, size: 18, color: Colors.green),
-            const SizedBox(width: 4),
-             Text("Filter by Amount",  style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: AppColors.accentColor,
-                      ),),
-          ],
-        ),
-      ),
-    ),
-  ),
-),
-
+                  onTap: toggleAmountFilter, // ✅ Entire container is tappable
+                  child: Container(
+                    child: showAmountFilter.value
+                        ? Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "Filter by Amount",
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      color: showAmountFilter.value
+                                          ? AppColors.backgroundColor
+                                          : AppColors.accentColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : DottedBorderBox(
+                            dashWidth: 4,
+                            space: 5,
+                            dashHeight: 1,
+                            color: AppColors.grey,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (showAmountFilter.value)
+                                    const Icon(Icons.check,
+                                        size: 18, color: Colors.green),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "Filter by Amount",
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      color: AppColors.accentColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 10),
@@ -1043,36 +1075,64 @@ Widget filterTransaction(context) {
             Obx(
               () => Padding(
                 padding: const EdgeInsets.only(top: 4),
-               child: GestureDetector(
-  onTap: toggleDateFilter, // ✅ Whole container is tappable
-  child: Container(
-    child: DottedBorderBox(
-      dashWidth: 4,
-      space: 5,
-      dashHeight: 1,
-      color: AppColors.grey,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (showDateFilter.value)
-              const Icon(Icons.check, size: 18, color: Colors.green),
-            const SizedBox(width: 4),
-             Text("Filter by Date",  style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: AppColors.accentColor,
-                      ),),
-          ],
-        ),
-      ),
-    ),
-  ),
-),
-
+                child: GestureDetector(
+                  onTap: toggleDateFilter, // ✅ Whole container is tappable
+                  child: Container(
+                    child: showDateFilter.value
+                        ? Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "Filter by Date",
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      color: showDateFilter.value
+                                          ? AppColors.backgroundColor
+                                          : AppColors.accentColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : DottedBorderBox(
+                            dashWidth: 4,
+                            space: 5,
+                            dashHeight: 1,
+                            color: AppColors.grey,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "Filter by Date",
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      color: AppColors.accentColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
               ),
             ),
           ],
@@ -1258,7 +1318,6 @@ bool checkRangeofDate(BuildContext context, [bool f = true]) {
     return true;
   } catch (e) {
     if (f) {
-      print("eroor $e");
       snackBarCalledfail(context, 'Invalid date format');
     }
     startDateController.text = '';

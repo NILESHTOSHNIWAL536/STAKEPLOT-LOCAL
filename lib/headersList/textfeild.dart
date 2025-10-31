@@ -3,12 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:intl/intl.dart';
+
+import '../Utils/signUp.dart';
+import '../profile.dart';
 
 class TextFeildWidget extends StatelessWidget {
   TextEditingController textEditingController;
@@ -59,6 +65,9 @@ class TextFeildWidget extends StatelessWidget {
                  {
                      LoadTag.value = !LoadTag.value;
                  }
+                 if(SignupData().usernameLabel==heading){
+                      checkIsUserNameValid(c);
+                 }
               },
               maxLength: heading == "PhoneNo" ? 10 : null,
               obscureText: flag ? false : show.value,
@@ -87,8 +96,10 @@ class TextFeildWidget extends StatelessWidget {
                       borderSide: BorderSide(color: AppColors.primaryColor)
                     ),
                  
-                  
-                  suffixIcon: flag
+                  suffixIcon:SignupData().usernameLabel==heading?  
+                      textEditingController.text.length==0?null:
+                      isValidUser.value?Icon(Icons.check,size: 30,color: Colorcodes.green,):Container(width: 30,height: 30,child: Spinner())
+                  : flag
                       ? null
                       : Obx(() => InkWell(
                           onTap: () {

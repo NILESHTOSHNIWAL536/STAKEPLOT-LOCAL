@@ -1,17 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postLoadFeed.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/message.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../routes/route_post.dart';
 
 void getChats(data) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -98,98 +99,6 @@ void downvote(context, String str, String objectId) async {
   }
 }
 
-void mute(context, String type, String id) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.post(
-    Uri.parse('https://stakeplot.in/api/v1/user/mute'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      'type': type,
-      'id': id,
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    snackBarCalled(context, "You have muted this user.", Colors.black);
-  } else {
-    snackBarCalledfail(context, "An error occurred while muting!", Colors.red);
-  }
-}
-
-void exitRoom(context, String id) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.patch(
-    Uri.parse('${url}/room/exit/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({}),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-
-    userController.fetchUserInfo();    
-    snackBarCalled(context, "You have exited the room.", Colors.black);
-  } else {
-    snackBarCalledfail(
-        context, "An error occurred while exiting the room!", Colors.red);
-  }
-}
-
-void createRoom(context, List expenses, List user, String name) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  var body = {
-    'name': name.toString(),
-    'users': user,
-    'expenses': expenses,
-  };
-
-  final response = await http.post(
-    Uri.parse('${url}/room/add'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      'name': name.toString(),
-      'users': user,
-      'expenses': expenses,
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    snackBarCalled(
-        context, "The room has been created successfully!", Colors.black);
-
-    //  Navigator.pop(context);
-    //   Navigator.push(
-    //   context,
-    //   PageTransition(
-    //     type: PageTransitionType.fade,
-    //      duration: Durations.long1,
-    //     child: RoomHome(),
-    //     isIos: true,
-    //   ),
-    // );
-  } else {
-    final body = json.decode(response.body);
-    String msg = body['error']['explanation'];
-    snackBarCalled(context, msg, Colors.red);
-  }
-}
-
 void createPoll(context, String question, List options, roomDetails, members,
     String type) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -264,7 +173,7 @@ void createPoll(context, String question, List options, roomDetails, members,
 
 void createPollOfCommunityPost(context, String question, List options,
     roomDetails, members, String type) async {
-  String urlPath = '${url}/post/';
+  String urlPath = PostRoutes.post;
 final TagList = [...selectedSubCategories, ...selectedCategories];
   var body = {'question': question, 'options': options, 'postType': "poll", 'tags':TagList};
 
@@ -349,34 +258,6 @@ void votePollInPost(context, String id, int index) async {
   } else {}
 }
 
-void updateRoom(
-    context, List expenses, List user, String name, String id, admin) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.patch(
-    Uri.parse('${url}/room/update/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      "admin": admin,
-      "name": name,
-      "users": user,
-      "expenses": expenses,
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    snackBarCalled(
-        context, "The room has been updated successfully!", Colors.black);
-  } else {
-    snackBarCalled(
-        context, "An error occurred while updating the room!", Colors.red);
-  }
-}
 
 void getChatLoader(bool flag) async {
 
@@ -445,27 +326,14 @@ void getChatLoader(bool flag) async {
 
 void addMessage(
     context, String messageType, String message, String id, var data) async {
-  var urlPath = Uri.parse('${url}/chat/');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${urlPath}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  var urlPath = '${url}/chat/';
+  await postDataApiCall(urlPath, {
       "messageType": messageType,
       "receiver": id,
       "message": message,
       "image": "base",
       "poll": id
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-  } else {}
+    });
 }
 
 void addChatSplitAmount(

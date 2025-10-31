@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/post_apis.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../Hive_localstorage/apisCall/user_apis.dart';
 import '../backed_connections/apis_connect.dart';
+import '../routes/route_user_login.dart';
 
 class UserController extends GetxController {
   RxString userId = ''.obs;
@@ -58,18 +59,8 @@ class UserController extends GetxController {
   Future<void> fetchUserInfo() async {
     try {
       isLoading.value = true;
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString("accessToken");
-
-      if (token == null) return;
-
-      final response = await http.get(
-        Uri.parse('$url/user/info'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': token,
-        },
-      );
+   
+      var response=await getDataApiCall(UserRoutes.getInfo);
 
       if (response.statusCode == 200) {
         final res = jsonDecode(response.body);
@@ -81,7 +72,7 @@ class UserController extends GetxController {
         maskedName.value = obj['maskedName'] ?? '';
         canMaskMessage.value = obj['canMaskMessage'] ?? false;
         email.value = obj['email'] ?? '';
-        dob.value = obj['dob'];
+        dob.value = obj['dob'] ?? '';
         phone.value = (obj['phone'] is List && obj['phone'].isNotEmpty)
             ? obj['phone'][0]
             : '';
@@ -102,13 +93,16 @@ class UserController extends GetxController {
             : false;
         selectedBank.value = obj['selectedBank'] ?? '';
         firstFetchedDate.value = obj['firstFetchedDate'] ?? '';
+        canMessageUser.value = obj['canMaskMessage'] ?? false;
 
-        interestedTags.assignAll(List<String>.from(obj['interestedTags'] ?? []));
+        interestedTags
+            .assignAll(List<String>.from(obj['interestedTags'] ?? []));
         likedPosts.assignAll(List<String>.from(obj['likedPosts'] ?? []));
         likedComments.assignAll(List<String>.from(obj['likedComments'] ?? []));
         likedProducts.assignAll(List<String>.from(obj['likedProducts'] ?? []));
         savedPostIds.assignAll(List<String>.from(obj['saved'] ?? []));
-        friendsList.assignAll(List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
+        friendsList.assignAll(
+            List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
 
         addFriendtoList();
         getMaskendUsers(true);
@@ -118,34 +112,36 @@ class UserController extends GetxController {
         UserLocalStorage.cacheUserDataLocally();
       }
     } catch (e) {
+      print('Error fetching user info: $e');
     } finally {
       isLoading.value = false;
     }
   }
 }
 
-
-void addFriendtoList(){
-        userController.frdsListOrigin.assignAll(
-            List<Map<String, dynamic>>.from(userController.friendsList));
-        friendsListDetails.clear();
-        for (var friend in userController.friendsList) {
-          final id = friend['_id'];
-          friendsListDetails[id] = {
-            'name': friend['name'] ?? '',
-            'avatar': friend['avatar'] ?? '',
-            'avatarBackGround': friend['avatarBackGround'] ?? '',
-          };
-        }
+void addFriendtoList() {
+  userController.frdsListOrigin
+      .assignAll(List<Map<String, dynamic>>.from(userController.friendsList));
+  friendsListDetails.clear();
+  for (var friend in userController.friendsList) {
+    final id = friend['_id'];
+    friendsListDetails[id] = {
+      'name': friend['name'] ?? '',
+      'avatar': friend['avatar'] ?? '',
+      'avatarBackGround': friend['avatarBackGround'] ?? '',
+    };
+  }
 }
 
-void addSavedPostList(obj)
-{
-     userController.savedList.clear();
-     userController.savedList.addAll(PostModel.listFromJson(obj));
-     userController.savedList.forEach((element) {
-       postController.postCount[element.id] = element.upvotes;
-       postController.postCommentCount[element.id] = element.comments;
-     });
-     PostLocalStorage.savePostsToHive(postList: userController.savedList, isPostTranding: true,isSavedPost: true);
+void addSavedPostList(obj) {
+  userController.savedList.clear();
+  userController.savedList.addAll(PostModel.listFromJson(obj));
+  userController.savedList.forEach((element) {
+    postController.postCount[element.id] = element.upvotes;
+    postController.postCommentCount[element.id] = element.comments;
+  });
+  PostLocalStorage.savePostsToHive(
+      postList: userController.savedList,
+      isPostTranding: true,
+      isSavedPost: true);
 }

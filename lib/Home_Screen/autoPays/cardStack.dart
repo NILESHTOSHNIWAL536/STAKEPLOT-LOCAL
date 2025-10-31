@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/allcardsScreen.dart';
@@ -106,8 +107,6 @@ class _CardStackScreenState extends State<CardStackScreen>
                     ),
                     itemBuilder: (context, index) {
                       final selectedDay = index + 1;
-                      bool isToday = selectedDay == currentDay &&
-                          currentMonth == now.month;
 
                       return ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -161,17 +160,22 @@ class _CardStackScreenState extends State<CardStackScreen>
                           Navigator.pop(dialogContext);
 
                           final success = await updateRecurringPaymentDate(
-                              cardId, reminderDate);
+                            cardId,
+                            reminderDate,
+                            true,
+                          );
                           if (success) {
-                            final addSuccess =
-                                await addRecurringPayment(cardId, true);
+                            await getAutoPayInfo(); // force fresh API update
+
+                            // final addSuccess =
+                            //     await addRecurringPayment(cardId, true, );
                             snackBarCalled(
                               parentContext, // Use parentContext instead of dialogContext
-                              addSuccess
+                              success
                                   ? "Added and reminder set for $formattedDate"
                                   : "Failed to add payment",
                             );
-                            if (addSuccess) {
+                            if (success) {
                               toggleStates[cardId] = true;
                               await _fetchAutoPayData();
                             }
@@ -204,166 +208,11 @@ class _CardStackScreenState extends State<CardStackScreen>
       },
     );
   }
-  // void _showCustomCalendarPopup(BuildContext context, String cardId) {
-  //   final screenSize = MediaQuery.of(context).size;
-  //   final fontScale = screenSize.width / 375;
-  //   final now = DateTime.now();
-  //   final currentYear = now.year;
-  //   final currentMonth = now.month;
-  //   final currentDay = now.day;
-
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         backgroundColor: AppColors.primaryColor,
-  //         elevation: 1,
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(16 * fontScale),
-  //         ),
-  //         insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-  //         title: Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text(
-  //               "Choose a Day for Your Reminder",
-  //               style: FontManager().getTextStyle(
-  //                 context,
-  //                 lWeight: FontWeight.w600,
-  //                 fontSize: 18 * fontScale,
-  //                 color: AppColors.backgroundColor,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         content: SizedBox(
-  //           height: screenSize.height * 0.3,
-  //           width: screenSize.width * 0.9,
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Text(
-  //                 "Tap a day on the calendar to schedule your upcoming reminder.",
-  //                 style: FontManager().getTextStyle(
-  //                   context,
-  //                   lWeight: FontWeight.w600,
-  //                   fontSize: 14 * fontScale,
-  //                   color: AppColors.backgroundColor,
-  //                 ),
-  //               ),
-  //               const SizedBox(height: 12),
-  //               Expanded(
-  //                 child: GridView.builder(
-  //                   itemCount: 31,
-  //                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //                     crossAxisCount: 7,
-  //                     crossAxisSpacing: 8 * fontScale,
-  //                     mainAxisSpacing: 8 * fontScale,
-  //                     childAspectRatio: 1,
-  //                   ),
-  //                   itemBuilder: (context, index) {
-  //                     final selectedDay = index + 1;
-  //                     bool isToday = selectedDay == currentDay &&
-  //                         currentMonth == now.month;
-
-  //                     return ElevatedButton(
-  //                       style: ElevatedButton.styleFrom(
-  //                         backgroundColor: AppColors.backgroundColor,
-  //                         padding: EdgeInsets.zero,
-  //                         shape: RoundedRectangleBorder(
-  //                           borderRadius: BorderRadius.circular(8 * fontScale),
-  //                         ),
-  //                       ),
-  //                       onPressed: () async {
-  //                         DateTime reminderDate;
-  //                         if (selectedDay >= currentDay) {
-  //                           reminderDate = DateTime(
-  //                               currentYear, currentMonth, selectedDay);
-  //                         } else {
-  //                           final nextMonth =
-  //                               currentMonth == 12 ? 1 : currentMonth + 1;
-  //                           final nextYear = currentMonth == 12
-  //                               ? currentYear + 1
-  //                               : currentYear;
-  //                           final daysInNextMonth =
-  //                               DateTime(nextYear, nextMonth + 1, 0).day;
-
-  //                           if (selectedDay <= daysInNextMonth) {
-  //                             reminderDate =
-  //                                 DateTime(nextYear, nextMonth, selectedDay);
-  //                           } else {
-  //                             reminderDate = DateTime(
-  //                                 nextYear, nextMonth, daysInNextMonth);
-  //                           }
-
-  //                           if (now.isAfter(reminderDate)) {
-  //                             final followingMonth =
-  //                                 nextMonth == 12 ? 1 : nextMonth + 1;
-  //                             final followingYear =
-  //                                 nextMonth == 12 ? nextYear + 1 : nextYear;
-  //                             final daysInFollowingMonth =
-  //                                 DateTime(followingYear, followingMonth + 1, 0)
-  //                                     .day;
-  //                             final validDay =
-  //                                 selectedDay <= daysInFollowingMonth
-  //                                     ? selectedDay
-  //                                     : daysInFollowingMonth;
-  //                             reminderDate = DateTime(
-  //                                 followingYear, followingMonth, validDay);
-  //                           }
-  //                         }
-
-  //                         final formattedDate =
-  //                             "${reminderDate.day}/${reminderDate.month}/${reminderDate.year}";
-  //                         Navigator.pop(context);
-
-  //                         final success = await updateRecurringPaymentDate(
-  //                             cardId, reminderDate);
-  //                         if (success) {
-  //                           final addSuccess =
-  //                               await addRecurringPayment(cardId, true);
-  //                           snackBarCalled(
-  //                             context,
-  //                             addSuccess
-  //                                 ? "Added and reminder set for $formattedDate"
-  //                                 : "Failed to add",
-  //                           );
-  //                           if (addSuccess) {
-  //                             toggleStates[cardId] = true;
-  //                             await _fetchAutoPayData();
-  //                           }
-  //                         } else {
-  //                           snackBarCalled(context, "Failed to set reminder");
-  //                         }
-
-  //                         if (success) await _fetchAutoPayData();
-  //                       },
-  //                       child: Center(
-  //                         child: Text(
-  //                           '$selectedDay',
-  //                           style: FontManager().getTextStyle(
-  //                             context,
-  //                             lWeight: FontWeight.w600,
-  //                             fontSize: 14 * fontScale,
-  //                             color: AppColors.accentColor,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     );
-  //                   },
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   Future<void> _fetchAutoPayData() async {
     isLoading.value = true;
     final fetchedCards = await getAutoPayInfo();
+
     isAutoPayFected.value = !isAutoPayFected.value;
     allCards.clear();
     allCards.assignAll(fetchedCards);
@@ -374,7 +223,7 @@ class _CardStackScreenState extends State<CardStackScreen>
       toggleStates[card.id] = card.isActive;
     }
     _controllers.forEach((controller) => controller.dispose());
-    _initializeAnimations();
+     _initializeAnimations();
   }
 
   @override

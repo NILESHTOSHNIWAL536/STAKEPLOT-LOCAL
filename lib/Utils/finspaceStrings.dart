@@ -42,7 +42,8 @@ class FinspaceStrings
     'Global Market News & Analysis': [],
   };
 
-
+  bool liveIntegration=true;
+  
   void fetchConstants() async {
     try {
       final response = await getDataApiCall("${url}/constant/finvuCommunity");
@@ -51,6 +52,7 @@ class FinspaceStrings
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};
         categories=data['categories'] ?? categories;
+        liveIntegration= data['liveIntegration'] ?? liveIntegration;
         
       } 
     } catch (e) { 

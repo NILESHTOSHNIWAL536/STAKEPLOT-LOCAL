@@ -25,6 +25,9 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../routes/route_user_login.dart';
+import '../routes/route_post.dart';
+
 class ExploreModal extends StatefulWidget {
   final Function(Map<String, dynamic>) onPostCreated;
 
@@ -318,9 +321,9 @@ class _ExploreModalState extends State<ExploreModal> {
       if (byteData == null) return null;
 
       final Uint8List bytes = byteData.buffer.asUint8List();
-      final tempDir = await getTemporaryDirectory();
+      final tempDir = await getExternalStorageDirectory();
       final file = await File(
-              '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.png')
+              '${tempDir!.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.png')
           .writeAsBytes(bytes);
       return file;
     } catch (e) {
@@ -357,9 +360,9 @@ class _ExploreModalState extends State<ExploreModal> {
       if (byteData == null) return null;
 
       final Uint8List bytes = byteData.buffer.asUint8List();
-      final tempDir = await getTemporaryDirectory();
+      final tempDir = await getExternalStorageDirectory();
       final file = await File(
-              '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}_$index.png')
+              '${tempDir!.path}/cropped_${DateTime.now().millisecondsSinceEpoch}_$index.png')
           .writeAsBytes(bytes);
 
       return file;
@@ -448,7 +451,7 @@ class _ExploreModalState extends State<ExploreModal> {
     try {
       var accessToken = await getToken();
       final response = await http.post(
-        Uri.parse('$url/post/'),
+        Uri.parse(PostRoutes.post),
         headers: {
           'Content-Type': 'application/json',
           "Authorization": "$accessToken",

@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_AppBar.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/tagandhidebutton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionCalender.dart';
@@ -44,6 +44,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
   // State to toggle views
 
+
   @override
   void initState() {
     super.initState();
@@ -76,19 +77,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.sizeOf(context).height;
-
-    // double calculatedHeight;
-
-    // if (showFilter.value || redioButton.isNotEmpty) {
-    //   calculatedHeight = screenHeight / 1.52;
-    // } else if (showFilter.value && !isDateSummaryView.value) {
-    //   calculatedHeight = screenHeight / 1.5;
-    // } else {
-    //   calculatedHeight =
-    //       (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
-    //           ? screenHeight / 1.35
-    //           : screenHeight / 1.25;
-    // }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -146,6 +134,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                       if (!showFilter.value) {
                                         searchTextController.value = "";
                                         searchController.text = "";
+                                        startDateController.text = "";
+                                        endDateController.text = "";
+                                        showDateFilter.value =
+                                            false; // Reset date filter UI state
+                                        showAmountFilter.value = false;
                                         onChanedAutoTransactionStatus(context);
                                       }
 
@@ -287,7 +280,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         onChanged: (value) {
           isDateSummaryView.value = false;
           allOrGroupTransactionsName.value = StringConstant.allTransactions;
-             searchItemClicked.value=false;
+          searchItemClicked.value = false;
           if (_debounce?.isActive ?? false) _debounce!.cancel();
           // Start a new debounce timer
           _debounce = Timer(const Duration(milliseconds: 500), () {

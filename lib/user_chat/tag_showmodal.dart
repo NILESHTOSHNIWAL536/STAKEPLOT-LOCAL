@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -397,8 +397,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                   }
 
                   getCategoryData(context);
-                  tagBool.value =
-                      false; // if anything goes wrong in tag check here first
+                  tagBool.value =false;
                 },
                 child: Obx(() => tagBool.value
                     ? Spinner(

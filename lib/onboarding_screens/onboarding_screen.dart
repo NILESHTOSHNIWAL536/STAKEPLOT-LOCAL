@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/Home/init_Api_Calls.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -54,8 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
     _animationController.forward();
     _updateProgress();
-    socket = IO.io(urlWithLocallHost,
-        IO.OptionBuilder().setTransports(['websocket']).build());
+    socket = IO.io(BankApiUrl,IO.OptionBuilder().setTransports(['websocket']).build());
     fetchedTrsacntionList.clear();
     setUpSocketListener();
   }
@@ -659,7 +658,7 @@ class _OnboardingPageState extends State<OnboardingPage>
           if (widget.isLastPage) {
             if (flagToFetchData.value) {
               clearStack(context);
-              getBankAccounts();
+              callApi(context);
               Navigator.pushNamed(context, "/home");
             }
           } else {

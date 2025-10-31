@@ -6,9 +6,13 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dar
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/credentials.dart';
+import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../auth_service/login_apis.dart';
 
 Future<void> initializeOneSignal(BuildContext context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -18,40 +22,46 @@ Future<void> initializeOneSignal(BuildContext context) async {
     json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
   }
 
-  if (!pref.containsKey(key) || json["deviceId"] == "deviceData.value") {
+  if (!pref.containsKey(key) ||
+      json["deviceId"] == "deviceData.value" ||
+      json["deviceId"] == "") {
     await oneSignalInit();
     await Future.delayed(Duration(seconds: 3)); // Small delay
-    String? userDeviceId = await OneSignal.User.pushSubscription.id;
-    deviceData['deviceId'] = userDeviceId ?? "deviceData.value";
+    String userDeviceId =
+        await OneSignal.User.pushSubscription.id ?? "deviceData.value";
+    getDeviceLocalDetails(userDeviceId, context);
+    //  deviceData['deviceId'] = userDeviceId;
+    var deviceDataLocal = {
+      ...deviceData,
+      'deviceId': userDeviceId,
+    };
+    deviceData.clear();
+    deviceData.addAll(deviceDataLocal);
     pref.setString(key, jsonEncode(deviceData));
   } else {
     deviceData['deviceId'] = json["deviceId"];
   }
-
   addThisDeviceToBackendDevice(pref, context);
 }
 
 void _handleNotificationClick(
-    OSNotificationClickEvent event, BuildContext context) {
+    OSNotificationClickEvent event, BuildContext context, bool flag) {
   try {
     String screen = event.notification.additionalData?['screen'];
-    navigateScreens(context, screen);
+    navigateScreens(context, screen, flag);
   } catch (e) {}
 }
 
-void navigateScreens(context, screen) {
+void navigateScreens(context, screen, bool flag) {
   if (screen.toString().contains("chat")) {
     Navigator.pushNamed(context, '/TribeChats');
   } else if (screen.toString().contains("friends")) {
     Navigator.pushNamed(context, '/Friends');
-  } 
-  else if (screen.toString().contains("post")) {
+  } else if (screen.toString().contains("post")) {
     Navigator.pushNamed(context, '/post');
-  } 
-  else if (screen.toString().contains("coupons")) {
+  } else if (screen.toString().contains("coupons")) {
     Navigator.pushNamed(context, '/rewardsOverview');
-  } 
-  else if (screen.toString().contains("remainder") ||
+  } else if (screen.toString().contains("remainder") ||
       screen.toString().contains("remainders")) {
     Navigator.push(
       context,
@@ -71,25 +81,11 @@ void navigateScreens(context, screen) {
   }
 }
 
-// void navigateScreen(context) {
-//   OneSignal.Notifications.addClickListener((event) {
-//     String? screen = event.notification.additionalData?['screen'];
-//     if (screen != null) {
-//       Navigator.pushNamed(context, screen);
-//     } else {
-//     }
-//   });
-
-// }
-
 Future<void> oneSignalInit() async {
   try {
-    // 66bc1852-d40b-4ad0-8a11-5e3d0da698a2
-    // 66bc1852-d40b-4ad0-8a11-5e3d0da698a2
-    String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
-    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+    String appId = Credentials.oneSignal;
+    OneSignal.Debug.setLogLevel(OSLogLevel.none);
     OneSignal.initialize(appId);
-    // OneSignal.Notifications.requestPermission(true);
   } catch (e) {}
 }
 
@@ -97,23 +93,67 @@ Future<void> getDeviceInfo(
     String playerId,
     context,
     TextEditingController emailController,
-    TextEditingController passwordController) async {
+    ) async {
   deviceData.value = {};
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String key = "deviceInfo";
 
   if (!pref.containsKey(key)) {
-    getDeviceLocalDetails(
-        playerId, emailController, passwordController, context);
+    getDeviceLocalDetails(playerId, context);
   }
 
   deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
-  // loginUser(emailController,passwordController,context);
-  userVerification(emailController, passwordController, context);
+  // if (emailController.text == Credentials.TestUser) {
+  //   LoginService.loginUser(emailController, passwordController, context);
+  // } else {
+    LoginService.userVerification(emailController, context);
+  // }
 }
 
-void getDeviceLocalDetails(
-    String playerId, emailController, passwordController, context) async {
+void getDeviceLocalDetails(String playerId, context) async {
+  try {
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      deviceData.value = {
+        'deviceId': playerId,
+        'brand': androidInfo.brand,
+        'device': androidInfo.device,
+        'model': androidInfo.model,
+        'os': 'Android',
+      };
+    } else if (Platform.isIOS) {
+      final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      deviceData.value = {
+        'deviceId': playerId,
+        'device': iosInfo.name,
+        'brand': iosInfo.model == null ? 'Apple' : iosInfo.model,
+        'model': iosInfo.model == null ? 'iPhone' : iosInfo.model,
+        'os': 'iOS',
+      };
+    } else {
+      deviceData.value = {
+        'deviceId': (playerId == "" || playerId == null) ? "" : playerId,
+        'device': 'Unknown',
+        'os': 'Unknown',
+        'brand': '',
+        'model': '',
+      };
+    }
+  } catch (e) {
+    deviceData.value = {
+      'deviceId': (playerId == "" || playerId == null) ? "" : playerId,
+      'device': 'Unknown',
+      'os': 'Unknown',
+      'brand': 'Unknown',
+      'osVersion': 'Unknown',
+    };
+  }
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  pref.setString('deviceInfo', jsonEncode(deviceData));
+}
+
+void getDeviceLocalDetails2(String playerId, context) async {
   try {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
@@ -163,18 +203,13 @@ void getDeviceLocalDetails(
 void oneSignalAddClickListener(context) {
   try {
     OneSignal.Notifications.addClickListener((event) {
-      _handleNotificationClick(event, context);
+      _handleNotificationClick(event, Get.context ?? context,false);
+
     });
 
     OneSignal.Notifications.addForegroundWillDisplayListener((event) {
       String s = event.notification.body.toString().toLowerCase().trim();
-      String t1 =
-          "There is a problem with your bank server. Please try again later.";
-      String t2 =
-          "we couldn't able to fetch your bank details, try again later";
-      String t3 = "Your bank account data has been successfully fetched.";
       if (s == "you have been logged out from stakeplot!") {
-        //  logoutUserFromDevice(context);
         return;
       }
       if (s.contains("problem") ||

@@ -14,24 +14,36 @@ import 'package:intl/intl.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 
+import '../routes/route_transactions.dart';
 
 RxInt startIndex = 0.obs;
 
 void getPdf(BuildContext context, RxString selectedValue,
     RxString selectedValueType) async {
-  var response = await getDataApiCall("${url}/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}/${accountIdPdf.value}",);
-  startIndex.value=0;
-  bankLogo.value =getBankLogo();
- 
+  var response = await getDataApiCall(
+    BankTransactionRoutes.getPreviousTransactions(accountId: accountIdPdf.value,date:getPreviousDate(int.parse(selectedValue.value), selectedValueType.value) ),
+  );
+  
+  startIndex.value = 0;
+  bankLogo.value = getBankLogo();
+
   if (getFlagOfResponse(response)) {
     var obj = jsonDecode(response.body);
     List list = obj['data']['transactions'];
     if (list.length > 0) {
-      generatePdf(PdfPageFormat.legal, "StakePlot", list, context,obj['data']['profile'][0],obj['data']['summary'][0],obj['data']['bankAddress'],obj['data']['bankName'],obj['data']['account']['maskedAccNumber']);
+      generatePdf(
+          PdfPageFormat.legal,
+          "StakePlot",
+          list,
+          context,
+          obj['data']['profile'][0],
+          obj['data']['summary'][0],
+          obj['data']['bankAddress'],
+          obj['data']['bankName'],
+          obj['data']['account']['maskedAccNumber']);
     }
   }
 }
-
 
 Future<pw.MemoryImage> loadLogoNetwork(String url) async {
   final response = await http.get(Uri.parse(url));
@@ -43,53 +55,59 @@ Future<pw.MemoryImage> loadLogoNetwork(String url) async {
 }
 
 Future<pw.MemoryImage> loadLogo(path) async {
-  final ByteData bytes =
-      await rootBundle.load(path); // Correct path
+  final ByteData bytes = await rootBundle.load(path); // Correct path
   final Uint8List byteList = bytes.buffer.asUint8List();
   return pw.MemoryImage(byteList);
 }
 
 Future<void> generatePdf(
-    PdfPageFormat format, String title, List data, contextBui,profile,summary,String address,String BankName,String accountNo) async {
+    PdfPageFormat format,
+    String title,
+    List data,
+    contextBui,
+    profile,
+    summary,
+    String address,
+    String BankName,
+    String accountNo) async {
   final pdf = pw.Document();
   final logo = await loadLogo('assets/app_icon.png'); // Load the logo
   final logo2 = await loadLogoNetwork(bankLogo.value); // Load the logo
   try {
-
     pdf.addPage(
-        pw.MultiPage(
-          pageFormat:PdfPageFormat.a4.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
-          orientation: pw.PageOrientation.portrait,
-          header: (context) => firstPage(logo2,profile,summary,address,BankName,accountNo),
-          footer: (context) => tableFootercell(logo, context),
-          build: (context) {
-            return 
-            [
-              buildPDFTable(data, contextBui, startIndex.value,true),
-            ];
-          },
-        ),
-      );
+      pw.MultiPage(
+        pageFormat:
+            PdfPageFormat.a4.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+        orientation: pw.PageOrientation.portrait,
+        header: (context) =>
+            firstPage(logo2, profile, summary, address, BankName, accountNo),
+        footer: (context) => tableFootercell(logo, context),
+        build: (context) {
+          return [
+            buildPDFTable(data, contextBui, startIndex.value, true),
+          ];
+        },
+      ),
+    );
 
     while (startIndex.value < data.length) {
-     
       pdf.addPage(
         pw.MultiPage(
-          pageFormat:PdfPageFormat.a4.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+          pageFormat:
+              PdfPageFormat.a4.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
           orientation: pw.PageOrientation.portrait,
-          header: (context) => tableHeaderCell1(logo2,profile,summary,address,BankName),
+          header: (context) =>
+              tableHeaderCell1(logo2, profile, summary, address, BankName),
           footer: (context) => tableFootercell(logo, context),
           build: (context) {
             return [
-              buildPDFTable(data, contextBui, startIndex.value,false),
+              buildPDFTable(data, contextBui, startIndex.value, false),
             ];
           },
         ),
       );
-
     }
-  } catch (e) {
-  }
+  } catch (e) {}
 
   getPdgLoader.value = false;
   final Uint8List pdfBytes = await pdf.save(); // Save once
@@ -143,10 +161,13 @@ printDoc(data, context, title) {
       ]);
 }
 
-pw.Widget buildPDFTable(data, context, start,bool flag) {
+pw.Widget buildPDFTable(data, context, start, bool flag) {
   final pdfContainers = <pw.Widget>[];
-  int no = flag? PdfStrings().firstPage: selectedValue.value == "6" ?  PdfStrings().secoundPage : PdfStrings().thirdPage;
-
+  int no = flag
+      ? PdfStrings().firstPage
+      : selectedValue.value == "6"
+          ? PdfStrings().secoundPage
+          : PdfStrings().thirdPage;
 
   for (var i = start; i < data.length; i += no) {
     List chunk = data.sublist(i, (i + no > data.length) ? data.length : i + no);
@@ -219,7 +240,9 @@ tableContent(transactions) {
                 item['narration'].toString(), item['type'], item['txnId'])),
             tableCell(item['type'].toString()),
             tableCell(item['amount'].toString()),
-            tableCell((item['currentBalance']  ?? item['transactionalBalance']  ?? 0).toString()),
+            tableCell(
+                (item['currentBalance'] ?? item['transactionalBalance'] ?? 0)
+                    .toString()),
           ],
         );
       }).toList(),
@@ -243,7 +266,7 @@ pw.Widget tableHeaderCell(String text) {
   );
 }
 
-pw.Widget tableHeaderCell1(logo,profile,s,address,BankName) {
+pw.Widget tableHeaderCell1(logo, profile, s, address, BankName) {
   return pw.Container(
     padding: pw.EdgeInsets.all(8),
     decoration: pw.BoxDecoration(
@@ -258,7 +281,8 @@ pw.Widget tableHeaderCell1(logo,profile,s,address,BankName) {
       children: [
         pw.Image(logo, width: 30, height: 30),
         pw.SizedBox(width: 10),
-        pw.Text( BankName,
+        pw.Text(
+          BankName,
           // "Transaction Statement for ${profile['holder']['name']}",
           style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
         ),
@@ -267,8 +291,6 @@ pw.Widget tableHeaderCell1(logo,profile,s,address,BankName) {
     ),
   );
 }
-
-
 
 pw.Widget firstPage(
   logo,
@@ -304,15 +326,14 @@ pw.Widget firstPage(
         pw.SizedBox(height: 12),
 
         pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text("Account No: $accountNo"),
-                pw.Text("Branch: ${summary['data']['branch']}"),
-                pw.Text("IFSC: ${summary['data']['ifscCode']}"),
-                pw.Text("Opening Date: ${summary['data']['openingDate'].toString().split('T')[0]}"),
-              ],
-            ),
-
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text("Account No: $accountNo"),
+            pw.Text("Branch: ${summary['data']['branch']}"),
+            pw.Text("IFSC: ${summary['data']['ifscCode'] ?? summary['data']['ifsc']}"),
+            pw.Text("Opening Date: ${summary['data']['openingDate'].toString().split('T')[0]}"),
+          ],
+        ),
 
         pw.SizedBox(height: 12),
 
@@ -321,56 +342,51 @@ pw.Widget firstPage(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-        pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          mainAxisAlignment: pw.MainAxisAlignment.end,
-          children: [
-            pw.Text("Name: ${profile['holder']['name']}"),
-             if(profile['holder']['address'] is String && profile['holder']['address'].toString().trim().isNotEmpty) pw.Container(
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              mainAxisAlignment: pw.MainAxisAlignment.end,
+              children: [
+                pw.Text("Name: ${profile['holder']['name']}"),
+                if (profile['holder']['address'] is String &&
+                    profile['holder']['address'].toString().trim().isNotEmpty)
+                  pw.Container(
                     width: PdfPageFormat.a4.availableWidth / 2,
                     child: pw.Text("Address: ${profile['holder']['address']}"),
+                  ),
+                pw.SizedBox(height: 12),
+                if (profile['holder']['email'] is String &&
+                    profile['holder']['email'].toString().trim().isNotEmpty)
+                  pw.Text("Email: ${profile['holder']['email']}"),
+                pw.Text("DOB: ${profile['holder']['dob']}"),
+              ],
             ),
-             pw.SizedBox(height: 12),
-            if(profile['holder']['email'] is String && profile['holder']['email'].toString().trim().isNotEmpty)pw.Text("Email: ${profile['holder']['email']}"),
-            pw.Text("DOB: ${profile['holder']['dob']}"),
-          ],
-        ),
-
-     pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          mainAxisAlignment: pw.MainAxisAlignment.end,
-          children: [
-            pw.Container(
-              width: 200,
-              // alignment: pw.Alignment.topRight,
-              child: pw.Text(
-               "Bank Address : ",
-                textAlign: pw.TextAlign.right,
-              ),
-            ),
-            pw.Container(
-              width: 200,
-              // alignment: pw.Alignment.topRight,
-              child: pw.Text(
-               address,
-                textAlign: pw.TextAlign.right,
-              ),
-            ),
-          ]
-        ),
+            pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                mainAxisAlignment: pw.MainAxisAlignment.end,
+                children: [
+                  pw.Container(
+                    width: 200,
+                    // alignment: pw.Alignment.topRight,
+                    child: pw.Text(
+                      "Bank Address : ",
+                      textAlign: pw.TextAlign.right,
+                    ),
+                  ),
+                  pw.Container(
+                    width: 200,
+                    // alignment: pw.Alignment.topRight,
+                    child: pw.Text(
+                      address,
+                      textAlign: pw.TextAlign.right,
+                    ),
+                  ),
+                ]),
           ],
         ),
       ],
     ),
   );
 }
-
-
-
-
-
-
-
 
 // Helper function for single-line table cells
 pw.Widget tableCell(String text) {

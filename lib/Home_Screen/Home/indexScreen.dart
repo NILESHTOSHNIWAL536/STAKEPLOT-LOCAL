@@ -14,9 +14,12 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 
+import 'init_Api_Calls.dart';
+
 class IndexScreen extends StatelessWidget {
   final ScrollController scrollControllerHome;
-  const IndexScreen({Key? key, required this.scrollControllerHome}) : super(key: key);
+  const IndexScreen({Key? key, required this.scrollControllerHome})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,61 +27,64 @@ class IndexScreen extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-      child: SingleChildScrollView(
-        controller: scrollControllerHome,
-        child: Column(
-          children: [
-            Nextfetch(),
-            SizedBox(
-              height: height * 0.23,
-              child: NumberPickerScreen(),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: height * 0.51,
-              child: FinancePage(),
-            ),
-            SizedBox(
-              height: height * 0.16,
-              child: Manualtransaction(),
-            ),
-            const SizedBox(
-              height: 14,
-            ),
-            // SizedBox(
-            //   height: height * 0.21,
-            //   child: SwipeableCardsScreen(),
-            // ),
-
-            Obx(() =>isFinoraVisible.value ? GetFinora(height) : GetFinora(height)),
-           
-            const SizedBox(
-              height: 14,
-            ),
-
-            Obx(() => isAutoPayFected.value
-                ? GetAutopays(height)
-                : GetAutopays(height)),
-
-            SizedBox(height: height * 0.5, child: InsightsScreen()),
-
-        //  Obx(() => isFectedDonetChat.value? DoughnutChartExample():DoughnutChartExample()),
-           DoughnutChartExample(),
-            const SizedBox(
-              height: 14,
-            ),
-
-            SizedBox(
-              height: 30,
-              child: Text(HomepageStringsDart().madeWithLove,
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: AppColors.primaryColor)),
-            )
-          ],
+      child: RefreshIndicator(
+        color: AppColors.primaryColor,
+        backgroundColor: Colors.white,
+        strokeWidth: 3,
+        displacement: 40, // spinner position from top
+        edgeOffset: 0, // start right at the top
+        onRefresh: () async {
+          // Keep refresh indicator visible for at least 2 seconds
+          await Future.delayed(const Duration(seconds: 1));
+          callApi(context);
+        },
+        child: SingleChildScrollView(
+          controller: scrollControllerHome,
+          child: Column(
+            children: [
+              Nextfetch(),
+              SizedBox(
+                height: height * 0.23,
+                child: NumberPickerScreen(),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                height: height * 0.51,
+                child: FinancePage(),
+              ),
+              SizedBox(
+                height: height * 0.16,
+                child: Manualtransaction(),
+              ),
+              const SizedBox(
+                height: 14,
+              ),
+              Obx(() => isFinoraVisible.value
+                  ? GetFinora(height)
+                  : GetFinora(height)),
+              const SizedBox(
+                height: 14,
+              ),
+              Obx(() => isAutoPayFected.value
+                  ? GetAutopays(height)
+                  : GetAutopays(height)),
+              SizedBox(height: height * 0.5, child: InsightsScreen()),
+              DoughnutChartExample(),
+              const SizedBox(
+                height: 14,
+              ),
+              SizedBox(
+                height: 30,
+                child: Text(HomepageStringsDart().madeWithLove,
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: AppColors.primaryColor)),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -90,18 +96,8 @@ class IndexScreen extends StatelessWidget {
         : SizedBox(height: height * 0.4, child: CardStackScreen());
   }
 
-  // Widget GetFinora(height){
-  //   return SizedBox(
-  //           height: height * ( totalDebitThisMonth.value<=0 ? 0.54 : 0.21),
-  //           child:  totalDebitThisMonth.value<=0
-  //               ? FinoraLastTwoMonthsDashboard()
-  //               : SwipeableCardsScreen(),
-  //         );
-  // }
   Widget GetFinora(double height) {
     return Obx(() {
-      // Check if Hive has cached data
-      print('totalDebitThisMonth: ${totalDebitThisMonth.value}');
       return SizedBox(
         height: height * (totalDebitThisMonth.value <= 0 ? 0.54 : 0.21),
         child: totalDebitThisMonth.value <= 0

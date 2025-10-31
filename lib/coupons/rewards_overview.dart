@@ -5,7 +5,6 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/coupons/infoScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -674,7 +673,6 @@ class _RewardsOverviewState extends State<RewardsOverview>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    userController.fetchUserInfo();
     fetchClaimedCoupons();
     fetchCouponsCounts();
     getUserActity();

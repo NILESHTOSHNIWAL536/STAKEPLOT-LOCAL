@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_dis
 import 'package:flutter_application_code_stakeplot/finance_screen/financeWidgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../Utils/credit_card.dart';
 import '../colorcodes.dart';
 import 'creditCard_slider.dart';
 
@@ -42,7 +43,8 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
   @override
   void initState() {
     super.initState();
-    selectedIndex = widget.index;
+    selectedIndex =
+        CreditCardScreenStrings().showCreditCard.value ? widget.index : 1;
   }
 
   @override
@@ -114,14 +116,18 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
 
   Widget getTabs(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 22),
+        // const SizedBox(height: 22),
         // Option Buttons
-        for (int i = 0; i < routes.length; i++) ...[
+        for (int i = CreditCardScreenStrings().showCreditCard.value ? 0 : 1;
+            i < routes.length;
+            i++) ...[
           InkWell(
             borderRadius: BorderRadius.circular(9),
             onTap: () {
-              setState(() => selectedIndex = i);
+              setState(() => selectedIndex = i);  
               // Navigator.pushNamed(context, routes[i]);
             },
             child: Container(
@@ -130,11 +136,27 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
               decoration: BoxDecoration(
                 color:
                     selectedIndex == i ? const Color(0xFF635D8F) : Colors.white,
-                borderRadius: BorderRadius.circular(9),
-                border: selectedIndex == i
-                    ? null
-                    : Border.all(color: const Color(0xFF635D8F), width: 1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: Color(0xFFF3F4F6),
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.05),
+                    offset: Offset(0, 1),
+                    blurRadius: 1,
+                  ),
+                ],
               ),
+              // decoration: BoxDecoration(
+              //   color:
+              //       selectedIndex == i ? const Color(0xFF635D8F) : Colors.white,
+              //   borderRadius: BorderRadius.circular(9),
+              //   border: selectedIndex == i
+              //       ? null
+              //       : Border.all(color: const Color(0xFF635D8F), width: 1),
+              // ),
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
               margin: const EdgeInsets.all(5),
               child: Column(

@@ -13,6 +13,8 @@ import 'package:flutter_application_code_stakeplot/finSpace/updateInterestScreen
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:get/get.dart';
 
+import '../routes/route_user_login.dart';
+
 class CommunityUserProfileScreen extends StatefulWidget {
   const CommunityUserProfileScreen({Key? key}) : super(key: key);
 
@@ -204,7 +206,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                   var body = {
                         "canMaskMessage": canMessageUser.value,
                   };
-                   await updateDataApiCall2("${url}/user/", body);
+                   await updateDataApiCall2(UserRoutes.update, body);
                 }catch(e){
                   
                 }

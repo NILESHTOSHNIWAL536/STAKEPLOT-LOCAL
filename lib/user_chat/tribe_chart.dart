@@ -5,12 +5,10 @@ import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/colors.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Constants/search.dart";
-import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart";
 import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
@@ -20,15 +18,14 @@ import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:get/get.dart";
-import "package:shared_preferences/shared_preferences.dart";
-import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import "../routes/route_user_login.dart";
 
 RxBool load = true.obs;
 RxBool reloadCharts = true.obs;
 RxBool reloadMaskedCharts = true.obs;
-RxBool ismaskedUsers= false.obs;
-RxBool countOpen= false.obs;
+RxBool ismaskedUsers = false.obs;
+RxBool countOpen = false.obs;
 late IO.Socket socket;
 RxInt totalUnopenedMessages = 0.obs;
 
@@ -52,26 +49,32 @@ class _TribeSearchState extends State<TribeChats> {
   List<dynamic> chatSplitAccount = [];
   ValueNotifier<bool> getChatSplit = ValueNotifier<bool>(false);
   final CommunityScreenStrings strings = CommunityScreenStrings();
-  UserController userController=ControllerManagement.userController;
+  UserController userController = ControllerManagement.userController;
   @override
   void initState() {
     super.initState();
-    userController.fetchUserInfo();    
-    totalUnopenedMessages.value=0;
+    totalUnopenedMessages.value = 0;
     // ismaskedUsers.value = false;
     getChatLoader(ismaskedUsers.value);
     getTransactions();
     getChatsSplitAccounts(context, myId);
-    socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).enableForceNewConnection().build());
+    socket = IO.io(
+        urlWithLocallHost,
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .enableForceNewConnection()
+            .build());
     socket.connect();
     setUpSocketListener();
   }
 
   setUpSocketListener() {
     socket.onConnect((_) {
-      socket.emit("joinRoom", userController.userName.value + userController.userName.value);
-      if(userController.maskedName.value!="")socket.emit("joinRoom", userController.maskedName.value + userController.maskedName.value);
-
+      socket.emit("joinRoom",
+          userController.userName.value + userController.userName.value);
+      if (userController.maskedName.value != "")
+        socket.emit("joinRoom",
+            userController.maskedName.value + userController.maskedName.value);
     });
 
     socket.onConnectError((data) {});
@@ -82,21 +85,16 @@ class _TribeSearchState extends State<TribeChats> {
               socket.close(),
             });
 
-    socket.on("LoadCharts",(loadData) => {
-           if(loadData['isMasked']== ismaskedUsers.value) getChatLoader(ismaskedUsers.value),
-        });
+    socket.on(
+        "LoadCharts",
+        (loadData) => {
+              if (loadData['isMasked'] == ismaskedUsers.value)
+                getChatLoader(ismaskedUsers.value),
+            });
   }
 
   void getTransactions() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/user/info'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
+    var response = await getDataApiCall(UserRoutes.getInfo);
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
@@ -135,7 +133,6 @@ class _TribeSearchState extends State<TribeChats> {
     return Scaffold(
       extendBody: true,
       backgroundColor: AppColors.appIcon,
-
       appBar: PreferredSize(
         preferredSize: chatSplitAccount.isNotEmpty
             ? const Size.fromHeight(140)
@@ -144,7 +141,8 @@ class _TribeSearchState extends State<TribeChats> {
           automaticallyImplyLeading: true,
           backgroundColor: AppColors.appIcon,
           titleSpacing: 0,
-          toolbarHeight: chatSplitAccount.isNotEmpty && !ismaskedUsers.value ? 140 : 100,
+          toolbarHeight:
+              chatSplitAccount.isNotEmpty && !ismaskedUsers.value ? 140 : 100,
           leading: InkWell(
             onTap: () {
               Navigator.pop(context);
@@ -171,28 +169,34 @@ class _TribeSearchState extends State<TribeChats> {
                   ),
                 ),
                 const SizedBox(height: 4),
-             Obx(()=>  Text(
-               countOpen.value ? strings.messagesReceived.replaceFirst('{count}', totalUnopenedMessages.value.toString())  :strings.messagesReceived.replaceFirst('{count}', totalUnopenedMessages.value.toString()), // Null check for chatList
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 16,
-                    color: AppColors.backgroundColor,
-                  ),
-                )),
-                
-                Obx(()=>ismaskedUsers.value ? SizedBox.shrink():SizedBox(height:8)),
-
+                Obx(() => Text(
+                      countOpen.value
+                          ? strings.messagesReceived.replaceFirst(
+                              '{count}', totalUnopenedMessages.value.toString())
+                          : strings.messagesReceived.replaceFirst(
+                              '{count}',
+                              totalUnopenedMessages.value
+                                  .toString()), // Null check for chatList
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 16,
+                        color: AppColors.backgroundColor,
+                      ),
+                    )),
+                Obx(() => ismaskedUsers.value
+                    ? SizedBox.shrink()
+                    : SizedBox(height: 8)),
                 chatSplitAccount.isNotEmpty && !ismaskedUsers.value
                     ? SizedBox(
                         height: 40,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: chatSplitAccount.length, 
+                          itemCount: chatSplitAccount.length,
                           itemBuilder: (context, index) {
-                            var friend = chatSplitAccount[index]; 
+                            var friend = chatSplitAccount[index];
                             if (friend == null) {
-                              return const SizedBox.shrink(); 
+                              return const SizedBox.shrink();
                             }
                             return Row(
                               children: [
@@ -232,7 +236,7 @@ class _TribeSearchState extends State<TribeChats> {
         ),
       ),
       body: Container(
-        decoration:const BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppColors.backgroundColor, // Set your desired color here
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(24), // Adjust the radius as needed
@@ -248,7 +252,7 @@ class _TribeSearchState extends State<TribeChats> {
                 height: 16,
               ),
               // Obx(()=>  ismaskedUsers.value? getTabs(context): getTabs(context) ),
-              Obx(() => reloadCharts.value ? getChatList( ) : getChatList()),
+              Obx(() => reloadCharts.value ? getChatList() : getChatList()),
             ],
           ),
         ),
@@ -256,42 +260,47 @@ class _TribeSearchState extends State<TribeChats> {
     );
   }
 
-
-   Widget getTabs(context)
- {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Row(
-            children:[
-                   Padding(
-                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                     child: InkWell(
-                      onTap: (){
-                         ismaskedUsers.value = false;
-                         reloadCharts.value =! reloadCharts.value;
-                         getChatLoader(false);
-                      },
-                      child: textStyleImage(context: context,text: strings.All,fontsize:! ismaskedUsers.value?20: 18,fontWeight:! ismaskedUsers.value?FontWeight.bold:  FontWeight.w500,c: AppColors.accentColor)),
-                   ),
-                 Padding(
-                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                     child: InkWell(
-                      onTap: (){
-                          reloadCharts.value =! reloadCharts.value;
-                           ismaskedUsers.value = true;
-                           getChatLoader(true);
-                      },
-                      child: textStyleImage(context: context,text: strings.maskeduser,fontsize:ismaskedUsers.value?20: 18,fontWeight: ismaskedUsers.value?FontWeight.bold:  FontWeight.w500,c: AppColors.accentColor)),
-                   ),
-            ]
+  Widget getTabs(context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Row(children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: InkWell(
+              onTap: () {
+                ismaskedUsers.value = false;
+                reloadCharts.value = !reloadCharts.value;
+                getChatLoader(false);
+              },
+              child: textStyleImage(
+                  context: context,
+                  text: strings.All,
+                  fontsize: !ismaskedUsers.value ? 20 : 18,
+                  fontWeight:
+                      !ismaskedUsers.value ? FontWeight.bold : FontWeight.w500,
+                  c: AppColors.accentColor)),
         ),
-      );   
- }
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: InkWell(
+              onTap: () {
+                reloadCharts.value = !reloadCharts.value;
+                ismaskedUsers.value = true;
+                getChatLoader(true);
+              },
+              child: textStyleImage(
+                  context: context,
+                  text: strings.maskeduser,
+                  fontsize: ismaskedUsers.value ? 20 : 18,
+                  fontWeight:
+                      ismaskedUsers.value ? FontWeight.bold : FontWeight.w500,
+                  c: AppColors.accentColor)),
+        ),
+      ]),
+    );
+  }
 
-  Widget getChatList() 
-  {  
-
-
+  Widget getChatList() {
     return load.value
         ? Spinner(
             color: AppColors.primaryColor,
@@ -301,31 +310,29 @@ class _TribeSearchState extends State<TribeChats> {
                 child: Container(
                   width: MediaQuery.of(context).size.width / 1.1,
                   height: MediaQuery.of(context).size.height / 2,
-                  
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         AvatarProfileImage(
-                                        url: FinSpaceIcons.empty,
-                                        height: 4.5,
-                                        width: 4.5,
-                                      ),
-                                       Text(strings.noChatsAvailable,
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w400,
-                                    lineHeight: 1.2,
-                                    fontSize: 20,
-                                    color: AppColors.grey)),
-                                    
+                          url: FinSpaceIcons.empty,
+                          height: 4.5,
+                          width: 4.5,
+                        ),
+                        Text(strings.noChatsAvailable,
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w400,
+                                lineHeight: 1.2,
+                                fontSize: 20,
+                                color: AppColors.grey)),
                       ],
                     ),
                   ),
-
                 ),
               )
             : Column(
-                children: chatList.map((item) => profileContainer(item)).toList(),
+                children:
+                    chatList.map((item) => profileContainer(item)).toList(),
               );
   }
 
@@ -343,88 +350,78 @@ class _TribeSearchState extends State<TribeChats> {
                 chatList = getSearchDataRx(value, chatListOriginal);
               });
             },
-             decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                    filled: true,
-                    enabled: true,
-                    hintText: lableText,
-                    fillColor: AppColors.backgroundColor,
-                    hintStyle: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: Colors.black),
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-            // decoration: InputDecoration(
-            //   prefixIcon: Icon(Icons.search),
-            //   // prefixIconColor: Colorcodes.budgetDarkGreen,
-            //   filled: true,
-            //   contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
-            //   hintText: lableText,
-            //   enabledBorder: OutlineInputBorder(
-            //     borderRadius: BorderRadius.circular(24),
-            //   ),
-            //   focusedBorder: OutlineInputBorder(
-            //     borderRadius: BorderRadius.circular(24),
-            //   ),
-            //   fillColor: AppColors.button,
-            //   border: InputBorder.none,
-            // ),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+              filled: true,
+              enabled: true,
+              hintText: lableText,
+              fillColor: AppColors.backgroundColor,
+              hintStyle: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.normal,
+                  fontSize: 14,
+                  color: Colors.black),
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-
   Widget profileContainer(item) {
     var id = {'_id': item['_id']};
     String key = item['_id'];
-    bool canMaskMessage = ismaskedUsers.value? (item['canMaskMessage'] ?? true):true;
+    bool canMaskMessage =
+        ismaskedUsers.value ? (item['canMaskMessage'] ?? true) : true;
     getChats2(id, key);
     double width = MediaQuery.of(context).size.width;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: GestureDetector(
-        onTap: !canMaskMessage? (){
-            snackBarCalledfail(context, SnackbarData().offReplays);
-        }:()
-         {
-          messages.clear();
-          unSeenChat(context, item['_id']);
-          getChatLoader(ismaskedUsers.value);
-          getChats(item);
-          clear(item);
+        onTap: !canMaskMessage
+            ? () {
+                snackBarCalledfail(context, SnackbarData().offReplays);
+              }
+            : () {
+                messages.clear();
+                unSeenChat(context, item['_id']);
+                getChatLoader(ismaskedUsers.value);
+                getChats(item);
+                clear(item);
 
-         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  Chat(data: item, myId: userController.userId.value, myprofile: myprofile),
-            ),
-          );
-        },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Chat(
+                        data: item,
+                        myId: userController.userId.value,
+                        myprofile: myprofile),
+                  ),
+                );
+              },
         child: Container(
           color: AppColors.backgroundColor,
           child: Column(
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
-                color: canMaskMessage? Colors.transparent:Colorcodes.greyLight ,
+                color:
+                    canMaskMessage ? Colors.transparent : Colorcodes.greyLight,
                 //width: width / 1,
                 child: Row(
                   children: [
-                    
-                 ismaskedUsers.value?AvatarProfile2(url: item['avatar'], width: 20, height: 20) :   AvatarProfile(
-                        name: item['name'].toString() ,
-                        width: 1,
-                        height: 1,
-                        background: item['avatar'] ?? ""),
+                    ismaskedUsers.value
+                        ? AvatarProfile2(
+                            url: item['avatar'], width: 20, height: 20)
+                        : AvatarProfile(
+                            name: item['name'].toString(),
+                            width: 1,
+                            height: 1,
+                            background: item['avatar'] ?? ""),
                     const SizedBox(width: 8),
                     Container(
                       width: width >= 500

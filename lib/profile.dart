@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'routes/route_user_login.dart';
+import 'signInOut/userName.dart';
 
 class ProfileImage extends StatelessWidget {
   String url;
@@ -12,7 +18,10 @@ class ProfileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return flag
-        ? SvgPicture.asset(url,color: Colorcodes.textColor,)
+        ? SvgPicture.asset(
+            url,
+            color: Colorcodes.textColor,
+          )
         : SvgPicture.asset(url);
   }
 }
@@ -53,7 +62,8 @@ Widget upvoteLiked(context, [bool flag = true]) {
   return Container(
       width: width / val,
       height: height / val,
-      child:SvgPicture.asset("assets/svgs/up-voted.svg", color: flagdata(flag)));
+      child:
+          SvgPicture.asset("assets/svgs/up-voted.svg", color: flagdata(flag)));
 }
 
 Widget upvoteLike(context, [bool flag = true]) {
@@ -87,12 +97,41 @@ Widget downvoteLike(context, [bool flag = true]) {
           SvgPicture.asset("assets/svgs/down-vote.svg", color: flagdata(flag)));
 }
 
-Widget SvgImage({required BuildContext context,required String url,required double height,required double width}) {
+Widget SvgImage(
+    {required BuildContext context,
+    required String url,
+    required double height,
+    required double width}) {
   double h = MediaQuery.of(context).size.height;
   double w = MediaQuery.of(context).size.width;
   return Container(
       width: w / width,
       height: h / height,
-      child:Center(child: Image.network(url))
-    );
+      child: Center(child: Image.network(url)));
 }
+
+void checkIsUserNameValid(String val) async {
+  try {
+    if (val.length < 5)
+      isValidUser.value = false;
+    else {
+      var response =
+          await postDataApiCall("${AuthApiRoutes.validateName}", {"name": val});
+      if (getFlagOfResponse(response)) {
+        isValidUser.value = true;
+      } else {
+        isValidUser.value = false;
+      }
+    }
+  } catch (e) {}
+}
+
+
+Future<String> generateAccessToken(String email) async
+ {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    // ✅ Store your existing valid access token or fetch dynamically if needed
+    String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Nzg5MTk5YmFmZmIyZDJhZjhiZTE5MyIsImlhdCI6MTc2MTI4NzkwOSwiZXhwIjoxNzY2NDcxOTA5fQ.ZJY6Dvu_3TwaEj1FwUaXJk08GCWiJQMg_ozygssVHKA";
+    await pref.setString("accessToken", "Bearer $accessToken");
+    return pref.getString("accessToken") ?? "";
+ }

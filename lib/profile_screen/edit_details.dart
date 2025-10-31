@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
@@ -18,13 +16,13 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/revoke_access.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/emailUpdateOtp.dart';
 import 'package:get/get.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:intl/intl.dart';
-
+import '../Utils/credit_card.dart';
 import '../backed_connections/apiAutomations/share_data.dart';
+import '../show_modal/theme_modal.dart';
 
 late BuildContext showSnackBarContext;
 
@@ -41,7 +39,6 @@ class _EditDetailsState extends State<EditDetails> {
   final Map<String, TextEditingController> _controllers = {
     ProfileScreenStrings().nameLabel: TextEditingController(),
     ProfileScreenStrings().emailLabel: TextEditingController(),
-    ProfileScreenStrings().dobLabel: TextEditingController(),
     ProfileScreenStrings().numberLabel: TextEditingController(),
   };
 
@@ -53,12 +50,9 @@ class _EditDetailsState extends State<EditDetails> {
         userController.userName.value;
     _controllers[ProfileScreenStrings().emailLabel]!.text =
         userController.email.value;
-    _controllers[ProfileScreenStrings().dobLabel]!.text =
-        userController.dob.value;
     _controllers[ProfileScreenStrings().numberLabel]!.text = number.value;
 
-    checkBiometricsStatus();
-    userController.fetchUserInfo();
+    // checkBiometricsStatus();
   }
 
   @override
@@ -68,18 +62,19 @@ class _EditDetailsState extends State<EditDetails> {
     super.dispose();
   }
 
-  void checkBiometricsStatus() async {
-    final LocalAuthentication auth = LocalAuthentication();
-    bool canCheckBiometrics = await auth.canCheckBiometrics;
-    bool isDeviceSupported = await auth.isDeviceSupported();
-    List<BiometricType> availableBiometrics =
-        await auth.getAvailableBiometrics();
-  }
+  // void checkBiometricsStatus() async {
+  //   final LocalAuthentication auth = LocalAuthentication();
+  //   bool canCheckBiometrics = await auth.canCheckBiometrics;
+  //   bool isDeviceSupported = await auth.isDeviceSupported();
+  //   List<BiometricType> availableBiometrics =
+  //       await auth.getAvailableBiometrics();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: Theme.of(context)
+          .scaffoldBackgroundColor, // AppColors.backgroundColor,
       appBar: AppBar(
         title: textStyleOnly2(
           context: context,
@@ -92,6 +87,15 @@ class _EditDetailsState extends State<EditDetails> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
         actions: [
+          InkWell(
+            onTap: () {
+              showThemeSelectorModal(context);
+            },
+            child: Icon(
+              Icons.color_lens_outlined,
+              size: 30,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.delete, color: Colors.red),
             onPressed: () {
@@ -101,6 +105,19 @@ class _EditDetailsState extends State<EditDetails> {
               );
             },
           ),
+          !CreditCardScreenStrings().showRevokeScreen.value
+              ? SizedBox.shrink()
+              : IconButton(
+                  icon: Icon(Icons.remember_me_outlined,
+                      color: Colors.red, size: 25),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RevokeAccessScreen()),
+                    );
+                  },
+                ),
         ],
       ),
       body: SingleChildScrollView(
@@ -189,15 +206,15 @@ class _EditDetailsState extends State<EditDetails> {
                           Icons.phone,
                           ProfileScreenStrings().numberLabel,
                           userController.phone.value),
-                  const Divider(),
-                  _buildNonEditableField(
-                    Icons.calendar_today,
-                    ProfileScreenStrings().dobLabel,
-                    userController.dob.value.isNotEmpty
-                        ? DateFormat('yyyy-MM-dd')
-                            .format(DateTime.parse(userController.dob.value))
-                        : 'Not provided',
-                  ),
+                  // const Divider(),
+                  // _buildNonEditableField(
+                  //   Icons.calendar_today,
+                  //   ProfileScreenStrings().dobLabel,
+                  //   userController.dob.value.isNotEmpty
+                  //       ? DateFormat('yyyy-MM-dd')
+                  //           .format(DateTime.parse(userController.dob.value))
+                  //       : 'Not provided',
+                  // ),
                 ],
               ),
             ),
@@ -501,19 +518,18 @@ class _EditDetailsState extends State<EditDetails> {
           ),
         ),
       );
-
-  } else 
-  {
-    var body=jsonDecode(response.body);
-    snackBarCalledfail(showSnackBarContext,body['error']??"error", Colors.red);
+    } else {
+      var body = jsonDecode(response.body);
+      snackBarCalledfail(
+          showSnackBarContext, body['error'] ?? "error", Colors.red);
+    }
   }
-}
 
   Widget _buildAccountDetails(
       String bankName, String accountNumber, var data, String logo) {
     return InkWell(
-      onTap: (){
-        shareBankData(data);   
+      onTap: () {
+        shareBankData(data);
       },
       child: Card(
         elevation: 2,
@@ -576,7 +592,6 @@ class _EditDetailsState extends State<EditDetails> {
               );
             },
           ),
-         
         ),
       ),
     );

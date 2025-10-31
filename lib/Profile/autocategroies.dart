@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';

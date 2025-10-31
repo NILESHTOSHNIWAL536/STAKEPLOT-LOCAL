@@ -13,8 +13,11 @@ import 'package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
 import 'dart:io';
+
+import '../routes/route_post.dart';
 
 class CommunityUserProfile extends StatefulWidget {
   final data;
@@ -57,51 +60,45 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     getDis();
     getStatus();
     checkName(widget.data);
-   
   }
 
   void getDis() async {
-    try{
-    var response = await getDataApiCall(
-        '${url}/post/userDiscussions/${widget.data['_id']}');
+    try {
+      var response = await getDataApiCall(
+          '${PostRoutes.userDiscussions}/${widget.data['_id']}');
 
-    if (getFlagOfResponse(response))
-    {
-      var his = jsonDecode(response.body);
-      var obj = his['data'];
-      // getTrendingData =  obj;
-      getTrendingData.clear();
-      getTrendingData.addAll(PostModel.listFromJson(obj));
-      getTrendingData.forEach((element) {
-        postController.postCount[element.id] =
-            element.upvotes < 0 ? 0 : element.upvotes;
-      });
+      if (getFlagOfResponse(response)) {
+        var his = jsonDecode(response.body);
+        var obj = his['data'];
+        // getTrendingData =  obj;
+        getTrendingData.clear();
+        getTrendingData.addAll(PostModel.listFromJson(obj));
+        getTrendingData.forEach((element) {
+          postController.postCount[element.id] =
+              element.upvotes < 0 ? 0 : element.upvotes;
+        });
+      } else {}
+    } catch (e) {}
 
-    } else {}
-    } catch (e) {
-         
-    }
-
-    reload.value =!reload.value;
+    reload.value = !reload.value;
   }
 
   void getConnections() async {
     try {
       var response = await getDataApiCall(
-          '${url}/user/connections/${widget.data['_id']}/${widget.isMasked}');
+          '${UserRoutes.connections}/${widget.data['_id']}/${widget.isMasked}');
 
       if (getFlagOfResponse(response)) {
         var his = jsonDecode(response.body);
         count.value = his['data']['connections'];
         score.value = his['data']['score'];
       } else {}
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   void getStatus() async {
     var response =
-        await postDataApiCall("${url}/user/friend/acceptRequestStatus", {
+        await postDataApiCall(UserRoutes.acceptRequestStatus, {
       'userName': widget.data['name'],
       'friendUserId': widget.data['_id'],
     });
@@ -137,7 +134,9 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
               Column(
                 children: [
                   const SizedBox(height: 10),
-                  Obx(()=>reload.value? TabBarUser(userPostList: getTrendingData): TabBarUser(userPostList: getTrendingData)),
+                  Obx(() => reload.value
+                      ? TabBarUser(userPostList: getTrendingData)
+                      : TabBarUser(userPostList: getTrendingData)),
                 ],
               ),
             ],
@@ -155,7 +154,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
         children: [
           widget.isMasked
               ? AvatarProfile2(
-                  url: data['avatarType'],
+                  url: data['avatarType'] ?? data['avatar'],
                   width: 20,
                   height: 20,
                   flag: true,
@@ -168,11 +167,14 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                       data['avatarBackGround'] ?? defaultBackGround.value,
                   flag: true,
                 ),
-          widget.isMasked?Text((widget.data['maskedName'] ?? widget.data['name']).toString(),
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w600, color: AppColors.bg1)):Text(widget.data['name'].toString(),
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w600, color: AppColors.bg1)),
+          widget.isMasked
+              ? Text(
+                  (widget.data['maskedName'] ?? widget.data['name']).toString(),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w600, color: AppColors.bg1))
+              : Text(widget.data['name'].toString(),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w600, color: AppColors.bg1)),
           SizedBox(
             height: 6,
           ),
@@ -277,9 +279,10 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
 
   void checkName(data) {
     if (widget.isMasked) {
-      UserController userController=ControllerManagement.userController;
+      UserController userController = ControllerManagement.userController;
       String _id = data['_id'];
-      bool exists =userController.maskedConnections.any((item) => item['_id'] == _id);
+      bool exists =
+          userController.maskedConnections.any((item) => item['_id'] == _id);
       if (exists) {
         connect.value = "Remove";
       }

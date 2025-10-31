@@ -1,19 +1,17 @@
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/components/transactions_content.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_details.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/services.dart';
-
-
 
 class TransactionContainer extends StatelessWidget {
   final TransactionModel transaction;
@@ -94,44 +92,44 @@ class TransactionContainer extends StatelessWidget {
             ),
           ],
         ),
-        child:  AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              child: Stack(
-                children: [
-                  TransactionContent(
-                    transaction: transaction,
-                    isExcluded: isExcluded,
-                    isReview: isReview,
-                    isManual: isManual,
-                    isSplit: isSplit,
-                    hide: hide,
-                    category: category,
-                    logo: logo,
-                    amount: amount,
-                    formatAmount: formatAmount,
-                    formatAmountBalance: formatAmountBalance,
-                    nameOfUser: nameOfUser,
-                    formattedDate: formattedDate,
-                    formattedDateManual: formattedDateManual,
-                    index: index,
-                    fontSizes: fontSizes,
-                    amtColor: amtColor,
-                    context: context,
-                  ),
-                  if (isExcluded)
-                    Positioned(
-                      top: 0,
-                      right: -2,
-                      child: SvgPicture.asset(
-                        'assets/icons/Home-page/notMIne.svg',
-                        height: 20,
-                        width: 60,
-                      ),
-                    ),
-                ],
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          child: Stack(
+            children: [
+              TransactionContent(
+                transaction: transaction,
+                isExcluded: isExcluded,
+                isReview: isReview,
+                isManual: isManual,
+                isSplit: isSplit,
+                hide: hide,
+                category: category,
+                logo: logo,
+                amount: amount,
+                formatAmount: formatAmount,
+                formatAmountBalance: formatAmountBalance,
+                nameOfUser: nameOfUser,
+                formattedDate: formattedDate,
+                formattedDateManual: formattedDateManual,
+                index: index,
+                fontSizes: fontSizes,
+                amtColor: amtColor,
+                context: context,
               ),
-            ),
+              if (isExcluded)
+                Positioned(
+                  top: 0,
+                  right: -2,
+                  child: SvgPicture.asset(
+                    'assets/icons/Home-page/notMIne.svg',
+                    height: 20,
+                    width: 60,
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -239,8 +237,9 @@ class TransactionContainer extends StatelessWidget {
         redioButton[id] = id;
         redioButtonIndex[id] = index;
         balanceOutList[id] = transaction;
-        redioButtonAmount[id] =
-            transaction.type == "DEBIT" ? 0 - transaction.amount : transaction.amount;
+        redioButtonAmount[id] = transaction.type == "DEBIT"
+            ? 0 - transaction.amount
+            : transaction.amount;
         if (isManual) addManually.add(id);
         HapticFeedback.selectionClick();
       } else {
@@ -258,6 +257,8 @@ class TransactionContainer extends StatelessWidget {
           return TransactionDetailsPage(transaction: transaction);
         },
       );
+    } else if (isManual) {
+      snackBarCalled(context, "This transaction was added manually.");
     }
   }
 }

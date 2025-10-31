@@ -1,7 +1,5 @@
 import 'package:share_plus/share_plus.dart';
 
-import 'package:share_plus/share_plus.dart';
-
 void shareBankData(Map<String, dynamic> data) {
   // Format the bank info
   final String bankInfo = """
@@ -45,6 +43,5 @@ Branch Address:  ${data['branchAddress']}
   try {
     Share.share(bankInfo2, subject: "My Bank Account Info");
   } catch (e) {
-    print(e);
   }
 }

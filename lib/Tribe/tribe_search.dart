@@ -25,6 +25,9 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
+import "../routes/route_user_login.dart";
+import "../routes/route_post.dart";
+
 
 List ids = [];
 
@@ -70,8 +73,7 @@ class _TribeSearchState extends State<TribeSearch> {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     final response = await http.get(
-      Uri.parse('${url}/post/userDiscussions/${data['_id']}'),
-      // Uri.parse('https://stakeplot.in/api/v1/post/all'),
+      Uri.parse("${PostRoutes.userDiscussions}/${data['_id']}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
@@ -96,7 +98,7 @@ class _TribeSearchState extends State<TribeSearch> {
     
     final response = await http.get(
       Uri.parse(
-          '${url}/user/connections/${data['_id']}'),
+          '${UserRoutes.connections}/${data['_id']}/${widget.isMasked}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
@@ -127,13 +129,13 @@ class _TribeSearchState extends State<TribeSearch> {
     }
     
     final response = await http.post(
-      Uri.parse("${url}/user/friend/acceptRequestStatus"),
+      Uri.parse(UserRoutes.acceptRequestStatus),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
       },
        body: jsonEncode({
-          'userName':data['name'],
+          // 'userName':data['name'],
           'friendUserId':data['_id'],
        }),
     );
@@ -160,7 +162,7 @@ class _TribeSearchState extends State<TribeSearch> {
 
  
   void getTransaction() async {   
-    var response=await getDataApiCall("${url}/user/friends/find/${widget.isMasked}");
+    var response=await getDataApiCall("${UserRoutes.findFriend}/${widget.isMasked}");
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];

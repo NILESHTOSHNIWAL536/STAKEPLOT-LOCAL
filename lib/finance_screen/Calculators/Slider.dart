@@ -1,11 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 
 String selectedDestination = "Paris";
 String selectedAccommodation = "Hotel";
@@ -51,7 +50,7 @@ class _SliderPageState extends State<SliderPage> {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: AppColors.primaryColorHeader,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -120,9 +119,9 @@ class _SliderPageState extends State<SliderPage> {
           child: textStyle(
               context: context,
               text: data['name'],
-              fontWeight: FontWeight.w400,
-              fontsize: 14,
-              c: AppColors.backgroundColor),
+              fontWeight: FontWeight.w300,
+              fontsize: 16,
+              c: AppColors.accentColor),
         ),
         SizedBox(
           width: 100,
@@ -156,8 +155,9 @@ class _SliderPageState extends State<SliderPage> {
                 color: Colors.white,
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: AppColors.amtCal)),
               filled: true,
               fillColor: AppColors.amtCal,
             ),

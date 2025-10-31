@@ -52,7 +52,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
 
   void getslidersList() {
     slidersList = [
-      getJsonBodyObj("Monthly Investment", 5000.0, 1000.0, 50000.0, (value) {
+      getJsonBodyObj("Monthly Investment", 5000.0, 1000.0, 100000.0, (value) {
         updateSliderValue(0, value);
       }, TextEditingController(text: '5000')),
       getJsonBodyObj("Expected Return Rate(%)", 12.0, 1.0, 20.0, (value) {
@@ -86,21 +86,21 @@ class _SIPCalculatorState extends State<SIPCalculator> {
     });
   }
 
- void calculateSIPDetails() {
-  double annualRate = expectedReturnRate / 100;
-  double monthlyRate = pow(1 + annualRate, 1 / 12) - 1;
-  double months = investmentPeriod * 12;
-  if (monthlyRate == 0) {
-    futureValue = monthlyInvestment * months;
-  } else {
-    futureValue = monthlyInvestment *
-        ((pow(1 + monthlyRate, months) - 1) / monthlyRate) *
-        (1 + monthlyRate);
+  void calculateSIPDetails() {
+    double annualRate = expectedReturnRate / 100;
+    double monthlyRate = pow(1 + annualRate, 1 / 12) - 1;
+    double months = investmentPeriod * 12;
+    if (monthlyRate == 0) {
+      futureValue = monthlyInvestment * months;
+    } else {
+      futureValue = monthlyInvestment *
+          ((pow(1 + monthlyRate, months) - 1) / monthlyRate) *
+          (1 + monthlyRate);
+    }
+    totalInvested = monthlyInvestment * months;
+    totalReturns = futureValue - totalInvested;
+    totalReturns = totalReturns < 0 ? 0 : totalReturns;
   }
-  totalInvested = monthlyInvestment * months;
-  totalReturns = futureValue - totalInvested;
-  totalReturns = totalReturns < 0 ? 0 : totalReturns;
-}
 
   @override
   void dispose() {
@@ -114,49 +114,41 @@ class _SIPCalculatorState extends State<SIPCalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: AppColors.primaryColorHeader,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: AppColors.backgroundColor,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+          padding: const EdgeInsets.all(12.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: AppColors.primaryColor,
                       ),
-                      Container(
-                        width: MediaQuery.sizeOf(context).width/1.5,
-                        child: Center(
-                          child:GestureDetector(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14),
+                      child: GestureDetector(
                         onTap: () {
                           setState(() {
                             _isInfoVisible = true;
                             _opacity = 1.0;
-                            print('Showing container: opacity = $_opacity');
+                         
                           });
                           _timer?.cancel();
                           _timer = Timer(Duration(seconds: 2), () {
                             if (mounted) {
                               setState(() {
                                 _opacity = 0.0;
-                                print('Hiding container: opacity = $_opacity');
+                               
                               });
                             }
                           });
@@ -165,103 +157,105 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                           "SIP Calculator",
                           style: FontManager().getTextStyle(
                             context,
-                            lWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: AppColors.backgroundColor,
+                            lWeight: FontWeight.w800,
+                            fontSize: 40,
+                            color: AppColors.primaryColor,
                           ),
                         ),
-                      ),))
-                    ],
-                  ),
-                  AnimatedOpacity(
-                    opacity: _opacity,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                    onEnd: () {
-                      if (_opacity == 0.0 && mounted) {
-                        setState(() {
-                          _isInfoVisible = false;
-                          print(
-                              'Container hidden: _isInfoVisible = $_isInfoVisible');
-                        });
-                      }
-                    },
-                    child: _isInfoVisible
-                        ? Container(
-                            margin: EdgeInsets.symmetric(vertical: 4),
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppColors.backgroundColor.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white, width: 1),
-                            ),
-                            child: SingleChildScrollView(
-                              child: Text(
-                                
-  "The SIP Calculator helps you estimate the future value of your Systematic Investment Plan. Adjust the sliders to input your monthly investment, expected annual return rate (net of fees), and investment period to see the total invested amount and returns.",
-  
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: AppColors.primaryColor,
-                                ),
-                                textAlign: TextAlign.center,
+                      ),
+                    )
+                  ],
+                ),
+                AnimatedOpacity(
+                  opacity: _opacity,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  onEnd: () {
+                    if (_opacity == 0.0 && mounted) {
+                      setState(() {
+                        _isInfoVisible = false;
+                       
+                      });
+                    }
+                  },
+                  child: _isInfoVisible
+                      ? Container(
+                          margin: EdgeInsets.symmetric(vertical: 4),
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white, width: 1),
+                          ),
+                          child: SingleChildScrollView(
+                            child: Text(
+                              "The SIP Calculator helps you estimate the future value of your Systematic Investment Plan. Adjust the sliders to input your monthly investment, expected annual return rate (net of fees), and investment period to see the total invested amount and returns.",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: AppColors.backgroundColor,
                               ),
+                              textAlign: TextAlign.center,
                             ),
-                          )
-                        : SizedBox.shrink(),
+                          ),
+                        )
+                      : SizedBox.shrink(),
+                ),
+                SliderPage(
+                  slidersList: slidersList,
+                  onSliderValueChanged: updateSliderValue,
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    left: 4,
+                    right: 4,
+                    top: 0,
                   ),
-                  SliderPage(
-                    slidersList: slidersList,
-                    onSliderValueChanged: updateSliderValue,
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundColor,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundColor,
-                      borderRadius: BorderRadius.circular(12),
+                  child: graph(),
+                ),
+                SizedBox(height: 10),
+                CustomExpansionTile(
+                  howToUseContent: [
+                    ListItemModel(
+                      title: "Monthly Investment:",
+                      description:
+                          "Adjust the slider to set your monthly investment amount (e.g., ₹5000).",
                     ),
-                    child: graph(),
-                  ),
-                  SizedBox(height: 10),
-                  CustomExpansionTile(
-                    howToUseContent: [
-                      ListItemModel(
-                        title: "Monthly Investment:",
-                        description:
-                            "Adjust the slider to set your monthly investment amount (e.g., ₹5000).",
-                      ),
-                      ListItemModel(
-                        title: "Expected Return Rate:",
-                        description:
-                            "Adjust the slider to set the expected annual return rate (e.g., 12%).",
-                      ),
-                      ListItemModel(
-                        title: "Investment Period:",
-                        description:
-                            "Adjust the slider to set the investment duration in years (e.g., 5 years).",
-                      ),
-                    ],
-                    howItWorksContent: [
-                      ListItemModel(
-                        title: "Monthly Rate:",
-                        description:
-                            "Annual return rate divided by 12 and converted to decimal.",
-                      ),
-                      ListItemModel(
-                        title: "Future Value:",
-                        description:
-                            "Calculated using the compound interest formula for monthly investments.",
-                      ),
-                      ListItemModel(
-                        title: "Total Returns:",
-                        description:
-                            "Future value minus the total amount invested.",
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ListItemModel(
+                      title: "Expected Return Rate:",
+                      description:
+                          "Adjust the slider to set the expected annual return rate (e.g., 12%).",
+                    ),
+                    ListItemModel(
+                      title: "Investment Period:",
+                      description:
+                          "Adjust the slider to set the investment duration in years (e.g., 5 years).",
+                    ),
+                  ],
+                  howItWorksContent: [
+                    ListItemModel(
+                      title: "Monthly Rate:",
+                      description:
+                          "Annual return rate divided by 12 and converted to decimal.",
+                    ),
+                    ListItemModel(
+                      title: "Future Value:",
+                      description:
+                          "Calculated using the compound interest formula for monthly investments.",
+                    ),
+                    ListItemModel(
+                      title: "Total Returns:",
+                      description:
+                          "Future value minus the total amount invested.",
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -279,7 +273,8 @@ class _SIPCalculatorState extends State<SIPCalculator> {
           'value': totalInvested,
         },
         {
-          'title': 'Returns: ₹${formatMoneyIndian(totalReturns.toStringAsFixed(0))}',
+          'title':
+              'Returns: ₹${formatMoneyIndian(totalReturns.toStringAsFixed(0))}',
           'value': totalReturns,
         },
       ],

@@ -12,13 +12,17 @@ import 'package:flutter_application_code_stakeplot/model/user_activity_model.dar
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import '../controllers/controllerManagement.dart';
+import 'googlesignin/credentials.dart';
 part 'snackBars.dart';
 
-bool flag = true;
-String portNo = flag ? "192.168.1.9" : "localhost";
-String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+bool apis_flag = true;
+String urlWithLocallHost = !apis_flag ? Credentials.LIVE_API:Credentials.LIVE_API_TEST;
+String urlWithLocallHost2 = apis_flag ? Credentials.LIVE_API2:Credentials.LIVE_API_TEST2;
+String urlWithLocallHost3 = !apis_flag ? Credentials.FINVU_LIVE:Credentials.FINVU_TEST;
 String url = "${urlWithLocallHost}api/v1";
-String valid = "Please Enter All Fields";
+String EmailUrl = "${urlWithLocallHost2}api";
+String BankApiUrl = "${urlWithLocallHost3}";
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();
 RxMap deviceData = {}.obs;
@@ -99,6 +103,7 @@ RxInt selectedYear = DateTime.now().year.obs;
 RxInt selectedMonth = DateTime.now().month.obs;
 RxList inSights = [].obs;
 RxBool getInsights = false.obs;
+RxBool getCreditCardBudgetDebts = false.obs;
 RxBool allOrGroupTransactions = true.obs;
 RxString accountId = "".obs;
 RxString searchAccountId = "".obs;
@@ -164,9 +169,9 @@ RxDouble maxYValue = 0.0.obs;
 RxList<TransactionModel> hiddentrasactionsHistory = <TransactionModel>[].obs;
 RxList<TransactionModel> topThreeTransactions = <TransactionModel>[].obs;
 RxList<TransactionModel> transactionsHistory = <TransactionModel>[].obs;
-RxMap lastWeekjson={}.obs;
-RxMap lastmonthjson={}.obs;
-RxList<String> matchedKeywords=<String>[].obs;
+RxMap lastWeekjson = {}.obs;
+RxMap lastmonthjson = {}.obs;
+RxList<String> matchedKeywords = <String>[].obs;
 RxBool getHiddenHistory = false.obs;
 RxBool getTopThreeHistory = false.obs;
 RxBool isYearView = false.obs;
@@ -181,8 +186,7 @@ RxBool getGraphDataoverall = false.obs;
 RxDouble totalDebitValuePercent = 0.0.obs;
 
 final RxList<String> monthLabels = <String>[].obs;
-final Rx<Map<String, List<double>>> currentChartData =
-    Rx<Map<String, List<double>>>({});
+final Rx<Map<String, List<double>>> currentChartData = Rx<Map<String, List<double>>>({});
 final RxList<String> currentDays = <String>[].obs;
 final RxBool isLoading = false.obs;
 late FinvuAccountLinkingRequestReference linkingReference;
@@ -208,14 +212,25 @@ RxBool isFinoraVisible = false.obs;
 UserActivity? userActivity;
 RxMap<String, List<dynamic>> couponRequestMap = <String, List<dynamic>>{}.obs;
 
- TextEditingController minController=TextEditingController();
- TextEditingController maxController=TextEditingController();
+TextEditingController minController = TextEditingController();
+TextEditingController maxController = TextEditingController();
 
- final TextEditingController startDateController = TextEditingController();
+final TextEditingController startDateController = TextEditingController();
 final TextEditingController endDateController = TextEditingController();
 RxBool showAmountFilter = false.obs;
 RxBool showDateFilter = false.obs;
 
 // ---------------- Toggle functions ----------------
 void toggleAmountFilter() => showAmountFilter.value = !showAmountFilter.value;
-void toggleDateFilter() => showDateFilter.value = !showDateFilter.value;
+void toggleDateFilter() {
+  showDateFilter.value = !showDateFilter.value;
+}
+
+RxDouble originalAmount = 0.0.obs;
+RxDouble inflatedYears = 0.0.obs;
+RxDouble inflatedFutureValue = 0.0.obs;
+final RxList<Map<String, dynamic>> inflationPredictions =
+    <Map<String, dynamic>>[].obs;
+var showResults = false.obs;
+RxBool isLoadingInflation = false.obs;
+RxString changeAvater = ControllerManagement.userController.avatar.value.obs;

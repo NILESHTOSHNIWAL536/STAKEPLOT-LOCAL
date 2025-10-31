@@ -1,15 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/utils.dart';
 
 class Emi extends StatefulWidget {
@@ -137,125 +134,116 @@ class _EmiState extends State<Emi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: AppColors.backgroundColor,
       // appBar: appbarHeader("EMI Calculator", context),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: AppColors.primaryColorHeader),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: AppColors.backgroundColor,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+          padding: const EdgeInsets.all(12.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: AppColors.primaryColor,
                       ),
-                      Container(
-                        width: MediaQuery.sizeOf(context).width/1.7,
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: () {
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isInfoVisible = true;
+                            _opacity = 1.0; // Fade in
+                           
+                          });
+                          _timer?.cancel(); // Cancel any existing timer
+                          // Start a new timer to fade out after 5 seconds
+                          _timer = Timer(Duration(seconds: 2), () {
+                            if (mounted) {
                               setState(() {
-                                _isInfoVisible = true;
-                                _opacity = 1.0; // Fade in
-                                print('Showing container: opacity = $_opacity');
+                                _opacity = 0.0; // Fade out
+                               
                               });
-                              _timer?.cancel(); // Cancel any existing timer
-                              // Start a new timer to fade out after 5 seconds
-                              _timer = Timer(Duration(seconds: 2), () {
-                                if (mounted) {
-                                  setState(() {
-                                    _opacity = 0.0; // Fade out
-                                    print('Hiding container: opacity = $_opacity');
-                                  });
-                                }
-                              });
-                            },
-                            child: Text(
-                              "EMI Calculator",
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 18,
-                                color: AppColors.backgroundColor,
-                              ),
-                            ),
+                            }
+                          });
+                        },
+                        child: Text(
+                          "EMI Calculator",
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w800,
+                            fontSize: 40,
+                            color: AppColors.primaryColor,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  AnimatedOpacity(
-                    opacity: _opacity,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                    onEnd: () {
-                      // Hide container after fade-out completes
-                      if (_opacity == 0.0 && mounted) {
-                        setState(() {
-                          _isInfoVisible = false;
-                          print(
-                              'Container hidden: _isInfoVisible = $_isInfoVisible');
-                        });
-                      }
-                    },
-                    child: _isInfoVisible
-                        ? Container(
-                            margin: EdgeInsets.symmetric(vertical: 4),
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppColors.backgroundColor.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white, width: 1),
+                    ),
+                  ],
+                ),
+                AnimatedOpacity(
+                  opacity: _opacity,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  onEnd: () {
+                    // Hide container after fade-out completes
+                    if (_opacity == 0.0 && mounted) {
+                      setState(() {
+                        _isInfoVisible = false;
+                      });
+                    }
+                  },
+                  child: _isInfoVisible
+                      ? Container(
+                          margin: EdgeInsets.symmetric(vertical: 4),
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white, width: 1),
+                          ),
+                          child: SingleChildScrollView(
+                            child: Text(
+                              "The EMI Calculator helps you estimate your monthly loan repayment amount. Adjust the sliders to input your loan amount, annual interest rate, and loan tenure in months to see the monthly EMI and total interest paid.",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: AppColors.backgroundColor,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            child: SingleChildScrollView(
-                              child:Text(
-  "The EMI Calculator helps you estimate your monthly loan repayment amount. Adjust the sliders to input your loan amount, annual interest rate, and loan tenure in months to see the monthly EMI and total interest paid.",
-  style: FontManager().getTextStyle(
-    context,
-    lWeight: FontWeight.w400,
-    fontSize: 14,
-    color: AppColors.primaryColor,
-  ),
-  textAlign: TextAlign.center,
-),
-                            ),
-                          )
-                        : SizedBox.shrink(),
-                  ),
-                 
-                  SliderPage(
-                    slidersList: slidersList,
-                    onSliderValueChanged: updateSliderValue,
-                  ),
-                  Container(
-                      decoration: BoxDecoration(
-                          color: AppColors.backgroundColor,
-                          borderRadius: BorderRadius.circular(12)),
-                      child: graph()),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  CustomExpansionTile(
-                    howToUseContent: howToUseContent,
-                    howItWorksContent: howItWorksContent,
-                  ),
-                ],
-              ),
+                          ),
+                        )
+                      : SizedBox.shrink(),
+                ),
+                SliderPage(
+                  slidersList: slidersList,
+                  onSliderValueChanged: updateSliderValue,
+                ),
+                Container(
+                    margin:
+                        EdgeInsets.only(left: 4, right: 4, top: 0,),
+                    decoration: BoxDecoration(
+                        color: AppColors.backgroundColor,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: graph()),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomExpansionTile(
+                  howToUseContent: howToUseContent,
+                  howItWorksContent: howItWorksContent,
+                ),
+              ],
             ),
           ),
         ),

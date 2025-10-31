@@ -12,14 +12,14 @@ class FeatureGrid extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildFeatureIcon(
-            Icons.calculate, 'Calculators', 0, context, "/AllCalculator",svgIconPath.financecal),
-        _buildFeatureIcon(
-            Icons.fastfood, 'Foodie\nFund', 1, context, "/VegNonveg",svgIconPath.financefood),
+        _buildFeatureIcon(Icons.calculate, 'Calculators\n ', 0, context,
+            "/AllCalculator", svgIconPath.financecal),
+        _buildFeatureIcon(Icons.fastfood, 'Foodie\nFund', 1, context,
+            "/VegNonveg", svgIconPath.financefood),
         _buildFeatureIcon(Icons.account_balance, 'Loan\nAffordability', 2,
-            context, "/LoanCalculatorUI",svgIconPath.financeloan),
+            context, "/LoanCalculatorUI", svgIconPath.financeloan),
         _buildFeatureIcon(Icons.currency_exchange, 'Currency\nConverter', 3,
-            context, "/currencyConverterScreen",svgIconPath.financeCurrency),
+            context, "/currencyConverterScreen", svgIconPath.financeCurrency),
       ],
     );
   }
@@ -27,21 +27,21 @@ class FeatureGrid extends StatelessWidget {
 
 // Individual circular icon widget with text
 Widget _buildFeatureIcon(IconData icon, String text, int index,
-    BuildContext context, String routerName,String urlPath) {
+    BuildContext context, String routerName, String urlPath) {
   return InkWell(
     onTap: () {
       Navigator.pushNamed(context, routerName);
     },
     child: Padding(
-      padding: const EdgeInsets.only(top: 25),
+      padding: const EdgeInsets.only(top: 30),
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: index == 0 || index == 3 ? 0 : 50.0),
+            padding: EdgeInsets.only(top: index == 0 || index == 3 ? 10 : 60.0),
             child: Container(
               width: 50,
               height: 50,
-              padding: EdgeInsets.all(3),
+              padding: EdgeInsets.all(4),
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
                 shape: BoxShape.circle, // Changed to a circle for accuracy
@@ -54,18 +54,17 @@ Widget _buildFeatureIcon(IconData icon, String text, int index,
                   ),
                 ],
               ),
-              child: AvatarProfileImage(url: urlPath, width: 10, height: 10),
+              child: AvatarProfileImage(url: urlPath, width: 12, height: 14),
             ),
           ),
           const SizedBox(height: 4),
           textStyleImage(
-            text: text,
-            context: context,
-            c: Colorcodes.white,
-            fontsize: 12,
-            lineHeight: 1.2,
-            isCenter: true
-          ),
+              text: text,
+              context: context,
+              c: Colorcodes.white,
+              fontsize: 11,
+              // lineHeight: 1.2,
+              isCenter: true),
         ],
       ),
     ),

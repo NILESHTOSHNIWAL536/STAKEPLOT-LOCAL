@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/reset.dart';
-import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/create_new_password.dart';
-import 'package:page_transition/page_transition.dart';
+
 
 void checkEmail(context, email, otp, name) async {
  
@@ -18,40 +16,14 @@ void checkEmail(context, email, otp, name) async {
   {
     snackBarCalled(context,SnackbarData().otpAccepted, Colors.black);
     acceptReset.value = false;
-    Navigator.pushReplacement(
-        context,
-        PageTransition(
-          type: PageTransitionType.fade,
-          alignment: Alignment.bottomRight,
-          duration: Durations.long1,
-          child: CreateNewPasswordScreen(
-            email: email,
-            name: name,
-          ),
-          isIos: true,
-        ));
+   
   } else {
     acceptReset.value = false;
     snackBarCalledfail(context,SnackbarData().otpInvalid, Colors.red);
   }
 }
 
-void changePassword(context, email, p1, p2) async 
-{
 
-    var response=await postDataApiCallwithOutSharedPref('${url}/user/resetPassword', {
-      'email': email,
-      "newPassword": p1,
-      "confirmNewPassword": p2,
-    });
-  if (getFlagOfResponse(response)) {
-    snackBarCalled(context,SnackbarData().passwordChanged, Colors.black);
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-    Navigator.pushNamed(context, "/");
-  } else {
-    snackBarCalledfail(context,SnackbarData().passwordChangeFail, Colors.red);
-  }
-}
 
 
 
