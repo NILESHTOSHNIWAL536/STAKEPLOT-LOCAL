@@ -12,7 +12,8 @@ import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../auth_service/get_otp.dart';
+import '../auth_service/otp_service.dart';
+import '../auth_service/login_apis.dart';
 
 class TwoFactorEmailVerification extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -264,16 +265,19 @@ class _TwoFactorEmailVerificationState
     );
   }
 
-  void verifyEmail() async {
+  void verifyEmail() async 
+  {
     if (otpController.text.isEmpty) {
       snackBarCalledfail(context, 'Please enter the OTP');
       return;
     }
-    if (otpController.text.length != 6) {
+    if (otpController.text.length != 6)
+    {
       snackBarCalledfail(context, 'Please enter all 6 digits of the OTP');
       return;
     }
-    if (!RegExp(r'^[0-9]{6}$').hasMatch(otpController.text)) {
+    if (!RegExp(r'^[0-9]{6}$').hasMatch(otpController.text))
+    {
       snackBarCalledfail(context, 'Please enter only numeric digits');
       return;
     }
@@ -283,15 +287,17 @@ class _TwoFactorEmailVerificationState
     bool isVerified = await OtpService.verifyOTPForLogin(
       context,
       widget.data['email'],
-      widget.data['password'],
       otpController.text,
       widget.data['response'],
       widget.data['isForcedLogin'], // Pass the login response
+      isNewUser:  widget.data['newUser'] ?? false, // Pass the login response
     );
 
-    if (!isVerified) {
+
+    if (!isVerified)
+    {
       isOtpWrong2.value = true;
-      acceptReset.value = false;
     }
+    // acceptReset.value = false;
   }
 }

@@ -2,17 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 
-class NotificationsBudget extends StatelessWidget {
+class NotificationsBudget extends StatefulWidget {
 Widget child;
  NotificationsBudget({ Key? key, required  this.child }) : super(key: key);
 
+  @override
+  State<NotificationsBudget> createState() => _NotificationsBudgetState();
+}
 
+class _NotificationsBudgetState extends State<NotificationsBudget> {
+
+
+
+   @override
+  void initState() {
+    super.initState();
+    getAck();
+  }
+ 
 
   @override
   Widget build(BuildContext context){

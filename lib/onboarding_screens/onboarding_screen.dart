@@ -3,7 +3,6 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/init_Api_Calls.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -55,8 +54,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
     _animationController.forward();
     _updateProgress();
-    socket = IO.io(urlWithLocallHost,
-        IO.OptionBuilder().setTransports(['websocket']).build());
+    print(urlWithLocallHost+"socket.io");
+    print(BankApiUrl+"socket.io");
+    socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
+    print("socket initialized");
     fetchedTrsacntionList.clear();
     setUpSocketListener();
   }

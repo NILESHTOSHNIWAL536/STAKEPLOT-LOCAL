@@ -3,7 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionCalender.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_credit_debit.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_search_list.dart';
@@ -24,6 +24,8 @@ import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart'
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../animated/pdf3.dart';
 
 RxBool reloadHistory = false.obs;
 RxString selectedValue = "30".obs;
@@ -323,7 +325,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 child: InkWell(
                     onTap: () async {
                       getPdgLoader.value = true;
-                      getPdf(context, selectedValue, selectedValueType);
+                      getPdf3(context, selectedValue, selectedValueType);
                     },
                     child: Obx(() => getPdgLoader.value
                         ? getspinner(context, "")

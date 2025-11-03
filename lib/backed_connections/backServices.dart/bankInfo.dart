@@ -8,7 +8,10 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:get/get.dart';
+
+import '../../Home_Screen/categoriseSpending.dart';
 
 RxString balance = "0".obs;
 RxString accountName = "Bank Name : ".obs;
@@ -19,7 +22,7 @@ RxString selectedBank = "".obs;
 void getCategoryData(context) async {
   try {
     // API call inside try
-    var res = await getDataApiCall("${url}/transactionauto/categorize");
+    var res = await getDataApiCall(BankTransactionRoutes.categorizeTransactions);
 
     if (getFlagOfResponse(res)) {
       var data = jsonDecode(res.body);
@@ -82,14 +85,14 @@ void getCategoryData(context) async {
       processChartData();
       await CategoryStorage.cacheCardInsightsDataLocally();
     }
-  } catch (e) {
+  } catch (e)
+  {
     await CategoryStorage.loadCardInsightsDataFromHive();
-    processChartData();
   }
 }
 
 void getSummary() async {
-  var res = await getDataApiCall("${url}/transactionauto/user-details");
+  var res = await getDataApiCall(BankTransactionRoutes.getUserDetails);
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
     data = data['data'];
@@ -138,7 +141,7 @@ void deleteBankAccount(
     required String AccountId,
     required BuildContext context}) async {
   var res =
-      await deleteDataApiCall("${url}/transactionauto/${bankid}/${AccountId}");
+      await deleteDataApiCall(BankTransactionRoutes.deleteBankAccount(bankId: bankid, accountId: AccountId),);
   if (getFlagOfResponse(res)) {
     accountId.value = "";
     getBankAccounts();

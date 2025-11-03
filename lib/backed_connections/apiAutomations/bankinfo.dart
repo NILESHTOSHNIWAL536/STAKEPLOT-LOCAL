@@ -1,16 +1,20 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd_with_token.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:get/get.dart';
 
 import '../../Hive_localstorage/apisCall/bank_apis.dart';
 import '../../Hive_localstorage/apisCall/fipmetric_apis.dart';
 import '../../model/fips_metric_model.dart';
+import '../../routes/route_finvu.dart';
 
 
 RxList bankAccountLinkedList = [].obs;
@@ -19,11 +23,23 @@ RxList consentAndHandleDetails = [].obs;
 RxMap bankImagemap = {}.obs;
 
 Future<void> getBankAccounts() async {
-  var response = await getDataApiCall("${url}/transactionauto/get-banks-linked/");
-  print( "get bank accountsi ${response.body}");
- 
-  if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
+  try{
+     var response = await getDataApiCall(BankTransactionRoutes.getBanksLinkedAndAccounts);
+    if (getFlagOfResponse(response))
+    {
+      storeDataLocal(response);
+    }
+    addBankApiCall();
+    BankStorage.cacheBankDataLocally();
+  }catch(e)
+  {
+    await BankStorage.loadBankDataFromHive();
+    addBankApiCall();
+  }
+}
+
+void storeDataLocal(response){
+   var his = jsonDecode(response.body);
     consentAndHandleDetails.clear();
     bankAccountLinkedList.clear();
     FipIdsConnected.clear();
@@ -72,13 +88,11 @@ Future<void> getBankAccounts() async {
         });
       });
     });
-  }
-  addBankApiCall();
-  BankStorage.cacheBankDataLocally();
 }
 
-void addBankApiCall() {
-  if (bankAccountLinkedList.isNotEmpty)
+
+void storeBankDataApi(){
+   if (bankAccountLinkedList.isNotEmpty)
    {
     isBankLinked.value = true;
     LastFetchDate.value = bankAccountLinkedList[0]['lastFetch'].toString();
@@ -89,13 +103,18 @@ void addBankApiCall() {
   }
   loadBanks.value = false;
   loadBalance.value = !loadBalance.value;
+}
+
+void addBankApiCall() {
+  storeBankDataApi();
   getFipAccountInfo();
 }
 
-void getWeeklyfetchData(
-    consentId, consendHandleId, sessionId, custId, last,bankName,fipId,fetchCount,accountId) async {
-  final String apiUrl = "${url}/finvu/fetchWeekly";
-  final String userUrl = "${url}/user/updateFetchStatus";
+void getWeeklyfetchData(consentId, consendHandleId, sessionId, custId, last,bankName,fipId,fetchCount,accountId) async {
+  
+  final String apiUrl =FinvuRoutes.fetchWeekly;
+  final String userUrl = UserRoutes.updateFetchStatus;
+
   var body = {
     'handleId': consendHandleId,
     'custId': custId,
@@ -141,7 +160,7 @@ void calledFunctionToFetchData(context) async {
   }
 }
 
-Future<void> getFipAccountInfo() async
+Future<void> getFipAccountInfo([bool testing=false,String token=""]) async
 {
    try{ 
    List<String> fipIds=[];
@@ -151,17 +170,19 @@ Future<void> getFipAccountInfo() async
       bankNameMap[d["fipId"]]=d['bankName'];
    });
 
-
     if(fipIds.isEmpty)return;
-    String urlPath=url+"/finvu/fip-details/";
+    String urlPath=FinvuRoutes.getFipDetails;
     var body={
        "fipIds":fipIds
     };
-    var response=await postDataApiCall(urlPath,body);
-
+ 
+    var response=  (!testing?await postDataApiCall(urlPath,body): await postDataApiCallToken(urlPath, body, token));
+      print("Response Status Code:");
+      // printData(response);
     if(getFlagOfResponse(response))
     {
         var data=jsonDecode(response.body)['data'];
+  
         fipsMetricList.clear();
         List<FipsMetric> list = (data as List) .map((item) => FipsMetric.fromJson(item,bankNameMap[item['fip_id']]??"")).toList();
        
@@ -173,6 +194,7 @@ Future<void> getFipAccountInfo() async
     }
    }catch(e)
    {
+       print("Error in getFipAccountInfo: $e");
         FipsMetricLocalStorage.loadFipsMetricsFromHive();
    }
 

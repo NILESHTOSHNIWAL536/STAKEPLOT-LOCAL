@@ -46,9 +46,10 @@ class RevokeAccessScreen extends StatelessWidget {
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed == true) 
+    {
       // 🔥 Call your revoke API here
-      await deleteEmailAccess(context);
+      await revokeEmailAccess(context);
       Navigator.of(context).pop(); // close screen after revoke
     }
   }

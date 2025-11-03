@@ -18,6 +18,8 @@ import 'package:http/http.dart' as http;
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../routes/route_user_login.dart';
+
 class TribeShare extends StatefulWidget {
   var data;
   PostModel dataObj;
@@ -44,15 +46,7 @@ class _TribeHomeState extends State<TribeShare> {
   }
 
   void getTransaction() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/user/info'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
+    var response=await getDataApiCall(UserRoutes.getInfo);
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];

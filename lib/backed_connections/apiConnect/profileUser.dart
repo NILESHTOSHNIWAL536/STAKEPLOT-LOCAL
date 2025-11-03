@@ -8,13 +8,14 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 import '../../Hive_localstorage/apisCall/post_apis.dart';
 import '../../Hive_localstorage/hive_storage.dart';
+import '../../routes/route_post.dart';
 
 
 void approveBill(context, id, type, notifyId) async {
@@ -65,7 +66,7 @@ void getNotifications(context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
   final response = await http.get(
-    Uri.parse('${url}/user/myNotifications'),
+    Uri.parse(UserRoutes.myNotifications),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
@@ -91,7 +92,7 @@ void getNotifications(context) async {
 }
 
 void getuserPost(id) async {
-  String urlPath = '${url}/post/myDiscussions';
+  String urlPath = PostRoutes.myDiscussions;
   var response = await getDataApiCall(urlPath);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
@@ -110,7 +111,7 @@ void getuserPost(id) async {
 }
 
 void getMaskendUsers(bool flag) async {
-  String urlPath = "${url}/user/getMaskedUsers/${flag}";
+  String urlPath = "${UserRoutes.getMaskedUsers}/${flag}";
   var response = await getDataApiCall(urlPath);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
@@ -131,7 +132,7 @@ void getMaskendUsers(bool flag) async {
 
 void getSaved() async {
   try{
-  String urlPath = "${url}/post/saved";
+  String urlPath = PostRoutes.saved;
   var response = await getDataApiCall(urlPath);
   if (response.statusCode == 200 || response.statusCode == 201) {
     var his = jsonDecode(response.body);
@@ -159,7 +160,7 @@ void aboutuser(context, String about) async {
   var accessToken = _pref.getString("accessToken");
 
   final response = await http.patch(
-    Uri.parse('${url}/user/updateprofile'),
+    Uri.parse(UserRoutes.updateprofile),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
@@ -176,30 +177,7 @@ void aboutuser(context, String about) async {
   }
 }
 
-void addAccount(context, String account, String money) async {
-  var urlPath = Uri.parse('${url}/user/addAccount');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
 
-  final response = await http.post(
-    Uri.parse('${urlPath}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      'newAccount': account,
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(
-        context, SnackbarData().accountAddedSuccessfully, Colors.black);
-    Navigator.pushNamed(context, '/home');
-  } else {
-    snackBarCalledfail(context, SnackbarData().errorAddingAccount, Colors.red);
-  }
-}
 
 void editUserDetails(
     context, Map<String, TextEditingController> controller) async {
@@ -209,7 +187,7 @@ void editUserDetails(
 
   try {
     final response = await http.post(
-      Uri.parse('${url}/user/updateprofile'),
+      Uri.parse(UserRoutes.updateprofile),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",

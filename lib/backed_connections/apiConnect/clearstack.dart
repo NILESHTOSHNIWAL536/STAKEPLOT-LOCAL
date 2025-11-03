@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
@@ -20,12 +20,13 @@ import 'package:flutter_application_code_stakeplot/controllers/post-controller.d
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 
 import '../../controllers/credit_card_controller.dart';
+import '../../controllers/theme_controller.dart';
 
 void clearStack(BuildContext context) {
   try {
@@ -113,8 +114,9 @@ Future<void> storeDeviceInfo(context) async {
   var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
   if (getFlagOfResponse(responce)) {}
   try {
-    await postDataApiCall("${url}/user/logout", {});
-  } catch (e) {
+    await postDataApiCall(AuthApiRoutes.logout, {});
+  } catch (e)
+   {
       logoutUserFromDevice(context);
   }
 }
@@ -178,7 +180,6 @@ void clearGetX() {
   account = [];
   notificationList.clear();
   hasGetNewNotifications.value = false;
-  changeAvater = "Loading...".obs;
   targetString = "".obs;
   isBankAccountLink.value = true;
   trasactionsData.clear();
@@ -281,12 +282,14 @@ void initGetControllers() {
   Get.put(UserController());
   Get.put(PostController());
   Get.put(CardDueController());
+  Get.put(ThemeController());
 }
 
 void deleteGetControllers() {
   Get.delete<UserController>();
   Get.delete<PostController>();
   Get.delete<CardDueController>();
+  Get.delete<ThemeController>();
 }
 
 void initGetControllersIfisRegistered() {
@@ -298,5 +301,8 @@ void initGetControllersIfisRegistered() {
   }
   if (!Get.isRegistered<CardDueController>()) {
     Get.put(CardDueController());
+  }
+  if (!Get.isRegistered<ThemeController>()) {
+    Get.put(ThemeController());
   }
 }

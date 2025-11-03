@@ -52,10 +52,8 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
   }
 
   bool _hasFinancialData() {
-    // final cardController = CardDueController();
-    // final hasCreditCards = cardController.cardList?.isNotEmpty ?? false;
-    final hasBudgets = budgetList?.isNotEmpty ?? false; // Check budgetList
-    final hasDebts = debts?.isNotEmpty ?? false; // Check debts
+    final hasBudgets = budgetList.isNotEmpty ; // Check budgetList
+    final hasDebts = debts.isNotEmpty ; // Check debts
     return hasBudgets ||
             hasDebts ||
             CreditCardScreenStrings().showCreditCard.value

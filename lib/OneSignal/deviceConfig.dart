@@ -76,19 +76,32 @@ void setUpSocketListenerMainPage(BuildContext context) {
   try {
     if (userController.userId.value == "") return;
 
+     print("api url is userController"+userController.userId.value);
     // Initialize socket connection
-    mainPageWebSocket = IO.io(
-      urlWithLocallHost,
-      IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .enableForceNewConnection()
-          .build(),
-    );
+    // mainPageWebSocket = IO.io(
+    //   BankApiUrl,
+    //   IO.OptionBuilder()
+    //       .setTransports(['websocket'])
+    //       .enableForceNewConnection()
+    //       .build(),
+    // );
+mainPageWebSocket = IO.io(
+  "https://staging.stakeplot.in",
+  IO.OptionBuilder()
+      .setTransports(['websocket'])
+      .setPath("/socket.io/")
+      .enableForceNewConnection()
+      .build(),
+);
 
     // Connect the socket
+    mainPageWebSocket.onConnectError( (data) {
+      print("Main Page Socket Connect Error: $data");
+    });
     mainPageWebSocket.connect();
     mainPageWebSocket.onConnect((_) {
       try {
+        print("Main Page Socket Connected");
         mainPageWebSocket.emit("addUserToSocket", userController.userId.value);
       } catch (e) {}
     });

@@ -6,11 +6,9 @@ import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
-import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -25,6 +23,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
 import '../../Hive_localstorage/apisCall/autopays_apis.dart';
 import '../../Home_Screen/insightsController.dart';
+import '../../routes/route_transactions.dart';
 
 double getDouble(data) {
   return double.parse(data.toString());
@@ -32,7 +31,7 @@ double getDouble(data) {
 
 // Functions to fetch the data
 void getAutoMationsTransactions() async {
-  var response = await getDataApiCall("${url}/transactionauto/");
+  var response = await getDataApiCall(BankTransactionRoutes.createUserDetails);
   if (getFlagOfResponse(response)) {
     trasactionsData.clear();
     var his = jsonDecode(response.body);
@@ -44,7 +43,7 @@ void getAutoMationsTransactions() async {
 void getFinoraPreviousMonthData() async
  {
   var response =
-      await getDataApiCall("${url}/transactionauto/getUserMonthlySpending/");
+      await getDataApiCall(BankTransactionRoutes.getUserMonthlySpending);
   if (getFlagOfResponse(response)) {
     finoraTransactionData.clear();
     var finoraData = jsonDecode(response.body);
@@ -57,8 +56,8 @@ Future<List<CardData>> getAutoPayInfo({bool flag=false}) async {
     // Fetch both false and true auto pay info
     // if(flag)return allAutoPayData;
     final responses = await Future.wait([
-      getDataApiCall("${url}/transactionauto/get-recurring-payments/false"),
-      getDataApiCall("${url}/transactionauto/get-recurring-payments/true"),
+      getDataApiCall(BankTransactionRoutes.getRecurringPayments(isActive: false)),
+      getDataApiCall(BankTransactionRoutes.getRecurringPayments(isActive: true)),
     ]);
 
     allAutoPayData.clear();
@@ -94,7 +93,7 @@ Future<List<CardData>> getAutoPayInfo({bool flag=false}) async {
 Future<bool> addRecurringPayment(String id, bool isActive) async {
   try {
     final response = await updateDataApiCall2(
-        "$url/transactionauto/recurring-payments/$id", {'isActive': isActive});
+         BankTransactionRoutes.updateRecurringPayment(id: id),{'isActive': isActive});
 
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
@@ -110,7 +109,7 @@ Future<bool> addRecurringPayment(String id, bool isActive) async {
 Future<bool> addRecurringPaymentForDaily(String id, bool isDaily) async {
   try {
     final response = await updateDataApiCall2(
-        "$url/transactionauto/recurring-payments/$id", {'isDaily': isDaily});
+          BankTransactionRoutes.updateRecurringPayment(id: id), {'isDaily': isDaily});
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       return jsonData['success'] == true;
@@ -137,7 +136,7 @@ Future<bool> updateRecurringPaymentDate(
     ).toIso8601String();
 
     final response = await updateDataApiCall2(
-      "$url/transactionauto/recurring-payments/$id",
+       BankTransactionRoutes.updateRecurringPayment(id: id),
       {'nextReminderAt': formattedDate, 'isActive': isActive},
     );
 
@@ -157,7 +156,7 @@ Future<bool> updateRecurringPaymentDate(
 Future<bool> ignoreRecurringPayment(String id) async {
   try {
     final response =
-        await deleteDataApiCall("$url/transactionauto/recurring-payments/$id");
+        await deleteDataApiCall(  BankTransactionRoutes.deleteRecurringPayment(id: id),);
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       await getAutoPayInfo(flag: false);
@@ -191,7 +190,8 @@ void changeTrasactiondata() async {
 
 void getAutoMationsTransactionsMonthly() async {
   var response = await getDataApiCall(
-      "${url}/transactionauto/getalltransactionsbymonth/${getCurrentMonth()}");
+        BankTransactionRoutes.getAllTransactionsByMonth(month: getCurrentMonth()),
+    );
   trasactionsDataMonthlyCredit.clear();
   trasactionsDataMonthlyDebit.clear();
 
@@ -224,7 +224,8 @@ void getAutoMationsTransactionsMonthly() async {
 void getAutoMationsTransactionsWeekly() async {
   String week = getCurrentWeek();
   var response = await getDataApiCall(
-      "${url}/transactionauto/getalltransactionbyweek/${week}");
+      BankTransactionRoutes.getAllTransactionsByWeek(week: week),
+    );
   trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
   if (getFlagOfResponse(response)) {
@@ -247,10 +248,9 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
     {String weekORmonth = 'month',
     String? endDate,
     bool isSplashScreen = false}) async {
-  if (accountId.value.trim().isEmpty) {
-    _setEmptyState(weekORmonth, date, endDate);
-    return;
-  }
+
+
+  
 
   String storedPeriod = weekORmonth == 'month'
       ? 'Month'
@@ -270,35 +270,38 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
     }
   }
 
+  // if (accountId.value.trim().isEmpty)
+  // {
+  //   _setEmptyState(weekORmonth, date, endDate);
+  //   return;
+  // }
+
   if ((weekORmonth == 'month' || weekORmonth == 'Month') && !isSplashScreen) {
     await FinanceLocalStorage.loadFinanceFromHive(
         accountId.value, storedPeriod, formattedDate, endDate);
   }
 
-  // Try loading from Hive first
-  // final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(
-  //     accountId.value, storedPeriod, formattedDate, endDate);
-  // if (cachedFinance != null) {
-  //   // Set data from cache
-  //   // transactionChatGraph['debited'] = cachedFinance.debited ?? [];
-  //   // transactionChatGraph['credited'] = cachedFinance.credited ?? [];
-  //   // labels.assignAll(cachedFinance.labels ?? []);
-  //   // totalDebitValue.value = cachedFinance.totalDebitValue ?? 0;
-  //   // totalDebitValuePercent.value = cachedFinance.totalDebitValuePercent ?? 0;
-  //   // maxYValue.value = cachedFinance.maxYValue ?? 500.0;
-  //   // getGraphData.value = true;
-  //   return;
-  // }
-
-  // Show loading state
-  // getGraphData.value = false;
   List<String> labelsLocal = [];
   List<double> debitList = [];
   List<double> creditList = [];
 
+  // String urlPath = endDate != null && weekORmonth == 'Custom'
+  //     ? "$url/transactionaut2o/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$formattedDate,${getNextDay(endDate)}"
+  //     : "$url/transactionaut2o/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$formattedDate";
+
   String urlPath = endDate != null && weekORmonth == 'Custom'
-      ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$formattedDate,${getNextDay(endDate)}"
-      : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$formattedDate";
+    ? BankTransactionRoutes.getAllCustomTransactions(
+        accountId: accountId.value,
+        type: weekORmonth.toLowerCase(),
+        value: "$formattedDate,${getNextDay(endDate)}",
+      )
+    : BankTransactionRoutes.getAllCustomTransactions(
+        accountId: accountId.value,
+        type: weekORmonth.toLowerCase(),
+        value: formattedDate,
+      );
+
+
 
   try {
     final response = await getDataApiCall(urlPath);
@@ -495,7 +498,7 @@ int _getWeekNumber(DateTime date) {
 }
 
 void getUserBankData(context) async {
-  String urlPath = "${url}/transactionauto/userDetails/";
+  String urlPath = BankTransactionRoutes.getUserDetails;
   var responce = await getDataApiCall(urlPath);
 
   if (getFlagOfResponse(responce)) {}
@@ -503,7 +506,7 @@ void getUserBankData(context) async {
 
 void updateTheTagOfTarnsactions2(
     category, subCategory, transactionId, context, index) async {
-  String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
+  String urlPath = BankTransactionRoutes.updateTransaction(transactionId: transactionId);
   var response = await updateDataApiCall2(urlPath, {
     'category': category,
     'subcategory': subCategory,
@@ -523,7 +526,7 @@ Future<void> updateTheTagOfTarnsactions(
   int index,
   TransactionModel transaction,
 ) async {
-  String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
+  String urlPath = BankTransactionRoutes.updateTransaction(transactionId: transactionId);
 
   // Construct selectedCategory
   final selectedCategory = {
@@ -574,7 +577,8 @@ double _getPredictionScore(Predictions predictions, String category) {
 
 void updateTheTagOfTarnsactionsGroup(
     category, subCategory, grpId, context, index) async {
-  String urlPath = "${url}/transactionauto/grouped/${grpId}/categorize";
+
+  String urlPath = BankTransactionRoutes.categorizeGroupedTransaction(groupId: grpId);
 
   var body = {
     'category': category,
@@ -596,30 +600,10 @@ void updateTheTagOfTarnsactionsGroup(
   } else {}
 }
 
-void hideTransactions(
-    source_category, destination_category_name, transactionId, context) async {
-  String urlPath =
-      "${url}/transactionauto/hideTransaction/${source_category}/${destination_category_name}/${transactionId}";
-  var responce = await getDataApiCall(urlPath);
-  if (getFlagOfResponse(responce)) {
-    getAutoMationsTransactions();
-  }
-}
 
-void unHideTransactions(
-    source_category, destination_category_name, transactionId, context) async {
-  String urlPath =
-      "${url}/transactionauto/unHideTransaction/${source_category}/${destination_category_name}/${transactionId}";
-  var responce = await getDataApiCall(urlPath);
-
-  if (getFlagOfResponse(responce)) {
-    getAutoMationsTransactions();
-    getHideTransactions(context);
-  }
-}
 
 void getHideTransactions(context) async {
-  String urlPath = "${url}/transactionauto/getHideTransaction/";
+  String urlPath = BankTransactionRoutes.getHideTransactions;
   var response = await getDataApiCall(urlPath);
   if (getFlagOfResponse(response)) {
     trasactionsHideData.clear();
@@ -641,16 +625,13 @@ void addTransaction(String amount, String subCategory, String categories,
     'isSplit': isSplit,
     'isDebit': isDebit
   };
-  final response = await postDataApiCall("${url}/transaction/add", body);
+  final response = await postDataApiCall("${TransactionRoutes.addTransaction}", body);
   if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
     transactionsHistory.insert(
         0, TransactionModel.fromJson(body['data'][0]['data']));
     updateCatAndMoneyMap(context);
     Future.wait([
-      // () async => controller.getHomePageInsights(Get.context!),
-      // () async => controller.getHomePageMoneyMapInsights(Get.context!),
-      // () async => getCategoryData(context),
       () async {
         reloadHistory.value = !reloadHistory.value;
         setDonectChat.value = !setDonectChat.value;
@@ -671,7 +652,8 @@ void addTransaction(String amount, String subCategory, String categories,
 }
 
 
-void updateCatAndMoneyMap(BuildContext context) {
+void updateCatAndMoneyMap(BuildContext context)
+{
   final controller = Get.find<InsightsController>();
   controller.getHomePageInsights(context);
   controller.getHomePageMoneyMapInsights(context);
@@ -686,7 +668,7 @@ void processChartData() {
     Map<String, Color> categoryColors = colorcodes;
 
     for (var item in categoriesList) {
-      String category = item["category"];
+      String category = item["category"] ?? "Others";
       String percentage = item["total_debit_percentage"] ?? "";
       double value = item["total_debit"].toDouble();
       Color color = categoryColors[category] ?? Colors.grey; // Default color
@@ -702,16 +684,7 @@ void processChartData() {
   } catch (e) {}
 }
 
-void getTransaction(context) async {
-  var response = await getDataApiCall("${url}/transaction/history");
 
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    trasactionsHistory.clear();
-    trasactionsHistory.addAll(obj);
-  } else {}
-}
 
 void pickCustomDateRange(BuildContext context) async {
   List<DateTime?> picked = await showCalendarDatePicker2Dialog(
@@ -775,9 +748,20 @@ double calculateTotal(Map<String, List<double>> data) {
 
 void getAutoMationsTransactionsCustomoverall(date, context,
     [weekORmonths = 'month', String? endDate]) async {
+  // String urlPath = endDate != null && weekORmonths == 'custom'
+  //     ? "$url/transactionaut2o/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date,${getNextDay(endDate)}"
+  //     : "$url/transactionaut2o/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date";
+
   String urlPath = endDate != null && weekORmonths == 'custom'
-      ? "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date,${getNextDay(endDate)}"
-      : "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date";
+    ? BankTransactionRoutes.getWholeTransactionsGraph(
+        type: weekORmonths.toLowerCase(),
+        value: "$date,${getNextDay(endDate)}",
+      )
+    : BankTransactionRoutes.getWholeTransactionsGraph(
+        type: weekORmonths.toLowerCase(),
+        value: date,
+      );
+
 
   var response = await getDataApiCall(urlPath);
 

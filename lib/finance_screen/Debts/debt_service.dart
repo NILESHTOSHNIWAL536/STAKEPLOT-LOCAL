@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -62,7 +63,7 @@ Future<void> calculateInflation() async {
       'years_ahead': inflatedYears.value,
     };
    
-    var response=await postDataApiCall("${url}/user/inflation",body);
+    var response=await postDataApiCall(UserRoutes.inflation,body);
    
     if (getFlagOfResponse(response))
     {

@@ -4,10 +4,8 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.da
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
-import 'package:flutter_application_code_stakeplot/loginservices/signin.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../Utils/snackBar.dart';
 
 
 Future<void> screenDataLocalStorage() async {
@@ -34,34 +32,14 @@ Future<void> screenDataLocalStorage() async {
 }
 
 
-void getforgotPassword(context, String name, String email) async {
-  var responce =
-      await postDataApiCallwithOutSharedPref('${url}/user/forgotPassword', {
-    'email': email,
-  });
 
-  if (getFlagOfResponse(responce)) {
-    snackBarCalled(context, SnackbarData().sentOtpToEmailAlt, Colors.black);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ResetOtp(
-          email: email,
-          name: name,
-        ),
-      ),
-    );
-  } else {
-    snackBarCalledfail(context, SnackbarData().emailIdNotValid, Colors.red);
-  }
-}
 
 void addThisDeviceToBackendDevice(SharedPreferences pref, context) async 
 {
-  await addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
+  await _addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
 }
 
-Future<void> addThisDeviceToBackend(deviceData, context) async {
+Future<void> _addThisDeviceToBackend(deviceData, context) async {
    try {
      await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
    } catch (e) {}

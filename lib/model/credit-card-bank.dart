@@ -13,7 +13,7 @@ class CreditCardBank {
 
   factory CreditCardBank.fromJson(Map<String, dynamic> json) {
     return CreditCardBank(
-      id: json["_id"] ?? "",
+      id: json["bankId"] ?? "",
       name: json["name"] ?? "",
       logo: json["logo"] ?? "",
       bankId: json["bankId"] ?? "",

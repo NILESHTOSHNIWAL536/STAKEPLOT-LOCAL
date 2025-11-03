@@ -12,12 +12,17 @@ import 'package:flutter_application_code_stakeplot/model/user_activity_model.dar
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import '../controllers/controllerManagement.dart';
 import 'googlesignin/credentials.dart';
 part 'snackBars.dart';
 
 bool apis_flag = true;
-String urlWithLocallHost = !apis_flag? Credentials.LIVE_API:Credentials.LIVE_API_TEST;
+String urlWithLocallHost =apis_flag ? Credentials.LIVE_API:Credentials.LIVE_API_TEST; // main backend api
+String urlWithLocallHost2 = apis_flag ? Credentials.LIVE_API2:Credentials.LIVE_API_TEST2; // email sync api
+String urlWithLocallHost3 = apis_flag ? Credentials.FINVU_LIVE:Credentials.FINVU_TEST; // bank api
 String url = "${urlWithLocallHost}api/v1";
+String EmailUrl = "${urlWithLocallHost2}api";
+String BankApiUrl = "${urlWithLocallHost3}api";
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();
 RxMap deviceData = {}.obs;
@@ -228,3 +233,4 @@ final RxList<Map<String, dynamic>> inflationPredictions =
     <Map<String, dynamic>>[].obs;
 var showResults = false.obs;
 RxBool isLoadingInflation = false.obs;
+RxString changeAvater = ControllerManagement.userController.avatar.value.obs;

@@ -2,6 +2,7 @@ import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:hive/hive.dart';
+import '../../backed_connections/apiAutomations/getTrasactions.dart';
 import 'init_hive.dart';
 
 class CategoryStorage {
@@ -48,6 +49,7 @@ class CategoryStorage {
           List<Map<String, dynamic>>.from(latestData.categoriesList);
 
       isFinoraVisible.value = totalDebitThisMonth.value > 0;
+      processChartData();
     } else {}
   }
 

@@ -7,6 +7,8 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../routes/route_transactions.dart';
+
 class InsightsController extends GetxController {
   final RxList<Map<String, dynamic>> totalInSights =
       <Map<String, dynamic>>[].obs;
@@ -27,7 +29,7 @@ class InsightsController extends GetxController {
     Future(() async {
       try {
         final response =
-            await getDataApiCall("$url/transactionauto/get-headsup-messages");
+            await getDataApiCall( BankTransactionRoutes.getHeadsUpMessages,);
         if (response.statusCode == 200) {
           final his = jsonDecode(response.body);
           final obj = his['data'] as List;
@@ -66,8 +68,7 @@ class InsightsController extends GetxController {
     // 2️⃣ Try API fetch in background
     Future(() async {
       try {
-        final response =
-            await getDataApiCall("$url/transactionauto/get-money-map-messages");
+        final response = await getDataApiCall(BankTransactionRoutes.getMoneyMapMessages);
         if (response.statusCode == 200) {
           final his = jsonDecode(response.body);
           final obj = his['data'] as List;

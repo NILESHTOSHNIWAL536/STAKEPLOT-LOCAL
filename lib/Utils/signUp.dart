@@ -32,6 +32,7 @@ class SignupData {
 
   // ✅ Validation Messages
    String emptyUsername = "Please enter a username.";
+   String emptyUsernameValid = "Please enter a valid  username.";
    String invalidUsername = "Username must start with a letter (A-Z or a-z).";
    String shortUsername = "Username must be at least 3 characters long.";
 
@@ -59,6 +60,7 @@ class SignupData {
         data=data['data'] ?? {};
         createAccount = data['createAccount'] ?? createAccount;
         usernameLabel = data['usernameLabel'] ?? usernameLabel;
+        emptyUsernameValid = data['emptyUsernameValid'] ?? emptyUsernameValid;
         dobLabel = data['dobLabel'] ?? dobLabel;
         emailLabel = data['emailLabel'] ?? emailLabel;
         passwordLabel = data['passwordLabel'] ?? passwordLabel;

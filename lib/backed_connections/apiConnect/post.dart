@@ -12,9 +12,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:http/http.dart' as http;
+
+import '../../routes/route_post.dart';
 
 Future<http.Response>  addReply(context, String data, String commentId, String postId) async {
   var body = {'comment': commentId, 'reply': data, 'post': postId};
@@ -26,7 +30,7 @@ Future<http.Response>  addReply(context, String data, String commentId, String p
 }
 
 void deletePost(id, context) async {
-  var responce = await deleteDataApiCall("${url}/post/${id}");
+  var responce = await deleteDataApiCall("${PostRoutes.post}${id}");
 
   if (getFlagOfResponse(responce)) {
     snackBarCalled(context, "Deleted Post");
@@ -62,7 +66,7 @@ Future<String> postImageToCloud(imageFile, context) async {
 
 void reportPost(context, String id, String spam, String type, int index) async {
   var response =
-      await postDataApiCall('${url}/user/report/${type}/$id', {'reason': spam});
+      await postDataApiCall('${UserRoutes.report}/${type}/$id', {'reason': spam});
 
   if (getFlagOfResponse(response)) {
     snackBarCalled(
@@ -130,7 +134,7 @@ Future<Map<String, dynamic>> createPost(
 }
 
 void createPostWithOutImage(context, String title, String description) async {
-  var urlPath = '${url}/post/';
+  var urlPath = PostRoutes.post;
   final TagList = [...selectedSubCategories, ...selectedCategories];
 
   var body = {
@@ -177,8 +181,7 @@ void createPollOfCommunity(context, String title, String description) async {
 Future<void> getPost(context) async {
   try{
   var response =
-      await getDataApiCall('${url}/post/feed/${postController.currentPageFeed.value}');
-      print("get post response ${response.body}");
+      await getDataApiCall('${PostRoutes.feed}${postController.currentPageFeed.value}');
   expire(response, context);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
@@ -216,7 +219,7 @@ Future<void> getPost(context) async {
 
 Future<void> getTranding(context) async {
   try{
-  var response = await getDataApiCall('${url}/post/trending/${postController.currentPageTranding.value}');
+  var response = await getDataApiCall('${PostRoutes.trending}${postController.currentPageTranding.value}');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -250,7 +253,7 @@ Future<void> getTranding(context) async {
 }
 
 void savePostData(context,PostModel data) async {
-  var urlPath = "${url}/post/save/${data.id}";
+  var urlPath = "${PostRoutes.save}${data.id}";
   var body = {"postId": data.id};
   var response = await postDataApiCall(urlPath, body);
   var decodedResponse = json.decode(response.body);
@@ -265,7 +268,7 @@ void savePostData(context,PostModel data) async {
 
 Future<List<dynamic>> savePostGetData(context) async {
   try {
-    var urlPath = "${url}/post/saved";
+    var urlPath = PostRoutes.saved;
 
     var response = await getDataApiCall(urlPath);
 
@@ -284,7 +287,7 @@ Future<List<dynamic>> savePostGetData(context) async {
 
   void getpost(id) async
   {
-    var response=await getDataApiCall('${url}/post/${id}');
+    var response=await getDataApiCall('${PostRoutes.post}${id}');
     if (getFlagOfResponse(response))
      {
       var his = jsonDecode(response.body);

@@ -23,13 +23,12 @@ import '../insightsController.dart';
 void callApi(context) async {
   await Get.find<UserController>().fetchUserInfo();
   final InsightsController _controller = Get.put(InsightsController());
-
+  getBankAccounts();
   getPost(context);
   getTranding(context);
   getAck();
-  getBudget();
   contextGlobal = context;
-  setUpSocketListenerMainPage(context);
+ 
   getUserLend(context);
   getBudget();
   getHiddenTransactions(context);
@@ -43,19 +42,20 @@ void callApi(context) async {
   getAutoPayInfo();
   getAllTransactionHistory(context, false, false, isRefreshing: true);
   getAllTransactionHistory(context, true, false, isRefreshing: true);
-  getCategoryData(context);
   getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,
       isSplashScreen: true);
   userController.fetchUserInfo();
   custom = getthelist();
   allOrGroupTransactionsName.value = StringConstant.allTransactions;
   clearAllFlags();
-  getBankAccounts();
+  
   await getRemainders(context);
   await updateWidget();
+  getCategoryData(context);
   lifecycleHandler = AppLifecycleHandler(
       userController.userId.value); // Replace with actual user ID
   WidgetsBinding.instance.addObserver(lifecycleHandler);
+   setUpSocketListenerMainPage(context);
 }
 
 void initializeData(context, mounted) {

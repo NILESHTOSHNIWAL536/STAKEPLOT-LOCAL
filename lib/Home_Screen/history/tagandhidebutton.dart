@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/balanceout.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -17,6 +17,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../routes/route_transactions.dart';
 import '../insightsController.dart';
 
 Widget getTab(BuildContext context) {
@@ -272,7 +273,7 @@ void showModal(context2) {
 void deletSelectedTransactions(BuildContext context) async {
   try {
     var body = {'transactionIds': addManually};
-    var urlPath = "${url}/transactionauto/delete/";
+    var urlPath = BankTransactionRoutes.deleteTransactions;
 
     var response = await postDataApiCall(urlPath, body);
 

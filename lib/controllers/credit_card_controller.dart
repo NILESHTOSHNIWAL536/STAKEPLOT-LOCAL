@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
 import '../Utils/credit_card.dart';
 import '../backed_connections/apiAutomations/curd.dart';
@@ -17,7 +18,7 @@ Future<void> fetchCardData() async {
   try {
     // API call (replace url with your actual base url)
     if(!CreditCardScreenStrings().showCreditCard.value)return;
-    var response = await getDataApiCall("${url}/email/");
+    var response = await getDataApiCall(AuthApiRoutes.getCreditCardList);
     loading.value=true;
     if (getFlagOfResponse(response)) {
       var data = jsonDecode(response.body)['data'];
@@ -45,18 +46,18 @@ Future<void> LinkBankData(context) async {
       pushnameToRoute(context,AddCreditCardBankScreen());
       return;
     }
-    var response = await getDataApiCall("${url}/user/readEmail/${selectedBankId.value}");
+    var response = await postDataApiCall("${AuthApiRoutes.scrape}/",{
+         "bankIds":[selectedBankId.value]
+    });
 
     if (getFlagOfResponse(response)) 
     {
       var data = jsonDecode(response.body);
       loadingBankdetails.value = true;
       selectedBankId.value="";
-
        Future.delayed(const Duration(seconds: 2), () {
         pushnameToRoute(context, CardDueCarousel());
       });
-      
     } 
   } catch (e) {
     cardList.clear();
@@ -66,7 +67,7 @@ Future<void> LinkBankData(context) async {
 Future<void> getBanksListCrediCard() async {
   try {
     // API call (replace url with your actual base url)
-    var response = await getDataApiCall("${url}/email/get-banks/");
+    var response = await getDataApiCall(AuthApiRoutes.getUnLinkedCards);
 
     if (getFlagOfResponse(response))
     {
