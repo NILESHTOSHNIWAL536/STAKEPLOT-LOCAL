@@ -112,6 +112,10 @@ async function webHook(req, res) {
     const { dataSessionId } = req.body;
     finvuData = await Finvu.findOne({ sessionId: dataSessionId });
 
+
+    // TESTING PURPOSE
+    constole.log('Webhook received dataSessionId:', dataSessionId);
+
     if (!finvuData) return res.status(404).json({ message: 'No data found for this sessionId' });
     logger.debug(`finvuData from the backend finvu: ${finvuData}`);
 
@@ -159,8 +163,8 @@ async function webHook(req, res) {
         const notificationMessage = {
           type: 'FetchedData',
           message: `${name} Data has been successfully fetched`,
-          avatarType: bankLogo.logoUrl,
-          logo: bankLogo.logoUrl,
+          avatarType: bankLogo?.logoUrl || 'default',
+          logo: bankLogo?.logoUrl || 'default',
         };
         await notificationRepository.createNotification({
           userId: finvuData.userId,
@@ -206,6 +210,7 @@ async function webHook(req, res) {
 }
 
 async function sendWebSocketMessage(userId, msg, failed = false) {
+  console.log('Sending WebSocket message to user:', userId, 'Message:', msg);
   const newObjectId = new mongoose.Types.ObjectId(userId);
   await User.findByIdAndUpdate(userId, { fetchInProgress: false }, { new: true, runValidators: true });
   const deviceIds = await getDeviceIdsByUserId(newObjectId);
@@ -217,6 +222,7 @@ async function sendWebSocketMessage(userId, msg, failed = false) {
       failed: failed,
     },
   });
+  console.log('WebSocket message sent to user:', userId);
 }
 
 module.exports = { webHook, getAll };

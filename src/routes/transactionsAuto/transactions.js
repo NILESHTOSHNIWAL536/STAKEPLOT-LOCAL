@@ -51,6 +51,7 @@ router.get(
 );
 router.get('/categorize', AuthMiddlewares.protect, TransactionAutoController.categorizeTransactions);
 // **************************************** NEWLY ADDED APIS ****************************************
+router.post("/create", AuthMiddlewares.protect, TransactionAutoController.createTransaction);
 router.get("/top-five-categories", AuthMiddlewares.protect, TransactionAutoController.getTopFiveCategories);
 router.get('/category-wise-spendings/:categoryNames/:startDate/:endDate', AuthMiddlewares.protect, TransactionAutoController.getCategoryWiseSpendings);
 router.get('/budget-transactions/:categoryNames/:groupBy/:startDate/:endDate', AuthMiddlewares.protect, TransactionAutoController.getBudgetTransactions);

@@ -270,6 +270,15 @@ async function categorizeTransactions(userId) {
   }
 }
 
+async function createTransaction(data) {
+  try {
+    const response = await new AutoTransactionRepository().createTransaction([data], null, data.userId);
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
 async function getTopFiveCategories(userId) {
   try {
     const response = await new AutoTransactionRepository().getTopFiveCategories(userId);
@@ -712,5 +721,6 @@ module.exports = {
   getIncomeAndCategorySpent,
   getLoanCalculation,
   getTopFiveCategories,
-  getBudgetSpents
+  getBudgetSpents,
+  createTransaction,
 };

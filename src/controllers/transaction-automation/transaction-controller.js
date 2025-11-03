@@ -206,6 +206,21 @@ exports.categorizeTransactions = async (req, res) => {
   }
 };
 
+exports.createTransaction = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const data = req.body;
+    const response = await BankService.createTransaction(userId, data);
+
+    SuccessResponse.data = response;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.error = error;
+    const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    return res.status(statusCode).json(ErrorResponse);
+  }
+};
+
 exports.getTopFiveCategories = async (req, res) => {
   try {
     const userId = req.user._id;

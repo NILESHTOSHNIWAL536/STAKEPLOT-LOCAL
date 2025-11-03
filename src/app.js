@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 // ✅ Webhook route
-app.post('/fi/notification/callback/v1/finvu/FI/Prod/Notification', webHook);
+app.post('/FI/Notification', webHook);
 
 // ✅ 404 & Error handlers
 app.use(notFoundHandler);
