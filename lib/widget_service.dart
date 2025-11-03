@@ -27,7 +27,6 @@ void callbackDispatcher() {
     try {
       // Restore full API URL and token from SharedPreferences (stored during app init)
       final prefs = await SharedPreferences.getInstance();
-    
       String? token = prefs.getString('accessToken'); 
       // Your exact token key from LoginService
       String fullApiUrl = prefs.getString('full_api_url') ?? ''; // Stored full URL with /api/v1
