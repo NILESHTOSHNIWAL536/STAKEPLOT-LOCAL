@@ -1,20 +1,18 @@
-const axios = require("axios");
-const apiClient = require("../utils/helpers/apiClient");
-const { Finvu, FipsMetric } = require("../models/index");
-const { getDeviceIdsByUserId } = require("../utils/helpers/getDeviceIds");
-const {
-  SendNotificationToDeviceSpecific,
-} = require("../services/notification-service");
-const { User,FailedTransaction,ConsentHandleId } = require("../models/index");
-const generateToken = require("../utils/helpers/generate-finvu-token");
-const getISTTimestamp = require("../utils/helpers/get-IST-timeStamp");
-const redisClient = require("../config/redis-config");
-const logger = require("../utils/common/logger");
+const axios = require('axios');
+const apiClient = require('../utils/helpers/apiClient');
+const { Finvu, FipsMetric } = require('../models/index');
+const { getDeviceIdsByUserId } = require('../utils/helpers/getDeviceIds');
+const { SendNotificationToDeviceSpecific } = require('../services/notification-service');
+const { User, FailedTransaction, ConsentHandleId } = require('../models/index');
+const generateToken = require('../utils/helpers/generate-finvu-token');
+const getISTTimestamp = require('../utils/helpers/get-IST-timeStamp');
+const redisClient = require('../config/redis-config');
+const logger = require('../utils/common/logger');
 const finvuMap = new Map();
-const { DateTime } = require("luxon");
-const mongoose = require("mongoose");
-const WebSocketService = require("../services/websocket-service");
-const {updateNextFetchByUserId} = require("../utils/helpers/update-existing-accounts")
+const { DateTime } = require('luxon');
+const mongoose = require('mongoose');
+const WebSocketService = require('../services/websocket-service');
+const { updateNextFetchByUserId } = require('../utils/helpers/update-existing-accounts');
 
 const baseUrl = process.env.FINVU_URL;
 const headers = {
@@ -23,17 +21,15 @@ const headers = {
   channelId: process.env.FINVU_CHANNEL_ID,
 };
 
-
 async function deleteConsentHandleById(handleId) {
   try {
     const result = await ConsentHandleId.findOneAndDelete({ handleId });
-    return "";
+    return '';
   } catch (error) {
-    console.error("Error deleting consent handle:", error);
-    return "";
+    console.error('Error deleting consent handle:', error);
+    return '';
   }
 }
-
 
 async function storeOrUpdateConsentHandle({ custId, handleId, userId }) {
   try {
@@ -52,13 +48,11 @@ async function storeOrUpdateConsentHandle({ custId, handleId, userId }) {
       }
     );
     return result;
-  } catch (error)
-  {
-    console.error("Error in storeOrUpdateConsentHandle:", error);
-    return "";
+  } catch (error) {
+    console.error('Error in storeOrUpdateConsentHandle:', error);
+    return '';
   }
 }
-
 
 async function loginAndGetHandleId(req, res) {
   try {
@@ -71,54 +65,38 @@ async function loginAndGetHandleId(req, res) {
     logger.debug(`token from login ${token}`);
 
     // Step 2: Request Consent Handle ID
-    const consentResponse = await apiClient.post(
-      `${baseUrl}/ConsentRequestPlus`,
-      token,
-      {
-        header: headers,
-        body: {
-          custId: custId,
-          consentDescription: process.env.FINVU_CONSENT_DESCRIPTION,
-          templateName: process.env.FINVU_TEMPLATE_NAME,
-          userSessionId: process.env.FINVU_USER_SESSION_ID,
-          redirectUrl: "https://google.co.in",
-          ConsentDetails: {},
-          // aaId: process.env.FINVU_AA_ID,
-          // "pan": "GDJHF8509I",
-        },
-      }
-    );
+    const consentResponse = await apiClient.post(`${baseUrl}/ConsentRequestPlus`, token, {
+      header: headers,
+      body: {
+        custId: custId,
+        consentDescription: process.env.FINVU_CONSENT_DESCRIPTION,
+        templateName: process.env.FINVU_TEMPLATE_NAME,
+        userSessionId: process.env.FINVU_USER_SESSION_ID,
+        redirectUrl: 'https://google.co.in',
+        ConsentDetails: {},
+        // aaId: process.env.FINVU_AA_ID,
+        // "pan": "GDJHF8509I",
+      },
+    });
 
     if (consentResponse.status !== 200 && consentResponse.status !== 201) {
-      return res
-        .status(400)
-        .json({ message: "Failed to get Consent Handle ID" });
+      return res.status(400).json({ message: 'Failed to get Consent Handle ID' });
     }
     const consentHandleId = consentResponse.data.body.ConsentHandle;
     logger.debug(`consentHandleId: ${consentHandleId} `);
 
-      await storeOrUpdateConsentHandle({
-          custId,
-          handleId: consentHandleId,
-          userId: Id,
-      });
-    
+    await storeOrUpdateConsentHandle({
+      custId,
+      handleId: consentHandleId,
+      userId: Id,
+    });
 
     //step-4: update the mobile for the User in the DB
-    const updateMobile = await User.findOneAndUpdate(
-      { _id: Id },
-      { $addToSet: { phone: req.body.number } },
-      { new: true }
-    );
+    const updateMobile = await User.findOneAndUpdate({ _id: Id }, { $addToSet: { phone: req.body.number } }, { new: true });
     if (!updateMobile)
-      return res
-        .status(400)
-        .json({
-          message:
-            "Failed to update mobile number, already the number is registered",
-        });
-
-  
+      return res.status(400).json({
+        message: 'Failed to update mobile number, already the number is registered',
+      });
 
     return res.json({ consentHandleId });
   } catch (error) {
@@ -132,30 +110,24 @@ async function fetchTransactions(req, res) {
   try {
     const { handleId, custId } = req.body;
     const userId = req.user._id;
-    const token = await redisClient.get("auth_token");
+    const token = await redisClient.get('auth_token');
 
-    if (!handleId || !custId)
-      return res.status(400).json({ message: "Missing required parameters" });
+    if (!handleId || !custId) return res.status(400).json({ message: 'Missing required parameters' });
 
     // Step 1: Fetch Consent Status
     let maxAtemptsForconsentResponse = 2;
     let attemptForConsentResponse = 0;
     let consentId = null;
     // Poll for consent status every 8 seconds
-    while (
-      !consentId &&
-      attemptForConsentResponse < maxAtemptsForconsentResponse
-    ) {
-      logger.debug("entered into the while loop for consent status");
+    while (!consentId && attemptForConsentResponse < maxAtemptsForconsentResponse) {
+      logger.debug('entered into the while loop for consent status');
       const consentResponse = await fetchConsentStatus(token, handleId, custId);
-      if (consentResponse.consentStatus == "ACCEPTED") {
+      if (consentResponse.consentStatus == 'ACCEPTED') {
         consentId = consentResponse.consentId;
         break;
       }
       attemptForConsentResponse++;
-      logger.debug(
-        `Attempt ${attemptForConsentResponse}: consentResponse not received, retrying in 10 seconds...`
-      );
+      logger.debug(`Attempt ${attemptForConsentResponse}: consentResponse not received, retrying in 10 seconds...`);
       await new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
@@ -170,21 +142,18 @@ async function fetchTransactions(req, res) {
       // );
 
       // webSocket message to the user
-      WebSocketService.sendMessage(custId, "registerUser", {
-        message:
-          "There is a problem with you bank server. Please try again later.",
-        data: { number_id: custId, data: "error" },
+      WebSocketService.sendMessage(custId, 'registerUser', {
+        message: 'There is a problem with you bank server. Please try again later.',
+        data: { number_id: custId, data: 'error' },
       });
 
-      return res.status(400).json({ message: "Consent ID not received" });
+      return res.status(400).json({ message: 'Consent ID not received' });
     }
 
     // Step 2: Fetch Consent Details
     const { from, to } = await fetchConsentDetails(token, consentId);
-    const newFrom = DateTime.fromISO(from, { zone: "utc" }).plus({ days: 1 });
-    const formattedNewFrom = newFrom
-      .setZone("utc", { keepLocalTime: false })
-      .toFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
+    const newFrom = DateTime.fromISO(from, { zone: 'utc' }).plus({ days: 1 });
+    const formattedNewFrom = newFrom.setZone('utc', { keepLocalTime: false }).toFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
 
     const TO = getISTTimestamp();
     logger.debug(`to: ${TO}`);
@@ -195,15 +164,7 @@ async function fetchTransactions(req, res) {
     let sessionId = null;
     // Poll for sessionId every 10 seconds
     while (!sessionId && attempt < maxAttempts) {
-      sessionId = await initiateFIRequest(
-        token,
-        handleId,
-        custId,
-        consentId,
-        formattedNewFrom,
-        TO,
-        userId
-      );
+      sessionId = await initiateFIRequest(token, handleId, custId, consentId, formattedNewFrom, TO, userId);
 
       if (sessionId) {
         logger.debug(`Session ID received: ${sessionId}`);
@@ -211,20 +172,12 @@ async function fetchTransactions(req, res) {
       }
 
       attempt++;
-      logger.debug(
-        `Attempt ${attempt}: sessionId not received, retrying in 1 minute...`
-      );
+      logger.debug(`Attempt ${attempt}: sessionId not received, retrying in 1 minute...`);
       await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for 10secs
     }
 
     // step 4: Check the status of the FI Request
-    const checkStatus = await checkFIRequestStatus(
-      token,
-      consentId,
-      sessionId,
-      handleId,
-      custId
-    );
+    const checkStatus = await checkFIRequestStatus(token, consentId, sessionId, handleId, custId);
 
     const body = {
       sessionId,
@@ -245,21 +198,13 @@ async function fetchTransactions(req, res) {
       let checkStatus = null;
       // Poll for FIRequest every 10 seconds
       while (!checkStatus && atemptForStatus < maxAtemptsForStatus) {
-        logger.debug("entered into the while loop for fiRequest status");
-        checkStatus = await checkFIRequestStatus(
-          token,
-          consentId,
-          sessionId,
-          handleId,
-          custId
-        );
-        if (checkStatus.fiRequestStatus == "READY") {
+        logger.debug('entered into the while loop for fiRequest status');
+        checkStatus = await checkFIRequestStatus(token, consentId, sessionId, handleId, custId);
+        if (checkStatus.fiRequestStatus == 'READY') {
           break;
         }
         atemptForStatus++;
-        logger.debug(
-          `Attempt ${atemptForStatus}: consentResponse not received, retrying in 10 seconds...`
-        );
+        logger.debug(`Attempt ${atemptForStatus}: consentResponse not received, retrying in 10 seconds...`);
         await new Promise((resolve) => setTimeout(resolve, 10000));
       }
       logger.debug(`checkStatus: ${checkStatus}`);
@@ -268,29 +213,25 @@ async function fetchTransactions(req, res) {
       res.status(200).json(body);
     }
   } catch (error) {
-    console.error(
-      "Error fetching data:",
-      error.response ? error.response.data : error.message
-    );
+    console.error('Error fetching data:', error.response ? error.response.data : error.message);
     // res.status(500).json({ message: "Error fetching data", error: error.message });
   }
 }
-
 
 async function getStatus(req, res) {
   try {
     const id = req.params.id;
 
     // Fetch token from redis
-    const token = await redisClient.get("auth_token");
+    const token = await redisClient.get('auth_token');
     if (!token) {
-      return res.status(401).json({ error: "Auth token not found" });
+      return res.status(401).json({ error: 'Auth token not found' });
     }
 
     // Find latest Finvu record by ID
     const findData = await ConsentHandleId.findOne({ _id: new mongoose.Types.ObjectId(id) }).sort({ createdAt: -1 });
     if (!findData) {
-      return res.status(404).json({ error: "Finvu record not found" });
+      return res.status(404).json({ error: 'Finvu record not found' });
     }
 
     // Extract values from DB record
@@ -299,32 +240,26 @@ async function getStatus(req, res) {
     const data = await fetchConsentStatus(token, handleId, custId);
 
     return res.status(200).json({ data });
-  } catch (error)
-  {
-    console.error("Error in getStatus:", error);
+  } catch (error) {
+    console.error('Error in getStatus:', error);
     return res.status(500).json({ error: error.message });
   }
 }
 
-
 // Fetch Consent Status from the server
 async function fetchConsentStatus(token, handleId, custId) {
   try {
-    const response = await axios.get(
-      `${baseUrl}/ConsentStatus/${handleId}/${custId}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      }
-    );
+    const response = await axios.get(`${baseUrl}/ConsentStatus/${handleId}/${custId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    });
     logger.debug(`from fetchConsentStatus: ${response.data.body.consentStatus}`);
     return response.data.body;
-  } catch (error) 
-  {
+  } catch (error) {
     logger.debug(`error from the fetchConsentStatus: ${error}`);
-    throw new Error("Failed to fetch consent status");
+    throw new Error('Failed to fetch consent status');
   }
 }
 
@@ -340,11 +275,10 @@ async function getFipsLatestMetricsAll(req, res) {
 async function getFipsDetails(req, res) {
   try {
     const { fipIds } = req.body;
-    console.log("fipIds received in getFipsDetails:");
+    console.log('fipIds received in getFipsDetails:');
     console.log(fipIds);
-    if (!Array.isArray(fipIds) || fipIds.length === 0)
-    {
-      return res.status(400).json({ error: "fipIds must be a non-empty array" });
+    if (!Array.isArray(fipIds) || fipIds.length === 0) {
+      return res.status(400).json({ error: 'fipIds must be a non-empty array' });
     }
     // const sanitizedIds = fipIds
     // .filter(id => mongoose.Types.ObjectId.isValid(id))
@@ -352,13 +286,13 @@ async function getFipsDetails(req, res) {
 
     const data = await FipsMetric.find({
       fip_id: { $in: fipIds },
-      event_name: { $regex: /FIFetchResponse/, $options: "i" },
+      event_name: { $regex: /FIFetchResponse/, $options: 'i' },
     }).sort({ timestamp: -1 });
-     console.log(data);
-    var json= res.status(200).json({ data });
+    console.log(data);
+    var json = res.status(200).json({ data });
     return json;
   } catch (error) {
-    console.error("getFipsDetails error:", error);
+    console.error('getFipsDetails error:', error);
     return res.status(400).json({ error: error.message });
   }
 }
@@ -368,7 +302,7 @@ async function fetchConsentDetails(token, consentId) {
   try {
     const response = await axios.get(`${baseUrl}/Consent/${consentId}`, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: token,
       },
     });
@@ -378,20 +312,12 @@ async function fetchConsentDetails(token, consentId) {
     return { from, to };
   } catch (error) {
     logger.debug(`error from the fetchConsentDetails: ${error}`);
-    throw new Error("Failed to fetch consent details");
+    throw new Error('Failed to fetch consent details');
   }
 }
 
 // Initiate FI Request and get sessionId
-async function initiateFIRequest(
-  token,
-  handleId,
-  custId,
-  consentId,
-  from,
-  to,
-  userId
-) {
+async function initiateFIRequest(token, handleId, custId, consentId, from, to, userId) {
   try {
     const response = await axios.post(
       `${baseUrl}/FIRequest`,
@@ -407,19 +333,17 @@ async function initiateFIRequest(
       },
       {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: token,
         },
       }
     );
-    logger.debug(
-      `response came from the server sessionId ${response.data.body.sessionId}`
-    );
+    logger.debug(`response came from the server sessionId ${response.data.body.sessionId}`);
     return response.data.body.sessionId;
   } catch (error) {
     logger.error(`error response from inititateRequest: ${error}`);
     SendNotificationMessage(userId);
-    throw new Error("Failed to initiate FI Request");
+    throw new Error('Failed to initiate FI Request');
   }
 }
 
@@ -427,11 +351,7 @@ async function SendNotificationMessage(userId) {
   const newObjectId = new mongoose.Types.ObjectId(userId);
   const deviceIds = await getDeviceIdsByUserId(newObjectId);
 
-  await User.findByIdAndUpdate(
-    userId,
-    { fetchInProgress: false },
-    { new: true, runValidators: true }
-  );
+  await User.findByIdAndUpdate(userId, { fetchInProgress: false }, { new: true, runValidators: true });
 
   // await SendNotificationToDeviceSpecific(
   //   userId,
@@ -440,11 +360,10 @@ async function SendNotificationMessage(userId) {
   //   "/home"
   // );
 
-  WebSocketService.sendMessage(userId, "addUserToSocket", {
-    type: "fetchedApiCall",
+  WebSocketService.sendMessage(userId, 'addUserToSocket', {
+    type: 'fetchedApiCall',
     data: {
-      message:
-        "we couldn't able to fetch your bank details, please try again later.It might be due to an bank server issue.",
+      message: "we couldn't able to fetch your bank details, please try again later.It might be due to an bank server issue.",
       failed: true,
     },
   });
@@ -467,49 +386,36 @@ async function SendNotificationMessage(userId) {
 // }
 
 // Check the status of the FI Request
-async function checkFIRequestStatus(
-  token,
-  consentId,
-  sessionId,
-  handleId,
-  custId
-) {
+async function checkFIRequestStatus(token, consentId, sessionId, handleId, custId) {
   const urlPath = `${baseUrl}/FIStatus/${consentId}/${sessionId}/${handleId}/${custId}`;
   try {
     const response = await axios.get(`${urlPath}`, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: token,
       },
     });
 
-    logger.debug(
-      `response from checkFIRRequestStatus: ${JSON.stringify(
-        response.data.body
-      )}`
-    );
+    logger.debug(`response from checkFIRRequestStatus: ${JSON.stringify(response.data.body)}`);
     return response.data.body;
   } catch (error) {
     logger.debug(`error from the checkFIRequestStatus: ${error}`);
-    throw new Error("Failed to check FI Request Status");
+    throw new Error('Failed to check FI Request Status');
   }
 }
 
 async function fetchFinalData(token, custId, consentId, sessionId) {
   try {
-    const response = await axios.get(
-      `${baseUrl}/FIFetch/${custId}/${consentId}/${sessionId}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      }
-    );
+    const response = await axios.get(`${baseUrl}/FIFetch/${custId}/${consentId}/${sessionId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    });
     return response.data.body;
   } catch (error) {
     if (error.response) {
-      console.error("Response error:", {
+      console.error('Response error:', {
         data: error.response.data,
         status: error.response.status,
         headers: error.response.headers,
@@ -522,7 +428,7 @@ async function fetchFinalData(token, custId, consentId, sessionId) {
       logger.error(`Request setup error: ${error.message}`);
     }
     logger.error(`Config: ${error.config}, ${error}`);
-    throw new Error("Failed to fetch final data");
+    throw new Error('Failed to fetch final data');
   }
 }
 
@@ -542,26 +448,22 @@ async function addFinvuData(req, res, userId) {
       logger.error(`Error while saving Finvu: ${err.message}`);
     });
 
-    res
-      .status(201)
-      .json({ message: "Data added successfully", finvu: response });
+    res.status(201).json({ message: 'Data added successfully', finvu: response });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error adding data", error: error.message });
+    res.status(500).json({ message: 'Error adding data', error: error.message });
   }
 }
 
 async function fetchTransactionsWeekly(req, res) {
-  const { custId, userId, consentId, handleId, FROM, isCron} = req.body;
+  const { custId, userId, consentId, handleId, FROM, isCron } = req.body;
   try {
     let { token } = req.body;
     if (!isCron) {
       token = await generateToken();
-      if (token == "error") {
+      if (token == 'error') {
         SendNotificationMessage(userId);
         if (isCron != undefined && !isCron) return;
-        throw new Error("Failed to initiate FI Request");
+        throw new Error('Failed to initiate FI Request');
       }
     }
 
@@ -569,15 +471,7 @@ async function fetchTransactionsWeekly(req, res) {
     logger.debug(`from: ${FROM}`);
     logger.debug(`to: ${TO}`);
 
-    const sessionId = await initiateFIRequest(
-      token,
-      handleId,
-      custId,
-      consentId,
-      FROM,
-      TO,
-      userId
-    );
+    const sessionId = await initiateFIRequest(token, handleId, custId, consentId, FROM, TO, userId);
     logger.debug(`sessionId: ${sessionId}`);
 
     const body = { sessionId, custId, consentId, handleId };
@@ -591,11 +485,11 @@ async function fetchTransactionsWeekly(req, res) {
       logger.debug(`Error adding Finvu data: ${error}`);
     }
   } catch (error) {
-     if (isCron != undefined && !isCron) addFailedTransactions(req.body);
+    if (isCron != undefined && !isCron) addFailedTransactions(req.body);
     await SendNotificationMessage(userId);
     logger.debug(`Error adding fetchWeekly: ${error}`);
     if (isCron != undefined && !isCron) return;
-    throw new Error("Failed to initiate FI Request");
+    throw new Error('Failed to initiate FI Request');
   }
 }
 
@@ -604,11 +498,11 @@ async function fetchAndStoreFipsMetrics() {
     const token = await generateToken();
     const response = await axios.get(`${baseUrl}/fips/latest-metrics-all`, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: token,
       },
     });
-  
+
     const { timestamp, header, data } = response.data;
     const metrics = data.map((row) => {
       const entry = { timestamp };
@@ -617,46 +511,39 @@ async function fetchAndStoreFipsMetrics() {
       });
       return entry;
     });
-    
+
     await FipsMetric.collection.drop();
     await FipsMetric.insertMany(metrics);
 
     return metrics;
-  } catch (e) {
-  }
+  } catch (e) {}
 }
 
-
-
-async function addFailedTransactions(result)
-{  
-  try{
-
+async function addFailedTransactions(result) {
+  try {
     await FailedTransaction.findOneAndUpdate(
-    { consendHandleId: result.handleId }, // Find condition
-    {
-      $set: {
-        custId: result.custId,
-        consentId: result.consentId,
-        userId: result.userId,
-        FROM: result.FROM,
-        retryCount: 0,
-        bankName: result.bankName,
-        accountId: result.accountId,
-        fipId: result.fipId,
-        fetchCount: result.fetchCount,
-        createdAt: new Date()
-      }
-    },
-    { upsert: true, new: true } // Create if not found, return the updated doc
-  );
-   await updateNextFetchByUserId(result.accountId);
-
-   }catch(e)
-   {
-      console.log(e);
-   }
- }
+      { consendHandleId: result.handleId }, // Find condition
+      {
+        $set: {
+          custId: result.custId,
+          consentId: result.consentId,
+          userId: result.userId,
+          FROM: result.FROM,
+          retryCount: 0,
+          bankName: result.bankName,
+          accountId: result.accountId,
+          fipId: result.fipId,
+          fetchCount: result.fetchCount,
+          createdAt: new Date(),
+        },
+      },
+      { upsert: true, new: true } // Create if not found, return the updated doc
+    );
+    await updateNextFetchByUserId(result.accountId);
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 module.exports = {
   finvuMap,
@@ -670,5 +557,5 @@ module.exports = {
   fetchAndStoreFipsMetrics,
   getFipsDetails,
   deleteConsentHandleById,
-  getStatus
+  getStatus,
 };

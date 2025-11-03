@@ -35,4 +35,8 @@ module.exports = {
   
   //user score activity
   FipsMetric : require("./fips-metric"),
+
+  sendingNotification: require("./deviceNotifications"),
+  UserActivity: require("./user-activity"),
+  Notification: require("./notification-model"),
 };

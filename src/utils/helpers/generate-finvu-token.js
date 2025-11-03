@@ -1,12 +1,9 @@
-const apiClient = require("./apiClient");
-const redisClient = require("../../config/redis-config");
-const logger = require("../common/logger");
-
+const apiClient = require('./apiClient');
+const redisClient = require('../../config/redis-config');
+const logger = require('../common/logger');
 
 const baseUrl = process.env.FINVU_URL;
-const headers = {rid: process.env.FINVU_RID, ts: process.env.FINVU_TS,
-  channelId: process.env.FINVU_CHANNEL_ID,
-};
+const headers = { rid: process.env.FINVU_RID, ts: process.env.FINVU_TS, channelId: process.env.FINVU_CHANNEL_ID };
 
 async function generateToken() {
   try {
@@ -18,12 +15,12 @@ async function generateToken() {
       },
     });
 
-    if (loginResponse.status !== 200 && loginResponse.status !== 201) return { message: "Login failed" };
+    if (loginResponse.status !== 200 && loginResponse.status !== 201) return { message: 'Login failed' };
 
     const token = `Bearer ${loginResponse.data.body.token}`;
-    const cacheKey = "auth_token";
+    const cacheKey = 'auth_token';
     const cachedData = await redisClient.get(cacheKey);
-    if(cachedData){
+    if (cachedData) {
       return cachedData;
     }
     logger.debug(`token from the generateToken ${token}`);
@@ -31,7 +28,7 @@ async function generateToken() {
     logger.debug(`cachedToken from generateToken: ${cacheToken}`);
 
     return token;
-  } catch (error){
+  } catch (error) {
     return error;
   }
 }

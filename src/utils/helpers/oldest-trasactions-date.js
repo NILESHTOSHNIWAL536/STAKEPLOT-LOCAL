@@ -1,16 +1,14 @@
-const mongoose = require("mongoose");
-const {Transaction} = require("../../models/"); // adjust path
+const mongoose = require('mongoose');
+const { Transaction } = require('../../models/');
 
-async function getOldestTransactionMonthYear(userId)
-{
-  const result = await Transaction
-    .findOne({ userId: new mongoose.Types.ObjectId(userId) })
+async function getOldestTransactionMonthYear(userId) {
+  const result = await Transaction.findOne({ userId: new mongoose.Types.ObjectId(userId) })
     .sort({ transactionTimestamp: 1 })
     .select({ transactionTimestamp: 1 })
-    .lean(); 
+    .lean();
 
   if (!result) {
-    return ''; 
+    return '';
   }
 
   const date = new Date(result.transactionTimestamp);
@@ -18,5 +16,4 @@ async function getOldestTransactionMonthYear(userId)
   return firstOfMonth;
 }
 
-
-module.exports = {getOldestTransactionMonthYear};
+module.exports = { getOldestTransactionMonthYear };

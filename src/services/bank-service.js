@@ -270,6 +270,15 @@ async function categorizeTransactions(userId) {
   }
 }
 
+async function getTopFiveCategories(userId) {
+  try {
+    const response = await new AutoTransactionRepository().getTopFiveCategories(userId);
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
 async function getAllTransactionsByTimeLine(userId, accountId, startDate, endDate, groupBy) {
   try {
     const response = await new AutoTransactionRepository().getAllTransactionsByTimeLine(userId, accountId, startDate, endDate, groupBy);
@@ -404,6 +413,15 @@ async function updateUserDetails(data, consenthandleid, userId, accountId) {
 async function getBudgetTransactions(userId, startDate, endDate, categories, groupBy) {
   try {
     const response = await new AutoTransactionRepository().getBudgetTransactions(userId, startDate, endDate, categories, groupBy);
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function getBudgetSpents(userId, startDate, endDate, categories) {
+  try {
+    const response = await new AutoTransactionRepository().getSpentAmounts(userId, startDate, endDate, categories);
     return response;
   } catch (error) {
     return error;
@@ -693,4 +711,6 @@ module.exports = {
   getUserSpending,
   getIncomeAndCategorySpent,
   getLoanCalculation,
+  getTopFiveCategories,
+  getBudgetSpents
 };

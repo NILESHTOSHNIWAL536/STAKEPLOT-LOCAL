@@ -1,4 +1,4 @@
-const { User, sendingNotification, UserActivity } = require('../../models/index');
+const { User, sendingNotification, UserActivity } = require('../../models');
 
 async function getFriendsWithUserId(id) {
   const user = await User.findOne({ _id: id });

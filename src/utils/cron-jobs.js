@@ -23,15 +23,6 @@ require('dotenv').config();
 
 const limit = plimit(10);
 
-// Initialize SES client
-const sesClient = new SESClient({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
-
 // Mock response object for cron job usage
 const createMockRes = () => ({
   status: (code) => {
@@ -273,7 +264,8 @@ cron.schedule(
 );
 
 // Run daily at midnight 12:00 AM IST for grouping transactions
-cron.schedule('0 0 * * *',
+cron.schedule(
+  '0 0 * * *',
   async () => {
     const userIds = await UserService.getUserInfo();
     for (const userId of userIds) {
@@ -283,75 +275,6 @@ cron.schedule('0 0 * * *',
       } catch (err) {
         logger.error(`Failed to add job for user ${userId}: ${err}`);
       }
-    }
-  },
-  {
-    scheduled: true,
-    timezone: 'Asia/Kolkata',
-  }
-);
-
-// Schedule cron job for sending notifications every day at 7:00 PM IST
-cron.schedule(
-  '0 19 * * *',
-  async () => {
-    try {
-      const response = await pushNotificationController.SendNotification();
-      logger.debug(`Notification response: ${response}`);
-    } catch (err) {
-      logger.error(`Error in sending notification: ${err}`);
-    }
-  },
-  {
-    scheduled: true,
-    timezone: 'Asia/Kolkata',
-  }
-);
-
-// schedule cron job for sending notifications every day at 12:00 PM IST
-cron.schedule(
-  '0 12 * * *',
-  async () => {
-    try {
-      const reminderOffsets = [3, 2, 1, 0];
-
-      for (const offset of reminderOffsets) {
-        const targetDate = moment().add(offset, 'days').startOf('day').toDate();
-        const nextDay = moment(targetDate).add(1, 'day').toDate();
-
-        const bills = await Bill.find({
-          dueDate: { $gte: targetDate, $lt: nextDay },
-          markAsComplete: false,
-        });
-
-        for (const bill of bills) {
-          const user = await User.findById(bill.userId);
-          const receiver = await User.findById(bill.billReceiverId);
-
-          const userName = user?.name || 'Someone';
-          const receiverName = receiver?.name || 'someone';
-          // const formattedDate = moment(bill.dueDate).format('YYYY-MM-DD');
-
-          // Customize message based on offset
-          let dayPrefix = '';
-          if (offset === 3) dayPrefix = 'in 3 days';
-          else if (offset === 2) dayPrefix = 'in 2 days';
-          else if (offset === 1) dayPrefix = 'tomorrow';
-          else if (offset === 0) dayPrefix = 'today';
-
-          // Message to bill creator
-          const userMessage = `Hey ${userName}, your pending bill of ₹${bill.amount} from ${receiverName} is due ${dayPrefix}.`;
-          const userDeviceIds = await getDeviceIdsByUserId(bill.userId);
-          await pushNotificationService.SendNotificationToDeviceSpecific(userMessage, userDeviceIds, '/home');
-
-          // Message to bill receiver
-          const receiverMessage = `Hey ${receiverName}, you owe ₹${bill.amount} to ${userName} is due ${dayPrefix}.`;
-          const receiverDeviceIds = await getDeviceIdsByUserId(bill.billReceiverId);
-          await pushNotificationService.SendNotificationToDeviceSpecific(receiverMessage, receiverDeviceIds, '/home');
-        }
-      }
-    } catch (err) {
-      logger.error(`Error in sending bill reminders: ${err}`);
     }
   },
   {
@@ -496,78 +419,6 @@ cron.schedule(
   }
 );
 
-// send the new user from the DB on every thursday
-cron.schedule(
-  '0 9 * * 4',
-  async () => {
-    try {
-      const now = new Date();
-      const thisThursday = new Date(now.setDate(now.getDate() - now.getDay() + 4));
-      thisThursday.setHours(0, 0, 0, 0);
-
-      const lastThursday = new Date(thisThursday);
-      lastThursday.setDate(lastThursday.getDate() - 7);
-
-      const subscribers = await User.find({
-        createdAt: { $gte: lastThursday, $lt: thisThursday },
-      }).lean();
-
-      if (subscribers.length === 0) {
-        logger.debug('ℹ️ No subscribers found this week.');
-        return;
-      }
-
-      // Create CSV
-      const fields = ['name', 'email', 'createdAt'];
-      const parser = new Parser({ fields });
-      const csvData = parser.parse(subscribers);
-
-      // MIME message for attachment
-      const boundary = 'NextPart_' + Date.now();
-      const subject = 'Stakeplot newly joined users (Weekly CSV)';
-      const bodyText = 'Attached is the latest users (last Thursday to this Thursday).';
-
-      const rawMessage = [
-        `From: ${process.env.EMAIL_USER}`,
-        `To: info@stakeplot.com`,
-        `Subject: ${subject}`,
-        'MIME-Version: 1.0',
-        `Content-Type: multipart/mixed; boundary="${boundary}"`,
-        '',
-        `--${boundary}`,
-        'Content-Type: text/plain; charset=UTF-8',
-        'Content-Transfer-Encoding: 7bit',
-        '',
-        bodyText,
-        '',
-        `--${boundary}`,
-        'Content-Type: text/csv; name="subscribers.csv"',
-        'Content-Disposition: attachment; filename="subscribers.csv"',
-        'Content-Transfer-Encoding: base64',
-        '',
-        Buffer.from(csvData).toString('base64'),
-        '',
-        `--${boundary}--`,
-      ].join('\n');
-
-      // Send via SES
-      const command = new SendRawEmailCommand({
-        RawMessage: { Data: Buffer.from(rawMessage) },
-      });
-
-      await sesClient.send(command);
-
-      logger.debug('✅ Weekly newsletter CSV email sent via SES.');
-    } catch (err) {
-      logger.error(`❌ Error sending newsletter CSV: ${err}`);
-    }
-  },
-  {
-    scheduled: true,
-    timezone: 'Asia/Kolkata',
-  }
-);
-
 async function runFipsCronJob() {
   try {
     const count = await FinvuController.fetchAndStoreFipsMetrics();
@@ -576,25 +427,6 @@ async function runFipsCronJob() {
     console.error('Cron job error:', error.message);
   }
 }
-
-async function sendNotificationsForCoupons() {
-  try {
-    const response = await getCouponsCount();
-    if (response.data > 0) {
-      const uniqueDeviceIds = await getDeviceIdsofCupons();
-      const message = 'Grab your unclaimed coupons before they expire!';
-      await pushNotificationService.SendNotificationToDeviceSpecific('', message, uniqueDeviceIds, 'coupons', 'Claim Coupons Now 🔥🔥');
-    }
-  } catch (err) {
-    logger.error(`Error in sending notification: ${err}`);
-  }
-}
-
-// Schedule to run once every 24 hours at 6:00 AM
-cron.schedule('0 18 * * *', sendNotificationsForCoupons, {
-  scheduled: true,
-  timezone: 'Asia/Kolkata',
-});
 
 cron.schedule('0 0,2,4,6,8,10,12,14,16,18,20,22 * * *', runFipsCronJob, {
   scheduled: true,
@@ -625,24 +457,5 @@ cron.schedule(
   {
     scheduled: true,
     timezone: 'Asia/Kolkata', // Adjust for your timezone
-  }
-);
-
-cron.schedule(
-  '0 14 * * 5',
-  async () => {
-    try {
-      const res = await createAndUploadBackup();
-      logger.debug(`Uploaded ${res.s3Key}`);
-
-      const r = await enforceRetention();
-      logger.debug(`Retention enforced, deleted: ${r.deleted}`);
-    } catch (e) {
-      console.error('Backup failed', e);
-    }
-  },
-  {
-    scheduled: true,
-    timezone: 'Asia/Kolkata',
   }
 );

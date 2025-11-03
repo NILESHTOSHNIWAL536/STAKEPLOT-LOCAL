@@ -206,6 +206,71 @@ exports.categorizeTransactions = async (req, res) => {
   }
 };
 
+exports.getTopFiveCategories = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const response = await BankService.getTopFiveCategories(userId);
+
+    SuccessResponse.data = response;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.error = error;
+    const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    return res.status(statusCode).json(ErrorResponse);
+  }
+};
+
+exports.getCategoryWiseSpendings = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { categoryNames, startDate, endDate } = req.params;
+    const categoryNamesArray = categoryNames.split(',');
+    console.log('categoryNames:', categoryNamesArray);
+    const response = await BankService.categoryWiseSpendings(userId, categoryNamesArray, startDate, endDate);
+
+    SuccessResponse.data = response;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.error = error;
+    const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    return res.status(statusCode).json(ErrorResponse);
+  }
+}
+
+exports.getBudgetTransactions = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { categoryNames, groupBy, startDate, endDate } = req.params;
+    const categoryNamesArray = categoryNames.split(',');
+
+    const response = await BankService.getBudgetTransactions(userId, startDate, endDate, categoryNamesArray, groupBy);
+
+    SuccessResponse.data = response;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.error = error;
+    const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    return res.status(statusCode).json(ErrorResponse);
+  }
+}
+
+exports.getBudgetSpents = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { categories, startDate, endDate } = req.params;
+    const categoryNamesArray = categories.split(',');
+
+    const response = await BankService.getBudgetSpents(userId, startDate, endDate, categoryNamesArray);
+
+    SuccessResponse.data = response;
+    return res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    ErrorResponse.error = error;
+    const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    return res.status(statusCode).json(ErrorResponse);
+  }
+};
+
 exports.updateUserDetails = async (req, res) => {
   try {
     const userId = req.user._id;
