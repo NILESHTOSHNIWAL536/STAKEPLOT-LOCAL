@@ -11,8 +11,15 @@ const logger = require('../utils/common/logger');
 const finvuMap = new Map();
 const { DateTime } = require('luxon');
 const mongoose = require('mongoose');
-const WebSocketService = require('../services/websocket-service');
+// const WebSocketService = require('../services/websocket-service');
 const { updateNextFetchByUserId } = require('../utils/helpers/update-existing-accounts');
+
+/**
+ * Helper to publish WebSocket events via Redis Pub/Sub
+ */
+async function publishSocketEvent(userId, event, data) {
+  await redisClient.publish('bank_events', JSON.stringify({ userId, event, data }));
+}
 
 const baseUrl = process.env.FINVU_URL;
 const headers = {
@@ -142,7 +149,12 @@ async function fetchTransactions(req, res) {
       // );
 
       // webSocket message to the user
-      WebSocketService.sendMessage(custId, 'registerUser', {
+      // WebSocketService.sendMessage(custId, 'registerUser', {
+      //   message: 'There is a problem with you bank server. Please try again later.',
+      //   data: { number_id: custId, data: 'error' },
+      // });
+
+      await publishSocketEvent(custId, 'registerUser', {
         message: 'There is a problem with you bank server. Please try again later.',
         data: { number_id: custId, data: 'error' },
       });
@@ -360,7 +372,14 @@ async function SendNotificationMessage(userId) {
   //   "/home"
   // );
 
-  WebSocketService.sendMessage(userId, 'addUserToSocket', {
+  // WebSocketService.sendMessage(userId, 'addUserToSocket', {
+  //   type: 'fetchedApiCall',
+  //   data: {
+  //     message: "we couldn't able to fetch your bank details, please try again later.It might be due to an bank server issue.",
+  //     failed: true,
+  //   },
+  // });
+  await publishSocketEvent(userId, 'addUserToSocket', {
     type: 'fetchedApiCall',
     data: {
       message: "we couldn't able to fetch your bank details, please try again later.It might be due to an bank server issue.",

@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 const app = require('./app');
 const { ServerConfig } = require('./config');
 const logger = require('./utils/common/logger');
-const WebSocketService = require('./services/websocket-service');
 const { initCloudWatchLogs } = require('./utils/cloud-watch');
 const redisClient = require('./config/redis-config');
 
@@ -16,7 +15,6 @@ const startServer = async () => {
     });
 
     await mongoose.connect(ServerConfig.MONGO_URI);
-    await WebSocketService.initialize(server);
     await initCloudWatchLogs();
     await redisClient.connect();
     // require("./utils/cron-jobs");

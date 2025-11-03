@@ -8,26 +8,23 @@ const apiRoutes = require('./routes');
 
 const app = express();
 
+// ✅ Must come before any middleware using req.ip
+app.set('trust proxy', 1);
+
 // Disable X-Powered-By header globally
 app.disable('x-powered-by');
 
 // ✅ Apply middlewares
-securityMiddleware(app);
 corsMiddleware(app);
+securityMiddleware(app);
 metricsMiddleware(app);
 
-// ✅ Main routes
+// ✅ Routes
 app.use('/api', apiRoutes);
-
-// ✅ Health check
-app.get('/', (req, res) => {
-  res.json({ status: 'healthy', message: 'Server is running' });
-});
-
-// ✅ Webhook route
+app.get('/', (req, res) => res.json({ status: 'healthy', message: 'Server is running' }));
 app.post('/FI/Notification', webHook);
 
-// ✅ 404 & Error handlers
+// ✅ Error handling
 app.use(notFoundHandler);
 app.use(globalErrorHandler);
 
