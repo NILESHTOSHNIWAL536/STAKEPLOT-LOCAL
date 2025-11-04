@@ -23,13 +23,12 @@ const protect = async (req, res, next) => {
         if (!user) throw new AppError('User Not found', StatusCodes.UNAUTHORIZED);
 
         // Check if token is active in the session database
-        const session = await Session.findOne({ userId: user._id, token });
+        const session = await Session.findOne({ userId: user._id });
         if (!session) {
           ErrorResponse.error = 'JsonWebTokenError';
           return res.status(StatusCodes.UNAUTHORIZED).json(ErrorResponse);
         }
 
-        console.log('Authenticated user:', user._id);
         req.user = user;
         req.user.token = token;
         return next();

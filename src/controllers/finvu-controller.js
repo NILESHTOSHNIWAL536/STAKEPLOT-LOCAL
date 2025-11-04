@@ -287,8 +287,6 @@ async function getFipsLatestMetricsAll(req, res) {
 async function getFipsDetails(req, res) {
   try {
     const { fipIds } = req.body;
-    console.log('fipIds received in getFipsDetails:');
-    console.log(fipIds);
     if (!Array.isArray(fipIds) || fipIds.length === 0) {
       return res.status(400).json({ error: 'fipIds must be a non-empty array' });
     }

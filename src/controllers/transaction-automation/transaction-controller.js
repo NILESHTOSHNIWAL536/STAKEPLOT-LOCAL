@@ -238,14 +238,15 @@ exports.getTopFiveCategories = async (req, res) => {
 exports.getCategoryWiseSpendings = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { categoryNames, startDate, endDate } = req.params;
+    const { categoryNames, startDate, endDate } = req.query;
     const categoryNamesArray = categoryNames.split(',');
-    console.log('categoryNames:', categoryNamesArray);
-    const response = await BankService.categoryWiseSpendings(userId, categoryNamesArray, startDate, endDate);
 
+    const response = await BankService.categoryWiseSpendings(userId, categoryNamesArray, startDate, endDate);
+    
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
+    console.log('error:', error);
     ErrorResponse.error = error;
     const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     return res.status(statusCode).json(ErrorResponse);
@@ -255,7 +256,7 @@ exports.getCategoryWiseSpendings = async (req, res) => {
 exports.getBudgetTransactions = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { categoryNames, groupBy, startDate, endDate } = req.params;
+    const { categoryNames, groupBy, startDate, endDate } = req.query;
     const categoryNamesArray = categoryNames.split(',');
 
     const response = await BankService.getBudgetTransactions(userId, startDate, endDate, categoryNamesArray, groupBy);
@@ -272,8 +273,8 @@ exports.getBudgetTransactions = async (req, res) => {
 exports.getBudgetSpents = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { categories, startDate, endDate } = req.params;
-    const categoryNamesArray = categories.split(',');
+    const { categoryNames, startDate, endDate } = req.query;
+    const categoryNamesArray = categoryNames.split(',');
 
     const response = await BankService.getBudgetSpents(userId, startDate, endDate, categoryNamesArray);
 

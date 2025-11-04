@@ -1089,7 +1089,6 @@ class AutoTransactionRepository extends CrudRepository {
         },
       },
     ]);
-
     return result;
   }
 
