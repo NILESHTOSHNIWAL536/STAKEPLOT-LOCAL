@@ -89,6 +89,7 @@ class BankTransactionRoutes {
 
   // Hide transactions
   static String getHideTransactions = "$_urlPath/get-hide-transactions";
+  static String getBudgetTopFiveCategories = "$_urlPath/top-five-categories";
 
   // User details
   static String getUserDetails = "$_urlPath/user-details";
@@ -115,6 +116,9 @@ class BankTransactionRoutes {
   // Top 3 transactions of the week
   static String getTopThreeTransactionsOfWeek =
       "$_urlPath/top-three-transactions-of-week";
+
+
+
 
   // Income & category spent
   static String getIncomeAndCategorySpent =

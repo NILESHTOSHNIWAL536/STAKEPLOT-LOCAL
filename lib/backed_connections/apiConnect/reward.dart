@@ -18,14 +18,17 @@ RxList<CouponModel> categoryCoupons = <CouponModel>[].obs;
 
 Future<void> fetchCouponsCounts() async {
   try {
+    couponAvalible.value = true;
     final response = await getDataApiCall('$url/reward/iscoupons/count');
-
+    print("Coupon count response: ${response.body}");
     if (getFlagOfResponse(response)) {
       var json = jsonDecode(response.body);
       couponAvalible.value = json['data'] > 0;
     }
-  } catch (e) {
+  } 
+  catch (e) {
     // Handle error silently as per your code
+    print("Error fetching coupon counts: $e");
   } finally {
     loadReaward.value = false;
   }
@@ -116,9 +119,11 @@ void redirectToUrl(BuildContext context, String path) async {
   }
 }
 
-void callRewardApis(context) {
-  fetchCouponsCounts();
+void callRewardApis(context)async {
+  await fetchCouponsCounts();
   dialofBoxContext = context;
+//  
+
   CouponPopupUtils.showCouponPopup(context, (category) {
     fetchCategoryCoupons(category);
     CouponPopupUtils.showCouponSelectionPopup(context, category);

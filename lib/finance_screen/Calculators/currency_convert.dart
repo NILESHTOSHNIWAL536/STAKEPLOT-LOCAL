@@ -98,7 +98,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
     try {
       final response = await http.get(Uri.parse(
           "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json"));
-      if (response.statusCode == 200) {
+        if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         setState(() {
           currencies = data

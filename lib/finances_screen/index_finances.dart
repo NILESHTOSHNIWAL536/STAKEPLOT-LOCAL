@@ -35,6 +35,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
     super.initState();
     Get.put(CardDueController());
     _loadData();
+    
   }
 
   Future<void> _loadData() async {

@@ -631,6 +631,7 @@ void addTransaction(String amount, String subCategory, String categories,
     transactionsHistory.insert(
         0, TransactionModel.fromJson(body['data'][0]['data']));
     updateCatAndMoneyMap(context);
+    userController.fetchUserInfo();
     Future.wait([
       () async {
         reloadHistory.value = !reloadHistory.value;

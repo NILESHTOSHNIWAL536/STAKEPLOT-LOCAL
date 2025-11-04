@@ -86,11 +86,11 @@ void setUpSocketListenerMainPage(BuildContext context) {
     //       .build(),
     // );
 mainPageWebSocket = IO.io(
-  "https://staging.stakeplot.in",
+  urlWithLocallHost,
   IO.OptionBuilder()
       .setTransports(['websocket'])
-      .setPath("/socket.io/")
-      .enableForceNewConnection()
+      // .setPath("/socket.io/")
+      // .enableForceNewConnection()
       .build(),
 );
 
@@ -121,6 +121,7 @@ mainPageWebSocket = IO.io(
       } else if (type == "logoutUser") {
         logoutUserFromDevice(context);
       } else if (type == 'Reward') {
+        print("Reward socket called");
         //  couponAvalible.value
         //  fetchCouponsCounts();
         //  await Future.delayed(Duration(milliseconds: 200));

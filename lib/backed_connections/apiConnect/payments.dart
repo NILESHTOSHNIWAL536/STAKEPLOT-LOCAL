@@ -411,7 +411,7 @@ void sendNotificationsToDevice(id, context, msg,
 }
 
 void getTopFiveCater() async {
-  String urlPath = "${url}/budget/top-five-categories/";
+  String urlPath =BankTransactionRoutes.getBudgetTopFiveCategories;
   try {
     var responce = await getDataApiCall(urlPath);
     if (getFlagOfResponse(responce)) {

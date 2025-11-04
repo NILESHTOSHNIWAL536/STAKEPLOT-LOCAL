@@ -116,6 +116,7 @@ class SliderAdddingFinances extends StatelessWidget {
                       child: CardBuilders.budgetCard(context, budget),
                     ),
                   )),
+                 
               // Display Debts
               ...debts.take(2).toList().map((debt) => Padding(
                     padding:

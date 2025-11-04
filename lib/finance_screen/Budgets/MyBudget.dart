@@ -57,7 +57,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     try {
       var response = await deleteDataApiCall(apiUrl);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         snackBarCalled(context, SnackbarData().budgetDeletionSuccess);
 
        
@@ -90,7 +90,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       var response = await getDataApiCall(apiUrl);
      
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
        
 
@@ -120,7 +120,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     try {
       var response = await getDataApiCall(apiUrl);
      
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
        
         if (!mounted) {
