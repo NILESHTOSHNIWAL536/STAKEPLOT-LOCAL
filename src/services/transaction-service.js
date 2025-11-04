@@ -15,14 +15,30 @@ const transactionRepository = new TransactionRepository();
 
 async function enterTransaction(data) {
   try {
+    logger.debug("[STEP 1] enterTransaction() called");
+
     if (!data) {
+      logger.error("[STEP 1.1] No transaction data provided");
       throw new AppError("No transaction data provided", StatusCodes.BAD_REQUEST);
     }
-    // Modify the transaction object to add in auto transaction collection
+
     const transaction = data;
-    const id=data.userId;
-    await handleDailyCounter(id, 'dailyTransaction',1,"",scoreToAdd.Transaction,scoreToGetReward.Transaction);
-    
+    const id = data.userId;
+    logger.debug(`[STEP 2] userId: ${id}`);
+
+    // handleDailyCounter
+    logger.debug("[STEP 3] Calling handleDailyCounter()");
+    // await handleDailyCounter(
+    //   id,
+    //   "dailyTransaction",
+    //   1,
+    //   "",
+    //   scoreToAdd.Transaction,
+    //   scoreToGetReward.Transaction
+    // );
+    logger.debug("[STEP 3 DONE] handleDailyCounter() completed");
+
+    // prepare transactionData
     const transactionData = {
       transactions: [
         {
@@ -42,35 +58,53 @@ async function enterTransaction(data) {
           isBill: transaction.isBill ?? false,
           isSplit: transaction.isSplit ?? false,
           userId: data.userId,
-        }
+        },
       ],
-      userId: data.userId
+      userId: data.userId,
     };
 
+    logger.debug("[STEP 4] Calling autoTransactionRepository.createTransaction()");
+    const response = await autoTransactionRepository.createTransaction(
+      transactionData.transactions,
+      null,
+      data.userId
+    );
+    logger.debug("[STEP 4 DONE] createTransaction() completed");
 
-    // Create a new transaction in auto transaction collection
-    const response = await autoTransactionRepository.createTransaction(transactionData.transactions, null, data.userId);
-
-    if(response){
-      // Clear the data for the donout chart
+    if (response) {
+      // Redis cleanup
+      logger.debug("[STEP 5] Clearing Redis cache for donut chart");
       const cacheKey = `categorizedTransactions:${data.userId}`;
       const cachedData = await redisClient.del(cacheKey);
-      logger.debug(`delete count after the manual transaction: ${cachedData}`);
+      logger.debug(`[STEP 5 DONE] Redis delete result (categorizedTransactions): ${cachedData}`);
 
+      logger.debug("[STEP 6] Clearing Redis cache for budget data");
       const budgetKey = `all-budgets-${data.userId}`;
       const budgetCachedData = await redisClient.del(budgetKey);
-      logger.debug(`delete count for budget after manualTransaction: ${budgetCachedData}`);
+      logger.debug(`[STEP 6 DONE] Redis delete result (budget): ${budgetCachedData}`);
 
-      // call headsup and money map function to update the cards
+      // headsUp and moneyMap
+      logger.debug("[STEP 7] Calling headsUpMessages()");
       await headsUpMessages(data.userId);
+      logger.debug("[STEP 7 DONE] headsUpMessages() completed");
+
+      logger.debug("[STEP 8] Calling moneyMapMessages()");
       await moneyMapMessages(data.userId);
+      logger.debug("[STEP 8 DONE] moneyMapMessages() completed");
     }
+
+    logger.debug("[STEP 9] enterTransaction() completed successfully");
     return response;
+
   } catch (error) {
-    logger.error(`Error adding transaction: ${error}`);
-    throw new AppError("Cannot add a new transaction Object",StatusCodes.INTERNAL_SERVER_ERROR);
+    logger.error(`[ERROR] enterTransaction() failed: ${error.stack || error}`);
+    throw new AppError(
+      "Cannot add a new transaction Object",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
   }
 }
+
 
 // async function transactionHistory(data) {
 //   try {
