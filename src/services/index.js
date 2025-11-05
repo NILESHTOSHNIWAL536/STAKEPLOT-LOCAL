@@ -5,4 +5,5 @@ module.exports = {
   BankService: require("./bank-service"),
 
   pushNotificationService: require("./notification-service"),
+  UserService: require("./user-service"),
 };

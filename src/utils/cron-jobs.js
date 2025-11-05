@@ -31,7 +31,9 @@ const createMockRes = () => ({
 });
 
 // retry count for the cron job
-async function retryFailedTransactions(flag) {
+async function retryFailedTransactions(flag)
+{
+
   try {
     let fipIds = [];
     if (flag) {
@@ -83,8 +85,6 @@ async function processBankDetailsForTransactions(bankDetailsOfUsers) {
 
   // Remove duplicates based on consendHandleId-consentId-custId
   const uniqueBankDetails = Array.from(new Map(filteredBankDetails.map((item) => [`${item.consendHandleId}-${item.consentId}-${item.custId}`, item])).values());
-
-  logger.debug(`Unique bank details for transactions: ${JSON.stringify(uniqueBankDetails)}`);
 
   // Build request payloads with necessary metadata
   const transactionRequests = uniqueBankDetails.map((bankDetail) => {
@@ -387,33 +387,21 @@ cron.schedule(
   }
 );
 
+
+// don't delete this code
+
 //  Retry at 8:30 AM
 cron.schedule('30 8 * * 5', () => retryFailedTransactions(false), {
   scheduled: true,
   timezone: 'Asia/Kolkata',
 });
 
-// Retry at 9:00 AM
-cron.schedule('0 9 * * 5', () => retryFailedTransactions(false), {
-  scheduled: true,
-  timezone: 'Asia/Kolkata',
-});
+// // Retry at 9:00 AM
+// cron.schedule('0 9 * * 5', () => retryFailedTransactions(false), {
+//   scheduled: true,
+//   timezone: 'Asia/Kolkata',
+// });
 
-// Delete notification tracker complete documents for bills, splits
-cron.schedule(
-  '0 0 * * *',
-  async () => {
-    try {
-      await notificationTracker.deleteMany({});
-    } catch (err) {
-      console.error('Error clearing notification trackers:', err);
-    }
-  },
-  {
-    scheduled: true,
-    timezone: 'Asia/Kolkata',
-  }
-);
 
 cron.schedule(
   '0 0,2,4,6,8,10,12,14,16,18,20,22 * * *',
@@ -428,32 +416,5 @@ cron.schedule(
   {
     scheduled: true,
     timezone: 'Asia/Kolkata',
-  }
-);
-
-cron.schedule(
-  '0 0 * * *',
-  async () => {
-    try {
-      await UserActivity.updateMany(
-        {},
-        {
-          $set: {
-            dailyClaimCount: [],
-            dailyTransaction: [],
-            dailyTags: [],
-            dailyBillClears: [],
-            pendingPosts: [],
-            transactionIdList: [],
-          },
-        }
-      );
-    } catch (err) {
-      console.error('❌ Error resetting daily counters:', err);
-    }
-  },
-  {
-    scheduled: true,
-    timezone: 'Asia/Kolkata', // Adjust for your timezone
   }
 );
