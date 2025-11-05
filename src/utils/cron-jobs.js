@@ -165,11 +165,9 @@ async function dropFailedCollection() {
 }
 
 // Schedule cron job for every friday at 8:00 AM IST for fetching bank transactions
-// cron.schedule('* * * * *', async () => {
-cron.schedule(
-  '0 8 * * 5',
-  async () => {
+cron.schedule('0 8 * * 5',async () => {
     // cleared the failed fetching banks details collection
+    console.log("cron job started");
     await dropFailedCollection();
 
     try {
