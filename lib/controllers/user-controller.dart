@@ -112,7 +112,7 @@ class UserController extends GetxController {
         UserLocalStorage.cacheUserDataLocally();
       }
     } catch (e) {
-      print('Error fetching user info: $e');
+      
     } finally {
       isLoading.value = false;
     }

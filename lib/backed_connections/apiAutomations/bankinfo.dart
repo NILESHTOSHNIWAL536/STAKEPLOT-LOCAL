@@ -177,7 +177,7 @@ Future<void> getFipAccountInfo([bool testing=false,String token=""]) async
     };
  
     var response=  (!testing?await postDataApiCall(urlPath,body): await postDataApiCallToken(urlPath, body, token));
-      print("Response Status Code:");
+     
       // printData(response);
     if(getFlagOfResponse(response))
     {

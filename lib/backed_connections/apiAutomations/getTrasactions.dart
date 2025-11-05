@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
@@ -515,6 +516,7 @@ void updateTheTagOfTarnsactions2(
     Navigator.pop(context);
     reloadHistory.value = !reloadHistory.value;
     updateCatAndMoneyMap(context);
+    getBudget();
   } else {}
 }
 
@@ -645,6 +647,7 @@ void addTransaction(String amount, String subCategory, String categories,
     ].map((fn) => fn())).then((_) {
       // All actions are complete
     });
+    getBudget();
   } else {
     snackBarCalledfail(context, SnackbarData().transactionAddFail, Colors.red);
   }

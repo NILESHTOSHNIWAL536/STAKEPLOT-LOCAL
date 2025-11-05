@@ -55,9 +55,9 @@ Future<void> getConsentHandleId(context) async {
   var body = {"custId": custId, 'number': number.value};
 
   try {
-    print("api url is $apiUrl and body is $body");
+  
     var response = await postDataApiCall(apiUrl, body);
-    print("response for consent handle id ${response.body}");
+   
     if (getFlagOfResponse(response)) {
       final data = jsonDecode(response.body);
       String consentHandleId = data["consentHandleId"];

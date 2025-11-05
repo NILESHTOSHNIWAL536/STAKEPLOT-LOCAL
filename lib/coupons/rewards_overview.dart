@@ -22,12 +22,16 @@ final RxBool showBrands = false.obs;
 class CouponPopupUtils {
   static void showCouponPopup(
       BuildContext context, Function(String) onCategorySelected) {
+        if (MediaQuery.maybeOf(context) == null) {
+     
+      return;
+    }
     showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext sheetContext) {
         return Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2,
+          width: MediaQuery.of(sheetContext).size.width,
+          height: MediaQuery.of(sheetContext).size.height / 2,
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -36,7 +40,7 @@ class CouponPopupUtils {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              getHeader(context),
+              getHeader(sheetContext),
               SizedBox(height: 16),
               Align(
                 alignment: Alignment.center,
@@ -52,13 +56,13 @@ class CouponPopupUtils {
               ),
               SizedBox(height: 16),
               couponAvalible.value
-                  ? gridList(context, onCategorySelected)
+                  ? gridList(sheetContext, onCategorySelected)
                   : Container(
-                      height: MediaQuery.of(context).size.height / 3,
+                      height: MediaQuery.of(sheetContext).size.height / 3,
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Center(
                         child: textStyleImage(
-                            context: context,
+                            context: sheetContext,
                             text: RewardScreenStrings().outOfReaward,
                             fontsize: 17,
                             fontWeight: FontWeight.w500,
@@ -248,10 +252,12 @@ class CouponPopupUtils {
   static void showCouponSelectionPopup(
       BuildContext context, String categoryTitle) async {
     await getCouponRequestCheck(categoryTitle);
-
+if (MediaQuery.maybeOf(context) == null) {
+      return;
+    }
     showDialog(
       context: context,
-      builder: (BuildContext dialogContext) {
+      builder: (BuildContext sheetContext) {
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -276,7 +282,7 @@ class CouponPopupUtils {
               children: [
                 couponRequestMap[categoryTitle]?.isNotEmpty ?? false
                     ? SizedBox.shrink()
-                    : getHeaderForCoupons(context),
+                    : getHeaderForCoupons(sheetContext),
                 Expanded(
                   child: Obx(() => loadReaward.value
                       ? Center(child: Spinner())
@@ -353,7 +359,7 @@ class CouponPopupUtils {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.pop(dialogContext);
+                                            Navigator.pop(sheetContext);
                                           },
                                           child: Container(
                                             width: MediaQuery.sizeOf(context)

@@ -50,7 +50,7 @@ class UserRoutes {
   static String selectedBank = "$_urlPath/selectedBank/";
   static String myNotifications = "$_urlPath/myNotifications/";
   static String inflation = "$_urlPath/inflation/";
-  static String deleteNotifications = "$_urlPath/deleteNotifications/";
+  static String deleteNotifications = "$_urlPath/deleteNotifications";
   static String updateprofile = "$_urlPath/updateprofile/";
   static String connections = "$_urlPath/connections";
   static String getMaskedUsers = "$_urlPath/getMaskedUsers";

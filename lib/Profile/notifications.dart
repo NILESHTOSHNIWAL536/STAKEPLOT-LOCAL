@@ -49,7 +49,8 @@ class _NotificationsState extends State<Notifications> {
     if (notifyId == null) return;
     String urlPath = '${UserRoutes.deleteNotifications}/$notifyId';
     var response = await getDataApiCall(urlPath);
-    if (response.statusCode != 200)
+    if (!getFlagOfResponse(response)) 
+     
     {
       snackBarCalledfail(context, SnackbarData().deleteNotificationFailed);
     }

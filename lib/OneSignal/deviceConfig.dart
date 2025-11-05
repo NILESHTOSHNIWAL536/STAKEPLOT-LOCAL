@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -76,7 +77,7 @@ void setUpSocketListenerMainPage(BuildContext context) {
   try {
     if (userController.userId.value == "") return;
 
-     print("api url is userController"+userController.userId.value);
+    
     // Initialize socket connection
     // mainPageWebSocket = IO.io(
     //   BankApiUrl,
@@ -96,12 +97,12 @@ mainPageWebSocket = IO.io(
 
     // Connect the socket
     mainPageWebSocket.onConnectError( (data) {
-      print("Main Page Socket Connect Error: $data");
+     
     });
     mainPageWebSocket.connect();
     mainPageWebSocket.onConnect((_) {
       try {
-        print("Main Page Socket Connected");
+       
         mainPageWebSocket.emit("addUserToSocket", userController.userId.value);
       } catch (e) {}
     });
@@ -121,7 +122,7 @@ mainPageWebSocket = IO.io(
       } else if (type == "logoutUser") {
         logoutUserFromDevice(context);
       } else if (type == 'Reward') {
-        print("Reward socket called");
+      
         //  couponAvalible.value
         //  fetchCouponsCounts();
         //  await Future.delayed(Duration(milliseconds: 200));

@@ -375,7 +375,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                             if (widget.flag) {
                               Navigator.pop(context);
                             }
-                            Navigator.pop(context);
+                           widget.ismanual? Navigator.pop(context): null;
                           }
                         : null,
                     // onTap: () {

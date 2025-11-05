@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import '../apiAutomations/curd.dart';
 import '../apis_connect.dart';
 import 'package:url_launcher/url_launcher.dart';
+// reward.dart (or backed_connections/reward.dart — file that contains callRewardApis)
+import 'package:flutter_application_code_stakeplot/main.dart' show navigatorKey;
 
 RxBool loadReaward = false.obs;
 RxBool refreshCupon = false.obs;
@@ -20,15 +22,14 @@ Future<void> fetchCouponsCounts() async {
   try {
     couponAvalible.value = true;
     final response = await getDataApiCall('$url/reward/iscoupons/count');
-    print("Coupon count response: ${response.body}");
+  
     if (getFlagOfResponse(response)) {
       var json = jsonDecode(response.body);
       couponAvalible.value = json['data'] > 0;
     }
   } 
   catch (e) {
-    // Handle error silently as per your code
-    print("Error fetching coupon counts: $e");
+
   } finally {
     loadReaward.value = false;
   }
@@ -119,15 +120,40 @@ void redirectToUrl(BuildContext context, String path) async {
   }
 }
 
-void callRewardApis(context)async {
-  await fetchCouponsCounts();
+// void callRewardApis(context)async {
+//   await fetchCouponsCounts();
   
-  dialofBoxContext = context;
-//  
+//   dialofBoxContext = context;
+// //  
 
-  CouponPopupUtils.showCouponPopup(context, (category) {
+//   CouponPopupUtils.showCouponPopup(context, (category) {
+//     fetchCategoryCoupons(category);
+//     CouponPopupUtils.showCouponSelectionPopup(context, category);
+//   });
+// }
+void callRewardApis(BuildContext? context) async {
+  await fetchCouponsCounts();
+
+  // Prefer app-level context (navigatorKey) because it is normally attached to MaterialApp.
+  BuildContext? safeContext = navigatorKey.currentContext ?? context;
+
+  if (safeContext == null) {
+    
+    return;
+  }
+
+  // Guard: ensure MediaQuery exists in this context.
+  if (MediaQuery.maybeOf(safeContext) == null) {
+   
+    return;
+  }
+
+  // Avoid keeping a long-lived reference to context if not needed.
+  dialofBoxContext = safeContext;
+
+  CouponPopupUtils.showCouponPopup(safeContext, (category) {
     fetchCategoryCoupons(category);
-    CouponPopupUtils.showCouponSelectionPopup(context, category);
+    CouponPopupUtils.showCouponSelectionPopup(safeContext, category);
   });
 }
 
