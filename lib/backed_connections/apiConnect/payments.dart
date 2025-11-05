@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_finances.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,20 +49,6 @@ Future<void> fetchDebts() async {
   }
 }
 
-void getBudget() async {
-  String urlPath = "${url}/budget/";
-  try {
-    var responce = await getDataApiCall(urlPath);
-    if (getFlagOfResponse(responce)) {
-      var his = jsonDecode(responce.body);
-      var obj = his['data'];
-      budgetList.clear();
-      budgetList.addAll(obj);
-      budgetLength.value = obj.length;
-      if(!getCreditCardBudgetDebts.value)getCreditCardBudgetDebts.value=budgetList.isNotEmpty;
-    }
-  } catch (e) {}
-}
 
 getBills() async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -93,82 +80,6 @@ bool isZeroAmount(String amount) {
   }
 }
 
-void addBudget(BuildContext context, String name, String amount,
-    List expenseCategory, String budgetPeriod) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  List filteredCategories = expenseCategory
-      .where((e) => !isZeroAmount(e['amount'].toString() ?? '0'))
-      .toList();
-
-  if (filteredCategories.isEmpty) {
-    createBudget.value = false;
-    snackBarCalledfail(context, SnackbarData().budgetAddFailed, Colors.red);
-    return;
-  }
-  var body = {
-    'name': name.toString(),
-    'amount': amount.toString(),
-    'categoryBudgets': filteredCategories,
-    'budgetPeriod': budgetPeriod.toString(),
-  };
-
-  final response = await http.post(
-    Uri.parse('${url}/budget/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": accessToken.toString(),
-    },
-    body: jsonEncode(body),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    getBudget();
-    Navigator.pop(context);
-    Navigator.pop(context);
-    Navigator.pop(context);
-
-    snackBarCalled(context, SnackbarData().budgetAdded);
-  } else {
-    snackBarCalledfail(context, SnackbarData().budgetAddFailed, Colors.red);
-  }
-
-  acceptReset.value = false;
-  createBudget.value = false;
-}
-
-void budgetUpdate(context, name, amount, expenseCategory, budgetType,
-    budgetPeriod, id) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${url}/budget/edit/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      'name': name.toString(),
-      'amount': amount.toString(),
-      'expenseCategories': expenseCategory,
-      'budgetType': budgetType.toString(),
-      'budgetPeriod': budgetPeriod.toString(),
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-
-    snackBarCalled(context, SnackbarData().budgetUpdated);
-    // Navigator.pushNamed(context, '/BudgetCheck');
-    Navigator.pop(context);
-    Navigator.pop(context);
-  } else {
-    snackBarCalledfail(context, SnackbarData().budgetUpdateFailed, Colors.red);
-  }
-}
 
 void addDebts(context, name, amount, interest, startDate, durations) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -410,18 +321,7 @@ void sendNotificationsToDevice(id, context, msg,
   } catch (e) {}
 }
 
-void getTopFiveCater() async {
-  String urlPath =BankTransactionRoutes.getBudgetTopFiveCategories;
-  try {
-    var responce = await getDataApiCall(urlPath);
-    if (getFlagOfResponse(responce)) {
-      var his = jsonDecode(responce.body);
-      categoriesSeleted.clear();
-      categoriesSeleted.addAll(his['data']);
-      getCategories.value = !getCategories.value;
-    }
-  } catch (e) {}
-}
+
 
 Future<String?> getToken() async {
   final SharedPreferences pref = await SharedPreferences.getInstance();

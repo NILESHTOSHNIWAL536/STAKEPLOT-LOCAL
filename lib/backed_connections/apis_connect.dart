@@ -1,10 +1,12 @@
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/controllers/post-controller.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/MyBudget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
@@ -234,3 +236,28 @@ final RxList<Map<String, dynamic>> inflationPredictions =
 var showResults = false.obs;
 RxBool isLoadingInflation = false.obs;
 RxString changeAvater = ControllerManagement.userController.avatar.value.obs;
+
+
+
+  List<FlSpot> budgetLineSpots = [];
+   Map<String, double> spendingCategories = {};
+   List categoryGraphObjects = [];
+   List<BudgetChartDataPoint> budgetChartData = [];
+   String selectedBudgetPeriod = 'monthly';
+   List<dynamic> budgetTransactions = []; // Store raw transactions from API
+   Map<String, dynamic>? currentBudgetInfo;
+   List<String>? budgetInsights;
+   List<Map<String, dynamic>> categorySpendings = [];
+   List<Map<String, dynamic>> pieGraphData = [];
+   bool isBudgetDeleting = false;
+
+  /// Renamed from _ChartData to BudgetChartDataPoint and made it a static inner class
+   class BudgetChartDataPoint {
+    BudgetChartDataPoint({required this.x, required this.y, required this.xString});
+    final int x;
+    final double y;
+    final String xString;
+
+    @override
+    String toString() => '($x, $y, $xString)';
+  }
