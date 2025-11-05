@@ -298,7 +298,6 @@ async function getFipsDetails(req, res) {
       fip_id: { $in: fipIds },
       event_name: { $regex: /FIFetchResponse/, $options: 'i' },
     }).sort({ timestamp: -1 });
-    console.log(data);
     var json = res.status(200).json({ data });
     return json;
   } catch (error) {

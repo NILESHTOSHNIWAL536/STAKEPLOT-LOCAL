@@ -273,6 +273,11 @@ async function categorizeTransactions(userId) {
 async function createTransaction(userId, data) {
   try {
     const response = await new AutoTransactionRepository().createTransaction(data, null, userId, null);
+
+    // clear budget cache:
+    await redisClient.del(`all-budgets-${userId}`);
+    await redisClient.del(`banksWithAccountDetails:${userId}`);    
+
     return response;
   } catch (error) {
     return error;
