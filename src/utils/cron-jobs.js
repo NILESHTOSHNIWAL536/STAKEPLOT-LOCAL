@@ -12,12 +12,8 @@ const fetchNextReminderAt = require('./helpers/fetchNextReminderTime');
 const moment = require('moment');
 const { Bill, User, Account, FailedTransaction, notificationTracker, UserActivity, RecurringPayment, FipsMetric } = require('../models');
 const FinvuController = require('../controllers/finvu-controller');
-const { Parser } = require('json2csv');
 const { getCouponsCount } = require('../utils/helpers/increment_score');
 const { updateNextFetchByUserId } = require('../utils/helpers/update-existing-accounts');
-const { createAndUploadBackup } = require('../services/db-backup/backup');
-const { enforceRetention } = require('../services/db-backup/retention');
-const { SESClient, SendRawEmailCommand } = require('@aws-sdk/client-ses');
 const plimit = require('p-limit');
 require('dotenv').config();
 
@@ -419,19 +415,21 @@ cron.schedule(
   }
 );
 
-async function runFipsCronJob() {
-  try {
-    const count = await FinvuController.fetchAndStoreFipsMetrics();
-    retryFailedTransactions(false);
-  } catch (error) {
-    console.error('Cron job error:', error.message);
+cron.schedule(
+  '0 0,2,4,6,8,10,12,14,16,18,20,22 * * *',
+  async () => {
+    try {
+      await FinvuController.fetchAndStoreFipsMetrics();
+      retryFailedTransactions(false);
+    } catch (error) {
+      console.error('Cron job error:', error.message);
+    }
+  },
+  {
+    scheduled: true,
+    timezone: 'Asia/Kolkata',
   }
-}
-
-cron.schedule('0 0,2,4,6,8,10,12,14,16,18,20,22 * * *', runFipsCronJob, {
-  scheduled: true,
-  timezone: 'Asia/Kolkata',
-});
+);
 
 cron.schedule(
   '0 0 * * *',
