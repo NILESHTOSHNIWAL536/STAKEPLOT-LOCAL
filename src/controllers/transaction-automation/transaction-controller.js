@@ -209,8 +209,8 @@ exports.categorizeTransactions = async (req, res) => {
 exports.createTransaction = async (req, res) => {
   try {
     const userId = req.user._id;
-    const data = req.body;
-    const response = await BankService.createTransaction(userId, data);
+    const { transactions } = req.body;
+    const response = await BankService.createTransaction(userId, transactions);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);

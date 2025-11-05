@@ -5,7 +5,7 @@ const transactionAuto = require('./transactionsAuto/transactions');
 const finvuRoutes = require('./finvu-routes');
 const customCategory = require('./transactionsAuto/customCategoryRoutes');
 
-const router = express.Router();
+const router = express.Router();``
 
 router.use('/notify', notificationApiOneSignal);
 router.use('/transaction', transactionRoutes);

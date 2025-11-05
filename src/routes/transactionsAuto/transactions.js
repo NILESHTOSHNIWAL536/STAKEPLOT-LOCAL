@@ -56,6 +56,7 @@ router.get("/top-five-categories", AuthMiddlewares.protect, TransactionAutoContr
 router.get('/category-wise-spendings', AuthMiddlewares.protect, TransactionAutoController.getCategoryWiseSpendings);
 router.get('/budget-transactions', AuthMiddlewares.protect, TransactionAutoController.getBudgetTransactions);
 router.get('/get-budget-spents', AuthMiddlewares.protect, TransactionAutoController.getBudgetSpents);
+router.put('/:transactionId', AuthMiddlewares.protect, TransactionAutoController.updateTransaction);
 // ******************************************************************************************************
 router.get('/getUserMonthlySpending', AuthMiddlewares.protect, TransactionAutoController.getUserMonthlySpending);
 router.get('/get-grouped-transactions', AuthMiddlewares.protect, TransactionAutoController.getGroupedTransactions);

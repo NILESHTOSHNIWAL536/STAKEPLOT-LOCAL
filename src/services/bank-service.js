@@ -270,9 +270,9 @@ async function categorizeTransactions(userId) {
   }
 }
 
-async function createTransaction(data) {
+async function createTransaction(userId, data) {
   try {
-    const response = await new AutoTransactionRepository().createTransaction([data], null, data.userId);
+    const response = await new AutoTransactionRepository().createTransaction(data, null, userId, null);
     return response;
   } catch (error) {
     return error;
@@ -431,6 +431,15 @@ async function getBudgetTransactions(userId, startDate, endDate, categories, gro
 async function getBudgetSpents(userId, startDate, endDate, categories) {
   try {
     const response = await new AutoTransactionRepository().getSpentAmounts(userId, startDate, endDate, categories);
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function updateTransactionById(userId, transactionId, updateData) {
+  try {
+    const response = await new AutoTransactionRepository().updateTransactionById(userId, transactionId, updateData);
     return response;
   } catch (error) {
     return error;
@@ -723,4 +732,5 @@ module.exports = {
   getTopFiveCategories,
   getBudgetSpents,
   createTransaction,
+  updateTransactionById
 };
