@@ -31,7 +31,7 @@ const generateServiceToken = () => {
 const incrementScore = async (userId, scoreToAdd) => {
   try {
     let user = await UserActivity.findOne({ userId });
-     console.log('Incrementing score for user:', userId, 'by', scoreToAdd);
+
     if (!user) {
       user = new UserActivity({ userId });
     }
@@ -55,8 +55,6 @@ const incrementScore = async (userId, scoreToAdd) => {
 const getCouponsCount = async () => {
   try {
     const token = generateServiceToken();
-    console.log('Generated service token for coupon count request');
-    console.log('Generated service token:', token);
     const response = await axios.get(`${baseUrl}/coupon/get-unclaimed-coupons-count`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -64,7 +62,6 @@ const getCouponsCount = async () => {
     });
     return response;
   } catch (e) {
-    console.error('Error fetching coupons count:', e.message);
     return { data: 0 };
   }
 };
@@ -104,7 +101,6 @@ const handleDailyCounter = async (userId, counterField, scoreToAdd, objectId, in
     // Initialize counter array if it doesn't exist
     const currentDate = getCurrentDate();
     let user = await UserActivity.findOne({ userId });
-    console.log('Handling daily counter for user:', userId, 'on field:', counterField);
 
     if (!user) {
       user = new UserActivity({ userId });
@@ -142,7 +138,7 @@ const handleDailyCounter = async (userId, counterField, scoreToAdd, objectId, in
     if (dailyCounter.count >= countBreak) {
       try {
         const response = await getCouponsCount();
-        console.log('Coupons count response:', response.data);
+
         if (response.data > 0) {
           user.unclaimedCount++;
           dailyCounter.count = 0;
@@ -164,7 +160,6 @@ const handleDailyCounter = async (userId, counterField, scoreToAdd, objectId, in
     await user.save();
     return dailyCounter.count;
   } catch (error) {
-    console.log('Error in handleDailyCounter:', error);
     throw new Error(`Failed to handle daily counter for ${counterField}: ${error.message}`);
   }
 };
