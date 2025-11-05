@@ -121,6 +121,7 @@ void redirectToUrl(BuildContext context, String path) async {
 
 void callRewardApis(context)async {
   await fetchCouponsCounts();
+  
   dialofBoxContext = context;
 //  
 
