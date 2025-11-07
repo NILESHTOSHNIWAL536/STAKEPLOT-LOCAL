@@ -34,6 +34,18 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info"/>
         </receiver>
+                <receiver
+            android:name="com.stakeplot.pfa.ClickableWidget"
+            android:exported="true"
+            android:enabled="true"
+            android:permission="android.permission.BIND_APPWIDGET">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/click_info" />
+        </receiver>
         <receiver
         android:name="com.stakeplot.pfa.PayableWidgetProvider" android:exported="true" android:enabled="true"
         android:permission="android.permission.BIND_APPWIDGET">
@@ -44,6 +56,7 @@
             android:name="android.appwidget.provider"
             android:resource="@xml/payable_widget_info" />
     </receiver>
+    
     </application>
     
     <!-- Required to query activities that can process text, see:
