@@ -14,12 +14,12 @@ void checkEmail(context, email, otp, name) async {
 
   if (getFlagOfResponse(response))
   {
-    snackBarCalled(context,SnackbarData().otpAccepted, Colors.black);
+    snackBarCalled(context,SnackbarData().otpAccepted);
     acceptReset.value = false;
    
   } else {
     acceptReset.value = false;
-    snackBarCalledfail(context,SnackbarData().otpInvalid, Colors.red);
+    snackBarCalledfail(context,SnackbarData().otpInvalid,);
   }
 }
 
@@ -36,9 +36,9 @@ void resendOptUser(context, email, name) async
 
   if (getFlagOfResponse(response)) {
     acceptReset.value = false;
-    snackBarCalled(context,SnackbarData().otpResent, Colors.black);
+    snackBarCalled(context,SnackbarData().otpResent,);
   } else {
-    snackBarCalledfail(context,SnackbarData().otpSendFail1, Colors.red);
+    snackBarCalledfail(context,SnackbarData().otpSendFail1,);
   }
 }
 
@@ -53,8 +53,8 @@ void resendOpt(context, email, name) async {
 
   if (getFlagOfResponse(response)) {
     acceptReset.value = false;
-    snackBarCalled(context,SnackbarData().otpResentSuccess, Colors.black);
+    snackBarCalled(context,SnackbarData().otpResentSuccess, );
   } else {
-    snackBarCalledfail(context,SnackbarData().otpSendFail2, Colors.red);
+    snackBarCalledfail(context,SnackbarData().otpSendFail2, );
   }
 }

@@ -104,7 +104,7 @@ class RewardsScreen extends StatelessWidget {
                                   boxShadow: [
                                     BoxShadow(
                                       color: AppColors.greyCard.withOpacity(0.2),
-                                      // color: Colors.black.withOpacity(0.09),
+                                      // color: AppColors.accentColor.withOpacity(0.09),
                                       offset: Offset(0, 3),
                                       blurRadius: 1.0,
                                       spreadRadius: 2.0,

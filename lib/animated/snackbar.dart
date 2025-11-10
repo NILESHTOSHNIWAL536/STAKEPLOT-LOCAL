@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -15,7 +16,7 @@ void showSuccessTopSnackBar(BuildContext context, String message) {
                       context,
                       lWeight: FontWeight.bold,
                       fontSize: 12,
-                      color: Colors.white,
+                      color: AppColors.backgroundColor,
                     ),
       ),
     ),
@@ -36,7 +37,7 @@ void showErrorTopSnackBar(BuildContext context, String message) {
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: 12,
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                   ),
     ),
     displayDuration: const Duration(seconds: 3),

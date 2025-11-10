@@ -15,7 +15,7 @@ void snackBarCalled(BuildContext context, String text,
             context,
             lWeight: FontWeight.bold,
             fontSize: 12,
-            color: Colors.white,
+            color: AppColors.backgroundColor,
           ),
         ),
       ),
@@ -28,7 +28,7 @@ void snackBarCalled(BuildContext context, String text,
   }
 }
 
-void snackBarCalledfail(context, String text, [Color colors = Colors.black]) {
+void snackBarCalledfail(context, String text, [Color colors = AppColors.accentColor]) {
   showTopSnackBar(
     Overlay.of(context),
     Container(
@@ -40,7 +40,7 @@ void snackBarCalledfail(context, String text, [Color colors = Colors.black]) {
           context,
           lWeight: FontWeight.bold,
           fontSize: 12,
-          color: Colors.white,
+          color: AppColors.backgroundColor,
         ),
       ),
     ),
@@ -51,7 +51,8 @@ void snackBarCalledfail(context, String text, [Color colors = Colors.black]) {
   );
 }
 
-void snackBarCalledSignup(context, String text, [Color colors = Colors.black]) {
+void snackBarCalledSignup(context, String text, [Color colors = AppColors.accentColor
+]) {
   showTopSnackBar(
     Overlay.of(context),
     Container(
@@ -63,7 +64,7 @@ void snackBarCalledSignup(context, String text, [Color colors = Colors.black]) {
           context,
           lWeight: FontWeight.bold,
           fontSize: 12,
-          color: Colors.white,
+          color: AppColors.backgroundColor,
         ),
       ),
     ),
@@ -87,7 +88,7 @@ void snackBarAllFeilds(context, [Color colors = Colors.red]) {
           context,
           lWeight: FontWeight.bold,
           fontSize: 12,
-          color: Colors.white,
+          color: AppColors.backgroundColor,
         ),
       ),
     ),
@@ -110,7 +111,7 @@ void snackBarAllFeilds2(context, text, [Color colors = Colors.red]) {
           context,
           lWeight: FontWeight.bold,
           fontSize: 12,
-          color: Colors.white,
+          color: AppColors.backgroundColor,
         ),
       ),
     ),
@@ -135,7 +136,7 @@ void snackBarAllBottom(context, text, [Color colors = Colors.green]) {
         context,
         lWeight: FontWeight.bold,
         fontSize: 12,
-        color: Colors.white,
+        color: AppColors.backgroundColor,
       ),
     ),
   ),

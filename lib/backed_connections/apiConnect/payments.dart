@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -109,7 +110,7 @@ void addDebts(context, name, amount, interest, startDate, durations) async {
     getDebts();
     Navigator.pop(context);
   } else {
-    snackBarCalledfail(context, SnackbarData().debtAddFailed, Colors.red);
+    snackBarCalledfail(context, SnackbarData().debtAddFailed,);
   }
   acceptReset.value = false;
 }
@@ -144,11 +145,11 @@ void addBillTranscations(
       final body = json.decode(response.body);
 
       acceptReset.value = false;
-      snackBarCalled(context, SnackbarData().billAdded, Colors.black);
+      snackBarCalled(context, SnackbarData().billAdded,);
       getBills();
       Navigator.pop(context);
     } else {
-      snackBarCalledfail(context, SnackbarData().billAddFailed, Colors.red);
+      snackBarCalledfail(context, SnackbarData().billAddFailed,);
     }
     acceptReset.value = false;
   }
@@ -167,7 +168,7 @@ void deleteDebts(context, String id, [flag = false]) async {
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, SnackbarData().debtCleared, Colors.black);
+    snackBarCalled(context, SnackbarData().debtCleared,);
     debtLength.value--;
     getDebts();
     if (flag) return;
@@ -178,7 +179,7 @@ void deleteDebts(context, String id, [flag = false]) async {
     //           ),
     //       );
   } else {
-    snackBarCalledfail(context, SnackbarData().debtClearError, Colors.red);
+    snackBarCalledfail(context, SnackbarData().debtClearError,);
   }
 }
 
@@ -243,7 +244,7 @@ void clearDebts(context, String id, String amount, String value) async {
     body: jsonEncode(body),
   );
   if (response.statusCode == 200) {
-    snackBarCalled(context, SnackbarData().allDebtsCleared, Colors.black);
+    snackBarCalled(context, SnackbarData().allDebtsCleared, AppColors.accentColor);
   } else {
     snackBarCalledfail(context, SnackbarData().debterror, Colors.red);
   }

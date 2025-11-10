@@ -245,15 +245,15 @@ class _TwoFactorEmailVerificationState
           borderRadius: BorderRadius.circular(10),
           fieldHeight: MediaQuery.of(context).size.width * 0.13,
           fieldWidth: MediaQuery.of(context).size.width * 0.13,
-          activeFillColor: Colors.white,
+          activeFillColor: AppColors.backgroundColor,
           activeColor: AppColors.finSpaceColor,
-          selectedFillColor: Colors.white,
+          selectedFillColor: AppColors.backgroundColor,
           selectedColor: Colors.blue,
           inactiveFillColor: Colors.grey[200],
-          inactiveColor: Colors.white,
+          inactiveColor: AppColors.backgroundColor,
         ),
         enableActiveFill: true,
-        textStyle: const TextStyle(fontSize: 20, color: Colors.black),
+        textStyle: const TextStyle(fontSize: 20, color: AppColors.accentColor),
         onChanged: (value) {
           _otpCode.value = value;
           _isOtpValid.value = value.length == _otpLength;

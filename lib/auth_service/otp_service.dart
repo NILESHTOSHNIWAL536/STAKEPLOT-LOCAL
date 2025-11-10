@@ -14,9 +14,9 @@ class OtpService {
       'name': name,
     });
     if (getFlagOfResponse(response)) {
-      snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
+      snackBarCalled(context, SnackbarData().sentOtpToEmail,);
     } else {
-      snackBarCalledfail(context, SnackbarData().cantSendOtp, Colors.red);
+      snackBarCalledfail(context, SnackbarData().cantSendOtp,);
     }
   }
 
@@ -39,18 +39,18 @@ class OtpService {
     }
 
     if (getFlagOfResponse(response)) {
-      snackBarCalled(context, decodedResponse['data'], Colors.black);
+      snackBarCalled(context, decodedResponse['data']);
     } else if (response.statusCode == 429) {
       if (decodedResponse != null &&
           decodedResponse is Map &&
           decodedResponse['message'] != null) {
-        snackBarCalledfail(context, decodedResponse['message'], Colors.red);
+        snackBarCalledfail(context, decodedResponse['message']);
       } else {
         snackBarCalledfail(context,
-            "Too many OTP requests. Please try again later.", Colors.red);
+            "Too many OTP requests. Please try again later.",);
       }
     } else {
-      snackBarCalledfail(context, decodedResponse['message'], Colors.red);
+      snackBarCalledfail(context, decodedResponse['message']);
     }
   }
 
@@ -60,14 +60,14 @@ class OtpService {
       var response = await postDataApiCallwithOutSharedPref(otpRoutes.sendOtp,
           {'email': email, 'name': name, 'type': "deleteAccount"});
       if (getFlagOfResponse(response)) {
-        snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
+        snackBarCalled(context, SnackbarData().sentOtpToEmail,);
         return true;
       } else {
-        snackBarCalledfail(context, SnackbarData().cantSendOtp, Colors.red);
+        snackBarCalledfail(context, SnackbarData().cantSendOtp,);
         return false;
       }
     } catch (e) {
-      snackBarCalledfail(context, 'Failed to send OTP: $e', Colors.red);
+      snackBarCalledfail(context, 'Failed to send OTP: $e',);
       return false;
     }
   }
@@ -81,15 +81,15 @@ class OtpService {
           otpRoutes.verifyOtp, {'email': email, 'otp': deleteOtp});
       if (getFlagOfResponse(response)) {
         snackBarCalled(context, 'OTP verified successfully',
-            Colors.black); // Adjusted message for clarity
+            ); // Adjusted message for clarity
         return true;
       } else {
         snackBarCalledfail(
-            context, 'Invalid OTP', Colors.red); // Adjusted message for clarity
+            context, 'Invalid OTP'); // Adjusted message for clarity
         return false;
       }
     } catch (e) {
-      snackBarCalledfail(context, 'Failed to verify OTP: $e', Colors.red);
+      snackBarCalledfail(context, 'Failed to verify OTP: $e');
       return false;
     }
   }

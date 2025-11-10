@@ -109,7 +109,7 @@ class CardWidget extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           horizontal: 8 * fontScale, vertical: 4 * fontScale),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.4),
+                        color: AppColors.backgroundColor.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(2 * fontScale),
                       ),
                       child: Row(
@@ -154,7 +154,7 @@ class CardWidget extends StatelessWidget {
                             },
                             activeColor: AppColors.primaryColor,
                             inactiveThumbColor: Colors.white70,
-                            inactiveTrackColor: Colors.white.withOpacity(0.3),
+                            inactiveTrackColor: AppColors.backgroundColor.withOpacity(0.3),
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                           )),
@@ -232,13 +232,13 @@ class CardWidget extends StatelessWidget {
                         padding: EdgeInsets.symmetric(
                             horizontal: 8 * fontScale, vertical: 4 * fontScale),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: AppColors.backgroundColor.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(10 * fontScale),
                         ),
                         child: Text(
                           "Added",
                           style: TextStyle(
-                              fontSize: 14 * fontScale, color: Colors.white),
+                              fontSize: 14 * fontScale, color: AppColors.backgroundColor),
                         ),
                       ),
                     )
@@ -314,7 +314,7 @@ class CardWidget extends StatelessWidget {
                             horizontal: 12 * fontScale,
                             vertical: 4 * fontScale),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: AppColors.backgroundColor.withOpacity(0.2),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20 * fontScale),
                             topRight: Radius.circular(20 * fontScale),
@@ -323,7 +323,7 @@ class CardWidget extends StatelessWidget {
                         child: Text(
                           "+",
                           style: TextStyle(
-                              fontSize: 18 * fontScale, color: Colors.white),
+                              fontSize: 18 * fontScale, color: AppColors.backgroundColor),
                         ),
                       ),
                     ),
@@ -396,7 +396,7 @@ class CardWidget extends StatelessWidget {
                             horizontal: 12.5 * fontScale,
                             vertical: 4 * fontScale),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: AppColors.backgroundColor.withOpacity(0.2),
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(20 * fontScale),
                             bottomRight: Radius.circular(20 * fontScale),
@@ -405,7 +405,7 @@ class CardWidget extends StatelessWidget {
                         child: Text(
                           "x",
                           style: TextStyle(
-                              fontSize: 18 * fontScale, color: Colors.white),
+                              fontSize: 18 * fontScale, color: AppColors.backgroundColor),
                         ),
                       ),
                     ),
@@ -438,7 +438,7 @@ class CardWidget extends StatelessWidget {
                                   horizontal: 8 * fontScale,
                                   vertical: 4 * fontScale),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
+                                color: AppColors.backgroundColor.withOpacity(0.2),
                                 borderRadius:
                                     BorderRadius.circular(4 * fontScale),
                               ),
@@ -459,7 +459,7 @@ class CardWidget extends StatelessWidget {
                                       horizontal: 8 * fontScale,
                                       vertical: 4 * fontScale),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
+                                    color: AppColors.backgroundColor.withOpacity(0.2),
                                     borderRadius:
                                         BorderRadius.circular(8 * fontScale),
                                   ),
@@ -488,7 +488,7 @@ class CardWidget extends StatelessWidget {
                                   horizontal: 8 * fontScale,
                                   vertical: 6 * fontScale),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
+                                color: AppColors.backgroundColor.withOpacity(0.2),
                                 borderRadius:
                                     BorderRadius.circular(10 * fontScale),
                               ),

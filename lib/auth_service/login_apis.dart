@@ -39,7 +39,7 @@ class LoginService {
       acceptReset.value = false;
       if (!boolvar) {
         snackBarCalledfail(
-            context, data2['error']['explanation'], Colors.red);
+            context, data2['error']['explanation'], );
         return;
       }
       final body = jsonDecode(response.body);
@@ -50,7 +50,7 @@ class LoginService {
       clearStack(context);
       Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
     } catch (e) {
-      snackBarCalledfail(context, "Server error", Colors.red);
+      snackBarCalledfail(context, "Server error", );
     }
   }
   
@@ -73,9 +73,9 @@ class LoginService {
         await screenDataLocalStorage();
       }
       else if (response.statusCode == 500) {
-        snackBarCalledfail(context, SnackbarData().serverError, Colors.red);
+        snackBarCalledfail(context, SnackbarData().serverError,);
       } else if (response.statusCode == 400) {
-        snackBarCalledfail(context, SnackbarData().invalidInfo, Colors.red);
+        snackBarCalledfail(context, SnackbarData().invalidInfo);
       } else {
         snackBarCalledfail(context, SnackbarData().invalidCredentials);
       }
@@ -102,7 +102,7 @@ class LoginService {
         ForceLogout.forceLoginShowModal(
             context, decodedResponse, emailController);
       } else if (response.statusCode == 400) {
-        snackBarCalledfail(context, decodedResponse['error'], Colors.red);
+        snackBarCalledfail(context, decodedResponse['error']);
         acceptReset.value = false;
         OtpService.getOTPForTwoFactorAuth(
             context, "MoneyMosaic", emailController.text.toString());

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
@@ -76,7 +77,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final size = MediaQuery.of(context).size;
 
     return AnimatedSplashScreen.withScreenFunction(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       duration: 1800,
       splashIconSize: size.height,
       splashTransition: SplashTransition.fadeTransition,

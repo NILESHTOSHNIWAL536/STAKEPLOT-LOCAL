@@ -65,7 +65,7 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
         backgroundColor: AppColors.backgroundColor,
         title: Text(widget.debt.name),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [

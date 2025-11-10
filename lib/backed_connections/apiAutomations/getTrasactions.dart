@@ -702,12 +702,12 @@ void pickCustomDateRange(BuildContext context) async {
           selectedDayHighlightColor:
               AppColors.primaryColor, // Selected range color
           controlsTextStyle:
-              TextStyle(color: Colors.black), // Header text color
+              TextStyle(color: AppColors.accentColor), // Header text color
           dayTextStyle:
-              TextStyle(color: Colors.black), // Default day text color
+              TextStyle(color: AppColors.accentColor), // Default day text color
           selectedDayTextStyle:
-              TextStyle(color: Colors.black), // Selected day text color
-          weekdayLabelTextStyle: TextStyle(color: Colors.black),
+              TextStyle(color: AppColors.accentColor), // Selected day text color
+          weekdayLabelTextStyle: TextStyle(color: AppColors.accentColor),
         ),
         dialogSize: const Size(400, 300),
         value: [
@@ -968,10 +968,10 @@ void pickCustomDateRangeoverall(BuildContext context) async {
           lastDate: DateTime.now(),
           selectableDayPredicate: (day) => true,
           selectedDayHighlightColor: Colors.blueAccent,
-          controlsTextStyle: TextStyle(color: Colors.black),
-          dayTextStyle: TextStyle(color: Colors.black),
-          selectedDayTextStyle: TextStyle(color: Colors.black),
-          weekdayLabelTextStyle: TextStyle(color: Colors.black),
+          controlsTextStyle: TextStyle(color: AppColors.accentColor),
+          dayTextStyle: TextStyle(color: AppColors.accentColor),
+          selectedDayTextStyle: TextStyle(color: AppColors.accentColor),
+          weekdayLabelTextStyle: TextStyle(color: AppColors.accentColor),
         ),
         dialogSize: const Size(300, 300),
         value: [

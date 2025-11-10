@@ -29,7 +29,7 @@ void showTagListOfInterestModal({
             vertical: 16,
           ),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundColor,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
           child: Column(

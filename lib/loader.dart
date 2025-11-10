@@ -94,7 +94,7 @@ class Spinner extends StatelessWidget {
 class Verify extends StatelessWidget {
   String str;
   Color color;
-  Verify({Key? key, this.str = "Verifying.....", this.color = Colors.black})
+  Verify({Key? key, this.str = "Verifying.....", this.color = AppColors.accentColor})
       : super(key: key);
 
   @override

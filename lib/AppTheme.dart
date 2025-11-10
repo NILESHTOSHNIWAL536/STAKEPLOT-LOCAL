@@ -9,10 +9,10 @@ class AppTheme {
     appBarTheme:const AppBarTheme(
       backgroundColor: AppColors.backgroundColor,
       iconTheme:  IconThemeData(color: Color.fromARGB(255, 125, 45, 45)),
-      titleTextStyle:  TextStyle(color: Colors.black, fontSize: 18),
+      titleTextStyle:  TextStyle(color: AppColors.accentColor, fontSize: 18),
     ),
     textTheme: const TextTheme(
-      bodyMedium: TextStyle(color: Colors.black),
+      bodyMedium: TextStyle(color: AppColors.accentColor),
     ),
   );
 
@@ -22,14 +22,14 @@ class AppTheme {
       seedColor: AppColors.primaryColor,
       brightness: Brightness.dark,
     ),
-    scaffoldBackgroundColor: Colors.black,
+    scaffoldBackgroundColor: AppColors.accentColor,
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF1E1E1E),
-      iconTheme: IconThemeData(color: Colors.white),
-      titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
+      iconTheme: IconThemeData(color: AppColors.backgroundColor),
+      titleTextStyle: TextStyle(color: AppColors.backgroundColor, fontSize: 18),
     ),
     textTheme: const TextTheme(
-      bodyMedium: TextStyle(color: Colors.white),
+      bodyMedium: TextStyle(color: AppColors.backgroundColor),
     ),
   );
 }

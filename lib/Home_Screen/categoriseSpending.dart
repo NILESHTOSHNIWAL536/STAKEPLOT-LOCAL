@@ -215,7 +215,7 @@ class CategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(26), // Shadow color
+              color: AppColors.accentColor.withAlpha(26), // Shadow color
               spreadRadius: 2, // Spread radius
               blurRadius: 5, // Blur radius
               offset: Offset(0, 5), // Changes the position of the shadow
@@ -330,7 +330,7 @@ class AllCategoriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         title: Text(
           HomepageStringsDart().allCategories,
@@ -341,7 +341,7 @@ class AllCategoriesPage extends StatelessWidget {
             color: AppColors.bg3,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.bg3),

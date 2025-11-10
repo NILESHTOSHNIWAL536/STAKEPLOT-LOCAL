@@ -45,7 +45,7 @@ class CouponCardWidget extends StatelessWidget {
         CouponCard(
           height: height,
           width: width,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backgroundColor,
           curveAxis: Axis.horizontal,
           curvePosition: curve,
           curveRadius: 20,
@@ -54,7 +54,7 @@ class CouponCardWidget extends StatelessWidget {
             height: height * 0.6,
             padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: AppColors.backgroundColor,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Column(

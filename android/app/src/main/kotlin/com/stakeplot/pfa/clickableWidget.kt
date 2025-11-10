@@ -1,4 +1,4 @@
-package com.stakeplot.pfa  // Your app's package—keep this matching.
+package com.stakeplot.pfa
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -6,88 +6,103 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.RemoteViews  // For building the widget's UI remotely (can't use full Views in widgets).
+import android.widget.RemoteViews
+import org.json.JSONArray
 
-class ClickableWidget : AppWidgetProvider() {  // Name matches your manifest receiver.
-    override fun onUpdate(
-        context: Context,  // The app context (gives access to resources like layouts).
-        appWidgetManager: AppWidgetManager,  // Manages all widgets on the device.
-        appWidgetIds: IntArray  // Array of IDs for each instance of this widget (user can add multiples).
-    ) {
-        Log.d("ClickableWidget", "Updating ${appWidgetIds.size} widgets")  // Debug log: How many widgets to refresh.
+private const val PREFS_NAME = "stakeplot_widget_prefs"
+private const val PREFS_KEY_SET = "selected_options"
+private const val PREFS_FRIENDS_JSON = "friend_list_json"
+private const val ACTION_WIDGET_CLICK = "com.stakeplot.WIDGET_CLICK"
 
-        for (appWidgetId in appWidgetIds) {  // Loop per widget instance.
+class ClickableWidget : AppWidgetProvider() {
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        // Update UI on custom actions
+        if (intent.action == "com.stakeplot.WIDGET_CLICKED" || intent.action == ACTION_WIDGET_CLICK || intent.action == "com.stakeplot.WIDGET_RESET") {
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val thisWidget = android.content.ComponentName(context.packageName, ClickableWidget::class.java.name)
+            val ids = appWidgetManager.getAppWidgetIds(thisWidget)
+            onUpdate(context, appWidgetManager, ids)
+        }
+    }
+
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        for (appWidgetId in appWidgetIds) {
             try {
-                Log.d("ClickableWidget", "Creating RemoteViews for widget ID: $appWidgetId")
-                val views = RemoteViews(context.packageName, R.layout.clickable_widget_layout)  // Load your XML layout.
-
-                // Set static texts for the 4 clickable items. (Easy to swap with dynamic data from SharedPrefs later.)
-                views.setTextViewText(R.id.click_text1, "Option 1")
-                views.setTextViewText(R.id.click_text2, "Option 2")
-                views.setTextViewText(R.id.click_text3, "Option 3")
-                views.setTextViewText(R.id.click_text4, "Option 4")
-
-                // Create PendingIntents for each clickable TextView.
-                // Each intent broadcasts to WidgetClickReceiver with a unique extra (no app launch!).
-                val clickIntent1 = Intent(context, WidgetClickReceiver::class.java).apply {
-                    action = "com.stakeplot.WIDGET_CLICK"  // Custom action to filter in the receiver.
-                    putExtra("clicked_item", "Option 1")  // Data passed: What was clicked.
-                }
-                val pendingIntent1 = PendingIntent.getBroadcast(  // Broadcast instead of Activity (for logging only).
-                    context,
-                    appWidgetId * 10 + 1, // Unique request code per widget/instance/click (avoids conflicts).
-                    clickIntent1,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE  // Standard flags for security/efficiency.
-                )
-                views.setOnClickPendingIntent(R.id.click_text1, pendingIntent1)  // Wire the click to this intent.
-
-                // Repeat for the other 3 (same pattern, just change extra and request code).
-                val clickIntent2 = Intent(context, WidgetClickReceiver::class.java).apply {
-                    action = "com.stakeplot.WIDGET_CLICK"
-                    putExtra("clicked_item", "Option 2")
-                }
-                val pendingIntent2 = PendingIntent.getBroadcast(
-                    context,
-                    appWidgetId * 10 + 2,
-                    clickIntent2,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-                views.setOnClickPendingIntent(R.id.click_text2, pendingIntent2)
-
-                val clickIntent3 = Intent(context, WidgetClickReceiver::class.java).apply {
-                    action = "com.stakeplot.WIDGET_CLICK"
-                    putExtra("clicked_item", "Option 3")
-                }
-                val pendingIntent3 = PendingIntent.getBroadcast(
-                    context,
-                    appWidgetId * 10 + 3,
-                    clickIntent3,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-                views.setOnClickPendingIntent(R.id.click_text3, pendingIntent3)
-
-                val clickIntent4 = Intent(context, WidgetClickReceiver::class.java).apply {
-                    action = "com.stakeplot.WIDGET_CLICK"
-                    putExtra("clicked_item", "Option 4")
-                }
-                val pendingIntent4 = PendingIntent.getBroadcast(
-                    context,
-                    appWidgetId * 10 + 4,
-                    clickIntent4,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-                views.setOnClickPendingIntent(R.id.click_text4, pendingIntent4)
-
-                Log.d("ClickableWidget", "Updating widget ID: $appWidgetId")
-                appWidgetManager.updateAppWidget(appWidgetId, views)  // Push the updated UI to the home screen.
-            } catch (e: Exception) {  // Error handling: Show "Error" texts if something breaks.
-                Log.e("ClickableWidget", "Update failed for widget ID: $appWidgetId, error: ${e.message}", e)
                 val views = RemoteViews(context.packageName, R.layout.clickable_widget_layout)
-                views.setTextViewText(R.id.click_text1, "Error")
-                views.setTextViewText(R.id.click_text2, "Error")
-                views.setTextViewText(R.id.click_text3, "Error")
-                views.setTextViewText(R.id.click_text4, "Error")
+                val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+                // Read friend list JSON -> names list
+                val friendJson = prefs.getString(PREFS_FRIENDS_JSON, "[]")
+                val names = mutableListOf<String>()
+                try {
+                    val arr = JSONArray(friendJson)
+                    for (i in 0 until arr.length()) names.add(arr.optString(i))
+                } catch (e: Exception) {
+                    Log.e("ClickableWidget", "parse friend json err: ${e.message}", e)
+                }
+
+                // Read selected set
+                val selected = prefs.getStringSet(PREFS_KEY_SET, emptySet()) ?: emptySet()
+
+                // Slot ids mapping
+                val slotIds = listOf(R.id.click_text1, R.id.click_text2, R.id.click_text3, R.id.click_text4)
+
+                // Labels - show up to 4 names; hide empty rows
+                for (i in slotIds.indices) {
+                    val id = slotIds[i]
+                    if (i < names.size && names[i].isNotEmpty()) {
+                        views.setTextViewText(id, names[i])
+                        views.setViewVisibility(id, android.view.View.VISIBLE)
+                    } else {
+                        views.setTextViewText(id, "")
+                        views.setViewVisibility(id, android.view.View.GONE)
+                    }
+                }
+
+                // Reset visuals for all
+                val defaultColor = 0xFF212121.toInt()
+                val defaultSizeSp = 16f
+                for (id in slotIds) {
+                    views.setInt(id, "setBackgroundResource", android.R.color.transparent)
+                    views.setTextColor(id, defaultColor)
+                    views.setTextViewTextSize(id, android.util.TypedValue.COMPLEX_UNIT_SP, defaultSizeSp)
+                }
+
+                // Highlight selected (multiple allowed) - compare by friend name
+                for (i in names.indices) {
+                    val name = names[i]
+                    if (selected.contains(name)) {
+                        val id = slotIds[i]
+                        views.setInt(id, "setBackgroundResource", R.drawable.widget_selected_bg)
+                        views.setTextColor(id, 0xFFFFFFFF.toInt())
+                        views.setTextViewTextSize(id, android.util.TypedValue.COMPLEX_UNIT_SP, 18f)
+                    }
+                }
+
+                // Wire PendingIntents (clicks send friend name as clicked_item)
+                for (i in slotIds.indices) {
+                    val id = slotIds[i]
+                    if (i < names.size && names[i].isNotEmpty()) {
+                        val name = names[i]
+                        val clickIntent = Intent(context, WidgetClickReceiver::class.java).apply {
+                            action = ACTION_WIDGET_CLICK
+                            putExtra("clicked_item", name)
+                        }
+                        val pending = PendingIntent.getBroadcast(
+                            context,
+                            appWidgetId * 10 + (i + 1),
+                            clickIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        )
+                        views.setOnClickPendingIntent(id, pending)
+                    }
+                }
+
                 appWidgetManager.updateAppWidget(appWidgetId, views)
+            } catch (e: Exception) {
+                Log.e("ClickableWidget", "onUpdate failed for widget $appWidgetId: ${e.message}", e)
             }
         }
     }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -69,7 +70,7 @@ void upvote(context, String str, String objectId) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "You liked this!", Colors.black);
+    snackBarCalled(context, "You liked this!", AppColors.accentColor);
   } else {
     snackBarCalledfail(context, "An error occurred while liking!", Colors.red);
   }
@@ -93,7 +94,7 @@ void downvote(context, String str, String objectId) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "You disliked this!", Colors.black);
+    snackBarCalled(context, "You disliked this!", AppColors.accentColor);
   } else {
     snackBarCalledfail(context, "An error occurred while disliking!", Colors.red);
   }
@@ -128,11 +129,11 @@ void createPoll(context, String question, List options, roomDetails, members,
         'Sending polls to friends...!!',
         style: FontManager().getTextStyle(
           context,
-          color: Colors.white,
+          color: AppColors.backgroundColor,
           fontSize: 15,
         ),
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.accentColor,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -157,10 +158,10 @@ void createPoll(context, String question, List options, roomDetails, members,
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
-        'An error occurred while uploading...!',
+        'An error occurred while uploading!',
         style: FontManager().getTextStyle(
           context,
-          color: Colors.white,
+          color: AppColors.backgroundColor,
           fontSize: 15,
         ),
       ),
@@ -219,11 +220,11 @@ void votePoll(context, String id, int index) async {
         'Your vote has been added!',
         style: FontManager().getTextStyle(
           context,
-          color: Colors.white,
+          color: AppColors.backgroundColor,
           fontSize: 15,
         ),
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.backgroundColor,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);

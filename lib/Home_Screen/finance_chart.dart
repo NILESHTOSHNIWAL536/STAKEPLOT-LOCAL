@@ -602,7 +602,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
                         fontSize: fontSizeFactor * 2.5,
-                        color: Colors.white),
+                        color: AppColors.backgroundColor),
                   ),
                 ),
               );

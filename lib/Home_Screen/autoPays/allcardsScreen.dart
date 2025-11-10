@@ -74,7 +74,7 @@
 //                 ? Center(
 //                     child: Text(
 //                       "No paycycles available",
-//                       style: TextStyle(color: Colors.white, fontSize: 16 * fontScale),
+//                       style: TextStyle(color: AppColors.backgroundColor, fontSize: 16 * fontScale),
 //                     ),
 //                   )
 //                 : ListView.builder(
@@ -270,7 +270,7 @@
 //                     child: Text(
 //                       "No paycycles available",
 //                       style: TextStyle(
-//                           color: Colors.white, fontSize: 16 * fontScale),
+//                           color: AppColors.backgroundColor, fontSize: 16 * fontScale),
 //                     ),
 //                   )
 //                 : ListView.builder(
@@ -788,7 +788,7 @@ class SimilarCardsScreen extends StatelessWidget {
                           child: Text(
                             "No similar cards available",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppColors.backgroundColor,
                               fontSize: 16 * fontScale,
                             ),
                           ),

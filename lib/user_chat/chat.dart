@@ -796,7 +796,7 @@ class _ChatState extends State<Chat> {
             width: MediaQuery.of(context).size.width / 2,
             height: MediaQuery.of(context).size.height / 5,
             fit: BoxFit.cover,
-            color: Colors.black.withOpacity(0.0),
+            color: AppColors.accentColor.withOpacity(0.0),
             colorBlendMode: BlendMode.exclusion,
           ),
         ),
@@ -910,7 +910,7 @@ class _ChatState extends State<Chat> {
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w500,
                       fontSize: 13,
-                      color: Colors.black)),
+                      color: AppColors.accentColor)),
             ),
             Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -934,7 +934,7 @@ class _ChatState extends State<Chat> {
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.w400,
                                     fontSize: 14,
-                                    color: Colors.black)),
+                                    color: AppColors.accentColor)),
                           ],
                         )),
                   );
@@ -1086,7 +1086,7 @@ class _ChatState extends State<Chat> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: AppColors.accentColor.withOpacity(0.1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -1273,7 +1273,7 @@ class _ChatState extends State<Chat> {
         padding: const EdgeInsets.only(bottom: 10.0),
         child: Text((dataObj['description']['message']),
             style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.w400, fontSize: 13, color: Colors.black)),
+                lWeight: FontWeight.w400, fontSize: 13, color: AppColors.accentColor)),
       );
     } catch (e) {
       return Container(
@@ -1281,7 +1281,7 @@ class _ChatState extends State<Chat> {
         padding: const EdgeInsets.only(bottom: 10.0),
         child: Text((dataObj['description']),
             style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.w400, fontSize: 13, color: Colors.black)),
+                lWeight: FontWeight.w400, fontSize: 13, color: AppColors.accentColor)),
       );
     }
   }

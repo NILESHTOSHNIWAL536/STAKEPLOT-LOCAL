@@ -203,7 +203,7 @@ class _emailUpdationState extends State<emailUpdation> {
                   ControllerManagement.userController.email.value =
                       widget.data['email'];
                   snackBarCalled(
-                      context, "Email updated successfully", Colors.black);
+                      context, "Email updated successfully", AppColors.accentColor);
                   Navigator.pop(context); // Return to EditDetails screen
                 } else {
                   snackBarCalledfail(
@@ -314,15 +314,15 @@ class _emailUpdationState extends State<emailUpdation> {
           borderRadius: BorderRadius.circular(10),
           fieldHeight: MediaQuery.of(context).size.width * 0.13,
           fieldWidth: MediaQuery.of(context).size.width * 0.13,
-          activeFillColor: Colors.white,
+          activeFillColor: AppColors.backgroundColor,
           activeColor: AppColors.finSpaceColor,
-          selectedFillColor: Colors.white,
+          selectedFillColor: AppColors.backgroundColor,
           selectedColor: Colors.blue,
           inactiveFillColor: Colors.grey[200],
-          inactiveColor: Colors.white,
+          inactiveColor: AppColors.backgroundColor,
         ),
         enableActiveFill: true,
-        textStyle: const TextStyle(fontSize: 20, color: Colors.black),
+        textStyle: const TextStyle(fontSize: 20, color: AppColors.accentColor),
         onChanged: (value) {
           _otpCode.value = value;
           _isOtpValid.value = value.length == _otpLength;

@@ -35,17 +35,25 @@
                 android:resource="@xml/widget_info"/>
         </receiver>
                 <receiver
-            android:name="com.stakeplot.pfa.ClickableWidget"
-            android:exported="true"
-            android:enabled="true"
-            android:permission="android.permission.BIND_APPWIDGET">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/click_info" />
-        </receiver>
+    android:name="com.stakeplot.pfa.ClickableWidget"
+    android:exported="true"
+    android:enabled="true"
+    android:permission="android.permission.BIND_APPWIDGET">
+    <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+    </intent-filter>
+    <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/click_info" />
+</receiver>
+
+<receiver android:name="com.stakeplot.pfa.WidgetClickReceiver" android:exported="true">
+    <intent-filter>
+        <action android:name="com.stakeplot.WIDGET_CLICK" />
+        <action android:name="com.stakeplot.WIDGET_CLICKED" />
+    </intent-filter>
+</receiver>
+
         <receiver
         android:name="com.stakeplot.pfa.PayableWidgetProvider" android:exported="true" android:enabled="true"
         android:permission="android.permission.BIND_APPWIDGET">

@@ -135,7 +135,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
               height: MediaQuery.sizeOf(context).height / 9,
               decoration: BoxDecoration(
                 color:
-                    selectedIndex == i ? const Color(0xFF635D8F) : Colors.white,
+                    selectedIndex == i ? const Color(0xFF635D8F) : AppColors.backgroundColor,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: Color(0xFFF3F4F6),
@@ -151,7 +151,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
               ),
               // decoration: BoxDecoration(
               //   color:
-              //       selectedIndex == i ? const Color(0xFF635D8F) : Colors.white,
+              //       selectedIndex == i ? const Color(0xFF635D8F) : AppColors.backgroundColor,
               //   borderRadius: BorderRadius.circular(9),
               //   border: selectedIndex == i
               //       ? null
@@ -166,7 +166,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
                     width: 32,
                     height: 32,
                     color: selectedIndex == i
-                        ? Colors.white
+                        ? AppColors.backgroundColor
                         : const Color(0xFF635D8F),
                   ),
                   const SizedBox(height: 4),
@@ -178,14 +178,14 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
                       fontSize: 14,
                       overflow: TextOverflow.ellipsis,
                       color: selectedIndex == i
-                          ? Colors.white
+                          ? AppColors.backgroundColor
                           : AppColors.primaryColor,
                     ),
                     // style: TextStyle(
                     //   fontSize: 15.5,
                     //   fontWeight: FontWeight.w500,
                     //   color: selectedIndex == i
-                    //       ? Colors.white
+                    //       ? AppColors.backgroundColor
                     //       : const Color(0xFF37344F),
                     // ),
                   ),

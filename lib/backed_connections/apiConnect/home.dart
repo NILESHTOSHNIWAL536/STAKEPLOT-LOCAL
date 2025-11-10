@@ -28,7 +28,7 @@ void getAck() async {
 
 void setPasswordApiCalled(context, String password) async {
   if (password == "00") {
-    snackBarCalledfail(context, SnackbarData().pinSetFail00, Colors.red);
+    snackBarCalledfail(context, SnackbarData().pinSetFail00,);
     return; // Exit the function without setting the PIN
   }
 
@@ -41,9 +41,9 @@ void setPasswordApiCalled(context, String password) async {
     userController.cupertinoPin.value = password;
     hideBackAccountPassword.value = false;
 
-    snackBarCalled(context, SnackbarData().pinSetSuccess, Colors.black);
+    snackBarCalled(context, SnackbarData().pinSetSuccess,);
   } else {
-    snackBarCalledfail(context, SnackbarData().pinSetFail, Colors.red);
+    snackBarCalledfail(context, SnackbarData().pinSetFail);
   }
   Navigator.pop(context);
 }
@@ -94,7 +94,7 @@ void pinPasswordVerify(
       userController.cupertinoAttemptCount.value =
           (errorResponse['count'] ?? 0) > 4;
       if (userController.cupertinoAttemptCount.value) {
-        snackBarCalledfail(context, SnackbarData().maxLimitSetFail, Colors.red);
+        snackBarCalledfail(context, SnackbarData().maxLimitSetFail);
       }
       hideBackAccountPassword.value = false;
     }

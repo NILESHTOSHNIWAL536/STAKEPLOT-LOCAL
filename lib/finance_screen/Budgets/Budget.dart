@@ -243,7 +243,7 @@ class _BudgetState extends State<Budget> {
                                   color: AppColors.accentColor,
                                   size: 24 * fontScale,
                                 ),
-                                dropdownColor: Colors.white,
+                                dropdownColor: AppColors.backgroundColor,
                                 items: [
                                   PlotFinanceStaticData().weeklyPeriod,
                                   PlotFinanceStaticData().monthlyPeriod,
@@ -331,7 +331,7 @@ class _BudgetState extends State<Budget> {
                 horizontal: 12, vertical: 10), // Adjusted padding
             decoration: BoxDecoration(
               color:
-                  period.value == text ? AppColors.accentColor : Colors.white,
+                  period.value == text ? AppColors.accentColor : AppColors.backgroundColor,
               borderRadius: BorderRadius.circular(12),
               boxShadow: period.value == text
                   ? [
@@ -349,7 +349,7 @@ class _BudgetState extends State<Budget> {
                 text: text,
                 fontWeight: FontWeight.w600,
                 fontsize: 10, // Decreased font size
-                c: period.value == text ? Colors.white : AppColors.bg3,
+                c: period.value == text ? AppColors.backgroundColor : AppColors.bg3,
               ),
             ),
           ),

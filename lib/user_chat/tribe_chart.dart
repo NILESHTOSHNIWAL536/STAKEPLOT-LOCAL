@@ -149,7 +149,7 @@ class _TribeSearchState extends State<TribeChats> {
             },
             child: Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: AppColors.backgroundColor,
               size: 20,
             ),
           ),
@@ -359,7 +359,7 @@ class _TribeSearchState extends State<TribeChats> {
               hintStyle: FontManager().getTextStyle(context,
                   lWeight: FontWeight.normal,
                   fontSize: 14,
-                  color: Colors.black),
+                  color: AppColors.accentColor),
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5.0),

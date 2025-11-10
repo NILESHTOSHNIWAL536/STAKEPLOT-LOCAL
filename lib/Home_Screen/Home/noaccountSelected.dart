@@ -98,7 +98,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.finSpaceColor,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.backgroundColor,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -130,7 +130,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
               color: AppColors.backgroundColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: AppColors.accentColor.withOpacity(0.05),
                   blurRadius: 10,
                   offset: Offset(0, -2),
                 ),

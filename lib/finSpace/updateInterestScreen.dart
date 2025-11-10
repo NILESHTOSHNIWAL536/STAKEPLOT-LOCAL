@@ -44,7 +44,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Stack(
           children: [

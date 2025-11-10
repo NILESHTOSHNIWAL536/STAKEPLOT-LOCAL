@@ -208,7 +208,7 @@ class _EmiState extends State<Emi> {
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor.withOpacity(0.9),
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.white, width: 1),
+                            border: Border.all(color: AppColors.backgroundColor, width: 1),
                           ),
                           child: SingleChildScrollView(
                             child: Text(

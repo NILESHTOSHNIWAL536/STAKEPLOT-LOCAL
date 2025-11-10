@@ -184,7 +184,7 @@ class _TribeSearchState extends State<TribeSearch> {
       extendBody: true,
       body: SafeArea(
         child: Container(
-          color: Colors.white,
+          color: AppColors.backgroundColor,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
           child: ListView(
            

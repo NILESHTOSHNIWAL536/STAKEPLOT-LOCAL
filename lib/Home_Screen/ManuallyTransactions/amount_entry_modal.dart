@@ -413,7 +413,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                       leftoverAmount == 0
                           ? AppColors.primaryColor
                           : Colors.grey, // Grey out when disabled
-                      leftoverAmount == 0 ? AppColors.bg5 : Colors.white,
+                      leftoverAmount == 0 ? AppColors.bg5 : AppColors.backgroundColor,
                     ),
                   ),
                 )

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart';
 
 class CreditCardsScreen extends StatelessWidget {
@@ -7,12 +8,12 @@ class CreditCardsScreen extends StatelessWidget {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(40),
         child: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backgroundColor,
           leading: leadIcon(context),
           title: Text(
             "Credit Cards",

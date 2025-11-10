@@ -143,7 +143,7 @@ class _FinoraLastTwoMonthsDashboardState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
@@ -232,7 +232,7 @@ class _FinoraLastTwoMonthsDashboardState
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: AppColors.accentColor,
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -260,7 +260,7 @@ class _FinoraLastTwoMonthsDashboardState
           markerSettings: const MarkerSettings(
             isVisible: false,
             color: AppColors.primaryColor,
-            borderColor: Colors.white,
+            borderColor: AppColors.backgroundColor,
             borderWidth: 1,
             height: 6,
             width: 6,
@@ -281,7 +281,7 @@ class _FinoraLastTwoMonthsDashboardState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
+                    color: AppColors.backgroundColor.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: [
                       BoxShadow(
@@ -318,7 +318,7 @@ class _FinoraLastTwoMonthsDashboardState
           markerSettings: const MarkerSettings(
             isVisible: false,
             color: AppColors.finoraMonth,
-            borderColor: Colors.white,
+            borderColor: AppColors.backgroundColor,
             borderWidth: 1,
             height: 6,
             width: 6,
@@ -339,7 +339,7 @@ class _FinoraLastTwoMonthsDashboardState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
+                    color: AppColors.backgroundColor.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: [
                       BoxShadow(

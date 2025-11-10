@@ -14,7 +14,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
       borderRadius: BorderRadius.vertical(
           top: Radius.circular(20)), // Rounded top corners
     ),
-    backgroundColor: Colors.white, // Modal background
+    backgroundColor: AppColors.backgroundColor, // Modal background
     builder: (BuildContext context) {
       return SafeArea(
         child: Padding(
@@ -53,7 +53,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.bold,
                                 fontSize: 15,
-                                color: Colors.black),
+                                color: AppColors.accentColor),
                           ),
                         ),
                       )),
@@ -80,7 +80,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.bold,
                                 fontSize: 15,
-                                color: Colors.white),
+                                color: AppColors.backgroundColor),
                           ),
                         ),
                       )),

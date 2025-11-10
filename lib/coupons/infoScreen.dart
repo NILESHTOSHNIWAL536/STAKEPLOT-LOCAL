@@ -13,7 +13,7 @@ void showEarningScoreDialog(BuildContext context) {
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundColor,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
@@ -79,7 +79,7 @@ void showEarningScoreDialog(BuildContext context) {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4A4A68),
-                      foregroundColor: Colors.white,
+                      foregroundColor: AppColors.backgroundColor,
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),

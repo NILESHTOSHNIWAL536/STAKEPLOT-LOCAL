@@ -641,7 +641,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                         decoration: BoxDecoration(
                           // borderRadius: BorderRadius.circular(10),
                           color: !isSelected
-                              ? Colors.white
+                              ? AppColors.backgroundColor
                               : AppColors.primaryColor,
 
                           borderRadius: BorderRadius.circular(8),
@@ -689,7 +689,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                   lWeight: FontWeight.w500,
                                   fontSize: 14,
                                   color: isSelected
-                                      ? Colors.white
+                                      ? AppColors.backgroundColor
                                       : AppColors.accentColor,
                                 ),
                               ),
@@ -982,7 +982,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                                 value;
                                           },
                                           style: const TextStyle(
-                                              color: Colors.white),
+                                              color: AppColors.backgroundColor),
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: const Color.fromARGB(
@@ -996,7 +996,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                               borderSide: const BorderSide(
-                                                color: Colors.white,
+                                                color: AppColors.backgroundColor,
                                                 width: 1,
                                               ),
                                             ),
@@ -1004,7 +1004,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                               borderSide: const BorderSide(
-                                                color: Colors.white,
+                                                color: AppColors.backgroundColor,
                                                 width: 1,
                                               ),
                                             ),
@@ -1047,7 +1047,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                         child: TextField(
                                           controller: newCategoryController,
                                           style: const TextStyle(
-                                              color: Colors.white),
+                                              color: AppColors.backgroundColor),
                                           decoration: InputDecoration(
                                             hintText: 'Add new category',
                                             hintStyle: const TextStyle(
@@ -1064,7 +1064,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                               borderSide: const BorderSide(
-                                                color: Colors.white,
+                                                color: AppColors.backgroundColor,
                                                 width: 1,
                                               ),
                                             ),
@@ -1072,7 +1072,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                               borderSide: const BorderSide(
-                                                color: Colors.white,
+                                                color: AppColors.backgroundColor,
                                                 width: 1,
                                               ),
                                             ),
@@ -1265,7 +1265,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white, width: 1),
+                        border: Border.all(color: AppColors.backgroundColor, width: 1),
                       ),
                       child: SingleChildScrollView(
                         child: Text(
@@ -1428,7 +1428,7 @@ class CustomShapePainter extends CustomPainter {
     final Paint paint2 = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.8
-      ..color = Colors.white.withOpacity(0.7);
+      ..color = AppColors.backgroundColor.withOpacity(0.7);
 
     final Path path2 = Path();
     // (keep your existing stroke path here)

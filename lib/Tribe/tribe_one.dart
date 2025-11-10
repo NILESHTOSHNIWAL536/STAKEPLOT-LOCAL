@@ -131,7 +131,7 @@ class _TribeHomeState extends State<TribeUnique> {
 
       postController.postCount[id] = 0;
       snackBarCalled(
-          context, SnackbarData().commentAddedSuccessfully, Colors.black);
+          context, SnackbarData().commentAddedSuccessfully, AppColors.accentColor);
     } else {
       snackBarCalledfail(
           context, SnackbarData().unableToAddComment, Colors.red);
@@ -313,7 +313,7 @@ class _TribeHomeState extends State<TribeUnique> {
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w600,
                         fontSize: 20,
-                        color: Colors.black),
+                        color: AppColors.accentColor),
                   )
                 : SizedBox.shrink(),
             widget.popBox.value
@@ -637,7 +637,7 @@ class _TribeHomeState extends State<TribeUnique> {
                                               context,
                                               lWeight: FontWeight.w400,
                                               fontSize: 14,
-                                              color: Colors.black),
+                                              color: AppColors.accentColor),
                                         ),
                                       ),
                                     ],
@@ -814,7 +814,7 @@ class _TribeHomeState extends State<TribeUnique> {
                         suffixIcon: suffix(
                             Textcontroller.text, commentId, Textcontroller),
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white)),
+                            borderSide: const BorderSide(color: AppColors.backgroundColor)),
                         focusedBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: AppColors.buttonBorder)),

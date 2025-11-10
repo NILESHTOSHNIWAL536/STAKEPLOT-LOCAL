@@ -303,8 +303,8 @@ class _PollScreenState extends State<PollScreen> {
                                                       _optionControllers.every(
                                                           (controller) => controller
                                                               .text.isNotEmpty)
-                                                  ? Colors.white
-                                                  : Colors.black,
+                                                  ? AppColors.backgroundColor
+                                                  : AppColors.accentColor,
                                             ),
                                           )),
                                   ),
@@ -324,7 +324,7 @@ class _PollScreenState extends State<PollScreen> {
                                     style: FontManager().getTextStyle(context,
                                         lWeight: FontWeight.bold,
                                         fontSize: 18,
-                                        color: Colors.black),
+                                        color: AppColors.accentColor),
                                   ),
                                   const SizedBox(height: 10),
                             for (var option in ( options==null? [] : options!))
@@ -340,7 +340,7 @@ class _PollScreenState extends State<PollScreen> {
                                                 context,
                                                 lWeight: FontWeight.normal,
                                                 fontSize: 18,
-                                                color: Colors.black),
+                                                color: AppColors.accentColor),
                                           ),
                                           const SizedBox(height: 5),
                                           Stack(

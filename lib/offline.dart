@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -21,7 +22,7 @@ class Connections extends StatelessWidget {
           6,
           (i) => Card(
             elevation: 0,
-            color: Colors.white,
+            color: AppColors.backgroundColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -144,7 +145,7 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
         curve: Curves.easeInOut,
         height: showBottomBar ? 58 : 0,
         decoration: BoxDecoration(
-          color: showBottomBar ? const Color(0xFF202335) : Colors.transparent,
+          color: showBottomBar ? const Color(0xFF202335) : AppColors.transparentColor,
           boxShadow: showBottomBar
               ? [
                   BoxShadow(
@@ -161,7 +162,7 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
                 minimum: const EdgeInsets.symmetric(horizontal: 14),
                 child: Row(
                   children: [
-                    const Icon(Icons.wifi_off_rounded, color: Colors.white70),
+                    const Icon(Icons.wifi_off_rounded, color: AppColors.whiteOpacity07),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
@@ -169,7 +170,7 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
-                            ?.copyWith(color: Colors.white),
+                            ?.copyWith(color: AppColors.backgroundColor),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -177,7 +178,7 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
                     TextButton(
                       onPressed: _recheckInternet,
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.backgroundColor,
                       ),
                       child: const Text('Retry'),
                     ),
@@ -240,7 +241,7 @@ class _OfflineBeautifulState extends StatelessWidget {
                 ),
                 child: const Center(
                   child: Icon(Icons.wifi_off_rounded,
-                      size: 64, color: Colors.white),
+                      size: 64, color: AppColors.backgroundColor),
                 ),
               ),
               const SizedBox(height: 28),
@@ -248,7 +249,7 @@ class _OfflineBeautifulState extends StatelessWidget {
                 'No Internet Connection',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Colors.white,
+                      color: AppColors.backgroundColor,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.2,
                     ),
@@ -345,8 +346,8 @@ class _OutlineActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton.icon(
       onPressed: onPressed,
-      icon: Icon(icon, color: Colors.white),
-      label: Text(label, style: const TextStyle(color: Colors.white)),
+      icon: Icon(icon, color: AppColors.backgroundColor),
+      label: Text(label, style: const TextStyle(color: AppColors.backgroundColor)),
       style: OutlinedButton.styleFrom(
         side: const BorderSide(color: Colors.white54, width: 1.2),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),

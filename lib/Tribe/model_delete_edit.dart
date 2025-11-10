@@ -35,7 +35,7 @@ void showEditBottomSheet({
         child: Container(
           height: MediaQuery.of(context).size.height/3,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.97),
+            color: AppColors.backgroundColor.withOpacity(0.97),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             boxShadow: const [
               BoxShadow(
@@ -145,7 +145,7 @@ void showEditBottomSheet({
                           child: const Text(
                             'Update',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppColors.backgroundColor,
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                             ),
@@ -232,7 +232,7 @@ void showEditBottomSheet2({
                       child: const Text(
                         'Update',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.backgroundColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -313,7 +313,7 @@ void showDeleteDialogComment(BuildContext context2, String commentText,String ty
                     "Delete",
                     style: FontManager().getTextStyle(
                       context2,
-                      color: Colors.white,
+                      color: AppColors.backgroundColor,
                       lWeight: FontWeight.w600),
                   ),
                 ),

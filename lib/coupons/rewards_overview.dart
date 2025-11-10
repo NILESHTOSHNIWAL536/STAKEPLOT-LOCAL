@@ -34,7 +34,7 @@ class CouponPopupUtils {
           height: MediaQuery.of(sheetContext).size.height / 2,
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundColor,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -263,16 +263,16 @@ if (MediaQuery.maybeOf(context) == null) {
             borderRadius: BorderRadius.circular(20),
           ),
           elevation: 8, // Subtle shadow for depth
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backgroundColor,
           child: Container(
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.height / 2.2, // Compact height
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.backgroundColor,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: AppColors.accentColor.withOpacity(0.1),
                   blurRadius: 10,
                   offset: Offset(0, 4),
                 ),
@@ -348,7 +348,7 @@ if (MediaQuery.maybeOf(context) == null) {
                                                   context,
                                                   fontSize: 16,
                                                   lWeight: FontWeight.w600,
-                                                  color: Colors.white,
+                                                  color: AppColors.backgroundColor,
                                                 ),
                                               ),
                                             ),
@@ -439,7 +439,7 @@ if (MediaQuery.maybeOf(context) == null) {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.backgroundColor,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.height / 2.2,
@@ -648,7 +648,7 @@ if (MediaQuery.maybeOf(context) == null) {
                               context,
                               fontSize: 14,
                               lWeight: FontWeight.w600,
-                              color: Colors.white,
+                              color: AppColors.backgroundColor,
                             ),
                           ),
                         ),
@@ -693,12 +693,12 @@ class _RewardsOverviewState extends State<RewardsOverview>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -724,8 +724,8 @@ class _RewardsOverviewState extends State<RewardsOverview>
             margin: EdgeInsets.symmetric(horizontal: 20),
             child: TabBar(
               controller: _tabController,
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey,
+              labelColor: AppColors.accentColor,
+              unselectedLabelColor: AppColors.greyColor,
               indicatorColor: AppColors.primaryColor,
               indicatorWeight: 0.4,
               labelStyle: FontManager().getTextStyle(
@@ -819,7 +819,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
           builder: (BuildContext context) {
             return Dialog(
               insetPadding: EdgeInsets.zero,
-              backgroundColor: Colors.transparent,
+              backgroundColor: AppColors.transparentColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
               child: CouponCardWidget(
@@ -860,8 +860,8 @@ class _RewardsOverviewState extends State<RewardsOverview>
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.black.withOpacity(0.3),
-                            Colors.transparent,
+                            AppColors.accentColor.withOpacity(0.3),
+                            AppColors.transparentColor,
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -877,7 +877,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
                         padding:
                             EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.8),
+                          color: AppColors.backgroundColor.withOpacity(0.8),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -885,7 +885,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: AppColors.accentColor,
                           ),
                         ),
                       ),

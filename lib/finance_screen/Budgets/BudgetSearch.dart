@@ -214,7 +214,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: Colors.white,
+          color: AppColors.backgroundColor,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

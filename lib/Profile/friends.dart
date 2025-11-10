@@ -5,6 +5,7 @@ import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_search.dart";
 import "package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart";
+import "package:flutter_application_code_stakeplot/animated/widget_bridge.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
@@ -14,7 +15,7 @@ import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
 import "package:get/get.dart";
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
-
+RxList globalFriendsList = [].obs;
 class Friends extends StatefulWidget {
   bool isMasked = false;
   bool isMaskedConnect = false;
@@ -41,6 +42,18 @@ class _FriendsState extends State<Friends> {
             ? userController.maskedConnected
             : userController.maskedConnections
         : userController.friendsList);
+        globalFriendsList.assignAll(userController.friendsList);
+        try {
+    final friendNames = globalFriendsList
+        .take(4)
+        .map((e) => (e != null && e['name'] != null) ? e['name'].toString() : '')
+        .where((s) => s.isNotEmpty)
+        .toList();
+    WidgetBridge.setWidgetFriends(friendNames);
+  } catch (e) {
+    // ignore
+  }
+
   }
 
   @override
@@ -118,7 +131,7 @@ class _FriendsState extends State<Friends> {
                           hintStyle: FontManager().getTextStyle(context,
                               lWeight: FontWeight.normal,
                               fontSize: 14,
-                              color: Colors.black),
+                              color: AppColors.accentColor),
                           prefixIcon: Icon(Icons.search),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
@@ -194,7 +207,7 @@ class _FriendsState extends State<Friends> {
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w500,
                       fontSize: 18,
-                      color: Colors.black)),
+                      color: AppColors.accentColor)),
             ],
           ),
         ),

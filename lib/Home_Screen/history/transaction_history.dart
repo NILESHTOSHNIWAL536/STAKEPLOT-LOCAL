@@ -284,7 +284,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),
             ),
-            color: Colors.white,
+            color: AppColors.backgroundColor,
           ),
           child: Column(
             children: [

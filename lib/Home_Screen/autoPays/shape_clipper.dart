@@ -26,12 +26,12 @@ class CustomNeumorphicContainer extends StatelessWidget {
           color: const Color(0xFF4B4D73),
           boxShadow: [
             BoxShadow(
-              color: Colors.white.withOpacity(0.2),
+              color: AppColors.backgroundColor.withOpacity(0.2),
               offset: const Offset(-4, -4),
               blurRadius: 14,
             ),
             BoxShadow(
-              color: Colors.white.withOpacity(0.2),
+              color: AppColors.backgroundColor.withOpacity(0.2),
               offset: const Offset(4, 4),
               blurRadius: 14,
               spreadRadius: 20,

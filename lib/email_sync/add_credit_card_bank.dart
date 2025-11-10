@@ -37,12 +37,12 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(40),
         child: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backgroundColor,
           leading: leadIcon(context),
           title: textStyle(
               context: context,

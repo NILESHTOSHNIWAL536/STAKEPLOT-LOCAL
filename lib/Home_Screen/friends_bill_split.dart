@@ -140,7 +140,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                 //                           },
                 //                           child: const Icon(
                 //                             Icons.remove_circle,
-                //                             color: Colors.black,
+                //                             color: AppColors.accentColor,
                 //                           ),
                 //                         ),
                 //                       ),
@@ -412,7 +412,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
             hintText: "Search",
             fillColor: AppColors.backgroundColor,
             hintStyle: FontManager().getTextStyle(context,
-                lWeight: FontWeight.normal, fontSize: 14, color: Colors.black),
+                lWeight: FontWeight.normal, fontSize: 14, color: AppColors.accentColor),
             prefixIcon: Icon(Icons.search),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),

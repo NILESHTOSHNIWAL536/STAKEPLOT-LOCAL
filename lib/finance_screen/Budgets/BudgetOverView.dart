@@ -199,7 +199,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.all(13),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.backgroundColor,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: Color(0xFFF3F4F6),
@@ -297,7 +297,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                   padding: EdgeInsets.all(13),
                   margin: EdgeInsets.symmetric(vertical: 5),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: Color(0xFFF3F4F6),

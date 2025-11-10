@@ -191,7 +191,7 @@ class _RotatingIconState extends State<Nextfetch>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparentColor,
       builder: (context) {
         return SafeArea(
           child: AnimatedContainer(
@@ -204,20 +204,20 @@ class _RotatingIconState extends State<Nextfetch>
               width: MediaQuery.of(context).size.width, // Full screen width
               padding: EdgeInsets.all(screenWidth * 0.06), // Responsive padding
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.backgroundColor,
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(24)),
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.white,
+                    AppColors.backgroundColor,
                     Colors.grey[50]!,
                   ],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: AppColors.accentColor.withOpacity(0.1),
                     blurRadius: 20,
                     spreadRadius: 5,
                     offset: const Offset(0, -5),
@@ -338,7 +338,7 @@ class _RotatingIconState extends State<Nextfetch>
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primaryColor,
-                                  foregroundColor: Colors.white,
+                                  foregroundColor: AppColors.backgroundColor,
                                   padding: EdgeInsets.symmetric(
                                     horizontal: screenWidth * 0.06,
                                     vertical: screenWidth * 0.04,

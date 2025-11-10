@@ -21,7 +21,7 @@ class TransactionDetailsPage extends StatelessWidget {
       backgroundColor: Colors.grey[100], // Light background
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor,
         title: Text(
           'Transaction Details',
           style: FontManager().getTextStyle(context,
@@ -68,7 +68,7 @@ class TransactionDetailsPage extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.backgroundColor,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(

@@ -34,7 +34,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Stack(
           children: [
@@ -494,7 +494,7 @@ class DoneButtonWidget extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(0xFF4A4E69),
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

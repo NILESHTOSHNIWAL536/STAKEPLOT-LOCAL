@@ -63,14 +63,14 @@ class CustomExpansionTile extends StatelessWidget {
       child: Theme(
         data: ThemeData(
           dividerColor:
-              Colors.transparent, // This removes the divider between tiles
-          splashColor: Colors.transparent, // This removes the splash effect
+              AppColors.transparentColor, // This removes the divider between tiles
+          splashColor: AppColors.transparentColor, // This removes the splash effect
           highlightColor:
-              Colors.transparent, // This removes the highlight effect
+              AppColors.transparentColor, // This removes the highlight effect
         ),
         child: ExpansionTile(
-          iconColor: Colors.white, // Color when expanded
-          collapsedIconColor: Colors.white,
+          iconColor: AppColors.backgroundColor, // Color when expanded
+          collapsedIconColor: AppColors.backgroundColor,
           title: Row(
             children: [
               Icon(icon, color: AppColors.backgroundColor),
@@ -115,7 +115,7 @@ class CustomExpansionTile extends StatelessWidget {
               context,
               lWeight: FontWeight.bold,
               fontSize: 14,
-              color: Colors.white,
+              color: AppColors.backgroundColor,
             ),
           ),
           const SizedBox(height: 5),
@@ -146,7 +146,7 @@ class CustomExpansionTile extends StatelessWidget {
               context,
               lWeight: FontWeight.bold,
               fontSize: 14,
-              color: Colors.white,
+              color: AppColors.backgroundColor,
             ),
           ),
           const SizedBox(height: 5),

@@ -162,7 +162,7 @@ class BalanceOutMismatchUI extends StatelessWidget {
    
 
     return Container(
-      // color: Colors.white,
+      // color: AppColors.backgroundColor,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),

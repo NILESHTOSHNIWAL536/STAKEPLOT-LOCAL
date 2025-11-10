@@ -29,7 +29,7 @@ class IndexScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
       child: RefreshIndicator(
         color: AppColors.primaryColor,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor,
         strokeWidth: 3,
         displacement: 40, // spinner position from top
         edgeOffset: 0, // start right at the top

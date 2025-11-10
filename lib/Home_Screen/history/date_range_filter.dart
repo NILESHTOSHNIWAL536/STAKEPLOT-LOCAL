@@ -24,12 +24,12 @@
 //           data: ThemeData.light().copyWith(
 //             colorScheme: ColorScheme.light(
 //               primary: AppColors.accentColor,
-//               onPrimary: Colors.white,
-//               surface: Colors.white,
-//               onSurface: Colors.black,
+//               onPrimary: AppColors.backgroundColor,
+//               surface: AppColors.backgroundColor,
+//               onSurface: AppColors.accentColor,
 
 //             ),
-//             dialogBackgroundColor: Colors.white,
+//             dialogBackgroundColor: AppColors.backgroundColor,
 //           ),
 //           child: child!,
 //         );
@@ -135,13 +135,13 @@ class DateRangeField extends StatelessWidget {
 
     await showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       builder: (BuildContext builder) {
         return Container(
           height: 300,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: Colors.white,
+            color: AppColors.backgroundColor,
           ),
           child: Column(
             children: [

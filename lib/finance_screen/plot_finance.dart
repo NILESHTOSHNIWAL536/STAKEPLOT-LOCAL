@@ -128,7 +128,7 @@ class _PlotFinanceState extends State<PlotFinance> {
         children: [
           
            Material(
-              color: Colors.transparent,
+              color: AppColors.transparentColor,
              child: InkWell(
                onTap: () {
                  Navigator.pushNamed(context, '/TribeSearch');
@@ -147,7 +147,7 @@ class _PlotFinanceState extends State<PlotFinance> {
                      hintStyle: FontManager().getTextStyle(context,
                          lWeight: FontWeight.normal,
                          fontSize: 14,
-                         color: Colors.black),
+                         color: AppColors.accentColor),
                      prefixIcon: Icon(Icons.search),
                      border: OutlineInputBorder(
                        borderRadius: BorderRadius.circular(24.0),

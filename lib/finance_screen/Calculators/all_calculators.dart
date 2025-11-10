@@ -106,7 +106,7 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
    
 
     return Scaffold(
-      backgroundColor: Colors.white, // Clean, bright background
+      backgroundColor: AppColors.backgroundColor, // Clean, bright background
       body: Stack(
         children: [
           // Animated Gradient Background with Finance Shapes
@@ -121,7 +121,7 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
                   padding: EdgeInsets.fromLTRB(
                       responsivePadding, 20.0, responsivePadding, 16.0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,7 +242,7 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
                                         offset: Offset(4, 4),
                                       ),
                                       BoxShadow(
-                                        color: Colors.white.withOpacity(0.7),
+                                        color: AppColors.backgroundColor.withOpacity(0.7),
                                         blurRadius: 10.0,
                                         offset: Offset(-4, -4),
                                       ),
@@ -258,7 +258,7 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
                                           calculator['svgPath'],
                                           width: 100,
                                           height: 100,
-                                          color: Colors.white,
+                                          color: AppColors.backgroundColor,
                                         ),
                                       ),
 

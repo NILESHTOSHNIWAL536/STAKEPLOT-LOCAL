@@ -138,7 +138,7 @@ class _SliderPageState extends State<SliderPage> {
             style: FontManager().getTextStyle(
               context,
 
-              color: Colors.white, // Change this to your desired color
+              color: AppColors.backgroundColor, // Change this to your desired color
               fontSize: 16, // Optional: change font size
               lWeight: FontWeight.w500, // Optional: make it bolder/lighter
             ),
@@ -147,12 +147,12 @@ class _SliderPageState extends State<SliderPage> {
               prefixText: data['flag'] ? data['symbol'] : null,
               prefixStyle: FontManager().getTextStyle(
                 context,
-                color: Colors.white,
+                color: AppColors.backgroundColor,
               ),
               suffixText: data['flag'] ? null : data['symbol'],
               suffixStyle: FontManager().getTextStyle(
                 context,
-                color: Colors.white,
+                color: AppColors.backgroundColor,
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
               border: OutlineInputBorder(
@@ -356,5 +356,5 @@ Widget textStyle({
       style: TextStyle(
           fontWeight: fontWeight,
           fontSize: fontsize,
-          color: c ?? Colors.black));
+          color: c ?? AppColors.accentColor));
 }

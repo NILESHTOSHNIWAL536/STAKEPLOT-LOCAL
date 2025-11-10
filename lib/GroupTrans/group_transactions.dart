@@ -113,19 +113,19 @@ class _GroupTransactionsState extends State<GroupTransactions>
         margin: const EdgeInsets.symmetric(vertical: 8),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
             colors: [
               AppColors.backgroundColor.withOpacity(0.05),
-              Colors.white,
+              AppColors.backgroundColor,
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: AppColors.accentColor.withOpacity(0.06),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -153,7 +153,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                   ),
                   child: const Icon(
                     Icons.groups_rounded,
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                     size: 28,
                   ),
                 ),
@@ -216,7 +216,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       builder: (modalContext) {
         return Container(
           height: MediaQuery.of(modalContext).size.height * 0.7,
@@ -287,14 +287,14 @@ class _GroupTransactionsState extends State<GroupTransactions>
                       children: [
                         const Icon(
                           Icons.tag_rounded,
-                          color: Colors.white,
+                          color: AppColors.backgroundColor,
                           size: 20,
                         ),
                         const SizedBox(width: 8),
                         textStyle(
                           context: context,
                           text: "Tag Group",
-                          c: Colors.white,
+                          c: AppColors.backgroundColor,
                           fontsize: 14,
                           fontWeight: FontWeight.w600,
                         ),
@@ -359,19 +359,19 @@ class _GroupTransactionsState extends State<GroupTransactions>
               child: Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.backgroundColor,
                   borderRadius: BorderRadius.circular(12),
                   gradient: LinearGradient(
                     colors: [
                       AppColors.backgroundColor.withOpacity(0.1),
-                      Colors.white,
+                      AppColors.backgroundColor,
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: AppColors.accentColor.withOpacity(0.04),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),

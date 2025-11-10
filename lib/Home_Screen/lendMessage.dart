@@ -41,8 +41,8 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: AppColors.accentColor, // Header background
-              onPrimary: Colors.white, // Header text
-              surface: Colors.white, // Background
+              onPrimary: AppColors.backgroundColor, // Header text
+              surface: AppColors.backgroundColor, // Background
               onSurface: AppColors.bg1, // Text
             ),
             textButtonTheme: TextButtonThemeData(
@@ -302,7 +302,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                             context,
                             lWeight: FontWeight.bold,
                             fontSize: 16,
-                            color: Colors.white,
+                            color: AppColors.backgroundColor,
                           ),
                         ),
                       ),

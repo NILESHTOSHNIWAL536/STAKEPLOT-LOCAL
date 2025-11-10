@@ -110,7 +110,7 @@ class _ExploreModalState extends State<ExploreModal> {
                         //  ratio: Ratio(16, 9),
                         // forceInsideCropArea:true,
 
-                        overlayColor: Colors.black.withOpacity(0.5),
+                        overlayColor: AppColors.accentColor.withOpacity(0.5),
                         cropPercentage: 0.92, //
                       ),
                     ),
@@ -229,7 +229,7 @@ class _ExploreModalState extends State<ExploreModal> {
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.normal,
                                 fontSize: 12,
-                                color: Colors.white)),
+                                color: AppColors.backgroundColor)),
                       ),
                     ),
                     // Save Button with Loader
@@ -277,7 +277,7 @@ class _ExploreModalState extends State<ExploreModal> {
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.normal,
                                     fontSize: 12,
-                                    color: Colors.white)),
+                                    color: AppColors.backgroundColor)),
                       ),
                     ),
                   ],
@@ -559,7 +559,7 @@ class _ExploreModalState extends State<ExploreModal> {
         const SizedBox(width: 8),
         Text(strings.exploria,
             style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
+                lWeight: FontWeight.bold, fontSize: 18, color: AppColors.backgroundColor)),
       ],
     );
   }
@@ -575,7 +575,7 @@ class _ExploreModalState extends State<ExploreModal> {
               context,
               lWeight: FontWeight.w500,
               fontSize: 14,
-              color: Colors.black,
+              color: AppColors.backgroundColor,
             ),
           ),
           const SizedBox(width: 8), // Reduced spacing for better alignment
@@ -593,7 +593,7 @@ class _ExploreModalState extends State<ExploreModal> {
             starColor: AppColors.finSpaceColor,
             starOffColor: AppColors.button,
             valueLabelVisibility: false,
-            valueLabelTextStyle: const TextStyle(color: Colors.black),
+            valueLabelTextStyle: const TextStyle(color: AppColors.backgroundColor),
             starBuilder: (index, color) => Icon(
               Icons.star,
               color: color,
@@ -614,7 +614,7 @@ class _ExploreModalState extends State<ExploreModal> {
             context,
             lWeight: FontWeight.bold,
             fontSize: 16,
-            color: Colors.black,
+            color: AppColors.backgroundColor,
           ),
         ),
         const SizedBox(height: 8),
@@ -684,7 +684,7 @@ class _ExploreModalState extends State<ExploreModal> {
                                 child: const Icon(
                                   Icons.close,
                                   size: 16,
-                                  color: Colors.white,
+                                  color: AppColors.backgroundColor,
                                 ),
                               ),
                             ),
@@ -711,7 +711,7 @@ class _ExploreModalState extends State<ExploreModal> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.add_a_photo, color: Colors.white, size: 20),
+                const Icon(Icons.add_a_photo, color: AppColors.backgroundColor, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   strings.addPhoto,
@@ -719,7 +719,7 @@ class _ExploreModalState extends State<ExploreModal> {
                     context,
                     lWeight: FontWeight.normal,
                     fontSize: 16,
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                   ),
                 ),
               ],
@@ -736,7 +736,7 @@ class _ExploreModalState extends State<ExploreModal> {
       children: [
         Text(strings.aboutPlace,
             style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.normal, fontSize: 16, color: Colors.black)),
+                lWeight: FontWeight.normal, fontSize: 16, color: AppColors.accentColor)),
         const SizedBox(height: 10),
         TextField(
           controller: locationNameController,
@@ -762,7 +762,7 @@ class _ExploreModalState extends State<ExploreModal> {
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.normal,
                     fontSize: 16,
-                    color: Colors.black)),
+                    color: AppColors.accentColor)),
             IconButton(
               onPressed: _addTextFields,
               icon: const Icon(Icons.add),
@@ -809,7 +809,7 @@ class _ExploreModalState extends State<ExploreModal> {
             context,
             lWeight: FontWeight.normal,
             fontSize: 16,
-            color: Colors.black,
+            color: AppColors.accentColor,
           ),
         ),
         const SizedBox(height: 10),
@@ -872,8 +872,8 @@ class _ExploreModalState extends State<ExploreModal> {
                     fontSize: 15,
                     color: locationNameController.text.isNotEmpty &&
                             locationAddressController.text.isNotEmpty
-                        ? Colors.white
-                        : Colors.black,
+                        ? AppColors.backgroundColor
+                        : AppColors.accentColor,
                   ),
                 ),
               ),
@@ -885,7 +885,7 @@ class _ExploreModalState extends State<ExploreModal> {
     return InputDecoration(
       hintText: hintText,
       hintStyle: FontManager().getTextStyle(context,
-          lWeight: FontWeight.normal, fontSize: 16, color: Colors.black),
+          lWeight: FontWeight.normal, fontSize: 16, color: AppColors.accentColor),
       border: const OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(16.0)),
       ),

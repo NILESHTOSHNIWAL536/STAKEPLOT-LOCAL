@@ -55,7 +55,7 @@ class CardDueCarousel extends StatelessWidget {
                   margin:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(

@@ -383,7 +383,7 @@ class CardBuilders {
                               textStyle: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: AppColors.backgroundColor,
                               ),
                             ),
                             dataLabelMapper: (ChartData data, _) =>
@@ -463,7 +463,7 @@ class CardBuilders {
           ],
         ),
         child: Material(
-          color: Colors.transparent,
+          color: AppColors.transparentColor,
           borderRadius: BorderRadius.circular(20),
           child: InkWell(
             borderRadius: BorderRadius.circular(20),
@@ -560,11 +560,11 @@ class CardBuilders {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white, // or AppColors.mt
+        color: AppColors.backgroundColor, // or AppColors.mt
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1), // soft shadow
+            color: AppColors.accentColor.withOpacity(0.1), // soft shadow
             blurRadius: 8, // how soft the shadow looks
             spreadRadius: 2, // how much it expands
             offset: const Offset(0, 4), // x, y position
@@ -684,7 +684,7 @@ class CardBuilders {
                         color: AppColors.primaryColor,
                         borderRadius: BorderRadius.circular(36),
                       ),
-                      child: Icon(Icons.arrow_forward_ios, color: Colors.white),
+                      child: Icon(Icons.arrow_forward_ios, color: AppColors.backgroundColor),
                     ),
                   ],
                 ),
@@ -739,7 +739,7 @@ class CardBuilders {
           context,
           lWeight: fontWeight,
           fontSize: fontsize,
-          color: color ?? Colors.black,
+          color: color ?? AppColors.accentColor,
         )
         .copyWith(
           overflow: overflow ?? TextOverflow.clip,

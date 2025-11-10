@@ -107,12 +107,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -152,7 +152,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                       ),
                       child: Icon(
                         Icons.warning,
-                        color: Colors.white,
+                        color: AppColors.backgroundColor,
                         size: 16,
                       ),
                     ),
@@ -232,7 +232,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     ),
                     child: _isLoading
                         ? CircularProgressIndicator(
-                            color: Colors.white,
+                            color: AppColors.backgroundColor,
                             strokeWidth: 2,
                           )
                         : Text(
@@ -290,7 +290,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         ),
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.black,
+                          color: AppColors.accentColor,
                         ),
                       ),
                     ),
@@ -342,7 +342,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   ),
                   child: _isLoading
                       ? CircularProgressIndicator(
-                          color: Colors.white,
+                          color: AppColors.backgroundColor,
                           strokeWidth: 2,
                         )
                       : Text(
@@ -352,7 +352,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           lWeight: FontWeight.w500,
                           fontSize: 16,
                           color: _isOtpVerified && !_isLoading
-                                ? Colors.white
+                                ? AppColors.backgroundColor
                                 : Colors.grey,
                         )
                          

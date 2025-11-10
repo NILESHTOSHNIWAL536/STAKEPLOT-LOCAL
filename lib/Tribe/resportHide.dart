@@ -12,11 +12,11 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
     curve: Curves.easeInOut,
     height: MediaQuery.of(context).size.height * 0.55,
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: AppColors.backgroundColor,
       borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.1),
+          color: AppColors.accentColor.withOpacity(0.1),
           blurRadius: 10,
           spreadRadius: 2,
         ),
@@ -88,7 +88,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                                       // Square shape
                                     ),
                                     activeColor: AppColors.finSpaceColor,
-                                    checkColor: Colors.white,
+                                    checkColor: AppColors.backgroundColor,
                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                     visualDensity: VisualDensity.compact,
                                     

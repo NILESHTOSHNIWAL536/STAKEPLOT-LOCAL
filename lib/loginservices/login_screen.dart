@@ -172,8 +172,8 @@ class _LoginScreenState extends State<LoginScreen> {
         onChanged: (c) {
           acceptReset.value = false;
         },
-        cursorColor: Colors.white,
-        style: const TextStyle(color: Colors.white),
+        cursorColor: AppColors.backgroundColor,
+        style: const TextStyle(color: AppColors.backgroundColor),
         decoration: InputDecoration(
           fillColor: Color.fromRGBO(255, 255, 255, 0.23),
           hintText: 'Email Address',
@@ -218,8 +218,8 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
+            backgroundColor: AppColors.backgroundColor,
+            foregroundColor: AppColors.accentColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

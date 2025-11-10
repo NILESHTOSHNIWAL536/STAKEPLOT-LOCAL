@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import '../Constants/font_manager.dart';
 import '../backed_connections/apis_connect.dart';
 import '../backed_connections/backServices.dart/email-services.dart';
@@ -39,7 +40,7 @@ class RevokeAccessScreen extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(true),
             child: Text(
               "Revoke",
-              style: FontManager().getTextStyle(context, lWeight: FontWeight.w600, color: Colors.white),
+              style: FontManager().getTextStyle(context, lWeight: FontWeight.w600, color: AppColors.backgroundColor),
             ),
           ),
         ],
@@ -63,10 +64,10 @@ Widget build(BuildContext context) {
     appBar: AppBar(
       elevation: 0,
       backgroundColor: Colors.redAccent,
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: const IconThemeData(color: AppColors.backgroundColor),
       title: Text(
         "Google Account Access",
-        style: fm.getTextStyle(context, lWeight: FontWeight.w600, fontSize: 18, color: Colors.white),
+        style: fm.getTextStyle(context, lWeight: FontWeight.w600, fontSize: 18, color: AppColors.backgroundColor),
       ),
     ),
     body: Container(
@@ -78,7 +79,7 @@ Widget build(BuildContext context) {
           mainAxisSize: MainAxisSize.min,
           children: [
             Card(
-              color: Colors.white,
+              color: AppColors.backgroundColor,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               elevation: 2,
               child: Padding(
@@ -140,7 +141,7 @@ Widget build(BuildContext context) {
                 icon: const Icon(Icons.logout),
                 label: Text(
                   "Revoke Access",
-                  style: fm.getTextStyle(context, lWeight: FontWeight.w600, color: Colors.white),
+                  style: fm.getTextStyle(context, lWeight: FontWeight.w600, color: AppColors.backgroundColor),
                 ),
                 onPressed: () => _confirmRevoke(context),
               ),

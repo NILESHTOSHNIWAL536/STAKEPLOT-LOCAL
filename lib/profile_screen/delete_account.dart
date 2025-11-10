@@ -26,12 +26,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -132,7 +132,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                         ),
                         child: Icon(
                           Icons.currency_yen,
-                          color: Colors.white,
+                          color: AppColors.backgroundColor,
                           size: 30,
                         ),
                       ),
@@ -190,7 +190,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                                   ? Icon(
                                       Icons.check,
                                       size: 14,
-                                      color: Colors.white,
+                                      color: AppColors.backgroundColor,
                                     )
                                   : null,
                             ),
@@ -290,12 +290,12 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -336,7 +336,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                       ),
                       child: Icon(
                         Icons.warning,
-                        color: Colors.white,
+                        color: AppColors.backgroundColor,
                         size: 16,
                       ),
                     ),
@@ -358,7 +358,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                               text: 'Deleting your account is permanent and cannot be undone. All your data will be erased.',
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.black,
+                                color: AppColors.accentColor,
                                 height: 1.4,
                               ),
                             ),
@@ -378,7 +378,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                  color: AppColors.accentColor,
                 ),
               ),
               
@@ -424,7 +424,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                   ),
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.black,
+                    color: AppColors.accentColor,
                   ),
                 ),
               ),
@@ -457,7 +457,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: _passwordController.text.isNotEmpty
-                          ? Colors.white
+                          ? AppColors.backgroundColor
                           : Colors.grey[600],
                     ),
                   ),
@@ -564,7 +564,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
           width: MediaQuery.of(context).size.width/1.1,
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundColor,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -598,7 +598,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
         SnackBar(
           content: Row(
             children: [
-              Icon(Icons.check_circle, color: Colors.white),
+              Icon(Icons.check_circle, color: AppColors.backgroundColor),
               SizedBox(width: 8),
               Text('Account deleted successfully'),
             ],

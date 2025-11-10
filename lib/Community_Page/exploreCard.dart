@@ -169,7 +169,7 @@ class _ExploreCardState extends State<ExploreCard> {
                     height: _currentPage == index ? 10 : 6,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _currentPage == index ? Colors.white : Colors.grey,
+                      color: _currentPage == index ? AppColors.backgroundColor : Colors.grey,
                     ),
                   ),
                 ),
@@ -190,7 +190,7 @@ class _ExploreCardState extends State<ExploreCard> {
       height: getImageHeight(context),
       boxFit: BoxFit.fill,
       colorFilter: null, // Disable any color tint
-      color: Colors.transparent,
+      color: AppColors.transparentColor,
       // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
       image: NetworkImage(widget.extractdata.images[index]),
     );
@@ -205,7 +205,7 @@ class _ExploreCardState extends State<ExploreCard> {
         // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
         image: NetworkImage(imageUrl),
         colorFilter: null, // Disable any color tint
-        color: Colors.transparent,
+        color: AppColors.transparentColor,
         border: Border.all(color: AppColors.bg5),
       ),
     );

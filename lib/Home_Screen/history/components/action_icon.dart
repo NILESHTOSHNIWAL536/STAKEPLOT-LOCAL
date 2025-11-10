@@ -113,16 +113,16 @@ class ActionIcons extends StatelessWidget {
             width: screenWidth * 0.95,
             padding: EdgeInsets.all(screenWidth * 0.05),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.backgroundColor,
               borderRadius: BorderRadius.circular(16),
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.white, Colors.grey[50]!],
+                colors: [AppColors.backgroundColor, Colors.grey[50]!],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: AppColors.accentColor.withOpacity(0.1),
                   blurRadius: 12,
                   spreadRadius: 2,
                   offset: const Offset(0, 2),

@@ -252,11 +252,11 @@
 //       appBar: AppBar(
 //         backgroundColor: AppColors.backgroundColor,
 //         leading: IconButton(
-//           icon: Icon(Icons.arrow_back, color: Colors.black),
+//           icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
 //           onPressed: () => Navigator.of(context).pop(),
 //         ),
 //         elevation: 0,
-//         title: _buildText(widget.data['name'] ?? PlotFinanceStaticData().budgetTitle, Colors.black,
+//         title: _buildText(widget.data['name'] ?? PlotFinanceStaticData().budgetTitle, AppColors.accentColor,
 //             fontSize: 18, fontWeight: FontWeight.bold),
 //         centerTitle: true,
 //         actions: [
@@ -338,7 +338,7 @@
 //           padding: const EdgeInsets.symmetric(vertical: 20.0),
 //           child: _buildText(
 //             PlotFinanceStaticData().noSpendingData,
-//             Colors.black,
+//             AppColors.accentColor,
 //             fontSize: 16,
 //             fontWeight: FontWeight.bold,
 //           ),
@@ -411,7 +411,7 @@
 //           _buildRow(
 //             PlotFinanceStaticData().amountSpentLabel, // Updated
 //             '₹ ${formatMoneyIndian(totalSpent.toString())}',
-//             Colors.black,
+//             AppColors.accentColor,
 //           ),
 //           SizedBox(height: 8),
 //           _buildRow2(
@@ -428,9 +428,9 @@
 //     return Row(
 //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //       children: [
-//         _buildText(title, Colors.black,
+//         _buildText(title, AppColors.accentColor,
 //             fontSize: 14, fontWeight: FontWeight.w500),
-//         _buildText(value, Colors.black,
+//         _buildText(value, AppColors.accentColor,
 //             fontSize: 16, fontWeight: FontWeight.w500),
 //       ],
 //     );
@@ -463,7 +463,7 @@
 //     return Column(
 //       crossAxisAlignment: CrossAxisAlignment.start,
 //       children: [
-//          _buildText(PlotFinanceStaticData().budgetSpendingTitle, Colors.black, // Updated
+//          _buildText(PlotFinanceStaticData().budgetSpendingTitle, AppColors.accentColor, // Updated
 //             fontSize: 18, fontWeight: FontWeight.bold),
 //         SizedBox(height: 8),
 //         SizedBox(
@@ -502,7 +502,7 @@
 //       child: Column(
 //         crossAxisAlignment: CrossAxisAlignment.start,
 //         children: [
-//           _buildText(PlotFinanceStaticData().budgetSpendingTitle, Colors.black, // Updated
+//           _buildText(PlotFinanceStaticData().budgetSpendingTitle, AppColors.accentColor, // Updated
 //             fontSize: 18, fontWeight: FontWeight.bold),
 //           SizedBox(height: 8),
 //           insightsList != null && insightsList.isNotEmpty
@@ -581,7 +581,7 @@
 //         child: Text(
 //           PlotFinanceStaticData().noSpendingData,
 //           style: FontManager().getTextStyle(context,
-//               lWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
+//               lWeight: FontWeight.bold, fontSize: 12, color: AppColors.accentColor),
 //         ),
 //       );
 //     }
@@ -678,7 +678,7 @@
 //                     return Container(
 //                       decoration: BoxDecoration(
 //                         borderRadius: BorderRadius.circular(16),
-//                         color: Colors.black,
+//                         color: AppColors.accentColor,
 //                       ),
 //                       padding: EdgeInsets.all(8),
 //                       child: Text('₹${chartData.y.toStringAsFixed(2)}',
@@ -696,7 +696,7 @@
 //             child: Text(
 //                PlotFinanceStaticData().noSpendingData,
 //               style: FontManager().getTextStyle(context,
-//                   lWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
+//                   lWeight: FontWeight.bold, fontSize: 12, color: AppColors.accentColor),
 //             ),
 //           );
 //   }
@@ -783,11 +783,11 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: AppColors.accentColor),
           onPressed: () => Navigator.of(context).pop(),
         ),
         elevation: 0,
-        title: _buildText(widget.data['name'] ?? PlotFinanceStaticData().budgetTitle, Colors.black,
+        title: _buildText(widget.data['name'] ?? PlotFinanceStaticData().budgetTitle, AppColors.accentColor,
             fontSize: 18, fontWeight: FontWeight.bold),
         centerTitle: true,
         actions: [
@@ -869,7 +869,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: _buildText(
             PlotFinanceStaticData().noSpendingData,
-            Colors.black,
+            AppColors.accentColor,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
@@ -933,7 +933,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildText(PlotFinanceStaticData().budgetAmountLabel, Colors.grey), // Updated
+          _buildText(PlotFinanceStaticData().budgetAmountLabel, AppColors.greyColor), // Updated
           SizedBox(height: 8),
           _buildText('₹ ${formatMoneyIndian(widget.data['amount'].toString())}',
               AppColors.primaryColor,
@@ -942,7 +942,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           _buildRow(
             PlotFinanceStaticData().amountSpentLabel, // Updated
             '₹ ${formatMoneyIndian(totalSpent.toString())}',
-            Colors.black,
+            AppColors.accentColor,
           ),
           SizedBox(height: 8),
           _buildRow2(
@@ -959,9 +959,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildText(title, Colors.black,
+        _buildText(title, AppColors.accentColor,
             fontSize: 14, fontWeight: FontWeight.w500),
-        _buildText(value, Colors.black,
+        _buildText(value, AppColors.accentColor,
             fontSize: 16, fontWeight: FontWeight.w500),
       ],
     );
@@ -994,7 +994,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         _buildText(PlotFinanceStaticData().budgetSpendingTitle, Colors.black, // Updated
+         _buildText(PlotFinanceStaticData().budgetSpendingTitle, AppColors.accentColor, // Updated
             fontSize: 18, fontWeight: FontWeight.bold),
         SizedBox(height: 8),
         SizedBox(
@@ -1033,7 +1033,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildText(PlotFinanceStaticData().budgetSpendingTitle, Colors.black, // Updated
+          _buildText(PlotFinanceStaticData().budgetSpendingTitle, AppColors.accentColor, // Updated
             fontSize: 18, fontWeight: FontWeight.bold),
           SizedBox(height: 8),
           insightsList != null && insightsList.isNotEmpty
@@ -1112,7 +1112,7 @@ class LineChartSample extends StatelessWidget {
         child: Text(
           PlotFinanceStaticData().noSpendingData,
           style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
+              lWeight: FontWeight.bold, fontSize: 12, color: AppColors.accentColor),
         ),
       );
     }
@@ -1209,7 +1209,7 @@ class LineChartSample extends StatelessWidget {
                     return Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        color: Colors.black,
+                        color: AppColors.accentColor,
                       ),
                       padding: EdgeInsets.all(8),
                       child: Text('₹${chartData.y.toStringAsFixed(2)}',
@@ -1227,7 +1227,7 @@ class LineChartSample extends StatelessWidget {
             child: Text(
                PlotFinanceStaticData().noSpendingData,
               style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
+                  lWeight: FontWeight.bold, fontSize: 12, color: AppColors.accentColor),
             ),
           );
   }

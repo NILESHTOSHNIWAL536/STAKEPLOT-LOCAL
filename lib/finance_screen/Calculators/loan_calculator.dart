@@ -143,7 +143,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
           borderSide: BorderSide(color: Colors.white70, width: 1)),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white, width: 1.5)),
+          borderSide: BorderSide(color: AppColors.accentColor, width: 1.5)),
     );
   }
 
@@ -224,7 +224,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                             decoration: BoxDecoration(
                               color: AppColors.primaryColor.withOpacity(0.9),
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white, width: 1),
+                              border: Border.all(color: AppColors.backgroundColor, width: 1),
                             ),
                             child: SingleChildScrollView(
                               child: Text(
@@ -254,7 +254,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                           color: AppColors.accentColor,
                           fontSize: 15,
                           lWeight: FontWeight.w500),
-                      cursorColor: Colors.black,
+                      cursorColor: AppColors.accentColor,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: AppColors.backgroundColor,
@@ -308,7 +308,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                           color: AppColors.accentColor,
                           fontSize: 15,
                           lWeight: FontWeight.w500),
-                      cursorColor: Colors.black,
+                      cursorColor: AppColors.accentColor,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: AppColors.backgroundColor,
@@ -379,9 +379,9 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                         value: _selectedCreditScore,
                         dropdownColor: const Color(0xFF656399),
                         icon:
-                            const Icon(Icons.expand_more, color: Colors.white),
+                            const Icon(Icons.expand_more, color: AppColors.backgroundColor),
                         style: FontManager().getTextStyle(context,
-                            color: Colors.white, fontSize: 15.2),
+                            color: AppColors.backgroundColor, fontSize: 15.2),
                         onChanged: (String? newVal) {
                           setState(() {
                             if (newVal != null) _selectedCreditScore = newVal;
@@ -416,7 +416,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                         height: height * 0.055,
                         decoration: BoxDecoration(
                           color: !isSelected
-                              ? Colors.white
+                              ? AppColors.backgroundColor
                               : AppColors.primaryColor,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
@@ -442,7 +442,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                             style: FontManager().getTextStyle(context,
                                 color: !isSelected
                                     ? const Color(0xFF656399)
-                                    : Colors.white,
+                                    : AppColors.backgroundColor,
                                 lWeight: FontWeight.w700,
                                 fontSize: 15.4),
                           ),

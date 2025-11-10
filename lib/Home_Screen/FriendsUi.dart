@@ -107,7 +107,7 @@ class _FriendsUiState extends State<FriendsUi> {
                                         },
                                         child: const Icon(
                                           Icons.remove_circle,
-                                          color: Colors.black,
+                                          color: AppColors.accentColor,
                                         ),
                                       ),
                                     ),
@@ -241,7 +241,7 @@ class _FriendsUiState extends State<FriendsUi> {
                                   //      child: Icon(
                                   //           Icons.person_outline_sharp,
                                   //           size: 40,
-                                  //           color: Colors.black,
+                                  //           color: AppColors.accentColor,
                                   //         ),
                                   //    ),
                                   addedUser.contains(values)
@@ -314,7 +314,7 @@ class _FriendsUiState extends State<FriendsUi> {
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                   borderSide: const BorderSide(
-                      // color:Colors.white
+                      // color:AppColors.backgroundColor
                       color: Color.fromRGBO(249, 246, 238, 1))),
               focusedBorder: OutlineInputBorder(
                   // borderRadius: BorderRadius.circular(40),

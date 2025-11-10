@@ -392,7 +392,7 @@ class _UserListScreenState extends State<UserListScreen> {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor,
         builder: (context) {
           final maxHeight = MediaQuery.of(context).size.height * 0.85;
           final animation = ModalRoute.of(context)!.animation!;

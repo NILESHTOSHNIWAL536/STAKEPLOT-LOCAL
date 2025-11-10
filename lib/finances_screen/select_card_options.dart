@@ -39,12 +39,12 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
     final w = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(44),
         child: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backgroundColor,
           leading: leadIcon(context),
           title: textStyleImage(
               context: context,

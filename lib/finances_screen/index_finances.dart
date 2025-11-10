@@ -257,7 +257,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
             child: textStyle(
               context: context,
               text: 'Plot your finances',
-              c: Colors.white,
+              c: AppColors.backgroundColor,
               fontsize: 24,
               fontWeight: FontWeight.bold,
             ),

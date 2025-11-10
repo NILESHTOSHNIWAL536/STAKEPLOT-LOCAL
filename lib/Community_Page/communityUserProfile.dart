@@ -164,13 +164,13 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(8),
 
         
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppColors.accentColor.withOpacity(0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -186,10 +186,10 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                       fontSize: 16,
                       color: AppColors.accentColor)),
           if (hasArrow)
-            const Icon(
+             Icon(
               Icons.arrow_forward,
               size: 18,
-              color: Colors.grey,
+              color: AppColors.greyColor,
             )
           else if (hasToggle)
             Container(

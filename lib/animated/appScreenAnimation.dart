@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
@@ -130,7 +131,7 @@ class _AppScreenAnimationState extends State<AppScreenAnimation>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Match Lottie splash
+      backgroundColor: AppColors.backgroundColor, // Match Lottie splash
       body: SafeArea(
         child: Center(
           child: FadeTransition(

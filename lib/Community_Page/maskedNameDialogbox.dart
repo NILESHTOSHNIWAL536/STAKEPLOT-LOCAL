@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/marks.dart';
 
@@ -12,7 +13,7 @@ class MaskedNameDialogBox {
             borderRadius: BorderRadius.circular(16.0),
           ),
           elevation: 0,
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColors.transparentColor,
           child: _buildDialogContent(context),
         );
       },
@@ -23,11 +24,11 @@ class MaskedNameDialogBox {
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: AppColors.accentColor.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -43,7 +44,7 @@ class MaskedNameDialogBox {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: AppColors.accentColorOpacity,
             ),
           ),
           const SizedBox(height: 12),

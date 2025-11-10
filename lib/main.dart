@@ -127,7 +127,7 @@
 //           await AppVersionUpdate.showAlertUpdate(
 //             appVersionResult: result,
 //             context: context,
-//             backgroundColor: Colors.white,
+//             backgroundColor: AppColors.backgroundColor,
 //             title: 'Update Available',
 //             content:
 //                 'A new version (${result.storeVersion ?? "unknown"}) is available. Please update the app.',
@@ -416,7 +416,7 @@
 //           await AppVersionUpdate.showAlertUpdate(
 //             appVersionResult: result,
 //             context: context,
-//             backgroundColor: Colors.white,
+//             backgroundColor: AppColors.backgroundColor,
 //             title: 'Update Available',
 //             content:
 //                 'A new version (${result.storeVersion ?? "unknown"}) is available. Please update the app.',
@@ -705,7 +705,7 @@
 //           await AppVersionUpdate.showAlertUpdate(
 //             appVersionResult: result,
 //             context: context,
-//             backgroundColor: Colors.white,
+//             backgroundColor: AppColors.backgroundColor,
 //             title: 'Update Available',
 //             content:
 //                 'A new version (${result.storeVersion ?? "unknown"}) is available. Please update the app.',
@@ -1079,7 +1079,7 @@
 //           await AppVersionUpdate.showAlertUpdate(
 //             appVersionResult: result,
 //             context: context,
-//             backgroundColor: Colors.white,
+//             backgroundColor: AppColors.backgroundColor,
 //             title: 'Update Available',
 //             content:
 //                 'A new version (${result.storeVersion ?? "unknown"}) is available. Please update the app.',
@@ -1105,6 +1105,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
+import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
+import 'package:flutter_application_code_stakeplot/animated/widget_bridge.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:flutter_application_code_stakeplot/widget_service.dart';
 import 'package:get/get.dart';
@@ -1191,6 +1193,36 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+     WidgetBridge.getLastWidgetSelection().then((opt) {
+    if (opt != null) {
+      print('Last widget option: $opt');
+      // react: maybe show a toast or set UI state
+    }
+  });
+
+  // 2) Listen for runtime events when Android calls into Flutter (onNewIntent)
+  WidgetBridge.setMethodCallHandler((args) {
+    if (args.containsKey('tab')) {
+      final tab = args['tab'];
+      // navigate to tab in your HomeShell, e.g. set selectedIndex
+    } else if (args.containsKey('option')) {
+      final option = args['option'];
+      // react to raw clicked option
+    } else if (args.containsKey('navigate_to_tab')) {
+      final nav = args['navigate_to_tab'];
+      // handle older getInitialRoute map
+    }
+  });
+ try {
+    final friendNames = globalFriendsList
+        .take(4)
+        .map((e) => (e != null && e['name'] != null) ? e['name'].toString() : '')
+        .where((s) => s.isNotEmpty)
+        .toList();
+    WidgetBridge.setWidgetFriends(friendNames);
+  } catch (e) {
+    // ignore
+  }
     initGetControllersIfisRegistered();
     themeController = ControllerManagement.themeController;
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
@@ -1252,7 +1284,7 @@ Future<void> checkForUpdate() async {
           await AppVersionUpdate.showAlertUpdate(
             appVersionResult: result,
             context: context,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.white,
             title: 'Update Available',
             content:
                 'A new version (${result.storeVersion ?? "unknown"}) is available. Please update the app.',

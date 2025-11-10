@@ -2,6 +2,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -52,7 +53,7 @@ AvatarProfileImage({ Key? key,required this.url,required this.width,required thi
                                 shape: BoxShape.circle,
                                 boxFit: BoxFit.contain,
                                 image: NetworkImage(url),
-                                colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
+                                colorFilter:ColorFilter.mode(AppColors.accentColor.withOpacity(0.0),
                                 BlendMode.exclusion
                         ),
                  ),
@@ -99,7 +100,7 @@ AvatarProfileImageNextFetch({ Key? key,required this.url,required this.width,req
                                 shape: BoxShape.circle,
                                 boxFit: BoxFit.contain,
                                 image: NetworkImage(url),
-                                colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
+                                colorFilter:ColorFilter.mode(AppColors.accentColor.withOpacity(0.0),
                                 BlendMode.exclusion
                         ),
                  ),
@@ -253,7 +254,7 @@ class AvatarProfile extends StatelessWidget {
     try {
       return Color(int.parse(hex.replaceFirst('#', '0xFF')));
     } catch (_) {
-      return Colors.grey; // Fallback color
+      return AppColors.greyColor; // Fallback color
     }
   }
 
@@ -366,14 +367,14 @@ class AvatarProfile2 extends StatelessWidget {
           child: CircleAvatar(
               radius:35,
              backgroundImage: AssetImage(url.toString().trim()),
-             backgroundColor: Colors.transparent, // optional: removes default grey bg
+             backgroundColor: AppColors.transparentColor, // optional: removes default grey bg
           ),
       ):Container(
           padding: EdgeInsets.all(2),
           alignment: Alignment.center,
           child: CircleAvatar(
              backgroundImage: AssetImage(url.toString().trim()),
-             backgroundColor: Colors.transparent, // optional: removes default grey bg
+             backgroundColor: AppColors.transparentColor, // optional: removes default grey bg
           ),
       );
   }

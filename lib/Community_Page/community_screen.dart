@@ -203,7 +203,7 @@ class CommunityState extends State<Community> {
             BorderRadius.circular(30), // Reduced radius for a modern look
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2), // Subtle shadow for depth
+            color: AppColors.accentColor.withOpacity(0.2), // Subtle shadow for depth
             spreadRadius: 2,
             blurRadius: 6,
             offset: const Offset(0, 3),
@@ -211,7 +211,7 @@ class CommunityState extends State<Community> {
         ],
       ),
       child: Material(
-        color: Colors.transparent,
+        color: AppColors.transparentColor,
         borderRadius: BorderRadius.circular(30),
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
@@ -222,12 +222,12 @@ class CommunityState extends State<Community> {
                 ? MaskedNameDialogBox.showMaskedNameDialog(context)
                 : await showModal({});
           },
-          splashColor: Colors.white.withOpacity(0.3), // Visual feedback on tap
+          splashColor: AppColors.backgroundColor.withOpacity(0.3), // Visual feedback on tap
           child: const Center(
             child: Icon(
               Icons.add, // Generic icon for adding content
               size: 26, // Slightly larger for visibility
-              color: Colors.white, // High contrast with primaryColor
+              color: AppColors.backgroundColor, // High contrast with primaryColor
             ),
           ),
         ),

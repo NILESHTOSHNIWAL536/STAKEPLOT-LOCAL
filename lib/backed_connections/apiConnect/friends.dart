@@ -24,10 +24,10 @@ void addUserAsFrd(id,context,[type="friend"])async
               sendNotificationsToDevice(id,context,"${controller.userName.value} has  accepted your friend request..","/friends");
             }
             
-            snackBarCalled(context,SnackbarData().addingFriend,Colors.black);  
+            snackBarCalled(context,SnackbarData().addingFriend,);  
            userController.fetchUserInfo();    
       }else{
-           snackBarCalledfail(context,SnackbarData().addFriendFail,Colors.red);
+           snackBarCalledfail(context,SnackbarData().addFriendFail,);
       }
 }
 
@@ -37,7 +37,7 @@ void  rejectFrdRequest(body,context)async
   var response=await postDataApiCall(urlPath, {});
       if(!getFlagOfResponse(response))
       {
-          snackBarCalledfail(context,SnackbarData().friendRejected ,Colors.red);
+          snackBarCalledfail(context,SnackbarData().friendRejected );
       }
 }
 
@@ -56,9 +56,9 @@ void   addUsersendRequest(id,name,context)async
       if(getFlagOfResponse(response))
       {
             sendNotificationsToDevice(id,context,"${controller.userName.value} has sent you a friend request");
-            snackBarCalled(context,SnackbarData().sendingRequest,Colors.black);
+            snackBarCalled(context,SnackbarData().sendingRequest);
       }else{
-           snackBarCalledfail(context,SnackbarData().requestAddFail,Colors.red);
+           snackBarCalledfail(context,SnackbarData().requestAddFail);
       }
 }
 
@@ -73,9 +73,9 @@ void  removeRequest(id,name,context)async
       var response=await postDataApiCall(urlPath, body);
       if(getFlagOfResponse(response))
       {
-            snackBarCalled(context,SnackbarData().requestRemoved,Colors.black);
+            snackBarCalled(context,SnackbarData().requestRemoved);
       }else{
-           snackBarCalledfail(context,SnackbarData().requestRemoveFail,Colors.red);
+           snackBarCalledfail(context,SnackbarData().requestRemoveFail);
       }
 }
 
@@ -87,7 +87,7 @@ void  removeRequest(id,name,context)async
     var response=await postDataApiCall(urlPath, {});
       if(getFlagOfResponse(response))
       {
-                  snackBarCalled(context,SnackbarData().friendRemoved,Colors.black);
+                  snackBarCalled(context,SnackbarData().friendRemoved);
                    userController.fetchUserInfo();  
       }
 }

@@ -294,7 +294,7 @@ class _CardStackScreenState extends State<CardStackScreen>
                         borderRadius: BorderRadius.circular(16),
                         // boxShadow: [
                         //   BoxShadow(
-                        //     color: Colors.black.withOpacity(0.3),
+                        //     color: AppColors.accentColor.withOpacity(0.3),
                         //     blurRadius: 20 * fontScale,
                         //     offset: Offset(0, 8 * fontScale),
                         //   ),
@@ -319,14 +319,14 @@ class _CardStackScreenState extends State<CardStackScreen>
                                           ? Container(
                                               height: cardHeight,
                                               decoration: BoxDecoration(
-                                                color: Colors.white
+                                                color: AppColors.backgroundColor
                                                     .withOpacity(0.2),
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         16 * fontScale),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.black
+                                                    color: AppColors.accentColor
                                                         .withOpacity(0.25),
                                                     blurRadius: 12 * fontScale,
                                                     offset: Offset(

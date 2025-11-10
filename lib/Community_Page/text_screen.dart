@@ -274,8 +274,8 @@ class _TextScreenState extends State<TextScreen> {
                                           fontSize: 15,
                                           color: titleController.text.isNotEmpty &&
                                                   contentController.text.isNotEmpty
-                                              ? Colors.white
-                                              : Colors.black,
+                                              ? AppColors.backgroundColor
+                                              : AppColors.accentColor,
                                         ),
                                       ),
                               ),

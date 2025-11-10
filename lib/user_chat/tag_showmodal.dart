@@ -128,7 +128,7 @@ class _TagShowmodalState extends State<TagShowmodal>
               // Obx(()=>   LoadTag.value? getCustomCategoryList(context):getCustomCategoryList(context)),
               Container(
                 decoration: const BoxDecoration(
-    color: Colors.white,
+    color: AppColors.backgroundColor,
     borderRadius: BorderRadius.only(
       topLeft: Radius.circular(14),
       topRight: Radius.circular(14),
@@ -173,7 +173,7 @@ class _TagShowmodalState extends State<TagShowmodal>
       margin: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
        decoration: BoxDecoration(
                              borderRadius: BorderRadius.circular(5),
-    color: Colors.white,
+    color: AppColors.backgroundColor,
     boxShadow: [
       BoxShadow(
         color: Color.fromRGBO(156, 156, 156, 0.25),
@@ -477,7 +477,7 @@ class _TagShowmodalState extends State<TagShowmodal>
             margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
              decoration: BoxDecoration(
                              borderRadius: BorderRadius.circular(5),
-    color: Colors.white,
+    color: AppColors.backgroundColor,
     boxShadow: [
       BoxShadow(
         color: Color.fromRGBO(156, 156, 156, 0.25),

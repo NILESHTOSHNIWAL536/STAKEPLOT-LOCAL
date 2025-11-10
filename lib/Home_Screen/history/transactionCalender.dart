@@ -602,7 +602,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
                           fontSize: 16,
                           lWeight: FontWeight.normal,
                           color: isSelected
-                              ? Colors.white
+                              ? AppColors.backgroundColor
                               : AppColors.historyCalenderText,
                         ),
                       ),
@@ -626,7 +626,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
                     style: FontManager().getTextStyle(context,
                         fontSize: 16,
                         lWeight: FontWeight.w600,
-                        color: Colors.white),
+                        color: AppColors.backgroundColor),
                   ),
                 ),
                 decoration: BoxDecoration(
@@ -1092,7 +1092,7 @@ class OvalTransactionWidget extends StatelessWidget {
     required this.transactionCount,
     this.width = 120,
     this.height = 120,
-    this.backgroundColor = Colors.white,
+    this.backgroundColor = AppColors.backgroundColor,
     this.borderColor = const Color(0xFFE5E7EB),
     this.textColor = const Color(0xFF374151),
   }) : super(key: key);

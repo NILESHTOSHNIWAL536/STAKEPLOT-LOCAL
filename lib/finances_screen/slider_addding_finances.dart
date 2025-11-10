@@ -139,7 +139,7 @@ class SliderAdddingFinances extends StatelessWidget {
       child: Container(
         width: containerWidth - 95,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(

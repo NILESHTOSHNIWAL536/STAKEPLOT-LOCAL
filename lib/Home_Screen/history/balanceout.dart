@@ -181,7 +181,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                     context,
                     fontSize: 14,
                     lWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                   ),
                 ),
               ):SizedBox(),
@@ -236,7 +236,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                              borderRadius: BorderRadius.circular(5),
-    color: Colors.white,
+    color: AppColors.backgroundColor,
     boxShadow: [
       BoxShadow(
         color: Color.fromRGBO(156, 156, 156, 0.25),

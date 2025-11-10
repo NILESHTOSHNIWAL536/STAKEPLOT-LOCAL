@@ -47,7 +47,7 @@ Widget _buildFeatureIcon(IconData icon, String text, int index,
                 shape: BoxShape.circle, // Changed to a circle for accuracy
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: AppColors.accentColor.withOpacity(0.1),
                     spreadRadius: 1,
                     blurRadius: 5,
                     offset: const Offset(0, 3),

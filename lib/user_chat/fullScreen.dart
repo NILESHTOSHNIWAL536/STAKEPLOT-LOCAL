@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 
 
 class FullImageScreen extends StatelessWidget {
@@ -9,7 +10,7 @@ class FullImageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.accentColor,
       body: Center(
         child: GestureDetector(
           onTap: () {

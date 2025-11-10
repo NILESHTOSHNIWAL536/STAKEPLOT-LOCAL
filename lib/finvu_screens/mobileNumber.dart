@@ -288,15 +288,15 @@ class _MobileNumberState extends State<MobileNumber> {
                   borderRadius: BorderRadius.circular(10),
                   fieldHeight: MediaQuery.of(context).size.width * 0.12,
                   fieldWidth: MediaQuery.of(context).size.width * 0.12,
-                  activeFillColor: Colors.white,
+                  activeFillColor: AppColors.backgroundColor,
                   activeColor: isOtpWrong.value ? Colors.red : Colors.blue,
-                  selectedFillColor: Colors.white,
+                  selectedFillColor: AppColors.backgroundColor,
                   selectedColor: isOtpWrong.value ? Colors.red : Colors.blue,
                   inactiveFillColor: Colors.grey[200],
                   inactiveColor: isOtpWrong.value ? Colors.red : Colors.grey,
                 ),
                 enableActiveFill: true,
-                textStyle: TextStyle(fontSize: 20, color: Colors.black),
+                textStyle: TextStyle(fontSize: 20, color: AppColors.accentColor),
                 onChanged: (value) {
                   _otpCode.value = value;
                   _isOtpValid.value = value.length == _otpCodeLength;

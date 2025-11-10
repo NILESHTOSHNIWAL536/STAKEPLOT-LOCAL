@@ -650,7 +650,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                 value: animatedValue,
                 strokeWidth: 4,
                 backgroundColor: AppColors.accentColor,
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: const AlwaysStoppedAnimation<Color>(AppColors.backgroundColor),
               );
             },
           ),
@@ -676,12 +676,12 @@ class _OnboardingPageState extends State<OnboardingPage>
                 height: screenWidth * 0.15,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white,
+                  color: AppColors.backgroundColor,
                 ),
                 child: const Center(
                   child: Icon(
                     Icons.arrow_forward,
-                    color: Colors.black,
+                    color: AppColors.accentColor,
                     size: 24,
                   ),
                 ),

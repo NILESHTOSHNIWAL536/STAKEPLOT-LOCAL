@@ -160,7 +160,7 @@ Widget buildWelcomeRow(context) {
                     hintStyle: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
                         fontSize: 14,
-                        color: Colors.black),
+                        color: AppColors.accentColor),
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),

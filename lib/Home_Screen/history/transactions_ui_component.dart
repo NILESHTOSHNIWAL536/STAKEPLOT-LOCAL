@@ -167,7 +167,7 @@ Widget reviewTagTransactions(
                     context: context,
                     fontsize: 11,
                     fontWeight: FontWeight.bold,
-                    c: Colors.white,
+                    c: AppColors.backgroundColor,
                   ),
                 ),
                 SizedBox(width: 8 * scaleFactor),

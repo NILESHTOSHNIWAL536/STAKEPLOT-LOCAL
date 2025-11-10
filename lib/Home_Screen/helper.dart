@@ -526,12 +526,12 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
             // height:
             //     (MediaQuery.of(context).size.height / 2.5), // Full screen height
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.backgroundColor,
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(12)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: AppColors.accentColor.withOpacity(0.1),
                   blurRadius: 20,
                   spreadRadius: 5,
                   offset: const Offset(0, -5),
@@ -592,7 +592,7 @@ Widget getBankAccountList(context, [fromPdf = true]) {
     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
     // decoration: BoxDecoration(
     //    borderRadius: BorderRadius.circular(5),
-    // color: Colors.white,
+    // color: AppColors.backgroundColor,
     // boxShadow: [
     //   BoxShadow(
     //     color: Color.fromRGBO(156, 156, 156, 0.25),
@@ -607,7 +607,7 @@ Widget getBankAccountList(context, [fromPdf = true]) {
         return Obx(() => Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: Colors.white,
+                color: AppColors.backgroundColor,
                 boxShadow: [
                   BoxShadow(
                     color: Color.fromRGBO(156, 156, 156, 0.25),
@@ -805,7 +805,7 @@ void showModalForPdfDownload(BuildContext context) {
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
-            color: Colors.white,
+            color: AppColors.backgroundColor,
           ),
           child: SingleChildScrollView(
             child: Column(

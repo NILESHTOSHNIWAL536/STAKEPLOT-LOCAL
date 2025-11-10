@@ -65,7 +65,7 @@ class TransactionCheckbox extends StatelessWidget {
                 },
                 shape: const CircleBorder(),
                 side: BorderSide(color: AppColors.primaryColor),
-                checkColor: Colors.white,
+                checkColor: AppColors.backgroundColor,
                 activeColor: AppColors.primaryColor,
                 semanticLabel: 'Select transaction ${transaction.id}',
               ),

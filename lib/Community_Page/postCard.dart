@@ -216,7 +216,7 @@ class PostCard extends StatelessWidget {
                                   boxFit: BoxFit.fill,
                                   image: NetworkImage(dataObj.image),
                                   colorFilter: null, // Disable any color tint
-                                  color: Colors.transparent,
+                                  color: AppColors.transparentColor,
                                 ),
                               ),
                             )
@@ -239,7 +239,7 @@ class PostCard extends StatelessWidget {
                           //                   begin: Alignment.bottomCenter,
                           //                   end: Alignment.topCenter,
                           //                   colors: [
-                          //                     Colors.black.withOpacity(0.6),
+                          //                     AppColors.accentColor.withOpacity(0.6),
                           //                     Colors.transparent,
                           //                   ],
                           //                 ),

@@ -170,7 +170,7 @@ class _ImageScreenState extends State<ImageScreen> {
                                   //  ratio: Ratio(16, 9),
                                   // forceInsideCropArea:true,
 
-                                  overlayColor: Colors.black.withOpacity(0.5),
+                                  overlayColor: AppColors.accentColor.withOpacity(0.5),
                                   cropPercentage: 0.92, // Increased crop size
                                   // Increased crop size
                                 )
@@ -343,8 +343,8 @@ class _ImageScreenState extends State<ImageScreen> {
                               fontSize: 15,
                               color: selectedImage != null &&
                                       textController.text.isNotEmpty
-                                  ? Colors.white
-                                  : Colors.black,
+                                  ? AppColors.backgroundColor
+                                  : AppColors.accentColor,
                             ),
                           )),
                   ),

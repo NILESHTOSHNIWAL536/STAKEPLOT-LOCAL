@@ -62,8 +62,8 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
                         child: Container(
                           width: 7,
                           height: 7,
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
+                          decoration: BoxDecoration(
+                            color: AppColors.redColor,
                             shape: BoxShape.circle,
                           ),
                         ),

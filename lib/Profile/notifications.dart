@@ -190,7 +190,7 @@ class _NotificationsState extends State<Notifications> {
                             alignment: Alignment.centerRight,
                             child: const Padding(
                               padding: EdgeInsets.only(right: 20),
-                              child: Icon(Icons.delete, color: Colors.white),
+                              child: Icon(Icons.delete, color: AppColors.backgroundColor),
                             ),
                           ),
                           child: _buildNotificationCard(e),
@@ -587,7 +587,7 @@ class _NotificationsState extends State<Notifications> {
                   _buildActionButton(
                     "Accept",
                     AppColors.primaryColor,
-                    Colors.white,
+                    AppColors.backgroundColor,
                     () {
                       addUserAsFrd(id, context);
                       _deleteNotification(notifyId);
@@ -596,7 +596,7 @@ class _NotificationsState extends State<Notifications> {
                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   _buildActionButton(
                     "Reject",
-                    Colors.white,
+                    AppColors.backgroundColor,
                     AppColors.bg3,
                     () {
                       rejectFrdRequest(e, context);
@@ -646,7 +646,7 @@ class _NotificationsState extends State<Notifications> {
                   _buildActionButton(
                     "Approve",
                     AppColors.primaryColor,
-                    Colors.white,
+                    AppColors.backgroundColor,
                     () {
                       approveBill(context, e['bill_id'] as String? ?? "",
                           "accept", notifyId);
@@ -656,7 +656,7 @@ class _NotificationsState extends State<Notifications> {
                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   _buildActionButton(
                     "Reject",
-                    Colors.white,
+                    AppColors.backgroundColor,
                     AppColors.bg3,
                     () {
                       approveBill(context, e['bill_id'] as String? ?? "",
@@ -709,7 +709,7 @@ class _NotificationsState extends State<Notifications> {
                   _buildActionButton(
                     "Approve",
                     AppColors.primaryColor,
-                    Colors.white,
+                    AppColors.backgroundColor,
                     () {
                       settleAmount(context, id, type, endUser);
                       _deleteNotification(notifyId);
@@ -718,7 +718,7 @@ class _NotificationsState extends State<Notifications> {
                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   _buildActionButton(
                     "Reject",
-                    Colors.white,
+                    AppColors.backgroundColor,
                     AppColors.bg3,
                     () {
                       declineAmount(context, id, type, endUser);

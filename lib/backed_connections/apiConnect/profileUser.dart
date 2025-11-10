@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -171,7 +172,7 @@ void aboutuser(context, String about) async {
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(context, SnackbarData().userInfoUpdated, Colors.black);
+    snackBarCalled(context, SnackbarData().userInfoUpdated, AppColors.accentColor);
   } else {
     snackBarCalledfail(context, SnackbarData().errorUpdatingUserInfo, Colors.red);
   }
@@ -211,7 +212,7 @@ void editUserDetails(
       return;
     }
     if (response.statusCode == 200 || response.statusCode == 201) {
-      snackBarCalled(context, SnackbarData().userInfoUpdated, Colors.black);
+      snackBarCalled(context, SnackbarData().userInfoUpdated, AppColors.accentColor);
 
       userController.avatar.value = changeAvater.value;
       userController.userName.value = controller['name']!.text.toString();

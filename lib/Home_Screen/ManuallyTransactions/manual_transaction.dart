@@ -900,7 +900,7 @@ Widget categoryExpandedWidget() {
   //     searchController.clear();
   //     getAllTransaction(context);
 
-  //     snackBarCalled(context, SnackbarData().splitAmountSuccess, Colors.black);
+  //     snackBarCalled(context, SnackbarData().splitAmountSuccess, AppColors.accentColor);
   //     Navigator.pop(context);
   //     addedMembers.clear();
   //     addedUser.clear();
@@ -1008,7 +1008,7 @@ Widget categoryExpandedWidget() {
       searchController.clear();
       getAllTransaction(context);
 
-      snackBarCalled(context, SnackbarData().splitAmountSuccess, Colors.black);
+      snackBarCalled(context, SnackbarData().splitAmountSuccess, AppColors.accentColor);
       Navigator.pop(context);
       addedMembers.clear();
       addedUser.clear();

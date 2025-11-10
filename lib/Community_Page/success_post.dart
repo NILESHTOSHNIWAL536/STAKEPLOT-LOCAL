@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:confetti/confetti.dart';
@@ -72,7 +73,7 @@ class _SuccessPostState extends State<SuccessPost>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.green[50]!, Colors.white],
+            colors: [Colors.green[50]!, AppColors.backgroundColor],
           ),
           borderRadius: BorderRadius.circular(16),
         ),

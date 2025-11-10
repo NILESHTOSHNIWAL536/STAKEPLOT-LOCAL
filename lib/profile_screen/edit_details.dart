@@ -85,7 +85,7 @@ class _EditDetailsState extends State<EditDetails> {
         ),
         backgroundColor: AppColors.backgroundColor,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: AppColors.accentColor),
         actions: [
           InkWell(
             onTap: () {
@@ -359,7 +359,7 @@ class _EditDetailsState extends State<EditDetails> {
                   ),
                 ),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: AppColors.backgroundColor,
                 hintText: "Enter new email address",
                 hintStyle: FontManager().getTextStyle(
                   context,
@@ -504,7 +504,7 @@ class _EditDetailsState extends State<EditDetails> {
       'name': name,
     });
     if (getFlagOfResponse(response)) {
-      snackBarCalled(context, SnackbarData().sentOtpToEmail, Colors.black);
+      snackBarCalled(context, SnackbarData().sentOtpToEmail, AppColors.accentColor);
 
       Navigator.push(
         context,

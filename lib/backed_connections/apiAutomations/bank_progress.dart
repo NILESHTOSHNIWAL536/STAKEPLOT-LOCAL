@@ -104,7 +104,7 @@ class BankProgress extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(2),
                               decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: AppColors.backgroundColor,
                                   shape: BoxShape.circle,
                                   // borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
@@ -113,7 +113,7 @@ class BankProgress extends StatelessWidget {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
+                                      color: AppColors.accentColor.withOpacity(0.1),
                                       blurRadius: 6,
                                       offset: const Offset(0, 2),
                                     ),
@@ -134,7 +134,7 @@ class BankProgress extends StatelessWidget {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
+                                      color: AppColors.accentColor.withOpacity(0.1),
                                       blurRadius: 6,
                                       offset: const Offset(0, 2),
                                     ),
@@ -219,7 +219,7 @@ class _BankProgressDemoState extends State<BankProgressDemo> {
       appBar: AppBar(
         title: const Text('Bank Progress Demo'),
         backgroundColor: Colors.blue[600],
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.backgroundColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

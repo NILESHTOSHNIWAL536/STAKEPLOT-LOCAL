@@ -39,7 +39,7 @@ class _EnvelopeGridState extends State<EnvelopeGrid> {
             context,
             fontSize: 18,
             lWeight: FontWeight.w400,
-            color: Colors.grey,
+            color: AppColors.greyColor,
           ),
         ),
       );
@@ -109,7 +109,7 @@ class CouponCarouselCard extends StatelessWidget {
             horizontal: screenWidth * 0.05,
             vertical: MediaQuery.of(context).size.height * 0.1,
           ),
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColors.transparentColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: CouponCardWidget(
@@ -133,7 +133,7 @@ class CouponCarouselCard extends StatelessWidget {
       showDialog(
         context: context,
         barrierDismissible: false,
-        barrierColor: Colors.black.withOpacity(0.5),
+        barrierColor: AppColors.accentColor.withOpacity(0.5),
         builder: (BuildContext dialogContext) {
           return WillPopScope(
             onWillPop: () async => false, // Prevent dismissing during animation
@@ -182,7 +182,7 @@ class CouponCarouselCard extends StatelessWidget {
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             decoration: BoxDecoration(
-              color: Colors.white, // Plain white background
+              color: AppColors.backgroundColor, // Plain white background
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isCentered ? Colors.grey[300]! : Colors.grey[200]!,
@@ -190,7 +190,7 @@ class CouponCarouselCard extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(isCentered ? 0.12 : 0.06),
+                  color: AppColors.accentColor.withOpacity(isCentered ? 0.12 : 0.06),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),

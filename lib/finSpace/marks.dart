@@ -26,7 +26,7 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
     final isSmallScreen = screenSize.width < 360;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       body: Stack(
         children: [
           AvatarProfileImage(
@@ -254,7 +254,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                             border: Border.all(
                               color: userController.avatar.value == avatarv
                                   ? Colors.blue
-                                  : Colors.transparent,
+                                  : AppColors.transparentColor,
                               width: 1,
                             ),
                             borderRadius: BorderRadius.circular(50),
@@ -282,7 +282,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
       width: screenSize.width * 0.85,
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -448,7 +448,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4A4E69),
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.backgroundColor,
                 padding: EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
