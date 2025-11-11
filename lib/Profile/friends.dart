@@ -5,7 +5,7 @@ import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_search.dart";
 import "package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart";
-import "package:flutter_application_code_stakeplot/animated/widget_bridge.dart";
+import "package:flutter_application_code_stakeplot/widget_services/widget_bridge.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";

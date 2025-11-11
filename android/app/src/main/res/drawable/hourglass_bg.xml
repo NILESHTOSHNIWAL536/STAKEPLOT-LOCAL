@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outline: Pixelated hourglass shape (simple rounded rect for bulb effect) -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke android:width="2dp" android:color="#4B4D73" />
+            <corners android:radius="12dp" /> <!-- Rounded for bulb curve -->
+        </shape>
+    </item>
+    <!-- Bottom Fill: "Sand" accumulates from bottom based on % (0% empty, 100% full bottom bulb) -->
+    <item android:id="@android:id/progress">
+        <clip android:gravity="bottom"> <!-- Clips from bottom up -->
+            <shape android:shape="rectangle">
+                <solid android:color="#00796B" /> <!-- Green sand -->
+                <corners android:bottomLeftRadius="12dp" android:bottomRightRadius="12dp" /> <!-- Bulb curve -->
+            </shape>
+        </clip>
+    </item>
+</layer-list>
