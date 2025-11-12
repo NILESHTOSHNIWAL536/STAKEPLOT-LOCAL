@@ -4,74 +4,75 @@
     android:id="@+id/next_fetch_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="12dp"
     android:background="@drawable/widget_background"
     android:clickable="true"
     android:focusable="true">
 
-    <!-- Row: Title & Countdown -->
+    <!-- Left: Pie / Ring -->
     <ImageView
-    android:id="@+id/next_fetch_image"
-    android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:scaleType="centerCrop"
-    android:adjustViewBounds="true"
-    android:layout_marginBottom="8dp"
-    android:src="@drawable/countdown"
-    android:contentDescription="Widget image" />
+        android:id="@+id/next_fetch_ring"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:contentDescription="Countdown ring"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:layout_marginEnd="12dp"/>
 
+    <!-- Right: Text content -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_vertical"
-        android:weightSum="1">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/next_fetch_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="⏰ Next Fetch in"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#000000"/>
+
+            <TextView
+                android:id="@+id/next_fetch_countdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Calculating..."
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#4B4D73"/>
+        </LinearLayout>
+
+        <!-- small spacer -->
+        
 
         <TextView
-            android:id="@+id/next_fetch_title"
-            android:layout_width="0dp"
+            android:id="@+id/next_fetch_status"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            android:text="⏰ Next Fetch"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#4B4D73"/>
+            android:text="Ready to fetch"
+            android:textSize="12sp"
+            android:textColor="#56607A"/>
 
         <TextView
-            android:id="@+id/next_fetch_countdown"
-            android:layout_width="0dp"
+            android:id="@+id/next_fetch_timestamp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:text="Calculating..."
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:gravity="end"
-            android:textColor="#00796B"/>
+            android:text="🗓️ 11 Nov - 12 Nov"
+            android:textSize="11sp"
+            android:textColor="#8A97B0"
+            android:layout_marginTop="4dp"/>
+
     </LinearLayout>
-
-    <!-- Status or Info (Optional, e.g., last fetch or status) -->
-    <TextView
-        android:id="@+id/next_fetch_status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ready to fetch"
-        android:textSize="12sp"
-        android:textColor="#555555"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="6dp"/>
-
-    <!-- Date Range (Centered) -->
-    <TextView
-        android:id="@+id/next_fetch_timestamp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="🗓️ 11 Nov - 12 Nov"
-        android:textSize="12sp"
-        android:textColor="#888888"
-        android:gravity="center_horizontal"/>
-
 </LinearLayout>
-
-

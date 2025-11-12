@@ -58,8 +58,8 @@ updateNextFetchWidget();
   }
 
 void updateNextFetchWidget() {
-  // String dateStr = nextFecthDate.value;
-  String dateStr = "2025-11-12T02:30:00.000Z"; // Fixed: Valid ISO for Nov 14, 8 AM IST (2:30 AM UTC)
+  String dateStr = nextFecthDate.value;
+  // String dateStr = "2025-11-13T02:30:00.000Z"; // Fixed: Valid ISO for Nov 14, 8 AM IST (2:30 AM UTC)
   // Note: IST is UTC+5:30, so 8 AM IST = 2:30 AM UTC same day. Use this for testing.
 
   // Validate/parse check: If invalid, fallback to dynamic Fri 8 AM

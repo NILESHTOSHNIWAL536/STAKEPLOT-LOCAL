@@ -105,4 +105,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth' // Firebase Authentication
     implementation 'com.google.android.gms:play-services-auth:21.1.0' // Google Sign-In
     implementation 'androidx.multidex:multidex:2.0.1' // MultiDex Support
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
 }

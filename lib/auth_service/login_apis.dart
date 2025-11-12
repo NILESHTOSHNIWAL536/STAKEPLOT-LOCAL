@@ -90,6 +90,7 @@ class LoginService {
     BuildContext context,
   ) async {
     try {
+      print("emailController.text.toString() ${AuthApiRoutes.verify}");
       var response =
           await postDataApiCallwithOutSharedPref(AuthApiRoutes.verify, {
         'email': emailController.text.toString(),
@@ -97,7 +98,8 @@ class LoginService {
       });
 
       var decodedResponse = json.decode(response.body);
-     
+      print(decodedResponse);
+      
       if (response.statusCode == 409) {
         ForceLogout.forceLoginShowModal(
             context, decodedResponse, emailController);
