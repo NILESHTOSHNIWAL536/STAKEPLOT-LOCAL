@@ -56,36 +56,60 @@ updateNextFetchWidget();
 
     // Initialize homepage strings
   }
-
 void updateNextFetchWidget() {
   String dateStr = nextFecthDate.value;
-  // String dateStr = "2025-11-13T02:30:00.000Z"; // Fixed: Valid ISO for Nov 14, 8 AM IST (2:30 AM UTC)
-  // Note: IST is UTC+5:30, so 8 AM IST = 2:30 AM UTC same day. Use this for testing.
-
-  // Validate/parse check: If invalid, fallback to dynamic Fri 8 AM
-  DateTime? parsedDate;
+  DateTime? parsed;
   try {
-    parsedDate = DateTime.parse(dateStr); // Strict ISO parse
-  } catch (e) {
-    print("Invalid dateStr: $dateStr, error: $e"); // Debug log
-    dateStr = ""; // Force fallback
+    parsed = DateTime.parse(dateStr);
+  } catch (_) {
+    parsed = null;
   }
 
-  if (dateStr.isEmpty) {
-    // Dynamic fallback: Next Fri 8 AM IST
+  if (parsed == null) {
     DateTime now = DateTime.now();
-    int daysToFriday = (DateTime.friday - now.weekday + 7) % 7; // 0 if today Fri, else days ahead
-    if (daysToFriday == 0 && now.hour >= 8) daysToFriday = 7; // If past 8 AM Fri, next week
-    DateTime nextFri8AM = now.add(Duration(days: daysToFriday)).copyWith(hour: 8, minute: 0, second: 0, microsecond: 0);
-    dateStr = nextFri8AM.toUtc().toIso8601String(); // UTC ISO for consistency
-    print("Fallback date: $dateStr"); // Debug
+    int daysToFriday = (DateTime.friday - now.weekday + 7) % 7;
+    if (daysToFriday == 0 && now.hour >= 8) daysToFriday = 7;
+    parsed = now.add(Duration(days: daysToFriday)).copyWith(hour: 8, minute: 0, second: 0);
   }
 
-  HomeWidget.saveWidgetData<String>('next_fetch_date', dateStr);
+  final int epochMs = parsed.toUtc().millisecondsSinceEpoch;
+  HomeWidget.saveWidgetData<String>('next_fetch_date', parsed.toUtc().toIso8601String());
+  HomeWidget.saveWidgetData<String>('next_fetch_date_ms', epochMs.toString());
   HomeWidget.saveWidgetData<String>('fetch_status', isFected.value ? 'Fetching...' : 'Ready to fetch');
   HomeWidget.updateWidget(name: 'NextFetchWidgetProvider');
-  print("Widget updated with date: $dateStr"); // Confirm in Flutter console
+  
 }
+
+// void updateNextFetchWidget() {
+//   String dateStr = nextFecthDate.value;
+//   print("Updating widget with dateStr: $dateStr"); // Debug log
+//   // String dateStr = "2025-11-13T02:30:00.000Z"; // Fixed: Valid ISO for Nov 14, 8 AM IST (2:30 AM UTC)
+//   // Note: IST is UTC+5:30, so 8 AM IST = 2:30 AM UTC same day. Use this for testing.
+
+//   // Validate/parse check: If invalid, fallback to dynamic Fri 8 AM
+//   DateTime? parsedDate;
+//   try {
+//     parsedDate = DateTime.parse(dateStr); // Strict ISO parse
+//   } catch (e) {
+//     print("Invalid dateStr: $dateStr, error: $e"); // Debug log
+//     dateStr = ""; // Force fallback
+//   }
+
+//   if (dateStr.isEmpty) {
+//     // Dynamic fallback: Next Fri 8 AM IST
+//     DateTime now = DateTime.now();
+//     int daysToFriday = (DateTime.friday - now.weekday + 7) % 7; // 0 if today Fri, else days ahead
+//     if (daysToFriday == 0 && now.hour >= 8) daysToFriday = 7; // If past 8 AM Fri, next week
+//     DateTime nextFri8AM = now.add(Duration(days: daysToFriday)).copyWith(hour: 8, minute: 0, second: 0, microsecond: 0);
+//     dateStr = nextFri8AM.toUtc().toIso8601String(); // UTC ISO for consistency
+//     print("Fallback date: $dateStr"); // Debug
+//   }
+
+//   HomeWidget.saveWidgetData<String>('next_fetch_date', dateStr);
+//   HomeWidget.saveWidgetData<String>('fetch_status', isFected.value ? 'Fetching...' : 'Ready to fetch');
+//   HomeWidget.updateWidget(name: 'NextFetchWidgetProvider');
+//   print("Widget updated with date: $dateStr"); // Confirm in Flutter console
+// }
  
   @override
   Widget build(BuildContext context) {

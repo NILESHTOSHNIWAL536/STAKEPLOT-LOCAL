@@ -8,13 +8,14 @@ import android.content.Intent
 import android.graphics.*
 import android.util.Log
 import android.util.TypedValue
+import android.view.View
 import android.widget.RemoteViews
 import androidx.work.*
 import es.antonborri.home_widget.HomeWidgetPlugin
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.math.*
+import kotlin.math.roundToInt
 
 class NextFetchWidgetProvider : AppWidgetProvider() {
 
@@ -28,59 +29,86 @@ class NextFetchWidgetProvider : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         Log.d(TAG, "Updating ${appWidgetIds.size} widgets")
+
         for (appWidgetId in appWidgetIds) {
             try {
                 val views = RemoteViews(context.packageName, R.layout.next_fetch_widget_layout)
 
-                val nextFetchDateStr = HomeWidgetPlugin.getData(context).getString("next_fetch_date", "") ?: ""
+                val dateStr = HomeWidgetPlugin
+                    .getData(context)
+                    .getString("next_fetch_date", "") ?: ""
 
-                val (countdownText, percentFinished) = if (nextFetchDateStr.isNotEmpty()) {
-                    calculateCountdownAndPercent(nextFetchDateStr)
-                } else {
-                    calculateNext8AMCountdownAndPercent()
+                Log.d(TAG, "Fetched next_fetch_date='$dateStr'")
+
+                // ───────────────────────────────
+                // CASE A → NO DATE (Option A)
+                // ───────────────────────────────
+                if (dateStr.isEmpty()) {
+                    Log.d(TAG, "No date found → showing fallback text")
+
+                    views.setTextViewText(R.id.next_fetch_title, "No Fetch Scheduled")
+                    views.setTextViewText(R.id.next_fetch_countdown, "")
+                    views.setTextViewText(R.id.next_fetch_timestamp, "")
+
+                    // Hide ring graphic
+                    views.setViewVisibility(R.id.next_fetch_ring, View.GONE)
+                    views.setViewVisibility(R.id.next_fetch_status, View.GONE)
+
+                    appWidgetManager.updateAppWidget(appWidgetId, views)
+                    continue
                 }
+
+                // ───────────────────────────────
+                // CASE B → VALID DATE → Normal UI
+                // ───────────────────────────────
+                val (countdownText, percent) = calculateCountdownAndPercent(dateStr)
 
                 views.setTextViewText(R.id.next_fetch_title, "Next Fetch in")
                 views.setTextViewText(R.id.next_fetch_countdown, countdownText)
-                views.setTextViewText(R.id.next_fetch_timestamp, getCurrentDateRange(context))
+                views.setTextViewText(R.id.next_fetch_timestamp, getDateLabel(dateStr))
 
-                val pieBitmap = drawClassicPieBitmap(
+                val ringBitmap = drawPie(
                     context,
-                    sizeInDp = 120,
-                    percent = percentFinished,
-                    filledColorHex = "#4B4D73",
-                    backgroundColorHex = "#E6E6E6",
-                    centerDot = true
+                    sizeDp = 120,
+                    percent = percent,
+                    fillColor = "#4B4D73",
+                    bgColor = "#E6E6E6"
                 )
-                views.setImageViewBitmap(R.id.next_fetch_ring, pieBitmap)
 
-                val launchIntent = Intent(context, MainActivity::class.java).apply {
+                views.setViewVisibility(R.id.next_fetch_ring, View.VISIBLE)
+                views.setImageViewBitmap(R.id.next_fetch_ring, ringBitmap)
+
+                // Tap → Open App
+                val intent = Intent(context, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                     putExtra("navigate_to_tab", "fetch")
                 }
+
                 val pendingIntent = android.app.PendingIntent.getActivity(
                     context,
                     appWidgetId,
-                    launchIntent,
-                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+                    intent,
+                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or
+                            android.app.PendingIntent.FLAG_IMMUTABLE
                 )
+
                 views.setOnClickPendingIntent(R.id.next_fetch_layout, pendingIntent)
 
                 appWidgetManager.updateAppWidget(appWidgetId, views)
+
             } catch (e: Exception) {
-                Log.e(TAG, "Update failed: ${e.message}", e)
+                Log.e(TAG, "Widget update error: ${e.message}", e)
             }
         }
 
-        // Smart scheduling (dynamic)
-        val nextInterval = calculateSmartIntervalMinutes(context)
-        scheduleWork(context, nextInterval)
+        // Smart refresh interval
+        val interval = calculateSmartIntervalMinutes(context)
+        scheduleWork(context, interval)
     }
 
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
-        val initialInterval = calculateSmartIntervalMinutes(context)
-        scheduleWork(context, initialInterval)
+        scheduleWork(context, 15)
     }
 
     override fun onDisabled(context: Context) {
@@ -88,182 +116,154 @@ class NextFetchWidgetProvider : AppWidgetProvider() {
         WorkManager.getInstance(context).cancelUniqueWork("NextFetchWidgetWork")
     }
 
-    // -------------------------------
-    // Smart WorkManager scheduling
-    // -------------------------------
-    fun scheduleWork(context: Context, intervalMinutes: Long) {
+    // ─────────────────────────────────────────────
+    // SMART WORKER SCHEDULING
+    // ─────────────────────────────────────────────
+    fun scheduleWork(context: Context, interval: Long) {
         try {
-            val workRequest = PeriodicWorkRequestBuilder<WidgetUpdateWorker>(
-                intervalMinutes, TimeUnit.MINUTES
-            ).setConstraints(
-                Constraints.Builder()
-                    .setRequiresBatteryNotLow(false)
-                    .build()
+            val req = PeriodicWorkRequestBuilder<WidgetUpdateWorker>(
+                interval, TimeUnit.MINUTES
             ).build()
 
-            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-                "NextFetchWidgetWork",
-                ExistingPeriodicWorkPolicy.UPDATE,
-                workRequest
-            )
+            WorkManager.getInstance(context)
+                .enqueueUniquePeriodicWork(
+                    "NextFetchWidgetWork",
+                    ExistingPeriodicWorkPolicy.UPDATE,
+                    req
+                )
 
-            Log.d(TAG, "Scheduled smart refresh every $intervalMinutes min")
+            Log.d(TAG, "Scheduled update every $interval minutes")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to schedule WorkManager: ${e.message}", e)
+            Log.e(TAG, "scheduleWork error: ${e.message}")
         }
     }
 
     private fun calculateSmartIntervalMinutes(context: Context): Long {
         return try {
-            val nextFetchDateStr = HomeWidgetPlugin.getData(context).getString("next_fetch_date", "") ?: ""
-            if (nextFetchDateStr.isEmpty()) return 15L
+            val iso = HomeWidgetPlugin.getData(context)
+                .getString("next_fetch_date", "") ?: ""
+
+            if (iso.isEmpty()) return 15L
 
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
             sdf.timeZone = TimeZone.getTimeZone("UTC")
-            val nextFetchDate = sdf.parse(nextFetchDateStr) ?: return 15L
 
-            val diffMinutes = (nextFetchDate.time - Date().time) / (1000 * 60)
-            if (diffMinutes in 0..120) 5L else 15L
+            val nextUTC = sdf.parse(iso) ?: return 15L
+
+            // Backend sends 8AM UTC → we convert to IST by subtracting 5h30m
+            val nextIST = Date(nextUTC.time - (5 * 60 + 30) * 60 * 1000)
+
+            val diffMin = (nextIST.time - Date().time) / (1000 * 60)
+
+            Log.d(TAG, "SmartInterval → diffMin = $diffMin")
+
+            if (diffMin in 0..120) 5L else 15L
+
         } catch (e: Exception) {
-            Log.e(TAG, "Smart interval error: ${e.message}")
+            Log.e(TAG, "Interval calc error: ${e.message}")
             15L
         }
     }
 
-    // -------------------------
-    // Time + UI logic (same as before)
-    // -------------------------
-    private fun calculateCountdownAndPercent(nextFetchDateStr: String): Pair<String, Int> {
-        try {
+    // ─────────────────────────────────────────────
+    // COUNTDOWN + PERCENT
+    // ─────────────────────────────────────────────
+    private fun calculateCountdownAndPercent(dateStr: String): Pair<String, Int> {
+        return try {
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
             sdf.timeZone = TimeZone.getTimeZone("UTC")
-            val parsed = sdf.parse(nextFetchDateStr)
-                ?: run {
-                    val localSdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                    localSdf.parse(nextFetchDateStr)
-                }
 
-            if (parsed == null) return Pair("Not Scheduled", 0)
+            val nextUTC = sdf.parse(dateStr) ?: return Pair("No Fetch Scheduled", 0)
+
+            // Convert UTC → IST (backend uses Z)
+            val nextIST = Date(nextUTC.time - (5 * 60 + 30) * 60 * 1000)
 
             val now = Date()
-            val next = parsed.time
 
-            if (next <= now.time) return Pair("Overdue", 100)
+            if (nextIST.time <= now.time) return Pair("Overdue", 100)
 
-            val dayMs = 24L * 60 * 60 * 1000
-            var prev = next - dayMs
-            while (prev > now.time) prev -= dayMs
-            if (prev >= next) prev = next - dayMs
+            val diff = nextIST.time - now.time
 
-            val totalWindow = next - prev
-            val remaining = next - now.time
-            val elapsed = totalWindow - remaining
+            val hours = (diff / (1000 * 60 * 60)).toInt()
+            val minutes = ((diff / (1000 * 60)) % 60).toInt()
 
-            val percent = when {
-                totalWindow <= 0 -> 0
-                elapsed <= 0 -> 0
-                elapsed >= totalWindow -> 100
-                else -> ((elapsed.toDouble() / totalWindow.toDouble()) * 100.0).roundToInt()
-            }
+            val countdown = if (hours > 0) "${hours}h : ${minutes}m" else "${minutes}m"
 
-            val countdownText = calculateDiff(next)
-            return Pair(countdownText, percent)
+            // Percent calculation (1-day window)
+            val prevDay = nextIST.time - 24L * 60 * 60 * 1000
+            val elapsed = now.time - prevDay
+            val percent = ((elapsed.toDouble() / (24 * 60 * 60 * 1000)) * 100)
+                .coerceIn(0.0, 100.0)
+                .roundToInt()
+
+            Pair(countdown, percent)
+
         } catch (e: Exception) {
-            Log.e(TAG, "Parse error: ${e.message}")
-            return calculateNext8AMCountdownAndPercent()
+            Log.e(TAG, "Countdown error: ${e.message}")
+            Pair("No Fetch Scheduled", 0)
         }
     }
 
-    private fun calculateNext8AMCountdownAndPercent(): Pair<String, Int> {
-        val calendar = Calendar.getInstance()
-        val now = calendar.time
-        calendar.set(Calendar.HOUR_OF_DAY, 8)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        if (now.after(calendar.time)) calendar.add(Calendar.DAY_OF_MONTH, 1)
-        val next8 = calendar.time.time
-        val dayMs = 24L * 60 * 60 * 1000
-        val prev8 = next8 - dayMs
+    private fun getDateLabel(dateStr: String): String {
+        return try {
+            val sdfSrc = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+            sdfSrc.timeZone = TimeZone.getTimeZone("UTC")
 
-        val totalWindow = next8 - prev8
-        val remaining = next8 - now.time
-        val elapsed = totalWindow - remaining
+            val date = sdfSrc.parse(dateStr) ?: return ""
+            val dateIST = Date(date.time - (5 * 60 + 30) * 60 * 1000)
 
-        val percent = ((elapsed.toDouble() / totalWindow.toDouble()) * 100.0).roundToInt()
-        val countdownText = calculateNext8AMCountdown()
-        return Pair(countdownText, percent)
+            val sdfOut = SimpleDateFormat("dd MMM", Locale.getDefault())
+            sdfOut.format(dateIST)
+        } catch (e: Exception) {
+            ""
+        }
     }
 
-    private fun calculateDiff(targetEpochMs: Long): String {
-        val now = Date()
-        val diff = targetEpochMs - now.time
-        if (diff <= 0) return "Overdue"
-        val hours = (diff / (1000 * 60 * 60)).toInt()
-        val minutes = ((diff / (1000 * 60)) % 60).toInt()
-        return if (hours > 0) "${hours}h : ${minutes}m" else "${minutes}m"
-    }
+    // ─────────────────────────────────────────────
+    // PIE DRAWING
+    // ─────────────────────────────────────────────
+    private fun dpToPx(context: Context, dp: Int): Int =
+        TypedValue
+            .applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.resources.displayMetrics)
+            .toInt()
 
-    private fun calculateNext8AMCountdown(): String {
-        val calendar = Calendar.getInstance()
-        val now = calendar.time
-        calendar.set(Calendar.HOUR_OF_DAY, 8)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        if (now.after(calendar.time)) calendar.add(Calendar.DAY_OF_MONTH, 1)
-        val diff = calendar.time.time - now.time
-        val hours = (diff / (1000 * 60 * 60)).toInt()
-        val minutes = ((diff / (1000 * 60)) % 60).toInt()
-        return if (hours > 0) "${hours}h : ${minutes}m" else "${minutes}m"
-    }
-
-    private fun getCurrentDateRange(context: Context): String {
-        val sdf = SimpleDateFormat("dd MMM", Locale.getDefault())
-        val calendar = Calendar.getInstance()
-        val today = sdf.format(calendar.time)
-        calendar.add(Calendar.DAY_OF_MONTH, 1)
-        val tomorrow = sdf.format(calendar.time)
-        return "$today"
-    }
-
-    private fun dpToPx(context: Context, dp: Float): Int =
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics).toInt()
-
-    private fun drawClassicPieBitmap(
+    private fun drawPie(
         context: Context,
-        sizeInDp: Int,
+        sizeDp: Int,
         percent: Int,
-        filledColorHex: String,
-        backgroundColorHex: String,
-        centerDot: Boolean
+        fillColor: String,
+        bgColor: String
     ): Bitmap {
-        val sizePx = dpToPx(context, sizeInDp.toFloat())
-        val bmp = Bitmap.createBitmap(sizePx, sizePx, Bitmap.Config.ARGB_8888)
+
+        val size = dpToPx(context, sizeDp)
+        val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bmp)
-        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
 
-        val center = sizePx / 2f
-        val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        val rect = RectF(0f, 0f, size.toFloat(), size.toFloat())
+        val center = size / 2f
+
+        val bg = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor(bgColor)
             style = Paint.Style.FILL
-            color = Color.parseColor(backgroundColorHex)
-        }
-        val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.FILL
-            color = Color.parseColor(filledColorHex)
         }
 
-        val fullRect = RectF(0f, 0f, sizePx.toFloat(), sizePx.toFloat())
-        canvas.drawOval(fullRect, bgPaint)
+        val fill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor(fillColor)
+            style = Paint.Style.FILL
+        }
+
+        canvas.drawOval(rect, bg)
+
         if (percent > 0) {
-            val sweep = (360f * percent) / 100f
-            val path = Path()
-            path.moveTo(center, center)
-            path.arcTo(fullRect, -90f, sweep, false)
-            path.close()
-            canvas.drawPath(path, fillPaint)
+            val sweep = 360f * percent / 100f
+            val path = Path().apply {
+                moveTo(center, center)
+                arcTo(rect, -90f, sweep)
+                close()
+            }
+            canvas.drawPath(path, fill)
         }
-        
+
         return bmp
     }
 }
