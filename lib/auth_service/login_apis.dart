@@ -68,7 +68,7 @@ class LoginService {
         "otp": otp.toString(),
       });
       if (getFlagOfResponse(response)) {
-        Navigator.pushReplacementNamed(context, '/home');
+        // Navigator.pushReplacementNamed(context, '/home');
         loginCalledData(response, context);
         await screenDataLocalStorage();
       }
@@ -167,7 +167,7 @@ class LoginService {
     );
   }
 
-  static void loginCalledData(response, context, {bool flag = false}) async {
+  static Future<void> loginCalledData(response, context, {bool flag = false}) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     final body = !flag ? json.decode(response.body) : response;
     String accessToken = body['data']['accessToken'];
@@ -178,7 +178,7 @@ class LoginService {
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
     acceptReset.value = false;
     getPhoneNo(body);
-    callApi(context);
+    await callApi(context);
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 

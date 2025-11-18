@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,8 +33,7 @@ class HomePageIcons {
       "assets/icons/Home-page/TransactionSplitIcon.svg";
   static String cashIn = "assets/icons/Home-page/cashIn.svg";
   static String cashOut = "assets/icons/Home-page/cashOut.svg";
-  static String transactionHistoryIcon =
-      "assets/icons/Home-page/historyIcon.svg";
+  static String transactionHistoryIcon = "assets/icons/Home-page/historyIcon.svg";
   static String noAccLink = "assets/icons/Home-page/noAccLink.svg";
   static String filterIcon = "assets/icons/Home-page/filterIcon2.svg";
   static String filterOn = "assets/icons/Home-page/filterOn.svg";

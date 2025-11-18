@@ -21,7 +21,7 @@ import '../../backed_connections/backServices.dart/bankInfo.dart';
 import '../../controllers/user-controller.dart';
 import '../insightsController.dart';
 
-void callApi(context) async {
+Future<void> callApi(context) async {
   await Get.find<UserController>().fetchUserInfo();
   final InsightsController _controller = Get.put(InsightsController());
   getBankAccounts();

@@ -29,22 +29,26 @@ void snackBarCalled(BuildContext context, String text,
 }
 
 void snackBarCalledfail(context, String text, [Color colors = AppColors.accentColor]) {
+  vibrateForSnack();
   showTopSnackBar(
+    
     Overlay.of(context),
-    Container(
-      height: 40,
-      child: CustomSnackBar.success(
-        message: text,
-        backgroundColor: Colors.red,
-        textStyle: FontManager().getTextStyle(
-          context,
-          lWeight: FontWeight.bold,
-          fontSize: 12,
-          color: AppColors.backgroundColor,
+    ShakeWidget(
+      child: Container(
+        height: 40,
+        child: CustomSnackBar.success(
+          message: text,
+          backgroundColor: Colors.red,
+          textStyle: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.bold,
+            fontSize: 12,
+            color: AppColors.backgroundColor,
+          ),
         ),
       ),
     ),
-    displayDuration: const Duration(seconds: 3),
+    displayDuration: const Duration(seconds: 2),
     curve: Curves.easeOutBack,
     reverseCurve: Curves.easeInBack,
     animationDuration: const Duration(milliseconds: 600),

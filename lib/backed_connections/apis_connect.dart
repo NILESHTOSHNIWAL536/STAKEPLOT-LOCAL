@@ -3,10 +3,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Utils/shakewidget.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/controllers/post-controller.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
-
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
@@ -18,10 +18,11 @@ import '../controllers/controllerManagement.dart';
 import 'googlesignin/credentials.dart';
 part 'snackBars.dart';
 
+
 bool apis_flag = true;
-String urlWithLocallHost =apis_flag ? Credentials.LIVE_API:Credentials.LIVE_API_TEST; // main backend api
+String urlWithLocallHost =!apis_flag ? Credentials.LIVE_API:Credentials.LIVE_API_TEST; // main backend api
 String urlWithLocallHost2 = apis_flag ? Credentials.LIVE_API2:Credentials.LIVE_API_TEST2; // email sync api
-String urlWithLocallHost3 = apis_flag ? Credentials.FINVU_LIVE:Credentials.FINVU_TEST; // bank api
+String urlWithLocallHost3 = !apis_flag ? Credentials.FINVU_LIVE:Credentials.FINVU_TEST; // bank api
 String url = "${urlWithLocallHost}api/v1";
 String EmailUrl = "${urlWithLocallHost2}api";
 String BankApiUrl = "${urlWithLocallHost3}api";

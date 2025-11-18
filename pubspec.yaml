@@ -96,6 +96,8 @@ dependencies:
   share_plus: ^11.1.0
   flutter_dotenv: ^6.0.0  
   workmanager: ^0.7.0
+  vibration: ^3.1.4
+  shake_animation_widget: ^3.0.4
 
 dev_dependencies:
   # flutter_test:
