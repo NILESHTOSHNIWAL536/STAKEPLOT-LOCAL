@@ -5,6 +5,7 @@ const { ServerConfig } = require('./config');
 const logger = require('./utils/common/logger');
 const { initCloudWatchLogs } = require('./utils/cloud-watch');
 const redisClient = require('./config/redis-config');
+const initCategoryWatcher  = require('./config/categoryWatcher');
 
 dotenv.config({ path: `./config/.env.${process.env.NODE_ENV}` });
 
@@ -17,6 +18,7 @@ const startServer = async () => {
     await mongoose.connect(ServerConfig.MONGO_URI);
     await initCloudWatchLogs();
     await redisClient.connect();
+    await initCategoryWatcher();
     require("./utils/cron-jobs");
   } catch (error) {
     console.error('Server Start Error:', error);

@@ -1,58 +1,16 @@
-const amqplib = require("amqplib");
-const { CLOUDAMQP_URL } = require("./server-config");
+const Queue = require('bull');
 
-let channel, connection, exchangeName;
+// Load Redis config from .env or fallback
+const REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD || '';
 
-async function connectQueue() {
-  try {
-    connection = await amqplib.connect(CLOUDAMQP_URL);
-    exchangeName = "notifications";
-    channel = await connection.createChannel();
-    await channel.assertExchange(exchangeName, "topic", { durable: true });
-  } catch (error) {
-    console.error("Error connecting to queue:", error);
-    throw error;
-  }
-}
+const categoryUpdatedQueue = new Queue('category-updated', {
+  redis: {
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+    password: REDIS_PASSWORD,
+  },
+});
 
-async function sendData(username, notificationData) {
-  try {
-    const routingKey = `user.${username}`;
-    const queueName = `notifications_${username}`;
-    await channel.assertQueue(queueName, { durable: true });
-    await channel.bindQueue(queueName, exchangeName, routingKey);
-    // await new Promise(resolve => setTimeout(resolve, 1000)); 
-    await channel.publish(exchangeName, routingKey, Buffer.from(JSON.stringify(notificationData)));
-   
-  } catch (error) {
-    console.error("Error sending data:", error);
-    throw error;
-  }
-}
-
-async function consumeData(req, res) {
-  try {
-    const msgs = [];
-    const username = req.user.name;
-    const queueName = `notifications_${username}`;
-    await new Promise((resolve) => {
-      channel.consume(queueName, (msg) => {
-        if (msg !== null) {
-          msgs.push(msg.content.toString());
-          // channel.ack(msg);
-        }
-      }, { noAck: true });
-      setTimeout(() => resolve(), 500);
-    });
-    res.status(200).send(msgs);
-  } catch (error) {
-    console.error("Error consuming data:", error);
-    res.status(500).send(error);
-  }
-}
-
-module.exports = {
-  connectQueue,
-  sendData,
-  consumeData,
-};
+module.exports = categoryUpdatedQueue;
