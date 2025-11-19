@@ -1,7 +1,8 @@
 const chokidar = require('chokidar');
-const fs = require('fs');
-const categoriesPath = __dirname + '/categories.js';
+const path = require('path');
 const categoryUpdatedQueue = require('./queue-config');
+
+const categoriesPath = path.join(__dirname, 'categories.js');
 
 const initCategoryWatcher = () => {
   const watcher = chokidar.watch(categoriesPath, { ignoreInitial: true });
@@ -15,11 +16,13 @@ const initCategoryWatcher = () => {
     // Load updated JS module
     const newConfig = require(categoriesPath);
 
-    // Publish event to queue
+    // Add job to BullMQ queue
     await categoryUpdatedQueue.add('CATEGORIES_UPDATED', {
       timestamp: Date.now(),
       newCategories: newConfig,
     });
+
+    console.log('✅ Job added to queue');
   });
 
   console.log('👀 Watching categories.js for changes...');
