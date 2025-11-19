@@ -90,6 +90,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   Widget getListViewBankInfo(data) {
     int randomIndex = Random().nextInt(lock.length);
     if (randomIndex == lock.length) randomIndex = 0;
+   
     return Container(
         padding: EdgeInsets.symmetric(horizontal: Colorcodes.paddingHorizontal,vertical: Colorcodes.paddingHorizontal / 6),
         decoration: BoxDecoration(
@@ -139,13 +140,49 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-               Obx(()=> Text(
-                  '\u{20B9} ${(hideBackAccountPassword.value || userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00") ? formatMoneyIndian(data['currentBalance'] ?? "null",lock[randomIndex]) : lock[randomIndex]}',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: AppColors.backgroundColor),
-               )),
+                Obx(() {
+  // use .value so Obx actually depends on these reactive variables
+  final String pin = userController.cupertinoPin.value;
+  final bool hide = hideBackAccountPassword.value;
+
+  final balance = data['currentBalance'];
+
+  // If API didn't return balance -> show small text (no lock)
+  if (balance == null) {
+    return Text(
+      "Balance not available",
+      style: FontManager().getTextStyle(
+        context,
+        lWeight: FontWeight.w500,
+        fontSize: 14,
+        color: AppColors.backgroundColor,
+      ),
+    );
+  }
+
+  // compute showBalance inside Obx using reactive values
+  final bool showBalance = (pin == "0" || pin == "00" || hide);
+
+  return Text(
+    '\u{20B9} ${showBalance ? formatMoneyIndian(balance, lock[randomIndex]) : lock[randomIndex]}',
+    style: FontManager().getTextStyle(
+      context,
+      lWeight: FontWeight.bold,
+      fontSize: 20,
+      color: AppColors.backgroundColor,
+    ),
+  );
+})
+,
+              //  Obx(()=> 
+              //  Text(
+              //     '\u{20B9} ${(hideBackAccountPassword.value || userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00") ? formatMoneyIndian(data['currentBalance'] ?? "null",lock[randomIndex]) : lock[randomIndex]}',
+              //     style: FontManager().getTextStyle(context,
+              //         lWeight: FontWeight.bold,
+              //         fontSize: 20,
+              //         color: AppColors.backgroundColor),
+              //  )
+              //  ),
                 //  locker(context),
                 setPinForAccountHide(context)
               ],

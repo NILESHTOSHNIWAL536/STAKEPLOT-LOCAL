@@ -235,20 +235,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                               },
                             ),
                            
-                            _buildOption(
-                              ProfileImage(url: ProfileIcons.rewards),
-                              ProfileScreenStrings().rewards, // Direct access
-                              ProfileScreenStrings()
-                                  .friendsListSubLabel, // Direct access
-                              onTap: () async {
-      //                           HapticFeedback.mediumImpact();
-      
-      // // Shake entire screen
-      // await shakeKey.currentState?.shake();
-      //  print("Screen shake triggered!");
-                                vibrateScreen();
-                              },
-                            ),
+                          
                           ],
                         ),
                       ),

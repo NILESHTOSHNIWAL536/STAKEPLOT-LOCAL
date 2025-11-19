@@ -183,7 +183,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         if (i == 0 && isSelected) {
           // Single tap on already selected Home tab
           // HapticFeedback.lightImpact();
-          // SystemSound.play(SystemSoundType.click);
+          SystemSound.play(SystemSoundType.click);
           widget.onHomeDoubleTap
               ?.call(); // Call the Home scroll-to-top callback
           return;
@@ -191,14 +191,14 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         if (i == communityIndex && isSelected) {
           // Single tap on already selected Community tab
           // HapticFeedback.lightImpact();
-          // SystemSound.play(SystemSoundType.click);
+          SystemSound.play(SystemSoundType.click);
           widget.onCommunityDoubleTap?.call();
           return;
         }
 
         if (widget.data == i) return;
         // HapticFeedback.heavyImpact();
-        // SystemSound.play(SystemSoundType.click);
+        SystemSound.play(SystemSoundType.click);
         try {
           String tabName = _tabNames[i];
           ScreenTimeTracker().switchTab(tabName);
