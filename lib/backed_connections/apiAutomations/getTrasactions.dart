@@ -664,30 +664,74 @@ void updateCatAndMoneyMap(BuildContext context)
   controller.getHomePageMoneyMapInsights(context);
   getCategoryData(context);
 }
-
 void processChartData() {
   try {
+    // Recompute everything from scratch
     List<ChartData> newData = [];
     double newTotalValue = 0.0;
 
+    // categoryColors should be a Map<String, Color>
     Map<String, Color> categoryColors = colorcodes;
 
     for (var item in categoriesList) {
-      String category = item["category"] ?? "Others";
-      String percentage = item["total_debit_percentage"] ?? "";
-      double value = item["total_debit"].toDouble();
-      Color color = categoryColors[category] ?? Colors.grey; // Default color
+      final String category = (item["category"] ?? "Others").toString();
+      final String percentage = (item["total_debit_percentage"] ?? "").toString();
+
+      // Defensive parsing for numeric fields
+      double value = 0.0;
+      final dynamic rawValue = item["total_debit"];
+      if (rawValue is num) {
+        value = rawValue.toDouble();
+      } else if (rawValue is String) {
+        value = double.tryParse(rawValue) ?? 0.0;
+      }
+
+      final Color color = categoryColors[category] ?? Colors.grey;
       newData.add(ChartData(category, value, color, percentage));
 
-      totalValue.value += value;
+      newTotalValue += value; // accumulate into local total
     }
 
-    if (newData.isNotEmpty) {
-      spendingsOnCategories.clear();
-      spendingsOnCategories.addAll(newData);
-    }
-  } catch (e) {}
+    // Replace the reactive list atomically so UI reacts correctly
+    spendingsOnCategories
+      ..clear()
+      ..addAll(newData);
+
+    // Assign computed total (not incremental)
+    totalValue.value = newTotalValue;
+
+    // If you want to signal any other reactive flags, refresh them:
+    spendingsOnCategories.refresh();
+    totalValue.refresh();
+  } catch (e, st) {
+    // Consider logging the error for debugging
+    debugPrint("processChartData error: $e\n$st");
+  }
 }
+// if any problem in above function use this below function
+// void processChartData() {
+//   try {
+//     List<ChartData> newData = [];
+//     double newTotalValue = 0.0;
+
+//     Map<String, Color> categoryColors = colorcodes;
+
+//     for (var item in categoriesList) {
+//       String category = item["category"] ?? "Others";
+//       String percentage = item["total_debit_percentage"] ?? "";
+//       double value = item["total_debit"].toDouble();
+//       Color color = categoryColors[category] ?? Colors.grey; // Default color
+//       newData.add(ChartData(category, value, color, percentage));
+
+//       totalValue.value += value;
+//     }
+
+//     if (newData.isNotEmpty) {
+//       spendingsOnCategories.clear();
+//       spendingsOnCategories.addAll(newData);
+//     }
+//   } catch (e) {}
+// }
 
 
 

@@ -30,9 +30,10 @@ class IndexScreen extends StatelessWidget {
       child: RefreshIndicator(
         color: AppColors.primaryColor,
         backgroundColor: AppColors.backgroundColor,
-        strokeWidth: 3,
+        strokeWidth: 2.5,
         displacement: 40, // spinner position from top
         edgeOffset: 0, // start right at the top
+
         onRefresh: () async {
           // Keep refresh indicator visible for at least 2 seconds
           await Future.delayed(const Duration(seconds: 1));

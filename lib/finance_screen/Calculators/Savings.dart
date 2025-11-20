@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Au
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
+
 import 'package:flutter_application_code_stakeplot/finance_screen/utils.dart';
 
 class Savings extends StatefulWidget {

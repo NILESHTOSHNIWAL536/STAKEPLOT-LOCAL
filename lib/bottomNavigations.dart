@@ -14,7 +14,7 @@ import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart";
 import "package:flutter_application_code_stakeplot/finSpace/welcomeScreen.dart";
-import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
+
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
 import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 import "package:get/get.dart";

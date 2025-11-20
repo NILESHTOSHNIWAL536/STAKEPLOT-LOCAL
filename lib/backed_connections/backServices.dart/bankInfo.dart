@@ -26,6 +26,7 @@ void getCategoryData(context) async {
 
     if (getFlagOfResponse(res)) {
       var data = jsonDecode(res.body);
+     
       categoriesList.clear();
       frequentPayments.clear();
       moreDrasticChange.clear();
@@ -39,6 +40,7 @@ void getCategoryData(context) async {
             .map((e) => e as Map<String, dynamic>)
             .toList(),
       );
+      print( categoriesList);
 
       // frequentPayments.addAll(data["data"]['frequentPayments']);
       // moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
@@ -150,5 +152,6 @@ void deleteBankAccount(
     getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,isSplashScreen: true);
     Navigator.of(context).pop();
     bankAccountLinkedList.refresh();
+    
   }
 }

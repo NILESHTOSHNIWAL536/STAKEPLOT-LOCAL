@@ -18,7 +18,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/cr
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
+
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -47,7 +47,7 @@ var routes =
       '/ShareAccountLogin': (context) =>  ShareAccountLogin(),     
       '/Budget': (context) =>  Budget(),     
       '/debt': (context) =>  CreateDebtScreen(),     
-      '/PlotFinance': (context) =>  PlotFinance(),     
+          
       '/CreditCard':(context) => CreditCard() ,
       '/emi':(context) => Emi() ,
       '/rent_buy':(context) => RentBuy() ,
