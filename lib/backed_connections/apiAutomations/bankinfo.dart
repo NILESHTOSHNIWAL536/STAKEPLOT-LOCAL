@@ -27,6 +27,8 @@ Future<void> getBankAccounts() async {
      var response = await getDataApiCall(BankTransactionRoutes.getBanksLinkedAndAccounts);
     if (getFlagOfResponse(response))
     {
+      print("Bank Accounts Fetched Successfully");
+      print(response.body);
     
       storeDataLocal(response);
     }
@@ -95,14 +97,15 @@ void storeDataLocal(response){
 void storeBankDataApi(){
    if (bankAccountLinkedList.isNotEmpty)
    {
-    isBankLinked.value = true;
+    // isBankLinked.value = true;
     LastFetchDate.value = bankAccountLinkedList[0]['lastFetch'].toString();
     nextFecthDate.value = bankAccountLinkedList[0]['nextFetch'].toString();
-    print("Next Fetch Datess: ${nextFecthDate.value}");
+   
     fetchCount.value = bankAccountLinkedList[0]['fetchCount'].toString();
     BankName.value = bankAccountLinkedList[0]['bankName'].toString();
     BankUrl.value = bankAccountLinkedList[0]['bankLogo'].toString();
   }
+  isBankLinked.value = bankAccountLinkedList.isNotEmpty;
   loadBanks.value = false;
   loadBalance.value = !loadBalance.value;
 }

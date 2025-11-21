@@ -172,3 +172,11 @@ Future<void> init_post() async {
   {
   }
 }
+Future<void> clearSpecificBox(String boxName) async {
+  if (Hive.isBoxOpen(boxName)) {
+    await Hive.box(boxName).clear();
+  } else {
+    final box = await Hive.openBox(boxName);
+    await box.clear();
+  }
+}

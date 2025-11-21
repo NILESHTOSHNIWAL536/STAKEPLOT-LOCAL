@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -11,7 +13,6 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:get/get.dart';
 
-import '../../Home_Screen/categoriseSpending.dart';
 
 RxString balance = "0".obs;
 RxString accountName = "Bank Name : ".obs;
@@ -25,9 +26,11 @@ void getCategoryData(context) async {
     var res = await getDataApiCall(BankTransactionRoutes.categorizeTransactions);
 
     if (getFlagOfResponse(res)) {
+    
       var data = jsonDecode(res.body);
-     
+      
       categoriesList.clear();
+     
       frequentPayments.clear();
       moreDrasticChange.clear();
       categoriesListWeek.clear();
@@ -35,12 +38,15 @@ void getCategoryData(context) async {
       moreDrasticChangeWeek.clear();
       // spendingsOnCategories.clear();
       // throw Error();
+      
+    
       categoriesList.addAll(
         (data["data"]['categorized'] as List<dynamic>)
             .map((e) => e as Map<String, dynamic>)
             .toList(),
       );
-      print( categoriesList);
+
+     
 
       // frequentPayments.addAll(data["data"]['frequentPayments']);
       // moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
@@ -95,6 +101,7 @@ void getCategoryData(context) async {
 
 void getSummary() async {
   var res = await getDataApiCall(BankTransactionRoutes.getUserDetails);
+  
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
     data = data['data'];
@@ -146,10 +153,16 @@ void deleteBankAccount(
       await deleteDataApiCall(BankTransactionRoutes.deleteBankAccount(bankId: bankid, accountId: AccountId),);
   if (getFlagOfResponse(res)) {
     accountId.value = "";
+    clearSpecificBox(HiveStorage.transactionsBoxName);
+    clearSpecificBox(HiveStorage.cardInsightsBoxName);
+    clearSpecificBox(HiveStorage.bankAccountsBoxName);
+    clearSpecificBox(HiveStorage.financeBoxName);
+    clearSpecificBox(HiveStorage.autoPayBoxName);
     getBankAccounts();
     getCategoryData(context);
     clearGraph();
     getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,isSplashScreen: true);
+    
     Navigator.of(context).pop();
     bankAccountLinkedList.refresh();
     
