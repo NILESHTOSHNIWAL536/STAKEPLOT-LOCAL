@@ -64,16 +64,10 @@ Future<void> getFoodieFundsDetails(BuildContext context, String id) async {
 }
 
 void getNotifications(context) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.get(
-    Uri.parse(UserRoutes.myNotifications),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-  if (response.statusCode == 200) {
+  
+  final response = await getDataApiCall(UserRoutes.myNotifications);
+ 
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     notificationList.clear();
     notificationList.addAll(his['data']);
@@ -157,18 +151,10 @@ String getCurrentFormattedDate() {
 }
 
 void aboutuser(context, String about) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.patch(
-    Uri.parse(UserRoutes.updateprofile),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  
+  final response = await updateDataApiCall2(UserRoutes.updateprofile,{
       "aboutMe": about,
-    }),
+    }
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
@@ -182,18 +168,13 @@ void aboutuser(context, String about) async {
 
 void editUserDetails(
     context, Map<String, TextEditingController> controller) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+  
   UserController userController = ControllerManagement.userController;
 
   try {
-    final response = await http.post(
-      Uri.parse(UserRoutes.updateprofile),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
+    final response = await postDataApiCall(UserRoutes.updateprofile, 
+    
+        {
         "name": controller['name']!.text.toString(),
         "phone": controller['Number']!.text.toString(),
         "dob": controller['dob']!.text.toString(),
@@ -201,7 +182,7 @@ void editUserDetails(
             (changeAvater.value == "Loading..." || changeAvater.value == "")
                 ? userController.avatar.value
                 : changeAvater.value,
-      }),
+      }
     );
 
     var responce = jsonDecode(response.body);

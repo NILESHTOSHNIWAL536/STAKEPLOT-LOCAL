@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
@@ -396,10 +397,7 @@ class _ExploreModalState extends State<ExploreModal> {
     return completer.future;
   }
 
-  static Future<String?> getToken() async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    return pref.getString("accessToken");
-  }
+ 
 
   Future<void> _submitPost() async {
     if (locationNameController.text.isEmpty ||
@@ -449,18 +447,12 @@ class _ExploreModalState extends State<ExploreModal> {
 
 
     try {
-      var accessToken = await getToken();
-      final response = await http.post(
-        Uri.parse(PostRoutes.post),
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": "$accessToken",
-        },
-        body: jsonEncode(requestBody),
+     
+      final response = await postDataApiCall(PostRoutes.post,requestBody
       );
 
 
-      if (response.statusCode == 201 || response.statusCode == 200) {
+      if (getFlagOfResponse(response)) {
         setState(() {
           exploreSubmitted = true;
           _isSubmitting = false;

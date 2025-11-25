@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart'; // For url
 
@@ -77,8 +78,9 @@ class CommunityScreenStrings {
 
   Future<bool> fetchConstants() async {
     try {
-      final response = await http.get(Uri.parse("$url/constant/community"));
-      if (response.statusCode == 200) {
+      final response = await getDataApiCall("$url/constant/community");
+      
+      if (getFlagOfResponse(response)) {
         var data = jsonDecode(response.body)['data'] ?? {};
         limitTag = data['limitTag'] ?? limitTag;
         // Community Screen

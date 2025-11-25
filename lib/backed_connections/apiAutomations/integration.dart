@@ -20,7 +20,7 @@ import '../googlesignin/credentials.dart';
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-      finvuEndpoint: !FinspaceStrings().liveIntegration
+      finvuEndpoint: FinspaceStrings().liveIntegration
           ? Credentials.Live_finvu_api
           : Credentials.Dev_finvu_api,
       certificatePins: [],
@@ -73,24 +73,18 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     final String apiUrl = FinvuRoutes.fetchData;
     final String custId = "${number.value}@finvu";
 
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    String accessToken = pref.getString("accessToken").toString();
+    
     //  flagToFetchData.value=false;
     clearStackShared(context);
     Navigator.pushNamed(context, "/OnboardingScreen");
 
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
+    final response = await postDataApiCall(apiUrl,
+    {
         "token": "",
         "handleId": handleId.value,
         "custId": custId,
         // "images": bankImgMap,
-      }),
+      }
     );
 
     if (response.statusCode == 200) {

@@ -184,16 +184,8 @@ class _emailUpdationState extends State<emailUpdation> {
 
               if (getFlagOfResponse(response)) {
                 // Call PATCH API to update email
-                final prefs = await SharedPreferences.getInstance();
-                final token = prefs.getString("accessToken");
-
-                final updateResponse = await http.patch(
-                  Uri.parse('$url/user'),
-                  headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    'Authorization': token ?? '',
-                  },
-                  body: jsonEncode({'email': widget.data['email']}),
+                
+                final updateResponse = await updateDataApiCall2('$url/user', {'email': widget.data['email']}
                 );
 
                 Navigator.pop(context); // Close loading dialog

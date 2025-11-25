@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -513,15 +514,9 @@ class _ChatState extends State<Chat> {
 
   Widget polled2(isme, poll) {
     Future<String> getPolled() async {
-      final SharedPreferences _pref = await SharedPreferences.getInstance();
-      var accessToken = _pref.getString("accessToken");
-      final response = await http.get(
-        Uri.parse('${url}/poll/${poll}'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          "Authorization": "$accessToken",
-        },
-      );
+     
+      final response = await getDataApiCall('${url}/poll/${poll}');
+     
       return response.body;
     }
 

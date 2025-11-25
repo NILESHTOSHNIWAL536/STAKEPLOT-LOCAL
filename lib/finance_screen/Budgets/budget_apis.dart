@@ -215,8 +215,7 @@ void getBudget() async {
 }
 void addBudget(BuildContext context, String name, String amount,
     List expenseCategory, String budgetPeriod) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+  
   List filteredCategories = expenseCategory
       .where((e) => !isZeroAmount(e['amount'].toString() ?? '0'))
       .toList();
@@ -233,14 +232,8 @@ void addBudget(BuildContext context, String name, String amount,
     'budgetPeriod': budgetPeriod.toString(),
   };
 
-  final response = await http.post(
-    Uri.parse('${url}/budget/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": accessToken.toString(),
-    },
-    body: jsonEncode(body),
-  );
+  final response = await postDataApiCall('${url}/budget/', body);
+ 
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
@@ -260,22 +253,14 @@ void addBudget(BuildContext context, String name, String amount,
 
 void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     budgetPeriod, id) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${url}/budget/edit/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  
+  final response = await postDataApiCall('${url}/budget/edit/${id}', {
       'name': name.toString(),
       'amount': amount.toString(),
       'expenseCategories': expenseCategory,
       'budgetType': budgetType.toString(),
       'budgetPeriod': budgetPeriod.toString(),
-    }),
+    }
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {

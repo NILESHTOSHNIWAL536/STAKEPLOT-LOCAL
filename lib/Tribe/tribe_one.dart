@@ -84,8 +84,7 @@ class _TribeHomeState extends State<TribeUnique> {
       return;
     }
 
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
+    
 
     Comments obj = Comments();
     Author auth = Author();
@@ -107,19 +106,13 @@ class _TribeHomeState extends State<TribeUnique> {
     // indexArray.add(i);
     // i++;
 
-    final response = await http.post(
-      Uri.parse('${url}/comment/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
+    final response = await postDataApiCall('${url}/comment/',{
         'post': postId,
         // 'user': authorId,
         'comment': data,
-      }),
+      }
     );
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    if (getFlagOfResponse(response)) {
       final body = json.decode(response.body);
 
       var id = body['data']['_id'];
@@ -165,17 +158,12 @@ class _TribeHomeState extends State<TribeUnique> {
   }
 
   void getTransactionComments() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/comment/${widget.id}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
+    
+    final response = await getDataApiCall(
+        '${url}/comment/${widget.id}');
+    
 
-    if (response.statusCode == 200) {
+    if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
       historyListData = obj;
@@ -1046,19 +1034,12 @@ class _TribeHomeState extends State<TribeUnique> {
 
   void upvote2(context, String str, String objectId, dataObj, historyListData2,
       Comments commentObj, int index) async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
+   
     // boolVar.value=!boolVar.value
-    final response = await http.post(
-      Uri.parse('${url}/upvote/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
+    final response = await postDataApiCall('${url}/upvote/',{
         'onModel': str.toString(),
         'objectId': objectId,
-      }),
+      }
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {

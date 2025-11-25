@@ -460,13 +460,9 @@ String formatDateTime(String dateString) {
 
 Future<http.Response> updateDataApiCall(String url, var body) async {
   try {
-    var accessToken = await getToken();
-    final response = await http.patch(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          "Authorization": "$accessToken",
-        },
-        body: jsonEncode(body));
+    
+    final response = await updateDataApiCall2(url, body);
+   
     return response;
   } catch (error) {
     rethrow;

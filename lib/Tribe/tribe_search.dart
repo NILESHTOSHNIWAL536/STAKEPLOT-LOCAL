@@ -70,17 +70,11 @@ class _TribeSearchState extends State<TribeSearch> {
 
 
   void getDis(data) async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse("${PostRoutes.userDiscussions}/${data['_id']}"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
-   
-    if (response.statusCode == 200) {
+    
+    final response = await getDataApiCall(
+        "${PostRoutes.userDiscussions}/${data['_id']}");
+    
+    if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
        
@@ -93,19 +87,12 @@ class _TribeSearchState extends State<TribeSearch> {
   }
 
   void getConnections(data) async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
     
-    final response = await http.get(
-      Uri.parse(
-          '${UserRoutes.connections}/${data['_id']}/${widget.isMasked}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
+    final response = await getDataApiCall(
+        "${UserRoutes.connections}/${data['_id']}/${widget.isMasked}");
+   
 
-    if (response.statusCode == 200) {
+    if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
       
       setState(() {
@@ -117,8 +104,7 @@ class _TribeSearchState extends State<TribeSearch> {
   }
   
   void getStatus(data) async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
+   
     UserController userController =ControllerManagement.userController;
     if(widget.isMasked){
          bool isMasked = userController.maskedConnections.any((friend) => friend['_id'] == data['_id']);
@@ -128,19 +114,13 @@ class _TribeSearchState extends State<TribeSearch> {
       return;
     }
     
-    final response = await http.post(
-      Uri.parse(UserRoutes.acceptRequestStatus),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-       body: jsonEncode({
-          // 'userName':data['name'],
-          'friendUserId':data['_id'],
-       }),
+    final response = await postDataApiCall(UserRoutes.acceptRequestStatus,{
+        'friendUserId':data['_id'],
+     }
     );
+   
 
-    if (response.statusCode == 200) {
+    if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
        frdRequestCheck.value=his['data'];
         if(frdRequestCheck.value=="Friend Request already sent"){

@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_share.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
@@ -304,18 +305,12 @@ Widget likeIcon(BuildContext context, bool isLiked) {
 }
 
 void upvoteGlobal(context, String str, String objectId, dataObj) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.post(
-    Uri.parse('${url}/upvote/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  
+  final response = await postDataApiCall('${url}/upvote/',
+      {
       'onModel': str.toString(),
       'objectId': objectId,
-    }),
+    }
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
