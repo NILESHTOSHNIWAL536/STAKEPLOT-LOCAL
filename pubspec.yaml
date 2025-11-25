@@ -102,6 +102,7 @@ dependencies:
 dev_dependencies:
   # flutter_test:
   #   sdk: flutter
+  flutter_launcher_icons: "^0.14.4"
   integration_test:
     sdk: flutter
 
@@ -117,7 +118,10 @@ dev_dependencies:
   build_runner: ^2.4.6
   test: ^1.25.7
   
-  
+flutter_launcher_icons:
+  android: "mainicon"
+  ios: true
+  image_path: "assets/app_icons/mainicon.png"
 # flutter_launcher_icons:
 #   android: "launcher_icon"
 #   ios: true
@@ -140,6 +144,7 @@ flutter:
     - assets/icons/
     - assets/
     - assets/svgs/
+    - assets/app_icons/
     - assets/icons/Navigation_bar/
     - assets/icons/Home-page/
     - assets/icons/Categories/
