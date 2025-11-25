@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -543,20 +544,10 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       return;
     }
 
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    if (accessToken == null) {
-      snackBarCalledfail(context, SnackbarData().authenticationError, Colors.red);
-      return;
-    }
+   
 
-    final response = await http.post(
-      Uri.parse('$url/split'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
+    final response = await postDataApiCall('$url/split', 
+        {
         "subcategory": subcategory,
         "category": category,
         "amount": calculatedTotal,
@@ -564,7 +555,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         "transactionId": !ismanual ? transactionsId.value : "",
         "paymentStatus": nameList,
         "image": '',
-      }),
+      }
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {

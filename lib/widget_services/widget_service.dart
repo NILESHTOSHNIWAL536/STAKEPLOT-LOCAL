@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:home_widget/home_widget.dart';
@@ -40,20 +41,14 @@ void callbackDispatcher() {
       // Fetch remainders data directly (replicating getRemainders logic)
       String urlPath = "${fullApiUrl}/reminders";
      
-      var response = await http.get(
-        Uri.parse(urlPath),
-        headers: {
-          // Handle Bearer prefix based on how it's stored
-          'Authorization': token.startsWith('Bearer ') ? token : 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
+      var response = await getDataApiCall(urlPath);
+     
     
       
       String toReceive = 'None: ₹0';
       String toPay = 'None: ₹0';
      
-      if (response.statusCode == 200) {
+      if (getFlagOfResponse(response)) {
         // Assuming getFlagOfResponse checks for success; here we assume 200 is good
         var his = json.decode(response.body);
       

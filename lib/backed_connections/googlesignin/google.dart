@@ -30,21 +30,19 @@ class AuthService {
        final String? authCode = await googleUser.serverAuthCode;
         if (authCode != null)
         {
-          final response =  await http.post(
-              Uri.parse(AuthApiRoutes.generateToken),
-              headers: {'Content-Type': 'application/json'},
-              body: jsonEncode({'idToken':  authCode}),
+          final response =  await postDataApiCall(AuthApiRoutes.generateToken, 
+          
+                {'idToken':  authCode}
             );
              if(!flag)return {};
         }
 
-      final response = await http.post(
-        Uri.parse(AuthApiRoutes.googleAuth),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'idToken': idToken}),
+      final response = await postDataApiCall(AuthApiRoutes.googleAuth, 
+      
+        {'idToken': idToken}
       );
 
-      if (response.statusCode == 200) return json.decode(response.body);
+      if (getFlagOfResponse(response)) return json.decode(response.body);
     } catch (e) {}
 
     return null;
@@ -70,16 +68,14 @@ class AuthService {
       if (idToken == null) {
         return null;
       }
-      final response = await http.post(
-        // Uri.parse('$url/auth/apple-auth'),
-        Uri.parse(AuthApiRoutes.appleAuth),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
+      final response = await postDataApiCall(AuthApiRoutes.appleAuth, 
+      
+          {
           'idToken': idToken,
           'authorizationCode': authCode,
           'email': email,
           'fullName': fullName,
-        }),
+        }
       );
       printData(response);
       if (response.statusCode == 400) {

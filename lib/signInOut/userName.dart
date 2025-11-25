@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -103,17 +104,13 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     String name = data['name'];
     String email = data['email'];
       updateDeviceData(deviceData);
-    final response = await http.post(
-      Uri.parse(AuthApiRoutes.signUp),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode({
+    final response = await postDataApiCall(AuthApiRoutes.signUp,
+        {
         'name': name,
         'email': email,
         'authorizationKey':Credentials.Sign_Up_Key,
         'deviceInfo':deviceData
-      }),
+      }
     );
 
     try {
@@ -322,19 +319,14 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
     String name = data['name'];
     String email = data['email'];
        updateDeviceData(deviceData);
-    final response = await http.post(
-      Uri.parse(AuthApiRoutes.signUp),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode({
+    final response = await postDataApiCall(AuthApiRoutes.signUp, {
         'name': name,
         'email': email,
         'isAppleUser': true,
         'appleUserId': data['appleUserId'],
         'authorizationKey':Credentials.Sign_Up_Key,
         'deviceInfo':deviceData
-      }),
+      }
     );
 
     try {

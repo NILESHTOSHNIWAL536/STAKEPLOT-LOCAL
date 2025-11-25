@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
@@ -96,9 +97,9 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
 
   Future<void> fetchCurrencies() async {
     try {
-      final response = await http.get(Uri.parse(
-          "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json"));
-        if (response.statusCode == 200 || response.statusCode == 201) {
+      final response = await getDataApiCall("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json");
+     
+        if (getFlagOfResponse(response)) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         setState(() {
           currencies = data
@@ -179,9 +180,9 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
     try {
       final url =
           "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/$baseCurrency.json";
-      final response = await http.get(Uri.parse(url));
+      final response = await getDataApiCall(url);
 
-      if (response.statusCode == 200) {
+      if (getFlagOfResponse(response)) {
         final data = jsonDecode(response.body);
         if (!data.containsKey(baseCurrency) ||
             !data[baseCurrency].containsKey(targetCurrency)) {

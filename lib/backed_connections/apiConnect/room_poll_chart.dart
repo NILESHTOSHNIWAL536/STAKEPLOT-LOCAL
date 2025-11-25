@@ -16,17 +16,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../routes/route_post.dart';
 
 void getChats(data) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.get(
-    Uri.parse('${url}/chat/${data['_id']}/${ismaskedUsers.value}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-  if (response.statusCode == 200) {
+ 
+  final response = await getDataApiCall('${url}/chat/${data['_id']}/${ismaskedUsers.value}');
+  
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
     messagesTemp.clear();
@@ -53,19 +46,11 @@ void getChats(data) async {
 }
 
 void upvote(context, String str, String objectId) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
 
-  final response = await http.post(
-    Uri.parse('${url}/upvote/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  final response = await postDataApiCall('${url}/upvote/', {
       'onModel': str.toString(),
       'objectId': objectId,
-    }),
+    }
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
@@ -77,22 +62,16 @@ void upvote(context, String str, String objectId) async {
 }
 
 void downvote(context, String str, String objectId) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${url}/downvote/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  
+  final response = await postDataApiCall('${url}/downvote/',
+  
+      {
       'onModel': str.toString(),
       'objectId': objectId,
-    }),
+    }
   );
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
     snackBarCalled(context, "You disliked this!", AppColors.accentColor);
   } else {
@@ -102,26 +81,20 @@ void downvote(context, String str, String objectId) async {
 
 void createPoll(context, String question, List options, roomDetails, members,
     String type) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${url}/poll/add'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+ 
+  final response = await postDataApiCall('${url}/poll/add',
+   
+      {
       'question': question,
       'options': options,
       'pollType': type, //roomDetails.length!=0?'room':'casual',
       'roomDetails': roomDetails,
       'myVote': 'none',
       'members': members
-    }),
+    }
   );
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
     var snackBar = SnackBar(
       duration: Durations.long1,
@@ -200,19 +173,14 @@ void uploadRefreshCall(var postData, BuildContext context) {
 }
 
 void votePoll(context, String id, int index) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+ 
 
-  final response = await http.post(
-    Uri.parse('${url}/poll/votePoll/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({'optionIndex': index}),
+  final response = await postDataApiCall('${url}/poll/votePoll/${id}', 
+ 
+      {'optionIndex': index}
   );
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
     var snackBar = SnackBar(
       duration: Durations.long1,
@@ -232,18 +200,13 @@ void votePoll(context, String id, int index) async {
 }
 
 void votePollInPost(context, String id, int index) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${url}/poll/votePollInPost/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({'optionIndex': index}),
+ 
+  final response = await postDataApiCall('${url}/poll/votePollInPost/${id}',
+  
+      {'optionIndex': index}
   );
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  
+  if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
 
     var data = body['data'];
@@ -340,9 +303,7 @@ void addMessage(
 void addChatSplitAmount(
     context, String splitName, String amount, String id, List addedUser) async {
   var urlPath = Uri.parse('${url}/chat/');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
+ 
   try {
     var jsonData = {
       "messageType": "split",
@@ -361,13 +322,8 @@ void addChatSplitAmount(
       },
       "roomId": "",
     };
-    final response = await http.post(
-      Uri.parse('${urlPath}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode(jsonData),
+    final response = await postDataApiCall('${urlPath}',
+     jsonData
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -432,18 +388,11 @@ void addMessageImage(context, String messageType, String messageObj, String id,
 }
 
 void getChats2(data, key) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+  
+  final response = await getDataApiCall('${url}/chat/${data['_id']}/${ismaskedUsers.value}');
+  
 
-  final response = await http.get(
-    Uri.parse('${url}/chat/${data['_id']}/${ismaskedUsers.value}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200) {
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
 
@@ -471,17 +420,9 @@ void getChats2(data, key) async {
 }
 
 void unSeenChat(context, String id) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.patch(
-    Uri.parse('${url}/chat/${id}/${ismaskedUsers.value}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({}),
-  );
+  
+  final response = await updateDataApiCall2('${url}/chat/${id}/${ismaskedUsers.value}', {});
+ 
 }
 
 

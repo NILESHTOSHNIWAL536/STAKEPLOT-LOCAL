@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -816,13 +817,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       }
     }
 
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    final String? accessToken = pref.getString("accessToken");
-
-    if (accessToken == null) {
-      snackBarCalledfail(context, 'Authentication token not found');
-      return;
-    }
+    
+    
 
     final requestBody = {
       "name": name,
@@ -837,13 +833,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     };
 
     try {
-      final response = await http.post(
-        Uri.parse('$url/split'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': accessToken,
-        },
-        body: jsonEncode(requestBody),
+      final response = await postDataApiCall('$url/split', requestBody
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

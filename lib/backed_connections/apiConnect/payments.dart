@@ -70,22 +70,17 @@ bool isZeroAmount(String amount) {
 
 
 void addDebts(context, name, amount, interest, startDate, durations) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+  
   debtLength.value = 1 + debtLength.value;
-  final response = await http.post(
-    Uri.parse('${url}/debt/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  final response = await postDataApiCall('${url}/debt/',
+  
+    {
       'name': name.toString(),
       'amount': amount,
       'interest': interest.toString(),
       'startDate': startDate.toString(),
       'duration': durations,
-    }),
+    }
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
@@ -104,9 +99,7 @@ void addDebts(context, name, amount, interest, startDate, durations) async {
 
 void addBillTranscations(
     List<TextEditingController> controller, context) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
+  
   int end = controller.length;
 
   for (int i = 0; i < end; i += 3) {
@@ -115,20 +108,15 @@ void addBillTranscations(
     String amount = controller[i + 1].text;
     String expenseCategory = controller[i + 2].text;
 
-    final response = await http.post(
-      Uri.parse('${url}/bill/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
+    final response = await postDataApiCall('${url}/bill/',
+     {
         'name': name.toString(),
         'amount': amount,
         'dueDate': expenseCategory.toString(),
-      }),
+      }
     );
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    if (getFlagOfResponse(response)) {
       final body = json.decode(response.body);
 
       acceptReset.value = false;
@@ -143,17 +131,10 @@ void addBillTranscations(
 }
 
 void deleteDebts(context, String id, [flag = false]) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.delete(
-    Uri.parse('${url}/debt/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({}),
-  );
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  
+  final response = await deleteDataApiCallBody('${url}/debt/${id}', {});
+  
+  if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
     snackBarCalled(context, SnackbarData().debtCleared,);
     debtLength.value--;
@@ -171,15 +152,8 @@ void deleteDebts(context, String id, [flag = false]) async {
 }
 
 void deleteAmount(context, String id, String am) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.patch(
-    Uri.parse('${url}/debt/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({}),
+ 
+  final response = await updateDataApiCall2('${url}/debt/${id}',{}
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
@@ -189,17 +163,10 @@ void deleteAmount(context, String id, String am) async {
 }
 
 void deleteBudget(context, String id) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.delete(
-    Uri.parse('${url}/budget/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  
+  final response = await deleteDataApiCall('${url}/budget/${id}');
+  
+  if (getFlagOfResponse(response)) {
     snackBarCalled(
         context, SnackbarData().processingBudgetDeletion, Colors.red);
   } else {
@@ -208,8 +175,7 @@ void deleteBudget(context, String id) async {
 }
 
 void clearDebts(context, String id, String amount, String value) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+  
 
   var body = {
     'amount': amount,
@@ -221,16 +187,10 @@ void clearDebts(context, String id, String amount, String value) async {
     'merchantId': 'assxx',
   };
 
-  final response = await http.post(
-    Uri.parse(TransactionRoutes.addTransaction),
-    // Uri.parse('${url}/transaction/add'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode(body),
-  );
-  if (response.statusCode == 200) {
+  final response = await postDataApiCall(TransactionRoutes.addTransaction, body);
+  
+  
+  if (getFlagOfResponse(response)) {
     snackBarCalled(context, SnackbarData().allDebtsCleared, AppColors.accentColor);
   } else {
     snackBarCalledfail(context, SnackbarData().debterror, Colors.red);
@@ -238,18 +198,11 @@ void clearDebts(context, String id, String amount, String value) async {
 }
 
 void getNewBudget() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+  
+  final response = await getDataApiCall('${url}/budget/');
+  
 
-  final response = await http.get(
-    Uri.parse('${url}/budget/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200) {
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
 
@@ -278,24 +231,17 @@ void sendNotificationsToDevice(id, context, msg,
     String message = "",
     String billid = ""]) async {
   String urlPath = "${url}/reminders/sendNotifications/ToDevice";
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+ 
 
   try {
-    final response = await http.post(
-      Uri.parse('${urlPath}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
+    final response = await postDataApiCall(urlPath,{
         'id': id,
         'message': msg,
         'screen': screen,
         'title': title,
         'pic': pic,
         "billId": billid
-      }),
+      }
     );
 
     if (response.statusCode == 429) {
