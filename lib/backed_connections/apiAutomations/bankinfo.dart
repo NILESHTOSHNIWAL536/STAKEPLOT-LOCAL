@@ -27,7 +27,7 @@ Future<void> getBankAccounts() async {
      var response = await getDataApiCall(BankTransactionRoutes.getBanksLinkedAndAccounts);
     if (getFlagOfResponse(response))
     {
-      print("Bank Accounts Fetched Successfully");
+     
       print(response.body);
     
       storeDataLocal(response);

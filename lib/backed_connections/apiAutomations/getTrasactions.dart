@@ -708,6 +708,7 @@ void processChartData() {
     debugPrint("processChartData error: $e\n$st");
   }
 }
+
 // if any problem in above function use this below function
 // void processChartData() {
 //   try {

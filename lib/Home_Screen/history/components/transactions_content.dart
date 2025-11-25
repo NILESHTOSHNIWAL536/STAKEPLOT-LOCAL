@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/components/transactions_checkbox.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter/services.dart';
 import 'transactions_details.dart';
@@ -54,11 +56,13 @@ class TransactionContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        
         SizedBox(height: isExcluded ? 8 : 0),
         Container(
           padding: EdgeInsets.only(top: isExcluded ? 0 : fontSizes.padding / 6),
           child: Row(
             children: [
+              
               TransactionCheckbox(
                 transaction: transaction,
                 index: index,
@@ -88,6 +92,8 @@ class TransactionContent extends StatelessWidget {
                 context: context,
                 hide: hide,
               ),
+          
+              
             ],
           ),
         ),

@@ -97,26 +97,49 @@ class TransactionContainer extends StatelessWidget {
           curve: Curves.easeInOut,
           child: Stack(
             children: [
-              TransactionContent(
-                transaction: transaction,
-                isExcluded: isExcluded,
-                isReview: isReview,
-                isManual: isManual,
-                isSplit: isSplit,
-                hide: hide,
-                category: category,
-                logo: logo,
-                amount: amount,
-                formatAmount: formatAmount,
-                formatAmountBalance: formatAmountBalance,
-                nameOfUser: nameOfUser,
-                formattedDate: formattedDate,
-                formattedDateManual: formattedDateManual,
-                index: index,
-                fontSizes: fontSizes,
-                amtColor: amtColor,
-                context: context,
+              
+              Column(
+                children: [
+                 isReview? SizedBox(height: fontSizes.padding):const SizedBox.shrink(),
+                  TransactionContent(
+                    transaction: transaction,
+                    isExcluded: isExcluded,
+                    isReview: isReview,
+                    isManual: isManual,
+                    isSplit: isSplit,
+                    hide: hide,
+                    category: category,
+                    logo: logo,
+                    amount: amount,
+                    formatAmount: formatAmount,
+                    formatAmountBalance: formatAmountBalance,
+                    nameOfUser: nameOfUser,
+                    formattedDate: formattedDate,
+                    formattedDateManual: formattedDateManual,
+                    index: index,
+                    fontSizes: fontSizes,
+                    amtColor: amtColor,
+                    context: context,
+                  ),
+                ],
               ),
+                ( isReview)
+              ?
+              Positioned(
+                  top: -2,
+                  right: -1.6,
+                  child:reviewTagTransactions(
+                  isReview,
+                  fontSizes.scaleFactor,
+                  isSplit,
+                  fontSizes.margin,
+                  fontSizes.badgeSize,
+                  fontSizes.fontSizeSmall,
+                  context,
+                  index,
+                  transaction.id,
+                ))
+              : const SizedBox(height: 10),
               if (isExcluded)
                 Positioned(
                   top: 0,

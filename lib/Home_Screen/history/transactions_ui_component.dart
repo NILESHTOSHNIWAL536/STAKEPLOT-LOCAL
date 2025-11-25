@@ -60,12 +60,11 @@ class HistoryTransactions extends StatelessWidget {
     final bool isReview = transaction.needsReview ?? false;
     final bool isExcluded = transaction.isExcluded ?? false;
 
-    if (hideReview && isReview) return const SizedBox.shrink();
+    // if (hideReview && isReview) return const SizedBox.shrink();
 
     final List<String> parts = _parseNarration(narration);
     final String nameOfUser = transaction.title ?? _getNameOfUser(parts);
-    final Color amtColor =
-        type == 'CREDIT' ? AppColors.primaryColor : AppColors.primaryColor;
+    final Color amtColor =type == 'CREDIT' ? AppColors.primaryColor : AppColors.primaryColor;
     final String formatAmount = type == 'CREDIT'
         ? "+₹${formatMoneyIndian(amount.toString())}"
         : "-₹${formatMoneyIndian(amount.toString())}";
@@ -146,35 +145,30 @@ Widget reviewTagTransactions(
     String narration_id) {
   return Column(
     children: [
-      const SizedBox(height: 10),
+      
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           if (isReview)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colorcodes.red,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(16 * scaleFactor),
-                    ),
-                  ),
-                  child: textStyle(
-                    text: "Review",
-                    context: context,
-                    fontsize: 11,
-                    fontWeight: FontWeight.bold,
-                    c: AppColors.backgroundColor,
-                  ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colorcodes.red,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(16 * scaleFactor),
                 ),
-                SizedBox(width: 8 * scaleFactor),
-              ],
+              ),
+              child: textStyle(
+                text: "Review",
+                context: context,
+                fontsize: 9,
+                fontWeight: FontWeight.bold,
+                c: AppColors.backgroundColor,
+              ),
             ),
         ],
       ),
+      SizedBox(height: 4,)
     ],
   );
 }

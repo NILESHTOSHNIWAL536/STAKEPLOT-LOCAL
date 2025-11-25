@@ -61,6 +61,7 @@ class TransactionDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(()=> Container(
+  
       width: MediaQuery.of(context).size.width / (showCheckBox.value ? 1.2 : 1.1),
       padding: EdgeInsets.only(
           top: isExcluded ? 0 : fontSizes.padding / 6,
@@ -68,19 +69,7 @@ class TransactionDetails extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          (isManual || isReview)
-              ? reviewTagTransactions(
-                  isReview,
-                  fontSizes.scaleFactor,
-                  isSplit,
-                  fontSizes.margin,
-                  fontSizes.badgeSize,
-                  fontSizes.fontSizeSmall,
-                  context,
-                  index,
-                  transaction.id,
-                )
-              : const SizedBox(height: 10),
+        
           Padding(
             padding: EdgeInsets.symmetric(horizontal: fontSizes.padding),
             child: Row(
