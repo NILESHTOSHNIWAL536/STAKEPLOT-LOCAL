@@ -15,6 +15,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth_service/login_apis.dart';
+import '../backed_connections/apiAutomations/secure_storage.dart';
 import '../backed_connections/googlesignin/credentials.dart';
 
 RxBool isValidUser=false.obs;
@@ -126,8 +127,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       final body = jsonDecode(response.body);
 
       String accessToken = body['data'];
-      final SharedPreferences _pref = await SharedPreferences.getInstance();
-      _pref.setString("accessToken", "Bearer " + accessToken);
+      SecureStorageService().setString("accessToken", "Bearer " + accessToken);
       clearStack(context);
       Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
     } catch (e) {
@@ -341,8 +341,7 @@ class _UserDetailsPage2State extends State<UserDetailsPage2> {
       final body = jsonDecode(response.body);
 
       String accessToken = body['data'];
-      final SharedPreferences _pref = await SharedPreferences.getInstance();
-      _pref.setString("accessToken", "Bearer " + accessToken);
+      SecureStorageService().setString("accessToken", "Bearer " + accessToken);
       clearStack(context);
       Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
     } catch (e) {
