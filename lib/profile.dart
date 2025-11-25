@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'backed_connections/apiAutomations/secure_storage.dart';
 import 'routes/route_user_login.dart';
 import 'signInOut/userName.dart';
 
@@ -130,5 +131,5 @@ void checkIsUserNameValid(String val) async {
 Future<String> generateAccessToken(String email) async
  {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    return pref.getString("accessToken") ?? "";
+    return SecureStorageService().read("accessToken").toString();
  }

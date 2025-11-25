@@ -7,10 +7,12 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/loginservices/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../apiAutomations/secure_storage.dart';
+
 
 Future<void> screenDataLocalStorage() async {
   final pref = await SharedPreferences.getInstance();
-  String userId = pref.getString('accessToken').toString();
+  String userId = SecureStorageService().read("accessToken").toString();
   final todayKey =
       'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId';
   int dailyLoginCount = pref.getInt(todayKey) ?? 0;

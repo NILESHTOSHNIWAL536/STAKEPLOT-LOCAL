@@ -392,7 +392,7 @@ Widget logoutWidget(context, [flag = false]) {
                 await ScreenTimeTracker().clearUserData();
                 final SharedPreferences _pref =
                     await SharedPreferences.getInstance();
-                String? userId = _pref.getString('accessToken') ?? '';
+                String? userId = SecureStorageService().read("accessToken").toString();
                 await _pref.remove("accessToken");
                 await _pref.remove(
                     'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId');
