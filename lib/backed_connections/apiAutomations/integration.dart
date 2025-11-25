@@ -20,7 +20,7 @@ import '../googlesignin/credentials.dart';
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-      finvuEndpoint: FinspaceStrings().liveIntegration
+      finvuEndpoint:! FinspaceStrings().liveIntegration
           ? Credentials.Live_finvu_api
           : Credentials.Dev_finvu_api,
       certificatePins: [],
