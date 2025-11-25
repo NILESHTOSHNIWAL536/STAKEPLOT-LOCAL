@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+// final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 Future postDataApiCall(String urlPath, Map body) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
@@ -89,33 +89,33 @@ Future<http.Response> updateDataApiCall3(String urlPath,
   return response;
 }
 
-// Future<http.Response> getDataApiCall(urlPath) async {
-//   final SharedPreferences pref = await SharedPreferences.getInstance();
-//   var  accessToken= pref.getString("accessToken");
+Future<http.Response> getDataApiCall(urlPath) async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  var  accessToken= pref.getString("accessToken");
   
-//   final response = await http.get(
-//     Uri.parse(urlPath),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//       "Authorization": "$accessToken",
-//     },
-//   );
-//   return response;
-// }
-Future<http.Response> getDataApiCall(String urlPath) async {
-  // Read token securely
-  String? accessToken = await secureStorage.read(key: "accessToken");
-
   final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': '$accessToken',
+      "Authorization": "$accessToken",
     },
   );
-
   return response;
 }
+// Future<http.Response> getDataApiCall(String urlPath) async {
+//   // Read token securely
+//   String? accessToken = await secureStorage.read(key: "accessToken");
+
+//   final response = await http.get(
+//     Uri.parse(urlPath),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//       'Authorization': '$accessToken',
+//     },
+//   );
+
+//   return response;
+// }
 
 Future<http.Response> deleteDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
