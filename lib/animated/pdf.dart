@@ -46,8 +46,8 @@ void getPdf(BuildContext context, RxString selectedValue,
 }
 
 Future<pw.MemoryImage> loadLogoNetwork(String url) async {
-  final response = await http.get(Uri.parse(url));
-  if (response.statusCode == 200) {
+  final response = await getDataApiCall(url);
+  if (getFlagOfResponse(response)) {
     return pw.MemoryImage(response.bodyBytes);
   } else {
     throw Exception('Failed to load image from $url');

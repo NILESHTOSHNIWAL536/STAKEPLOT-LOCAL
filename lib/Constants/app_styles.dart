@@ -949,15 +949,7 @@ class MaskedAvatars {
 
 List avatarBackGroundList = ["#FA7070", "#FFB07A", "#4C8BF5", "#68B2A0"];
 
-class AnimatedAppLoaders {
-  static String animate1 = "assets/icons/appScreenLoader/animate1.svg";
-  static String animate2 = "assets/icons/appScreenLoader/animate2.svg";
-  static String animate3 = "assets/icons/appScreenLoader/animate3.svg";
-  static String animate4 = "assets/icons/appScreenLoader/animate4.svg";
-  static String animate5 = "assets/icons/appScreenLoader/animate5.svg";
-  static String animate6 = "assets/icons/appScreenLoader/animate6.svg";
-  static String animate7 = "assets/icons/appScreenLoader/animate7.svg";
-}
+
 
 
 
