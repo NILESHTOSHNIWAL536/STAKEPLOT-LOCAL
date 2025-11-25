@@ -15,18 +15,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../routes/route_transactions.dart';
 
 void getDebts() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+ 
 
-  final response = await http.get(
-    Uri.parse('${url}/debt/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
+  final response = await getDataApiCall('${url}/debt/');
+ 
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     debtLength.value = obj.length;
@@ -52,18 +46,11 @@ Future<void> fetchDebts() async {
 
 
 getBills() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+  
+  final response = await getDataApiCall('${url}/bill/');
+ 
 
-  final response = await http.get(
-    Uri.parse('${url}/bill/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     billLength.value = obj.length;

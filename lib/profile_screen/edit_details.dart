@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.da
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/revoke_access.dart';
+import 'package:flutter_application_code_stakeplot/services/icon_picker_modal.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/emailUpdateOtp.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -257,6 +258,10 @@ class _EditDetailsState extends State<EditDetails> {
               ],
             ),
             const SizedBox(height: 20),
+            ElevatedButton(
+                    child: Text("Change App Icon"),
+                    onPressed: () => IconPickerModal.show(context),
+            ),
             getListOfBankConnected(),
             const SizedBox(height: 20),
           ],
