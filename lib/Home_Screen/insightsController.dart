@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../backed_connections/apiAutomations/secure_storage.dart';
 import '../routes/route_transactions.dart';
 
 class InsightsController extends GetxController {
@@ -101,12 +102,12 @@ class InsightsController extends GetxController {
 
 Future<Map<String, dynamic>> getUserStats() async {
   final pref = await SharedPreferences.getInstance();
-  final userId = pref.getString('accessToken') ?? '';
+  final userId =SecureStorageService().read("accessToken");
   final todayKey =
       'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId';
 
   final tracker = ScreenTimeTracker();
-  await tracker.setUser(userId);
+  await tracker.setUser(userId.toString());
   tracker.startSession();
 
   // Extract only the value after the last colon from each entry
@@ -135,7 +136,7 @@ Future<Map<String, dynamic>> getUserStats() async {
 
 Future<void> setUserStats(Map<String, dynamic> data) async {
   final pref = await SharedPreferences.getInstance();
-  final userId = pref.getString('accessToken') ?? '';
+  final userId =await SecureStorageService().read("accessToken");
   final todayDate = DateTime.now().toIso8601String().substring(0, 10);
   final todayLoginKey = 'login_count_${todayDate}_$userId';
 

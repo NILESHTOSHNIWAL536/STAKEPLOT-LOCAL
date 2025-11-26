@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../routes/route_transactions.dart';
+import '../apiAutomations/secure_storage.dart';
 
 void getDebts() async {
  
@@ -259,7 +260,7 @@ void sendNotificationsToDevice(id, context, msg,
 
 Future<String?> getToken() async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  var accessToken = pref.getString("accessToken");
+  var accessToken =await SecureStorageService().read("accessToken");
   if (accessToken == null) {
     return null;
   } else {

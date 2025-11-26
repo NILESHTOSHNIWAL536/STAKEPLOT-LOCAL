@@ -27,6 +27,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import "Utils/animated_signin.dart";
 import "auth_service/login_apis.dart";
+import "backed_connections/apiAutomations/secure_storage.dart";
 import "finances_screen/index_finances.dart";
 import "offline.dart";
 
@@ -298,8 +299,8 @@ Widget showUserData(BuildContext context) {
                         String userId = user['accessToken'] ?? user['email'];
 
                         await ScreenTimeTracker().setUser(userId);
-                        _pref.remove("accessToken").then((_) {
-                          _pref.setString("accessToken", user['accessToken']);
+                        _pref.remove("accessToken").then((_) async{
+                        await  SecureStorageService().setString("accessToken", user['accessToken']);
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               '/', (Route<dynamic> route) => false);
                           Navigator.pushReplacementNamed(context, '/home');
@@ -391,7 +392,7 @@ Widget logoutWidget(context, [flag = false]) {
                 await ScreenTimeTracker().clearUserData();
                 final SharedPreferences _pref =
                     await SharedPreferences.getInstance();
-                String? userId = _pref.getString('accessToken') ?? '';
+                String? userId =await SecureStorageService().read("accessToken").toString();
                 await _pref.remove("accessToken");
                 await _pref.remove(
                     'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId');

@@ -13,24 +13,24 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/snackBar.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
+import '../backed_connections/apiAutomations/secure_storage.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';
 import '../backed_connections/googlesignin/credentials.dart';
 import '../routes/route_user_login.dart';
 import '../signInOut/userName.dart';
 
 class LoginService {
-
-  static  Future<void> signUp(
+  static Future<void> signUp(
       context, Map<String, dynamic> data, String avatarUrl) async {
     String name = data['name'];
     String email = data['email'];
-      updateDeviceData(deviceData);
-      final response= await postDataApiCall(AuthApiRoutes.signUp, {
-         'name': name,
-         'email': email,
-         'authorizationKey':Credentials.Sign_Up_Key,
-         'deviceInfo':deviceData
-       });
+    updateDeviceData(deviceData);
+    final response = await postDataApiCall(AuthApiRoutes.signUp, {
+      'name': name,
+      'email': email,
+      'authorizationKey': Credentials.Sign_Up_Key,
+      'deviceInfo': deviceData
+    });
 
     try {
       var data2 = jsonDecode(response.body);
@@ -39,21 +39,25 @@ class LoginService {
       acceptReset.value = false;
       if (!boolvar) {
         snackBarCalledfail(
-            context, data2['error']['explanation'], );
+          context,
+          data2['error']['explanation'],
+        );
         return;
       }
       final body = jsonDecode(response.body);
 
       String accessToken = body['data'];
-      final SharedPreferences _pref = await SharedPreferences.getInstance();
-      _pref.setString("accessToken", "Bearer " + accessToken);
+     await SecureStorageService().setString("accessToken", "Bearer " + accessToken);
       clearStack(context);
       Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
     } catch (e) {
-      snackBarCalledfail(context, "Server error", );
+      snackBarCalledfail(
+        context,
+        "Server error",
+      );
     }
   }
-  
+
   static Future<void> loginUser({
     required TextEditingController emailController,
     required BuildContext context,
@@ -71,9 +75,11 @@ class LoginService {
         // Navigator.pushReplacementNamed(context, '/home');
         loginCalledData(response, context);
         await screenDataLocalStorage();
-      }
-      else if (response.statusCode == 500) {
-        snackBarCalledfail(context, SnackbarData().serverError,);
+      } else if (response.statusCode == 500) {
+        snackBarCalledfail(
+          context,
+          SnackbarData().serverError,
+        );
       } else if (response.statusCode == 400) {
         snackBarCalledfail(context, SnackbarData().invalidInfo);
       } else {
@@ -99,7 +105,7 @@ class LoginService {
 
       var decodedResponse = json.decode(response.body);
       print(decodedResponse);
-      
+
       if (response.statusCode == 409) {
         ForceLogout.forceLoginShowModal(
             context, decodedResponse, emailController);
@@ -162,24 +168,25 @@ class LoginService {
       context,
       MaterialPageRoute(
           builder: (context) => UserDetailsPage(data: {
-                "data": {"name": "", "dob": "",'email':email}
+                "data": {"name": "", "dob": "", 'email': email}
               })),
     );
   }
 
-  static Future<void> loginCalledData(response, context, {bool flag = false}) async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
+  static Future<void> loginCalledData(response, context,
+      {bool flag = false}) async {
     final body = !flag ? json.decode(response.body) : response;
     String accessToken = body['data']['accessToken'];
     initGetControllers();
-    pref.setString("accessToken", "Bearer " + accessToken);
+    await  SecureStorageService().setString("accessToken", "Bearer " + accessToken);
     await initializeOneSignal(context);
     userController.userId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
     acceptReset.value = false;
     getPhoneNo(body);
     await callApi(context);
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 
   static void getPhoneNo(body) {

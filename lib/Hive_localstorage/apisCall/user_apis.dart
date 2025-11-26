@@ -53,7 +53,7 @@ static Future<void> cacheUserDataLocally() async {
 static Future<void> loadUserFromHive() async 
 {
    // ✅ Ensure the box is open
-  HiveHelper. openBoxIfNot<UserModel>(HiveStorage.userBoxName);
+  HiveHelper.openBoxIfNot<UserModel>(HiveStorage.userBoxName);
   final box =await HiveStorage.userBox;
   final user = box.get('localUser');
 

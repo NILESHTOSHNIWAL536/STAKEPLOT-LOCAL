@@ -27,6 +27,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 
 import '../../controllers/credit_card_controller.dart';
 import '../../controllers/theme_controller.dart';
+import '../apiAutomations/secure_storage.dart';
 
 void clearStack(BuildContext context) {
   try {
@@ -94,8 +95,7 @@ void clearPostReportHide(int index, context, [bool f = true]) {
 }
 
 Future<bool> check(context, String flag) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  bool f = _pref.containsKey("accessToken");
+  bool f = await SecureStorageService().containsKey("accessToken");
   // //  if (!f && flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
   if (!f && flag != "loginuser") {
     Navigator.pushReplacementNamed(context, '/');
