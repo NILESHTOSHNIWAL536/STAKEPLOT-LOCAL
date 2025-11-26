@@ -270,6 +270,7 @@ class _EditDetailsState extends State<EditDetails> {
     );
   }
 
+
   Widget getListOfBankConnected() {
   
     return Container(

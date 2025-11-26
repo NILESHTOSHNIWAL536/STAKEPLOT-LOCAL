@@ -25,7 +25,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 
-import "Utils/animated_signin.dart";
+
 import "auth_service/login_apis.dart";
 import "backed_connections/apiAutomations/secure_storage.dart";
 import "finances_screen/index_finances.dart";

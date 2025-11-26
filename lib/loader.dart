@@ -23,48 +23,6 @@ class Loader extends StatelessWidget {
   }
 }
 
-class LoaderApp extends StatefulWidget {
-  const LoaderApp({Key? key}) : super(key: key);
-
-  @override
-  State<LoaderApp> createState() => _LoaderAppState();
-}
-
-class _LoaderAppState extends State<LoaderApp> with TickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SizedBox(
-        child: Lottie.asset(
-          'assets/splashScreen/appScreen.json',
-          controller: _controller,
-          onLoaded: (composition) {
-            _controller
-              ..duration = composition.duration
-              ..repeat();
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return const Icon(Icons.error);
-          },
-        ),
-      ),
-    );
-  }
-}
 
 class Spinner extends StatelessWidget {
   double size;
