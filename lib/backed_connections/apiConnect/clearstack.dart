@@ -240,6 +240,7 @@ void logoutUserFromDevice(context2) async {
     Navigator.pushReplacementNamed(context, '/');
     await _pref.remove("token");
     await _pref.remove("accessToken");
+    await SecureStorageService().deleteAll();
   } catch (e) {}
 }
 
