@@ -19,15 +19,14 @@ exports.createUserDetails = async (details, consenthandleid, userId) => {
     const existingBankAccounts = await new AccountRepository().getMap(userId);
     const responses = [];
 
-    const noExistingAccounts =
-      !existingBankAccounts || existingBankAccounts.size === 0;
+    const noExistingAccounts = !existingBankAccounts || existingBankAccounts.size === 0;
 
     // If user has no accounts → create everything directly
     if (noExistingAccounts) {
-      const createPromises = details.map((data) =>
-        BankService.createUserDetails(data, consenthandleid, userId)
-      );
-      responses.push(...(await Promise.all(createPromises)));
+      for (const bank of details) {
+        const result = await BankService.createUserDetails(bank, consenthandleid, userId);
+        responses.push(result);
+      }
       return responses;
     }
 
@@ -40,28 +39,17 @@ exports.createUserDetails = async (details, consenthandleid, userId) => {
         const { linkRefNo, accountRefNo } = acct;
 
         // Check if account already exists (via linkRefNo or accountRefNo)
-        const matchedKey =
-          (linkRefNo && existingBankAccounts.has(linkRefNo) && linkRefNo) ||
-          (accountRefNo &&
-            existingBankAccounts.has(accountRefNo) &&
-            accountRefNo) ||
-          null;
+        const matchedKey = (linkRefNo && existingBankAccounts.has(linkRefNo) && linkRefNo) || (accountRefNo && existingBankAccounts.has(accountRefNo) && accountRefNo) || null;
 
         if (matchedKey) {
           // Account exists → perform UPDATE
           const accountId = existingBankAccounts.get(matchedKey);
 
           // Find matching fiObject for this specific account
-          const fiObject = bank.fiObjects.find(
-            (fi) =>
-              fi.linkedAccRef === linkRefNo ||
-              fi.linkedAccRef === accountRefNo
-          );
+          const fiObject = bank.fiObjects.find((fi) => fi.linkedAccRef === linkRefNo || fi.linkedAccRef === accountRefNo);
 
           if (!fiObject) {
-            console.warn(
-              `No matching fiObject found for accountRef/linkRef ${matchedKey}`
-            );
+            console.warn(`No matching fiObject found for accountRef/linkRef ${matchedKey}`);
             continue;
           }
 
@@ -70,21 +58,12 @@ exports.createUserDetails = async (details, consenthandleid, userId) => {
             fiObjects: [fiObject],
           };
 
-          const result = await BankService.updateUserDetails(
-            payload,
-            consenthandleid,
-            userId,
-            accountId
-          );
+          const result = await BankService.updateUserDetails(payload, consenthandleid, userId, accountId);
 
           responses.push(result);
         } else {
           // Account does not exist → CREATE new one
-          const fiObject = bank.fiObjects.find(
-            (fi) =>
-              fi.linkedAccRef === linkRefNo ||
-              fi.linkedAccRef === accountRefNo
-          );
+          const fiObject = bank.fiObjects.find((fi) => fi.linkedAccRef === linkRefNo || fi.linkedAccRef === accountRefNo);
 
           const payload = {
             ...bank,
@@ -92,11 +71,7 @@ exports.createUserDetails = async (details, consenthandleid, userId) => {
             fiAccountInfo: [acct], // only create the specific account
           };
 
-          const result = await BankService.createUserDetails(
-            payload,
-            consenthandleid,
-            userId
-          );
+          const result = await BankService.createUserDetails(payload, consenthandleid, userId);
 
           responses.push(result);
         }
@@ -227,7 +202,7 @@ exports.categorizeTransactions = async (req, res) => {
     const userId = req.user._id;
     const response = await BankService.categorizeTransactions(userId);
 
-    console.log("response from the API: ", response);
+    console.log('response from the API: ', response);
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
@@ -273,7 +248,7 @@ exports.getCategoryWiseSpendings = async (req, res) => {
     const categoryNamesArray = categoryNames.split(',');
 
     const response = await BankService.categoryWiseSpendings(userId, categoryNamesArray, startDate, endDate);
-    
+
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
@@ -282,7 +257,7 @@ exports.getCategoryWiseSpendings = async (req, res) => {
     const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     return res.status(statusCode).json(ErrorResponse);
   }
-}
+};
 
 exports.getBudgetTransactions = async (req, res) => {
   try {
@@ -299,7 +274,7 @@ exports.getBudgetTransactions = async (req, res) => {
     const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     return res.status(statusCode).json(ErrorResponse);
   }
-}
+};
 
 exports.getBudgetSpents = async (req, res) => {
   try {
