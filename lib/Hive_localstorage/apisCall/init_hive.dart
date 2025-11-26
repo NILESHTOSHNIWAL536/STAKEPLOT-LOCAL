@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/bank_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_last_two_months_apis.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/transactions_data/transaction.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import '../autopays_data/cards_data.dart';
@@ -175,8 +177,10 @@ Future<void> init_post() async {
 Future<void> clearSpecificBox(String boxName) async {
   if (Hive.isBoxOpen(boxName)) {
     await Hive.box(boxName).clear();
-  } else {
-    final box = await Hive.openBox(boxName);
+  } else
+  {
+    final key = await HiveHelper.getOrCreateKey();
+    final box = await Hive.openBox(boxName,encryptionCipher:HiveAesCipher(key));
     await box.clear();
   }
 }

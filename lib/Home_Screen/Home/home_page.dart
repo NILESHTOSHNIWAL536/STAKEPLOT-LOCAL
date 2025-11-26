@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/Home/init_Api_Cal
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/noaccountSelected.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
+import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
@@ -44,6 +45,7 @@ class _HomePageState extends State<HomePage> {
       } else {}
     });
     storeBankDataApi();
+    requestNotificationPermissionOncePerDay();
   }
 
   void _scrollToTop() {

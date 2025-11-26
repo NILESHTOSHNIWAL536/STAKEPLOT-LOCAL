@@ -183,8 +183,7 @@ bool securityCheck(){
 
 Future<void> loadEnvs() async {
   try {
-    await dotenv.load(fileName: ".env"); // relative to project root
-    // Optional: print a variable to test
+    await dotenv.load(fileName: ".env"); 
   } catch (e) {
   }
 }

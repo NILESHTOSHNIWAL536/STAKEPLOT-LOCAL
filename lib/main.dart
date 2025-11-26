@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:async';
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
@@ -15,13 +14,8 @@ import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:app_version_update/app_version_update.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:home_widget/home_widget.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart'; // Import for 'url' global
-
 
 import 'appTheme.dart';
 import 'backed_connections/apiConnect/clearstack.dart';
@@ -36,35 +30,35 @@ final GlobalKey<NavigatorState> updateNavigatorKey =
     GlobalKey<NavigatorState>(); // New key for updates
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
   securityCheck();
   checkFirebaseAndValidUser();
   loadEnvs();
-  
+
   // Store full API URL (with /api/v1) in SharedPreferences for background access (after loadEnvs)
   final prefs = await SharedPreferences.getInstance();
   // Full URL is already built as "${urlWithLocallHost}api/v1" in apis_connect.dart after loadEnvs
-  await prefs.setString('full_api_url', url); // 'url' is the global full path from apis_connect.dart
-  
+  await prefs.setString('full_api_url',
+      url); // 'url' is the global full path from apis_connect.dart
+
   // Store accountId if available (adjust key/source as needed, e.g., from login service)
-  String? accountId = prefs.getString('accountId'); // Fetch existing; set during login if needed
+  String? accountId = prefs
+      .getString('accountId'); // Fetch existing; set during login if needed
   if (accountId != null && accountId.isNotEmpty) {
     await prefs.setString('accountId', accountId);
   }
-  
+
   initializeGlobalErrorHandling();
-  
+
   // Initialize widget service (handles WorkManager and widgets only)
   initializeWidgetService();
-  
-   runZonedGuarded(() {
+  runZonedGuarded(() {
     runApp(const MyApp());
   }, (Object error, StackTrace stack) {
     // Handle uncaught async errors here
     handleError(error, stack);
   });
 }
-
 
 /// Method to initialize Flutter error handling
 void initializeGlobalErrorHandling() {
@@ -78,9 +72,7 @@ void initializeGlobalErrorHandling() {
 
 /// Centralized error handling method
 void handleError(Object error, StackTrace? stack) {
-  if (stack != null) {
-   
-  }
+  if (stack != null) {}
 }
 
 class MyApp extends StatefulWidget {
@@ -91,93 +83,97 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-   late ThemeController themeController;
+  // late ThemeController themeController;
   @override
   void initState() {
     super.initState();
-     WidgetBridge.getLastWidgetSelection().then((opt) {
-    if (opt != null) {
-      // react: maybe show a toast or set UI state
-    }
-  });
+    
+    WidgetBridge.getLastWidgetSelection().then((opt) {
+      if (opt != null) {
+        // react: maybe show a toast or set UI state
+      }
+    });
 
-  // 2) Listen for runtime events when Android calls into Flutter (onNewIntent)
-  WidgetBridge.setMethodCallHandler((args) {
-    if (args.containsKey('tab')) {
-      final tab = args['tab'];
-      // navigate to tab in your HomeShell, e.g. set selectedIndex
-    } else if (args.containsKey('option')) {
-      final option = args['option'];
-      // react to raw clicked option
-    } else if (args.containsKey('navigate_to_tab')) {
-      final nav = args['navigate_to_tab'];
-      // handle older getInitialRoute map
+    // 2) Listen for runtime events when Android calls into Flutter (onNewIntent)
+    WidgetBridge.setMethodCallHandler((args) {
+      if (args.containsKey('tab')) {
+        final tab = args['tab'];
+        // navigate to tab in your HomeShell, e.g. set selectedIndex
+      } else if (args.containsKey('option')) {
+        final option = args['option'];
+        // react to raw clicked option
+      } else if (args.containsKey('navigate_to_tab')) {
+        final nav = args['navigate_to_tab'];
+        // handle older getInitialRoute map
+      }
+    });
+    try {
+      final friendNames = globalFriendsList
+          .take(4)
+          .map((e) =>
+              (e != null && e['name'] != null) ? e['name'].toString() : '')
+          .where((s) => s.isNotEmpty)
+          .toList();
+      WidgetBridge.setWidgetFriends(friendNames);
+    } catch (e) {
+      // ignore
     }
-  });
- try {
-    final friendNames = globalFriendsList
-        .take(4)
-        .map((e) => (e != null && e['name'] != null) ? e['name'].toString() : '')
-        .where((s) => s.isNotEmpty)
-        .toList();
-    WidgetBridge.setWidgetFriends(friendNames);
-  } catch (e) {
-    // ignore
-  }
     initGetControllersIfisRegistered();
-    themeController = ControllerManagement.themeController;
+    loadThemes();
+    // themeController = ControllerManagement.themeController;
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
   }
 
+  void loadThemes() async {
+    ControllerManagement.themeController.loadTheme();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-      child:Obx(()=> MaterialApp(
-        navigatorKey: navigatorKey,
-         theme: AppTheme.lightTheme,      // 👈 Light Theme
-         darkTheme: AppTheme.darkTheme,   // 👈 Dark Theme
-        // themeMode: ThemeMode.system,     // 👈 Automatically switch based on device
-          themeMode: themeController.themeMode.value,
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/splash',
-        routes: routes,
-        // Attach updateNavigatorKey to a nested Navigator if needed (optional)
-        builder: (context, child) {
-          return Navigator(
-            key:updateNavigatorKey, // Attach updateNavigatorKey for update dialogs
-            onGenerateRoute: (settings) => MaterialPageRoute(
-              builder: (context) =>
-                  child ?? Container(), // Fallback to empty container
-            ),
-          );
-        },
-      )),
+      child: Obx(() => MaterialApp(
+            navigatorKey: navigatorKey,
+            theme: AppTheme.lightTheme, // 👈 Light Theme
+            darkTheme: AppTheme.darkTheme, // 👈 Dark Theme
+            // themeMode: ThemeMode.system,     // 👈 Automatically switch based on device
+            themeMode: ControllerManagement.themeController.themeMode.value,
+            debugShowCheckedModeBanner: false,
+            initialRoute: '/splash',
+            routes: routes,
+            // Attach updateNavigatorKey to a nested Navigator if needed (optional)
+            builder: (context, child) {
+              return Navigator(
+                key: updateNavigatorKey, // Attach updateNavigatorKey for update dialogs
+                onGenerateRoute: (settings) => MaterialPageRoute(
+                  builder: (context) =>
+                      child ?? Container(), // Fallback to empty container
+                ),
+              );
+            },
+          )),
     );
   }
 }
 
 // Update check function (kept in main as requested)
 Future<void> checkForUpdate() async {
-  if (Platform.isAndroid) { 
+  if (Platform.isAndroid) {
     try {
       final updateInfo = await InAppUpdate.checkForUpdate();
       if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
         await InAppUpdate.performImmediateUpdate(); // Force update
       }
-    } catch (e)
-    {
-    }
+    } catch (e) {}
   } else if (Platform.isIOS) {
     final context = updateNavigatorKey.currentContext ?? Get.context;
     if (context != null) {
       try {
         // Check for updates using app_version_update
         final result = await AppVersionUpdate.checkForUpdates(
-          appleId: 'com.stakeplot.pfa', // Replace with your iOS App Store bundle ID
+          appleId:
+              'com.stakeplot.pfa', // Replace with your iOS App Store bundle ID
         );
         // Check if result and canUpdate are non-null and true
         if (result.canUpdate == true) {
@@ -193,11 +189,8 @@ Future<void> checkForUpdate() async {
             cancelButtonText: 'Later',
             mandatory: false, // Set to true for forced update
           );
-        } else {
-        }
-      } catch (e) {
-      }
-    } else {
-    }
+        } else {}
+      } catch (e) {}
+    } else {}
   }
 }
