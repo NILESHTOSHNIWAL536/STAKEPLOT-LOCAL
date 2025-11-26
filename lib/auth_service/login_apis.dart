@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/force_logout.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/otp_service.dart';
@@ -47,7 +49,8 @@ class LoginService {
       final body = jsonDecode(response.body);
 
       String accessToken = body['data'];
-     await SecureStorageService().setString("accessToken", "Bearer " + accessToken);
+      await SecureStorageService()
+          .setString("accessToken", "Bearer " + accessToken);
       clearStack(context);
       Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
     } catch (e) {
@@ -96,12 +99,13 @@ class LoginService {
     BuildContext context,
   ) async {
     try {
+      appLog(AuthApiRoutes.verify);
       var response =
           await postDataApiCallwithOutSharedPref(AuthApiRoutes.verify, {
         'email': emailController.text.toString(),
-        // 'userpassword': emailController.text.toString(),
       });
 
+      printData(response);
       var decodedResponse = json.decode(response.body);
       if (response.statusCode == 409) {
         ForceLogout.forceLoginShowModal(
@@ -155,7 +159,18 @@ class LoginService {
                 : SnackbarData().invalidCredentials);
       }
     } catch (e) {
-      snackBarCalledfail(context, SnackbarData().loginFailedTryAgain);
+
+      // snackBarCalledfail(context, SnackbarData().loginFailedTryAgain);
+      if (!context.mounted) return;
+      String message = "Something went wrong. Please try again.";
+      if (e is TimeoutException) {
+        message = "Request timed out. Check your network or server.";
+      } else if (e.toString().contains("No route to host")) {
+        message = "Cannot reach server. Check WiFi/mobile network.";
+      } else if (e.toString().contains("SocketException")) {
+        message = "Network error. Please check your connection.";
+      }
+      snackBarCalledfail(context, message);
     }
     acceptReset.value = false;
   }
@@ -175,7 +190,8 @@ class LoginService {
     final body = !flag ? json.decode(response.body) : response;
     String accessToken = body['data']['accessToken'];
     initGetControllers();
-    await  SecureStorageService().setString("accessToken", "Bearer " + accessToken);
+    await SecureStorageService()
+        .setString("accessToken", "Bearer " + accessToken);
     await initializeOneSignal(context);
     userController.userId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];

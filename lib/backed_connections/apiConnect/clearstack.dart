@@ -68,7 +68,6 @@ void clearStackShared(BuildContext context) {
 void expire(response, BuildContext context) {
   try {
     // var body = json.decode(response.body);
-
     if (response.statusCode == 401) {
       logoutUserFromDevice(context);
     }
@@ -235,8 +234,7 @@ void logoutUserFromDevice(context2) async {
     if (!Get.isRegistered<UserController>()) {
       Get.lazyPut(() => UserController());
     }
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     Navigator.pushReplacementNamed(context, '/');
     await _pref.remove("token");
     await _pref.remove("accessToken");

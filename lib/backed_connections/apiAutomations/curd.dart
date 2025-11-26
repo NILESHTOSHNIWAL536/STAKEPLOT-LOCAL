@@ -1,56 +1,97 @@
+import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/secure_storage.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
 
 final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
-
 Future postDataApiCall(String urlPath, Map body) async {
-  var accessToken =await SecureStorageService().read("accessToken");
- 
-  final response = await http.post(
+  var accessToken = await SecureStorageService().read("accessToken");
+
+  final response = await http
+      .post(
     Uri.parse(urlPath),
     headers: {
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
-    
     body: jsonEncode(body),
+  )
+      .timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
+    },
   );
+
   return response;
 }
 
 Future postDataApiCallwithOutSharedPref(String urlPath, Map body) async {
-  final response = await http.post(
+  final response = await http
+      .post(
     Uri.parse(urlPath),
     headers: {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(body),
+  ).timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
+    },
   );
   return response;
 }
 
 Future<http.Response> updateDataApiCall(urlPath) async {
-   var accessToken =await SecureStorageService().read("accessToken");
+  var accessToken = await SecureStorageService().read("accessToken");
 
-  final response = await http.patch(Uri.parse(urlPath),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({}));
+  final response = await http
+      .patch(Uri.parse(urlPath),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            "Authorization": "$accessToken",
+          },
+          body: jsonEncode({}))
+      .timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
+    },
+  );
+
   return response;
 }
 
 Future<http.Response> updateDataApiCall2(
     String urlPath, Map<String, dynamic> body) async {
-  var accessToken =await SecureStorageService().read("accessToken");
+  var accessToken = await SecureStorageService().read("accessToken");
+
+  final response = await http
+      .patch(
+    Uri.parse(urlPath),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+    body: jsonEncode(body),
+  )
+      .timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
+    },
+  );
+  return response;
+}
+
+Future<http.Response> updateDataApiCallWithoutBody(String urlPath) async {
+  var accessToken = await SecureStorageService().read("accessToken");
 
   final response = await http.patch(
     Uri.parse(urlPath),
@@ -58,19 +99,10 @@ Future<http.Response> updateDataApiCall2(
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
-    body: jsonEncode(body),
-  );
-  return response;
-}
-
-Future<http.Response> updateDataApiCallWithoutBody(String urlPath) async {
-  var accessToken =await SecureStorageService().read("accessToken");
-
-  final response = await http.patch(
-    Uri.parse(urlPath),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
+  ).timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
     },
   );
   return response;
@@ -78,81 +110,96 @@ Future<http.Response> updateDataApiCallWithoutBody(String urlPath) async {
 
 Future<http.Response> updateDataApiCall3(String urlPath,
     {required Map<String, dynamic> data}) async {
- var accessToken =await SecureStorageService().read("accessToken");
+  var accessToken = await SecureStorageService().read("accessToken");
 
-  final response = await http.patch(
+  final response = await http
+      .patch(
     Uri.parse(urlPath),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
     body: jsonEncode(data),
+  )
+      .timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
+    },
   );
   return response;
 }
 
 Future<http.Response> getDataApiCall(urlPath) async {
-  var accessToken =await SecureStorageService().read("accessToken");
+  var accessToken = await SecureStorageService().read("accessToken");
   final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
+  ).timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
+    },
   );
   return response;
 }
-// Future<http.Response> getDataApiCall(String urlPath) async {
-//   // Read token securely
-//   String? accessToken = await secureStorage.read(key: "accessToken");
-
-//   final response = await http.get(
-//     Uri.parse(urlPath),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//       'Authorization': '$accessToken',
-//     },
-//   );
-
-//   return response;
-// }
-
 
 Future<http.Response> deleteDataApiCall(urlPath) async {
-  var accessToken =await SecureStorageService().read("accessToken");
+  var accessToken = await SecureStorageService().read("accessToken");
 
   final response = await http.delete(
     Uri.parse(urlPath),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
+    },
+  ).timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
     },
   );
   return response;
 }
 
 Future<http.Response> deleteDataApiCallBody(urlPath, body) async {
-  var accessToken =await SecureStorageService().read("accessToken");
+  var accessToken = await SecureStorageService().read("accessToken");
 
-  final response = await http.delete(
+  final response = await http
+      .delete(
     Uri.parse(urlPath),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
     body: jsonEncode(body),
+  )
+      .timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
+    },
   );
   return response;
 }
 
 bool getFlagOfResponse(response) {
-  if (response.statusCode == 200 || response.statusCode == 201) return true;
+  if (response.statusCode == 401)
+  {
+     Get.toNamed("/");
+  } else if (response.statusCode == 200 || response.statusCode == 201) {
+    return true;
+  }
   return false;
 }
 
-void printData(response, [context = ""]) {
-   appLog("Response Data $context : ${response.body}");
-   appLog("Response Status Code  : ${response.statusCode}");  
+void printData(response, [context = ""])
+{
+  appLog("Response Data $context : ${response.body}");
+  appLog("Response Status Code  : ${response.statusCode}");
 }
 
 Future<http.Response> getTransactionsWithAmount({
@@ -162,8 +209,7 @@ Future<http.Response> getTransactionsWithAmount({
   String startDate = '',
   String endDate = '',
 }) async {
- 
-  var accessToken =await SecureStorageService().read("accessToken");
+  var accessToken = await SecureStorageService().read("accessToken");
 
   // Build the query params
   final queryParams = <String, String>{};
@@ -180,8 +226,6 @@ Future<http.Response> getTransactionsWithAmount({
     queryParams['endDate'] = endDate;
   }
 
-  
-
   // Append query params to the URL
   Uri uri = Uri.parse(urlPath).replace(
     queryParameters: {
@@ -190,15 +234,18 @@ Future<http.Response> getTransactionsWithAmount({
     },
   );
 
- 
   final response = await http.get(
     uri,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
+  ).timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
+    },
   );
 
-  
   return response;
 }

@@ -14,8 +14,6 @@ class HiveHelper {
   static Future<void> openBoxIfNot<T>(String boxName) async {
     try {
       final key = await getOrCreateKey();
-      appLog("key---------");
-      appLog(key);
       if (!Hive.isBoxOpen(boxName)) {
         await Hive.openBox<T>(
           boxName,
