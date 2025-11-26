@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/allcardsScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardWidget.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/shape_clipper.dart';
+import 'package:flutter_application_code_stakeplot/components/autopay_card_clip.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';

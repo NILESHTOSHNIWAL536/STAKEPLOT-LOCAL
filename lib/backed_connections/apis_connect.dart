@@ -16,7 +16,7 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../controllers/controllerManagement.dart';
 import 'googlesignin/credentials.dart';
-part 'snackBars.dart';
+part '../Constants/snackBars.dart';
 
 
 bool apis_flag = true;

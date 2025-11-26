@@ -115,7 +115,7 @@ class _EditDetailsState extends State<EditDetails> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => RevokeAccessScreen()),
+                          builder: (context) => const RevokeAccessScreen()),
                     );
                   },
                 ),

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/animated/userLoginedAlready.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/userLoginedAlready.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';

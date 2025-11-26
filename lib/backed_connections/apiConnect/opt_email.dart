@@ -4,24 +4,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
 
-void checkEmail(context, email, otp, name) async {
- 
 
-  var response=await postDataApiCallwithOutSharedPref('${url}/otp/verify-otp', {
-      'email': email,
-      "otp": otp.toString(),
-    });
-
-  if (getFlagOfResponse(response))
-  {
-    snackBarCalled(context,SnackbarData().otpAccepted);
-    acceptReset.value = false;
-   
-  } else {
-    acceptReset.value = false;
-    snackBarCalledfail(context,SnackbarData().otpInvalid,);
-  }
-}
 
 
 
@@ -43,18 +26,4 @@ void resendOptUser(context, email, name) async
 }
 
 
-void resendOpt(context, email, name) async {
- 
-   var response=await postDataApiCallwithOutSharedPref('${url}/otp/resend-otp',{
-      'email': email,
-      "name": name,
-      'type': 'resetPassword'
-    });
 
-  if (getFlagOfResponse(response)) {
-    acceptReset.value = false;
-    snackBarCalled(context,SnackbarData().otpResentSuccess, );
-  } else {
-    snackBarCalledfail(context,SnackbarData().otpSendFail2, );
-  }
-}

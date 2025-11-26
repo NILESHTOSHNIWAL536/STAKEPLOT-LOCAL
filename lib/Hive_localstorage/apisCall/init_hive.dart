@@ -10,7 +10,7 @@ import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora_prev_months/finora_last_two_months_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/insights_data/insights_model.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/transactions_data/transaction.dart';

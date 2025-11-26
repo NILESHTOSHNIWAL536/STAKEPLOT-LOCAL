@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import '../../backed_connections/apis_connect.dart';
-import '../helper.dart';
+import '../../components/helper.dart';
 
 class AmountRangeField extends StatelessWidget {
   const AmountRangeField({

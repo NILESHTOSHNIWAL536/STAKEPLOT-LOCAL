@@ -172,32 +172,6 @@ void uploadRefreshCall(var postData, BuildContext context) {
  postController.getPosted.value = !postController.getPosted.value;
 }
 
-void votePoll(context, String id, int index) async {
- 
-
-  final response = await postDataApiCall('${url}/poll/votePoll/${id}', 
- 
-      {'optionIndex': index}
-  );
-
-  if (getFlagOfResponse(response)) {
-    final body = json.decode(response.body);
-    var snackBar = SnackBar(
-      duration: Durations.long1,
-      content: Text(
-        'Your vote has been added!',
-        style: FontManager().getTextStyle(
-          context,
-          color: AppColors.backgroundColor,
-          fontSize: 15,
-        ),
-      ),
-      backgroundColor: AppColors.backgroundColor,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  } else {}
-}
 
 void votePollInPost(context, String id, int index) async {
  
@@ -300,36 +274,6 @@ void addMessage(
     });
 }
 
-void addChatSplitAmount(
-    context, String splitName, String amount, String id, List addedUser) async {
-  var urlPath = Uri.parse('${url}/chat/');
- 
-  try {
-    var jsonData = {
-      "messageType": "split",
-      "receiver": id,
-      "sender": userController.userId.value,
-      "message": null,
-      "image": null,
-      "poll": null,
-      "post": null,
-      "split": {
-        "BillName": splitName,
-        "Amount": amount,
-        "Share": ((double.parse(amount) / (addedUser.length + 1)).toString()),
-        "isPaid": false,
-        "splitId": splitID.value,
-      },
-      "roomId": "",
-    };
-    final response = await postDataApiCall('${urlPath}',
-     jsonData
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-    } else {}
-  } catch (e) {}
-}
 
 Future<String> addImageToCloud2(imageFile) async
 {
