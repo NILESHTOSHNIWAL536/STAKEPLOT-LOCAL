@@ -10,7 +10,6 @@ class AppIconChanger {
       });
       return ok == true;
     } catch (e) {
-      print("Error changing icon: $e");
       return false;
     }
   }

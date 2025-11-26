@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +27,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../animated/pdf3.dart';
 import 'history/amount_range.dart';
+
+void appLog(message) {
+  if (!kReleaseMode) {
+      print(message); // Only prints in debug
+  }
+}
+
 
 List<PredictionEntry> getUniquePredictedCategories(
     List<PredictionEntry> predictions) {

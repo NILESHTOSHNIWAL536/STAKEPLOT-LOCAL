@@ -77,7 +77,6 @@ class AuthService {
           'fullName': fullName,
         }
       );
-      printData(response);
       if (response.statusCode == 400) {
         return null;
       }

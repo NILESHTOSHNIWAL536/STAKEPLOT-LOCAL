@@ -11,7 +11,6 @@ import '../backed_connections/apiConnect/signInAndOut.dart';
 class ForceLogout {
   static void forceLoginShowModal(
       context, response, emailController) {
-     print(response);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

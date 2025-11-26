@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/credentials.dart';
@@ -36,21 +37,21 @@ void main() async {
         await normalLogin(email, otp);
       }
 
-      print('--- Flow Completed --- ✅');
+      appLog('--- Flow Completed --- ✅');
     });
   });
 }
 
 
 Future<Map<String, dynamic>> verifyUser(String email) async {
-  print('--- Step 1: Verify User ---');
-  print(AuthApiRoutes.verify);
+  appLog('--- Step 1: Verify User ---');
+  appLog(AuthApiRoutes.verify);
   final response = await postDataApiCallwithOutSharedPref(AuthApiRoutes.verify, {
     'email': email,
   });
 
-  print('Verify Response Status: ${response.statusCode}');
-  print('Verify Response Body: ${response.body}');
+  appLog('Verify Response Status: ${response.statusCode}');
+  appLog('Verify Response Body: ${response.body}');
 
   bool isNewUser = false;
   bool isForceLogin = false;
@@ -59,19 +60,19 @@ Future<Map<String, dynamic>> verifyUser(String email) async {
   try {
     loginResponse = jsonDecode(response.body);
   } catch (e) {
-    print('Error decoding verify response: $e');
+    appLog('Error decoding verify response: $e');
   }
 
   if (response.statusCode == 409) {
-    print('User has existing session, will force logout if needed.');
+    appLog('User has existing session, will force logout if needed.');
     isForceLogin = true;
   } else if (response.statusCode == 400) {
-    print('New user detected. Will proceed to OTP and then registration.');
+    appLog('New user detected. Will proceed to OTP and then registration.');
     isNewUser = true;
   } else if (getFlagOfResponse(response)) {
-    print('Existing user, proceed to OTP verification.');
+    appLog('Existing user, proceed to OTP verification.');
   } else {
-    print('Invalid response.');
+    appLog('Invalid response.');
   }
 
   return {
@@ -82,7 +83,7 @@ Future<Map<String, dynamic>> verifyUser(String email) async {
 }
 
 Future<void> sendOtp(String email, String name) async {
-  print('--- Step 2: Send OTP ---');
+  appLog('--- Step 2: Send OTP ---');
 
   var response = await postDataApiCallwithOutSharedPref(
     otpRoutes.sendOtp,
@@ -94,18 +95,18 @@ Future<void> sendOtp(String email, String name) async {
     },
   );
 
-  print('OTP sent to $email');
-  print('OTP Response Status: ${response.statusCode}');
-  print('OTP Response Body: ${response.body}');
+  appLog('OTP sent to $email');
+  appLog('OTP Response Status: ${response.statusCode}');
+  appLog('OTP Response Body: ${response.body}');
 }
 
 Future<void> registerNewUser(String email, String name, String otp) async {
-  print('--- Step 3: Verify OTP for New User ---');
+  appLog('--- Step 3: Verify OTP for New User ---');
   var response3 = await postDataApiCallwithOutSharedPref(
       otpRoutes.verifyOtp, {'email': email, 'otp': otp});
 
   if (getFlagOfResponse(response3)) {
-    print('--- Step 4: Register New User ---');
+    appLog('--- Step 4: Register New User ---');
     final response = await postDataApiCallwithOutSharedPref(AuthApiRoutes.signUp, {
       'name': name,
       'email': email,
@@ -114,19 +115,19 @@ Future<void> registerNewUser(String email, String name, String otp) async {
     });
 
     if (getFlagOfResponse(response)) {
-      print('Signup completed for new user: $email');
+      appLog('Signup completed for new user: $email');
     } else {
       printData(response);
     }
   } else {
-    print('OTP Verification failed for new user.');
+    appLog('OTP Verification failed for new user.');
     printData(response3);
   }
 }
 
 Future<void> forceLogoutUser(
     String email, String otp, Map<String, dynamic> loginResponse) async {
-  print('--- Step 4: Force Logout Existing Session ---');
+  appLog('--- Step 4: Force Logout Existing Session ---');
 
   var response = await postDataApiCallwithOutSharedPref(AuthApiRoutes.forceLogin, {
     "sessionId": loginResponse["error"]?['existingSessionId'],
@@ -136,14 +137,14 @@ Future<void> forceLogoutUser(
   });
 
   if (getFlagOfResponse(response)) {
-    print('Existing session logged out for user: $email');
+    appLog('Existing session logged out for user: $email');
   } else {
     printData(response);
   }
 }
 
 Future<void> normalLogin(String email, String otp) async {
-  print('--- Step 4: Normal Login ---');
+  appLog('--- Step 4: Normal Login ---');
   var response = await postDataApiCallwithOutSharedPref(AuthApiRoutes.login, {
     'email': email,
     'deviceInfo': deviceData,
@@ -151,7 +152,7 @@ Future<void> normalLogin(String email, String otp) async {
   });
 
   if (getFlagOfResponse(response)) {
-    print("Login successfully....");
+    appLog("Login successfully....");
   } else {
     printData(response);
   }

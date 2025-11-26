@@ -9,7 +9,6 @@ Future<void> revokeEmailAccess(BuildContext context)async
   // implement the function to delete email access
    try {
     var res = await deleteDataApiCall(AuthApiRoutes.revokeAccessToken);
-    printData(res);
     if (getFlagOfResponse(res))
     {
       snackBarCalled(context, "Email access deleted successfully");

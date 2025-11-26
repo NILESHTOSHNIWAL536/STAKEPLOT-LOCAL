@@ -26,10 +26,7 @@ Future<void> getBankAccounts() async {
   try{
      var response = await getDataApiCall(BankTransactionRoutes.getBanksLinkedAndAccounts);
     if (getFlagOfResponse(response))
-    {
-     
-      print(response.body);
-    
+    {    
       storeDataLocal(response);
     }
     addBankApiCall();
@@ -182,8 +179,6 @@ Future<void> getFipAccountInfo([bool testing=false,String token=""]) async
     };
  
     var response=  (!testing?await postDataApiCall(urlPath,body): await postDataApiCallToken(urlPath, body, token));
-     
-      // printData(response);
     if(getFlagOfResponse(response))
     {
         var data=jsonDecode(response.body)['data'];
@@ -199,7 +194,6 @@ Future<void> getFipAccountInfo([bool testing=false,String token=""]) async
     }
    }catch(e)
    {
-       print("Error in getFipAccountInfo: $e");
         FipsMetricLocalStorage.loadFipsMetricsFromHive();
    }
 

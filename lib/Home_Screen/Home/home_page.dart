@@ -32,7 +32,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     // initializeData(context, mounted);
     // getTopThreeTransactions(context);
-    print("Home Page Initialized");
     HomeWidgetBindUpdate();
     if (!Get.isRegistered<WeeklyPopupController>(
         tag: 'weeklyPopup_${userController.userId.value}')) {

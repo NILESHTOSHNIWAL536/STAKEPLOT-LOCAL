@@ -705,7 +705,6 @@ void processChartData() {
     totalValue.refresh();
   } catch (e, st) {
     // Consider logging the error for debugging
-    debugPrint("processChartData error: $e\n$st");
   }
 }
 

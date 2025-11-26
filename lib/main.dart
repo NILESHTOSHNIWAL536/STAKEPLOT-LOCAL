@@ -97,7 +97,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
      WidgetBridge.getLastWidgetSelection().then((opt) {
     if (opt != null) {
-      print('Last widget option: $opt');
       // react: maybe show a toast or set UI state
     }
   });

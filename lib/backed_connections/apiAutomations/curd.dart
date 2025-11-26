@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/secure_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -150,8 +151,8 @@ bool getFlagOfResponse(response) {
 }
 
 void printData(response, [context = ""]) {
-   print("Response Data $context : ${response.body}");
-   print("Response Status Code  : ${response.statusCode}");  
+   appLog("Response Data $context : ${response.body}");
+   appLog("Response Status Code  : ${response.statusCode}");  
 }
 
 Future<http.Response> getTransactionsWithAmount({
