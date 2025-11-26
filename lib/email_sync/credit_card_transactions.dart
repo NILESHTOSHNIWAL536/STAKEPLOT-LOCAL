@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 
-import '../Home_Screen/helper.dart';
+import '../components/helper.dart';
 
 class CreditCardTransaction {
   final String bank;

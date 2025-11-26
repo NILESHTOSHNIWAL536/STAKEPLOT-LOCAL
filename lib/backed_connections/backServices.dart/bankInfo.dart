@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
@@ -100,17 +100,7 @@ void getCategoryData(context) async {
   }
 }
 
-void getSummary() async {
-  var res = await getDataApiCall(BankTransactionRoutes.getUserDetails);
-  
-  if (getFlagOfResponse(res)) {
-    var data = jsonDecode(res.body);
-    data = data['data'];
-    accountName.value = data['Bank'][0]['fipName'];
-    accountNo.value = data['accounts'][0]['accounts']['maskedAccNumber'] ?? 0;
-    balance.value = data['summaries'][0]['data']['currentBalance'].toString();
-  }
-}
+
 
 void getdebts() async {
   Map<String, dynamic> body = {};

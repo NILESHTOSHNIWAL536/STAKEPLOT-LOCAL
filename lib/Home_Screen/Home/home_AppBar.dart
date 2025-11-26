@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
+import 'package:flutter_application_code_stakeplot/components/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 

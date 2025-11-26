@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
 
-import '../helper.dart';
+import '../../components/helper.dart';
 
 class TransactionsSearchList extends StatefulWidget {
   const TransactionsSearchList({Key? key}) : super(key: key);

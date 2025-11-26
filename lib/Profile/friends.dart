@@ -1,13 +1,13 @@
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Constants/colors.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
+import "package:flutter_application_code_stakeplot/components/helper.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_search.dart";
 import "package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart";
 import "package:flutter_application_code_stakeplot/widget_services/widget_bridge.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends_apis.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";

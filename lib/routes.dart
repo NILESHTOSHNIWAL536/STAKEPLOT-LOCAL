@@ -8,14 +8,14 @@ import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
+
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Emi.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Rent_Buy.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Savings.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
+
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/all_calculators.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/loan_calculator.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 
@@ -27,7 +27,7 @@ import 'package:flutter_application_code_stakeplot/loginservices/login_screen.da
 import 'Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'email_sync/add_credit_card_bank.dart';
-import 'finance_screen/Calculators/loan_calculator.dart';
+
 import 'finances_screen/creditCard_slider.dart';
 import 'finances_screen/index_finances.dart';
 import 'onboarding_screens/onboarding_screen.dart';
@@ -51,9 +51,9 @@ var routes =
       '/CreditCard':(context) => CreditCard() ,
       '/emi':(context) => Emi() ,
       '/rent_buy':(context) => RentBuy() ,
-      '/Savings':(context) => Savings() ,
-      '/autoLoan':(context) => AutoLoan() ,
-      '/TripCost':(context) => TripCost() ,
+      
+    
+     
       '/VegNonveg':(context) => VegNonVegCalculator(),
       '/FetchTransaction':(context) => FetchTransaction() ,
       '/OnboardingScreen':(context) => OnboardingScreen() ,

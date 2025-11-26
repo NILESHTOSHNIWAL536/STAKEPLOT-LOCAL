@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
+import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -46,19 +46,7 @@ Future<void> fetchDebts() async {
 }
 
 
-getBills() async {
-  
-  final response = await getDataApiCall('${url}/bill/');
- 
 
-  if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    billLength.value = obj.length;
-    //  billAmount.clear();
-    //  billAmount.addAll(obj);
-  } else {}
-}
 
 bool isZeroAmount(String amount) {
   try {
@@ -98,38 +86,6 @@ void addDebts(context, name, amount, interest, startDate, durations) async {
   acceptReset.value = false;
 }
 
-void addBillTranscations(
-    List<TextEditingController> controller, context) async {
-  
-  int end = controller.length;
-
-  for (int i = 0; i < end; i += 3) {
-    billLength.value += 1;
-    String name = controller[i].text;
-    String amount = controller[i + 1].text;
-    String expenseCategory = controller[i + 2].text;
-
-    final response = await postDataApiCall('${url}/bill/',
-     {
-        'name': name.toString(),
-        'amount': amount,
-        'dueDate': expenseCategory.toString(),
-      }
-    );
-
-    if (getFlagOfResponse(response)) {
-      final body = json.decode(response.body);
-
-      acceptReset.value = false;
-      snackBarCalled(context, SnackbarData().billAdded,);
-      getBills();
-      Navigator.pop(context);
-    } else {
-      snackBarCalledfail(context, SnackbarData().billAddFailed,);
-    }
-    acceptReset.value = false;
-  }
-}
 
 void deleteDebts(context, String id, [flag = false]) async {
   
@@ -152,16 +108,6 @@ void deleteDebts(context, String id, [flag = false]) async {
   }
 }
 
-void deleteAmount(context, String id, String am) async {
- 
-  final response = await updateDataApiCall2('${url}/debt/${id}',{}
-  );
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-  } else {
-    snackBarCalled(context, SnackbarData().debtClearError, Colors.red);
-  }
-}
 
 void deleteBudget(context, String id) async {
   
@@ -175,43 +121,8 @@ void deleteBudget(context, String id) async {
   }
 }
 
-void clearDebts(context, String id, String amount, String value) async {
-  
 
-  var body = {
-    'amount': amount,
-    'label': "",
-    'account': value,
-    'category': "",
-    'isDebt': true,
-    'remainderId': id,
-    'merchantId': 'assxx',
-  };
 
-  final response = await postDataApiCall(TransactionRoutes.addTransaction, body);
-  
-  
-  if (getFlagOfResponse(response)) {
-    snackBarCalled(context, SnackbarData().allDebtsCleared, AppColors.accentColor);
-  } else {
-    snackBarCalledfail(context, SnackbarData().debterror, Colors.red);
-  }
-}
-
-void getNewBudget() async {
-  
-  final response = await getDataApiCall('${url}/budget/');
-  
-
-  if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-
-    budgetList.clear();
-    budgetLength.value = obj.length;
-    budgetList.addAll(obj);
-  } else {}
-}
 
 void getUserLend(context) async {
   String urlPath = "${url}/bill/lend";

@@ -3,7 +3,7 @@ import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:get/get.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/colors.dart';
-import '../animated/booleanFlag.dart';
+import '../Constants/booleanFlag.dart';
 import '../auth_service/login_apis.dart';
 import '../avatarProfile.dart';
 import '../backed_connections/googlesignin/google.dart';
