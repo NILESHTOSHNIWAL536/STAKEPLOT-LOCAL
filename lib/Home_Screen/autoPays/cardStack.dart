@@ -58,6 +58,7 @@ class _CardStackScreenState extends State<CardStackScreen>
 
     showDialog(
       context: parentContext,
+      useRootNavigator: false,
       builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: AppColors.primaryColor,

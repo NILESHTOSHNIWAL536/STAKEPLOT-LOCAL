@@ -167,6 +167,7 @@ class CardWidget extends StatelessWidget {
                       onTap: () async {
                         final confirm = await showDialog<bool>(
                           context: parentContext,
+                          useRootNavigator: false,
                           builder: (context) => AlertDialog(
                             title: Text(
                               "Remove Payment",

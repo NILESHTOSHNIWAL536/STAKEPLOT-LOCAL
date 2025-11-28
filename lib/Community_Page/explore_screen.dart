@@ -82,6 +82,7 @@ class _ExploreModalState extends State<ExploreModal> {
      bool showCropSelection = _isSquare == null;
     final croppedFile = await showDialog<Map<String, dynamic>?>(
       context: context,
+      useRootNavigator: false,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => LayoutBuilder(
           builder: (context, constraints) {

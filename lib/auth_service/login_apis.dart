@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/force_logout.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/otp_service.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
+import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/two_factor_email_verification.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -181,9 +183,12 @@ class LoginService {
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
     acceptReset.value = false;
     getPhoneNo(body);
-    await callApi(context);
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    userController.fetchUserInfo();
+    await getBankAccounts();
+    
+   
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+     await callApi(context);
   }
 
   static void getPhoneNo(body) {

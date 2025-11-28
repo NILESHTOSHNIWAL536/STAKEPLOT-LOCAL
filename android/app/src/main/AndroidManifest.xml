@@ -24,15 +24,20 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+    <action android:name="android.intent.action.MAIN" />
+    <category android:name="android.intent.category.LAUNCHER" />
+</intent-filter>
+
 
             <meta-data android:name="io.flutter.embedding.android.EnableImpeller" android:value="false"/>
             <meta-data android:name="com.onesignal.Notification.Icon" android:resource="@drawable/app_icon"/>
         </activity>
 
        
-        <activity-alias
+        <!-- <activity-alias
             android:name="com.stakeplot.pfa.IconDefault"
-            android:enabled="true"
+            android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/launcher_icon"
             android:label="Stakeplot"
@@ -41,7 +46,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity-alias>
+        </activity-alias> -->
 
         <!-- Other icons (disabled by default) -->
         <activity-alias

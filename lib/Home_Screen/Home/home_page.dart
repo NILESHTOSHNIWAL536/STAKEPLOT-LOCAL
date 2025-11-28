@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_AppBar.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/indexScreen.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/Home/init_Api_Calls.dart';
+
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/noaccountSelected.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
@@ -15,10 +15,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 RxBool sectionReached = false.obs;
 RxString weekOfThis = "This week".obs;
 late AppLifecycleHandler lifecycleHandler;
+RxBool isBankLoading = true.obs;
+ // initially TRUE
 
 class HomePage extends StatefulWidget {
   @override

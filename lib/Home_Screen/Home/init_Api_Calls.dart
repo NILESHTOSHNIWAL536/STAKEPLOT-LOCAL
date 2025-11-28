@@ -26,8 +26,7 @@ Future<void> callApi(context) async {
   await Get.find<UserController>().fetchUserInfo();
   final InsightsController _controller = Get.put(InsightsController());
   getBankAccounts();
-  getPost(context);
-  getTranding(context);
+ 
   getAck();
   contextGlobal = context;
  
@@ -50,6 +49,8 @@ Future<void> callApi(context) async {
   custom = getthelist();
   allOrGroupTransactionsName.value = StringConstant.allTransactions;
   clearAllFlags();
+  getPost(context);
+  getTranding(context);
   
   await getRemainders(context);
   await updateWidget();

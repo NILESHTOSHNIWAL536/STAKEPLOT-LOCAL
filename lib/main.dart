@@ -83,10 +83,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // late ThemeController themeController;
+ late ThemeController themeController;
   @override
   void initState() {
     super.initState();
+    initGetControllersIfisRegistered();
     
     WidgetBridge.getLastWidgetSelection().then((opt) {
       if (opt != null) {
@@ -118,15 +119,15 @@ class _MyAppState extends State<MyApp> {
     } catch (e) {
       // ignore
     }
-    initGetControllersIfisRegistered();
+    themeController = ControllerManagement.themeController;
     loadThemes();
-    // themeController = ControllerManagement.themeController;
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
   }
 
   void loadThemes() async {
-    ControllerManagement.themeController.loadTheme();
+    await Get.put(ThemeController());
+    themeController.loadTheme();
   }
 
   @override
@@ -138,7 +139,7 @@ class _MyAppState extends State<MyApp> {
             theme: AppTheme.lightTheme, // 👈 Light Theme
             darkTheme: AppTheme.darkTheme, // 👈 Dark Theme
             // themeMode: ThemeMode.system,     // 👈 Automatically switch based on device
-            themeMode: ControllerManagement.themeController.themeMode.value,
+            themeMode: themeController.themeMode.value,
             debugShowCheckedModeBanner: false,
             initialRoute: '/splash',
             routes: routes,

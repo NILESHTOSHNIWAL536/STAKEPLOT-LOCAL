@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd_with_token.dart';
@@ -23,8 +24,10 @@ RxList consentAndHandleDetails = [].obs;
 RxMap bankImagemap = {}.obs;
 
 Future<void> getBankAccounts() async {
+ 
   try{
      var response = await getDataApiCall(BankTransactionRoutes.getBanksLinkedAndAccounts);
+     
     if (getFlagOfResponse(response))
     {    
       storeDataLocal(response);
@@ -36,6 +39,7 @@ Future<void> getBankAccounts() async {
     await BankStorage.loadBankDataFromHive();
     addBankApiCall();
   }
+  isBankLoading.value = false;
 }
 
 void storeDataLocal(response){

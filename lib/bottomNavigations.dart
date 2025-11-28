@@ -228,98 +228,44 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     );
   }
 
-  void pushName(Widget widgetName, [bool flag = false]) {
-    final route = PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => widgetName,
-    );
+  // void pushName(Widget widgetName, [bool flag = false]) {
+  //   final route = PageRouteBuilder(
+  //     pageBuilder: (context, animation, secondaryAnimation) => widgetName,
+  //   );
 
-    if (flag) {
-      Navigator.push(context, route);
-    } else {
-      Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
-    }
+  //   if (flag) {
+  //     Navigator.push(context, route);
+  //   } else {
+      
+  //     Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+  //   }
+  // }
+void pushName(Widget widgetName, [bool flag = false]) {
+  final route = PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => widgetName,
+  );
+
+  if (flag) {
+    // push but still listen for when it is popped to reset to Home
+    Navigator.push(context, route).then((_) {
+      if (!mounted) return;
+      setState(() {
+        widget.data = 0;
+      });
+      ScreenTimeTracker().switchTab(_tabNames[0]);
+    });
+  } else {
+    Navigator.push(context, route).then((_) {
+      if (!mounted) return;
+      setState(() {
+        widget.data = 0;
+      });
+      ScreenTimeTracker().switchTab(_tabNames[0]);
+    });
+    // If you ever want to force replace instead of push, use pushReplacement
+    // Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
   }
 }
 
 
-Widget logoutWidget(context, [flag = false]) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 6),
-    child: Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          InkWell(
-            onTap: () async {
-              try {
-                clearServarData(context);
-                await ScreenTimeTracker().clearUserData();
-                final SharedPreferences _pref =
-                    await SharedPreferences.getInstance();
-                String? userId =await SecureStorageService().read("accessToken").toString();
-                await _pref.remove("accessToken");
-                await _pref.remove(
-                    'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId');
-                await _pref.remove('login_history_$userId');
-
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/', (Route<dynamic> route) => false);
-                Navigator.pushReplacementNamed(context, '/');
-                clearGetX();
-              } catch (e) {}
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              width: flag
-                  ? MediaQuery.of(context).size.width / 1.1
-                  : MediaQuery.of(context).size.width / 1.2,
-              decoration: BoxDecoration(
-                  color: Colorcodes.budgetDarkGreen,
-                  borderRadius: BorderRadius.circular(100)),
-              child: Center(
-                child: Text(
-                  "LogOut",
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w500,
-                    fontSize: 20,
-                    color: Colorcodes.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-void clearServarData(context) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  await _pref.remove("accessToken");
-  await _pref.remove("token");
-  await _pref.remove("ConsentHandleId");
-  await _pref.remove("consentId");
-  await _pref.remove("from");
-  await _pref.remove("to");
-  await _pref.remove("sessionId");
-}
-
-void navigateToNextPage(context) {
-  // Navigate to your desired page
-  Navigator.push(
-    context,
-    PageTransition(
-      type: PageTransitionType.bottomToTop,
-      alignment: Alignment.bottomCenter,
-      duration: const Duration(milliseconds: 2000), // Increase duration
-      curve: Curves.easeInOut, // Smooth transition
-      child: TransactionHistory(
-        pageTransition: true,
-      ),
-      isIos: true,
-    ),
-  );
 }

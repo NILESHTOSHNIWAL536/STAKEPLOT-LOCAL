@@ -696,6 +696,7 @@ class _AccessState extends State<Access> {
   void showDialogBoxForDecline(BuildContext context) {
     showDialog(
       context: context,
+      useRootNavigator: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(

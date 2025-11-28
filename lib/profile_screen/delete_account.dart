@@ -484,6 +484,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
  void showDeleteConfirmationDialog(context2,selectedReason) {
     showDialog(
       context: context2,
+      useRootNavigator: false,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
