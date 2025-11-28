@@ -5,13 +5,23 @@
     <uses-permission android:name="android.permission.BIOMETRIC" />
     <application android:label="Stakeplot" android:name="${applicationName}" android:exported="true" android:icon="@mipmap/launcher_icon" android:allowBackup="false" 
         android:fullBackupContent="false">
-        <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:taskAffinity="" android:theme="@style/Theme.AppCompat.NoActionBar" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
-            <!-- Specifies an Android theme to apply to this Activity as soon as
-                 the Android process has started. This theme is visible to the user
-                 while the Flutter UI initializes. After that, this theme continues
-                 to determine the Window background behind the Flutter UI. -->
-<!-- <activityandroid:name=".MainActivity" android:theme="@style/Theme.AppCompat.NoActionBar"> -->
-            <!-- <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme"/> -->
+
+        <!-- MAIN ACTIVITY (NO LAUNCHER intent-filter here) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+    <action android:name="android.intent.action.MAIN" />
+    <category android:name="android.intent.category.LAUNCHER" />
+</intent-filter>
+
+
             <meta-data android:name="io.flutter.embedding.android.EnableImpeller" android:value="false"/>
             <meta-data android:name="com.onesignal.Notification.Icon" android:resource="@drawable/app_icon"/>
             <intent-filter>
@@ -20,9 +30,114 @@
             </intent-filter>
             
         </activity>
-        
-        <!-- Don't delete the meta-data below.
-             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+
+       
+        <!-- <activity-alias
+            android:name="com.stakeplot.pfa.IconDefault"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/launcher_icon"
+            android:label="Stakeplot"
+            android:targetActivity="com.stakeplot.pfa.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias> -->
+
+        <!-- Other icons (disabled by default) -->
+        <activity-alias
+            android:name="com.stakeplot.pfa.Icon1"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/icon1"
+            android:label="Stakeplot"
+            android:targetActivity="com.stakeplot.pfa.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name="com.stakeplot.pfa.Icon2"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/icon2"
+            android:label="Stakeplot"
+            android:targetActivity="com.stakeplot.pfa.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name="com.stakeplot.pfa.Icon3"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/icon3"
+            android:label="Stakeplot"
+            android:targetActivity="com.stakeplot.pfa.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Receivers and widget metadata -->
+        <receiver
+            android:name="com.stakeplot.pfa.StakeplotWidgetProvider"
+            android:exported="true"
+            android:enabled="true"
+            android:permission="android.permission.BIND_APPWIDGET">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_info"/>
+        </receiver>
+
+        <receiver
+            android:name="com.stakeplot.pfa.ClickableWidget"
+            android:exported="true"
+            android:enabled="true"
+            android:permission="android.permission.BIND_APPWIDGET">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/click_info" />
+        </receiver>
+
+        <receiver android:name="com.stakeplot.pfa.WidgetClickReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.stakeplot.WIDGET_CLICK" />
+                <action android:name="com.stakeplot.WIDGET_CLICKED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.stakeplot.pfa.PayableWidgetProvider"
+            android:exported="true"
+            android:enabled="true"
+            android:permission="android.permission.BIND_APPWIDGET">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/payable_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name="com.stakeplot.pfa.NextFetchWidgetProvider"
+            android:exported="true"
+            android:enabled="true"
+            android:permission="android.permission.BIND_APPWIDGET">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/next_fetch_widget_info"/>
+        </receiver>
+
+        <!-- Flutter embedding meta-data -->
         <meta-data android:name="flutterEmbedding" android:value="2"/>
         <receiver android:name="com.stakeplot.pfa.StakeplotWidgetProvider" android:exported="true" android:enabled="true"
         android:permission="android.permission.BIND_APPWIDGET">

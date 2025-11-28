@@ -334,6 +334,8 @@ class _EditDetailsState extends State<EditDetails> {
 
     showDialog(
       context: context,
+      barrierDismissible: true,
+      useRootNavigator: false,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: AppColors.backgroundColor,

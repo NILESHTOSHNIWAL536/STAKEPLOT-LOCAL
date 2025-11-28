@@ -102,6 +102,7 @@ class ActionIcons extends StatelessWidget {
     final screenWidth = MediaQuery.sizeOf(context).width;
     await showDialog(
       context: context,
+      useRootNavigator: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(

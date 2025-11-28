@@ -61,6 +61,7 @@ class UserController extends GetxController {
       isLoading.value = true;
    
       var response=await getDataApiCall(UserRoutes.getInfo);
+      print('User Info Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final res = jsonDecode(response.body);

@@ -197,7 +197,7 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
   await showDialog(
     context: context,
     barrierDismissible: false,
-    
+    useRootNavigator: false,
     builder: (BuildContext context) {
       return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

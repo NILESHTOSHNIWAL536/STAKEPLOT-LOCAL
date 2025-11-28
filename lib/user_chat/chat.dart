@@ -943,6 +943,7 @@ class _ChatState extends State<Chat> {
   void showData(imageData,BuildContext context) {
     showDialog(
       context: context,
+      useRootNavigator: false,
       builder: (context2) {
         return Center(
           child: Container(

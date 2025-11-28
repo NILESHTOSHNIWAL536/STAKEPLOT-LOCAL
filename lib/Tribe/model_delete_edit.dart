@@ -167,6 +167,7 @@ void showEditBottomSheet({
 void showDeleteDialogComment(BuildContext context2, String commentText,String type,String id,String postId,int index,int replyindex) {
     showDialog(
       context: context2,
+      useRootNavigator: false,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),

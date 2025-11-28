@@ -738,6 +738,7 @@ void processChartData() {
 void pickCustomDateRange(BuildContext context) async {
   List<DateTime?> picked = await showCalendarDatePicker2Dialog(
         context: context,
+        useRootNavigator: false,
         config: CalendarDatePicker2WithActionButtonsConfig(
           calendarType: CalendarDatePicker2Type.range,
           firstDate: DateTime(2020),

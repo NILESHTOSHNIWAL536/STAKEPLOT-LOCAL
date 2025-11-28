@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 void showEarningScoreDialog(BuildContext context) {
   showDialog(
     context: context,
+    useRootNavigator: false,
     builder: (BuildContext context) {
       return Dialog(
         shape: RoundedRectangleBorder(

@@ -154,6 +154,7 @@ Widget getTagHideButtons(BuildContext context) {
               onTap: () {
                 showDialog(
                   context: context,
+                  useRootNavigator: false,
                   builder: (context) => const BalanceOutDialog(),
                 );
               },

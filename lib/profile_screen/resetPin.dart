@@ -60,6 +60,7 @@ void resetCupertinoPin(BuildContext context) async {
   // Show the Reset PIN dialog
   showDialog(
     context: context,
+    useRootNavigator: false,
     builder: (BuildContext dialogContext) {
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

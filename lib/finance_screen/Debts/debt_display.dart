@@ -78,6 +78,7 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
                 : () async {
                     bool? confirm = await showDialog<bool>(
                       context: context,
+                      useRootNavigator: false,
                       builder: (context) => AlertDialog(
                         title: Text(PlotFinanceStaticData().deleteDebtTitle), // Updated
                         content: Text(PlotFinanceStaticData().deleteDebtPrompt),

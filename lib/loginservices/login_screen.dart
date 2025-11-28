@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
@@ -27,7 +28,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController(text: "nileshtoshniwal743@gmail.com");
+  final TextEditingController emailController = TextEditingController(text: "testuser2@gmail.com");
   final AuthService authService = AuthService();
   
   @override
@@ -190,57 +191,53 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+Widget _buildSignInButton() {
+  return Obx(() {
+    return GestureDetector(
+      onTap: () async {
+        // IMPORTANT: Remove keyboard focus so first tap works
+        FocusScope.of(context).unfocus();
 
+        if (acceptReset.value) return;
 
-  Widget _buildSignInButton() {
-    return SizedBox(
+        if (emailController.text.isEmpty) {
+          snackBarCalledfail(context, SnackbarData().enterAllFields);
+          return;
+        }
+
+        acceptReset.value = true;
+
+        await getDeviceInfo(
+          "deviceData.value".toString(),
+          context,
+          emailController,
+        );
+      },
+
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.06,
         width: double.infinity,
-        height: 50,
-        child: ElevatedButton(
-          onPressed: () async {
-            // Handle sign in
-            if (acceptReset.value) return;
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
 
-            if (emailController.text.isEmpty) {
-              snackBarCalledfail(
+        child: acceptReset.value
+            ? Spinner(size: 30)
+            : Text(
+                "Sign In",
+                style: FontManager().getTextStyle(
                   context,
-                  SnackbarData()
-                      .enterAllFields); // You might want to update this to use signinData validation messages
-              return;
-            }
-
-            acceptReset.value = true;
-
-            await getDeviceInfo(
-              "deviceData.value".toString(),
-              context,
-              emailController
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.backgroundColor,
-            foregroundColor: AppColors.accentColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 0,
-          ),
-          child: Obx(
-            () => acceptReset.value
-                ? Spinner(
-                    size: 30,
-                  )
-                : Text(
-                    'Sign In',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: AppColors.finSpaceColor),
-                  ),
-          ),
-        ));
-  }
-
+                  lWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: AppColors.finSpaceColor,
+                ),
+              ),
+      ),
+    );
+  });
+}
   Widget _buildDivider() {
     return Row(
       children: [

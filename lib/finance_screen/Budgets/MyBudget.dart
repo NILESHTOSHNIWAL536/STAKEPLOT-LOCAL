@@ -797,6 +797,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
               // Show confirmation dialog before deletion
               bool? confirm = await showDialog(
                 context: context,
+                useRootNavigator: false,
                 builder: (context) => AlertDialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
