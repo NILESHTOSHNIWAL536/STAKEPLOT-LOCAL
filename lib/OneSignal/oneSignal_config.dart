@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../auth_service/login_apis.dart';
 
 Future<void> initializeOneSignal(BuildContext context) async {
@@ -21,16 +20,13 @@ Future<void> initializeOneSignal(BuildContext context) async {
   if (pref.containsKey(key)) {
     json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
   }
-
-  if (!pref.containsKey(key) ||
+  else if(!pref.containsKey(key) ||
       json["deviceId"] == "deviceData.value" ||
       json["deviceId"] == "") {
     await oneSignalInit();
     await Future.delayed(Duration(seconds: 3)); // Small delay
-    String userDeviceId =
-        await OneSignal.User.pushSubscription.id ?? "deviceData.value";
+    String userDeviceId = await OneSignal.User.pushSubscription.id ?? "deviceData.value";
     getDeviceLocalDetails(userDeviceId, context);
-    //  deviceData['deviceId'] = userDeviceId;
     var deviceDataLocal = {
       ...deviceData,
       'deviceId': userDeviceId,
@@ -38,7 +34,8 @@ Future<void> initializeOneSignal(BuildContext context) async {
     deviceData.clear();
     deviceData.addAll(deviceDataLocal);
     pref.setString(key, jsonEncode(deviceData));
-  } else {
+  } 
+  else {
     deviceData['deviceId'] = json["deviceId"];
   }
   addThisDeviceToBackendDevice(pref, context);
@@ -89,7 +86,7 @@ Future<void> oneSignalInit() async {
   } catch (e) {}
 }
 
-Future<void> getDeviceInfo(
+Future<void>  getDeviceInfo(
     String playerId,
     context,
     TextEditingController emailController,
@@ -98,16 +95,12 @@ Future<void> getDeviceInfo(
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String key = "deviceInfo";
 
-  if (!pref.containsKey(key)) {
+  if (!pref.containsKey(key))
+  {
     getDeviceLocalDetails(playerId, context);
   }
-
   deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
-  // if (emailController.text == Credentials.TestUser) {
-  //   LoginService.loginUser(emailController, passwordController, context);
-  // } else {
-    LoginService.userVerification(emailController, context);
-  // }
+  LoginService.userVerification(emailController, context);
 }
 
 void getDeviceLocalDetails(String playerId, context) async {
@@ -127,13 +120,13 @@ void getDeviceLocalDetails(String playerId, context) async {
       deviceData.value = {
         'deviceId': playerId,
         'device': iosInfo.name,
-        'brand': iosInfo.model == null ? 'Apple' : iosInfo.model,
-        'model': iosInfo.model == null ? 'iPhone' : iosInfo.model,
+        'brand': iosInfo.model ?? 'Apple',
+        'model': iosInfo.model ?? 'iPhone',
         'os': 'iOS',
       };
     } else {
       deviceData.value = {
-        'deviceId': (playerId == "" || playerId == null) ? "" : playerId,
+        'deviceId': (playerId == "") ? "" : playerId,
         'device': 'Unknown',
         'os': 'Unknown',
         'brand': '',
@@ -142,54 +135,7 @@ void getDeviceLocalDetails(String playerId, context) async {
     }
   } catch (e) {
     deviceData.value = {
-      'deviceId': (playerId == "" || playerId == null) ? "" : playerId,
-      'device': 'Unknown',
-      'os': 'Unknown',
-      'brand': 'Unknown',
-      'osVersion': 'Unknown',
-    };
-  }
-  final SharedPreferences pref = await SharedPreferences.getInstance();
-  pref.setString('deviceInfo', jsonEncode(deviceData));
-}
-
-void getDeviceLocalDetails2(String playerId, context) async {
-  try {
-    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (Platform.isAndroid) {
-      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-
-      deviceData.value = {
-        'deviceId': playerId,
-        'brand': androidInfo.brand,
-        'device': androidInfo.device,
-        'model': androidInfo.model,
-        'os': 'Android',
-      };
-    } else if (Platform.isIOS) {
-      // For iOS devices
-      final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceData.value = {
-        'deviceId': playerId,
-        'device': iosInfo.name,
-        'brand': iosInfo.model,
-        'modal': iosInfo.model,
-        'os': 'iOS',
-        'osVersion': iosInfo.systemVersion
-      };
-    } else {
-      deviceData.value = {
-        'deviceId': (playerId == "" || playerId == null) ? "" : playerId,
-        'device': 'Unknown',
-        'os': 'Unknown',
-        'brand': '',
-        'modal': '',
-        'osVersion': 'Unknown',
-      };
-    }
-  } catch (e) {
-    deviceData.value = {
-      'deviceId': (playerId == "" || playerId == null) ? "" : playerId,
+      'deviceId': (playerId == "") ? "" : playerId,
       'device': 'Unknown',
       'os': 'Unknown',
       'brand': 'Unknown',
@@ -214,7 +160,8 @@ void oneSignalAddClickListener(context) {
       }
       if (s.contains("problem") ||
           s.contains("try again later") ||
-          s.contains("successfully fetched")) {
+          s.contains("successfully fetched"))
+      {
         isFected.value = false;
         getBankAccounts();
       }

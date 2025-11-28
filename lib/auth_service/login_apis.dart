@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/force_logout.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/otp_service.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/two_factor_email_verification.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/snackBar.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../backed_connections/apiAutomations/secure_storage.dart';
@@ -99,7 +97,6 @@ class LoginService {
     BuildContext context,
   ) async {
     try {
-      appLog(AuthApiRoutes.verify);
       var response =
           await postDataApiCallwithOutSharedPref(AuthApiRoutes.verify, {
         'email': emailController.text.toString(),
