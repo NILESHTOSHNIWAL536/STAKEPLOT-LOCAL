@@ -147,7 +147,11 @@ async function webHook(req, res) {
     if (finalData !== 'Account data not found.') {
       await Finvu.findOneAndUpdate({ sessionId: finvuData.sessionId }, { $set: { data: finalData } }, { new: true });
 
-      await transactionController.createUserDetails(finalData, finvuData.handleId, finvuData.userId);
+      if (finvuData.isUpdate) {
+        await transactionController.updateBankDetails(finalData, finvuData.handleId, finvuData.userId);
+      } else {
+        await transactionController.createBankDetails(finalData, finvuData.handleId, finvuData.userId);
+      }
 
       await deleteConsentHandleById(finvuData.handleId);
       await FailedTransaction.deleteMany({ consendHandleId: finvuData.handleId });

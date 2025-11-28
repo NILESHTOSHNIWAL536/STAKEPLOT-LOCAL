@@ -13,7 +13,8 @@ const encryptedFieldSchema = {
 const accountSchema = new mongoose.Schema({
     linkedAccRef: {
         ...encryptedFieldSchema,
-        required: true
+        required: true,
+        unique: true
     },
     type: {
         ...encryptedFieldSchema,

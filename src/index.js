@@ -9,8 +9,6 @@ const initCategoryWatcher  = require('./config/categoryWatcher');
 
 dotenv.config({ path: `./config/.env.${process.env.NODE_ENV}` });
 
-console.log("Working directory:", process.cwd());
-
 const startServer = async () => {
   try {
     const server = app.listen(ServerConfig.PORT, '0.0.0.0', async () => {

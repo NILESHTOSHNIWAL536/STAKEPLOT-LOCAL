@@ -21,7 +21,7 @@ const {
   deleteTransactionsSchema,
 } = require('../../validators/transaction-validators');
 
-router.post('/', AuthMiddlewares.protect, TransactionAutoController.createUserDetails);
+// router.post('/', AuthMiddlewares.protect, TransactionAutoController.createUserDetails);
 router.post(
   '/grouped/:groupId/categorize',
   AuthMiddlewares.protect,

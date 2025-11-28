@@ -1,30 +1,251 @@
 const { StatusCodes } = require('http-status-codes');
 const AppError = require('../utils/errors/app-error');
 const { FipRepository, AccountRepository, ProfileRespository, SummaryRepository, AutoTransactionRepository } = require('../respositories');
-// const { ErrorResponse } = require("../utils/common");
 const redisClient = require('../config/redis-config');
 const logger = require('../utils/common/logger');
 const { updateExistingAccounts, createNewBankAccount } = require('../utils/helpers/update-existing-accounts');
+const { PendingTransaction } = require('../models');
 const headsUpMessages = require('../utils/common/headsup-messages');
 const moneyMapMessages = require('../utils/common/money-map');
 const saveGroupedTransactions = require('../utils/helpers/saveGroupedTransactions');
 const { BankLogo, HeadsUp, MoneyMap, GroupedTransaction, Transaction } = require('../models/index');
+const detectRecurringPayments = require('../utils/helpers/detect-recurring-payments');
+const { generateDataKey } = require('../services/Encryption/generateDataKey');
+const { getNextFetch, getNextMonthFetch } = require('../utils/helpers/get-next-fetch');
+const getISTTimestamp = require('../utils/helpers/get-IST-timeStamp');
 const mongoose = require('mongoose');
 
-async function createUserDetails(data, consentHandleId, userId) {
+async function createBankDetails(data, consentHandleId, userId) {
   try {
-    // createNewBankAccount
-    const response = await createNewBankAccount(data, consentHandleId, userId);
+    // Generate plaintextKey and ciphertextBlob
+    const { plaintextKey, ciphertextBlob } = await generateDataKey();
+
+    // This function will fetch the next upcoming monday and sets it to the nextFetch
+    const nextFetch = getNextFetch();
+    const lastFetch = getISTTimestamp();
+    logger.debug(`lastFetch from the createNewBank: ${lastFetch}`);
+    logger.debug(`nextFetch from the createNewBank ${nextFetch}`);
+
+    // Creating new BANK (FIP) record
+    const bankData = {
+      fipId: data.fipId,
+      fipName: data.fipName,
+      custId: data.custId,
+      consentId: data.consentId,
+      fiAccountInfo: data.fiAccountInfo,
+      consentHandleId,
+      userId,
+    };
+    const bank = await new FipRepository().createFipRecord(bankData, plaintextKey, ciphertextBlob);
+
+    // Create new ACCOUNT(s) record(s), profile(s), summary(s) and transactions
+    const fiObjects = data.fiObjects;
+
+    for (const fiObject of fiObjects) {
+      if (typeof fiObject === 'string') continue; // skip string values
+
+      // Create account record
+      const accountData = {
+        type: fiObject.type,
+        maskedAccNumber: fiObject.maskedAccNumber,
+        version: fiObject.version,
+        linkedAccRef: fiObject.linkedAccRef,
+        schemaLocation: fiObject.schemaLocation,
+        startDate: fiObject.Transactions.startDate,
+        endDate: fiObject.Transactions.endDate,
+        bankId: bank._id,
+        nextFetch: new Date(nextFetch),
+        lastFetch: new Date(lastFetch),
+        fetchCount: 1,
+        userId,
+      };
+      const account = await new AccountRepository().createAccount(accountData, plaintextKey, ciphertextBlob);
+
+      if (fiObject.Profile) {
+        // Create profile, summary and transactions
+        await new ProfileRespository().createProfile(
+          {
+            holder: { ...fiObject.Profile.Holders.Holder },
+            accountId: account._id,
+            type: fiObject.Profile.Holders.type,
+            userId,
+          },
+          plaintextKey,
+          ciphertextBlob
+        );
+      }
+
+      if (fiObject.Summary) {
+        await new SummaryRepository().createSummary(
+          {
+            data: { ...fiObject.Summary },
+            accountId: account._id,
+            userId,
+          },
+          plaintextKey,
+          ciphertextBlob
+        );
+      }
+
+      // Create pending transactions
+      // Normalize pending data into array
+      const pendingData = Array.isArray(fiObject?.Summary?.PendingTxns) ? fiObject.Summary.PendingTxns : fiObject?.Summary?.PendingTxns ? [fiObject.Summary.PendingTxns] : [];
+
+      // Save each pending transaction
+
+      await Promise.all(
+        pendingData.map((txn) =>
+          PendingTransaction.create({
+            ...txn,
+            accountId: account._id,
+            userId,
+          })
+        )
+      );
+
+      // Store transactions if present
+      if (fiObject.Transactions) {
+        await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, account._id, userId, bank._id);
+
+        // grouping the transactions function
+        await saveGroupedTransactions(userId);
+
+        // call the grouping, money-map messages
+        await headsUpMessages(userId);
+        await moneyMapMessages(userId);
+
+        // call the funtion to get recurring payments and store them in DB
+        await detectRecurringPayments(userId);
+      }
+    }
 
     // When a new bank is added, clear the cache
     const cacheKey = `banksWithAccountDetails:${userId}`;
     const clearedBanksCache = await redisClient.del(cacheKey);
     logger.debug(`cleared bank cached details: ${clearedBanksCache}`);
 
-    return response;
   } catch (error) {
     logger.error(`Error creating user details ${error}`);
     throw new AppError('Error creating user details', StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+}
+
+async function updateBankDetails(data, consentHandleId, userId) {
+  try {
+    // Generate new encryption key for updates
+    const { plaintextKey, ciphertextBlob } = await generateDataKey();
+
+    // Update FIP record
+    const fipData = {
+      fipId: data.fipId,
+      fipName: data.fipName,
+      custId: data.custId,
+      consentId: data.consentId,
+      fiAccountInfo: data.fiAccountInfo,
+      consentHandleId,
+      userId,
+    };
+
+    const existingBank = await new FipRepository().getbankByName(userId, data.fipId, consentHandleId);
+    const bank = await new FipRepository().updateFipRecord(existingBank._id, fipData, plaintextKey, ciphertextBlob);
+
+    const getAccountLinkedsByBank = await new AccountRepository().getAccounts({ bankId: bank._id });
+
+    // Update each ACCOUNT(s) record(s), profile(s), summary(s) and transactions
+    for (const fiObject of data.fiObjects) {
+      if (typeof fiObject === 'string') continue;
+      const matchedAccount = getAccountLinkedsByBank.find((acc) => acc.accounts.linkedAccRef === fiObject.linkedAccRef);
+
+      // If matched account found, update it
+      let nextFetch;
+      const lastFetch = getISTTimestamp();
+      if (matchedAccount && matchedAccount.fetchCount == 4) {
+        nextFetch = getNextMonthFetch();
+      } else {
+        nextFetch = getNextFetch();
+      }
+
+      const accountData = {
+        type: fiObject.type,
+        maskedAccNumber: fiObject.maskedAccNumber,
+        version: fiObject.version,
+        linkedAccRef: fiObject.linkedAccRef,
+        schemaLocation: fiObject.schemaLocation,
+        startDate: fiObject.Transactions.startDate,
+        endDate: fiObject.Transactions.endDate,
+        bankId: bank._id,
+        nextFetch: new Date(nextFetch),
+        lastFetch: new Date(lastFetch),
+        userId,
+      };
+
+      await new AccountRepository().updateAccount(matchedAccount._id, accountData, plaintextKey, ciphertextBlob);
+
+      // Update profile if present
+      if (fiObject.Profile) {
+        await new ProfileRespository().updateProfile(
+          { accountId },
+          {
+            holder: { ...fiObject.Profile.Holders.Holder },
+            type: fiObject.Profile.Holders.type,
+            userId,
+          },
+          plaintextKey,
+          ciphertextBlob
+        );
+      }
+
+      // Update summary if present
+      if (fiObject.Summary) {
+        await new SummaryRepository().updateSummary(
+          { accountId },
+          {
+            data: { ...fiObject.Summary },
+            accountId,
+            userId,
+          },
+          plaintextKey,
+          ciphertextBlob
+        );
+
+        try {
+          // Normalize pending data into array
+          const pendingData = Array.isArray(fiObject?.Summary?.Pending) ? fiObject.Summary.Pending : fiObject?.Summary?.Pending ? [fiObject.Summary.Pending] : [];
+
+          // Save each pending transaction
+          await Promise.all(
+            pendingData.map((txn) =>
+              PendingTransaction.create({
+                ...txn,
+                accountId: account._id,
+                userId,
+              })
+            )
+          );
+        } catch (e) {}
+      }
+
+      // Update transactions - assuming we want to append new transactions
+      if (fiObject.Transactions && fiObject.Transactions.Transaction) {
+        const newTransactions = fiObject.Transactions.Transaction;
+        await new AutoTransactionRepository().createTransaction(newTransactions, accountId, userId, fip._id);
+
+        // grouping the transactions function
+        await saveGroupedTransactions(userId);
+
+        // call the grouping, money-map messages
+        await headsUpMessages(userId);
+        await moneyMapMessages(userId);
+      }
+    }
+
+    // When a bank is updated, clear the cache
+    const cacheKey = `banksWithAccountDetails:${userId}`;
+    const clearedBanksCache = await redisClient.del(cacheKey);
+    logger.debug(`cleared bank cached details: ${clearedBanksCache}`);
+  } catch (error) {
+    logger.error(`Error updating user details ${error}`);
+    throw new AppError('Error updating user details', StatusCodes.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -276,7 +497,7 @@ async function createTransaction(userId, data) {
 
     // clear budget cache:
     await redisClient.del(`all-budgets-${userId}`);
-    await redisClient.del(`banksWithAccountDetails:${userId}`);    
+    await redisClient.del(`banksWithAccountDetails:${userId}`);
 
     return response;
   } catch (error) {
@@ -697,7 +918,8 @@ async function getUserSpending(userId) {
 }
 
 module.exports = {
-  createUserDetails,
+  createBankDetails,
+  updateBankDetails,
   getUserDetails,
   getAllTransactions,
   categorizeTransactions,
@@ -737,5 +959,5 @@ module.exports = {
   getTopFiveCategories,
   getBudgetSpents,
   createTransaction,
-  updateTransactionById
+  updateTransactionById,
 };

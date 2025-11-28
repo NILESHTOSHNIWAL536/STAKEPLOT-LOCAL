@@ -4,6 +4,7 @@ const FinvuSchema = new mongoose.Schema({
     sessionId: { type: String, required: true, unique: true },
     custId: { type: String, required: true },
     consentId: { type: String, required: true },
+    isUpdate: { type: Boolean, required: true },
     handleId: { type: String, required: true },
     data: { type: Object, default: {} },
     userId: { type: mongoose.Types.ObjectId, ref: "User" },

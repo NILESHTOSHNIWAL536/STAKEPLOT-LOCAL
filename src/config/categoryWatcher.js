@@ -25,7 +25,6 @@ const initCategoryWatcher = () => {
     console.log('✅ Job added to queue');
   });
 
-  console.log('👀 Watching categories.js for changes...');
 };
 
 module.exports = initCategoryWatcher;

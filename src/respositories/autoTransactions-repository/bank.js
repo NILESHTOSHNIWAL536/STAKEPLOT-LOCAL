@@ -1,13 +1,10 @@
-const { Bank } = require("../../models/index");
-const CrudRepository = require("../crud-repository");
-const {
-  encrypt,
-  decrypt,
-} = require("../../services/Encryption/encryption-service");
-const decryptDataKey = require("../../services/Encryption/decryptDataKey");
-const AppError = require("../../utils/errors/app-error");
-const logger = require("../../utils/common/logger");
-const { StatusCodes } = require("http-status-codes");
+const { Bank } = require('../../models/index');
+const CrudRepository = require('../crud-repository');
+const { encrypt, decrypt } = require('../../services/Encryption/encryption-service');
+const decryptDataKey = require('../../services/Encryption/decryptDataKey');
+const AppError = require('../../utils/errors/app-error');
+const logger = require('../../utils/common/logger');
+const { StatusCodes } = require('http-status-codes');
 class FipRepository extends CrudRepository {
   constructor() {
     super(Bank);
@@ -36,8 +33,7 @@ class FipRepository extends CrudRepository {
     const encryptedValues = await Promise.all(Object.values(encryptionTasks));
 
     // Map back to keys for the final data object
-    const [fipId, fipName, custId, consentId, sessionId, consentHandleId] =
-      encryptedValues;
+    const [fipId, fipName, custId, consentId, sessionId, consentHandleId] = encryptedValues;
 
     const data = {
       fipId,
@@ -68,8 +64,7 @@ class FipRepository extends CrudRepository {
       // Helper function to decrypt a single response object
       const decryptResponse = async (response) => {
         const plaintextKey = await decryptDataKey(response.encryptedDEK);
-        const decryptField = (field) =>
-          decrypt(field.encryptedData, field.iv, field.authTag, plaintextKey);
+        const decryptField = (field) => decrypt(field.encryptedData, field.iv, field.authTag, plaintextKey);
 
         // const fiAccountInfo = response.fiAccountInfo.map(acc => ({
         //     accountRefNo: decryptField(acc.accountRefNo),
@@ -80,7 +75,6 @@ class FipRepository extends CrudRepository {
           fipId: decryptField(response.fipId),
           fipName: decryptField(response.fipName),
           consentId: decryptField(response.consentId),
-          sessionId: decryptField(response.sessionId),
           consentHandleId: decryptField(response.consentHandleId),
           custId: decryptField(response.custId),
           userId: response.userId,
@@ -89,22 +83,35 @@ class FipRepository extends CrudRepository {
       };
 
       if (Array.isArray(response)) {
-        const decryptedResponses = await Promise.all(
-          response.map(decryptResponse)
-        );
+        const decryptedResponses = await Promise.all(response.map(decryptResponse));
         return decryptedResponses;
       } else {
         return await decryptResponse(response);
       }
     } catch (error) {
-      logger.error(
-        `Error fetching bank records for userId ${userId}: ${error}`
-      );
-      throw new AppError(
-        "Failed to fetch bank details",
-        StatusCodes.INTERNAL_SERVER_ERROR
-      );
+      logger.error(`Error fetching bank records for userId ${userId}: ${error}`);
+      throw new AppError('Failed to fetch bank details', StatusCodes.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  async getbankByName(userId, fipName, consentHandleId) {
+    const response = await this.get({ userId });
+    if (!response) {
+      throw new Error('Bank record not found for this user.');
+    }
+
+    await Promise.all(
+      response.map(async (record) => {
+        const plaintextKey = await decryptDataKey(record.encryptedDEK);
+
+        const decryptedFipName = decrypt(record.fipName.encryptedData, record.fipName.iv, record.fipName.authTag, plaintextKey);
+        const decryptedConsentHandleId = decrypt(record.consentHandleId.encryptedData, record.consentHandleId.iv, record.consentHandleId.authTag, plaintextKey);
+
+        if (decryptedFipName === fipName && decryptedConsentHandleId === consentHandleId) {
+          return record;
+        }
+      })
+    );
   }
 
   async getBankById(bankId, userId) {
@@ -119,8 +126,7 @@ class FipRepository extends CrudRepository {
       // Decrypt the bank data (reuse logic from getBank)
       const plaintextKey = await decryptDataKey(response.encryptedDEK);
 
-      const decryptField = (field) =>
-        decrypt(field.encryptedData, field.iv, field.authTag, plaintextKey);
+      const decryptField = (field) => decrypt(field.encryptedData, field.iv, field.authTag, plaintextKey);
 
       // Decrypt fiAccountInfo if needed
       const fiAccountInfo = response.fiAccountInfo.map((acc) => ({
@@ -141,10 +147,7 @@ class FipRepository extends CrudRepository {
       };
     } catch (error) {
       logger.error(`Error fetching bank by ID: ${bankId}, Error: ${error}`);
-      throw new AppError(
-        "Failed to fetch bank details",
-        StatusCodes.INTERNAL_SERVER_ERROR
-      );
+      throw new AppError('Failed to fetch bank details', StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -161,12 +164,7 @@ class FipRepository extends CrudRepository {
         const plaintextKey = await decryptDataKey(data.encryptedDEK);
 
         // Decrypt fipId field
-        const fipId = decrypt(
-          data.fipId.encryptedData,
-          data.fipId.iv,
-          data.fipId.authTag,
-          plaintextKey
-        );
+        const fipId = decrypt(data.fipId.encryptedData, data.fipId.iv, data.fipId.authTag, plaintextKey);
 
         // Store in the map with fipId as key and _id as value
         bankMap.set(fipId, data._id);
@@ -181,15 +179,14 @@ class FipRepository extends CrudRepository {
     const response = await this.get({ userId: userId });
 
     if (!response) {
-      throw new Error("Bank record not found for this user.");
+      throw new Error('Bank record not found for this user.');
     }
 
     // Helper function to decrypt response data
     const decryptResponse = async (response) => {
       const plaintextKey = await decryptDataKey(response.encryptedDEK);
 
-      const decryptField = (field) =>
-        decrypt(field.encryptedData, field.iv, field.authTag, plaintextKey);
+      const decryptField = (field) => decrypt(field.encryptedData, field.iv, field.authTag, plaintextKey);
 
       return {
         fipId: decryptField(response.fipId),
@@ -231,9 +228,7 @@ class FipRepository extends CrudRepository {
       }
     }
 
-    throw new Error(
-      "No matching bank record found for the given userId and consentHandleId."
-    );
+    throw new Error('No matching bank record found for the given userId and consentHandleId.');
   }
 
   async updateFipRecord(bankId, fipData, plaintextKey, ciphertextBlob) {
@@ -260,14 +255,7 @@ class FipRepository extends CrudRepository {
       const encryptedValues = await Promise.all(Object.values(encryptionTasks));
 
       // Map back to keys for the final data object
-      const [
-        encryptedFipId,
-        fipName,
-        custId,
-        consentId,
-        sessionId,
-        consentHandleId,
-      ] = encryptedValues;
+      const [encryptedFipId, fipName, custId, consentId, sessionId, consentHandleId] = encryptedValues;
 
       const updateData = {
         fipId: encryptedFipId,
@@ -282,10 +270,7 @@ class FipRepository extends CrudRepository {
       };
 
       // Update the existing record
-      const response = await Bank.findOneAndUpdate(
-        { _id: bankId },
-        { $set: updateData }
-      );
+      const response = await Bank.findOneAndUpdate({ _id: bankId }, { $set: updateData });
 
       return response;
     } catch (error) {
@@ -299,18 +284,18 @@ class FipRepository extends CrudRepository {
       // Handle single bank delete
       const bankRecord = await Bank.findOne({ _id: bankId, userId: userId });
       if (!bankRecord) {
-        throw new AppError("Bank record not found", StatusCodes.NOT_FOUND);
+        throw new AppError('Bank record not found', StatusCodes.NOT_FOUND);
       }
       if (bankRecord.fiAccountInfo.length === 1) {
         const response = await this.deleteOne({ _id: bankId });
         return response;
       }
-      return { message: "Bank record has multiple accounts, cannot delete." };
+      return { message: 'Bank record has multiple accounts, cannot delete.' };
     } else {
       // Handle all banks delete
       const response = await this.deleteMany({ userId: userId });
       if (!response) {
-        throw new AppError("Bank record not found", StatusCodes.NOT_FOUND);
+        throw new AppError('Bank record not found', StatusCodes.NOT_FOUND);
       }
       return response;
     }

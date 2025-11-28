@@ -37,10 +37,6 @@ const bankSchema = new mongoose.Schema({
         ...encryptedFieldSchema,
         required: true,
     },
-    sessionId: {
-        ...encryptedFieldSchema,
-        required: true,
-    },
     consentHandleId: {
         ...encryptedFieldSchema,
         required: true,

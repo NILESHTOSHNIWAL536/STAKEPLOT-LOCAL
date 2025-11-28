@@ -199,7 +199,7 @@ async function fetchTransactions(req, res) {
       consentId,
       handleId,
     };
-    req.body = { ...req.body, ...body };
+    req.body = { ...req.body, ...body, isUpdate: false };
 
     try {
       // Add Finvu Data to the DB
@@ -450,7 +450,7 @@ async function fetchFinalData(token, custId, consentId, sessionId) {
 
 async function addFinvuData(req, res, userId) {
   try {
-    const { sessionId, custId, consentId, handleId } = req.body;
+    const { sessionId, custId, consentId, handleId, isUpdate } = req.body;
     const userIdFormatted = new mongoose.Types.ObjectId(userId);
 
     const newFinvu = new Finvu({
@@ -458,6 +458,7 @@ async function addFinvuData(req, res, userId) {
       custId,
       consentId,
       handleId,
+      isUpdate,
       userId: userIdFormatted,
     });
     const response = await newFinvu.save().catch((err) => {
@@ -491,7 +492,7 @@ async function fetchTransactionsWeekly(req, res) {
     logger.debug(`sessionId: ${sessionId}`);
 
     const body = { sessionId, custId, consentId, handleId };
-    req.body = { ...req.body, ...body };
+    req.body = { ...req.body, ...body, isUpdate: true };
 
     try {
       const response = await addFinvuData(req, res, userId);

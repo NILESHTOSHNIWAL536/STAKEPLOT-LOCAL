@@ -13,76 +13,34 @@ const logger = require('../../utils/common/logger');
 const moment = require('moment');
 const mongoose = require('mongoose');
 
-exports.createUserDetails = async (details, consenthandleid, userId) => {
+exports.createBankDetails = async (details, consentHandleId, userId) => {
   try {
-    const existingBanks = await new FipRepository().getBankDetailsMap(userId);
-    const existingBankAccounts = await new AccountRepository().getMap(userId);
-    const responses = [];
-
-    const noExistingAccounts = !existingBankAccounts || existingBankAccounts.size === 0;
-
-    // If user has no accounts → create everything directly
-    if (noExistingAccounts) {
-      for (const bank of details) {
-        const result = await BankService.createUserDetails(bank, consenthandleid, userId);
-        responses.push(result);
-      }
-      return responses;
+    for (const bankData of details) {
+      logger.debug('🔥 createBankDetails CALLED', {
+        consentHandleId,
+        userId,
+        time: new Date().toISOString(),
+      });
+      await BankService.createBankDetails(bankData, consentHandleId, userId);
     }
-
-    // Process each FIP / bank
-    for (const bank of details) {
-      const bankExists = existingBanks.has(bank.fipId);
-
-      // Iterate through each account in the bank
-      for (const acct of bank.fiAccountInfo) {
-        const { linkRefNo, accountRefNo } = acct;
-
-        // Check if account already exists (via linkRefNo or accountRefNo)
-        const matchedKey = (linkRefNo && existingBankAccounts.has(linkRefNo) && linkRefNo) || (accountRefNo && existingBankAccounts.has(accountRefNo) && accountRefNo) || null;
-
-        if (matchedKey) {
-          // Account exists → perform UPDATE
-          const accountId = existingBankAccounts.get(matchedKey);
-
-          // Find matching fiObject for this specific account
-          const fiObject = bank.fiObjects.find((fi) => fi.linkedAccRef === linkRefNo || fi.linkedAccRef === accountRefNo);
-
-          if (!fiObject) {
-            console.warn(`No matching fiObject found for accountRef/linkRef ${matchedKey}`);
-            continue;
-          }
-
-          const payload = {
-            ...bank,
-            fiObjects: [fiObject],
-          };
-
-          const result = await BankService.updateUserDetails(payload, consenthandleid, userId, accountId);
-
-          responses.push(result);
-        } else {
-          // Account does not exist → CREATE new one
-          const fiObject = bank.fiObjects.find((fi) => fi.linkedAccRef === linkRefNo || fi.linkedAccRef === accountRefNo);
-
-          const payload = {
-            ...bank,
-            fiObjects: fiObject ? [fiObject] : [],
-            fiAccountInfo: [acct], // only create the specific account
-          };
-
-          const result = await BankService.createUserDetails(payload, consenthandleid, userId);
-
-          responses.push(result);
-        }
-      }
-    }
-
-    return responses;
+    return response;
   } catch (error) {
     ErrorResponse.error = error;
     logger.debug(`Error from createUserDetails: ${error}`);
     return error;
+  }
+};
+
+exports.updateBankDetails = async (details, consentHandleId, userId) => {
+  try {
+    // data has objects of banks, so send one after another to the update function
+    for (const bankData of details) {
+      await BankService.updateBankDetails(bankData, consentHandleId, userId);
+    }
+  } catch (error) {
+    ErrorResponse.error = error;
+    const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    return res.status(statusCode).json(ErrorResponse);
   }
 };
 
@@ -202,7 +160,6 @@ exports.categorizeTransactions = async (req, res) => {
     const userId = req.user._id;
     const response = await BankService.categorizeTransactions(userId);
 
-    console.log('response from the API: ', response);
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
