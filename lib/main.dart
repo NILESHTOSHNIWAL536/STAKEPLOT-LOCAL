@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
+import 'package:flutter_application_code_stakeplot/services/app_icon_changer.dart';
 import 'package:flutter_application_code_stakeplot/widget_services/widget_bridge.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:flutter_application_code_stakeplot/widget_services/widget_service.dart';
@@ -31,6 +32,7 @@ final GlobalKey<NavigatorState> updateNavigatorKey =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await AppIconChanger.setupDefaultIcon();
   securityCheck();
   checkFirebaseAndValidUser();
   loadEnvs();
@@ -195,3 +197,4 @@ Future<void> checkForUpdate() async {
     } else {}
   }
 }
+

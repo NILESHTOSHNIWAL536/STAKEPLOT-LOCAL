@@ -101,7 +101,7 @@ class _IconPickerContentState extends State<_IconPickerContent> {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // _iconItem("Default", "assets/app_icons/mainicon.png", "IconDefault"),
+                    _iconItem("Default", "assets/app_icons/mainicon.png", "IconDefault"),
                     _iconItem("Icon 1", "assets/app_icons/icon1.png", "Icon1"),
                     _iconItem("Icon 2", "assets/app_icons/icon2.png", "Icon2"),
                     _iconItem("Icon 3", "assets/app_icons/icon3.png", "Icon3"),

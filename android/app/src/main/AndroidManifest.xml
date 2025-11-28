@@ -35,7 +35,7 @@
         </activity>
 
        
-        <!-- <activity-alias
+        <activity-alias
             android:name="com.stakeplot.pfa.IconDefault"
             android:enabled="false"
             android:exported="true"
@@ -46,7 +46,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity-alias> -->
+        </activity-alias>
 
         <!-- Other icons (disabled by default) -->
         <activity-alias
