@@ -24,7 +24,9 @@ class MainActivity : FlutterFragmentActivity() {
     private val WIDGET_SELECTED_KEY = "selected_options"
 
     // Full alias names as declared in AndroidManifest.xml
+    // added this one line of mainactivity icon
     private val ICON_COMPONENTS = listOf(
+        "com.stakeplot.pfa.MainActivity",
         "com.stakeplot.pfa.IconDefault",
         "com.stakeplot.pfa.Icon1",
         "com.stakeplot.pfa.Icon2",

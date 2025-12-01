@@ -160,7 +160,8 @@ class _TribeSearchState extends State<TribeSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: SafeArea(child: BottomNavigations(data: widget.isMasked ? 2 : 1)),
+      bottomNavigationBar: SafeArea(child: BottomNavigations(
+        data: widget.isMasked ? 2 : 1)),
       extendBody: true,
       body: SafeArea(
         child: Container(

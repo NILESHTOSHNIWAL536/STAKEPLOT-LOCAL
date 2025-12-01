@@ -10,4 +10,5 @@ class ControllerManagement {
   static PostController get postController => Get.find<PostController>();
   static ThemeController get themeController => Get.find<ThemeController>();
   // final GlobalKey<CommunityState> communityKey = GlobalKey<CommunityState>();
+  
 }
