@@ -92,11 +92,7 @@ async function loginAndGetHandleId(req, res) {
     const consentHandleId = consentResponse.data.body.ConsentHandle;
     logger.debug(`consentHandleId: ${consentHandleId} `);
 
-    await storeOrUpdateConsentHandle({
-      custId,
-      handleId: consentHandleId,
-      userId: Id,
-    });
+    await storeOrUpdateConsentHandle({ custId, handleId: consentHandleId, userId: Id });
 
     //step-4: update the mobile for the User in the DB
     const updateMobile = await User.findOneAndUpdate({ _id: Id }, { $addToSet: { phone: req.body.number } }, { new: true });

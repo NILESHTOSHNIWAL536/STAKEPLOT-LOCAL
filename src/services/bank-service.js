@@ -8,11 +8,12 @@ const { PendingTransaction } = require('../models');
 const headsUpMessages = require('../utils/common/headsup-messages');
 const moneyMapMessages = require('../utils/common/money-map');
 const saveGroupedTransactions = require('../utils/helpers/saveGroupedTransactions');
-const { BankLogo, HeadsUp, MoneyMap, GroupedTransaction, Transaction } = require('../models/index');
+const { HeadsUp, MoneyMap, GroupedTransaction, Transaction } = require('../models/index');
 const detectRecurringPayments = require('../utils/helpers/detect-recurring-payments');
 const { generateDataKey } = require('../services/Encryption/generateDataKey');
 const { getNextFetch, getNextMonthFetch } = require('../utils/helpers/get-next-fetch');
 const getISTTimestamp = require('../utils/helpers/get-IST-timeStamp');
+const bankLogos = require('../config/bankLogos');
 const mongoose = require('mongoose');
 
 async function createBankDetails(data, consentHandleId, userId) {
@@ -36,6 +37,7 @@ async function createBankDetails(data, consentHandleId, userId) {
       consentHandleId,
       userId,
     };
+
     const bank = await new FipRepository().createFipRecord(bankData, plaintextKey, ciphertextBlob);
 
     // Create new ACCOUNT(s) record(s), profile(s), summary(s) and transactions
@@ -59,6 +61,7 @@ async function createBankDetails(data, consentHandleId, userId) {
         fetchCount: 1,
         userId,
       };
+
       const account = await new AccountRepository().createAccount(accountData, plaintextKey, ciphertextBlob);
 
       if (fiObject.Profile) {
@@ -92,7 +95,6 @@ async function createBankDetails(data, consentHandleId, userId) {
       const pendingData = Array.isArray(fiObject?.Summary?.PendingTxns) ? fiObject.Summary.PendingTxns : fiObject?.Summary?.PendingTxns ? [fiObject.Summary.PendingTxns] : [];
 
       // Save each pending transaction
-
       await Promise.all(
         pendingData.map((txn) =>
           PendingTransaction.create({
@@ -123,7 +125,6 @@ async function createBankDetails(data, consentHandleId, userId) {
     const cacheKey = `banksWithAccountDetails:${userId}`;
     const clearedBanksCache = await redisClient.del(cacheKey);
     logger.debug(`cleared bank cached details: ${clearedBanksCache}`);
-
   } catch (error) {
     logger.error(`Error creating user details ${error}`);
     throw new AppError('Error creating user details', StatusCodes.INTERNAL_SERVER_ERROR);
@@ -312,7 +313,7 @@ async function getBanksLinkedAndAccounts(userId) {
         const profilesMap = new Map(profiles.map((p) => [p.accountId.toString(), p]));
 
         // Find the respective bank logo
-        const bankLogo = await BankLogo.findOne({ name: bank.fipId });
+        const bankLogo = bankLogos[bank.fipId] || 'https://cdn.finvu.in/finvulogos/bank_large_light.png';
 
         async function fetchAddress(ifscCode) {
           try {
@@ -351,7 +352,7 @@ async function getBanksLinkedAndAccounts(userId) {
           bankId: bank._id,
           userId: bank.userId,
           bankName: bank.fipName,
-          bankLogo: bankLogo ? bankLogo.logoUrl : null,
+          bankLogo: bankLogo,
           fipId: bank.fipId,
           consentId: bank.consentId,
           sessionId: bank.sessionId,

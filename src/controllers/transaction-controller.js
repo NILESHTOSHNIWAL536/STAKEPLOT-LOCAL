@@ -4,7 +4,6 @@ const { SuccessResponse, ErrorResponse } = require("../utils/common");
 // const AppError = require("../utils/errors/app-error");
 const headsUpMessages = require("../utils/common/money-map");
 const moneyMapMessages = require("../utils/common/money-map");
-const { BankLogo } = require("../models");
 const moment = require('moment-timezone');
 // const { TransactionRepository } = require("../repositories");
 // const logger = require("../utils/common/logger");
@@ -14,35 +13,6 @@ const moment = require('moment-timezone');
 //   return keys.findIndex((obj) => obj.name === name);
 // }
 
-async function storeBankUrl(req, res) {
-  try{
-    const bankLogos = req.body;
-
-    if (!bankLogos || typeof bankLogos !== 'object') {
-      return res.status(400).json({ message: "Invalid input format. Expected key-value pairs." });
-    }
-
-    const results = [];
-
-    for (const [name, logoUrl] of Object.entries(bankLogos)) {
-      // Skip if name is empty or logoUrl is falsy (null, '', undefined)
-      if (!name || !logoUrl || logoUrl.toLowerCase() === 'null' || logoUrl.toLowerCase() === 'none') continue;
-
-      const updatedLogo = await BankLogo.findOneAndUpdate(
-        { name },
-        { name, logoUrl },
-        { new: true, upsert: true, setDefaultsOnInsert: true }
-      );
-      
-      results.push(updatedLogo);
-    }
-
-     return res.status(StatusCodes.OK).json({});
-  }catch(error){
-    ErrorResponse.error = error;
-    return res.status(error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR).json(ErrorResponse);
-  }
-}
 
 async function enterTransaction(req, res) {
   try {
@@ -193,7 +163,6 @@ module.exports = {
   getBudgetHistory,
   groupTransactions,
   deleteSpecificTransaction,
-  storeBankUrl,
   updateGroupTransaction,
   updateMoneymapHeadsUp
 };

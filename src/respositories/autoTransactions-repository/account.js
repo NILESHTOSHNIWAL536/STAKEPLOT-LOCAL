@@ -12,6 +12,7 @@ class AccountRespository extends CrudRepository {
 
   async createAccount(data, plaintextKey, ciphertextBlob) {
     try {
+      // 1. Encrypt incoming fields
       const fieldsToEncrypt = [data.type, data.maskedAccNumber, data.version, data.linkedAccRef, data.schemaLocation];
 
       const encryptedFields = await Promise.all(fieldsToEncrypt.map((field) => encrypt(field, plaintextKey)));
@@ -32,6 +33,29 @@ class AccountRespository extends CrudRepository {
         encryptedDEK: ciphertextBlob,
       };
 
+      // 2. Get ALL accounts for this bank + user
+      const existingAccounts = await this.model.find({
+        bankId: data.bankId,
+        userId: data.userId,
+      });
+
+      if (existingAccounts) {
+        // 3. Try to find matching linkedAccRef by decryption
+        for (const doc of existingAccounts) {
+          const existingPlaintextKey = await decryptDataKey(doc.encryptedDEK);
+
+          const existingLinkedAccRef = await decrypt(doc.linkedAccRef.encryptedData, doc.linkedAccRef.iv, doc.linkedAccRef.authTag, existingPlaintextKey);
+
+          // 4. If match → UPDATE
+          if (existingLinkedAccRef === data.linkedAccRef) {
+            const updated = await this.model.findByIdAndUpdate(doc._id, { $set: accountData }, { new: true });
+
+            return updated;
+          }
+        }
+      }
+
+      // 5. If NO match → CREATE new account
       const response = await this.create(accountData);
       return response;
     } catch (error) {

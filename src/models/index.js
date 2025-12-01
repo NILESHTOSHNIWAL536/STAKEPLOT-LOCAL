@@ -20,7 +20,6 @@ module.exports = {
 
   // Session for login/logout
   Session: require("./session-model"),
-  BankLogo: require("./transactions-automation/bank-logo"),
 
   // Models related to heads up and reminders
   HeadsUp: require("./messages/headsUp-model"),

@@ -1,17 +1,13 @@
-require("dotenv").config();
-const { Summary } = require("../../models/index");
-const CrudRepository = require("../crud-repository");
-const {
-  encryptObject,
-  decryptObject,
-} = require("../../services/Encryption/encryption-service");
-const decryptDataKey = require("../../services/Encryption/decryptDataKey");
+require('dotenv').config();
+const { Summary } = require('../../models/index');
+const CrudRepository = require('../crud-repository');
+const { encryptObject, decryptObject } = require('../../services/Encryption/encryption-service');
+const decryptDataKey = require('../../services/Encryption/decryptDataKey');
 // const { type } = require('os');
-const AppError = require("../../utils/errors/app-error");
+const AppError = require('../../utils/errors/app-error');
 // const account = require('../../models/transactions-automation/account');
-const logger = require("../../utils/common/logger");
-const { StatusCodes } = require("http-status-codes");
-
+const logger = require('../../utils/common/logger');
+const { StatusCodes } = require('http-status-codes');
 
 class SummaryRepository extends CrudRepository {
   constructor() {
@@ -20,16 +16,31 @@ class SummaryRepository extends CrudRepository {
 
   async createSummary(data, plaintextKey, ciphertextBlob) {
     try {
+      // 1. Check for existing summary
+      const existingSummary = await this.model.find({
+        accountId: data.accountId,
+        userId: data.userId,
+      });
+
+      // 2. Encrypt incoming data
       const summaryData = {
         data: await encryptObject(data.data, plaintextKey),
         accountId: data.accountId,
         userId: data.userId,
         encryptedDEK: ciphertextBlob,
       };
+
+      // 3. If exists → UPDATE
+      if ( Array.isArray(existingSummary) && existingSummary.length > 0) {
+        const response = await this.model.findByIdAndUpdate(existingSummary._id, { $set: summaryData }, { new: true });
+        return response;
+      }
+
+      // 4. If not → CREATE
       const response = await this.create(summaryData);
       return response;
     } catch (error) {
-      console.error("Error creating summary:", error.message);
+      console.error('Error creating summary:', error.message);
       throw error;
     }
   }
@@ -40,7 +51,7 @@ class SummaryRepository extends CrudRepository {
 
     // Ensure at least one document is returned
     if (!responses.length) {
-      throw new Error("No Summaries found for the given accountIds");
+      throw new Error('No Summaries found for the given accountIds');
     }
 
     const summaries = await Promise.all(
@@ -67,7 +78,7 @@ class SummaryRepository extends CrudRepository {
       });
 
       if (!existingSummary) {
-        throw new AppError("Summary not found", StatusCodes.NOT_FOUND);
+        throw new AppError('Summary not found', StatusCodes.NOT_FOUND);
       }
 
       // Prepare the updated summary data with encryption
@@ -79,10 +90,7 @@ class SummaryRepository extends CrudRepository {
       };
 
       // Update the existing record
-      const response = await Summary.findOneAndUpdate(
-        { _id: existingSummary._id },
-        { $set: summaryData }
-      );
+      const response = await Summary.findOneAndUpdate({ _id: existingSummary._id }, { $set: summaryData });
 
       return response;
     } catch (error) {

@@ -5,7 +5,6 @@ const router = express.Router();
 router.use(express.json());
 
 router.post("/add", AuthMiddlewares.protect, TransactionController.enterTransaction);
-router.post("/storeBankUrl", AuthMiddlewares.protect, TransactionController.storeBankUrl);
 
 router.get("/groupedTransactions", AuthMiddlewares.protect, TransactionController.groupTransactions);
 router.get("/all", AuthMiddlewares.protect, TransactionController.getAllTransactions);

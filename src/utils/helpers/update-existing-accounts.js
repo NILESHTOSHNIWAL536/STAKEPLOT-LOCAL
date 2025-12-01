@@ -1,33 +1,17 @@
-const {
-  generateDataKey,
-} = require("../../services/Encryption/generateDataKey");
-const {
-  AccountRepository,
-  ProfileRespository,
-  SummaryRepository,
-  FipRepository,
-  AutoTransactionRepository,
-} = require("../../respositories");
-const {
-  getNextFetch,
-  getNextMonthFetch,
-} = require("../helpers/get-next-fetch");
-const getISTTimestamp = require("../helpers/get-IST-timeStamp");
-const logger = require("../common/logger");
-const saveGroupedTransactions = require("./saveGroupedTransactions");
-const AppError = require("../errors/app-error");
-const headsUpMessages = require("../common/headsup-messages");
-const moneyMapMessages = require("../common/money-map");
-const { StatusCodes } = require("http-status-codes");
-const { PendingTransaction,Account } = require("../../models/");
-const detectRecurringPayments = require("../helpers/detect-recurring-payments");
+const { generateDataKey } = require('../../services/Encryption/generateDataKey');
+const { AccountRepository, ProfileRespository, SummaryRepository, FipRepository, AutoTransactionRepository } = require('../../respositories');
+const { getNextFetch, getNextMonthFetch } = require('../helpers/get-next-fetch');
+const getISTTimestamp = require('../helpers/get-IST-timeStamp');
+const logger = require('../common/logger');
+const saveGroupedTransactions = require('./saveGroupedTransactions');
+const AppError = require('../errors/app-error');
+const headsUpMessages = require('../common/headsup-messages');
+const moneyMapMessages = require('../common/money-map');
+const { StatusCodes } = require('http-status-codes');
+const { PendingTransaction, Account } = require('../../models/');
+const detectRecurringPayments = require('../helpers/detect-recurring-payments');
 
-async function updateExistingAccounts(
-  data,
-  consentHandleId,
-  userId,
-  accountId
-) {
+async function updateExistingAccounts(data, consentHandleId, userId, accountId) {
   try {
     // Generate new encryption key for updates
     const { plaintextKey, ciphertextBlob } = await generateDataKey();
@@ -44,34 +28,24 @@ async function updateExistingAccounts(
       userId,
     };
 
-    const existingFip = await new FipRepository().getFipById(
-      userId,
-      consentHandleId
-    );
+    const existingFip = await new FipRepository().getFipById(userId, consentHandleId);
     let fip;
     if (existingFip) {
-      fip = await new FipRepository().updateFipRecord(
-        existingFip._id,
-        fipData,
-        plaintextKey,
-        ciphertextBlob
-      );
+      fip = await new FipRepository().updateFipRecord(existingFip._id, fipData, plaintextKey, ciphertextBlob);
     }
 
     // Process fiObjects (assuming we're updating based on the first fiObject as per previous context)
     const fiObject = data.fiObjects[0]; // Taking first object as per previous logic
 
     if (!fiObject) {
-      return { status: "no_update_needed" };
+      return { status: 'no_update_needed' };
     }
 
     // Update nextFetch, lastFetch;
     let nextFetch;
     const lastFetch = getISTTimestamp();
 
-    const existingAccount = await new AccountRepository().getAccountById(
-      accountId
-    );
+    const existingAccount = await new AccountRepository().getAccountById(accountId);
     if (existingAccount && existingAccount.fetchCount == 4) {
       nextFetch = getNextMonthFetch();
     } else {
@@ -79,7 +53,7 @@ async function updateExistingAccounts(
     }
 
     // call the recurring payments function and store them in DB
-    await detectRecurringPayments(userId, {fromDate: existingAccount.lastFetch});
+    await detectRecurringPayments(userId, { fromDate: existingAccount.lastFetch });
 
     const accountData = {
       type: fiObject.type,
@@ -95,16 +69,11 @@ async function updateExistingAccounts(
       userId,
     };
 
-    const account = await new AccountRepository().updateAccount(
-      accountId,
-      accountData,
-      plaintextKey,
-      ciphertextBlob
-    );
+    const account = await new AccountRepository().updateAccount(accountId, accountData, plaintextKey, ciphertextBlob);
 
     if (!account) {
       logger.error(`Account not found for update: ${accountId}`);
-      throw new AppError("Account not found", StatusCodes.NOT_FOUND);
+      throw new AppError('Account not found', StatusCodes.NOT_FOUND);
     }
 
     // Update profile if present
@@ -136,11 +105,7 @@ async function updateExistingAccounts(
 
       try {
         // Normalize pending data into array
-        const pendingData = Array.isArray(fiObject?.Summary?.Pending)
-          ? fiObject.Summary.Pending
-          : fiObject?.Summary?.Pending
-          ? [fiObject.Summary.Pending]
-          : [];
+        const pendingData = Array.isArray(fiObject?.Summary?.Pending) ? fiObject.Summary.Pending : fiObject?.Summary?.Pending ? [fiObject.Summary.Pending] : [];
 
         // Save each pending transaction
         await Promise.all(
@@ -152,19 +117,13 @@ async function updateExistingAccounts(
             })
           )
         );
-      } catch (e) {
-      }
+      } catch (e) {}
     }
 
     // Update transactions - assuming we want to append new transactions
     if (fiObject.Transactions && fiObject.Transactions.Transaction) {
       const newTransactions = fiObject.Transactions.Transaction;
-      await new AutoTransactionRepository().createTransaction(
-        newTransactions,
-        accountId,
-        userId,
-        fip._id
-      );
+      await new AutoTransactionRepository().createTransaction(newTransactions, accountId, userId, fip._id);
 
       // grouping the transactions function
       await saveGroupedTransactions(userId);
@@ -175,16 +134,13 @@ async function updateExistingAccounts(
     }
 
     return {
-      status: "updated",
+      status: 'updated',
       accountId: account._id,
       bankId: fip._id,
     };
   } catch (error) {
     logger.error(`error from the update existing accoutns call: ${error}`);
-    throw new AppError(
-      error.message || "Error updating user details",
-      error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR
-    );
+    throw new AppError(error.message || 'Error updating user details', error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -204,16 +160,10 @@ async function createNewBankAccount(data, consentHandleId, userId) {
     userId,
   };
 
-  const fip = await new FipRepository().createFipRecord(
-    fipData,
-    plaintextKey,
-    ciphertextBlob
-  );
+  const fip = await new FipRepository().createFipRecord(fipData, plaintextKey, ciphertextBlob);
 
   // Create a lookup map for fiObjects to speed up matching
-  const fiObjectMap = new Map(
-    data.fiObjects.map((obj) => [obj.linkedAccRef, obj])
-  );
+  const fiObjectMap = new Map(data.fiObjects.map((obj) => [obj.linkedAccRef, obj]));
 
   // Process accounts in parallel
   const processedAccounts = await Promise.all(
@@ -249,11 +199,7 @@ async function createNewBankAccount(data, consentHandleId, userId) {
           fetchCount: 1,
           userId,
         };
-        const account = await new AccountRepository().createAccount(
-          accountData,
-          plaintextKey,
-          ciphertextBlob
-        );
+        const account = await new AccountRepository().createAccount(accountData, plaintextKey, ciphertextBlob);
         logger.debug(`account data not found, created new account: ${account}`);
 
         // Encrypt and store profile if present
@@ -284,11 +230,7 @@ async function createNewBankAccount(data, consentHandleId, userId) {
 
           try {
             // Normalize pending data into array
-            const pendingData = Array.isArray(fiObject?.Summary?.PendingTxns)
-              ? fiObject.Summary.PendingTxns
-              : fiObject?.Summary?.PendingTxns
-              ? [fiObject.Summary.PendingTxns]
-              : [];
+            const pendingData = Array.isArray(fiObject?.Summary?.PendingTxns) ? fiObject.Summary.PendingTxns : fiObject?.Summary?.PendingTxns ? [fiObject.Summary.PendingTxns] : [];
 
             // Save each pending transaction
 
@@ -301,18 +243,12 @@ async function createNewBankAccount(data, consentHandleId, userId) {
                 })
               )
             );
-          } catch (e) {
-          }
+          } catch (e) {}
         }
 
         // Store transactions if present
         if (fiObject.Transactions) {
-          await new AutoTransactionRepository().createTransaction(
-            fiObject.Transactions.Transaction,
-            account._id,
-            userId,
-            fip._id
-          );
+          await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, account._id, userId, fip._id);
 
           // grouping the transactions function
           await saveGroupedTransactions(userId);
@@ -328,10 +264,7 @@ async function createNewBankAccount(data, consentHandleId, userId) {
         return { account };
       } catch (error) {
         logger.error(`Error processing account: ${error}`);
-        throw new AppError(
-          "Error processing account data",
-          StatusCodes.INTERNAL_SERVER_ERROR
-        );
+        throw new AppError('Error processing account data', StatusCodes.INTERNAL_SERVER_ERROR);
       }
     })
   );
@@ -339,21 +272,18 @@ async function createNewBankAccount(data, consentHandleId, userId) {
   return processedAccounts;
 }
 
-
 async function updateNextFetchByUserId(_id) {
-    try {
-        if(_id=="")return;
-        const accounts = await Account.find({ _id });
-        for (const account of accounts)
-        {
-            const nextFetch = getNextFetch(); // replace with your own logic
-            account.nextFetch = nextFetch;
-            await account.save();
-        }
-
-    } catch (error) {
-        console.error('Error updating nextFetch:', error);
+  try {
+    if (_id == '') return;
+    const accounts = await Account.find({ _id });
+    for (const account of accounts) {
+      const nextFetch = getNextFetch(); // replace with your own logic
+      account.nextFetch = nextFetch;
+      await account.save();
     }
+  } catch (error) {
+    console.error('Error updating nextFetch:', error);
+  }
 }
 
-module.exports = { updateExistingAccounts, createNewBankAccount,updateNextFetchByUserId };
+module.exports = { updateExistingAccounts, createNewBankAccount, updateNextFetchByUserId };

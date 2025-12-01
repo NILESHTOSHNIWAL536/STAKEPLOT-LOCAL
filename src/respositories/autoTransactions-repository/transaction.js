@@ -1,4 +1,4 @@
-const { Transaction, GroupedTransaction, BankLogo, TransactionRule, HeadsUp, MoneyMap, PredictedCategories, RecurringPayment } = require('../../models/index');
+const { Transaction, GroupedTransaction, TransactionRule, HeadsUp, MoneyMap, PredictedCategories, RecurringPayment } = require('../../models/index');
 const { categorizeTransactions } = require('../../utils/helpers/categorizeTransactions');
 const { getTransactions } = require('../../utils/helpers/graphDataFromTransactions');
 const mongoose = require('mongoose');
@@ -16,7 +16,6 @@ const { StatusCodes } = require('http-status-codes');
 const transactionWithPredictions = require('../../utils/helpers/transaction-category-prediction');
 const { handleDailyCounter, incrementScore, getCurrentDate } = require('../../utils/helpers/increment_score');
 const { scoreToAdd, scoreToGetReward } = require('../../utils/common/enums');
-const axios = require('axios');
 const dotenv = require('dotenv');
 const { startOfWeek, endOfWeek, subDays, startOfMonth, endOfMonth } = require('date-fns');
 const { calculateLoanEligibility } = require('../../utils/common/loanCalculator');

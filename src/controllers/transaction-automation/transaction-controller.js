@@ -16,14 +16,8 @@ const mongoose = require('mongoose');
 exports.createBankDetails = async (details, consentHandleId, userId) => {
   try {
     for (const bankData of details) {
-      logger.debug('🔥 createBankDetails CALLED', {
-        consentHandleId,
-        userId,
-        time: new Date().toISOString(),
-      });
       await BankService.createBankDetails(bankData, consentHandleId, userId);
     }
-    return response;
   } catch (error) {
     ErrorResponse.error = error;
     logger.debug(`Error from createUserDetails: ${error}`);

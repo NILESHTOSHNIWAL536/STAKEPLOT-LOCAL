@@ -56,5 +56,6 @@ const bankSchema = new mongoose.Schema({
     }
 });
 
+bankSchema.index({ fipId: 1, consentHandleId: 1, userId: 1 }, { unique: true });
 const Bank = mongoose.model('Bank', bankSchema);
 module.exports = Bank;

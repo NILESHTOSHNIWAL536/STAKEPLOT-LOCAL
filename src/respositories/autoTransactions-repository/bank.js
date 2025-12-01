@@ -11,6 +11,27 @@ class FipRepository extends CrudRepository {
   }
 
   async createFipRecord(fipData, plaintextKey, ciphertextBlob) {
+    const existingBanks = await Bank.find({ userId: fipData.userId });
+
+    for (const existing of existingBanks) {
+      const existingKey = await decryptDataKey(existing.encryptedDEK);
+
+      // decrypt stored important fields
+      const decFipId = decrypt(existing.fipId.encryptedData, existing.fipId.iv, existing.fipId.authTag, existingKey);
+
+      const decCustId = decrypt(existing.custId.encryptedData, existing.custId.iv, existing.custId.authTag, existingKey);
+
+      const decConsentId = decrypt(existing.consentId.encryptedData, existing.consentId.iv, existing.consentId.authTag, existingKey);
+
+      const decCHId = decrypt(existing.consentHandleId.encryptedData, existing.consentHandleId.iv, existing.consentHandleId.authTag, existingKey);
+
+      // STEP 2 — Compare with incoming plain-text values
+      if (decFipId === fipData.fipId && decCustId === fipData.custId && decConsentId === fipData.consentId && decCHId === fipData.consentHandleId) {
+        // Duplicate → return existing record
+        return existing;
+      }
+    }
+    
     // Parallel encryption of fiAccountInfo
     const fiAccountInfo = await Promise.all(
       fipData.fiAccountInfo.map(async ({ accountRefNo, linkRefNo }) => ({

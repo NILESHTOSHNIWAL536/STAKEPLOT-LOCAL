@@ -1,5 +1,5 @@
-const {BankLogo} = require('../../models/index');
 const logger = require("../common/logger");
+const bankLogos = require("../../config/bankLogos");
 
 function extractImportantInfo(narration) {
   
@@ -172,7 +172,7 @@ async function enrichTransactionWithBankDetails(transactions, banks) {
           logger.warn(`Bank not found for transaction ${txn._id}`);
         }
 
-        const bankLogo = bank ? await BankLogo.findOne({ name: bank?.fipId }) : null;
+        const bankLogo = bank ? bankLogos[bank.fipId] || 'https://cdn.finvu.in/finvulogos/bank_large_light.png' : null;
         const narration = await extractImportantInfo(txn.narration || txn.category);
         
         return {
@@ -180,7 +180,7 @@ async function enrichTransactionWithBankDetails(transactions, banks) {
           title:narration || txn.category ,
           bankId: bank?.fipId || null,
           bankName: bank?.fipName || null,
-          bankLogo: bankLogo?.logoUrl || null,
+          bankLogo,
         };
       } 
       catch (err) {
