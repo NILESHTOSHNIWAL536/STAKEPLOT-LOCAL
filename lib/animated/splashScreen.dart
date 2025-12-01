@@ -33,7 +33,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    initializeOneSignal(context);
     _checkForUpdatesAndNavigate();
     initGetControllers();
     initializeData(context, mounted);

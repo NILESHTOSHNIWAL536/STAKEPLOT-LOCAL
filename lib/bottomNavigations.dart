@@ -9,18 +9,16 @@ import "package:flutter_application_code_stakeplot/controllers/controllerManagem
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 import "package:flutter_application_code_stakeplot/components/helper.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart";
+
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart";
+
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart";
 import "package:flutter_application_code_stakeplot/finSpace/welcomeScreen.dart";
 
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
 import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 import "package:get/get.dart";
-import "package:page_transition/page_transition.dart";
-import "package:shared_preferences/shared_preferences.dart";
-import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
+
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import 'package:flutter_svg/flutter_svg.dart';
@@ -228,19 +226,21 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     );
   }
 
-  // void pushName(Widget widgetName, [bool flag = false]) {
-  //   final route = PageRouteBuilder(
-  //     pageBuilder: (context, animation, secondaryAnimation) => widgetName,
-  //   );
+  void pushName(Widget widgetName, [bool flag = false]) {
+    final route = PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => widgetName,
+    );
 
-  //   if (flag) {
-  //     Navigator.push(context, route);
-  //   } else {
+    if (flag) {
+      Navigator.push(context, route);
+    } else {
       
-  //     Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
-  //   }
-  // }
-void pushName(Widget widgetName, [bool flag = false]) {
+      Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+    }
+  }
+
+  
+void pushName2(Widget widgetName, [bool flag = false]) {
   final route = PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => widgetName,
   );

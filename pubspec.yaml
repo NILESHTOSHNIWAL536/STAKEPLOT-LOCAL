@@ -99,6 +99,9 @@ dependencies:
   vibration: ^3.1.4
   shake_animation_widget: ^3.0.4
   flutter_secure_storage: ^9.2.4
+  persistent_bottom_nav_bar: ^6.2.1
+  stylish_bottom_bar: ^1.1.1
+  
   
 
 dev_dependencies:
