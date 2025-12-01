@@ -77,36 +77,25 @@ void resentCodeLocaldata() {
 void setUpSocketListenerMainPage(BuildContext context) {
   try {
     if (userController.userId.value == "") return;
-
-    
-    // Initialize socket connection
-    // mainPageWebSocket = IO.io(
-    //   BankApiUrl,
-    //   IO.OptionBuilder()
-    //       .setTransports(['websocket'])
-    //       .enableForceNewConnection()
-    //       .build(),
-    // );
-mainPageWebSocket = IO.io(
-  urlWithLocallHost,
-  IO.OptionBuilder()
-      .setTransports(['websocket'])
-      // .setPath("/socket.io/")
-      // .enableForceNewConnection()
-      .build(),
-);
-
+    mainPageWebSocket = IO.io(
+      urlWithLocallHost,
+      IO.OptionBuilder()
+          .setTransports(['websocket'])
+          .build(),
+    );
     // Connect the socket
     mainPageWebSocket.onConnectError( (data) {
-     
     });
+
     mainPageWebSocket.connect();
+
     mainPageWebSocket.onConnect((_) {
       try {
        
         mainPageWebSocket.emit("addUserToSocket", userController.userId.value);
       } catch (e) {}
     });
+
 
     // Listener for events from the socket
     mainPageWebSocket.on("addUserToSocket", (data) async {
@@ -123,10 +112,6 @@ mainPageWebSocket = IO.io(
       } else if (type == "logoutUser") {
         logoutUserFromDevice(context);
       } else if (type == 'Reward') {
-      
-        //  couponAvalible.value
-        //  fetchCouponsCounts();
-        //  await Future.delayed(Duration(milliseconds: 200));
         callRewardApis(context);
       } else if (type == "fetchedApiCall") {
         isFected.value = false;

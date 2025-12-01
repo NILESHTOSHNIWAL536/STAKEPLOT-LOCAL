@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/post_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -102,15 +103,14 @@ class UserController extends GetxController {
         likedComments.assignAll(List<String>.from(obj['likedComments'] ?? []));
         likedProducts.assignAll(List<String>.from(obj['likedProducts'] ?? []));
         savedPostIds.assignAll(List<String>.from(obj['saved'] ?? []));
-        friendsList.assignAll(
-            List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
+        friendsList.assignAll(List<Map<String, dynamic>>.from(obj['friendsList'] ?? []));
 
         addFriendtoList();
         getMaskendUsers(true);
         getMaskendUsers(false);
         getSaved();
         getuserPost(obj['_id']);
-        UserLocalStorage.cacheUserDataLocally();
+        unawaited(UserLocalStorage.cacheUserDataLocally());
       }
     } catch (e) {
       

@@ -1,12 +1,11 @@
+import 'dart:async';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/insights_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../backed_connections/apiAutomations/secure_storage.dart';
 import '../routes/route_transactions.dart';
 
@@ -40,10 +39,10 @@ class InsightsController extends GetxController {
 
           getTotalInsightsHistory.value = !getTotalInsightsHistory.value;
 
-          await InsightsLocalStorage.cacheInsightsData(
+          unawaited(InsightsLocalStorage.cacheInsightsData(
             totalInSights: totalInSights,
             totalInSightsMoneyMap: totalInSightsMoneyMap,
-          );
+          ));
         }
       } catch (e) {
         final cachedInsights =
@@ -80,10 +79,10 @@ class InsightsController extends GetxController {
           getTotalInsightsHistorytotalMoneyMap.value =
               !getTotalInsightsHistorytotalMoneyMap.value;
 
-          await InsightsLocalStorage.cacheInsightsData(
+          unawaited(InsightsLocalStorage.cacheInsightsData(
             totalInSights: totalInSights,
             totalInSightsMoneyMap: totalInSightsMoneyMap,
-          );
+          ));
         }
       } catch (e) {
         final cachedInsights =

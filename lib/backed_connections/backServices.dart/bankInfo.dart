@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
@@ -92,7 +93,7 @@ void getCategoryData(context) async {
       isFinoraVisible.value = !isFinoraVisible.value;
       setDonectChat.value = !setDonectChat.value;
       processChartData();
-      await CategoryStorage.cacheCardInsightsDataLocally();
+      unawaited(CategoryStorage.cacheCardInsightsDataLocally());
     }
   } catch (e)
   {

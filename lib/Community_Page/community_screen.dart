@@ -47,6 +47,10 @@ class CommunityState extends State<Community> {
 
   ScrollController get controller => scrollController;
 
+  Future<void> wait() async {
+    await Future.delayed(Duration(seconds: 1, milliseconds: 500));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +60,12 @@ class CommunityState extends State<Community> {
     postController.isPostloading.value = false;
     postController.hasMorePostTranding.value = true;
     postController.hasMorePostFeed.value = true;
+    callApisPost();
+    
+  }
+
+  void callApisPost() async {
+    // await wait();
     postController.isPost.value = false;
     postController.isPostTranding.value = false;
     getPost(context);
@@ -203,7 +213,8 @@ class CommunityState extends State<Community> {
             BorderRadius.circular(30), // Reduced radius for a modern look
         boxShadow: [
           BoxShadow(
-            color: AppColors.accentColor.withOpacity(0.2), // Subtle shadow for depth
+            color: AppColors.accentColor
+                .withOpacity(0.2), // Subtle shadow for depth
             spreadRadius: 2,
             blurRadius: 6,
             offset: const Offset(0, 3),
@@ -222,12 +233,14 @@ class CommunityState extends State<Community> {
                 ? MaskedNameDialogBox.showMaskedNameDialog(context)
                 : await showModal({});
           },
-          splashColor: AppColors.backgroundColor.withOpacity(0.3), // Visual feedback on tap
+          splashColor: AppColors.backgroundColor
+              .withOpacity(0.3), // Visual feedback on tap
           child: const Center(
             child: Icon(
               Icons.add, // Generic icon for adding content
               size: 26, // Slightly larger for visibility
-              color: AppColors.backgroundColor, // High contrast with primaryColor
+              color:
+                  AppColors.backgroundColor, // High contrast with primaryColor
             ),
           ),
         ),
@@ -331,7 +344,6 @@ class CommunityState extends State<Community> {
 
   // This is the modal function where we allow the user to pick an image
   Future<void> showModal(Map<String, dynamic> post) async {
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

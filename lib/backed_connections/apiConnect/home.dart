@@ -284,7 +284,7 @@ Future<void> getAllTransactionHistory(
           loadChatdataOnChnage.value = !loadChatdataOnChnage.value;
         }
         getHistory.value = !getHistory.value;
-        TransactionStorage.cacheTransactionsLocally();
+        unawaited(TransactionStorage.cacheTransactionsLocally());
       } else {
         snackBarCalled(context, SnackbarData().noTransactionData);
       }

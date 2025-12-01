@@ -13,7 +13,7 @@ RxBool lengthOfTransactions = false.obs;
 RxBool setGroupTransactions = false.obs;
 RxBool setAutoTransactions = false.obs;
 
-void getGroupTransactions() async {
+Future<void> getGroupTransactions() async {
   var res = await getDataApiCall(
     BankTransactionRoutes.getGroupedTransactions,
   );

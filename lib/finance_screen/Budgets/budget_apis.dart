@@ -198,7 +198,7 @@ void getTopFiveCater() async {
     }
   } catch (e) {}
 }
-void getBudget() async {
+Future<void> getBudget() async {
   // String urlPath = "${url}/budget/";
   String urlPath =BudgetRoutes.getAllBudgets;
   try {

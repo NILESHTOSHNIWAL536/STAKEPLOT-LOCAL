@@ -118,7 +118,7 @@ class OtpService {
       }
     } catch (error) {}
 
-   acceptReset.value = false;
+    acceptReset.value = false;
     return false;
   }
 }

@@ -18,7 +18,7 @@ class NoAccountScreen extends StatefulWidget {
 }
 
 class _NoAccountScreenState extends State<NoAccountScreen> {
-  int _selectedIndex = 1; // Cash Out is selected by default
+  int _selectedIndex = 1; // default cash out
 
   @override
   void initState() {
@@ -31,166 +31,162 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-        child: RefreshIndicator(
-          color: AppColors.primaryColor,
-          backgroundColor: AppColors.backgroundColor,
-          strokeWidth: 2.5,
-          displacement: 40, // spinner position from top
-          edgeOffset: 0, // start right at the top
-          onRefresh: () async {
-            // Keep refresh indicator visible for at least 2 seconds
-            await Future.delayed(const Duration(seconds: 1));
-            callApi(context);
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // SizedBox(height: MediaQuery.sizeOf(context).height / 11),
-              Column(
-                children: [
-                  // Decorative background with wallet icon
-                  Container(
-                    // color: Colors.green,
-                    child: AvatarProfileImage(
-                      url: HomePageIcons.noAccLink,
-                      height: 4,
-                      width: 3,
-                    ),
-                  ),
+    return RefreshIndicator(
+      color: AppColors.primaryColor,
+      backgroundColor: AppColors.backgroundColor,
+      strokeWidth: 2.5,
 
-                  SizedBox(width: MediaQuery.sizeOf(context).width / 14),
-                  // Title
-                  Container(
-                    // color: Colors.amber,
-                    width: MediaQuery.sizeOf(context).width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'No account Linked',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w700,
-                              fontSize: 18,
-                              color: AppColors.accentColor,
-                              maxLines: null,
-                              overflow: TextOverflow.visible),
-                        ),
+      // WORKING REFRESH
+      onRefresh: () async {
+        await callApi(context);
+      },
 
-                        SizedBox(height: screenHeight * 0.01),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 14),
+            _buildHeader(screenHeight),
+            const SizedBox(height: 20),
+            _buildBottomNavigation(screenWidth),
+          ],
+        ),
+      ),
+    );
+  }
 
-                        // Description
-                        Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Text(
-                            'Your money, your view! Connect your bank to see all your expenses in one place. Super easy.',
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w500,
-                                fontSize: 14,
-                                color: Colors.black54,
-                                maxLines: null,
-                                overflow: TextOverflow.visible),
-                          ),
-                        ),
+  // ---------------------------------------------------
+  // HEADER UI
+  // ---------------------------------------------------
+  Widget _buildHeader(double screenHeight) {
+    return Column(
+      children: [
+        AvatarProfileImage(
+          url: HomePageIcons.noAccLink,
+          height: 4,
+          width: 3,
+        ),
 
-                        SizedBox(height: screenHeight * 0.01),
+        const SizedBox(height: 12),
 
-                        // Add Bank Account Button
-                        Container(
-                          width: MediaQuery.sizeOf(context).width / 1.8,
-                          height: 30,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Handle add bank account action
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ShareAccountLogin(),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.finSpaceColor,
-                              foregroundColor: AppColors.backgroundColor,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Text(
-                              'Add Bank Account',
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 14,
-                                color: AppColors.backgroundColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-
-              // Bottom Navigation
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
-                child: Container(
-                  width: MediaQuery.sizeOf(context).width,
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.accentColor.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: Offset(0, -2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildBottomNavItem(
-                        icon: AvatarProfileImage(
-                          url: HomePageIcons.cashIn,
-                          height: 32,
-                          width: 34,
-                        ),
-                        label: 'Cash In',
-                        index: 0,
-                        screenWidth: screenWidth,
-                      ),
-                      _buildBottomNavItem(
-                        icon: AvatarProfileImage(
-                          url: HomePageIcons.cashOut,
-                          height: 32,
-                          width: 34,
-                        ),
-                        label: 'Cash Out',
-                        index: 1,
-                        screenWidth: screenWidth,
-                      ),
-                      _buildBottomNavItem(
-                        icon: AvatarProfileImage(
-                          url: HomePageIcons.transactionHistoryIcon,
-                          height: 32,
-                          width: 34,
-                        ),
-                        label: 'History',
-                        index: 2,
-                        screenWidth: screenWidth,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+        Text(
+          'No account Linked',
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w700,
+            fontSize: 18,
+            color: AppColors.accentColor,
           ),
-        ));
+        ),
+
+        const SizedBox(height: 8),
+
+        Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Text(
+            'Your money, your view! Connect your bank to see all your expenses in one place. Super easy.',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w500,
+              fontSize: 14,
+              color: Colors.black54,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+
+        SizedBox(height: screenHeight * 0.01),
+
+        SizedBox(
+          width: MediaQuery.sizeOf(context).width / 1.8,
+          height: 30,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => ShareAccountLogin()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.finSpaceColor,
+              foregroundColor: AppColors.backgroundColor,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'Add Bank Account',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w600,
+                fontSize: 14,
+                color: AppColors.backgroundColor,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ---------------------------------------------------
+  // BOTTOM NAV
+  // ---------------------------------------------------
+  Widget _buildBottomNavigation(double screenWidth) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+      child: Container(
+        width: MediaQuery.sizeOf(context).width,
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.accentColor.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildBottomNavItem(
+              icon: AvatarProfileImage(
+                url: HomePageIcons.cashIn,
+                height: 32,
+                width: 34,
+              ),
+              label: 'Cash In',
+              index: 0,
+              screenWidth: screenWidth,
+            ),
+            _buildBottomNavItem(
+              icon: AvatarProfileImage(
+                url: HomePageIcons.cashOut,
+                height: 32,
+                width: 34,
+              ),
+              label: 'Cash Out',
+              index: 1,
+              screenWidth: screenWidth,
+            ),
+            _buildBottomNavItem(
+              icon: AvatarProfileImage(
+                url: HomePageIcons.transactionHistoryIcon,
+                height: 32,
+                width: 34,
+              ),
+              label: 'History',
+              index: 2,
+              screenWidth: screenWidth,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildBottomNavItem({
@@ -202,44 +198,37 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
     final isSelected = _selectedIndex == index;
 
     return GestureDetector(
-      onTap: () {
-        tapNavigate(index);
-      },
-      child: Container(
-        // padding: EdgeInsets.symmetric(
-        //   horizontal: screenWidth * 0.02,
-
-        // ),
-        // color: Colors.green,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-                // padding: EdgeInsets.all(screenWidth * 0.01),
-                // decoration: BoxDecoration(
-                //   color: isSelected ? AppColors.primaryColor.withOpacity(0.1) : Colors.transparent,
-                //   borderRadius: BorderRadius.circular(8),
-                // ),
-                child: icon),
-            Text(
-              label,
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w500, fontSize: 12, color: AppColors.bg1),
+      onTap: () => tapNavigate(index),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          icon,
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w500,
+              fontSize: 12,
+              color: AppColors.bg1,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  void tapNavigate(index) {
-    if (0 == index) {
+  // ---------------------------------------------------
+  // NAVIGATION TAPS
+  // ---------------------------------------------------
+  void tapNavigate(int index) {
+    if (index == 0) {
       isDebit = false;
       showCustomModal(context, isDebit);
-    } else if (1 == index) {
+    } else if (index == 1) {
       isDebit = true;
       showCustomModal(context, isDebit);
-    } else if (2 == index) {
+    } else if (index == 2) {
       navToHistory(context);
     }
   }

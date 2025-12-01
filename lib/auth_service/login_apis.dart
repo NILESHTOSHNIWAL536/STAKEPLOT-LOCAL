@@ -75,7 +75,6 @@ class LoginService {
         "otp": otp.toString(),
       });
       if (getFlagOfResponse(response)) {
-        // Navigator.pushReplacementNamed(context, '/home');
         loginCalledData(response, context);
         await screenDataLocalStorage();
       } else if (response.statusCode == 500) {
@@ -158,7 +157,6 @@ class LoginService {
                 : SnackbarData().invalidCredentials);
       }
     } catch (e) {
-
       // snackBarCalledfail(context, SnackbarData().loginFailedTryAgain);
       if (!context.mounted) return;
       String message = "Something went wrong. Please try again.";
@@ -187,6 +185,39 @@ class LoginService {
   static Future<void> loginCalledData(response, context,
       {bool flag = false}) async {
     final body = !flag ? json.decode(response.body) : response;
+
+    // 1️⃣ Save token (must await)
+    String accessToken = body['data']['accessToken'];
+    await SecureStorageService()
+        .setString("accessToken", "Bearer $accessToken");
+
+    // 2️⃣ Init controllers
+    initGetControllers();
+
+    // 3️⃣ Initialize OneSignal in background (slow → don't block)
+    unawaited(initializeOneSignal(context));
+
+    // 4️⃣ Update values instantly
+    userController.userId.value = body['data']['_id'];
+    isBankAccountLink.value = body['data']['isBankAccountLinked'];
+    acceptReset.value = false;
+    unawaited(getPhoneNo(body));
+
+    // 5️⃣ Fetch minimal required data (DO NOT WAIT)
+    (userController.fetchUserInfo());
+    getBankAccounts(); // ← removed await
+    unawaited(callApi(context)); // ← removed await
+
+    // 6️⃣ Navigate instantly
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/home',
+      (_) => false,
+    );
+  }
+
+  static Future<void> loginCalledData2(response, context,
+      {bool flag = false}) async {
+    final body = !flag ? json.decode(response.body) : response;
     String accessToken = body['data']['accessToken'];
     initGetControllers();
     await SecureStorageService()
@@ -198,13 +229,12 @@ class LoginService {
     getPhoneNo(body);
     userController.fetchUserInfo();
     await getBankAccounts();
-    
-   
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-     await callApi(context);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    await callApi(context);
   }
 
-  static void getPhoneNo(body) {
+  static Future<void> getPhoneNo(body) async {
     List<dynamic> phoneList = body['data']['phone'] ?? [];
     String phone = "0";
     if (phoneList.isNotEmpty) {

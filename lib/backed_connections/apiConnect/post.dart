@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -209,7 +210,7 @@ Future<void> getPost(context) async {
     });
     postController.isPostloading.value = false;
     postController.isPost.value = true;
-    PostLocalStorage.savePostsToHive(postList:  postController.feedPostList, isPostTranding: false);
+    unawaited(PostLocalStorage.savePostsToHive(postList:  postController.feedPostList, isPostTranding: false));
   }
   }catch(e)
   {
@@ -245,7 +246,7 @@ Future<void> getTranding(context) async {
     });
     postController.isPostloading.value = false;
     postController.isPostTranding.value = true;
-    PostLocalStorage.savePostsToHive(postList:  postController.trandingPostList, isPostTranding: true);
+    unawaited(PostLocalStorage.savePostsToHive(postList:  postController.trandingPostList, isPostTranding: true));
   }
   }catch(e){
       PostLocalStorage.loadPostsFromHive(isPostTranding: true);

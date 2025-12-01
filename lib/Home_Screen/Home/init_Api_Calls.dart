@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
@@ -22,43 +24,37 @@ import '../../backed_connections/backServices.dart/bankInfo.dart';
 import '../../controllers/user-controller.dart';
 import '../insightsController.dart';
 
-Future<void> callApi(context) async {
+Future<void>  callApi(context) async {
   await Get.find<UserController>().fetchUserInfo();
   final InsightsController _controller = Get.put(InsightsController());
   getBankAccounts();
- 
   getAck();
   contextGlobal = context;
- 
   getUserLend(context);
-  getBudget();
+  unawaited(getBudget());
   getHiddenTransactions(context);
   _controller.getHomePageInsights(context);
   _controller.getHomePageMoneyMapInsights(context);
   getNotifications(context);
   getAllAutoTransactions();
   getAllContstant(context);
-  getGroupTransactions();
-  getCustomCategory(context);
-  getAutoPayInfo();
-  getAllTransactionHistory(context, false, false, isRefreshing: true);
-  getAllTransactionHistory(context, true, false, isRefreshing: true);
-  getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,
-      isSplashScreen: true);
-  userController.fetchUserInfo();
+  unawaited(getGroupTransactions());
+  unawaited(getCustomCategory(context));
+  unawaited(getAutoPayInfo());
+  unawaited(getAllTransactionHistory(context, false, false, isRefreshing: true));
+  unawaited(getAllTransactionHistory(context, true, false, isRefreshing: true));
+  getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,isSplashScreen: true);
   custom = getthelist();
   allOrGroupTransactionsName.value = StringConstant.allTransactions;
   clearAllFlags();
-  getPost(context);
-  getTranding(context);
-  
+  unawaited(getPost(context));
+  unawaited(getTranding(context));
   await getRemainders(context);
-  await updateWidget();
+  unawaited(updateWidget());
   getCategoryData(context);
-  lifecycleHandler = AppLifecycleHandler(
-      userController.userId.value); // Replace with actual user ID
+  lifecycleHandler = AppLifecycleHandler(userController.userId.value);
   WidgetsBinding.instance.addObserver(lifecycleHandler);
-   setUpSocketListenerMainPage(context);
+  setUpSocketListenerMainPage(context);
 }
 
 void initializeData(context, mounted) {

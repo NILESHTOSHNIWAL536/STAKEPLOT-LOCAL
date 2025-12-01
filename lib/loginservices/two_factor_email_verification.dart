@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/opt_email.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -11,9 +10,7 @@ import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
 import '../auth_service/otp_service.dart';
-import '../auth_service/login_apis.dart';
 
 class TwoFactorEmailVerification extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -44,11 +41,7 @@ class _TwoFactorEmailVerificationState
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (acceptReset.value) {
-        acceptReset.value = false;
-      }
-    });
+    acceptReset.value = false;
     startOtpTimer2();
   }
 
@@ -75,55 +68,54 @@ class _TwoFactorEmailVerificationState
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        backgroundColor: Colorcodes.white,
-        body: SafeArea(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF6568A7),
-                  Color(0xFF272841),
-                ],
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 20),
-                      topHeader(),
-                      textStyleOnly2(
-                        context: context,
-                        text: "Enter the 6-digit OTP sent to your email",
-                        fontWeight: FontWeight.w300,
-                        fontsize: 14,
-                        color: Colorcodes.white,
-                      ),
-                      const SizedBox(height: 40),
-                      verifyOpt(),
-                      acceptButton(),
-                      SizedBox(height: Colorcodes.paddingSize * 2),
-                      resendOtp(),
-                    ],
-                  ),
-                ),
-                buildBottomWaves(context),
+    return Scaffold(
+      backgroundColor: Colorcodes.white,
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF6568A7),
+                Color(0xFF272841),
               ],
             ),
           ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    topHeader(),
+                    textStyleOnly2(
+                      context: context,
+                      text: "Enter the 6-digit OTP sent to your email",
+                      fontWeight: FontWeight.w300,
+                      fontsize: 14,
+                      color: Colorcodes.white,
+                    ),
+                    const SizedBox(height: 40),
+                    verifyOpt(),
+                    acceptButton(),
+                    SizedBox(height: Colorcodes.paddingSize * 2),
+                    resendOtp(),
+                  ],
+                ),
+              ),
+              buildBottomWaves(context),
+            ],
+          ),
         ),
-      
+      ),
     );
   }
 
@@ -265,19 +257,16 @@ class _TwoFactorEmailVerificationState
     );
   }
 
-  void verifyEmail() async 
-  {
+  void verifyEmail() async {
     if (otpController.text.isEmpty) {
       snackBarCalledfail(context, 'Please enter the OTP');
       return;
     }
-    if (otpController.text.length != 6)
-    {
+    if (otpController.text.length != 6) {
       snackBarCalledfail(context, 'Please enter all 6 digits of the OTP');
       return;
     }
-    if (!RegExp(r'^[0-9]{6}$').hasMatch(otpController.text))
-    {
+    if (!RegExp(r'^[0-9]{6}$').hasMatch(otpController.text)) {
       snackBarCalledfail(context, 'Please enter only numeric digits');
       return;
     }
@@ -290,14 +279,12 @@ class _TwoFactorEmailVerificationState
       otpController.text,
       widget.data['response'],
       widget.data['isForcedLogin'], // Pass the login response
-      isNewUser:  widget.data['newUser'] ?? false, // Pass the login response
+      isNewUser: widget.data['newUser'] ?? false, // Pass the login response
     );
 
-
-    if (!isVerified)
-    {
+    if (!isVerified) {
       isOtpWrong2.value = true;
     }
-    // acceptReset.value = false;
+     acceptReset.value = false;
   }
 }

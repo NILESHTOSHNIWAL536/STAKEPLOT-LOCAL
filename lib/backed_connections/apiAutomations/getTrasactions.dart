@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ Future<List<CardData>> getAutoPayInfo({bool flag=false}) async {
       }
     }
 
-    await CardsLocalStorage.saveCardsToHive(cardList: allAutoPayData);
+    unawaited(CardsLocalStorage.saveCardsToHive(cardList: allAutoPayData));
     isAutoPayFected.value = !isAutoPayFected.value;
 
     return allAutoPayData;
@@ -375,7 +376,7 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
           getGraphData.value = true;
 
           // Cache the data
-          await FinanceLocalStorage.cacheFinanceDataLocally(
+          unawaited( FinanceLocalStorage.cacheFinanceDataLocally(
             period: storedPeriod,
             startDate: formattedDate,
             endDate: endDate,
@@ -386,7 +387,7 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
             totalDebitValuePercent: totalDebitValuePercent.value,
             maxYValue: maxYValue.value,
             accountId: accountId.value,
-          );
+          ));
         } else {
           _setEmptyState(weekORmonth, formattedDate, endDate);
           await FinanceLocalStorage.loadFinanceFromHive(

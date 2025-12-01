@@ -69,7 +69,7 @@ void onChanedAutoTransactionStatus(context)async
 }
 
 
-void getCustomCategory(context)async
+Future<void> getCustomCategory(context)async
 {
   var res = await getDataApiCall("${url}/custom/custom-category");
   if(getFlagOfResponse(res))
