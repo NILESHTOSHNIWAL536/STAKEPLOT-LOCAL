@@ -204,7 +204,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
           // added
 
           if (i == 0)
-            pushName(HomePage());
+            pushName(HomePage(),false,true);
           // else if (i == 1) pushName(Connections());
           else if (i == 1)
             pushName(FinanceDashboard());
@@ -226,16 +226,29 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     );
   }
 
-  void pushName(Widget widgetName, [bool flag = false]) {
+  void pushName(Widget widgetName, [bool flag = false,bool isHomePage=false]) {
     final route = PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => widgetName,
     );
 
-    if (flag) {
+    if (flag)
+    {
       Navigator.push(context, route);
     } else {
-      
-      Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+      // if(!isHomePage)
+      // {
+      //     Navigator.of(context).pushNamed("/home");
+      // }
+      // Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+      if (!isHomePage) {
+           Navigator.of(context).pushNamed("/home");
+        }
+
+        Navigator.of(context).pushAndRemoveUntil(
+          route,
+          ModalRoute.withName("/home"),
+        );
+
     }
   }
 
