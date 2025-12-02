@@ -221,7 +221,7 @@ class LoginService {
     initGetControllers();
     await SecureStorageService()
         .setString("accessToken", "Bearer " + accessToken);
-    await initializeOneSignal(context);
+     await initializeOneSignal(context);
     userController.userId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
     acceptReset.value = false;

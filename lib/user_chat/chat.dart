@@ -1,30 +1,18 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
-import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart';
-import 'package:flutter_application_code_stakeplot/user_chat/fullScreen.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/message.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,9 +21,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
+import 'componets/chat_index.dart';
 
 late IO.Socket socket;
 
@@ -68,26 +55,21 @@ class _ChatState extends State<Chat> {
 
   String path = "assets/avatar/menp1.svg";
   ValueNotifier<bool> onlineUser = ValueNotifier<bool>(false);
-  ValueNotifier<bool> isUploading = ValueNotifier<bool>(false); // Declare isUploading here
-  bool _isSending = false;
+  ValueNotifier<bool> isUploading =
+      ValueNotifier<bool>(false); // Declare isUploading here
+
   @override
   void initState() {
     super.initState();
     data = widget.data;
-    UserController userController=ControllerManagement.userController;
-    String room1 = userController.userName.value + data['name'];
-    String room2 = data['name'] +userController.userName.value;
+    UserController userController = ControllerManagement.userController;
 
-    String room3 = userController.maskedName.value + data['name'];
-    String room4 = data['name'] + userController.maskedName.value;
-
-    roomId.value = ismaskedUsers.value
-        ? (room3.compareTo(room4) <= 0)
-            ? room3
-            : room4
-        : (room1.compareTo(room2) <= 0)
-            ? room1
-            : room2;
+    roomId.value = generateRoomId(
+      userName: userController.userName.value,
+      maskedName: userController.maskedName.value,
+      otherName: data['name'],
+      isMasked: ismaskedUsers.value,
+    );
 
     getChats(data);
     path = userController.avatar.value;
@@ -98,20 +80,10 @@ class _ChatState extends State<Chat> {
     setUpSocketListener();
   }
 
-  @override
-  void dispose() {
-    // Close the socket connection when the widget is disposed
-    // if (socket != null) {
-    //   socket.disconnect();
-    //   socket.destroy();
-    // }
-    // super.dispose();
-  }
-
   setUpSocketListener() {
     socket.onConnect((_) {
       socket.emit("joinRoom", roomId.value);
-      socket.emit("online", roomId.value);
+      socket.emit("online", {"id":roomId.value,"flag":true});
     });
 
     socket.onConnectError((data) {});
@@ -120,12 +92,18 @@ class _ChatState extends State<Chat> {
         "disconnect",
         (data) => {
               socket.close(),
+              setState(() {
+                onlineUser.value = false;
+              })
             });
 
     socket.on(
         'online',
         (res) => {
-              onlineUser.value = true,
+              print({"id":roomId.value,"flag":true}),
+              setState(() {
+                onlineUser.value = true;
+              })
             });
 
     socket.on(
@@ -143,9 +121,7 @@ class _ChatState extends State<Chat> {
                         split: data2['split'] ?? "",
                         post: data2['messageType'] == "post"
                             ? data2['post']['postLocation']
-                            : ""
-                        // post:  postData,//data2['messageType']=="post"? (data2['post']['postLocation'])??"":"",
-                        )),
+                            : "")),
               unSeenChat(context, data['_id']),
               getChatLoader(ismaskedUsers.value),
               getChats(widget.data),
@@ -180,8 +156,6 @@ class _ChatState extends State<Chat> {
             poll: ""));
 
     search.clear();
-    // socket.emit('register',  data['_id']);
-
     socket.emit("message", jsonData);
     socket.emit("LoadCharts", {
       "roomId": data['name'] + "" + data['name'],
@@ -189,221 +163,13 @@ class _ChatState extends State<Chat> {
     });
   }
 
-  Widget getDataWidget(Message message) {
-    if (message.type == "message") {
-      return text(message.text, message.isMe);
-    } else if (message.type == "poll") {
-      return polled(
-        message.isMe,
-        message.poll,
-      );
-    } else if (message.type == "image") {
-      return imageDisplay(message.text, message.isMe, message.image);
-    } else if (message.type == "post") {
-      return postDisplay(message.text, message.isMe, message.image, message);
-    } else if (message.type == "split") {
-      return spliDisplay(message.text, message.isMe, message.image, message);
-    }
-
-    return Text("polled");
-  }
-
-  Widget postDisplay(msg, bool, url, Message message) {
-    return bool
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              uploadData((message.post),message ),
-              // PostCard(data: message.post),
-              // profilepath(bool),
-            ],
-          )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //profilepath(bool),
-              uploadData((message.post), message),
-              //  PostCard(data: message.post),
-            ],
-          );
-  }
-
-  Widget spliDisplay(msg, bool, url, Message message) {
-    return bool
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              spliData(message),
-              //  profilepath(bool),
-            ],
-          )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //   profilepath(bool),
-              spliData(message),
-            ],
-          );
-  }
-
-  Widget spliData(Message message) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      width: MediaQuery.of(context).size.width / 1.8,
-      decoration: BoxDecoration(
-        color: message.isMe ? AppColors.appIcon : AppColors.mt,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16), // Circular radius for top left
-          topRight: Radius.circular(16), // Circular radius for top right
-          bottomLeft: message.isMe
-              ? Radius.circular(16)
-              : Radius
-                  .zero, // Circular radius for bottom left (for other messages)
-          bottomRight: message.isMe
-              ? Radius.zero
-              : Radius.circular(
-                  16), // No radius for bottom right (for my messages)
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(Icons.receipt,
-                  color: message.isMe
-                      ? AppColors.backgroundColor
-                      : AppColors.appIcon,
-                  size: 24),
-              SizedBox(width: 10),
-              Text(
-                message.split['BillName'],
-                style: FontManager().getTextStyle(
-                  context,
-                  fontSize: 16,
-                  lWeight: FontWeight.bold,
-                  color:
-                      message.isMe ? AppColors.backgroundColor : AppColors.bg1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 3),
-          Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "₹", // Rupee symbol
-                    style: TextStyle(
-                        color: message.isMe
-                            ? AppColors.backgroundColor
-                            : AppColors.bg2,
-                        fontSize: 16),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    "Total expense: " +
-                        doubleToFixed(message.split['Amount'].toString()),
-                    style: FontManager().getTextStyle(context,
-                        fontSize: 12,
-                        color: message.isMe
-                            ? AppColors.backgroundColor
-                            : AppColors.bg2),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Icon(Icons.group,
-                      color: message.isMe
-                          ? AppColors.backgroundColor
-                          : AppColors.appIcon,
-                      size: 20),
-                  const SizedBox(width: 5),
-                  Text(
-                    "Share: " +
-                        doubleToFixed(message.split['Share'].toString())
-                            .toString(),
-                    style: FontManager().getTextStyle(context,
-                        fontSize: 12,
-                        color: message.isMe
-                            ? AppColors.backgroundColor
-                            : AppColors.bg2),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0),
-            child: Row(
-              children: [
-                Icon(
-                  message.split['isPaid'] ? Icons.check_circle : Icons.pending,
-                  color: message.split['isPaid'] ? Colors.green : Colors.red,
-                  size: 20,
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  message.split['isPaid'] ? "Settled Successfully" : "Pending",
-                  style: FontManager().getTextStyle(context,
-                      fontSize: 12,
-                      lWeight: FontWeight.w400,
-                      color:
-                          message.split['isPaid'] ? Colors.green : Colors.red),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void getImage(context) async {
     final _picker = ImagePicker();
     final imageData = await _picker.pickImage(source: ImageSource.gallery);
 
     if (imageData != null) {
-      showData(imageData,context);
+      showData(imageData, context);
     }
-  }
-
-  Widget _buildMessage(Message message) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: Row(
-        mainAxisAlignment:
-            message.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: !message.isMe
-                ? EdgeInsets.only(left: 14)
-                : EdgeInsets.only(right: 14),
-            child: getDataWidget(message),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void navigate() async {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Chat(
-          data: widget.data,
-          myId: widget.myId,
-          myprofile: widget.myprofile,
-        ),
-      ),
-    );
   }
 
   @override
@@ -433,26 +199,53 @@ class _ChatState extends State<Chat> {
               valueListenable: onlineUser,
               builder: (context, snapshot, child) {
                 return GestureDetector(
-                  onTap: () {
-                    pushDetails();
-                  },
-                  child: Text(
-                    data['name'],
-                    style: FontManager().getTextStyle(context,
-                        color: AppColors.backgroundColor,
-                        fontSize: 16,
-                        lWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                );
+                    onTap: () {
+                      pushDetails();
+                    },
+                    child: Row(
+                      children: [
+                        // online/offline dot
+                        Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            color: onlineUser.value ? Colors.green : Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+
+                        // username text
+                        Text(
+                          data['name'],
+                          style: FontManager().getTextStyle(
+                            context,
+                            color: AppColors.backgroundColor,
+                            fontSize: 16,
+                            lWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ],
+                    )
+                    // child: Text(
+                    //   onlineUser.value data['name'],
+                    //   style: FontManager().getTextStyle(context,
+                    //       color: AppColors.backgroundColor,
+                    //       fontSize: 16,
+                    //       lWeight: FontWeight.bold),
+                    //   overflow: TextOverflow.ellipsis,
+                    //   maxLines: 1,
+                    // ),
+                    );
               }),
         ),
         body: GestureDetector(
-           onTap: () {
-          // Dismiss the keyboard when tapping anywhere on the screen
-          FocusScope.of(context).unfocus();
-        },
+          onTap: () {
+            // Dismiss the keyboard when tapping anywhere on the screen
+            FocusScope.of(context).unfocus();
+          },
           child: Container(
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
@@ -467,8 +260,8 @@ class _ChatState extends State<Chat> {
                         shrinkWrap: true,
                         reverse: true,
                         itemCount: messages.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return _buildMessage(messages[index]);
+                        itemBuilder: (BuildContext context2, int index) {
+                          return buildMessage(messages[index], context);
                         },
                       ),
                     )),
@@ -489,130 +282,8 @@ class _ChatState extends State<Chat> {
     chatOfUserList.remove(data['_id']);
     clear(data);
     unSeenChat(context, data['_id']);
+    socket.emit("online", {"id":roomId.value,"flag":false});
     Navigator.pop(context);
-  }
-
-  Widget polled(isme, pollObj) {
-    return !isme
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              //  profilepath(isme),
-              poll(pollObj),
-            ],
-          )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              poll(pollObj),
-              // profilepath(isme),
-            ],
-          );
-  }
-
-  Widget polled2(isme, poll) {
-    Future<String> getPolled() async {
-     
-      final response = await getDataApiCall('${url}/poll/${poll}');
-     
-      return response.body;
-    }
-
-    return FutureBuilder<String>(
-      future: getPolled(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // While data is being fetched, display a loading indicator
-          return !isme
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    //   profilepath(isme),
-                    demiData(),
-                  ],
-                )
-              : Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    demiData(),
-                    // profilepath(isme),
-                  ],
-                );
-        } else if (snapshot.hasError) {
-          // If an error occurs during fetching, display an error message
-          return Text('Error: ${snapshot.error}');
-        } else {
-          // When data is fetched successfully, display the result
-          return calledData(isme, (snapshot.data));
-        }
-      },
-    );
-  }
-
-  Widget calledData(isme, data) {
-    var obj = jsonDecode(data);
-
-    if (obj['data'].isEmpty) return SizedBox.shrink();
-
-    return !isme
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              //   profilepath(isme),
-              poll(obj['data'][0]),
-            ],
-          )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              poll(obj['data'][0]),
-              //  profilepath(isme),
-            ],
-          );
-  }
-
-  Widget text(msg, isme) {
-    return !isme
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              // profilepath(isme),
-              textIsme(msg, isme),
-            ],
-          )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              textIsme(msg, isme),
-              // profilepath(isme),
-            ],
-          );
-  }
-
-  Widget imageDisplay(msg, bool, url) {
-    return bool
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              image(url),
-              // profilepath(bool),
-            ],
-          )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // profilepath(bool),
-              image(url),
-            ],
-          );
   }
 
   Widget profilepath(boolFlag) {
@@ -621,71 +292,6 @@ class _ChatState extends State<Chat> {
       width: 1,
       height: 1,
       background: userController.avatarBackGround.value,
-    );
-    // return chatAvatartImage(
-    //     url: boolFlag ? path : avaterUrlPath(data['name']),
-    //     width: 17,
-    //     height: 16);
-  }
-
-  Widget textIsme(String msg, bool isme) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0.0),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width / 1.4,
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: isme ? AppColors.appIcon : null,
-          borderRadius: BorderRadius.only(
-            bottomRight: isme ? Radius.zero : Radius.circular(10),
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
-            bottomLeft: !isme ? Radius.zero : Radius.circular(10),
-          ),
-          gradient: !isme
-              ? LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    AppColors.mt,
-                    AppColors.mt,
-                  ],
-                )
-              : null,
-        ),
-        child: SelectableText(
-          msg,
-          style: FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w400,
-            fontSize: 14,
-            letterSpacing: 0.0,
-            color: isme ? AppColors.backgroundColor : AppColors.bg1,
-          ),
-          textAlign: TextAlign.left,
-          onTap: () {
-            // Optional: Handle tap if needed
-          },
-          contextMenuBuilder: (context, editableTextState) {
-            return AdaptiveTextSelectionToolbar(
-              anchors: editableTextState.contextMenuAnchors,
-              children: [
-                TextSelectionToolbarTextButton(
-                  padding: EdgeInsets.all(8),
-                  child: Text('Copy'),
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: msg));
-                    //Navigator.of(context).pop(); // Close the context menu
-                  },
-                ),
-                // Add more options like 'Select All' if needed
-              ],
-            );
-          },
-        ),
-      ),
     );
   }
 
@@ -766,181 +372,9 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  Widget image(url) {
-    if (url == "" || url == "None") return SizedBox.shrink();
-
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 3.0),
-      child: GestureDetector(
-        onTap: () {
-          // Navigate to full image screen
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FullImageScreen(imageUrl: url),
-            ),
-          );
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.network(
-            url,
-            width: MediaQuery.of(context).size.width / 2,
-            height: MediaQuery.of(context).size.height / 5,
-            fit: BoxFit.cover,
-            color: AppColors.accentColor.withOpacity(0.0),
-            colorBlendMode: BlendMode.exclusion,
-          ),
-        ),
-      ),
-    );
-  }
-
 // poll card display in community
-  Widget poll(e) {
-    List options = e['options'] ?? [];
-    int index = 0; // e['selectedOption'];
-    int s = -1;
 
-    return Padding(
-      padding: const EdgeInsets.only(right: 0.0, top: 5),
-      child: Container(
-        padding: EdgeInsets.only(right: 5.0, left: 5.0, top: 10, bottom: 3.0),
-        width: MediaQuery.of(context).size.width / 1.4,
-        decoration: BoxDecoration(
-          //  color: Colorcodes.appBarColor,
-          color: AppColors.mt,
-          // border: Border.all(width: .5, color: Colorcodes.poll1),
-          borderRadius: BorderRadius.circular(9),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(e['question'] + "?",
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: AppColors.bg1)),
-            ),
-            Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: options.map((op) {
-                  s++;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        width: MediaQuery.of(context).size.width / 1.5,
-                        decoration: BoxDecoration(
-                          color: index == s ? null : AppColors.backgroundColor,
-                          borderRadius:
-                              BorderRadius.circular(Colorcodes.borderRadius),
-                          gradient: index == s
-                              ? LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  colors: [
-                                    AppColors.pollSelected,
-                                    AppColors.pollSelected,
-                                  ],
-                                )
-                              : null,
-                          border: index == s
-                              ? Border.all(color: Colorcodes.poll1)
-                              : null,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(op['option'].toString(),
-                                  maxLines: null,
-                                  softWrap: true,
-                                  textWidthBasis: TextWidthBasis.longestLine,
-                                  overflow: TextOverflow.visible,
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: index == s
-                                          ? AppColors.backgroundColor
-                                          : AppColors.accentColor)),
-                            ),
-                          ],
-                        )),
-                  );
-                }).toList()),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget demiData() {
-    var options = [1, 2, 3, 4];
-    return Padding(
-      padding: const EdgeInsets.only(right: 0.0, top: 5),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: MediaQuery.of(context).size.width / 1.4,
-        decoration: BoxDecoration(
-          //  color: Colorcodes.appBarColor,
-          border: Border.all(width: .5),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("",
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 13,
-                      color: AppColors.accentColor)),
-            ),
-            Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: options.map((op) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 13, horizontal: 10),
-                        width: MediaQuery.of(context).size.width / 1.5,
-                        decoration: BoxDecoration(
-                          color: AppColors.backgroundColor,
-                          borderRadius: BorderRadius.circular(5),
-                          // border: Border.all()
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("",
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    color: AppColors.accentColor)),
-                          ],
-                        )),
-                  );
-                }).toList()),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void showData(imageData,BuildContext context) {
+  void showData(imageData, BuildContext context) {
     showDialog(
       context: context,
       useRootNavigator: false,
@@ -950,12 +384,13 @@ class _ChatState extends State<Chat> {
             width: MediaQuery.of(context).size.width / 1.2,
             height: MediaQuery.of(context).size.height / 3.2,
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            decoration: BoxDecoration(color: AppColors.backgroundColor,borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(
+                color: AppColors.backgroundColor,
+                borderRadius: BorderRadius.circular(12)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-
                 Text(
                   "Do you want to send this?",
                   style: FontManager().getTextStyle(
@@ -965,7 +400,6 @@ class _ChatState extends State<Chat> {
                     lWeight: FontWeight.bold,
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Container(
@@ -973,13 +407,16 @@ class _ChatState extends State<Chat> {
                       height: MediaQuery.of(context).size.height / 7,
                       child: Image.file(File(imageData.path))),
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    textStyleColor("Cancel", AppColors.accentColor, data, imageData,context2),
-                    const SizedBox(width: 5,),
-                    textStyleColor(" Send ", AppColors.primaryColor, data, imageData,context2),
+                    textStyleColor("Cancel", AppColors.accentColor, data,
+                        imageData, context2),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    textStyleColor(" Send ", AppColors.primaryColor, data,
+                        imageData, context2),
                   ],
                 ),
               ],
@@ -990,37 +427,31 @@ class _ChatState extends State<Chat> {
     );
   }
 
- 
-  Widget textStyleColor(str,Color color, data, imageData,BuildContext context) {
+  Widget textStyleColor(
+      str, Color color, data, imageData, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: GestureDetector(
         onTap: () {
-          try{
-            
-          if (str.toString().trim().toLowerCase() == "Send".toLowerCase())
-          {
-            addMessageImage(
-              context,
-              "image",
-              "None",
-              data['_id'],
-              File(imageData.path),
-              widget.data,
-              widget.myId,
-              socket,
-              widget.myId,
-              roomId.value,
-            );
-          
-             
-          }else
-          {
+          try {
+            if (str.toString().trim().toLowerCase() == "Send".toLowerCase()) {
+              addMessageImage(
+                context,
+                "image",
+                "None",
+                data['_id'],
+                File(imageData.path),
+                widget.data,
+                widget.myId,
+                socket,
+                widget.myId,
+                roomId.value,
+              );
+            } else {
               getChatLoader(ismaskedUsers.value);
               Navigator.pop(context);
-          }
-          }catch(e){
-          }
+            }
+          } catch (e) {}
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -1040,394 +471,6 @@ class _ChatState extends State<Chat> {
     );
   }
 
-
- Widget uploadData(String dataObj2, Message message) {
-  PostModel dataObj = PostModel.fromJson(jsonDecode(dataObj2));
-  bool isExploria =dataObj.postType.name == "exploria";
-  bool isPoll =  dataObj.postType.name == "poll";
-  bool isImage = dataObj.postType.name == "image";
-  bool isWrite = dataObj.postType.name == "write";
-
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-    child: GestureDetector(
-      onTap: () async{
-        getpost(dataObj.id);
-        await Future.delayed(const Duration(milliseconds: 100));
-        Navigator.push(
-          context,
-          PageTransition(
-            type: PageTransitionType.fade,
-            duration: Durations.long1,
-            child: TribeUnique(
-              id: dataObj.id,
-              dataObj: dataObj,
-              popBox: false.obs,
-
-            ),
-            isIos: true,
-          ),
-        );
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width / 1.4,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.mt,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: message.isMe ? const Radius.circular(16) : Radius.zero,
-            bottomRight: message.isMe ? Radius.zero : const Radius.circular(16),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.accentColor.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Author Section
-            Row(
-              children: [
-                
-               
-                Expanded(
-                  child: Text(
-                    (dataObj.author.maskedName==''?  dataObj.author.name: dataObj.author.maskedName),
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w600,
-                      fontSize: 15,
-                      color:  AppColors.bg1,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            // Content Preview
-            if (isPoll && dataObj.pollData != null && dataObj.pollData!.question!= null)
-              Text(
-                "${dataObj.pollData!.question}?",
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color:  AppColors.bg1,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            if (isWrite)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (dataObj.title.isNotEmpty)
-                    Text(
-                      dataObj.title,
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color:  AppColors.bg1,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  if (dataObj.title.isNotEmpty) const SizedBox(height: 6),
-                  Text(
-                    (dataObj.description is Map ? dataObj.description.message : dataObj.description),
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: AppColors.bg1.withOpacity(0.8),
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            if (isImage)
-              Text(
-                (dataObj.description is Map ? dataObj.description.message : dataObj.description) ?? '',
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w400,
-                  fontSize: 13,
-                  color: AppColors.bg1.withOpacity(0.8),
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            if (isExploria)
-              Text(
-                (dataObj.description is Map ? dataObj.description.message : dataObj.description) ?? '',
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w400,
-                  fontSize: 13,
-                  color: AppColors.bg1.withOpacity(0.8),
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            // Image Thumbnail (if applicable)
-            if (isImage &&  dataObj.image != "none" && dataObj.image != "")
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                   dataObj.image,
-                    width: MediaQuery.of(context).size.width / 1.6,
-                    height: 120,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      width: MediaQuery.of(context).size.width / 1.6,
-                      height: 120,
-                      color: AppColors.grey.withOpacity(0.2),
-                      child:  Icon(Icons.error, size: 40, color: AppColors.grey),
-                    ),
-                  ),
-                ),
-              ),
-            if (isExploria && dataObj.images != null && dataObj.images.isNotEmpty && dataObj.images[0] != "none" && dataObj.images[0] != "")
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    dataObj.images[0],
-                    width: MediaQuery.of(context).size.width / 1.6,
-                    height: 120,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      width: MediaQuery.of(context).size.width / 1.6,
-                      height: 120,
-                      color: AppColors.grey.withOpacity(0.2),
-                      child:  Icon(Icons.error, size: 40, color: AppColors.grey),
-                    ),
-                  ),
-                ),
-              ),
-            // Tags (Show only one or hint)
-            if (dataObj.tag.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.finSpaceColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    "#${dataObj.tag[0]}",
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: AppColors.finSpaceColor,
-                    ),
-                  ),
-                ),
-              ),
-            // Timestamp
-            if (dataObj.createdAt.toString().isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  formatDateToIST(dataObj.createdAt.toString()),
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w400,
-                    fontSize: 11,
-                    color: AppColors.grey,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-  Widget getMessage(dataObj) {
-    if (dataObj['postType'] == "poll") return SizedBox.shrink();
-
-    try {
-      return Container(
-        width: MediaQuery.of(context).size.width / 1.62,
-        padding: const EdgeInsets.only(bottom: 10.0),
-        child: Text((dataObj['description']['message']),
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.w400, fontSize: 13, color: AppColors.accentColor)),
-      );
-    } catch (e) {
-      return Container(
-        width: MediaQuery.of(context).size.width / 1.62,
-        padding: const EdgeInsets.only(bottom: 10.0),
-        child: Text((dataObj['description']),
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.w400, fontSize: 13, color: AppColors.accentColor)),
-      );
-    }
-  }
-
-  Widget imageurl(url) {
-    return SvgPicture.asset(
-      url,
-      height: 30,
-    );
-  }
-
-  Widget barGraph(item) {
-    //  return Text("bargraph");
-    List<SalesData> chartData = <SalesData>[];
-    List list = item['description']['itemlist'];
-
-    int j = 0;
-    list.forEach(
-      (element) {
-        String t1 = element['item'];
-        String t2 = element['amount'].toString();
-        if (j == color.length) j = 0;
-        String b = t2 == "" ? "0" : t2;
-
-        chartData.add(
-          SalesData(t1, double.parse(b)),
-        );
-      },
-    );
-
-    var barSeries = BarSeries<SalesData, String>(
-      dataSource: chartData,
-      xValueMapper: (SalesData sales, _) => sales.month,
-      yValueMapper: (SalesData sales, _) => sales.sales,
-    );
-    return Container(
-      // width: MediaQuery.of(context).size.width/2,
-      // width: 300,
-      // height:170,
-      width: MediaQuery.of(context).size.width / 1.62,
-      height: MediaQuery.of(context).size.height / 5,
-
-      child: GestureDetector(
-          child: SfCartesianChart(
-        primaryXAxis: CategoryAxis(),
-        isTransposed: true,
-        series: <CartesianSeries>[barSeries],
-      )),
-    );
-  }
-
-  Widget popupMenuItemList() {
-    return PopupMenuButton<String>(
-      onSelected: (value) {
-        // Perform actions based on the selected value
-        if (value == 'Report') {
-          // Handle Report action
-        } else if (value == 'Block user') {
-          // Handle Block action
-        } else if (value == 'Mute notification') {
-          // Handle Mute notification action
-        } else if (value == 'Clear chat') {
-          // Handle Clear chat action
-        }
-      },
-      itemBuilder: (BuildContext context) {
-        return [
-          PopupMenuItem(
-            value: 'Report',
-            child: Text('Report',
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: AppColors.primaryColor)),
-          ),
-          PopupMenuItem(
-            value: 'Block user',
-            child: Text('Block user',
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: AppColors.primaryColor)),
-          ),
-          PopupMenuItem(
-            value: 'Mute notification',
-            child: Text('Mute notification',
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: AppColors.primaryColor)),
-          ),
-          PopupMenuItem(
-            value: 'Clear chat',
-            child: Text('Clear chat',
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: AppColors.primaryColor)),
-          ),
-        ];
-      },
-      child: Icon(Icons.more_vert), // Replace this with your desired icon
-    );
-  }
-
-  Widget pieChart(item) {
-    final List<ChartData> chartData = [];
-
-    List list = item['description']['itemlist'];
-
-    int j = 0;
-
-    list.forEach((element) {
-      String t1 = element['item'];
-      String t2 = element['amount'].toString();
-      if (j == color.length) j = 0;
-      String b = t2 == "" ? "0" : t2;
-      chartData.add(
-        ChartData(t1, list.length == 1 ? 100 : double.parse(b), color[j++], t1),
-      );
-    });
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Container(
-          //  width: 30,
-          width: MediaQuery.of(context).size.width / 1.62,
-          height: MediaQuery.of(context).size.height / 5,
-          child: SfCircularChart(series: <CircularSeries>[
-            // Render pie chart
-            PieSeries<ChartData, String>(
-              dataSource: chartData,
-
-              radius: "100",
-              explodeOffset: "4%",
-
-              dataLabelMapper: (ChartData data, _) => '${data.name}',
-              pointColorMapper: (ChartData data, _) => data.color,
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y,
-              onPointTap: (pointInteractionDetails) {},
-              // strokeWidth: 5.0,
-              dataLabelSettings: DataLabelSettings(
-                isVisible: true, // Show labels
-              ),
-            )
-          ])),
-    );
-  }
-
   void pushDetails() {
     Navigator.push(
       context,
@@ -1436,11 +479,4 @@ class _ChatState extends State<Chat> {
       ),
     );
   }
-}
-
-class SalesData {
-  final String month;
-  final double sales;
-
-  SalesData(this.month, this.sales);
 }
