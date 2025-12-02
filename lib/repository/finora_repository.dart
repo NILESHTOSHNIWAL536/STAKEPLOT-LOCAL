@@ -1,24 +1,40 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
+
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/init_hive.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_last_two_months_apis.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
-import 'package:get/get.dart';
 
+ void getFinoraPreviousMonthData() async {
+    isLoading.value = true;
+    FinoraLoading.value = false;
+    try {
+      var response = await getDataApiCall(BankTransactionRoutes.getUserMonthlySpending);
 
-RxString balance = "0".obs;
-RxString accountName = "Bank Name : ".obs;
-RxString accountNo = "XXXXXXXX".obs;
-RxString selectedBank = "".obs;
+      if (getFlagOfResponse(response)) {
+
+        try {
+          await FinoraLastTwoMonthsStorage.cacheFinoraLastTwoMonthsDataLocally(
+              jsonDecode(response.body)['data']);
+        } catch (e) {
+        }
+
+        finoraTransactionData = jsonDecode(response.body)['data'] ?? {};
+        isLoading.value = false;
+      } else {
+        isLoading.value = false;
+      }
+    } catch (e) {
+      isLoading.value = false;
+      await FinoraLastTwoMonthsStorage.loadFinoraLastTwoMonthsDataFromHive();
+      isFinoraVisible.value = true;
+    }
+  }
 
 
 void getCategoryData(context) async {
@@ -103,60 +119,3 @@ void getCategoryData(context) async {
 
 
 
-void getdebts() async {
-  Map<String, dynamic> body = {};
-  var res = await postDataApiCall("${url}/debt", body);
-  if (getFlagOfResponse(res)) {
-    var data = jsonDecode(res.body);
-    data = data['data'];
-  }
-}
-
-Future<bool> deleteUserAccount(BuildContext context, String msg) async {
-  try {
-    var body = {
-      // 'password':password,
-      'reason': msg,
-    };
-    var response = await deleteDataApiCallBody("${url}/user", body);
-
-    if (getFlagOfResponse(response)) {
-      clearStackLocalInfo();
-      logoutUserFromDevice(context);
-    } else if (response.statusCode == 400) {
-      var res = jsonDecode(response.body);
-      snackBarCalledfail(
-          context, res['error']['explanation'] ?? "Password incorrect");
-      return false;
-    }
-  } catch (e) {
-    snackBarCalledfail(context, "error while deleting");
-    return false;
-  }
-
-  return true;
-}
-
-void deleteBankAccount(
-    {required String bankid,
-    required String AccountId,
-    required BuildContext context}) async {
-  var res =
-      await deleteDataApiCall(BankTransactionRoutes.deleteBankAccount(bankId: bankid, accountId: AccountId),);
-  if (getFlagOfResponse(res)) {
-    accountId.value = "";
-    clearSpecificBox(HiveStorage.transactionsBoxName);
-    clearSpecificBox(HiveStorage.cardInsightsBoxName);
-    clearSpecificBox(HiveStorage.bankAccountsBoxName);
-    clearSpecificBox(HiveStorage.financeBoxName);
-    clearSpecificBox(HiveStorage.autoPayBoxName);
-    getBankAccounts();
-    getCategoryData(context);
-    clearGraph();
-    getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,isSplashScreen: true);
-    
-    Navigator.of(context).pop();
-    bankAccountLinkedList.refresh();
-    
-  }
-}

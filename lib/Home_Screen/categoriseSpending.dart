@@ -13,9 +13,10 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/repository/finora_repository.dart';
 import 'package:get/get.dart';
 
-import '../backed_connections/backServices.dart/bankInfo.dart';
+import '../backed_connections/backServices.dart/delete_banks_users.dart';
 
 RxInt selectedIndex = (-1).obs;
 RxList<ChartData> spendingsOnCategories = <ChartData>[].obs;

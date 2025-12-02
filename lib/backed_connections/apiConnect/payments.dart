@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
+import 'package:flutter_application_code_stakeplot/repository/debt_service.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_finances.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;

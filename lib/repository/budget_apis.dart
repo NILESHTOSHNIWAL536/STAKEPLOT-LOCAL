@@ -274,3 +274,15 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     snackBarCalledfail(context, SnackbarData().budgetUpdateFailed, Colors.red);
   }
 }
+
+
+void getInsights(context, String id) async {
+  var response = await getDataApiCall("${url}/budget/get-insights/$id");
+  if (response.statusCode == 200) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
+    inSights.clear();
+    inSights.addAll(obj);
+    getHistory.value = !getHistory.value;
+  } else {}
+}

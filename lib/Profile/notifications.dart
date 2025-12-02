@@ -6,7 +6,7 @@ import "package:flutter_application_code_stakeplot/Constants/colors.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart";
 import "package:flutter_application_code_stakeplot/components/helper.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart";
+import "package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart";
 import "package:flutter_application_code_stakeplot/Profile/autocategroies.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_one.dart";

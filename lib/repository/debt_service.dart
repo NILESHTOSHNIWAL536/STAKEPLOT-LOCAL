@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
+
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+
 
 class DebtService {
   static String baseUrl = '${url}/debt';
