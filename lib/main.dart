@@ -6,7 +6,7 @@ import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'appTheme.dart';
-import 'backed_connections/apiConnect/clearstack.dart';
+import 'repository/clearstack.dart';
 import 'controllers/controllerManagement.dart';
 import 'controllers/theme_controller.dart';
 import 'main_helper.dart';

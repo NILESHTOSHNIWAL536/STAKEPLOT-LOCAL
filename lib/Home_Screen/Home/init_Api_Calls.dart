@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
+import 'package:flutter_application_code_stakeplot/repository/lenduser_api.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/repository/home.dart';
+import 'package:flutter_application_code_stakeplot/repository/payments.dart';
+import 'package:flutter_application_code_stakeplot/repository/post.dart';
+import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
@@ -17,10 +18,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/budget_apis.dart';
+import 'package:flutter_application_code_stakeplot/repository/autopay_repository.dart';
+import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
+import 'package:flutter_application_code_stakeplot/repository/finora_repository.dart';
+import 'package:flutter_application_code_stakeplot/repository/payables_repository.dart';
 import 'package:flutter_application_code_stakeplot/widget_services/widget_updation.dart';
 import 'package:get/get.dart';
-import '../../backed_connections/backServices.dart/bankInfo.dart';
+import '../../backed_connections/bankServices/delete_banks_users.dart';
 import '../../controllers/user-controller.dart';
 import '../insightsController.dart';
 

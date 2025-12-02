@@ -1272,3 +1272,13 @@ bool checkRangeofDate(BuildContext context, [bool f = true]) {
     return false;
   }
 }
+
+
+bool isZeroAmount(String amount) {
+  try {
+    double parsed = double.parse(amount.trim().toString());
+    return parsed == 0.0 || parsed == 0.00 || parsed == 0;
+  } catch (e) {
+    return true;
+  }
+}

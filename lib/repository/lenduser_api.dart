@@ -8,7 +8,7 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
 void addLendUserAmount(context, String amount, List members, String name,
@@ -49,4 +49,15 @@ void addLendUserAmount(context, String amount, List members, String name,
   }
 
 
-  
+  void getUserLend(context) async {
+  String urlPath = "${url}/bill/lend";
+  var responce = await getDataApiCall(urlPath);
+
+  if (getFlagOfResponse(responce)) {
+    var his = jsonDecode(responce.body);
+    var userLend = his['data'];
+    lendAmountRemainders.clear();
+    lendAmountRemainders.addAll(userLend);
+    getlendUsers.value = !getlendUsers.value;
+  }
+}

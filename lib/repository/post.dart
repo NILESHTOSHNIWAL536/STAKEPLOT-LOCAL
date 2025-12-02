@@ -9,9 +9,9 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
+import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
@@ -19,7 +19,7 @@ import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:http/http.dart' as http;
 
-import '../../routes/route_post.dart';
+import '../routes/route_post.dart';
 
 Future<http.Response>  addReply(context, String data, String commentId, String postId) async {
   var body = {'comment': commentId, 'reply': data, 'post': postId};

@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:intl/intl.dart';
@@ -261,4 +262,16 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
   } else {
     snackBarCalledfail(context, SnackbarData().budgetUpdateFailed, Colors.red);
   }
+}
+
+
+void getInsights(context, String id) async {
+  var response = await getDataApiCall("${url}/budget/get-insights/$id");
+  if (response.statusCode == 200) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
+    inSights.clear();
+    inSights.addAll(obj);
+    getHistory.value = !getHistory.value;
+  } else {}
 }

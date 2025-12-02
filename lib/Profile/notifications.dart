@@ -5,8 +5,9 @@ import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/colors.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart";
+import "package:flutter_application_code_stakeplot/repository/payments.dart";
 import "package:flutter_application_code_stakeplot/components/helper.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart";
+import "package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart";
 import "package:flutter_application_code_stakeplot/Profile/autocategroies.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_one.dart";
@@ -14,18 +15,18 @@ import "package:flutter_application_code_stakeplot/Tribe/tribe_one.dart";
 import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends_apis.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
+import "package:flutter_application_code_stakeplot/repository/friends_apis.dart";
+import "package:flutter_application_code_stakeplot/repository/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/model/post_model.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
-import "package:flutter_application_code_stakeplot/routes/route_user_login.dart";
-import "dart:convert";
+import "package:flutter_application_code_stakeplot/repository/payables_repository.dart";
+
 
 import "package:get/get.dart";
 
-import "../routes/route_post.dart";
+
 
 RxBool notificationsFlag = true.obs;
 
@@ -45,32 +46,9 @@ class _NotificationsState extends State<Notifications> {
     // Debug notification list on init
   }
 
-  Future<void> deleteNotification(String? notifyId) async {
-    if (notifyId == null) return;
-    String urlPath = '${UserRoutes.deleteNotifications}/$notifyId';
-    var response = await getDataApiCall(urlPath);
-    if (!getFlagOfResponse(response)) 
-     
-    {
-      snackBarCalledfail(context, SnackbarData().deleteNotificationFailed);
-    }
-  }
+ 
 
-  Future<PostModel?> fetchPostById(String postId, BuildContext context) async {
-    try {
-      final response = await getDataApiCall(
-          '${PostRoutes.post}$postId'); // Adjust the endpoint based on your API);
-      if (getFlagOfResponse(response)) {
-        var jsonData = jsonDecode(response.body);
-        // Adjust based on your API response structure, e.g., jsonData['data']
-        return PostModel.fromJson(jsonData['data'][0] ?? jsonData);
-      } else {
-        return null;
-      }
-    } catch (e) {
-      return null;
-    }
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -794,7 +772,7 @@ class _NotificationsState extends State<Notifications> {
       setState(() {
         notificationList.removeWhere((item) => item['_id'] == notifyId);
       });
-      deleteNotification(notifyId);
+      deleteNotification(notifyId, context);
     }
   }
 }

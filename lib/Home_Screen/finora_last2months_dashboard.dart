@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/repository/finora_repository.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -34,32 +35,7 @@ class _FinoraLastTwoMonthsDashboardState
     // initFinoraLastTwoMonthsData();
   }
 
-  void getFinoraPreviousMonthData() async {
-    isLoading.value = true;
-    FinoraLoading.value = false;
-    try {
-      var response = await getDataApiCall(BankTransactionRoutes.getUserMonthlySpending);
-
-      if (getFlagOfResponse(response)) {
-
-        try {
-          await FinoraLastTwoMonthsStorage.cacheFinoraLastTwoMonthsDataLocally(
-              jsonDecode(response.body)['data']);
-        } catch (e) {
-        }
-
-        finoraTransactionData = jsonDecode(response.body)['data'] ?? {};
-        isLoading.value = false;
-      } else {
-        isLoading.value = false;
-      }
-    } catch (e) {
-      isLoading.value = false;
-      await FinoraLastTwoMonthsStorage.loadFinoraLastTwoMonthsDataFromHive();
-      isFinoraVisible.value = true;
-    }
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(

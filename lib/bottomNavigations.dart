@@ -24,10 +24,9 @@ import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 
 
-import "auth_service/login_apis.dart";
-import "backed_connections/apiAutomations/secure_storage.dart";
+
 import "finances_screen/index_finances.dart";
-import "offline.dart";
+
 
 class BottomNavigations extends StatefulWidget {
   int data;
@@ -253,32 +252,6 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   }
 
   
-void pushName2(Widget widgetName, [bool flag = false]) {
-  final route = PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => widgetName,
-  );
-
-  if (flag) {
-    // push but still listen for when it is popped to reset to Home
-    Navigator.push(context, route).then((_) {
-      if (!mounted) return;
-      setState(() {
-        widget.data = 0;
-      });
-      ScreenTimeTracker().switchTab(_tabNames[0]);
-    });
-  } else {
-    Navigator.push(context, route).then((_) {
-      if (!mounted) return;
-      setState(() {
-        widget.data = 0;
-      });
-      ScreenTimeTracker().switchTab(_tabNames[0]);
-    });
-    // If you ever want to force replace instead of push, use pushReplacement
-    // Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
-  }
-}
 
 
 }

@@ -122,3 +122,18 @@ class OtpService {
     return false;
   }
 }
+
+void resendOtpToUser(context, email, name) async
+{
+   var response=await postDataApiCallwithOutSharedPref('${url}/otp/resend-otp',{
+      'email': email,
+      "name": name,
+    });
+
+  if (getFlagOfResponse(response)) {
+    acceptReset.value = false;
+    snackBarCalled(context,SnackbarData().otpResent,);
+  } else {
+    snackBarCalledfail(context,SnackbarData().otpSendFail1,);
+  }
+}

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/userLoginedAlready.dart';
 import 'package:flutter_application_code_stakeplot/auth_service/login_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import '../backed_connections/apiConnect/signInAndOut.dart';

@@ -471,7 +471,7 @@ import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
+import 'package:flutter_application_code_stakeplot/repository/debt_service.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/financeWidgets.dart';

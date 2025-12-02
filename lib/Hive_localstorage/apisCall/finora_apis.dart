@@ -1,7 +1,12 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_data/card_insights_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:hive/hive.dart';
+import '../../Home_Screen/categoriseSpending.dart';
 import '../../backed_connections/apiAutomations/getTrasactions.dart';
 import 'init_hive.dart';
 
@@ -60,3 +65,73 @@ class CategoryStorage {
     }
   }
 }
+
+
+void processChartData() {
+  try {
+    // Recompute everything from scratch
+    List<ChartData> newData = [];
+    double newTotalValue = 0.0;
+
+    // categoryColors should be a Map<String, Color>
+    Map<String, Color> categoryColors = colorcodes;
+
+    for (var item in categoriesList) {
+      final String category = (item["category"] ?? "Others").toString();
+      final String percentage = (item["total_debit_percentage"] ?? "").toString();
+
+      // Defensive parsing for numeric fields
+      double value = 0.0;
+      final dynamic rawValue = item["total_debit"];
+      if (rawValue is num) {
+        value = rawValue.toDouble();
+      } else if (rawValue is String) {
+        value = double.tryParse(rawValue) ?? 0.0;
+      }
+
+      final Color color = categoryColors[category] ?? Colors.grey;
+      newData.add(ChartData(category, value, color, percentage));
+
+      newTotalValue += value; // accumulate into local total
+    }
+
+    // Replace the reactive list atomically so UI reacts correctly
+    spendingsOnCategories
+      ..clear()
+      ..addAll(newData);
+
+    // Assign computed total (not incremental)
+    totalValue.value = newTotalValue;
+
+    // If you want to signal any other reactive flags, refresh them:
+    spendingsOnCategories.refresh();
+    totalValue.refresh();
+  } catch (e, st) {
+    // Consider logging the error for debugging
+  }
+}
+
+// if any problem in above function use this below function
+// void processChartData() {
+//   try {
+//     List<ChartData> newData = [];
+//     double newTotalValue = 0.0;
+
+//     Map<String, Color> categoryColors = colorcodes;
+
+//     for (var item in categoriesList) {
+//       String category = item["category"] ?? "Others";
+//       String percentage = item["total_debit_percentage"] ?? "";
+//       double value = item["total_debit"].toDouble();
+//       Color color = categoryColors[category] ?? Colors.grey; // Default color
+//       newData.add(ChartData(category, value, color, percentage));
+
+//       totalValue.value += value;
+//     }
+
+//     if (newData.isNotEmpty) {
+//       spendingsOnCategories.clear();
+//       spendingsOnCategories.addAll(newData);
+//     }
+//   } catch (e) {}
+// }

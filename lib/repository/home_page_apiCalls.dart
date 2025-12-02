@@ -8,14 +8,14 @@ import "package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart";
+import "package:flutter_application_code_stakeplot/repository/home.dart";
+import "package:flutter_application_code_stakeplot/repository/payments.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-import "../../Hive_localstorage/apisCall/finance_apis.dart";
-import "../../routes/route_transactions.dart";
+import "../Hive_localstorage/apisCall/finance_apis.dart";
+import "../routes/route_transactions.dart";
 
 // expanded finance apis and functions
 final Map<String, int> monthNameToIndex = {
@@ -410,46 +410,6 @@ void showMonthPicker(
 
 // friends bill split
 
-class ThousandsFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.isEmpty) {
-      return newValue.copyWith(text: '');
-    }
-
-    // Remove commas from old and new values for comparison
-    String oldText = oldValue.text.replaceAll(',', '');
-    String newText = newValue.text.replaceAll(',', '');
-
-    // Handle decimal part if present
-    List<String> parts = newText.split('.');
-    String integerPart = parts[0];
-    String decimalPart = parts.length > 1 ? '.' + parts[1] : '';
-
-    // Format integer part with commas
-    final RegExp regExp = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-    String formattedInteger =
-        integerPart.replaceAllMapped(regExp, (Match m) => '${m[1]},');
-    String finalText = formattedInteger + decimalPart;
-
-    // Calculate new cursor position
-    int oldCommaCount = oldText.split('').where((c) => c == ',').length;
-    int newCommaCount = finalText.split('').where((c) => c == ',').length;
-    int cursorOffset =
-        newValue.selection.baseOffset + (newCommaCount - oldCommaCount);
-
-    // Adjust cursor position to stay in the correct relative spot
-    if (cursorOffset < 0) cursorOffset = 0;
-    if (cursorOffset > finalText.length) cursorOffset = finalText.length;
-
-    return newValue.copyWith(
-      text: finalText,
-      selection: TextSelection.collapsed(offset: cursorOffset),
-    );
-  }
-}
-// pending users
 
 String formatDateTime(String dateString) {
   DateTime dateTime = DateTime.parse(dateString).toLocal();

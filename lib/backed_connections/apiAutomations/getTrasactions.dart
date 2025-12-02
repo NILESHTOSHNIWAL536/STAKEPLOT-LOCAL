@@ -11,13 +11,14 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/repository/home.dart';
+import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/budget_apis.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/delete_banks_users.dart';
+import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
+import 'package:flutter_application_code_stakeplot/repository/finora_repository.dart';
 import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -33,219 +34,12 @@ double getDouble(data) {
 }
 
 // Functions to fetch the data
-void getAutoMationsTransactions() async {
-  var response = await getDataApiCall(BankTransactionRoutes.createUserDetails);
-  if (getFlagOfResponse(response)) {
-    trasactionsData.clear();
-    var his = jsonDecode(response.body);
-    trasactionsData.addAll(his['allTransactions']['categorized_transactions']);
-    changeTrasactiondata();
-  } else {}
-}
 
-void getFinoraPreviousMonthData() async
- {
-  var response =
-      await getDataApiCall(BankTransactionRoutes.getUserMonthlySpending);
-  if (getFlagOfResponse(response)) {
-    finoraTransactionData.clear();
-    var finoraData = jsonDecode(response.body);
-    finoraTransactionData.addAll(finoraData);
-  } else {}
-}
 
-Future<List<CardData>> getAutoPayInfo({bool flag=false}) async {
-  try {
-    // Fetch both false and true auto pay info
-    // if(flag)return allAutoPayData;
-    final responses = await Future.wait([
-      getDataApiCall(BankTransactionRoutes.getRecurringPayments(isActive: false)),
-      getDataApiCall(BankTransactionRoutes.getRecurringPayments(isActive: true)),
-    ]);
 
-    allAutoPayData.clear();
-    for (int i = 0; i < responses.length; i++) {
-      final response = responses[i];
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final jsonData = jsonDecode(response.body);
-        if (jsonData['success'] == true) {
-          final List<dynamic> autoPayDataInfo = jsonData['data'];
-          allAutoPayData.addAll(
-            autoPayDataInfo.asMap().entries.map((entry) {
-              final index = entry.key;
-              final data = entry.value as Map<String, dynamic>;
-              return CardData.fromJson(
-                  {...data, 'index': allAutoPayData.length + index});
-            }),
-          );
-        }
-      }
-    }
 
-    unawaited(CardsLocalStorage.saveCardsToHive(cardList: allAutoPayData));
-    isAutoPayFected.value = !isAutoPayFected.value;
 
-    return allAutoPayData;
-  } catch (e) {
-    isAutoPayFected.value = !isAutoPayFected.value;
-    await CardsLocalStorage.loadCardsFromHive();
-    return allAutoPayData;
-  }
-}
 
-Future<bool> addRecurringPayment(String id, bool isActive) async {
-  try {
-    final response = await updateDataApiCall2(
-         BankTransactionRoutes.updateRecurringPayment(id: id),{'isActive': isActive});
-
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      return jsonData['success'] == true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    return false;
-  }
-}
-
-Future<bool> addRecurringPaymentForDaily(String id, bool isDaily) async {
-  try {
-    final response = await updateDataApiCall2(
-          BankTransactionRoutes.updateRecurringPayment(id: id), {'isDaily': isDaily});
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      return jsonData['success'] == true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    return false;
-  }
-}
-
-Future<bool> updateRecurringPaymentDate(
-    String id, DateTime reminderDate, bool isActive) async {
-  try {
-    // Format the DateTime to ISO 8601 with fixed time (9:00 AM UTC)
-    final formattedDate = DateTime.utc(
-      reminderDate.year,
-      reminderDate.month,
-      reminderDate.day,
-      9, // Fixed hour (9 AM)
-      0, // Fixed minute
-      0, // Fixed second
-      0, // Fixed millisecond
-    ).toIso8601String();
-
-    final response = await updateDataApiCall2(
-       BankTransactionRoutes.updateRecurringPayment(id: id),
-      {'nextReminderAt': formattedDate, 'isActive': isActive},
-    );
-
-    // Debug prints for response
-
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      return jsonData['success'] == true;
-    } else {
-      return false;
-    }
-  } catch (e, stackTrace) {
-    return false;
-  }
-}
-
-Future<bool> ignoreRecurringPayment(String id) async {
-  try {
-    final response =
-        await deleteDataApiCall(  BankTransactionRoutes.deleteRecurringPayment(id: id),);
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      await getAutoPayInfo(flag: false);
-      return jsonData['success'] == true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    return false;
-  }
-}
-
-void changeTrasactiondata() async {
-  List allTransactions = [];
-
-  for (var category in trasactionsData) {
-    String categoryId = category['_id'];
-    String categoryName = category['category'];
-
-    for (var transaction in category['transactions']) {
-      transaction['categoryId'] = categoryId;
-      transaction['categoryName'] = categoryName;
-      allTransactions.add(transaction);
-    }
-  }
-  allTransactions.sort((a, b) => DateTime.parse(b["transactionTimestamp"])
-      .compareTo(DateTime.parse(a["transactionTimestamp"])));
-  listOfRecentTrasactionsData.clear();
-  listOfRecentTrasactionsData.addAll(allTransactions);
-}
-
-void getAutoMationsTransactionsMonthly() async {
-  var response = await getDataApiCall(
-        BankTransactionRoutes.getAllTransactionsByMonth(month: getCurrentMonth()),
-    );
-  trasactionsDataMonthlyCredit.clear();
-  trasactionsDataMonthlyDebit.clear();
-
-  if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
-    List<double> creditTransactions = List<double>.filled(32, 0);
-    List<double> debitTransactions = List<double>.filled(32, 0);
-
-    his['data']['debitTransactions'].forEach((element) {
-      int index = int.parse(element['day'].toString());
-      double amount = double.parse(element['amount'].toString());
-      debitTransactions[index] = amount;
-      maxDC = max(amount, maxDC);
-      minDC = min(amount, maxDC);
-    });
-    his['data']['creditTransactions'].forEach((element) {
-      int index = int.parse(element['day'].toString());
-      double amount = double.parse(element['amount'].toString());
-      creditTransactions[index] = amount;
-      maxDC = max(amount, maxDC);
-      minDC = min(amount, maxDC);
-    });
-
-    trasactionsDataMonthlyDebit.addAll(debitTransactions);
-    trasactionsDataMonthlyCredit.addAll(creditTransactions);
-    // getMaxAndMin();
-  }
-}
-
-void getAutoMationsTransactionsWeekly() async {
-  String week = getCurrentWeek();
-  var response = await getDataApiCall(
-      BankTransactionRoutes.getAllTransactionsByWeek(week: week),
-    );
-  trasactionsDataCreditWeekly.clear();
-  trasactionsDataDebitWeekly.clear();
-  if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
-    List creditTransactions = his['data'][week]['creditTransactions'];
-    List debitTransactions = his['data'][week]['debitTransactions'];
-
-    creditTransactions.forEach((element) {
-      trasactionsDataCreditWeekly.add(element['amount']);
-    });
-    debitTransactions.forEach((element) {
-      trasactionsDataDebitWeekly.add(element['amount']);
-    });
-
-    // getMaxAndMin();
-  }
-}
 
 Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
     {String weekORmonth = 'month',
@@ -665,74 +459,7 @@ void updateCatAndMoneyMap(BuildContext context)
   controller.getHomePageMoneyMapInsights(context);
   getCategoryData(context);
 }
-void processChartData() {
-  try {
-    // Recompute everything from scratch
-    List<ChartData> newData = [];
-    double newTotalValue = 0.0;
 
-    // categoryColors should be a Map<String, Color>
-    Map<String, Color> categoryColors = colorcodes;
-
-    for (var item in categoriesList) {
-      final String category = (item["category"] ?? "Others").toString();
-      final String percentage = (item["total_debit_percentage"] ?? "").toString();
-
-      // Defensive parsing for numeric fields
-      double value = 0.0;
-      final dynamic rawValue = item["total_debit"];
-      if (rawValue is num) {
-        value = rawValue.toDouble();
-      } else if (rawValue is String) {
-        value = double.tryParse(rawValue) ?? 0.0;
-      }
-
-      final Color color = categoryColors[category] ?? Colors.grey;
-      newData.add(ChartData(category, value, color, percentage));
-
-      newTotalValue += value; // accumulate into local total
-    }
-
-    // Replace the reactive list atomically so UI reacts correctly
-    spendingsOnCategories
-      ..clear()
-      ..addAll(newData);
-
-    // Assign computed total (not incremental)
-    totalValue.value = newTotalValue;
-
-    // If you want to signal any other reactive flags, refresh them:
-    spendingsOnCategories.refresh();
-    totalValue.refresh();
-  } catch (e, st) {
-    // Consider logging the error for debugging
-  }
-}
-
-// if any problem in above function use this below function
-// void processChartData() {
-//   try {
-//     List<ChartData> newData = [];
-//     double newTotalValue = 0.0;
-
-//     Map<String, Color> categoryColors = colorcodes;
-
-//     for (var item in categoriesList) {
-//       String category = item["category"] ?? "Others";
-//       String percentage = item["total_debit_percentage"] ?? "";
-//       double value = item["total_debit"].toDouble();
-//       Color color = categoryColors[category] ?? Colors.grey; // Default color
-//       newData.add(ChartData(category, value, color, percentage));
-
-//       totalValue.value += value;
-//     }
-
-//     if (newData.isNotEmpty) {
-//       spendingsOnCategories.clear();
-//       spendingsOnCategories.addAll(newData);
-//     }
-//   } catch (e) {}
-// }
 
 
 

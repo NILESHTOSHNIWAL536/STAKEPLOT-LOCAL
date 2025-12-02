@@ -4,14 +4,14 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/delete_banks_users.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart'; // Ensure DebtService is imported
+import 'package:flutter_application_code_stakeplot/repository/payments.dart'; // Ensure DebtService is imported
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
+import 'package:flutter_application_code_stakeplot/repository/debt_service.dart';
 class DebtDetailsScreen extends StatefulWidget {
   final Debt debt;
 
@@ -41,7 +41,7 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
      
     if (success) {
       await Future.delayed(Duration(seconds: 2));
-       fetchDebts();
+       DebtService.fetchDebts();
       if (mounted) {
         Navigator.of(context).pop();
       }

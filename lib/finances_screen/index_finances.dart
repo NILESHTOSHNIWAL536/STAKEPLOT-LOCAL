@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/repository/payments.dart';
+import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/add_credit_card_bank.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
+import 'package:flutter_application_code_stakeplot/repository/debt_service.dart';
+import 'package:flutter_application_code_stakeplot/repository/payables_repository.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../Utils/credit_card.dart';
@@ -46,7 +48,7 @@ class _FinanceDashboardState extends State<FinanceDashboard> {
       await Future.wait([
         cardController.fetchCardData(),
         cardController.getBanksListCrediCard(),
-        fetchDebts(), // Assuming fetchDebts is async
+       DebtService.fetchDebts() // Assuming fetchDebts is async
       ]);
     } catch (e) {
     } finally {

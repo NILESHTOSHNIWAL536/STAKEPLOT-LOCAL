@@ -9,13 +9,13 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 
-import '../../Hive_localstorage/apisCall/transactions_apis.dart';
+import '../Hive_localstorage/apisCall/transactions_apis.dart';
 
 void getAck() async {
   var response = await getDataApiCall(UserRoutes.newNotifications);
@@ -131,16 +131,7 @@ void getAllTransaction(context) async {
   } else {}
 }
 
-void getInsights(context, String id) async {
-  var response = await getDataApiCall("${url}/budget/get-insights/$id");
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    inSights.clear();
-    inSights.addAll(obj);
-    getHistory.value = !getHistory.value;
-  } else {}
-}
+
 
 void getHiddenTransactions(context) async {
   var response =
@@ -351,13 +342,4 @@ bool isCurrentMonth(String date, int m) {
   }
 }
 
-void getChatsSplitAccounts(context, String id) async {
-  var response = await getDataApiCall("${url}/split/pending-user");
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    chatSplitAccount.clear();
-    chatSplitAccount.addAll(obj);
-    getChatSplit.value = !getChatSplit.value;
-  } else {}
-}
+
