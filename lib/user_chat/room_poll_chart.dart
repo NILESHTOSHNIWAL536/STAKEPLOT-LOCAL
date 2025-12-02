@@ -13,7 +13,7 @@ import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../routes/route_post.dart';
+import '../routes/route_post.dart';
 
 void getChats(data) async {
  

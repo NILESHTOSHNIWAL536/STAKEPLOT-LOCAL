@@ -4,15 +4,14 @@ import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+
 import '../../Utils/finspaceStrings.dart';
 import '../../routes/route_finvu.dart';
 import '../googlesignin/credentials.dart';

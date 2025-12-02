@@ -12,9 +12,9 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/repository/home.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/delete_banks_users.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/delete_banks_users.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/post-controller.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
@@ -25,9 +25,9 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 
-import '../../controllers/credit_card_controller.dart';
-import '../../controllers/theme_controller.dart';
-import '../apiAutomations/secure_storage.dart';
+import '../controllers/credit_card_controller.dart';
+import '../controllers/theme_controller.dart';
+import '../backed_connections/apiAutomations/secure_storage.dart';
 
 void clearStack(BuildContext context) {
   try {

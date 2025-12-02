@@ -6,8 +6,8 @@ import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/model/user_activity_model.dart';
 import 'package:get/get.dart';
-import '../apiAutomations/curd.dart';
-import '../apis_connect.dart';
+import '../backed_connections/apiAutomations/curd.dart';
+import '../backed_connections/apis_connect.dart';
 import 'package:url_launcher/url_launcher.dart';
 // reward.dart (or backed_connections/reward.dart — file that contains callRewardApis)
 import 'package:flutter_application_code_stakeplot/main.dart' show navigatorKey;

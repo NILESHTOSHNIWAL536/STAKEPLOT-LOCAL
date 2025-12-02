@@ -14,39 +14,11 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
-import '../../Hive_localstorage/apisCall/post_apis.dart';
-import '../../Hive_localstorage/hive_storage.dart';
-import '../../routes/route_post.dart';
+import '../Hive_localstorage/apisCall/post_apis.dart';
+import '../Hive_localstorage/hive_storage.dart';
+import '../routes/route_post.dart';
 
 
-void approveBill(context, id, type, notifyId) async {
-  String urlPath = "${url}/bill/acceptBill/${id}/${type}/${notifyId}";
-
-  var responce = await getDataApiCall(urlPath);
-
-  if (getFlagOfResponse(responce)) {}
-}
-
-
-
-Future<void> getFoodieFundsDetails(BuildContext context, String id) async {
-  String urlPath = "${url}/reminders/$id";
-  var response = await getDataApiCall(urlPath);
-  if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
-    var data = his['data'] ?? {};
-
-    foodieFundsDetailsRemainders.clear();
-
-    // Add the entire data object as a single item (or adjust to extract friends + currentUser)
-    foodieFundsDetailsRemainders.add(data);
-
-    foodieFundsDetailsRemainders.refresh();
-    getFoodieFundsUsers.value = !getFoodieFundsUsers.value;
-  } else {
-    snackBarCalledfail(context, SnackbarData().failedToFetchFoodieFundsDetails);
-  }
-}
 
 void getNotifications(context) async {
   

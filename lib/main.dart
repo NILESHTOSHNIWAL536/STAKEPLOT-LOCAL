@@ -20,7 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart'; // Import for 'url' global
 
 import 'appTheme.dart';
-import 'backed_connections/apiConnect/clearstack.dart';
+import 'repository/clearstack.dart';
 import 'controllers/controllerManagement.dart';
 import 'controllers/theme_controller.dart';
 

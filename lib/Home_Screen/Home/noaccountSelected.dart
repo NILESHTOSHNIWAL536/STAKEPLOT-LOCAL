@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 
 import '../../backed_connections/apiAutomations/bankinfo.dart';
-import '../../backed_connections/apiConnect/clearstack.dart';
+import '../../repository/clearstack.dart';
 import 'init_Api_Calls.dart';
 
 class NoAccountScreen extends StatefulWidget {

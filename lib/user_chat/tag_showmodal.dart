@@ -10,7 +10,7 @@ import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/delete_banks_users.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/delete_banks_users.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/components/textfeild.dart';

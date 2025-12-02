@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';

@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'dart:convert';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 

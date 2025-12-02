@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/init_Api_Calls.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';

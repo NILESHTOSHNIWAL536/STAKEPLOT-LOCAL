@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:coupon_uikit/coupon_uikit.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/reward.dart';
+import 'package:flutter_application_code_stakeplot/repository/reward.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';

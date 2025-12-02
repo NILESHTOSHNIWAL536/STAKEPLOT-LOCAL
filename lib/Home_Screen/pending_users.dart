@@ -5,8 +5,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/repository/payments.dart';
+import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/repository/payables_repository.dart';
 

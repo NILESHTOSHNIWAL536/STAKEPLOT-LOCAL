@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';

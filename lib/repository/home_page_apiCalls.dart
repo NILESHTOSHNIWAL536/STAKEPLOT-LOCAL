@@ -9,7 +9,7 @@ import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart";
 import "package:flutter_application_code_stakeplot/repository/home.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart";
+import "package:flutter_application_code_stakeplot/repository/payments.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;

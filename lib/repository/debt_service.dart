@@ -13,7 +13,7 @@ class DebtService {
       Map<dynamic, dynamic> debtData) async {
     try {
       final response = await postDataApiCall(baseUrl, debtData);
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (getFlagOfResponse(response)) {
         return jsonDecode(response.body); // Return the JSON response
       }
     } catch (e) {}

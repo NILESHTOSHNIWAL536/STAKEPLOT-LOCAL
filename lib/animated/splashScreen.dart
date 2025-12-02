@@ -11,7 +11,7 @@ import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:lottie/lottie.dart';

@@ -10,7 +10,7 @@ import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart";
+import "package:flutter_application_code_stakeplot/repository/post.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/model/comment.dart";
 import "package:flutter_application_code_stakeplot/model/post_model.dart";

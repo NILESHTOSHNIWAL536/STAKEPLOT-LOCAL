@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
