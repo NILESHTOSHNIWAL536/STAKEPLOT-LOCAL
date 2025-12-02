@@ -100,11 +100,14 @@ class _ChatState extends State<Chat> {
     socket.on(
         'online',
         (res) => {
+          if(res['id']==roomId.value)
+          {
               print({"id":roomId.value,"flag":true}),
               setState(() {
-                onlineUser.value = true;
-              })
-            });
+                    onlineUser.value = res['flag'];
+                  })
+          }
+         });
 
     socket.on(
         "message",
@@ -278,11 +281,11 @@ class _ChatState extends State<Chat> {
   }
 
   void clearChatData() {
+    socket.emit("online", {"id":roomId.value,"flag":false});
     socket.close();
     chatOfUserList.remove(data['_id']);
     clear(data);
     unSeenChat(context, data['_id']);
-    socket.emit("online", {"id":roomId.value,"flag":false});
     Navigator.pop(context);
   }
 
