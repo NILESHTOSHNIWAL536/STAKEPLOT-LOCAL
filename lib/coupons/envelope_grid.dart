@@ -44,11 +44,7 @@ class _EnvelopeGridState extends State<EnvelopeGrid> {
         ),
       );
     }
-
-    // Duplicate the single coupon to simulate multiple coupons
-    // final coupon = widget.categoryCoupons[0];
-    // final duplicatedCoupons = List.filled(5, coupon); // Create 5 duplicates
-
+    
     return Container(
       child: CarouselSlider.builder(
         itemCount: widget.categoryCoupons.length,

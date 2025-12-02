@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-
 import '../components/helper.dart';
 
 class CreditCardTransaction {
@@ -92,45 +90,6 @@ class CreditCardTransactionCard extends StatelessWidget {
             indent: 0,
           ),
           SizedBox(height: 4),
-          //       Text(
-          //         "Credit Card Transaction",
-          //         style:
-          //            FontManager().getTextStyle(
-          //  context,fontSize: 15, lWeight: FontWeight.w600, color: Colors.black87),
-          //       ),
-          //       SizedBox(height: 12),
-          // Table(
-          //   columnWidths: {0: FixedColumnWidth(100), 1: FlexColumnWidth()},
-          //   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          //   children: [
-          //     TableRow(children: [
-          //       Text("Date", style: rowLabelStyle(context)),
-          //       Text(" :  ${txn.date}", style:  rowValueStyle(context)),
-          //     ]),
-          //     TableRow(children: [
-          //       Text("Transaction ID", style: rowLabelStyle(context)),
-          //       Text(" :  ${txn.transactionId}", style:  rowValueStyle(context)),
-          //     ]),
-          //     TableRow(children: [
-          //       Text("Amount", style: rowLabelStyle(context)),
-          //       Text(" :  ${parseAmount(txn.amount)}", style:  rowValueStyle(context)),
-          //     ]),
-          //     TableRow(children: [
-          //       Text("Card Number", style: rowLabelStyle(context)),
-          //       Text(
-          //         " :  ************${txn.cardNumber}",
-          //         style:  rowValueStyle(context),
-          //       ),
-          //     ]),
-          //     TableRow(children: [
-          //       Text("Merchant", style: rowLabelStyle(context)),
-          //       Text(
-          //         " :  ${txn.merchant ?? '-'}",
-          //         style: rowValueStyle(context),
-          //       ),
-          //     ]),
-          //   ],
-          // ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Column(
@@ -140,7 +99,6 @@ class CreditCardTransactionCard extends StatelessWidget {
                 buildRow("Amount", parseAmount(txn.amount), context),
                 buildRow(
                     "Card Number", "************${txn.cardNumber}", context),
-                // buildRow("Merchant", txn.merchant ?? '-', context),
               ],
             ),
           )
@@ -213,14 +171,6 @@ String parseAmount(String s) {
     return s;
   }
 }
-
-// Usage Example:
-// Pass your JSON map to this widget
-/*
-CreditCardTransactionCard(
-  txn: CreditCardTransaction.fromJson(myJsonMap),
-)
-*/
 
 class CreditCardTransaction2 {
   final String bank;

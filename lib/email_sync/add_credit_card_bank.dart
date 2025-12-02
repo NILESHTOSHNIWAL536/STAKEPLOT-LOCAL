@@ -137,14 +137,6 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                         c: AppColors.primaryColor,
                         fontWeight: FontWeight.w500,
                         fontsize: 18),
-                    // Text(
-                    //   filteredBanks[i].name,
-                    //   style: TextStyle(
-                    //     color: Color(0xFF37344F),
-                    //     fontSize: 16,
-                    //     fontWeight: FontWeight.w500,
-                    //   ),
-                    // ),
                     onTap: () {
                       controller.text = filteredBanks[i].name;
                       selectedBankName.value = filteredBanks[i].name;
@@ -201,87 +193,3 @@ void pushnameToRoute(BuildContext context, Widget CreditCardsScreen,
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => CreditCardsScreen));
 }
-
-
-
-// List banks =
-//    [
-//        { 
-//         'name':"HDFC Bank",
-//         'logo':'https://cdn.finvu.in/finvulogos/hdfcbank_logo.jpg',
-//          'bankId':'HDFCLtd-FIP'
-//        },
-//        { 
-//         'name':"ICICI Bank",
-//         'logo':'https://cdn.finvu.in/finvulogos/icicibank_icon.jpg',
-//          'bankId':'ICICI-FIP'
-//        },
-//        { 
-//         'name': "SBI Card",
-//         'logo':'https://cdn.finvu.in/finvulogos/sbi_logo.png',
-//          'bankId':'sbi-fip'
-//        },
-//        { 
-//         'name':  "Axis Bank",
-//         'logo':'https://cdn.finvu.in/finvulogos/axisbank_icon.jpg',
-//          'bankId':'AXIS001'
-//        },
-//        { 
-//         'name':  "Kotak Mahindra Bank",
-//         'logo':'https://cdn.finvu.in/finvulogos/kotakbank_app_logo.png',
-//          'bankId':'KotakMahindraBank-FIP'
-//        },
-//        { 
-//         'name':   "Bank of Baroda",
-//         'logo':'https://cdn.finvu.in/finvulogos/bank_of_baroda_logo_bob.png',
-//          'bankId':'BARBFIP'
-//        },
-//        { 
-//         'name': "Yes Bank",
-//         'logo':'https://cdn.finvu.in/finvulogos/yes_bank_logo.png',
-//          'bankId':'YESB-FIP'
-//        },
-//     ];
-
-
-     //  { 
-      //   'name': "IndusInd Bank",
-      //   'logo':'',
-      //    'id':''
-      //  },
-      //  { 
-      //   'name': "IDFC First Bank",
-      //   'logo':'',
-      //    'id':''
-      //  },
-      //  { 
-      //   'name':  "Punjab National Bank",
-      //   'logo':'',
-      //    'id':''
-      //  },
-      //  { 
-      //   'name': "IDBI Bank",
-      //   'logo':'',
-      //    'id':''
-      //  },
-      //  { 
-      //   'name':  "Canara Bank",
-      //   'logo':'',
-      //    'id':''
-      //  },   
-      //  { 
-      //   'name':  "Federal Bank",
-      //   'logo':'',
-      //    'id':''
-      //  },   
-      //  { 
-      //   'name':  "RBL Bank",
-      //   'logo':'',
-      //    'id':''
-      //  },   
-      //  { 
-      //   'name': "Union Bank of India",
-      //   'logo':'',
-      //    'id':''
-      //  },   
-       

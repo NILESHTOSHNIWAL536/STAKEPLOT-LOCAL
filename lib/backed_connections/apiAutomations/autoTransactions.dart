@@ -28,7 +28,6 @@ void getAllAutoTransactions() async {
 
 void updateTransactionsBalanceOut(context,transactionId,int index,double amount)async
 {
-  // var res =await postDataApiCall("${url}/transaction/updateGroupTransactions/${transactionId}",{
   var res =await postDataApiCall("${TransactionRoutes.updateGroupTransactions}/${transactionId}",{
       "amount":(amount).abs()
   });

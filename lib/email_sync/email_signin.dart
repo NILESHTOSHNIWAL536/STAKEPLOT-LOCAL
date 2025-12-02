@@ -77,13 +77,6 @@ class SignInScreen extends StatelessWidget {
                       c: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontsize: 15),
-                  //  Text(
-                  //   "Sign in with goggle",
-                  //   style: TextStyle(
-                  //     color: Color(0xFF37344F),
-                  //     fontSize: 16.2,
-                  //   ),
-                  // ),
                 ),
               ),
             ),

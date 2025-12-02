@@ -25,7 +25,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../animated/pdf3.dart';
+import '../../animated/pdf.dart';
 
 RxBool reloadHistory = false.obs;
 RxString selectedValue = "30".obs;

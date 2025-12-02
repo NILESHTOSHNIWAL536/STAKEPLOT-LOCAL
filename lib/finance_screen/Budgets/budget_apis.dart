@@ -10,11 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_finances.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-
-// Import for globals
-
 
 class BudgetService {
   static Future<void> fetchBudgetInsights(String budgetId) async {
@@ -27,7 +22,6 @@ class BudgetService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
        
-        // Extract the 'data' field from the response, which contains the list of insights
         budgetInsights = List<String>.from(data['data'] ?? []);
       } else {
        
@@ -40,7 +34,6 @@ class BudgetService {
     final String budgetId =
         budgetDataParam['_id']?.toString() ?? '67b84fdcfab72f34be29c893';
 
-    // final String apiUrl = '$url/budget/get-budget-spents/$budgetId';
     final String apiUrl = BudgetRoutes.getBudgetSpents(bid: budgetId);
    
     try {
@@ -180,7 +173,7 @@ class BudgetService {
       } else {
         snackBarCalledfail(context, SnackbarData().budgetDeletionError);
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
     } finally {
       isBudgetDeleting = false;
     }
@@ -199,7 +192,6 @@ void getTopFiveCater() async {
   } catch (e) {}
 }
 Future<void> getBudget() async {
-  // String urlPath = "${url}/budget/";
   String urlPath =BudgetRoutes.getAllBudgets;
   try {
     var responce = await getDataApiCall(urlPath);
@@ -217,7 +209,7 @@ void addBudget(BuildContext context, String name, String amount,
     List expenseCategory, String budgetPeriod) async {
   
   List filteredCategories = expenseCategory
-      .where((e) => !isZeroAmount(e['amount'].toString() ?? '0'))
+      .where((e) => !isZeroAmount(e['amount'].toString()))
       .toList();
 
   if (filteredCategories.isEmpty) {
@@ -236,7 +228,6 @@ void addBudget(BuildContext context, String name, String amount,
  
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
     getBudget();
     Navigator.pop(context);
     Navigator.pop(context);
@@ -264,10 +255,7 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-
     snackBarCalled(context, SnackbarData().budgetUpdated);
-    // Navigator.pushNamed(context, '/BudgetCheck');
     Navigator.pop(context);
     Navigator.pop(context);
   } else {

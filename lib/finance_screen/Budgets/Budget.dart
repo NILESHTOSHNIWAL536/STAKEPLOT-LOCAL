@@ -142,7 +142,6 @@ class _BudgetState extends State<Budget> {
         Container(
           width: MediaQuery.sizeOf(context).width / 1.2,
           height: MediaQuery.sizeOf(context).height / 1.7,
-          // padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: AppColors.backgroundColor,

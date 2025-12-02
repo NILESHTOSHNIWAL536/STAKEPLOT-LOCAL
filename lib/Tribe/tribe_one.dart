@@ -84,8 +84,6 @@ class _TribeHomeState extends State<TribeUnique> {
       return;
     }
 
-    
-
     Comments obj = Comments();
     Author auth = Author();
     PostDetails post = PostDetails();
@@ -106,12 +104,11 @@ class _TribeHomeState extends State<TribeUnique> {
     // indexArray.add(i);
     // i++;
 
-    final response = await postDataApiCall('${url}/comment/',{
-        'post': postId,
-        // 'user': authorId,
-        'comment': data,
-      }
-    );
+    final response = await postDataApiCall('${url}/comment/', {
+      'post': postId,
+      // 'user': authorId,
+      'comment': data,
+    });
     if (getFlagOfResponse(response)) {
       final body = json.decode(response.body);
 
@@ -123,8 +120,8 @@ class _TribeHomeState extends State<TribeUnique> {
       i++;
 
       postController.postCount[id] = 0;
-      snackBarCalled(
-          context, SnackbarData().commentAddedSuccessfully, AppColors.accentColor);
+      snackBarCalled(context, SnackbarData().commentAddedSuccessfully,
+          AppColors.accentColor);
     } else {
       snackBarCalledfail(
           context, SnackbarData().unableToAddComment, Colors.red);
@@ -142,7 +139,7 @@ class _TribeHomeState extends State<TribeUnique> {
   }
 
   void getInfo() async {
-   var response=await getDataApiCall(UserRoutes.getInfo);
+    var response = await getDataApiCall(UserRoutes.getInfo);
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
@@ -158,10 +155,7 @@ class _TribeHomeState extends State<TribeUnique> {
   }
 
   void getTransactionComments() async {
-    
-    final response = await getDataApiCall(
-        '${url}/comment/${widget.id}');
-    
+    final response = await getDataApiCall('${url}/comment/${widget.id}');
 
     if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
@@ -386,7 +380,6 @@ class _TribeHomeState extends State<TribeUnique> {
                     url: data.author!.avatar.toString(),
                     width: 10,
                     height: 23,
-                    // background: data.author!.avatarBackGround.toString(),
                   ),
                   const SizedBox(width: 0),
                   Container(
@@ -413,37 +406,6 @@ class _TribeHomeState extends State<TribeUnique> {
                                     fontSize: 16,
                                     color: AppColors.bg1),
                               ),
-
-                              //  trimlowercase(dataObj.author.maskedName) == trimlowercase(userController.maskedName) || (trimlowercase(data.author!.name)) == trimlowercase(userController.maskedName)?
-                              //   Row(
-                              //        children: [
-                              //         InkWell(
-                              //           onTap: (){
-                              //               showDeleteDialogComment(context,data.commentText.toString(),'comment',data.sId.toString(),dataObj.id,index,0);
-                              //           },
-                              //           child: Icon(Icons.delete,size: 20,color: Colorcodes.red)),
-                              //         (trimlowercase(data.author!.name)) == trimlowercase(userController.maskedName)  ?  Padding(
-                              //           padding: const EdgeInsets.only(left: 5),
-                              //           child: IconButton(
-                              //             icon: Icon(Icons.edit),
-                              //             onPressed: () {
-                              //               showEditBottomSheet(
-                              //                 context: context,
-                              //                 initialText:data.commentText.toString() ,
-                              //                 id: data.sId.toString(),
-                              //                 postId: dataObj.id,
-                              //                 type: 'comment'
-
-                              //               );
-                              //             },
-                              //          ),
-                              //         )
-                              //         :
-                              //         SizedBox.shrink(),
-
-                              //        ],
-                              //     ):SizedBox.shrink(),
-
                               trimlowercase(dataObj.author.maskedName) ==
                                           trimlowercase(
                                               userController.maskedName) ||
@@ -452,9 +414,9 @@ class _TribeHomeState extends State<TribeUnique> {
                                               userController.maskedName)
                                   ? Align(
                                       alignment: Alignment.topRight,
-                                      
                                       child: PopupMenuButton<String>(
-                                        icon: const Icon(Icons.more_horiz_rounded,
+                                        icon: const Icon(
+                                            Icons.more_horiz_rounded,
                                             size: 20),
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -509,7 +471,6 @@ class _TribeHomeState extends State<TribeUnique> {
                                                       .maskedName)) {
                                             items.add(
                                               PopupMenuItem(
-
                                                 value: 'delete',
                                                 child: Text('Delete',
                                                     style: getStyle()),
@@ -802,7 +763,8 @@ class _TribeHomeState extends State<TribeUnique> {
                         suffixIcon: suffix(
                             Textcontroller.text, commentId, Textcontroller),
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: AppColors.backgroundColor)),
+                            borderSide: const BorderSide(
+                                color: AppColors.backgroundColor)),
                         focusedBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: AppColors.buttonBorder)),
@@ -913,32 +875,6 @@ class _TribeHomeState extends State<TribeUnique> {
                                 fontSize: 16,
                                 color: AppColors.bg1)),
                       ),
-                      //  trimlowercase(dataObj.author.maskedName) == trimlowercase(userController.maskedName)   ||  trimlowercase(replayObj.author!.name)==trimlowercase(userController.maskedName)?
-                      //           Row(
-                      //                children: [
-                      //                       InkWell(
-                      //                         onTap: (){
-                      //                           showDeleteDialogComment(context,replayObj.replyText!,'reply',replayObj.sId.toString(),data.sId.toString(),index,replyIndex);
-                      //                         },
-                      //                         child: Icon(Icons.delete,size: 20,color: Colorcodes.red)),
-                      //                       trimlowercase(replayObj.author!.name)==trimlowercase(userController.maskedName)? Padding(
-                      //                         padding: const EdgeInsets.only(left: 5),
-                      //                         child:IconButton(
-                      //                     icon: Icon(Icons.edit),
-                      //                     onPressed: () {
-                      //                       showEditBottomSheet(
-                      //                         context: context,
-                      //                         initialText:replayObj.replyText.toString() ,
-                      //                         id: replayObj.sId.toString(),
-                      //                         postId: data.sId.toString(),
-                      //                         type: 'reply'
-                      //                       );
-                      //                     },
-                      //                  ),
-                      //                       ):SizedBox.shrink(),
-                      //                ],
-                      //             ):SizedBox.shrink(),
-
                       trimlowercase(dataObj.author.maskedName) ==
                                   trimlowercase(userController.maskedName) ||
                               trimlowercase(replayObj.author!.name) ==
@@ -947,10 +883,11 @@ class _TribeHomeState extends State<TribeUnique> {
                               alignment: Alignment.topRight,
                               heightFactor: 1.1,
                               widthFactor: 1.1,
-                            
                               child: PopupMenuButton<String>(
-                                icon: const Icon(Icons.more_horiz_rounded, size: 20),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                icon: const Icon(Icons.more_horiz_rounded,
+                                    size: 20),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
                                 position: PopupMenuPosition.under,
                                 offset: Offset(-20, -10),
                                 onSelected: (value) {
@@ -974,7 +911,7 @@ class _TribeHomeState extends State<TribeUnique> {
                                     );
                                   }
                                 },
-                                 color: Colorcodes.white,
+                                color: Colorcodes.white,
                                 itemBuilder: (BuildContext context) {
                                   List<PopupMenuEntry<String>> items = [];
 
@@ -989,8 +926,6 @@ class _TribeHomeState extends State<TribeUnique> {
                                       ),
                                     );
                                   }
-
-                                  // Show "Delete" if the user is either the post owner or the reply author
                                   if (trimlowercase(
                                               dataObj.author.maskedName) ==
                                           trimlowercase(
@@ -1034,13 +969,11 @@ class _TribeHomeState extends State<TribeUnique> {
 
   void upvote2(context, String str, String objectId, dataObj, historyListData2,
       Comments commentObj, int index) async {
-   
     // boolVar.value=!boolVar.value
-    final response = await postDataApiCall('${url}/upvote/',{
-        'onModel': str.toString(),
-        'objectId': objectId,
-      }
-    );
+    final response = await postDataApiCall('${url}/upvote/', {
+      'onModel': str.toString(),
+      'objectId': objectId,
+    });
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);

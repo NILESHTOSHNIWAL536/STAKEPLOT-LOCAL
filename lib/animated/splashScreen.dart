@@ -13,13 +13,11 @@ import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
-import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import '../Hive_localstorage/apisCall/init_hive.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
-import '../OneSignal/oneSignal_config.dart';
 import '../Utils/credit_card.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,31 +39,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _checkForUpdatesAndNavigate() async {
     // if (SnackbarData().showUpdatecall) await checkForUpdate();
-    // await checkAuthAndNavigate();
+     await checkAuthAndNavigate();
   }
 
-  void callApis() async {
+  void callApis() async
+  {
     await initAllHive();
-
-    SignupData signup = SignupData();
-    SnackbarData snackbarData = SnackbarData();
-    SigninData signinData = SigninData();
-    PlotFinanceStaticData plotFinanceStaticData = PlotFinanceStaticData();
-    CommunityScreenStrings communityScreenStrings = CommunityScreenStrings();
-    FinvuStrings finvuStrings = FinvuStrings();
-    ProfileScreenStrings profileScreenStrings = ProfileScreenStrings();
-    FinspaceStrings finspaceStrings = FinspaceStrings();
-    HomepageStringsDart homepageStringsDart = HomepageStringsDart();
-
-    finspaceStrings.fetchConstants();
-    signinData.fetchConstants();
-    signup.fetchConstants();
-    snackbarData.fetchConstants();
-    plotFinanceStaticData.fetchConstants();
-    communityScreenStrings.fetchConstants();
-    finvuStrings.fetchConstants();
-    homepageStringsDart.fetchConstants();
-    profileScreenStrings.fetchConstants();
+    FinspaceStrings().fetchConstants();
+    SigninData().fetchConstants();
+    SignupData().fetchConstants();
+    SnackbarData().fetchConstants();
+    PlotFinanceStaticData().fetchConstants();
+    CommunityScreenStrings().fetchConstants();
+    FinvuStrings().fetchConstants();
+    HomepageStringsDart().fetchConstants();
+    ProfileScreenStrings().fetchConstants();
     PdfStrings().fetchConstants();
     RewardScreenStrings().fetchConstants();
     CreditCardScreenStrings().fetchConstants();

@@ -33,7 +33,8 @@ class HomePageIcons {
       "assets/icons/Home-page/TransactionSplitIcon.svg";
   static String cashIn = "assets/icons/Home-page/cashIn.svg";
   static String cashOut = "assets/icons/Home-page/cashOut.svg";
-  static String transactionHistoryIcon = "assets/icons/Home-page/historyIcon.svg";
+  static String transactionHistoryIcon =
+      "assets/icons/Home-page/historyIcon.svg";
   static String noAccLink = "assets/icons/Home-page/noAccLink.svg";
   static String filterIcon = "assets/icons/Home-page/filterIcon2.svg";
   static String filterOn = "assets/icons/Home-page/filterOn.svg";
@@ -299,7 +300,6 @@ class BudgetCategories {
     "Bills": Categories.bills,
     "Subscriptions": Categories.subscription,
     "Events": Categories.events,
-    // "Personal care": Categories.personalCare,
     "Personal Care": Categories.personalCare, //
     "Services": Categories.services,
     "Emi": Categories.emi,
@@ -949,30 +949,29 @@ class MaskedAvatars {
 
 List avatarBackGroundList = ["#FA7070", "#FFB07A", "#4C8BF5", "#68B2A0"];
 
+final List<Map<String, dynamic>> categoriesOfReward = [
+  {'title': 'Fashion', 'emoji': '👗', 'color': Color(0xFFDCAAAA)},
+  {'title': 'Accessories', 'emoji': '👜', 'color': Color(0xFFA0CAD0)},
+  {
+    'title': 'Beauty & Personal Care',
+    'emoji': '💄',
+    'color': Color(0xFFA9B3DA)
+  },
+  {'title': 'Electronics', 'emoji': '📱', 'color': Color(0xFFCC9EBD)},
+  {'title': 'Software & Security', 'emoji': '🖥️', 'color': Color(0xFFBACC9E)},
+  {'title': 'Web Services', 'emoji': '🌐', 'color': Color(0xFFDCAAAA)},
+  {'title': 'Travel & Tourism', 'emoji': '🏖️', 'color': Color(0xFFA0CAD0)},
+  {'title': 'Flights', 'emoji': '✈️', 'color': Color(0xFFA9B3DA)},
+  {'title': 'Rentals', 'emoji': '🚗', 'color': Color(0xFFCC9EBD)},
+  {'title': 'Food & Beverage', 'emoji': '🍔', 'color': Color(0xFFBACC9E)},
+  {'title': 'Health & Wellness', 'emoji': '🏥', 'color': Color(0xFFDCAAAA)},
+  {'title': 'Entertainment', 'emoji': '🎬', 'color': Color(0xFFA0CAD0)},
+];
 
-
-
-
- final List<Map<String, dynamic>> categoriesOfReward = [
-   {'title': 'Fashion', 'emoji': '👗', 'color': Color(0xFFDCAAAA)},
-    {'title': 'Accessories', 'emoji': '👜', 'color': Color(0xFFA0CAD0)},
-    {'title': 'Beauty & Personal Care', 'emoji': '💄', 'color': Color(0xFFA9B3DA)},
-    {'title': 'Electronics', 'emoji': '📱', 'color': Color(0xFFCC9EBD)},
-    {'title': 'Software & Security', 'emoji': '🖥️', 'color': Color(0xFFBACC9E)},
-    {'title': 'Web Services', 'emoji': '🌐', 'color': Color(0xFFDCAAAA)},
-    {'title': 'Travel & Tourism', 'emoji': '🏖️', 'color': Color(0xFFA0CAD0)},
-    {'title': 'Flights', 'emoji': '✈️', 'color': Color(0xFFA9B3DA)},
-    {'title': 'Rentals', 'emoji': '🚗', 'color': Color(0xFFCC9EBD)},
-    {'title': 'Food & Beverage', 'emoji': '🍔', 'color': Color(0xFFBACC9E)},
-    {'title': 'Health & Wellness', 'emoji': '🏥', 'color': Color(0xFFDCAAAA)},
-    {'title': 'Entertainment', 'emoji': '🎬', 'color': Color(0xFFA0CAD0)},
-  ];
-
-
-RxList<String> customTagList=<String>[
-    Categories.link + Categories.handBill,
-    Categories.link + Categories.creditCardCheck,
-    Categories.link + Categories.digitalPayment,
+RxList<String> customTagList = <String>[
+  Categories.link + Categories.handBill,
+  Categories.link + Categories.creditCardCheck,
+  Categories.link + Categories.digitalPayment,
 ].obs;
 
 Map<String, List<String>> moveMatchedCategoryFirst(String match) {
@@ -981,13 +980,17 @@ Map<String, List<String>> moveMatchedCategoryFirst(String match) {
 
   // Find the matched entry (case-insensitive contains or exact match)
   final matchLower = match.toLowerCase();
-  final matched = entries.where(
-    (e) => e.key.toLowerCase().contains(matchLower),
-  ).toList();
+  final matched = entries
+      .where(
+        (e) => e.key.toLowerCase().contains(matchLower),
+      )
+      .toList();
 
-  final others = entries.where(
-    (e) => !e.key.toLowerCase().contains(matchLower),
-  ).toList();
+  final others = entries
+      .where(
+        (e) => !e.key.toLowerCase().contains(matchLower),
+      )
+      .toList();
 
   // Combine matched first, then others
   final newEntries = [...matched, ...others];
@@ -995,4 +998,3 @@ Map<String, List<String>> moveMatchedCategoryFirst(String match) {
   // Convert back to map
   return Map<String, List<String>>.fromEntries(newEntries);
 }
-    

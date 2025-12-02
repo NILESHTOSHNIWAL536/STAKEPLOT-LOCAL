@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,16 +27,12 @@ class CouponCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isClaimed = onClaim.toString().contains('Closure: () => null');
-    // Responsive height based on screen size, capped for smaller devices
-    // double height =
-    //     MediaQuery.of(context).size.height * 0.5; // 45% of screen height
-    // height = height.clamp(300, 600); // Min 300, max 450 for consistency
-    // final width =
-    //     MediaQuery.of(context).size.width * 0.9; // 90% of screen width
-    // double curve = height * 0.5; // Adjusted curve for more space in firstChild
- double height = MediaQuery.of(context).size.height * 0.45; // Reduced to 45% for better fit
-    height = height.clamp(300, 500); // Adjusted max to 500 for better proportion
-    final width = MediaQuery.of(context).size.width * 0.9; // 90% of screen width
+    double height = MediaQuery.of(context).size.height *
+        0.45; // Reduced to 45% for better fit
+    height =
+        height.clamp(300, 500); // Adjusted max to 500 for better proportion
+    final width =
+        MediaQuery.of(context).size.width * 0.9; // 90% of screen width
     double curve = height * 0.6;
     return Stack(
       clipBehavior: Clip.none,
@@ -144,22 +139,22 @@ class CouponCardWidget extends StatelessWidget {
                   ),
                   maxLines: 8,
                   // softWrap: true,
-                    overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-         secondChild: Container(
-          height: height * 0.4,
+          secondChild: Container(
+            height: height * 0.4,
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+              borderRadius:
+                  const BorderRadius.vertical(bottom: Radius.circular(20)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,76 +169,65 @@ class CouponCardWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                   Text.rich(
-       TextSpan(
-    text: 'In partnership with ',
-    style: FontManager().getTextStyle(
-      context,
-      fontSize: 12,
-      lWeight: FontWeight.w600,
-      color: AppColors.bg1.withOpacity(0.6),
-    ),
-    children: [
-      TextSpan(
-        text: 'fishmydeal',
-        style: FontManager().getTextStyle(
-          context,
-          fontSize: 13,
-          lWeight: FontWeight.w600,
-          color: AppColors.primaryColor,
-          decoration: TextDecoration.underline,
-        ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () async {
-             redirectToUrl(context, RewardScreenStrings().productUrl.value);
-          },
-      ),
-      TextSpan(
-        text: ' - exclusively on ',
-        style: FontManager().getTextStyle(
-          context,
-          fontSize: 12,
-          lWeight: FontWeight.w600,
-          color: AppColors.bg1.withOpacity(0.6),
-        ),
-      ),
-      TextSpan(
-        text: ' Stakeplot',
-        style: FontManager().getTextStyle(
-          context,
-          fontSize: 13,
-          lWeight: FontWeight.w600,
-          color: AppColors.bg6,
-        ),
-      ),
-    ],
-  ),
-)
-                    // InkWell(
-                    //   onTap: () async {
-                    //     redirectToUrl(
-                    //         context, RewardScreenStrings().productUrl.value);
-                    //   },
-                    //   child: Text(
-                    //     'In partnership with fishmydeal - exclusively on Stakeplot',
-                    //     style: FontManager().getTextStyle(
-                    //       context,
-                    //       fontSize: 12,
-                    //       lWeight: FontWeight.w600,
-                    //       color: AppColors.bg1.withOpacity(0.6),
-                    //     ),
-                    //   ),
-                    // ),
+                    Text.rich(
+                      TextSpan(
+                        text: 'In partnership with ',
+                        style: FontManager().getTextStyle(
+                          context,
+                          fontSize: 12,
+                          lWeight: FontWeight.w600,
+                          color: AppColors.bg1.withOpacity(0.6),
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'fishmydeal',
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 13,
+                              lWeight: FontWeight.w600,
+                              color: AppColors.primaryColor,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                redirectToUrl(context,
+                                    RewardScreenStrings().productUrl.value);
+                              },
+                          ),
+                          TextSpan(
+                            text: ' - exclusively on ',
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 12,
+                              lWeight: FontWeight.w600,
+                              color: AppColors.bg1.withOpacity(0.6),
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' Stakeplot',
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 13,
+                              lWeight: FontWeight.w600,
+                              color: AppColors.bg6,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
                 const SizedBox(height: 10),
                 Center(
                   child: SizedBox(
-                    width: MediaQuery.sizeOf(context).width/1.5,
-                    height: MediaQuery.sizeOf(context).height/20,
+                    width: MediaQuery.sizeOf(context).width / 1.5,
+                    height: MediaQuery.sizeOf(context).height / 20,
                     child: ElevatedButton(
-                      onPressed: isClaimed ? null: () {
-                              Clipboard.setData(ClipboardData(text: coupon.code));
+                      onPressed: isClaimed
+                          ? null
+                          : () {
+                              Clipboard.setData(
+                                  ClipboardData(text: coupon.code));
                               snackBarCalled(context, "Code Copied ");
                               redirectToUrl(context, coupon.link);
                               onClaim();
@@ -251,7 +235,8 @@ class CouponCardWidget extends StatelessWidget {
                             },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isClaimed
-                            ? Colors.grey.shade300 : AppColors.primaryColor,
+                            ? Colors.grey.shade300
+                            : AppColors.primaryColor,
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -278,9 +263,10 @@ class CouponCardWidget extends StatelessWidget {
       ],
     );
   }
+
   Widget getBorderDotted(double curve, BuildContext context) {
     return Positioned(
-      top: curve +10, // Centered on the curve
+      top: curve + 10, // Centered on the curve
       left: 0,
       right: 0,
       child: Center(

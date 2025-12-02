@@ -12,7 +12,6 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:get/get.dart';
-
 import '../../Hive_localstorage/apisCall/bank_apis.dart';
 import '../../Hive_localstorage/apisCall/fipmetric_apis.dart';
 import '../../model/fips_metric_model.dart';
