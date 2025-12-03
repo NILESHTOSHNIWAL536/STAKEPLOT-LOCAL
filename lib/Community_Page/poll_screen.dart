@@ -3,12 +3,12 @@ import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';

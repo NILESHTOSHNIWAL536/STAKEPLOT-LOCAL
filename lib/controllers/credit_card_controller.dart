@@ -6,7 +6,7 @@ import '../backed_connections/apiAutomations/curd.dart';
 import '../backed_connections/apis_connect.dart';
 import '../email_sync/add_credit_card_bank.dart';
 import '../email_sync/data_loading.dart';
-import '../finances_screen/creditCard_slider.dart';
+import '../finance_screen/finanace_dashboard/creditCard_slider.dart';
 import '../model/credit-card-bank.dart';
 import '../model/credit_card_model.dart';
 

@@ -6,16 +6,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
-import 'package:flutter_application_code_stakeplot/repository/payments.dart';
+import 'package:flutter_application_code_stakeplot/repository/notification_repository.dart';
 import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/repository/reward_repository.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/firebase_options.dart';
+import 'package:flutter_application_code_stakeplot/OneSignal/firebase_options.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/widget_services/widget_updation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -24,6 +24,7 @@ import 'package:home_widget/home_widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../components/shared_utils.dart';
 import '../routes/index_route.dart';
 
 

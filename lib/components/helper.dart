@@ -13,9 +13,9 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -24,15 +24,12 @@ import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:week_of_year/week_of_year.dart';
 
-import '../animated/pdf.dart';
+import '../backed_connections/bankServices/pdf.dart';
 import '../Home_Screen/history/amount_range.dart';
 
-void appLog(message) {
-  if (!kReleaseMode) {
-      print(message); // Only prints in debug
-  }
-}
+
 
 
 List<PredictionEntry> getUniquePredictedCategories(
@@ -66,261 +63,8 @@ String getCategoryForKeyword(String keyword) {
   return keyword; // return original if not found
 }
 
-final Map<int, Map<String, double>> weekData = {
-  for (int i = 0; i < 5; i++)
-    i: {
-      'Mon': Random().nextInt(500).toDouble(),
-      'Tue': Random().nextInt(500).toDouble(),
-      'Wed': Random().nextInt(500).toDouble(),
-      'Thu': Random().nextInt(500).toDouble(),
-      'Fri': Random().nextInt(500).toDouble(),
-      'Sat': Random().nextInt(500).toDouble(),
-      'Sun': Random().nextInt(500).toDouble(),
-    },
-};
 
-int getDaysInMonth(int year, int month) {
-  if (month == 12) {
-    return DateTime(year + 1, 1, 0).day;
-  }
-  return DateTime(year, month + 1, 0).day;
-}
 
-String getFormattedDate() {
-  DateTime now = DateTime.now();
-  return "${now.year}-${now.month.toString().padLeft(2, '0')}";
-}
-
-String getCurrentWeekNumber() {
-  DateTime now = DateTime.now();
-  int weekNumber = int.parse(DateFormat('w').format(now));
-  int year = now.year;
-  return '$year-W${weekNumber.toString().padLeft(2, '0')}';
-}
-
-String formatWhatsAppDate2(DateTime date) {
-  date = date.toLocal().subtract(Duration(hours: 5, minutes: 30));
-  ;
-  // Adjust for 5:30 offset
-  DateTime now = DateTime.now().toLocal();
-  DateTime today = DateTime(now.year, now.month, now.day);
-  DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime tomorrow = today.add(Duration(days: 1));
-  DateTime weekStart = today.subtract(Duration(days: today.weekday));
-  DateTime weekEnd = weekStart.add(Duration(days: 7));
-
-  String timeFormat = DateFormat('h:mm a').format(date);
-
-  // Check if the date is today
-  if (date.year == today.year &&
-      date.month == today.month &&
-      date.day == today.day) {
-    return "Today, $timeFormat";
-  }
-  // Check if the date is yesterday
-  else if (date.year == yesterday.year &&
-      date.month == yesterday.month &&
-      date.day == yesterday.day) {
-    return "Yesterday, $timeFormat";
-  }
-  // Check if the date is tomorrow
-  else if (date.year == tomorrow.year &&
-      date.month == tomorrow.month &&
-      date.day == tomorrow.day) {
-    return "Tomorrow, $timeFormat";
-  }
-  // Check if the date is within the current week (past or future)
-  else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
-    return "${DateFormat('EEE').format(date)}, $timeFormat"; // e.g., Mon, 10:30 AM
-  }
-  // Same year, different week
-  else if (date.year == now.year) {
-    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // e.g., 7 Apr, 10:30 AM
-  }
-  // Different year
-  else {
-    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // e.g., 7 Apr 2025, 10:30 AM
-  }
-}
-
-String formatWhatsAppDate(DateTime date) {
-  date = date.toLocal();
-  // Adjust for 5:30 offset
-  DateTime now = DateTime.now().toLocal();
-  DateTime today = DateTime(now.year, now.month, now.day);
-  DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime tomorrow = today.add(Duration(days: 1));
-  DateTime weekStart = today.subtract(Duration(days: today.weekday));
-  DateTime weekEnd = weekStart.add(Duration(days: 7));
-
-  String timeFormat = DateFormat('h:mm a').format(date);
-
-  // Check if the date is today
-  if (date.year == today.year &&
-      date.month == today.month &&
-      date.day == today.day) {
-    return "Today, $timeFormat";
-  }
-  // Check if the date is yesterday
-  else if (date.year == yesterday.year &&
-      date.month == yesterday.month &&
-      date.day == yesterday.day) {
-    return "Yesterday, $timeFormat";
-  }
-  // Check if the date is tomorrow
-  else if (date.year == tomorrow.year &&
-      date.month == tomorrow.month &&
-      date.day == tomorrow.day) {
-    return "Tomorrow, $timeFormat";
-  }
-  // Check if the date is within the current week (past or future)
-  else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
-    return "${DateFormat('EEE').format(date)}, $timeFormat"; // e.g., Mon, 10:30 AM
-  }
-  // Same year, different week
-  else if (date.year == now.year) {
-    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // e.g., 7 Apr, 10:30 AM
-  }
-  // Different year
-  else {
-    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // e.g., 7 Apr 2025, 10:30 AM
-  }
-}
-
-String formatWhatsAppDate4(DateTime date) {
-  // Remove toLocal() if not needed, or adjust properly
-  DateTime now = DateTime.now();
-  DateTime today = DateTime(now.year, now.month, now.day);
-  DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime tomorrow = today.add(Duration(days: 1));
-  DateTime weekStart = today.subtract(Duration(days: today.weekday));
-  DateTime weekEnd = weekStart.add(Duration(days: 7));
-
-  String timeFormat = DateFormat('h:mm a').format(date);
-
-  // Check if the date is today
-  if (date.year == today.year &&
-      date.month == today.month &&
-      date.day == today.day) {
-    return "Today, $timeFormat";
-  }
-  // Check if the date is yesterday
-  else if (date.year == yesterday.year &&
-      date.month == yesterday.month &&
-      date.day == yesterday.day) {
-    return "Yesterday, $timeFormat";
-  }
-  // Check if the date is tomorrow
-  else if (date.year == tomorrow.year &&
-      date.month == tomorrow.month &&
-      date.day == tomorrow.day) {
-    return "Tomorrow, $timeFormat";
-  }
-  // Check if the date is within the current week (past or future)
-  else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
-    return "${DateFormat('EEE').format(date)}, $timeFormat"; // Mon, 10:30 AM
-  }
-  // Same year, different week
-  else if (date.year == now.year) {
-    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // 7 Apr, 10:30 AM
-  }
-  // Different year
-  else {
-    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // 7 Apr 2025, 10:30 AM
-  }
-}
-
-String formatWhatsAppDateWithoutTime(DateTime date) {
-  // Remove toLocal() if not needed, or adjust properly
-  DateTime now = DateTime.now();
-  DateTime today = DateTime(now.year, now.month, now.day);
-  DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime tomorrow = today.add(Duration(days: 1));
-  DateTime weekStart = today.subtract(Duration(days: today.weekday));
-  DateTime weekEnd = weekStart.add(Duration(days: 7));
-
-  // String timeFormat = DateFormat('h:mm a').format(date);
-
-  // Check if the date is today
-  if (date.year == today.year &&
-      date.month == today.month &&
-      date.day == today.day) {
-    return "Today";
-  }
-  // Check if the date is yesterday
-  else if (date.year == yesterday.year &&
-      date.month == yesterday.month &&
-      date.day == yesterday.day) {
-    return "Yesterday";
-  }
-  // Check if the date is tomorrow
-  else if (date.year == tomorrow.year &&
-      date.month == tomorrow.month &&
-      date.day == tomorrow.day) {
-    return "Tomorrow";
-  }
-  // Check if the date is within the current week (past or future)
-  else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
-    return "${DateFormat('EEEE').format(date)}"; // Mon, 10:30 AM
-  }
-  // Same year, different week
-  else if (date.year == now.year) {
-    return "${DateFormat('d MMM').format(date)}"; // 7 Apr, 10:30 AM
-  }
-  // Different year
-  else {
-    return "${DateFormat('d MMM y').format(date)}"; // 7 Apr 2025, 10:30 AM
-  }
-}
-
-String formatWhatsAppDate3(DateTime date) {
-  date = date.toLocal().add(Duration(hours: 5, minutes: 30));
-  ;
-  // Adjust for 5:30 offset
-  DateTime now = DateTime.now().toLocal();
-  DateTime today = DateTime(now.year, now.month, now.day);
-  DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime tomorrow = today.add(Duration(days: 1));
-  DateTime weekStart = today.subtract(Duration(days: today.weekday));
-  DateTime weekEnd = weekStart.add(Duration(days: 7));
-
-  String timeFormat = DateFormat('h:mm a').format(date);
-
-  // Check if the date is today
-  if (date.year == today.year &&
-      date.month == today.month &&
-      date.day == today.day) {
-    return "Today, $timeFormat";
-  }
-  // Check if the date is yesterday
-  else if (date.year == yesterday.year &&
-      date.month == yesterday.month &&
-      date.day == yesterday.day) {
-    return "Yesterday, $timeFormat";
-  }
-  // Check if the date is tomorrow
-  else if (date.year == tomorrow.year &&
-      date.month == tomorrow.month &&
-      date.day == tomorrow.day) {
-    return "Tomorrow, $timeFormat";
-  }
-  // Check if the date is within the current week (past or future)
-  else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
-    return "${DateFormat('EEE').format(date)}, $timeFormat"; // e.g., Mon, 10:30 AM
-  }
-  // Same year, different week
-  else if (date.year == now.year) {
-    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // e.g., 7 Apr, 10:30 AM
-  }
-  // Different year
-  else {
-    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // e.g., 7 Apr 2025, 10:30 AM
-  }
-}
-
-DateTime convertStringToDateTime(String dateString) {
-  return DateTime.parse(dateString);
-}
 
 String getPreviousDate(int no, String type) {
   DateTime now = DateTime.now();
@@ -354,108 +98,6 @@ List getLastTenUsers(List allUsers) {
   return lastUsers.reversed.toList();
 }
 
-String getTimeBasedGreeting() {
-  final hour = DateTime.now().hour;
-  if (hour < 12) {
-    return "Good morning";
-  } else if (hour < 16) {
-    return "Good afternoon,";
-  } else {
-    return "Good evening,";
-  }
-}
-
-Widget getProfile() {
-  return AvatarProfile(
-    fontsize: 18,
-    name: userController.userName.value,
-    width: 8,
-    height: 10,
-    background: userController.avatarBackGround.value,
-    flag: true,
-  );
-}
-
-int getRandomValue(list) {
-  return Random().nextInt(list.length);
-}
-
-String avaterUrlPath(String name) {
-  if (name.isEmpty) return "assets/avatars/a.svg";
-  return "assets/avatars/" + name[0].toString().toLowerCase() + ".svg";
-}
-
-String formatMoneyIndian(String value, [String pattern = "0"]) {
-  if (value.isEmpty) return pattern;
-  try {
-    // Remove commas if user input already has them
-    final number = double.parse(value.replaceAll(',', ''));
-
-    // Format using Indian locale
-    final formatter = NumberFormat.currency(
-      locale: 'en_IN',
-      symbol: '',
-      decimalDigits: number.truncateToDouble() == number ? 0 : 2,
-    );
-    return formatter.format(number).trim();
-  } catch (e) {
-    return pattern;
-  }
-}
-
-
-String formatDate(String dateString) {
-  DateTime date = DateTime.parse(dateString);
-  return DateFormat('d MMM yyyy').format(date); // Format as Aug 2024
-}
-
-String getFullMonthName(int month) {
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
-  return monthNames[month - 1];
-}
-
-String getMonthName(int month) {
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-  ];
-  return months[month - 1];
-}
-
-String getMonthlyRange() {
-  final now = DateTime.now();
-  final startOfMonth = DateTime(now.year, now.month, 1);
-  final currentDay = now; // Use current date as the end date
-
-  return '${_formatDateDonut(startOfMonth)} - ${_formatDateDonut(currentDay)}';
-}
-
-String _formatDateDonut(DateTime date) {
-  return '${date.day.toString().padLeft(2, '0')} ${getMonthName(date.month)} ${date.year}';
-}
 
 void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
   getPdgLoader.value = false;
@@ -1106,25 +748,7 @@ String getBankLogo() {
   return bankImage; // return null if no match found
 }
 
-double getProgressValue(String text) {
-  if (text.toLowerCase().contains("same as last month")) {
-    return 0.0;
-  }
 
-  final match = RegExp(r'([-+]?\d+)%').firstMatch(text);
-  if (match != null) {
-    final value = int.tryParse(match.group(1) ?? "0") ?? 0;
-    double v = value <= 0
-        ? 1
-        : value <= 99
-            ? value / 1.0
-            : 100;
-    return v;
-    // return (value.abs().clamp(0, 100)) / 100;
-  }
-
-  return 0.0;
-}
 
 String getDaysLeftInMonth() {
   final now = DateTime.now();
@@ -1159,22 +783,7 @@ List<Map<String, dynamic>> getthelistAll() {
       .cast<Map<String, dynamic>>();
 }
 
-String getFormattedDateForScreenTime() {
-  final now = DateTime.now();
-  return "${now.day.toString().padLeft(2, '0')}:${now.month.toString().padLeft(2, '0')}:${now.year}";
-}
 
-List<TextInputFormatter> allowDecimalInput({int decimalPlaces = 2}) {
-  final regex = RegExp(r'^\d*\.?\d{0,' + decimalPlaces.toString() + r'}');
-  return [
-    FilteringTextInputFormatter.allow(regex),
-  ];
-}
-
-int getDaysInCurrentMonth() {
-  final now = DateTime.now();
-  return DateTime(now.year, now.month + 1, 0).day;
-}
 
 const List<Map<String, dynamic>> reportOptions = [
   {
@@ -1190,32 +799,6 @@ const List<Map<String, dynamic>> reportOptions = [
   {'title': 'Spam', 'subtitle': ''},
 ];
 
-String formatDateToIST(String dateStr) {
-  try {
-    DateTime utcDate = DateTime.parse(dateStr).toUtc();
-    DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
-    int hour = istDate.hour % 12 == 0 ? 12 : istDate.hour % 12;
-    String minute = istDate.minute.toString().padLeft(2, '0');
-    String period = istDate.hour >= 12 ? 'PM' : 'AM';
-    String month = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ][istDate.month - 1];
-    return "$hour:$minute $period · $month ${istDate.day}, ${istDate.year}";
-  } catch (e) {
-    return dateStr;
-  }
-}
 
 getErrorBankLogo() => (context, error, stackTrace) => const Icon(
       Icons.account_balance,
@@ -1274,11 +857,112 @@ bool checkRangeofDate(BuildContext context, [bool f = true]) {
 }
 
 
-bool isZeroAmount(String amount) {
-  try {
-    double parsed = double.parse(amount.trim().toString());
-    return parsed == 0.0 || parsed == 0.00 || parsed == 0;
-  } catch (e) {
-    return true;
+
+String getCurrentMonth() {
+  DateTime now = DateTime.now();
+  String year = now.year.toString();
+  String month = now.month.toString().padLeft(2, '0'); // Ensures two digits
+  return '$year-$month';
+}
+
+String getCurrentWeek() {
+  final now = DateTime.now().subtract(Duration(days: 7));
+  final year = now.year;
+  String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
+  return s;
+}
+
+String getCurrentWeekoverall() {
+  final now = DateTime.now();
+  final year = now.year;
+  String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
+  return s;
+}
+
+// Function to calculate the week number
+int _getWeekNumber(DateTime date) {
+  final firstDayOfYear = DateTime(date.year, 1, 1);
+  final daysSinceFirstDay = date.difference(firstDayOfYear).inDays;
+  final weekNumber = ((daysSinceFirstDay + firstDayOfYear.weekday) / 7).ceil();
+  return weekNumber;
+}
+String getFormattedDateoverall() {
+  final now = DateTime.now();
+  return "${now.year}-${now.month.toString().padLeft(2, '0')}";
+}
+
+final Map<String, int> monthNameToIndex = {
+  'Jan': 0,
+  'Feb': 1,
+  'Mar': 2,
+  'Apr': 3,
+  'May': 4,
+  'Jun': 5,
+  'Jul': 6,
+  'Aug': 7,
+  'Sep': 8,
+  'Oct': 9,
+  'Nov': 10,
+  'Dec': 11
+};
+
+void updateMonthLabels() {
+  monthLabels.value = List.generate(12, (index) {
+    return DateFormat('MMM').format(DateTime(selectedYear.value, index + 1, 1));
+  });
+}
+
+int getDaysInMonthExpanded(int year, int month) {
+  month = month.clamp(1, 12);
+  return DateTime(year, month + 1, 0).day;
+}
+
+double getDouble(data) {
+  return double.parse(data.toString());
+}
+
+String formatDateTime(String dateString) {
+  DateTime dateTime = DateTime.parse(dateString).toLocal();
+
+  String formattedDate = DateFormat("dd MMM yyyy hh:mm a").format(dateTime);
+  return formattedDate;
+}
+
+
+
+String getNextDay(String endDate) {
+  // Parse the input date string
+  DateTime date = DateTime.parse(endDate);
+  // Add one day
+  DateTime nextDay = date.add(Duration(days: 1));
+  // Return formatted as YYYY-MM-DD
+  return nextDay.toIso8601String().split('T')[0];
+}
+
+List<String> getWeekDays() {
+  return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+}
+
+List<String> getDaysInMonth(String yearMonth) {
+  List<String> days = [];
+  List<String> parts = yearMonth.split('-');
+  if (parts.length != 2) return days;
+
+  int year = int.tryParse(parts[0]) ?? 0;
+  int month = int.tryParse(parts[1]) ?? 0;
+  if (year == 0 || month == 0) return days;
+
+  int daysInMonth = DateTime(year, month + 1, 0).day;
+
+  for (int i = 1; i <= daysInMonth; i++) {
+    days.add('${i.toString().padLeft(2, '0')}');
   }
+
+  return days;
+}
+
+String getCurrentFormattedDate() {
+  DateTime now = DateTime.now();
+  String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+  return formattedDate;
 }

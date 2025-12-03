@@ -1,0 +1,84 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
+import 'package:flutter_application_code_stakeplot/Utils/pdfStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
+import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
+import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
+import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/components/main_helper.dart';
+import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
+import 'package:lottie/lottie.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:page_transition/page_transition.dart';
+import '../Hive_localstorage/apisCall/init_hive.dart';
+import '../Home_Screen/Home/init_Api_Calls.dart';
+import '../Utils/credit_card.dart';
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkForUpdatesAndNavigate();
+    initGetControllers();
+    initializeData(context, mounted);
+    callApis();
+  }
+
+  Future<void> _checkForUpdatesAndNavigate() async {
+    if (SnackbarData().showUpdatecall) await checkForUpdate();
+     await checkAuthAndNavigate();
+  }
+
+  void callApis() async
+  {
+    await initAllHive();
+    FinspaceStrings().fetchConstants();
+    SigninData().fetchConstants();
+    SignupData().fetchConstants();
+    SnackbarData().fetchConstants();
+    PlotFinanceStaticData().fetchConstants();
+    CommunityScreenStrings().fetchConstants();
+    FinvuStrings().fetchConstants();
+    HomepageStringsDart().fetchConstants();
+    ProfileScreenStrings().fetchConstants();
+    PdfStrings().fetchConstants();
+    RewardScreenStrings().fetchConstants();
+    CreditCardScreenStrings().fetchConstants();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return AnimatedSplashScreen.withScreenFunction(
+      backgroundColor: AppColors.backgroundColor,
+      duration: 1800,
+      splashIconSize: size.height,
+      splashTransition: SplashTransition.fadeTransition,
+      pageTransitionType: PageTransitionType.fade,
+      splash: SizedBox(
+        width: size.width,
+        height: size.height,
+        child: Lottie.asset(
+          "assets/splashScreen/appScreen.json",
+          fit: BoxFit.cover,
+        ),
+      ),
+      screenFunction: checkAuthAndNavigate,
+    );
+  }
+}

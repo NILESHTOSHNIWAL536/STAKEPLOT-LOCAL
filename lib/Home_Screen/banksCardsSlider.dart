@@ -4,19 +4,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/animated/bankSlider.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
-import 'package:flutter_application_code_stakeplot/repository/home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/bankSlider.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/delete_banks_users.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
+
+import '../components/shared_utils.dart';
 
 RxInt firstDigit = 0.obs;
 RxInt secondDigit = 0.obs;
@@ -405,33 +405,7 @@ Widget setPinForAccountHide(context) {
     );
   }
 
-  Widget popUpBox(BuildContext context) {
-    return PopupMenuButton<String>(
-      // Specify the expected value type
-      initialValue: selectedBank.value,
-      color: AppColors.backgroundColor,
-      child: Center(
-        child: Icon(
-          Icons.more_vert_outlined,
-          size: 25,
-          color: AppColors.backgroundColor, // Ensure the icon is visible
-        ),
-      ),
-      onSelected: (value) {
-        // Handle selection
-        selectedBank.value = value;
-        accountId.value = value;
-        seletedBankUpdateInfo(value, context);
-      },
-      itemBuilder: (context) {
-        return bankAccountLinkedList.map<PopupMenuEntry<String>>((e) {
-          return getItemOfListPopupMenuItem(
-              e['bankName'], e['fipId'], e, e['bankId']);
-        }).toList(); // Ensure it returns List<PopupMenuEntry<String>>
-      },
-    );
-  }
-
+  
   PopupMenuEntry<String> getItemOfListPopupMenuItem(
       String bankName, String fipId, var data, String id) {
     return PopupMenuItem<String>(

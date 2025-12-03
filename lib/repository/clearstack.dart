@@ -6,16 +6,14 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_screen_state/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
-import 'package:flutter_application_code_stakeplot/repository/home.dart';
+import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/delete_banks_users.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/post-controller.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
@@ -30,6 +28,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import '../controllers/credit_card_controller.dart';
 import '../controllers/theme_controller.dart';
 import '../backed_connections/apiAutomations/secure_storage.dart';
+import 'delete_banks_users.dart';
 
 void clearStack(BuildContext context) {
   try {

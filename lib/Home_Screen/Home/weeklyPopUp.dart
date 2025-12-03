@@ -5,9 +5,10 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
-import 'package:flutter_application_code_stakeplot/repository/home.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
+
+import '../../components/shared_utils.dart';
 
 // Controller to manage pop-up state
 class WeeklyPopupController extends GetxController {

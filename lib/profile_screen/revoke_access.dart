@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import '../Constants/font_manager.dart';
 import '../backed_connections/apis_connect.dart';
-import '../backed_connections/bankServices/email-services.dart';
+import '../repository/email-services.dart';
 
 class RevokeAccessScreen extends StatelessWidget {
 

@@ -3,15 +3,15 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/BudgetSearch.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/financeWidgets.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/financeWidgets.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/components/textfeild.dart';
 import 'package:get/get.dart';
+
+import 'BudgetSearch.dart';
 
 RxList categoriesSeleted = [].obs;
 RxList categoriesDividedList = [].obs;

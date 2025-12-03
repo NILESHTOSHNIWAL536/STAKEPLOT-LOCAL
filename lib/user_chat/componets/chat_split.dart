@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../Constants/colors.dart';
 import '../../Constants/font_manager.dart';
-import '../../colorcodes.dart';
+import '../../Constants/colorcodes.dart';
 import '../message.dart';
 
 Widget spliDisplay(msg, bool, url, Message message,BuildContext context)

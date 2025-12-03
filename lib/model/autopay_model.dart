@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 
+import '../components/shared_utils.dart';
+
 class CardData {
   final String id; // Add _id for unique identification
   final String title; // Maps to merchant

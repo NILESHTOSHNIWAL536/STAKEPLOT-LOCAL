@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/finances_screen/pending_users.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/pending_users.dart';
+import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/credentials.dart';
@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../auth_service/login_apis.dart';
+import '../repository/auth_service/login_apis.dart';
 
 Future<void> initializeOneSignal(BuildContext context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();

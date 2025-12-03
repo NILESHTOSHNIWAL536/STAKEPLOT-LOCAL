@@ -9,13 +9,14 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
-import 'package:flutter_application_code_stakeplot/animated/rewardsplashscreen.dart';
+import 'package:flutter_application_code_stakeplot/app_init/rewardsplashscreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/components/bottomNavigations.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../repository/bankinfo.dart';
 
 RxBool sectionReached = false.obs;
 RxString weekOfThis = "This week".obs;

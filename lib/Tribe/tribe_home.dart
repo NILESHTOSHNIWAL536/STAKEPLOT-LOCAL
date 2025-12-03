@@ -8,7 +8,7 @@ import 'package:flutter_application_code_stakeplot/Tribe/resportHide.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_share.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
@@ -20,7 +20,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
-import "package:flutter_application_code_stakeplot/colorcodes.dart";
+import "package:flutter_application_code_stakeplot/Constants/colorcodes.dart";
 import 'package:http/http.dart' as http;
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 

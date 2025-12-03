@@ -3,16 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Profile/Saved.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/components/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 
 import 'package:flutter_application_code_stakeplot/finSpace/updateInterestScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:get/get.dart';
 
+import '../image_service/avatarProfile.dart';
 import '../routes/route_user_login.dart';
 
 class CommunityUserProfileScreen extends StatefulWidget {

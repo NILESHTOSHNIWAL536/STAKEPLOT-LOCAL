@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDial
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/repository/friends_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';

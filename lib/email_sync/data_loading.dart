@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart';
-import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../Constants/colors.dart';
 import '../controllers/credit_card_controller.dart';
 import '../finance_screen/Budgets/Budget.dart';
-import '../finances_screen/creditCard_slider.dart';
+import '../finance_screen/finanace_dashboard/creditCard_slider.dart';
 import 'add_credit_card_bank.dart';
 
 RxBool loadingBankdetails = false.obs;

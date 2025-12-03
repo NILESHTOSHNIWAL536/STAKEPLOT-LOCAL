@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/repository/finance_repository.dart';
 import 'package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -13,47 +14,6 @@ import 'package:week_of_year/week_of_year.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import '../../Home_Screen/insightsController.dart';
 import '../../routes/route_transactions.dart';
-
-
-
-String getCurrentMonth() {
-  DateTime now = DateTime.now();
-  String year = now.year.toString();
-  String month = now.month.toString().padLeft(2, '0'); // Ensures two digits
-  return '$year-$month';
-}
-
-String getCurrentWeek() {
-  final now = DateTime.now().subtract(Duration(days: 7));
-  final year = now.year;
-  String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
-  return s;
-}
-
-String getCurrentWeekoverall() {
-  final now = DateTime.now();
-  final year = now.year;
-  String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
-  return s;
-}
-
-// Function to calculate the week number
-int _getWeekNumber(DateTime date) {
-  final firstDayOfYear = DateTime(date.year, 1, 1);
-  final daysSinceFirstDay = date.difference(firstDayOfYear).inDays;
-  final weekNumber = ((daysSinceFirstDay + firstDayOfYear.weekday) / 7).ceil();
-  return weekNumber;
-}
-
-void getUserBankData(context) async {
-  String urlPath = BankTransactionRoutes.getUserDetails;
-  var responce = await getDataApiCall(urlPath);
-
-  if (getFlagOfResponse(responce)) {}
-}
-
-
-
 
 
 void updateCatAndMoneyMap(BuildContext context)
@@ -329,10 +289,7 @@ DateTime _getWeekStartDate(int year, int weekNumber) {
 }
 // Helper functions
 
-String getFormattedDateoverall() {
-  final now = DateTime.now();
-  return "${now.year}-${now.month.toString().padLeft(2, '0')}";
-}
+
 
 void pickCustomDateRangeoverall(BuildContext context) async {
   List<DateTime?> picked = await showCalendarDatePicker2Dialog(

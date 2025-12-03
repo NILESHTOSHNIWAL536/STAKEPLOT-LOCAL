@@ -11,17 +11,17 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransacti
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/repository/home.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/manual_transaction_repository.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:flutter_application_code_stakeplot/image_service/profile.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../components/shared_utils.dart';
 import '../../routes/index_route.dart';
 
 bool isDebit = true;

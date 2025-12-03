@@ -10,7 +10,9 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Sl
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 
-import 'package:flutter_application_code_stakeplot/finance_screen/utils.dart';
+import 'package:flutter_application_code_stakeplot/Constants/calculator_utils.dart';
+
+import '../../components/shared_utils.dart';
 
 class RentBuy extends StatefulWidget {
   const RentBuy({Key? key}) : super(key: key);
