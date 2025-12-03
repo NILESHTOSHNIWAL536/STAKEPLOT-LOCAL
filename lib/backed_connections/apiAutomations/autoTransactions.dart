@@ -55,7 +55,6 @@ Future<void> addTagToTransactions(context,transactionId,bool flag,int index)asyn
     currentPage=1;
     getAllTransaction(context);
   }
-
 }
 
 
