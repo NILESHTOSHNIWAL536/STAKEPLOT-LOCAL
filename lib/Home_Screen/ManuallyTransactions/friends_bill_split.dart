@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransacti
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';

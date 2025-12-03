@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_data/card_insights_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/routes.dart';
+import 'package:flutter_application_code_stakeplot/routes/routes.dart';
 import 'package:hive/hive.dart';
 import '../../Home_Screen/categoriseSpending.dart';
 import '../../backed_connections/apiAutomations/getTrasactions.dart';

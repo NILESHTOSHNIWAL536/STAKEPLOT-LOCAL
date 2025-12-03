@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
+
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -10,38 +10,10 @@ import 'package:flutter_application_code_stakeplot/controllers/controllerManagem
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
-
 import '../Hive_localstorage/apisCall/post_apis.dart';
 import '../Hive_localstorage/hive_storage.dart';
 import '../routes/route_post.dart';
 
-
-
-void getNotifications(context) async {
-  
-  final response = await getDataApiCall(UserRoutes.myNotifications);
- 
-  if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
-    notificationList.clear();
-    notificationList.addAll(his['data']);
-    
-    notificationList.forEach((req) {
-      String type = req['notificationMessage']['type'];
-      var e = req['notificationMessage'];
-      if (type == "friendRequest") {
-        friendRequestList.add(e['from_id']);
-      }
-    });
-
-    hasGetNewNotifications.value = false;
-    myNotificationBool.value = !myNotificationBool.value;
-    notificationsFlag.value = false;
-  } else {}
-}
 
 void getuserPost(id) async {
   String urlPath = PostRoutes.myDiscussions;
@@ -61,6 +33,7 @@ void getuserPost(id) async {
     PostLocalStorage.loadPostsFromHive(isPostTranding: false,isUserPost: true);
   }
 }
+
 
 void getMaskendUsers(bool flag) async {
   String urlPath = "${UserRoutes.getMaskedUsers}/${flag}";
@@ -101,11 +74,7 @@ void getSaved() async {
   }
 }
 
-String getCurrentFormattedDate() {
-  DateTime now = DateTime.now();
-  String formattedDate = DateFormat('yyyy-MM-dd').format(now);
-  return formattedDate;
-}
+
 
 void aboutuser(context, String about) async {
   

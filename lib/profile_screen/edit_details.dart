@@ -4,12 +4,9 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/delete_banks_users.dart';
 
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
@@ -25,6 +22,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../Utils/credit_card.dart';
 import '../backed_connections/apiAutomations/share_data.dart';
+import '../image_service/avatarProfile.dart';
+import '../repository/bankinfo.dart';
+import '../repository/delete_banks_users.dart';
 import '../show_modal/theme_modal.dart';
 
 late BuildContext showSnackBarContext;

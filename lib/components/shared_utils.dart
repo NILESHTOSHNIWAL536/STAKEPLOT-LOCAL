@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/secure_storage.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -446,4 +448,32 @@ double getProgressValue(String text) {
   }
 
   return 0.0;
+}
+
+bool isCurrentYear(String date, int y) {
+  try {
+    DateTime parsedDate = DateTime.parse(date); // Parse the date string
+    return parsedDate.year == y; // Compare year
+  } catch (e) {
+    return false; // Return false if parsing fails
+  }
+}
+
+bool isCurrentMonth(String date, int m) {
+  try {
+    DateTime parsedDate = DateTime.parse(date);
+    return parsedDate.month == m; // Compare month
+  } catch (e) {
+    return false;
+  }
+}
+
+Future<String?> getToken() async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  var accessToken =await SecureStorageService().read("accessToken");
+  if (accessToken == null) {
+    return null;
+  } else {
+    return accessToken;
+  }
 }

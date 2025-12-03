@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/animated/rewardsplashscreen.dart';
+import 'package:flutter_application_code_stakeplot/app_init/rewardsplashscreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -6,7 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 
-import '../auth_service/otp_service.dart';
+import '../repository/auth_service/otp_service.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   final String email;

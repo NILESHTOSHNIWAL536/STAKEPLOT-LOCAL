@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/colors.dart';
 import '../Constants/booleanFlag.dart';
-import '../auth_service/login_apis.dart';
-import '../avatarProfile.dart';
+import '../repository/auth_service/login_apis.dart';
+import '../image_service/avatarProfile.dart';
 import '../backed_connections/googlesignin/google.dart';
-import '../loader.dart';
+import '../Constants/loader.dart';
 
 Widget containerIconSiginWith(IconData icon, Color color, context) {
     return InkWell(

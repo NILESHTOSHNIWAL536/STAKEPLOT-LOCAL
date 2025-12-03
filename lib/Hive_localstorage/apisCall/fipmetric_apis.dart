@@ -1,5 +1,6 @@
-import '../../backed_connections/apiAutomations/bankinfo.dart';
+
 import '../../model/fips_metric_model.dart';
+import '../../repository/bankinfo.dart';
 import '../fip_metric_bata/fips_metric.dart';
 import '../hive_storage.dart';
 import 'init_hive.dart';

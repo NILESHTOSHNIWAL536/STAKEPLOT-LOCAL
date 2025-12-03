@@ -2,14 +2,14 @@ import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
-import 'package:flutter_application_code_stakeplot/routes.dart';
+import 'package:flutter_application_code_stakeplot/routes/routes.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'appTheme.dart';
 import 'repository/clearstack.dart';
 import 'controllers/controllerManagement.dart';
 import 'controllers/theme_controller.dart';
-import 'main_helper.dart';
+import 'components/main_helper.dart';
 
 FinvuManager finvuManager = FinvuManager();
 late IO.Socket mainPageWebSocket;
