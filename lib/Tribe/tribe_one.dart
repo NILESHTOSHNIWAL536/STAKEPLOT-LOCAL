@@ -14,11 +14,9 @@ import "package:flutter_application_code_stakeplot/repository/post.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/model/comment.dart";
 import "package:flutter_application_code_stakeplot/model/post_model.dart";
-import "package:flutter_application_code_stakeplot/routes.dart";
+import "package:flutter_application_code_stakeplot/routes/route_post.dart";
 import "package:flutter_svg/svg.dart";
 import "package:get/get.dart";
-import "package:shared_preferences/shared_preferences.dart";
-import 'package:http/http.dart' as http;
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 
@@ -104,7 +102,7 @@ class _TribeHomeState extends State<TribeUnique> {
     // indexArray.add(i);
     // i++;
 
-    final response = await postDataApiCall('${url}/comment/', {
+    final response = await postDataApiCall(CommentRoute.addComment, {
       'post': postId,
       // 'user': authorId,
       'comment': data,
@@ -155,7 +153,7 @@ class _TribeHomeState extends State<TribeUnique> {
   }
 
   void getTransactionComments() async {
-    final response = await getDataApiCall('${url}/comment/${widget.id}');
+    final response = await getDataApiCall(CommentRoute.getComments(postId: widget.id));
 
     if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
@@ -970,7 +968,7 @@ class _TribeHomeState extends State<TribeUnique> {
   void upvote2(context, String str, String objectId, dataObj, historyListData2,
       Comments commentObj, int index) async {
     // boolVar.value=!boolVar.value
-    final response = await postDataApiCall('${url}/upvote/', {
+    final response = await postDataApiCall(UpvoteRoute.upvote, {
       'onModel': str.toString(),
       'objectId': objectId,
     });

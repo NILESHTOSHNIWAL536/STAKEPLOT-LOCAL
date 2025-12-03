@@ -1,8 +1,8 @@
-import '../backed_connections/apis_connect.dart';
+import 'index_route.dart';
 
 class FinvuRoutes
 {
-  static final String _urlPath = "${BankApiUrl}/finvu";
+  static final String _urlPath = "${API.BankApiUrl}/finvu";
 
   // Login and get handle ID
   static String login = "$_urlPath/login";

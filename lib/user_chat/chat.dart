@@ -22,6 +22,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../routes/index_route.dart';
 import 'componets/chat_index.dart';
 
 late IO.Socket socket;
@@ -74,7 +75,7 @@ class _ChatState extends State<Chat> {
     getChats(data);
     path = userController.avatar.value;
 
-    socket = IO.io(urlWithLocallHost,
+    socket = IO.io(API.urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     socket.connect();
     setUpSocketListener();

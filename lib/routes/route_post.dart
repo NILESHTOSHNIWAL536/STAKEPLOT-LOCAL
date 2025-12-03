@@ -1,7 +1,7 @@
-import '../backed_connections/apis_connect.dart';
+import 'index_route.dart';
 
 class PostRoutes {
-  static final String _urlPath = url + "/post";
+  static final String _urlPath =  API.mainBackendUrl  + "/post";
   static String post = "$_urlPath/";
   static String allPost = "$_urlPath/all/";
   static String save = "$_urlPath/save/";
@@ -13,7 +13,7 @@ class PostRoutes {
 }
 
 class PostRoute {
-  static final String _urlPath = "$url/post";
+  static final String _urlPath = "${API.mainBackendUrl}/post";
 
   // Create a new post
   static String createPost = "$_urlPath/";
@@ -51,7 +51,7 @@ class PostRoute {
 }
 
 class CommentRoute {
-  static final String _basePath = "$url/comment";
+  static final String _basePath = "${API.mainBackendUrl}/comment";
 
   // POST → Add comment
   static String addComment = "$_basePath/";
@@ -68,7 +68,7 @@ class CommentRoute {
 }
 
 class ReplyRoute {
-  static final String _basePath = "$url/reply";
+  static final String _basePath = "${API.mainBackendUrl}/reply";
 
   // POST → Add reply
   static String postReply = "$_basePath/";
@@ -84,20 +84,26 @@ class ReplyRoute {
   static String deleteReply({required String id}) => "$_basePath/$id";
 }
 
+class SplitRoutes
+{
+  static final String _basePath = "${API.mainBackendUrl}/split";
+  static String split = "$_basePath";
+  static String splitpending = "${_basePath}/pending-user";
+}
+
+
 class pollRoute {
-  static final String _basePath = "$url/poll";
+  static final String _basePath = "${API.mainBackendUrl}/poll";
 
   // POST → Upvote model (post/comment/reply)
   static String poll = "$_basePath/";
   static String pollAdd = "$_basePath/add";
-  static String split = "${url}/split/pending-user";
-
    static String votePollInPost({required String postId}) => "$_basePath/votePollInPost/$postId";
 
 }
 
 class UpvoteRoute {
-  static final String _basePath = "$url/upvote";
+  static final String _basePath = "${API.mainBackendUrl}/upvote";
 
   // POST → Upvote model (post/comment/reply)
   static String upvote = "$_basePath/";
@@ -107,7 +113,7 @@ class UpvoteRoute {
 }
 
 class DownvoteRoute {
-  static final String _basePath = "$url/downvote";
+  static final String _basePath = "${API.mainBackendUrl}/downvote";
 
   // POST → Downvote model (post/comment/reply)
   static String downvote = "$_basePath/";

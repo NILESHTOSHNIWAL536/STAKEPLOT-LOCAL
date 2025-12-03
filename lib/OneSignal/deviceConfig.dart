@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/repository/payments.dart';
@@ -24,6 +23,8 @@ import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+
+import '../routes/index_route.dart';
 
 
 DateTime? _lastSent;
@@ -77,7 +78,7 @@ void setUpSocketListenerMainPage(BuildContext context) {
   try {
     if (userController.userId.value == "") return;
     mainPageWebSocket = IO.io(
-      urlWithLocallHost,
+     API.urlWithLocallHost,
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .build(),
@@ -183,7 +184,7 @@ void checkFirebaseAndValidUser() async {
     );
 
     mainPageWebSocket = IO.io(
-        urlWithLocallHost,
+        API.urlWithLocallHost,
         IO.OptionBuilder()
             .setTransports(['websocket'])
             .enableForceNewConnection()

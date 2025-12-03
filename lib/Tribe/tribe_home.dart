@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/controllers/controllerManagem
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_post.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -306,7 +307,7 @@ Widget likeIcon(BuildContext context, bool isLiked) {
 
 void upvoteGlobal(context, String str, String objectId, dataObj) async {
   
-  final response = await postDataApiCall('${url}/upvote/',
+  final response = await postDataApiCall(UpvoteRoute.upvote,
       {
       'onModel': str.toString(),
       'objectId': objectId,

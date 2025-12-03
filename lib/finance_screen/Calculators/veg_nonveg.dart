@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/repository/notification_repository.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_post.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,8 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+
+import '../../routes/index_route.dart';
 
 class VegNonVegCalculator extends StatefulWidget {
   const VegNonVegCalculator({super.key});
@@ -93,7 +96,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       }
     }
     socket = IO.io(
-      urlWithLocallHost,
+      API.urlWithLocallHost,
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .enableAutoConnect()
@@ -834,7 +837,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     };
 
     try {
-      final response = await postDataApiCall('$url/split', requestBody
+      final response = await postDataApiCall(SplitRoutes.split, requestBody
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

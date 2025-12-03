@@ -18,6 +18,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.da
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/revoke_access.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:flutter_application_code_stakeplot/services/icon_picker_modal.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/emailUpdateOtp.dart';
 import 'package:get/get.dart';
@@ -508,7 +509,7 @@ class _EditDetailsState extends State<EditDetails> {
   }
 
   void sendOtp(BuildContext context, String name, String email) async {
-    var response = await postDataApiCallwithOutSharedPref('${url}/otp/send', {
+    var response = await postDataApiCallwithOutSharedPref(otpRoutes.sendOtp, {
       'email': email,
       'name': name,
     });

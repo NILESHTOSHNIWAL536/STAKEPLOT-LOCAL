@@ -1,21 +1,21 @@
-import '../backed_connections/apis_connect.dart';
+import 'index_route.dart';
 
 class SendNotificationsRoutes {
-  static final String _urlPath = url+"/notify";
+  static final String _urlPath =  API.mainBackendUrl +"/notify";
   static String sendNotify = "$_urlPath/addDeviceToNotify";
 
 }
 
 class otpRoutes {
-  static final String _urlPath = url;
+  static final String _urlPath =  API.mainBackendUrl ;
   static String sendOtp = "$_urlPath/otp/send";
   static String resendOtp = "$_urlPath/otp/resend-otp";
   static String verifyOtp = "$_urlPath/otp/verify-otp";
 }
 
 class AuthApiRoutes {
-  static final String _urlPath = url + "/auth";
-  static final String _emailPath = EmailUrl;
+  static final String _urlPath = API.mainBackendUrl + "/auth";
+  static final String _emailPath =API.EmailUrl;
 
   static String login = "$_urlPath/sign-in";
   static String verify = "$_urlPath/verify";
@@ -35,7 +35,7 @@ class AuthApiRoutes {
 }
 
 class UserRoutes {
-  static final String _urlPath = url + "/user";
+  static final String _urlPath =  API.mainBackendUrl  + "/user";
 
   static String update = "$_urlPath/";
   static String deleteUser = "$_urlPath/";

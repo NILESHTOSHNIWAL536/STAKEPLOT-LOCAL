@@ -1,7 +1,7 @@
-import '../backed_connections/apis_connect.dart';
+import 'index_route.dart';
 
 class BudgetRoutes {
-  static final String _urlPath = "$url/budget";
+  static final String _urlPath = "${API.mainBackendUrl}/budget";
 
   // ➕ Create a new budget
   static String createBudget = "$_urlPath/";

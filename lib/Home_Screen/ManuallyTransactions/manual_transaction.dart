@@ -22,6 +22,8 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../routes/index_route.dart';
+
 bool isDebit = true;
 
 class ModalContent extends StatefulWidget {
@@ -71,7 +73,7 @@ class _ModalContentState extends State<ModalContent>
       duration: const Duration(milliseconds: 300),
     );
 
-    socket = IO.io(urlWithLocallHost,
+    socket = IO.io(API.urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
  

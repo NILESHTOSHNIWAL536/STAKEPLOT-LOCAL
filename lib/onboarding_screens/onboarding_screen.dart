@@ -15,6 +15,8 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../routes/index_route.dart';
+
 
  RxString skipOrLets = "Let\'s Go".obs;
  RxString mess = "".obs;
@@ -55,7 +57,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     _animationController.forward();
     _updateProgress();
    
-    socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
+    socket = IO.io(API.urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
     
     fetchedTrsacntionList.clear();
     setUpSocketListener();

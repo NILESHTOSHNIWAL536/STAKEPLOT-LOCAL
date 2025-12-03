@@ -15,6 +15,7 @@ import 'Constants/colors.dart';
 import 'OneSignal/deviceConfig.dart';
 import 'Profile/friends.dart';
 import 'backed_connections/apis_connect.dart';
+import 'routes/index_route.dart';
 import 'widget_services/widget_bridge.dart';
 
 void main_apis_call_init()async{
@@ -25,7 +26,7 @@ void main_apis_call_init()async{
   // Store full API URL (with /api/v1) in SharedPreferences for background access (after loadEnvs)
   final prefs = await SharedPreferences.getInstance();
   // Full URL is already built as "${urlWithLocallHost}api/v1" in apis_connect.dart after loadEnvs
-  await prefs.setString('full_api_url',url); // 'url' is the global full path from apis_connect.dart
+  await prefs.setString('full_api_url',API.mainBackendUrl); // 'url' is the global full path from apis_connect.dart
 
   // Store accountId if available (adjust key/source as needed, e.g., from login service)
   String? accountId = prefs

@@ -16,6 +16,8 @@ import "package:flutter_application_code_stakeplot/controllers/user-controller.d
 
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../routes/index_route.dart';
+
 
  late IO.Socket socketManualTransaction;
 class AmountEntryModal extends StatefulWidget {
@@ -71,7 +73,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       );
       isModified[friend['id']] = false;
     });
-    socketManualTransaction = IO.io(urlWithLocallHost,
+    socketManualTransaction = IO.io(API.urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
     calculateTotal();

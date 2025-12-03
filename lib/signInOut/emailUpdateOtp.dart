@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/controllers/controllerManagem
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -175,7 +176,7 @@ class _emailUpdationState extends State<emailUpdation> {
               // Verify OTP
 
               var response = await postDataApiCallwithOutSharedPref(
-                '$url/otp/verify-otp',
+                otpRoutes.verifyOtp,
                 {
                   'email': widget.data['email'],
                   'otp': otpController.text,
@@ -185,7 +186,7 @@ class _emailUpdationState extends State<emailUpdation> {
               if (getFlagOfResponse(response)) {
                 // Call PATCH API to update email
                 
-                final updateResponse = await updateDataApiCall2('$url/user', {'email': widget.data['email']}
+                final updateResponse = await updateDataApiCall2(UserRoutes.update, {'email': widget.data['email']}
                 );
 
                 Navigator.pop(context); // Close loading dialog

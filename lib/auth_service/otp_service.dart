@@ -125,7 +125,7 @@ class OtpService {
 
 void resendOtpToUser(context, email, name) async
 {
-   var response=await postDataApiCallwithOutSharedPref('${url}/otp/resend-otp',{
+   var response=await postDataApiCallwithOutSharedPref(otpRoutes.resendOtp,{
       'email': email,
       "name": name,
     });

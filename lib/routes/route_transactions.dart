@@ -1,12 +1,12 @@
-import '../backed_connections/apis_connect.dart';
+import 'index_route.dart';
 
 class BankTransactionRoutes {
-  static final String _urlPath = "$BankApiUrl/transactionauto";
+  static final String _urlPath = "${API.BankApiUrl}/transactionauto";
 
   // Create user details
   static String createUserDetails = "$_urlPath/";
 
-  static final String customCategory = "$url/custom/custom-category";
+  static final String customCategory = "${API.mainBackendUrl}/custom/custom-category";
   // Grouped transactions
   static String categorizeGroupedTransaction({required String groupId}) =>
       "$_urlPath/grouped/$groupId/categorize";
@@ -135,7 +135,7 @@ class BankTransactionRoutes {
 }
 
 class TransactionRoutes {
-  static final String _urlPath = BankApiUrl + "/transaction";
+  static final String _urlPath = API.BankApiUrl + "/transaction";
   static String updateAndDelete = "$_urlPath/";
   static String addTransaction = "$_urlPath/add";
   static String getAll = "$_urlPath/all";

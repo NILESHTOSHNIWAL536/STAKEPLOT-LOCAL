@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/routes/route_transactions.dar
 
 import 'dart:convert';
 import '../../backed_connections/apiAutomations/curd.dart';
+import '../../routes/index_route.dart';
 
 // Your FontManager class (assumed imported)
 
@@ -32,7 +33,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
 
   Map<String, dynamic> expenses = {};
   int income = 0;
-  String apiUrl = url; // Your API domain
+  String apiUrl = API.mainBackendUrl; // Your API domain
   Map<String, dynamic>? loanCalcResponse;
   bool _isInfoVisible = false; // Controls visibility of the container
   double _opacity = 0.0; // Controls the fade effect

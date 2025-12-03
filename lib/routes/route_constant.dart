@@ -1,9 +1,10 @@
 
 
-import '../backed_connections/apis_connect.dart';
+
+import 'index_route.dart';
 
 class ConstantRoutes {
-  static final String _urlPath = "$url/constant";
+  static final String _urlPath = "${API.mainBackendUrl}/constant";
 
   /// 📅 Get week & month constants
   static String weekMonth = "$_urlPath/weekmonth";

@@ -20,6 +20,7 @@ import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:get/get.dart";
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import "../routes/index_route.dart";
 import "../routes/route_user_login.dart";
 
 RxBool load = true.obs;
@@ -60,7 +61,7 @@ class _TribeSearchState extends State<TribeChats> {
     getTransactions();
     getChatsSplitAccounts(context, myId);
     socket = IO.io(
-        urlWithLocallHost,
+        API.urlWithLocallHost,
         IO.OptionBuilder()
             .setTransports(['websocket'])
             .enableForceNewConnection()
@@ -117,7 +118,7 @@ class _TribeSearchState extends State<TribeChats> {
   }
 
   void getChatsSplitAccounts(BuildContext context, String id) async {
-    var response = await getDataApiCall(pollRoute.split);
+    var response = await getDataApiCall(SplitRoutes.splitpending);
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];

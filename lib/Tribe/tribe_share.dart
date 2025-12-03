@@ -8,17 +8,16 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/repository/notification_repository.dart';
-import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_chat.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
-import 'package:http/http.dart' as http;
-import "package:shared_preferences/shared_preferences.dart";
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../routes/index_route.dart';
 import '../routes/route_user_login.dart';
 
 class TribeShare extends StatefulWidget {
@@ -42,7 +41,7 @@ class _TribeHomeState extends State<TribeShare> {
   void initState() {
     super.initState();
     getTransaction();
-    socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
+    socket = IO.io(API.urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
   }
 
@@ -279,7 +278,7 @@ class _TribeHomeState extends State<TribeShare> {
   );
 }
   void sendPost(context, jsonData) async {
-    var responce = await postDataApiCall("${url}/chat/", jsonData);
+    var responce = await postDataApiCall(ChatRoutes.sendMessage, jsonData);
     if (getFlagOfResponse(responce)) {
       snackBarCalled(context, SnackbarData().postSentSuccessfully);
       Navigator.pop(context);
