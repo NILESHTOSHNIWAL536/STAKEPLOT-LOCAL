@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/components/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/repository/finora_repository.dart';
+import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/openShowModal.dart';
 import 'package:get/get.dart';
 
@@ -344,7 +345,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                           transactionsHistory.indexWhere((t) => t.id == id);
 
                       if (index != null) {
-                        updateTheTagOfTarnsactions2(
+                        updateTheTagOfTransactions2(
                           widget.data.category,
                           widget.data.subcategory,
                           id,
@@ -367,7 +368,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                     Navigator.pop(context);
                     Navigator.pop(context);
                   } else if (!widget.isGroupTransaction) {
-                    updateTheTagOfTarnsactions2(
+                    updateTheTagOfTransactions2(
                         widget.data.category,
                         widget.data.subcategory,
                         widget.data.id,

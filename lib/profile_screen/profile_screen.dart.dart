@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.da
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/repository/home.dart';
-import 'package:flutter_application_code_stakeplot/repository/reward.dart';
+import 'package:flutter_application_code_stakeplot/repository/reward_repository.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.d
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
 import 'package:flutter_application_code_stakeplot/Utils/vibration.dart';
+import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 
