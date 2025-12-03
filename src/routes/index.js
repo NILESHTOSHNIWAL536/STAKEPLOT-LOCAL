@@ -10,6 +10,7 @@ const router = express.Router();
 router.use('/notify', notificationApiOneSignal);
 router.use('/transaction', transactionRoutes);
 router.use('/transactionauto', transactionAuto);
+router.use('/custom', customCategory);
 router.use('/finvu', finvuRoutes);
 
 module.exports = router;
