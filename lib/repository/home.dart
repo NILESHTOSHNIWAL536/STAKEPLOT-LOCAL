@@ -1,20 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
-import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
-import '../Hive_localstorage/apisCall/transactions_apis.dart';
+
 
 
 
