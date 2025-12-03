@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
+import '../routes/route_constant.dart';
+
 class FinvuStrings {
   // 1. Static instance
   static final FinvuStrings _instance = FinvuStrings._internal();
@@ -115,7 +117,7 @@ class FinvuStrings {
 
   Future<bool> fetchConstants() async {
     try {
-      final response = await getDataApiCall("${url}/constant/finvu");
+      final response = await getDataApiCall(ConstantRoutes.finvu);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};

@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
+import '../routes/route_constant.dart';
+
 class SigninData {
   static final SigninData _instance = SigninData._internal();
 
@@ -33,7 +35,7 @@ class SigninData {
   Future<bool> fetchConstants() async {
     try {
       
-      final response = await getDataApiCall("$url/constant/signin");
+      final response = await getDataApiCall(ConstantRoutes.signin);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};

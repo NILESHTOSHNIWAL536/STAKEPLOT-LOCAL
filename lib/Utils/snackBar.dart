@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+
+import '../routes/route_constant.dart';
 class SnackbarData {
   static final SnackbarData _instance = SnackbarData._internal();
 
@@ -196,7 +198,7 @@ String amountExceed = "Amount exceeds the total budget!";
 
   Future<bool> fetchConstants() async {
     try {
-      final response = await getDataApiCall("${url}/constant/snackbar");
+      final response = await getDataApiCall(ConstantRoutes.snackbar);
 
       if (response.statusCode == 200) 
       {

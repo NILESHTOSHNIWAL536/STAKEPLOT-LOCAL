@@ -21,9 +21,10 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:get/get.dart';
 import 'dart:async';
 
+/// GLOBALS (kept unchanged)
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
-final RxBool showFilter = false.obs; // NEW
+final RxBool showFilter = false.obs;
 
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
@@ -42,12 +43,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   final RxBool isDateSummaryView = false.obs;
   Timer? _debounce;
 
-  // State to toggle views
-
-
   @override
   void initState() {
     super.initState();
+
+    /// Existing logic untouched
     currentPage = 1;
     showFilter.value = false;
     accountSelected.value = '';
@@ -57,7 +57,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     minController.text = "";
     startDateController.text = "";
     endDateController.text = "";
+
     getAllTransactionHistory(context, false, false, isRefreshing: true);
+
     getDayWiseTransactions(context).then((data) {
       dayWiseTransactions.assignAll(data);
     });
@@ -66,12 +68,10 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   }
 
   void _onScroll() {
-    scrollController.addListener(() async {
-      if (scrollController.position.pixels >=
-          scrollController.position.maxScrollExtent - 50) {
-        getAllTransactionHistory(context, false, false);
-      }
-    });
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 50) {
+      getAllTransactionHistory(context, false, false);
+    }
   }
 
   @override
@@ -86,178 +86,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Search Bar
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 4),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: 10,
-                                right: 2,
-                                bottom: (groupTransactionList.isEmpty ? 4 : 3)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Obx(() => searchTextControllerBool.value
-                                    ? getTextFeild()
-                                    : getTextFeild()),
-                                InkWell(
-                                    onTap: () {
-                                      isDateSummaryView.value =
-                                          !isDateSummaryView
-                                              .value; // Toggle state
-                                    },
-                                    child: Obx(() => !isDateSummaryView.value
-                                        ? AvatarProfileImage(
-                                            url: HomePageIcons.dayWiseIcon1,
-                                            width: 70,
-                                            height: 36)
-                                        : AvatarProfileImage(
-                                            url: HomePageIcons.dayWiseIcon2,
-                                            width: 70,
-                                            height: 36))),
-                                InkWell(
-                                    onTap: () {
-                                      showFilter.value = !showFilter.value;
-
-                                      if (!showFilter.value) {
-                                        searchTextController.value = "";
-                                        searchController.text = "";
-                                        startDateController.text = "";
-                                        endDateController.text = "";
-                                        showDateFilter.value =
-                                            false; // Reset date filter UI state
-                                        showAmountFilter.value = false;
-                                        onChanedAutoTransactionStatus(context);
-                                      }
-
-                                      // Toggle the filter visibility
-                                    },
-                                    child: Obx(
-                                      () => !showFilter.value
-                                          ? AvatarProfileImage(
-                                              url: HomePageIcons.filterIcon,
-                                              width: 66,
-                                              height: 30)
-                                          : AvatarProfileImage(
-                                              url: HomePageIcons.filterOn,
-                                              width: 66,
-                                              height: 30),
-                                    )),
-                              ],
-                            ),
-                          ),
-                          !isDateSummaryView.value
-                              ? Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 10, right: 2),
-                                  child: Obx(() => (groupTransactionList
-                                              .isNotEmpty ||
-                                          showCheckBox.value)
-                                      ? Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 3),
-                                          child: Obx(() => showCheckBox.value
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 10),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      // Cancel Button
-
-                                                      SelectButton(
-                                                          "Selected (${redioButton.length})",
-                                                          context),
-                                                      CancelButton(
-                                                          "Cancel", context),
-                                                    ],
-                                                  ),
-                                                )
-                                              : getTab(context)),
-                                        )
-                                      : SizedBox(height: 10)),
-                                )
-                              : SizedBox(height: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.backgroundColor,
-                            ),
-                            child: Obx(
-                                () => (redioButton.isNotEmpty && getBoolFalg())
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, right: 2, top: 8),
-                                        child: getTagHideButtons(context),
-                                      )
-                                    : SizedBox.shrink()),
-                          ),
-                          Obx(() => (showFilter.value && getBoolFalg())
-                              ? filterTransaction(context)
-                              : SizedBox.shrink()),
-                        ],
-                      ),
-                    ),
-                    Obx(() {
-                      double calculatedHeight;
-                      if (showFilter.value || redioButton.isNotEmpty) {
-                        calculatedHeight = screenHeight / 1.52;
-                      } else if (showFilter.value && !isDateSummaryView.value) {
-                        calculatedHeight = screenHeight / 1.5;
-                      } else {
-                        calculatedHeight = (groupTransactionList.isNotEmpty ||
-                                redioButton.isNotEmpty)
-                            ? screenHeight / 1.35
-                            : screenHeight / 1.25;
-                      }
-
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: calculatedHeight,
-                        child: IndexedStack(
-                          index: isDateSummaryView.value ? 0 : 1,
-                          children: [
-                            CalendarTransactionScreen(),
-                            NotificationListener<ScrollNotification>(
-                              onNotification: (scrollNotification) {
-                                if (scrollNotification
-                                    is ScrollStartNotification) {
-                                  // ✅ Dismiss keyboard when scrolling starts
-                                  FocusScope.of(context).unfocus();
-                                }
-                                return false;
-                              },
-                              child: SingleChildScrollView(
-                                controller: scrollController,
-                                child: TransactionHistory(
-                                  isYearView: false,
-                                  isflag: true,
-                                  showIcon: false,
-                                  expandedPage: false,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-              ),
+              _buildSearchAndTabsSection(context),
+              Expanded(child: _buildTransactionBody(context, screenHeight)),
             ],
           ),
         ),
@@ -265,32 +95,99 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-  bool getBoolFalg() {
-    return !isDateSummaryView.value &&
-        allOrGroupTransactionsName.value == StringConstant.allTransactions;
+  // ---------------------------------------------------------------------------
+  // UI SECTIONS
+  // ---------------------------------------------------------------------------
+
+  Widget _buildSearchAndTabsSection(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: double.infinity,
+      decoration: BoxDecoration(color: AppColors.primaryColor),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 4),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 2,
+              bottom: (groupTransactionList.isEmpty ? 4 : 3),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _buildSearchField(context),
+                _buildToggleDateSummaryBtn(),
+                _buildFilterButton(),
+              ],
+            ),
+          ),
+          _buildTabsOrCheckbox(),
+          _buildTagHideButtons(),
+          _buildFilterSection(),
+        ],
+      ),
+    );
   }
 
-  Widget getTextFeild() {
-    return Container(
+  Widget _buildTransactionBody(BuildContext context, double screenHeight) {
+    return Obx(() {
+      double calculatedHeight;
+
+      if (showFilter.value || redioButton.isNotEmpty) {
+        calculatedHeight = screenHeight / 1.52;
+      } else if (showFilter.value && !isDateSummaryView.value) {
+        calculatedHeight = screenHeight / 1.5;
+      } else {
+        calculatedHeight =
+            (groupTransactionList.isNotEmpty || redioButton.isNotEmpty)
+                ? screenHeight / 1.35
+                : screenHeight / 1.25;
+      }
+
+      return SizedBox(
+        width: double.infinity,
+        height: calculatedHeight,
+        child: IndexedStack(
+          index: isDateSummaryView.value ? 0 : 1,
+          children: [
+            CalendarTransactionScreen(),
+            NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollNotification is ScrollStartNotification) {
+                  FocusScope.of(context).unfocus();
+                }
+                return false;
+              },
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: TransactionHistory(
+                  isYearView: false,
+                  isflag: true,
+                  showIcon: false,
+                  expandedPage: false,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Sub widgets extracted for clarity
+  // ---------------------------------------------------------------------------
+
+  Widget _buildSearchField(BuildContext context) {
+    return SizedBox(
       width: MediaQuery.of(context).size.width / 1.4,
       height: MediaQuery.of(context).size.width / 10,
       child: TextField(
         controller: searchController,
         focusNode: focusNodeSearchFeild,
-        onChanged: (value) {
-          isDateSummaryView.value = false;
-          allOrGroupTransactionsName.value = StringConstant.allTransactions;
-          searchItemClicked.value = false;
-          if (_debounce?.isActive ?? false) _debounce!.cancel();
-          // Start a new debounce timer
-          _debounce = Timer(const Duration(milliseconds: 500), () {
-            onChanedAutoTransactionStatus(context);
-          });
-
-          // onChanedAutoTransactionStatus(context);
-          searchTextController.value = value;
-          searchTextControllerBool.value = !searchTextControllerBool.value;
-        },
+        onChanged: _onSearchChanged,
         decoration: InputDecoration(
           hintText: HomepageStringsDart().searchTransactions,
           hintStyle: FontManager().getTextStyle(
@@ -300,18 +197,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             color: AppColors.grey,
           ),
           prefixIcon: Icon(Icons.search, color: AppColors.grey),
-          suffixIcon: searchController.text.isNotEmpty
-              ? IconButton(
-                  icon: Icon(Icons.clear, color: AppColors.accentColor),
-                  onPressed: () {
-                    searchController.clear(); // Clear the TextEditingController
-                    searchTextController.value = ''; // Clear RxString
-                    clearTransactions(context: context, f: true);
-                    searchTextControllerBool.value =
-                        !searchTextControllerBool.value;
-                  },
-                )
-              : null,
+          suffixIcon: _buildClearButton(),
           filled: true,
           fillColor: AppColors.bg5,
           border: OutlineInputBorder(
@@ -326,9 +212,116 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-  Widget CancelButton(String text, BuildContext context) {
-    double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
-    double tabHeight = (MediaQuery.of(context).size.height) / 26;
+  void _onSearchChanged(String value) {
+    isDateSummaryView.value = false;
+    allOrGroupTransactionsName.value = StringConstant.allTransactions;
+    searchItemClicked.value = false;
+
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      onChanedAutoTransactionStatus(context);
+    });
+
+    searchTextController.value = value;
+    searchTextControllerBool.value = !searchTextControllerBool.value;
+  }
+
+  _buildClearButton() {
+    return searchController.text.isNotEmpty
+        ? IconButton(
+            icon: Icon(Icons.clear, color: AppColors.accentColor),
+            onPressed: () {
+              searchController.clear();
+              searchTextController.value = '';
+              clearTransactions(context: context, f: true);
+              searchTextControllerBool.value = !searchTextControllerBool.value;
+            },
+          )
+        : null;
+  }
+
+  Widget _buildToggleDateSummaryBtn() {
+    return InkWell(
+      onTap: () => isDateSummaryView.value = !isDateSummaryView.value,
+      child: Obx(
+        () => AvatarProfileImage(
+          url: !isDateSummaryView.value
+              ? HomePageIcons.dayWiseIcon1
+              : HomePageIcons.dayWiseIcon2,
+          width: 70,
+          height: 36,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterButton() {
+    return InkWell(
+      onTap: () => _toggleFilter(),
+      child: Obx(
+        () => AvatarProfileImage(
+          url: !showFilter.value
+              ? HomePageIcons.filterIcon
+              : HomePageIcons.filterOn,
+          width: 66,
+          height: 30,
+        ),
+      ),
+    );
+  }
+
+  void _toggleFilter() {
+    showFilter.value = !showFilter.value;
+
+    if (!showFilter.value) {
+      searchTextController.value = "";
+      searchController.text = "";
+      startDateController.text = "";
+      endDateController.text = "";
+      showDateFilter.value = false;
+      showAmountFilter.value = false;
+      onChanedAutoTransactionStatus(context);
+    }
+  }
+
+  Widget _buildTabsOrCheckbox() {
+    return Obx(() {
+      if (isDateSummaryView.value) return const SizedBox(height: 10);
+
+      final showTabs = groupTransactionList.isNotEmpty || showCheckBox.value;
+
+      return Padding(
+        padding: const EdgeInsets.only(left: 10, right: 2),
+        child: showTabs
+            ? Padding(
+                padding: const EdgeInsets.only(top: 3),
+                child: Obx(() => showCheckBox.value
+                    ? _buildCheckBoxButtons()
+                    : getTab(context)),
+              )
+            : const SizedBox(height: 10),
+      );
+    });
+  }
+
+  Widget _buildCheckBoxButtons() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _selectButton("Selected (${redioButton.length})"),
+          _cancelButton("Cancel"),
+        ],
+      ),
+    );
+  }
+
+  Widget _selectButton(String text) {
+    return _coloredButton(text, AppColors.button);
+  }
+
+  Widget _cancelButton(String text) {
     return InkWell(
       onTap: () {
         showCheckBox.value = false;
@@ -338,44 +331,49 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         addManually.clear();
         HapticFeedback.selectionClick();
       },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
-        width: tabWidth,
-        height: tabHeight,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-            color: AppColors.backgroundColor,
-            borderRadius: BorderRadius.circular(8)),
-        child: Center(
-          child: textStyleImage(
-            context: context,
-            text: text,
-            c: AppColors.primaryColor,
-            fontsize: 14,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+      child: _coloredButton(text, AppColors.primaryColor,
+          bg: AppColors.backgroundColor),
     );
   }
 
-  Widget SelectButton(String text, BuildContext context) {
-    double tabWidth = (MediaQuery.of(context).size.width) / 2.5;
-    double tabHeight = (MediaQuery.of(context).size.height) / 26;
+  Widget _coloredButton(String text, Color color, {Color? bg}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 4),
-      width: tabWidth,
-      height: tabHeight,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      width: MediaQuery.of(context).size.width / 2.5,
+      height: MediaQuery.of(context).size.height / 26,
+      decoration: BoxDecoration(
+        color: bg ?? Colors.transparent,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Center(
         child: textStyleImage(
           context: context,
           text: text,
-          c: AppColors.button,
+          c: color,
           fontsize: 14,
           fontWeight: FontWeight.w600,
         ),
       ),
     );
+  }
+
+  Widget _buildTagHideButtons() {
+    return Obx(() => (redioButton.isNotEmpty && _showTagButtons())
+        ? Padding(
+            padding: const EdgeInsets.only(left: 10, right: 2, top: 8),
+            child: getTagHideButtons(context),
+          )
+        : const SizedBox.shrink());
+  }
+
+  bool _showTagButtons() {
+    return !isDateSummaryView.value &&
+        allOrGroupTransactionsName.value == StringConstant.allTransactions;
+  }
+
+  Widget _buildFilterSection() {
+    return Obx(() => (showFilter.value && _showTagButtons())
+        ? filterTransaction(context)
+        : const SizedBox.shrink());
   }
 }

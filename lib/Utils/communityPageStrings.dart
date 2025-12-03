@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart'; // For url
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+
+import '../routes/route_constant.dart'; // For url
 
 class CommunityScreenStrings {
   static final CommunityScreenStrings _instance =
@@ -78,7 +80,7 @@ class CommunityScreenStrings {
 
   Future<bool> fetchConstants() async {
     try {
-      final response = await getDataApiCall("$url/constant/community");
+      final response = await getDataApiCall(ConstantRoutes.community);
       
       if (getFlagOfResponse(response)) {
         var data = jsonDecode(response.body)['data'] ?? {};

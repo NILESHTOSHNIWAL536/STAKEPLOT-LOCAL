@@ -13,12 +13,13 @@ import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../routes/route_chat.dart';
 import '../routes/route_post.dart';
 
 void getChats(data) async {
- 
-  final response = await getDataApiCall('${url}/chat/${data['_id']}/${ismaskedUsers.value}');
-  
+  final response = await getDataApiCall(ChatRoutes.retrieveChatMessages(
+      Id: data['_id'], isMasked: ismaskedUsers.value));
+
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
@@ -46,12 +47,10 @@ void getChats(data) async {
 }
 
 void upvote(context, String str, String objectId) async {
-
   final response = await postDataApiCall('${url}/upvote/', {
-      'onModel': str.toString(),
-      'objectId': objectId,
-    }
-  );
+    'onModel': str.toString(),
+    'objectId': objectId,
+  });
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
@@ -62,37 +61,30 @@ void upvote(context, String str, String objectId) async {
 }
 
 void downvote(context, String str, String objectId) async {
-  
-  final response = await postDataApiCall('${url}/downvote/',
-  
-      {
-      'onModel': str.toString(),
-      'objectId': objectId,
-    }
-  );
+  final response = await postDataApiCall('${url}/downvote/', {
+    'onModel': str.toString(),
+    'objectId': objectId,
+  });
 
   if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
     snackBarCalled(context, "You disliked this!", AppColors.accentColor);
   } else {
-    snackBarCalledfail(context, "An error occurred while disliking!", Colors.red);
+    snackBarCalledfail(
+        context, "An error occurred while disliking!", Colors.red);
   }
 }
 
 void createPoll(context, String question, List options, roomDetails, members,
     String type) async {
- 
-  final response = await postDataApiCall('${url}/poll/add',
-   
-      {
-      'question': question,
-      'options': options,
-      'pollType': type, //roomDetails.length!=0?'room':'casual',
-      'roomDetails': roomDetails,
-      'myVote': 'none',
-      'members': members
-    }
-  );
+  final response = await postDataApiCall('${url}/poll/add', {
+    'question': question,
+    'options': options,
+    'pollType': type, //roomDetails.length!=0?'room':'casual',
+    'roomDetails': roomDetails,
+    'myVote': 'none',
+    'members': members
+  });
 
   if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
@@ -148,8 +140,13 @@ void createPoll(context, String question, List options, roomDetails, members,
 void createPollOfCommunityPost(context, String question, List options,
     roomDetails, members, String type) async {
   String urlPath = PostRoutes.post;
-final TagList = [...selectedSubCategories, ...selectedCategories];
-  var body = {'question': question, 'options': options, 'postType': "poll", 'tags':TagList};
+  final TagList = [...selectedSubCategories, ...selectedCategories];
+  var body = {
+    'question': question,
+    'options': options,
+    'postType': "poll",
+    'tags': TagList
+  };
 
   final response = await postDataApiCall(urlPath, body);
 
@@ -164,31 +161,27 @@ final TagList = [...selectedSubCategories, ...selectedCategories];
 }
 
 void uploadRefreshCall(var postData, BuildContext context) {
- postController.feedPostList.insert(0, PostModel.fromJson(postData));
- postController.postCount[postData['_id']] = 0;
- postController.postCommentCount[postData['_id']] = 0;
- postController.posting.value = false;
- postController.postDis.value = false;
- postController.getPosted.value = !postController.getPosted.value;
+  postController.feedPostList.insert(0, PostModel.fromJson(postData));
+  postController.postCount[postData['_id']] = 0;
+  postController.postCommentCount[postData['_id']] = 0;
+  postController.posting.value = false;
+  postController.postDis.value = false;
+  postController.getPosted.value = !postController.getPosted.value;
 }
 
-
 void votePollInPost(context, String id, int index) async {
- 
-  final response = await postDataApiCall('${url}/poll/votePollInPost/${id}',
-  
-      {'optionIndex': index}
-  );
-  
+  final response = await postDataApiCall(
+      '${url}/poll/votePollInPost/${id}', {'optionIndex': index});
+
   if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
 
     var data = body['data'];
     for (int i = 0; i < postController.feedPostList.length; i++) {
-      if (postController.feedPostList[i].id == data['_id'])
-      {
+      if (postController.feedPostList[i].id == data['_id']) {
         PostModel post = postController.feedPostList[i];
-        postController.feedPostList[i]= PostModel.fromJson({...data,'author': post.author});
+        postController.feedPostList[i] =
+            PostModel.fromJson({...data, 'author': post.author});
         postController.getPosted.value = !postController.getPosted.value;
         return; // Stops loop after update
       }
@@ -196,11 +189,9 @@ void votePollInPost(context, String id, int index) async {
   } else {}
 }
 
-
 void getChatLoader(bool flag) async {
+  var response = await getDataApiCall(ChatRoutes.chatsOrder(isMasked: flag));
 
-  var response =await getDataApiCall(url + '/chat/order/${flag}');
-  
   if (response.statusCode == 200 || response.statusCode == 201) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
@@ -221,7 +212,9 @@ void getChatLoader(bool flag) async {
             : userInfo['sender'];
         var typed = element['chats']['details']['messageType'];
         String type = "message...";
-         bool canMaskMessage = ismaskedUsers.value? (element['chats']['details']['canMaskMessage'] ?? true):true;
+        bool canMaskMessage = ismaskedUsers.value
+            ? (element['chats']['details']['canMaskMessage'] ?? true)
+            : true;
         try {
           type = typed == null
               ? "message"
@@ -232,30 +225,25 @@ void getChatLoader(bool flag) async {
                       : typed == "image"
                           ? "Sent a image"
                           : typed == "poll"
-                              ? "Sent a poll" :
-                           typed == "split"
-                              ? "Sent a split bill"
-                              : "message";
-        } catch (e) {
-        
-        }
-       
-       var data = 
-       {
+                              ? "Sent a poll"
+                              : typed == "split"
+                                  ? "Sent a split bill"
+                                  : "message";
+        } catch (e) {}
+
+        var data = {
           '_id': key,
           'name': name,
           'avatar': element['chats']['details']['avatarType'],
-          'item':  defaultBackGround.value ,
+          'item': defaultBackGround.value,
           'count': element['chats']['unseenCount'],
           'type': type,
-          'canMaskMessage':canMaskMessage
+          'canMaskMessage': canMaskMessage
         };
-        count +=  int.parse(data['count'].toString());
+        count += int.parse(data['count'].toString());
         chatList.add(data);
         chatListOriginal.add(data);
-      } catch (e) {
-        
-      }
+      } catch (e) {}
     });
 
     totalUnopenedMessages.value = count;
@@ -264,19 +252,17 @@ void getChatLoader(bool flag) async {
 
 void addMessage(
     context, String messageType, String message, String id, var data) async {
-  var urlPath = '${url}/chat/';
+  var urlPath = ChatRoutes.sendMessage;
   await postDataApiCall(urlPath, {
-      "messageType": messageType,
-      "receiver": id,
-      "message": message,
-      "image": "base",
-      "poll": id
-    });
+    "messageType": messageType,
+    "receiver": id,
+    "message": message,
+    "image": "base",
+    "poll": id
+  });
 }
 
-
-Future<String> addImageToCloud2(imageFile) async
-{
+Future<String> addImageToCloud2(imageFile) async {
   final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
 
   final request = http.MultipartRequest('POST', url2)
@@ -327,14 +313,14 @@ void addMessageImage(context, String messageType, String messageObj, String id,
     'isMasked': ismaskedUsers.value,
   });
 
-   getChatLoader(ismaskedUsers.value);
-   Navigator.pop(context);
+  getChatLoader(ismaskedUsers.value);
+  Navigator.pop(context);
 }
 
 void getChats2(data, key) async {
-  
-  final response = await getDataApiCall('${url}/chat/${data['_id']}/${ismaskedUsers.value}');
-  
+  // final response = await getDataApiCall('${url}/chat/${data['_id']}/${ismaskedUsers.value}');
+  final response = await getDataApiCall(ChatRoutes.retrieveChatMessages(
+      Id: data['_id'], isMasked: ismaskedUsers.value));
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
@@ -364,12 +350,10 @@ void getChats2(data, key) async {
 }
 
 void unSeenChat(context, String id) async {
-  
-  final response = await updateDataApiCall2('${url}/chat/${id}/${ismaskedUsers.value}', {});
- 
+  String urlpath = ChatRoutes.updateUnseenMessages(friendId: id, isMasked: ismaskedUsers.value);
+   await updateDataApiCall2(urlpath, {});
+  // final response = await updateDataApiCall2('${url}/chat/${id}/${ismaskedUsers.value}', {});
 }
-
-
 
 void clear(data) {
   int index = 0;

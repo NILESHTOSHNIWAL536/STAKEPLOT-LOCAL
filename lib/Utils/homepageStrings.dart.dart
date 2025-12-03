@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
+import '../routes/route_constant.dart';
+
 class HomepageStringsDart {
   static final HomepageStringsDart _instance = HomepageStringsDart._internal();
 
@@ -143,7 +145,7 @@ class HomepageStringsDart {
   String creditcardSigninData = "We only fetch your bank credit card emails, nothing else. Your all other conversations stay completely private. Signing in just helps us pull those credit-related mails and neatly organize them here, so you can track your spends easily. Plus, we store only your credit card email data in encrypted form for security , and we don't save any other data.";
   Future<bool> fetchConstants() async {
     try {
-      final response = await getDataApiCall("$url/constant/homepage");
+      final response = await getDataApiCall(ConstantRoutes.homepage);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);

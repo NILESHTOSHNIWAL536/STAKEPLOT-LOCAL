@@ -253,19 +253,6 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
     return '$month $year';
   }
 
-  // Future<void> _fetchDayWiseTransactionsForMonth(DateTime month) async {
-  //   final transactions = await getDayWiseTransactions(context);
-  //   if (mounted) {
-  //     setState(() {
-  //       dayWiseTransactions.assignAll(transactions.where((data) {
-  //         final date = convertStringToDateTime(data['date']);
-  //         return date.month == month.month && date.year == month.year;
-  //       }).toList());
-  //       _updateCalendarData();
-  //       _calculateMonthlyTotals();
-  //     });
-  //   }
-  // }
 // Helper method to generate the date list including previous and next month's dates
   void _generateDateList() {
     final List<Map<String, dynamic>> tempDateList = [];
@@ -932,64 +919,6 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
   );
 }
 
-  // Widget _buildCalendarDateItem(
-  //     BuildContext context, Map<String, dynamic> dateData) {
-  //   return GestureDetector(
-  //     onTap: () => _onDateTapped(dateData),
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //         color: dateData['date'] != null
-  //             ? AppColors.backgroundColor
-  //             : AppColors.backgroundColor,
-  //         borderRadius: BorderRadius.circular(27),
-  //         boxShadow: dateData['date'] != null
-  //             ? [
-  //                 const BoxShadow(
-  //                   color: Color.fromRGBO(75, 77, 115, 0.25),
-  //                   blurRadius: 2,
-  //                   offset: Offset(0, 2),
-  //                   spreadRadius: 0,
-  //                 ),
-  //               ]
-  //             : null,
-  //       ),
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           SizedBox(height: 7),
-  //           Text(
-  //             dateData['date']?.toString().padLeft(2, '0') ?? '',
-  //             style: FontManager().getTextStyle(
-  //               context,
-  //               fontSize: 16,
-  //               lWeight: FontWeight.w800,
-  //               color: dateData['date'] != null
-  //                   ? AppColors.finSpaceColor
-  //                   : AppColors.likesharecommentCount,
-  //             ),
-  //           ),
-  //           SizedBox(height: 2),
-  //           if (dateData['date'] != null)
-  //             Divider(
-  //               color: Colorcodes.greyLight,
-  //             ),
-  //           SizedBox(height: 2),
-  //           if (dateData['date'] != null)
-  //             Text(
-  //               '${dateData['transactionCount']} tnxs',
-  //               style: FontManager().getTextStyle(
-  //                 context,
-  //                 fontSize: 12,
-  //                 color: AppColors.accentColor,
-  //               ),
-  //             ),
-  //           SizedBox(height: 7),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget _buildDottedDivider() {
     return Container(
       height: 1,
@@ -1068,14 +997,6 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
       ),
     );
   }
-
-  // @override
-  // void dispose() {
-  //   scrollController.dispose();
-  //   searchController.dispose();
-  //   focusNodeSearchFeild.dispose();
-  //   super.dispose();
-  // }
 }
 
 class OvalTransactionWidget extends StatelessWidget {

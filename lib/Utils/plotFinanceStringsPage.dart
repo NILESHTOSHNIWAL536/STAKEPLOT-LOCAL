@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
+import '../routes/route_constant.dart';
+
 class PlotFinanceStaticData {
   static final PlotFinanceStaticData _instance = PlotFinanceStaticData._internal();
 
@@ -156,7 +158,7 @@ class PlotFinanceStaticData {
 
   Future<bool> fetchConstants() async {
     try {
-      final response = await getDataApiCall("$url/constant/plotfinance");
+      final response = await getDataApiCall(ConstantRoutes.plotfinance);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);

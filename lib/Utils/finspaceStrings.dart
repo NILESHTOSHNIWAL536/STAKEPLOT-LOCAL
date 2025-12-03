@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
+import '../routes/route_constant.dart';
+
 class FinspaceStrings
 {
 
@@ -46,7 +48,7 @@ class FinspaceStrings
   
   void fetchConstants() async {
     try {
-      final response = await getDataApiCall("${url}/constant/finvuCommunity");
+      final response = await getDataApiCall(ConstantRoutes.finvuCommunity);
       if (getFlagOfResponse(response)) {
         
         var data = jsonDecode(response.body);

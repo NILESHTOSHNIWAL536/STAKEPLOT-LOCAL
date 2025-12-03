@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart'; // For url
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+
+import '../routes/route_constant.dart'; // For url
 
 class CreditCardScreenStrings {
   static final CreditCardScreenStrings _instance =
@@ -17,7 +19,7 @@ class CreditCardScreenStrings {
 
    void fetchConstants() async {
     try {
-      final response = await getDataApiCall("$url/constant/creditCard");
+      final response = await getDataApiCall(ConstantRoutes.creditCard);
      
       if (getFlagOfResponse(response)) 
       {

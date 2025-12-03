@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../routes/route_constant.dart';
+
 class RewardScreenStrings
 {
 
@@ -28,7 +30,7 @@ class RewardScreenStrings
 
   void fetchConstants() async {
     try {
-      final response = await getDataApiCall("${url}/constant/rewardIntro");
+      final response = await getDataApiCall(ConstantRoutes.rewardIntro);
       String key="ShowReward";
       if (getFlagOfResponse(response)) {
          final SharedPreferences pref = await SharedPreferences.getInstance();

@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/controllers/post-controller.d
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_constant.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -216,7 +217,7 @@ void clearGetX() {
 RxMap<String, String> ListOfBankImages = RxMap();
 
 void getAllContstant(context) async {
-  var responce = await getDataApiCall("${url}/constant/weekmonth");
+  var responce = await getDataApiCall(ConstantRoutes.weekMonth);
   expire(responce, context);
   if (getFlagOfResponse(responce)) {
     var data = jsonDecode(responce.body);

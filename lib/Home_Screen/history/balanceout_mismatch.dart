@@ -99,8 +99,6 @@ class BalanceOutExample extends StatelessWidget {
 
   Widget getExample(context){
     return ListView(
-      // mainAxisAlignment: MainAxisAlignment.start,
-      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
           const SizedBox(height: 15),
               Text(

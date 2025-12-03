@@ -117,10 +117,7 @@ PreferredSizeWidget historyAppBar(context) {
             if (len == 0) {
               snackBarCalled(context, SnackbarData().noBankForLinking);
             }
-            //  else if (len == 1) {
-            //   accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
-            //   showModalForPdfDownload(context);
-            // }
+            
             else {
               accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
               showModalForPdfDownloadBankUiCheckBox(context);
