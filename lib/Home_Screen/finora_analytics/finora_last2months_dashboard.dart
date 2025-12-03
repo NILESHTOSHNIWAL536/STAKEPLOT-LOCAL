@@ -13,7 +13,7 @@ import 'package:flutter_application_code_stakeplot/repository/finora_repository.
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../routes/route_transactions.dart';
+import '../../routes/route_transactions.dart';
 
 Map<String, dynamic> finoraTransactionData = {};
 RxBool FinoraLoading = false.obs;

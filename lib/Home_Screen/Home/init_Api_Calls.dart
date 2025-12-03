@@ -1,13 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
-import 'package:flutter_application_code_stakeplot/repository/lenduser_api.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/home_screen_state/home_page.dart';
+import 'package:flutter_application_code_stakeplot/repository/finance_repository.dart';
+
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/repository/home.dart';
+import 'package:flutter_application_code_stakeplot/repository/manual_transaction_repository.dart';
 import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
@@ -34,7 +36,7 @@ Future<void>  callApi(context) async {
   getBankAccounts();
   getAck();
   contextGlobal = context;
-  getUserLend(context);
+  // getUserLend(context);
   unawaited(getBudget());
   getHiddenTransactions(context);
   _controller.getHomePageInsights(context);

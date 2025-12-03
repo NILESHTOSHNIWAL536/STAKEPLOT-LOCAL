@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
-
 import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
@@ -8,26 +7,22 @@ import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Emi.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Rent_Buy.dart';
-
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/all_calculators.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/loan_calculator.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
-
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/login_screen.dart';
-import 'Home_Screen/Home/home_page.dart';
+import 'Home_Screen/home_screen_state/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'email_sync/add_credit_card_bank.dart';
-
 import 'finances_screen/creditCard_slider.dart';
 import 'finances_screen/index_finances.dart';
 import 'onboarding_screens/onboarding_screen.dart';
@@ -35,36 +30,36 @@ import 'onboarding_screens/onboarding_screen.dart';
 var routes =
  {  
       '/splash': (context) =>  const SplashScreen(),   
-      '/': (context) =>  LoginScreen(),   
-      '/home': (context) => HomePage(),  
-      '/Notifications': (context) => Notifications(),  
+      '/': (context) =>  const LoginScreen(),   
+      '/home': (context) =>  HomePage(),  
+      '/Notifications': (context) => const Notifications(),  
       '/comment': (context) => Notifications(),  
       '/TribeSearch': (context) => TribeSearch(),  
-      '/post': (context) => Community(),  
+      '/post': (context) => const Community(),  
       '/Friends': (context) => Friends(),    
-      '/TribeChats': (context) => TribeChats(), 
+      '/TribeChats': (context) => const TribeChats(), 
       '/discover': (context) =>  DiscoverAccount(),     
       '/ShareAccountLogin': (context) =>  ShareAccountLogin(),     
-      '/Budget': (context) =>  Budget(),     
+      '/Budget': (context) =>  const Budget(),     
       '/debt': (context) =>  CreateDebtScreen(),     
           
-      '/CreditCard':(context) => CreditCard() ,
-      '/emi':(context) => Emi() ,
-      '/rent_buy':(context) => RentBuy() ,
+      '/CreditCard':(context) => const CreditCard() ,
+      '/emi':(context) => const Emi() ,
+      '/rent_buy':(context) => const RentBuy() ,
       
     
      
-      '/VegNonveg':(context) => VegNonVegCalculator(),
-      '/FetchTransaction':(context) => FetchTransaction() ,
+      '/VegNonveg':(context) => const VegNonVegCalculator(),
+      '/FetchTransaction':(context) => const FetchTransaction() ,
       '/OnboardingScreen':(context) => OnboardingScreen() ,
-      '/editDetails':(context) => EditDetails() ,
-      '/interestScreen':(context) => InterestSelectionScreen() ,
+      '/editDetails':(context) => const EditDetails() ,
+      '/interestScreen':(context) => const InterestSelectionScreen() ,
       
-      '/currencyConverterScreen':(context)=>CurrencyConverterScreen(),
+      '/currencyConverterScreen':(context)=>const CurrencyConverterScreen(),
      
       '/rewardsOverview':(context)=>RewardsOverview(),
       '/LoanCalculatorUI':(context)=>LoanCalculatorScreen(),
-      '/FinanceDashboard':(context)=>FinanceDashboard(),
+      '/FinanceDashboard':(context)=>const FinanceDashboard(),
       '/creditCard':(context)=>CardDueCarousel(),
       '/addcreditCard':(context)=>AddCreditCardBankScreen(),
       '/AllCalculator':(context)=>AllCalculatorScreen(),

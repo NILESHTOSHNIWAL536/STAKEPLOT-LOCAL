@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_apis.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finora_last_two_months_apis.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/finora_last2months_dashboard.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';

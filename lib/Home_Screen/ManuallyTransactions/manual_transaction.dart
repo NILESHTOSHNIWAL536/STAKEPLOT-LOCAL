@@ -1,25 +1,20 @@
 
 
-import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
-import 'package:flutter_application_code_stakeplot/repository/lenduser_api.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/repository/home.dart';
-import 'package:flutter_application_code_stakeplot/repository/payments.dart';
+import 'package:flutter_application_code_stakeplot/repository/manual_transaction_repository.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/delete_banks_users.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
@@ -167,14 +162,7 @@ class _ModalContentState extends State<ModalContent>
     });
   }
 
-  void _showCelebration() {
-    setState(() {
-      _isCelebrationVisible = true;
-    });
-    _confettiController.play(); // Start confetti animation
-    _iconAnimationController.forward();
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -695,20 +683,7 @@ Widget categoryExpandedWidget() {
                 FocusScope.of(context).unfocus();
                 if (cashInAndOut.value) return;
                 cashInAndOut.value = true;
-                // if (isSplit.value && addedMembers.isNotEmpty) {
-                //   splitBill(selectedCategory2.toString(), amount.toString(),
-                //       selectedSubCategory2.toString(), true);
-                // }
-                //  else if (isLend.value && addedMembers.isNotEmpty) {
-                //   addLendUserAmount(
-                //     context,
-                //     amount.toString(),
-                //     addedMembers,
-                //     selectedCategory2.toString(),
-                //     selectedSubCategory2.toString(),
-                //   );
-                // }
-                // else {
+               
                 addTransaction(
                   amount.toString(),
                   selectedSubCategory2.toString(),
@@ -728,60 +703,8 @@ Widget categoryExpandedWidget() {
     );
   }
 
-  void splitBill(categories, amount, subCategories, bool isSplitAmount) {
-    if (categories == "" || amount == "" || subCategories == "") {
-      snackBarAllFeilds(context);
-      return;
-    }
-
-    if (acceptReset.value) return;
-    acceptReset.value = true;
-    isLend.value = false;
-    isSplit.value = false;
-
-    splitUserAmountManualTransaction(
-        context, amount, addedMembers, categories, subCategories);
-  }
-
-  void addSocketMessage(addedUser, String amount, String splitName,
-      String splitID, double parsedTotalAmount) {
-    if (addedUser.isEmpty) {
-      return;
-    }
-
-    // int index=0;
-    addedUser.forEach((rec) {
-      String room1 = rec['name'] + userController.userName.value;
-      String room2 = userController.userName.value + rec['name'];
-      String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
-
-      var jsonData = {
-        "messageType": "split",
-        "receiver": rec['id'],
-        "sender": userController.userId.value,
-        "message": null,
-        "image": null,
-        "poll": null,
-        "post": null,
-        "split": {
-          "BillName": splitName,
-          "Amount": parsedTotalAmount, // This is now the individual amount
-          "Share": amount,
-          "isPaid": false,
-          "splitId": splitID,
-        },
-        "roomId": roomId,
-      };
-
-      socket.emit("joinRoom", roomId);
-      socket.emit("message", jsonData);
-      String userToSend = rec['name'] + "" + rec['name'];
-      socket.emit("LoadCharts", {
-        "roomId": userToSend,
-      });
-    });
-  }
-
+ 
+ 
   Future<dynamic> showCustomFriendsModal(
     BuildContext context,
     double totalAmount,
@@ -809,216 +732,4 @@ Widget categoryExpandedWidget() {
     );
   }
 
-  // void splitUserAmountManualTransaction(
-  //   BuildContext context,
-  //   String totalAmount,
-  //   List members,
-  //   String name,
-  //   String subCategories, {
-  //   Map<String, double>? amounts,
-  // }) async {
-  //   double? parsedTotalAmount = double.tryParse(totalAmount);
-  //   if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
-  //     snackBarCalled(context, SnackbarData().invalidAmountEntered, Colors.red);
-  //     return;
-  //   }
-
-  //   if (members.isEmpty) {
-  //     snackBarCalled(context, SnackbarData().noMembersSelected, Colors.red);
-  //     return;
-  //   }
-
-  //   List<Map<String, dynamic>> nameList = [];
-  //   if (amounts != null) {
-  //     members.forEach((element) {
-  //       double memberAmount = amounts[element['id']] ?? 0.0;
-  //       nameList.add({
-  //         'member': element['id'],
-  //         'markAsComplete': false,
-  //         'amount': memberAmount,
-  //       });
-  //     });
-  //   } else {
-  //     double amountPerPerson = parsedTotalAmount / (members.length + 1);
-  //     members.forEach((element) {
-  //       nameList.add({
-  //         'member': element['id'],
-  //         'markAsComplete': false,
-  //         'amount': amountPerPerson,
-  //       });
-  //     });
-  //     nameList.add({
-  //       'member': userController.userId.value,
-  //       'markAsComplete': false,
-  //       'amount': amountPerPerson,
-  //     });
-  //   }
-
-  //   double calculatedTotal =
-  //       nameList.fold(0.0, (sum, item) => sum + item['amount']);
-
-  //   var response = await postDataApiCall(
-  //     '${url}/split',
-  //     {
-  //       "subcategory": subCategories,
-  //       "category": name,
-  //       "amount": calculatedTotal,
-  //       "paymentStatus": nameList,
-  //       "image": '',
-  //       "ismanual": true,
-  //     },
-  //   );
-
-  //   if (getFlagOfResponse(response)) {
-  //     final body = json.decode(response.body);
-  //     splitID.value = body['id']['_id'];
-  //     for (var member in members) {
-  //       double memberAmount = amounts?[member['id']] ??
-  //           (parsedTotalAmount / (members.length + 1));
-  //       String formattedAmount = memberAmount.toStringAsFixed(2);
-
-  //       sendNotificationsToDevice(
-  //           member['id'],
-  //           context,
-  //           "${userController.userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
-  //           "/chat");
-  //     }
-
-  //     if (amounts != null) {
-  //       members.forEach((member) {
-  //         double memberAmount = amounts[member['id']] ?? 0.0;
-  //         addSocketMessage([member], memberAmount.toString(), name,
-  //             splitID.value, parsedTotalAmount);
-  //       });
-  //     } else {
-  //       double amountPerPerson = parsedTotalAmount / (members.length + 1);
-  //       addSocketMessage(members, amountPerPerson.toString(), name,
-  //           splitID.value, parsedTotalAmount);
-  //     }
-  //     currentPage = 1;
-  //     isLoadingMore.value = false;
-  //     searchController.clear();
-  //     getAllTransaction(context);
-
-  //     snackBarCalled(context, SnackbarData().splitAmountSuccess, AppColors.accentColor);
-  //     Navigator.pop(context);
-  //     addedMembers.clear();
-  //     addedUser.clear();
-  //     _showCelebration();
-  //   } else {
-  //     snackBarCalled(context, SnackbarData().splitAmountError, Colors.red);
-  //   }
-
-  //   acceptReset.value = false;
-  //   cashInAndOut.value = false;
-  // }
-  void splitUserAmountManualTransaction(
-    BuildContext context,
-    String totalAmount,
-    List members,
-    String name,
-    String subCategories, {
-    Map<String, double>? amounts,
-  }) async {
-
-    double? parsedTotalAmount = double.tryParse(totalAmount);
-
-    if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
-      snackBarCalledfail(context, SnackbarData().invalidAmountEntered, Colors.red);
-      return;
     }
-
-    if (members.isEmpty) {
-      snackBarCalledfail(context, SnackbarData().noMembersSelected, Colors.red);
-      return;
-    }
-
-    List<Map<String, dynamic>> nameList = [];
-
-    if (amounts != null) {
-      members.forEach((element) {
-        double memberAmount = amounts[element['id']] ?? 0.0;
-        nameList.add({
-          'member': element['id'],
-          'markAsComplete': false,
-          'amount': memberAmount,
-        });
-      });
-    } else {
-      double amountPerPerson = parsedTotalAmount / (members.length + 1);
-    
-      members.forEach((element) {
-        nameList.add({
-          'member': element['id'],
-          'markAsComplete': false,
-          'amount': amountPerPerson,
-        });
-      });
-      nameList.add({
-        'member': userController.userId.value,
-        'markAsComplete': false,
-        'amount': amountPerPerson,
-      });
-    }
-
-    double calculatedTotal =
-        nameList.fold(0.0, (sum, item) => sum + item['amount']);
-    var response = await postDataApiCall(
-      '${url}/split',
-      {
-        "subcategory": subCategories,
-        "category": name,
-        "amount": calculatedTotal,
-        "paymentStatus": nameList,
-        "image": '',
-        "ismanual": true,
-      },
-    );
-
-
-    if (getFlagOfResponse(response)) {
-      final body = json.decode(response.body);
-      splitID.value = body['id']['_id'];
-
-      for (var member in members) {
-        double memberAmount = amounts?[member['id']] ??
-            (parsedTotalAmount / (members.length + 1));
-        String formattedAmount = memberAmount.toStringAsFixed(2);
-        sendNotificationsToDevice(
-            member['id'],
-            context,
-            "${userController.userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
-            "/chat");
-      }
-
-      if (amounts != null) {
-        members.forEach((member) {
-          double memberAmount = amounts[member['id']] ?? 0.0;
-          addSocketMessage([member], memberAmount.toString(), name,
-              splitID.value, parsedTotalAmount);
-        });
-      } else {
-        double amountPerPerson = parsedTotalAmount / (members.length + 1);
-        addSocketMessage(members, amountPerPerson.toString(), name,
-            splitID.value, parsedTotalAmount);
-      }
-
-      currentPage = 1;
-      isLoadingMore.value = false;
-      searchController.clear();
-      getAllTransaction(context);
-
-      snackBarCalled(context, SnackbarData().splitAmountSuccess, AppColors.accentColor);
-      Navigator.pop(context);
-      addedMembers.clear();
-      addedUser.clear();
-      _showCelebration();
-    } else {
-      snackBarCalledfail(context, SnackbarData().splitAmountError, Colors.red);
-    }
-    acceptReset.value = false;
-    cashInAndOut.value = false;
-  }
-}
-
-

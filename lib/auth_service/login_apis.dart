@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/auth_service/otp_service.dart
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
@@ -102,7 +103,8 @@ class LoginService {
         'email': emailController.text.toString(),
       });
 
-      printData(response);
+      appLog("response: ${response.body}");
+      appLog("Verification Response: ${AuthApiRoutes.verify}");
       var decodedResponse = json.decode(response.body);
       if (response.statusCode == 409) {
         ForceLogout.forceLoginShowModal(

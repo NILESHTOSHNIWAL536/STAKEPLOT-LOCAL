@@ -62,3 +62,40 @@ Future<void> getFoodieFundsDetails(BuildContext context, String id) async {
     snackBarCalledfail(context, SnackbarData().failedToFetchFoodieFundsDetails);
   }
 }
+
+void duesPaid(BuildContext context, int index) async {
+  final due = dueAmountRemainders[index];
+  final dueId = due['_id']?.toString();
+  final type = due['type'];
+
+  final apiUrl = "$url/reminders/request-approval/$type/$dueId";
+  try {
+    final response = await updateDataApiCall2(apiUrl, {});
+  } catch (e) {
+    snackBarCalledfail(context, SnackbarData().errorSettlingDue);
+  }
+}
+
+void settleAmount(
+    BuildContext context, String dueId, String type, String endUser) async {
+  final apiUrl = "$url/reminders/settle/$type/$dueId";
+  try {
+    var body = {
+      'splittedUserId': endUser,
+    };
+    final response = await updateDataApiCall2(apiUrl, body);
+  } catch (e) {
+    snackBarCalledfail(context, SnackbarData().errorSettlingDue);
+  }
+}
+
+void declineAmount(
+    BuildContext context, String dueId, String type, String endUser) async {
+  final apiUrl = "$url/reminders/decline-request/$type/$dueId";
+  try {
+    var body = {"splittedUserId": endUser};
+    final response = await updateDataApiCall2(apiUrl, body);
+  } catch (e) {
+    snackBarCalledfail(context, SnackbarData().errorSettlingDue);
+  }
+}

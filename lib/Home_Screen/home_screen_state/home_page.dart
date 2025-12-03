@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_AppBar.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/Home/indexScreen.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/home_screen_state/indexScreen.dart';
 
-import 'package:flutter_application_code_stakeplot/Home_Screen/Home/noaccountSelected.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/home_screen_state/noaccountSelected.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/weeklyPopUp.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';

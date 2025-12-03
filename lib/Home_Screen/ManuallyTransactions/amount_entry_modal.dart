@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/repository/manual_transaction_repository.dart';
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
@@ -15,6 +16,8 @@ import "package:flutter_application_code_stakeplot/controllers/user-controller.d
 
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+
+ late IO.Socket socketManualTransaction;
 class AmountEntryModal extends StatefulWidget {
   final List selectedFriends;
   final double totalAmount;
@@ -49,7 +52,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
   double leftoverAmount = 0.0;
   double initialEqualAmount = 0.0; // Store initial values
   Map<String, bool> isModified = {};
-  late IO.Socket socket;
+ 
 
   @override
   void initState() {
@@ -68,17 +71,17 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       );
       isModified[friend['id']] = false;
     });
-    socket = IO.io(urlWithLocallHost,
+    socketManualTransaction = IO.io(urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
     calculateTotal();
   }
 
   setUpSocketListener() {
-    socket.on(
+    socketManualTransaction.on(
         "disconnect",
         (data) => {
-              socket.close(),
+              socketManualTransaction.close(),
             });
   }
 
@@ -379,34 +382,9 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                            widget.ismanual? Navigator.pop(context): null;
                           }
                         : null,
-                    // onTap: () {
-                    //   if (widget.flag) {
-                    //     if (leftoverAmount != 0) {
-                    //       return;
-                    //     }
-                    //     Map<String, double> amounts = {};
-                    //     amountControllers.forEach((id, controller) {
-                    //       amounts[id] = double.tryParse(
-                    //               controller.text.replaceAll(',', '')) ??
-                    //           0.0;
-                    //     });
+                    
 
-                    //     splitUserAmount(
-                    //       context,
-                    //       widget.totalAmount.toString(),
-                    //       widget.selectedFriends,
-                    //       widget.cate ?? 'Uncategorized',
-                    //       widget.subcate ?? 'General',
-                    //       amounts: amounts,
-                    //       ismanual: widget.ismanual,
-                    //     );
-                    //     Navigator.pop(
-                    //         context); // Pop after processing when flag is true
-                    //   }
-                    //   else {
-                    //     Navigator.pop(context); // Just pop when flag is false
-                    //   }
-                    // },
+                   
 
                     child: buttonContainer(
                       context,
@@ -429,171 +407,9 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     );
   }
 
-  void addSocketMessage(
-    List addedUser,
-    String amount,
-    String splitName,
-    String splitID,
-    double parsedTotalAmount,
-  ) {
-    if (addedUser.isEmpty) {
-      return;
-    }
-    UserController controller = ControllerManagement.userController;
-    for (var rec in addedUser) {
-      String room1 = rec['name'] + controller.userName.value;
-      String room2 = controller.userName.value + rec['name'];
-      String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
+ 
 
-      var jsonData = {
-        "messageType": "split",
-        "receiver": rec['id'],
-        "sender": userController.userId.value,
-        "message": null,
-        "image": null,
-        "poll": null,
-        "post": null,
-        "split": {
-          "BillName": splitName,
-          "Amount": parsedTotalAmount,
-          "Share": amount,
-          "isPaid": false,
-          "splitId": splitID,
-        },
-        "roomId": roomId,
-      };
-
-      try {
-        socket.emit("joinRoom", roomId);
-        socket.emit("message", jsonData);
-        String userToSend =
-            rec['name'] + rec['name']; // Fix concatenation if needed
-        socket.emit("LoadCharts", {"roomId": userToSend});
-      } catch (e) {}
-    }
-  }
-
-  void splitUserAmount(
-    BuildContext context,
-    String totalAmount,
-    List members,
-    String category,
-    String subcategory, {
-    Map<String, double>? amounts,
-    bool ismanual = true,
-  }) async {
-    UserController controller = ControllerManagement.userController;
-    double? parsedTotalAmount = double.tryParse(totalAmount);
-    if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
-      snackBarCalled(context, SnackbarData().invalidAmountEntered, Colors.red);
-      return;
-    }
-
-    if (members.isEmpty) {
-      snackBarCalledfail(context, SnackbarData().noMembersSelected, Colors.red);
-      return;
-    }
-
-    // Prepare paymentStatus list with individual amounts
-    List<Map<String, dynamic>> nameList = [];
-    double calculatedTotal = 0.0;
-
-    if (amounts != null) {
-      members.forEach((element) {
-        double memberAmount = amounts[element['id']] ?? 0.0;
-        nameList.add({
-          'member': element['id'],
-          'markAsComplete': false,
-          'amount': memberAmount,
-        });
-        calculatedTotal += memberAmount;
-      });
-      // Include the user's amount if present
-      if (amounts.containsKey(userController.userId.value)) {
-        double userAmount = amounts[userController.userId.value]!;
-        nameList.add({
-          'member': userController.userId.value,
-          'markAsComplete': false,
-          'amount': userAmount,
-        });
-        calculatedTotal += userAmount;
-      }
-    } else {
-      double amountPerPerson = parsedTotalAmount / (members.length + 1);
-      members.forEach((element) {
-        nameList.add({
-          'member': element['id'],
-          'markAsComplete': false,
-          'amount': amountPerPerson,
-        });
-        calculatedTotal += amountPerPerson;
-      });
-      nameList.add({
-        'member': userController.userId.value,
-        'markAsComplete': false,
-        'amount': amountPerPerson,
-        'avatarBackGround': userController.avatarBackGround.value
-      });
-      calculatedTotal += amountPerPerson;
-    }
-
-    // Verify total matches
-    if ((calculatedTotal - parsedTotalAmount).abs() > 0.01) {
-      // Allow small floating-point errors
-
-      return;
-    }
-
-   
-
-    final response = await postDataApiCall('$url/split', 
-        {
-        "subcategory": subcategory,
-        "category": category,
-        "amount": calculatedTotal,
-        "ismanual": true,
-        "transactionId": !ismanual ? transactionsId.value : "",
-        "paymentStatus": nameList,
-        "image": '',
-      }
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final body = json.decode(response.body);
-      splitID.value = body['id']['_id'];
-
-      // Send notifications and socket messages with individual amounts
-      for (var member in members) {
-        double memberAmount = amounts?[member['id']] ??
-            (parsedTotalAmount / (members.length + 1));
-        String formattedAmount = memberAmount.toStringAsFixed(2);
-
-        sendNotificationsToDevice(
-            member['id'],
-            context,
-            "${controller.userName.value} has sent you a Split Bill of $category ($subcategory) for ₹$formattedAmount",
-            "/chat");
-        addSocketMessage(
-          [member],
-          formattedAmount,
-          category,
-          splitID.value,
-          parsedTotalAmount,
-        );
-        // searchController.clear();
-        // currentPage=1;
-        // isLoadingMore.value=false;
-        // getAllTransaction(context);
-      }
-     if (!context.mounted) return;
-      snackBarCalled(context, SnackbarData().splitAmountSent);
-    } else {
-      snackBarCalledfail(context, SnackbarData().splitError, Colors.red);
-    }
-
-    acceptReset.value = false;
-  }
-
+ 
 }
 
 Widget buttonContainer(context, str,
