@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/login_screen.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../apiAutomations/secure_storage.dart';
@@ -43,7 +44,7 @@ void addThisDeviceToBackendDevice(SharedPreferences pref, context) async
 
 Future<void> _addThisDeviceToBackend(deviceData, context) async {
    try {
-     await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
+     await postDataApiCall(SendNotificationsRoutes.sendNotify, deviceData);
    } catch (e) {}
 }
 

@@ -47,7 +47,7 @@ void getChats(data) async {
 }
 
 void upvote(context, String str, String objectId) async {
-  final response = await postDataApiCall('${url}/upvote/', {
+  final response = await postDataApiCall(UpvoteRoute.upvote, {
     'onModel': str.toString(),
     'objectId': objectId,
   });
@@ -61,7 +61,7 @@ void upvote(context, String str, String objectId) async {
 }
 
 void downvote(context, String str, String objectId) async {
-  final response = await postDataApiCall('${url}/downvote/', {
+  final response = await postDataApiCall(DownvoteRoute.downvote, {
     'onModel': str.toString(),
     'objectId': objectId,
   });
@@ -77,7 +77,7 @@ void downvote(context, String str, String objectId) async {
 
 void createPoll(context, String question, List options, roomDetails, members,
     String type) async {
-  final response = await postDataApiCall('${url}/poll/add', {
+  final response = await postDataApiCall(pollRoute.pollAdd, {
     'question': question,
     'options': options,
     'pollType': type, //roomDetails.length!=0?'room':'casual',
@@ -170,8 +170,8 @@ void uploadRefreshCall(var postData, BuildContext context) {
 }
 
 void votePollInPost(context, String id, int index) async {
-  final response = await postDataApiCall(
-      '${url}/poll/votePollInPost/${id}', {'optionIndex': index});
+  // final response = await postDataApiCall('${url}/poll/votePollInPost/${id}', {'optionIndex': index});
+  final response = await postDataApiCall(pollRoute.votePollInPost(postId: id), {'optionIndex': index});
 
   if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);

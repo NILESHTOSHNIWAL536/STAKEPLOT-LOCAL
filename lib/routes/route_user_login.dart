@@ -1,5 +1,11 @@
 import '../backed_connections/apis_connect.dart';
 
+class SendNotificationsRoutes {
+  static final String _urlPath = url+"/notify";
+  static String sendNotify = "$_urlPath/addDeviceToNotify";
+
+}
+
 class otpRoutes {
   static final String _urlPath = url;
   static String sendOtp = "$_urlPath/otp/send";
@@ -32,6 +38,7 @@ class UserRoutes {
   static final String _urlPath = url + "/user";
 
   static String update = "$_urlPath/";
+  static String deleteUser = "$_urlPath/";
   static String getInfo = "$_urlPath/info";
   static String updateFetchStatus = "$_urlPath/updateFetchStatus";
   static String logout = "$_urlPath/logout";
@@ -55,5 +62,3 @@ class UserRoutes {
   static String connections = "$_urlPath/connections";
   static String getMaskedUsers = "$_urlPath/getMaskedUsers";
 }
-
-

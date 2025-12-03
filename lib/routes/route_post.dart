@@ -84,6 +84,18 @@ class ReplyRoute {
   static String deleteReply({required String id}) => "$_basePath/$id";
 }
 
+class pollRoute {
+  static final String _basePath = "$url/poll";
+
+  // POST → Upvote model (post/comment/reply)
+  static String poll = "$_basePath/";
+  static String pollAdd = "$_basePath/add";
+  static String split = "${url}/split/pending-user";
+
+   static String votePollInPost({required String postId}) => "$_basePath/votePollInPost/$postId";
+
+}
+
 class UpvoteRoute {
   static final String _basePath = "$url/upvote";
 

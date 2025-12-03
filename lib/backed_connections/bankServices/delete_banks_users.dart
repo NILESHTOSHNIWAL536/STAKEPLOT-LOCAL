@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/repository/finance_repository.dart';
 import 'package:flutter_application_code_stakeplot/repository/finora_repository.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
 
 
@@ -29,7 +30,7 @@ Future<bool> deleteUserAccount(BuildContext context, String msg) async {
       // 'password':password,
       'reason': msg,
     };
-    var response = await deleteDataApiCallBody("${url}/user", body);
+    var response = await deleteDataApiCallBody(UserRoutes.deleteUser, body);
 
     if (getFlagOfResponse(response)) {
       clearStackLocalInfo();

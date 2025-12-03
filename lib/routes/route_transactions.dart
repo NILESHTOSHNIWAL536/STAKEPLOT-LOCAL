@@ -6,6 +6,7 @@ class BankTransactionRoutes {
   // Create user details
   static String createUserDetails = "$_urlPath/";
 
+  static final String customCategory = "$url/custom/custom-category";
   // Grouped transactions
   static String categorizeGroupedTransaction({required String groupId}) =>
       "$_urlPath/grouped/$groupId/categorize";

@@ -9,6 +9,7 @@ import "package:flutter_application_code_stakeplot/Utils/communityPageStrings.da
 import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
+import "package:flutter_application_code_stakeplot/routes/route_post.dart";
 import "package:flutter_application_code_stakeplot/user_chat/room_poll_chart.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
@@ -116,7 +117,7 @@ class _TribeSearchState extends State<TribeChats> {
   }
 
   void getChatsSplitAccounts(BuildContext context, String id) async {
-    var response = await getDataApiCall("${url}/split/pending-user");
+    var response = await getDataApiCall(pollRoute.split);
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];

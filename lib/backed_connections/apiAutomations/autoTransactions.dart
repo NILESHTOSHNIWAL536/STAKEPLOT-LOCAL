@@ -70,7 +70,7 @@ void onChanedAutoTransactionStatus(context)async
 
 Future<void> getCustomCategory(context)async
 {
-  var res = await getDataApiCall("${url}/custom/custom-category");
+  var res = await getDataApiCall(BankTransactionRoutes.customCategory);
   if(getFlagOfResponse(res))
   {
     var data = jsonDecode(res.body);
@@ -92,7 +92,7 @@ void postCustomCategory(context,name,urlPath,narr)async
     "narration":narr
   };
   
-  var res = await postDataApiCall("${url}/custom/custom-category",body);
+  var res = await postDataApiCall(BankTransactionRoutes.customCategory,body);
 
   if(getFlagOfResponse(res))
   {
