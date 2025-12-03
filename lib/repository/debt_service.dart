@@ -5,9 +5,11 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 
+import '../routes/index_route.dart';
+
 
 class DebtService {
-  static String baseUrl = '${url}/debt';
+  static String baseUrl = '${API.mainBackendUrl}/debt';
 
   static Future<Map<String, dynamic>?> createDebt(
       Map<dynamic, dynamic> debtData) async {

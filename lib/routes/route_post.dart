@@ -87,7 +87,9 @@ class ReplyRoute {
 class SplitRoutes
 {
   static final String _basePath = "${API.mainBackendUrl}/split";
+  static final String _basePathbill = "${API.mainBackendUrl}/bill";
   static String split = "$_basePath";
+  static String bill = "$_basePathbill";
   static String splitpending = "${_basePath}/pending-user";
 }
 

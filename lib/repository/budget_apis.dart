@@ -12,7 +12,6 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 
 import '../components/helper.dart';
 
-
 class BudgetService {
   static Future<void> fetchBudgetInsights(String budgetId) async {
     final String apiUrl = BudgetRoutes.getInsights(bid: budgetId);
@@ -202,8 +201,8 @@ Future<void> getBudget() async {
 void addBudget(BuildContext context, String name, String amount,
     List expenseCategory, String budgetPeriod) async {
   List filteredCategories = expenseCategory
-       .where((e) => !isZeroAmount(e['amount'].toString()))
-       .toList();
+      .where((e) => !isZeroAmount(e['amount'].toString()))
+      .toList();
 
   if (filteredCategories.isEmpty) {
     createBudget.value = false;
@@ -217,7 +216,7 @@ void addBudget(BuildContext context, String name, String amount,
     'budgetPeriod': budgetPeriod.toString(),
   };
 
-  final response = await postDataApiCall('${url}/budget/', body);
+  final response = await postDataApiCall(BudgetRoutes.createBudget, body);
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     getBudget();
@@ -236,7 +235,7 @@ void addBudget(BuildContext context, String name, String amount,
 
 void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     budgetPeriod, id) async {
-  final response = await postDataApiCall('${url}/budget/edit/${id}', {
+  final response = await postDataApiCall(BudgetRoutes.editBudget(id: id), {
     'name': name.toString(),
     'amount': amount.toString(),
     'expenseCategories': expenseCategory,
@@ -254,7 +253,7 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
 }
 
 void getInsights(context, String id) async {
-  var response = await getDataApiCall("${url}/budget/get-insights/$id");
+  var response = await getDataApiCall(BudgetRoutes.getInsights(bid: id));
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];

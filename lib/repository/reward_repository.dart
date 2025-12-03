@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 import 'package:flutter_application_code_stakeplot/model/user_activity_model.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_reward.dart';
 import 'package:get/get.dart';
 import '../backed_connections/apiAutomations/curd.dart';
 import '../backed_connections/apis_connect.dart';
@@ -21,7 +22,7 @@ RxList<CouponModel> categoryCoupons = <CouponModel>[].obs;
 Future<void> fetchCouponsCounts() async {
   try {
     couponAvalible.value = true;
-    final response = await getDataApiCall('$url/reward/iscoupons/count');
+    final response = await getDataApiCall(RewardRoutes.couponsCount);
   
     if (getFlagOfResponse(response)) {
       var json = jsonDecode(response.body);
@@ -43,7 +44,7 @@ Future<void> fetchCategoryCoupons(String category) async {
     categorySelected.value = formattedCategory;
 
     final response =
-        await getDataApiCall('$url/reward/search/$formattedCategory');
+        await getDataApiCall(RewardRoutes.searchByCategory(category));
 
     if (getFlagOfResponse(response)) {
       final List<dynamic> data = jsonDecode(response.body)['data'];
@@ -62,7 +63,7 @@ Future<void> fetchClaimedCoupons() async {
   try {
     loadReaward.value = true;
 
-    final response = await getDataApiCall('$url/reward/');
+    final response = await getDataApiCall(RewardRoutes.reward);
     if (getFlagOfResponse(response)) {
       final List<dynamic> data = jsonDecode(response.body)['data'];
       claimedCoupons.clear();
@@ -81,8 +82,7 @@ Future<bool> claimCoupon(
   try {
     // var body = {"category": categorySelected.value};
 
-    var response = await updateDataApiCallWithoutBody(
-        '$url/reward/claim/${id}/${categorySelected.value}');
+    var response = await updateDataApiCallWithoutBody(RewardRoutes.claimCoupon(couponId: id, category: categorySelected.value));
     if (getFlagOfResponse(response)) {
       claimedCoupons.add(coupon);
       userController.coupons.value--;
@@ -120,37 +120,16 @@ void redirectToUrl(BuildContext context, String path) async {
   }
 }
 
-// void callRewardApis(context)async {
-//   await fetchCouponsCounts();
-  
-//   dialofBoxContext = context;
-// //  
-
-//   CouponPopupUtils.showCouponPopup(context, (category) {
-//     fetchCategoryCoupons(category);
-//     CouponPopupUtils.showCouponSelectionPopup(context, category);
-//   });
-// }
 void callRewardApis(BuildContext? context) async {
   await fetchCouponsCounts();
-
-  // Prefer app-level context (navigatorKey) because it is normally attached to MaterialApp.
   BuildContext? safeContext = navigatorKey.currentContext ?? context;
-
   if (safeContext == null) {
-    
     return;
   }
-
-  // Guard: ensure MediaQuery exists in this context.
   if (MediaQuery.maybeOf(safeContext) == null) {
-   
     return;
   }
-
-  // Avoid keeping a long-lived reference to context if not needed.
   dialofBoxContext = safeContext;
-
   CouponPopupUtils.showCouponPopup(safeContext, (category) {
     fetchCategoryCoupons(category);
     CouponPopupUtils.showCouponSelectionPopup(safeContext, category);
@@ -158,13 +137,13 @@ void callRewardApis(BuildContext? context) async {
 }
 
 void updateClickOrViewCount({required String type, required String id}) async {
-  String urlPath = url + "/reward/coupon-view-increment/${type}/${id}";
+  String urlPath = RewardRoutes.incrementViewCount(type: type, couponId: id);
   await updateDataApiCall(urlPath);
 }
 
 void getUserActity() async {
   try {
-    String urlPath = url + "/reward/getUserActivity/";
+    String urlPath = RewardRoutes.getUserActivity;
     var response = await getDataApiCall(urlPath);
     if (getFlagOfResponse(response)) {
       var data = jsonDecode(response.body);
@@ -175,7 +154,7 @@ void getUserActity() async {
 
 Future<void> getCouponRequestCheck(String category) async {
   try {
-    var response = await getDataApiCall("${url}/reward/$category");
+    var response = await getDataApiCall(RewardRoutes.getBrandsByCategory(category));
 
     if (getFlagOfResponse(response)) {
       var couponCall = jsonDecode(response.body);
@@ -192,8 +171,7 @@ Future<void> getCouponRequestCheck(String category) async {
 Future<void> requestCoupon(
     BuildContext context, String category, String brand) async {
   try {
-    var response = await postDataApiCall(
-      "${url}/reward/coupon-request",
+    var response = await postDataApiCall( RewardRoutes.couponRequest,
       {"brand": brand, "category": category},
     );
 

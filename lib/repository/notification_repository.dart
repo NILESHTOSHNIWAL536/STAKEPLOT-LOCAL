@@ -23,8 +23,8 @@ void sendNotificationsToDevice(id, context, msg,
     String pic = "",
     String message = "",
     String billid = ""]) async {
-  String urlPath = "${url}/reminders/sendNotifications/ToDevice";
- 
+      
+    String urlPath = SendNotificationsRoutes.SendNotificationsToDevice;
 
   try {
     final response = await postDataApiCall(urlPath,{

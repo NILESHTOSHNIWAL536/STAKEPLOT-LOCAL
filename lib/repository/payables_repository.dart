@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/routes/bill_routes.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_post.dart';
+
+import '../routes/reminder_routes.dart';
 
 Future<void> getRemainders(context) async {
-  String urlPath = "${url}/reminders";
+  String urlPath = ReminderRoutes.getReminders;
   var responce = await getDataApiCall(urlPath);
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
@@ -23,7 +27,7 @@ Future<void> getRemainders(context) async {
 }
 
 void getChatsSplitAccounts(context, String id) async {
-  var response = await getDataApiCall("${url}/split/pending-user");
+  var response = await getDataApiCall(SplitRoutes.splitpending);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -33,19 +37,15 @@ void getChatsSplitAccounts(context, String id) async {
   } else {}
 }
 
-
 void approveBill(context, id, type, notifyId) async {
-  String urlPath = "${url}/bill/acceptBill/${id}/${type}/${notifyId}";
-
+  String urlPath =
+      BillRoutes.acceptBill(id: id, accept: type, notificationsId: notifyId);
   var responce = await getDataApiCall(urlPath);
-
   if (getFlagOfResponse(responce)) {}
 }
 
-
-
 Future<void> getFoodieFundsDetails(BuildContext context, String id) async {
-  String urlPath = "${url}/reminders/$id";
+  String urlPath = ReminderRoutes.getFoodieFunds(id);
   var response = await getDataApiCall(urlPath);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
@@ -68,7 +68,7 @@ void duesPaid(BuildContext context, int index) async {
   final dueId = due['_id']?.toString();
   final type = due['type'];
 
-  final apiUrl = "$url/reminders/request-approval/$type/$dueId";
+  final apiUrl = ReminderRoutes.requestApproval(type: type, id: dueId ?? "");
   try {
     final response = await updateDataApiCall2(apiUrl, {});
   } catch (e) {
@@ -78,7 +78,8 @@ void duesPaid(BuildContext context, int index) async {
 
 void settleAmount(
     BuildContext context, String dueId, String type, String endUser) async {
-  final apiUrl = "$url/reminders/settle/$type/$dueId";
+  final apiUrl = ReminderRoutes.settleReminder(
+      type: type, id: dueId); //"$url/reminders/settle/$type/$dueId";
   try {
     var body = {
       'splittedUserId': endUser,
@@ -91,10 +92,11 @@ void settleAmount(
 
 void declineAmount(
     BuildContext context, String dueId, String type, String endUser) async {
-  final apiUrl = "$url/reminders/decline-request/$type/$dueId";
   try {
-    var body = {"splittedUserId": endUser};
-    final response = await updateDataApiCall2(apiUrl, body);
+    
+     final apiUrl = ReminderRoutes.declineRequest(type: type, id: dueId); //"$url/reminders/decline-request/$type/$dueId";
+    await updateDataApiCall2(apiUrl, {"splittedUserId": endUser});
+
   } catch (e) {
     snackBarCalledfail(context, SnackbarData().errorSettlingDue);
   }

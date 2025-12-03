@@ -18,13 +18,13 @@ import '../controllers/controllerManagement.dart';
 import 'googlesignin/credentials.dart';
 part '../Constants/snackBars.dart';
 
-bool apis_flag = true;
-String urlWithLocallHost = apis_flag ? Credentials.LIVE_API:Credentials.LIVE_API_TEST; // main backend api
-String urlWithLocallHost2 = apis_flag ? Credentials.LIVE_API2:Credentials.LIVE_API_TEST2; // email sync api
-String urlWithLocallHost3 = apis_flag ? Credentials.FINVU_LIVE:Credentials.FINVU_TEST; // bank api
-String url = "${urlWithLocallHost}api/v1";
-String EmailUrl = "${urlWithLocallHost2}api";
-String BankApiUrl = "${urlWithLocallHost3}api";
+// bool apis_flag = true;
+// String urlWithLocallHost = apis_flag ? Credentials.LIVE_API:Credentials.LIVE_API_TEST; // main backend api
+// String urlWithLocallHost2 = apis_flag ? Credentials.LIVE_API2:Credentials.LIVE_API_TEST2; // email sync api
+// String urlWithLocallHost3 = apis_flag ? Credentials.FINVU_LIVE:Credentials.FINVU_TEST; // bank api
+// String url = "${urlWithLocallHost}api/v1";
+// String EmailUrl = "${urlWithLocallHost2}api";
+// String BankApiUrl = "${urlWithLocallHost3}api";
 
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();

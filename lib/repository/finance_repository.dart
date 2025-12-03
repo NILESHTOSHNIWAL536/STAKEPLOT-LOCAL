@@ -56,11 +56,7 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
   List<String> labelsLocal = [];
   List<double> debitList = [];
   List<double> creditList = [];
-
-  // String urlPath = endDate != null && weekORmonth == 'Custom'
-  //     ? "$url/transactionaut2o/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$formattedDate,${getNextDay(endDate)}"
-  //     : "$url/transactionaut2o/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$formattedDate";
-
+  
   String urlPath = endDate != null && weekORmonth == 'Custom'
     ? BankTransactionRoutes.getAllCustomTransactions(
         accountId: accountId.value,

@@ -2,7 +2,9 @@ import 'index_route.dart';
 
 class SendNotificationsRoutes {
   static final String _urlPath =  API.mainBackendUrl +"/notify";
-  static String sendNotify = "$_urlPath/addDeviceToNotify";
+  static String addDeviceToNotify = "$_urlPath/addDeviceToNotify";
+  static String SendNotificationsToDevice = "${API.mainBackendUrl}/reminders/sendNotifications/ToDevice";
+  static String deviceScreenTime = "${API.mainBackendUrl}/deviceScreenTime";
 
 }
 

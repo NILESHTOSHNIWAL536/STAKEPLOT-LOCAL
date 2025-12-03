@@ -18,6 +18,7 @@ import 'package:flutter_application_code_stakeplot/repository/notification_repos
 import 'package:flutter_application_code_stakeplot/repository/payables_repository.dart';
 import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_post.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 
 
@@ -140,7 +141,7 @@ void addTransaction(String amount, String subCategory, String categories,
 
    
 
-    final response = await postDataApiCall('$url/split', 
+    final response = await postDataApiCall(SplitRoutes.split, 
         {
         "subcategory": subcategory,
         "category": category,
@@ -237,7 +238,7 @@ void addTransaction(String amount, String subCategory, String categories,
 void addLendUserAmount(context, String amount, List members, String name,
       String subCategories) async {
 
-    var response=await postDataApiCall('${url}/bill', {
+    var response=await postDataApiCall(SplitRoutes.bill, {
         "userName": members[0]['name'],
         "avatarType": members[0]['avatar'],
         "billReceiverId": members[0]['id'],

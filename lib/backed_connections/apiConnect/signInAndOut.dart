@@ -44,7 +44,7 @@ void addThisDeviceToBackendDevice(SharedPreferences pref, context) async
 
 Future<void> _addThisDeviceToBackend(deviceData, context) async {
    try {
-     await postDataApiCall(SendNotificationsRoutes.sendNotify, deviceData);
+     await postDataApiCall(SendNotificationsRoutes.addDeviceToNotify, deviceData);
    } catch (e) {}
 }
 

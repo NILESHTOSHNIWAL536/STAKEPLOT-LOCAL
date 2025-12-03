@@ -33,4 +33,5 @@ class BackendApiEndPoints
       static final String notify = API.mainBackendUrl + "/notify";
       static final String auth = API.mainBackendUrl + "/auth";
       static final String user = API.mainBackendUrl + "/user";
+      static final String reward = "${API.mainBackendUrl}/reward";
 }

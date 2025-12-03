@@ -2,28 +2,24 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/post_apis.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/routes/index_route.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:http/http.dart' as http;
-
 import '../routes/route_post.dart';
 
 Future<http.Response>  addReply(context, String data, String commentId, String postId) async {
   var body = {'comment': commentId, 'reply': data, 'post': postId};
-  var response = await postDataApiCall('${url}/reply/', body);
+  var response = await postDataApiCall(ReplyRoute.postReply, body);
   if (!getFlagOfResponse(response)) {
     snackBarCalledfail(context, SnackbarData().unableToAddReply, Colors.red);
   }
@@ -104,7 +100,7 @@ Future<Map<String, dynamic>> createPost(
       'isSquareImage': cropShape,
     };
 
-    String apiCall = '${url}/post';
+    String apiCall = PostRoutes.post;
 
     var response = await postDataApiCall(apiCall, body);
 
@@ -156,7 +152,7 @@ void createPostWithOutImage(context, String title, String description) async {
 }
 
 void createPollOfCommunity(context, String title, String description) async {
-  var urlPath = '${url}/createPollPost';
+  var urlPath = '${API.mainBackendUrl}/createPollPost';
   final TagList = [...selectedSubCategories, ...selectedCategories];
 
   var body = {
@@ -302,7 +298,7 @@ Future<List<dynamic>> savePostGetData(context) async {
   {
        try{ 
             bool typeBool= type=='comment';
-            String urlPath=  url + ( typeBool ? '/comment/${postId}/${commentId}':'/reply/${commentId}');
+            String urlPath=  API.mainBackendUrl + ( typeBool ? '/comment/${postId}/${commentId}':'/reply/${commentId}');
             var response=await deleteDataApiCall(urlPath);
             if(getFlagOfResponse(response))
             {
@@ -343,7 +339,7 @@ Future<List<dynamic>> savePostGetData(context) async {
   {
        try{ 
           bool typeBool= type=='comment';
-            String urlPath=  url + ( typeBool ? '/comment/${commentId}':'/reply/${commentId}');
+            String urlPath= API.mainBackendUrl + ( typeBool ? '/comment/${commentId}':'/reply/${commentId}');
             var body={
                typeBool?  'comment':'reply'  :newText
             };

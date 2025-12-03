@@ -112,20 +112,18 @@ Future<bool> check(context, String flag) async {
 
 Future<void> storeDeviceInfo(context) async {
   var json = await getUserStats();
-  var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
+  var responce = await postDataApiCall("${SendNotificationsRoutes.deviceScreenTime}", json);
   if (getFlagOfResponse(responce)) {}
   try {
     await postDataApiCall(AuthApiRoutes.logout, {});
-  } catch (e)
-   {
-      logoutUserFromDevice(context);
+  } catch (e) {
+    logoutUserFromDevice(context);
   }
 }
 
 Future<void> storeDeviceInfoLocalBackState() async {
   var json = await getUserStats();
-  var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
-
+  var responce = await postDataApiCall("${SendNotificationsRoutes.deviceScreenTime}", json);
   if (getFlagOfResponse(responce)) {}
 }
 
@@ -236,7 +234,8 @@ void logoutUserFromDevice(context2) async {
     if (!Get.isRegistered<UserController>()) {
       Get.lazyPut(() => UserController());
     }
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     Navigator.pushReplacementNamed(context, '/');
     await _pref.remove("token");
     await _pref.remove("accessToken");
