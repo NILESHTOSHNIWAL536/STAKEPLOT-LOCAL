@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/repository/home.dart';
 import 'package:flutter_application_code_stakeplot/repository/manual_transaction_repository.dart';
+import 'package:flutter_application_code_stakeplot/repository/notification_repository.dart';
 import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
@@ -24,6 +25,7 @@ import 'package:flutter_application_code_stakeplot/repository/autopay_repository
 import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
 import 'package:flutter_application_code_stakeplot/repository/finora_repository.dart';
 import 'package:flutter_application_code_stakeplot/repository/payables_repository.dart';
+import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:flutter_application_code_stakeplot/widget_services/widget_updation.dart';
 import 'package:get/get.dart';
 import '../../backed_connections/bankServices/delete_banks_users.dart';

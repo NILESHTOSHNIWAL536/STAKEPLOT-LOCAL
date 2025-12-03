@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/controllers/post-controller.d
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_constant.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';

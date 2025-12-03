@@ -14,7 +14,7 @@ import 'package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/coupons/coupon_card.dart';
 import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:get/get.dart';
-import '../repository/reward.dart';
+import '../repository/reward_repository.dart';
 
 late BuildContext dialofBoxContext;
 final RxBool showBrands = false.obs;

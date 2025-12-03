@@ -1,33 +1,16 @@
-import 'dart:async';
+
 import 'dart:convert';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
-import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manual_transaction.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
-import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/repository/finance_repository.dart';
-import 'package:flutter_application_code_stakeplot/repository/home.dart';
 import 'package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart';
-import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/delete_banks_users.dart';
-import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
-import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
-import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:flutter_application_code_stakeplot/repository/finora_repository.dart';
-import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:week_of_year/week_of_year.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
-
-import '../../Hive_localstorage/apisCall/autopays_apis.dart';
 import '../../Home_Screen/insightsController.dart';
 import '../../routes/route_transactions.dart';
 
@@ -67,116 +50,6 @@ void getUserBankData(context) async {
   var responce = await getDataApiCall(urlPath);
 
   if (getFlagOfResponse(responce)) {}
-}
-
-void updateTheTagOfTarnsactions2(
-    category, subCategory, transactionId, context, index) async {
-  String urlPath = BankTransactionRoutes.updateTransaction(transactionId: transactionId);
-  var response = await updateDataApiCall2(urlPath, {
-    'category': category,
-    'subcategory': subCategory,
-  });
-  if (getFlagOfResponse(response)) {
-    Navigator.pop(context);
-    reloadHistory.value = !reloadHistory.value;
-    updateCatAndMoneyMap(context);
-    getBudget();
-  } else {}
-}
-
-Future<void> updateTheTagOfTarnsactions(
-  String category,
-  String subCategory,
-  String transactionId,
-  BuildContext context,
-  int index,
-  TransactionModel transaction,
-) async {
-  String urlPath = BankTransactionRoutes.updateTransaction(transactionId: transactionId);
-
-  // Construct selectedCategory
-  final selectedCategory = {
-    'category': category,
-    'percentage': transaction.predictions != null
-        ? _getPredictionScore(transaction.predictions!, category)
-        : 0.0,
-  };
-
-  // Construct predictedCategories as a list of maps
-  final predictedCategories = transaction.predictions != null
-      ? transaction.predictions!.entries
-          .map((entry) => {
-                'category': entry.category,
-                'percentage': entry.score,
-              })
-          .toList()
-      : [];
-
-  try {
-    var response = await updateDataApiCall2(urlPath, {
-      'category': category,
-      'subcategory': subCategory,
-      'selectedCategory': selectedCategory,
-      'predictedCategories': predictedCategories,
-    });
-
-    if (getFlagOfResponse(response)) {
-      // Update already applied optimistically, just show success
-      snackBarCalled(context, "Transaction tagged as $category");
-    } else {
-      throw Exception(" update failed");
-    }
-  } catch (e) {
-    // Rethrow to handle reversion in the caller
-    rethrow;
-  }
-}
-
-// Helper function to get the prediction score for a category
-double _getPredictionScore(Predictions predictions, String category) {
-  final entry = predictions.entries.firstWhere(
-    (entry) => entry.category == category,
-    orElse: () => PredictionEntry(category: category, score: 0.0),
-  );
-  return entry.score;
-}
-
-void updateTheTagOfTarnsactionsGroup(
-    category, subCategory, grpId, context, index) async {
-
-  String urlPath = BankTransactionRoutes.categorizeGroupedTransaction(groupId: grpId);
-
-  var body = {
-    'category': category,
-    'subcategory': subCategory,
-    "removedTransactions": removedGrpItemsList,
-  };
-
-  var response = await postDataApiCall(urlPath, body);
-
-  if (getFlagOfResponse(response)) {
-    getAllTransaction(context);
-    reloadHistory.value = !reloadHistory.value;
-    Navigator.pop(context);
-    Navigator.pop(context);
-    removedGrpItemsList.clear();
-    lengthOfTransactions.value = false;
-    setGroupTransactions.value = false;
-    getGroupTransactions();
-  } else {}
-}
-
-
-
-void getHideTransactions(context) async {
-  String urlPath = BankTransactionRoutes.getHideTransactions;
-  var response = await getDataApiCall(urlPath);
-  if (getFlagOfResponse(response)) {
-    trasactionsHideData.clear();
-    var his = jsonDecode(response.body);
-    trasactionsHideData
-        .addAll(his['allTransactions']['categorized_transactions']);
-  }
 }
 
 
