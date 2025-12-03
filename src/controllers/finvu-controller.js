@@ -135,21 +135,6 @@ async function fetchTransactions(req, res) {
     }
 
     if (consentId == null) {
-      const newObjectId = new mongoose.Types.ObjectId(userId);
-      // const deviceIds = await getDeviceIdsByUserId(newObjectId);
-      // await SendNotificationToDeviceSpecific(
-      //   userId,
-      //   `we couldn't able to fetch your bank details, try again later`,
-      //   deviceIds,
-      //   "/home"
-      // );
-
-      // webSocket message to the user
-      // WebSocketService.sendMessage(custId, 'registerUser', {
-      //   message: 'There is a problem with you bank server. Please try again later.',
-      //   data: { number_id: custId, data: 'error' },
-      // });
-
       await publishSocketEvent(custId, 'registerUser', {
         message: 'There is a problem with you bank server. Please try again later.',
         data: { number_id: custId, data: 'error' },
@@ -184,22 +169,11 @@ async function fetchTransactions(req, res) {
       await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for 10secs
     }
 
-    // step 4: Check the status of the FI Request
-    const checkStatus = await checkFIRequestStatus(token, consentId, sessionId, handleId, custId);
-
-    const body = {
-      sessionId,
-      formattedNewFrom,
-      to,
-      custId,
-      consentId,
-      handleId,
-    };
-    req.body = { ...req.body, ...body, isUpdate: false };
-
     try {
-      // Add Finvu Data to the DB
-      await addFinvuData(req, res, userId);
+      // cache the finvu data for 10 minutes and then add to the DB
+      const data = { sessionId, custId, consentId, handleId, isUpdate: false, userId };
+      await redisClient.setEx(`finvu:${sessionId}`, 600, JSON.stringify(data));
+      await addFinvuData(data);
 
       let maxAtemptsForStatus = 5;
       let atemptForStatus = 0;
@@ -208,10 +182,10 @@ async function fetchTransactions(req, res) {
       while (!checkStatus && atemptForStatus < maxAtemptsForStatus) {
         logger.debug('entered into the while loop for fiRequest status');
         checkStatus = await checkFIRequestStatus(token, consentId, sessionId, handleId, custId);
-        if (checkStatus.fiRequestStatus == 'READY') {
-          break;
-        }
-        atemptForStatus++;
+        break;
+      }
+      atemptForStatus++;
+      if (checkStatus.fiRequestStatus == 'READY') {
         logger.debug(`Attempt ${atemptForStatus}: consentResponse not received, retrying in 10 seconds...`);
         await new Promise((resolve) => setTimeout(resolve, 10000));
       }
@@ -222,7 +196,7 @@ async function fetchTransactions(req, res) {
     }
   } catch (error) {
     console.error('Error fetching data:', error.response ? error.response.data : error.message);
-    // res.status(500).json({ message: "Error fetching data", error: error.message });
+    res.status(500).json({ message: 'Error fetching data', error: error.message });
   }
 }
 
@@ -286,15 +260,10 @@ async function getFipsDetails(req, res) {
     if (!Array.isArray(fipIds) || fipIds.length === 0) {
       return res.status(400).json({ error: 'fipIds must be a non-empty array' });
     }
-    // const sanitizedIds = fipIds
-    // .filter(id => mongoose.Types.ObjectId.isValid(id))
-    // .map(id => new mongoose.Types.ObjectId(id));
 
-    const data = await FipsMetric.find({
-      fip_id: { $in: fipIds },
-      event_name: { $regex: /FIFetchResponse/, $options: 'i' },
-    }).sort({ timestamp: -1 });
-    var json = res.status(200).json({ data });
+    const data = await FipsMetric.find({ fip_id: { $in: fipIds }, event_name: { $regex: /FIFetchResponse/, $options: 'i' } }).sort({ timestamp: -1 });
+
+    const json = res.status(200).json({ data });
     return json;
   } catch (error) {
     console.error('getFipsDetails error:', error);
@@ -347,31 +316,16 @@ async function initiateFIRequest(token, handleId, custId, consentId, from, to, u
     return response.data.body.sessionId;
   } catch (error) {
     logger.error(`error response from inititateRequest: ${error}`);
-    SendNotificationMessage(userId);
+    sendFailedNotification(userId);
     throw new Error('Failed to initiate FI Request');
   }
 }
 
-async function SendNotificationMessage(userId) {
-  const newObjectId = new mongoose.Types.ObjectId(userId);
-  const deviceIds = await getDeviceIdsByUserId(newObjectId);
-
+async function sendFailedNotification(userId) {
+  // Update fetchInProgress to false
   await User.findByIdAndUpdate(userId, { fetchInProgress: false }, { new: true, runValidators: true });
 
-  // await SendNotificationToDeviceSpecific(
-  //   userId,
-  //   `we couldn't able to fetch your bank details, please try again later.It might be due to an bank server issue.`,
-  //   deviceIds,
-  //   "/home"
-  // );
-
-  // WebSocketService.sendMessage(userId, 'addUserToSocket', {
-  //   type: 'fetchedApiCall',
-  //   data: {
-  //     message: "we couldn't able to fetch your bank details, please try again later.It might be due to an bank server issue.",
-  //     failed: true,
-  //   },
-  // });
+  // WebSocket message to the user
   await publishSocketEvent(userId, 'addUserToSocket', {
     type: 'fetchedApiCall',
     data: {
@@ -444,10 +398,9 @@ async function fetchFinalData(token, custId, consentId, sessionId) {
   }
 }
 
-async function addFinvuData(req, res, userId) {
+async function addFinvuData(data) {
   try {
-    const { sessionId, custId, consentId, handleId, isUpdate } = req.body;
-    const userIdFormatted = new mongoose.Types.ObjectId(userId);
+    const { sessionId, custId, consentId, handleId, isUpdate, userId } = data;
 
     const newFinvu = new Finvu({
       sessionId,
@@ -455,7 +408,7 @@ async function addFinvuData(req, res, userId) {
       consentId,
       handleId,
       isUpdate,
-      userId: userIdFormatted,
+      userId,
     });
     const response = await newFinvu.save().catch((err) => {
       logger.error(`Error while saving Finvu: ${err.message}`);
@@ -472,9 +425,9 @@ async function fetchTransactionsWeekly(req, res) {
   try {
     let { token } = req.body;
     if (!isCron) {
-      token = await generateToken();
+      loginAndGetHandleId;
       if (token == 'error') {
-        SendNotificationMessage(userId);
+        sendFailedNotification(userId);
         if (isCron != undefined && !isCron) return;
         throw new Error('Failed to initiate FI Request');
       }
@@ -487,19 +440,13 @@ async function fetchTransactionsWeekly(req, res) {
     const sessionId = await initiateFIRequest(token, handleId, custId, consentId, FROM, TO, userId);
     logger.debug(`sessionId: ${sessionId}`);
 
-    const body = { sessionId, custId, consentId, handleId };
-    req.body = { ...req.body, ...body, isUpdate: true };
-
-    try {
-      const response = await addFinvuData(req, res, userId);
-      logger.debug(`response after adding finvu data: ${response}`);
-    } catch (error) {
-      SendNotificationMessage(userId);
-      logger.debug(`Error adding Finvu data: ${error}`);
-    }
+    // cache the finvu data for 10 minutes and then add to the DB
+    const data = { sessionId, custId, consentId, handleId, isUpdate: true, userId };
+    await redisClient.setEx(`finvu:${sessionId}`, 600, JSON.stringify(data));
+    await addFinvuData(data);
   } catch (error) {
     if (isCron != undefined && !isCron) addFailedTransactions(req.body);
-    await SendNotificationMessage(userId);
+    await sendFailedNotification(userId);
     logger.debug(`Error adding fetchWeekly: ${error}`);
     if (isCron != undefined && !isCron) return;
     throw new Error('Failed to initiate FI Request');
@@ -563,7 +510,6 @@ module.exports = {
   loginAndGetHandleId,
   fetchTransactions,
   fetchFinalData,
-  addFinvuData,
   checkFIRequestStatus,
   fetchTransactionsWeekly,
   getFipsLatestMetricsAll,
