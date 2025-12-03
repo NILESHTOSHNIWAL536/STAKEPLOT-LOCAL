@@ -18,6 +18,8 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
+import '../../components/shared_utils.dart';
+
 class ExpandedChartView extends StatefulWidget {
   final Map<String, List<double>> chartData;
   final List days;

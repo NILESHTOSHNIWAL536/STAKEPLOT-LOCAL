@@ -10,6 +10,8 @@ import 'package:flutter_application_code_stakeplot/repository/autopay_repository
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../components/shared_utils.dart';
+
 // Reusable Card Widget
 class CardWidget extends StatelessWidget {
   final CardData card;

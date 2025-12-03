@@ -16,6 +16,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
+import '../../components/shared_utils.dart';
+
 
 Widget uploadData(String dataObj2, Message message,BuildContext context) {
   PostModel dataObj = PostModel.fromJson(jsonDecode(dataObj2));

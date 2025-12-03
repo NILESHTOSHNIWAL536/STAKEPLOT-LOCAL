@@ -9,6 +9,8 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 
+import '../components/shared_utils.dart';
+
 class GroupTransactions extends StatefulWidget {
 
   const GroupTransactions({Key? key}) : super(key: key);

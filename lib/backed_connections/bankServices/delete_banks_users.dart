@@ -17,6 +17,8 @@ import 'package:flutter_application_code_stakeplot/routes/route_transactions.dar
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:get/get.dart';
 
+import '../../components/shared_utils.dart';
+
 
 RxString balance = "0".obs;
 RxString accountName = "Bank Name : ".obs;

@@ -12,6 +12,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/gr
 
 import 'package:flutter_application_code_stakeplot/finance_screen/utils.dart';
 
+import '../../components/shared_utils.dart';
+
 class RentBuy extends StatefulWidget {
   const RentBuy({Key? key}) : super(key: key);
 

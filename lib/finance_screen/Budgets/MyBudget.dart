@@ -14,6 +14,8 @@ import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math' as math;
 
+import '../../components/shared_utils.dart';
+
 // New import for the global budget state
 
 class MyBudgetScreen extends StatefulWidget {

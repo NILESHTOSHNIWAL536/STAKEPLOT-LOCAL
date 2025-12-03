@@ -19,6 +19,8 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../components/shared_utils.dart';
+
 class FinancePage extends StatefulWidget {
   const FinancePage({super.key});
 

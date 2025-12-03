@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 
 import '../Utils/signUp.dart';
 import '../profile.dart';
+import 'shared_utils.dart';
 
 class TextFeildWidget extends StatelessWidget {
   TextEditingController textEditingController;

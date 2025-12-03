@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/repository/finora_repository.
 import 'package:get/get.dart';
 
 import '../backed_connections/bankServices/delete_banks_users.dart';
+import '../components/shared_utils.dart';
 
 RxInt selectedIndex = (-1).obs;
 RxList<ChartData> spendingsOnCategories = <ChartData>[].obs;

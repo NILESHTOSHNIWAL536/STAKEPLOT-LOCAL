@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/helper.dart';
+import '../../components/shared_utils.dart';
 
 class AmountRangeField extends StatelessWidget {
   const AmountRangeField({

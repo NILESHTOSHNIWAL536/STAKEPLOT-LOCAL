@@ -21,6 +21,8 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:flutter_application_code_stakeplot/user_chat/openShowModal.dart';
 import 'package:get/get.dart';
 
+import '../components/shared_utils.dart';
+
 RxString tagName = "".obs;
 RxBool loadAgain = false.obs;
 

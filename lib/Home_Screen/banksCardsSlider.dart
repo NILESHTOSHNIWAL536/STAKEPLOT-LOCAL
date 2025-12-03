@@ -18,6 +18,8 @@ import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
 
+import '../components/shared_utils.dart';
+
 RxInt firstDigit = 0.obs;
 RxInt secondDigit = 0.obs;
 RxBool digitLoad = false.obs;

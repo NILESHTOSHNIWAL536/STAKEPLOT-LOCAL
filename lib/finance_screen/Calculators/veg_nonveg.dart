@@ -19,6 +19,7 @@ import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 
+import '../../components/shared_utils.dart';
 import '../../routes/index_route.dart';
 
 class VegNonVegCalculator extends StatefulWidget {

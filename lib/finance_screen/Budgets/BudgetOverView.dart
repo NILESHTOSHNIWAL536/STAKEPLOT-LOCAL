@@ -16,6 +16,8 @@ import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
+import '../../components/shared_utils.dart';
+
 class BudgetOverView extends StatefulWidget {
   final String amount;
   final String name;

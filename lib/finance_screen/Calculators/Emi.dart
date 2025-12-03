@@ -9,6 +9,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/ex
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/utils.dart';
 
+import '../../components/shared_utils.dart';
+
 class Emi extends StatefulWidget {
   const Emi({Key? key}) : super(key: key);
 

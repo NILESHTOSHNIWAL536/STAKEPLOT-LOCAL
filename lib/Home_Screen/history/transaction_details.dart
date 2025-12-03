@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
+import '../../components/shared_utils.dart';
+
 class TransactionDetailsPage extends StatelessWidget {
   final TransactionModel transaction;
 

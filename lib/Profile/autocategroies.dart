@@ -12,6 +12,8 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
 import 'package:get/get.dart';
 
+import '../components/shared_utils.dart';
+
 class AutocategroiesTransactions extends StatefulWidget {
    AutocategroiesTransactions({Key? key}) : super(key: key);
 

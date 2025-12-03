@@ -18,6 +18,7 @@ import 'package:home_widget/home_widget.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../components/shared_utils.dart';
 import '../../model/fips_metric_model.dart';
 import 'bank_progress.dart';
 

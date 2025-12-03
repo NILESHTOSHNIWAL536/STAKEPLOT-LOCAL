@@ -20,6 +20,8 @@ import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:get/get.dart';
 
+import '../../components/shared_utils.dart';
+
 PreferredSizeWidget getAppBar(context) {
   final userController = ControllerManagement.userController;
 

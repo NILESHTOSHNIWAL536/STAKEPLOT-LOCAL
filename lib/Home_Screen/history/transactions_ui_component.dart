@@ -14,6 +14,8 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 
+import '../../components/shared_utils.dart';
+
 
 RxMap<String, String> redioButton = <String, String>{}.obs;
 RxMap<String, int> redioButtonIndex = <String, int>{}.obs;
