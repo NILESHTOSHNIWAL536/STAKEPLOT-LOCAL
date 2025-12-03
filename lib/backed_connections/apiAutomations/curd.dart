@@ -38,7 +38,8 @@ Future postDataApiCallwithOutSharedPref(String urlPath, Map body) async {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(body),
-  ).timeout(
+  )
+      .timeout(
     const Duration(seconds: 30), // ⏳ timeout added here
     onTimeout: () {
       throw TimeoutException("Request timed out");
@@ -143,6 +144,7 @@ Future<http.Response> getDataApiCall(urlPath) async {
       throw TimeoutException("Request timed out");
     },
   );
+  printData(response);
   return response;
 }
 
@@ -182,22 +184,20 @@ Future<http.Response> deleteDataApiCallBody(urlPath, body) async {
       throw TimeoutException("Request timed out");
     },
   );
-  
+
   return response;
 }
 
 bool getFlagOfResponse(response) {
-  if (response.statusCode == 401)
-  {
-     Get.toNamed("/");
+  if (response.statusCode == 401) {
+    Get.toNamed("/");
   } else if (response.statusCode == 200 || response.statusCode == 201) {
     return true;
   }
   return false;
 }
 
-void printData(response, [context = ""])
-{
+void printData(response, [context = ""]) {
   appLog("Response Data $context : ${response.body}");
   appLog("Response Status Code  : ${response.statusCode}");
 }

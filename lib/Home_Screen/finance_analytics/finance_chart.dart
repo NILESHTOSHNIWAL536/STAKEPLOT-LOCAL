@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finance_data/finance_model.dart';
 import 'dart:math';
-import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/finance_analytics/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_button.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/repository/finance_repository.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';

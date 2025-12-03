@@ -3,18 +3,18 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manually.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStack.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/finora_last2months_dashboard.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/headsUpAndMoneyMap.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/finance_analytics/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/finora.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 
-import 'init_Api_Calls.dart';
+import '../Home/init_Api_Calls.dart';
 
 class IndexScreen extends StatelessWidget {
   final ScrollController scrollControllerHome;

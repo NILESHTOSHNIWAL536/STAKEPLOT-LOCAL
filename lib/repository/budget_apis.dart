@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
-import 'package:flutter_application_code_stakeplot/repository/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:intl/intl.dart';
@@ -12,38 +10,39 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/routes/route_finances.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 
+import '../components/helper.dart';
+
+
 class BudgetService {
   static Future<void> fetchBudgetInsights(String budgetId) async {
     final String apiUrl = BudgetRoutes.getInsights(bid: budgetId);
-  
+
     try {
       var response = await getDataApiCall(apiUrl);
-     
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-       
+
         budgetInsights = List<String>.from(data['data'] ?? []);
-      } else {
-       
-      }
-    } catch (e) {
-    }
+      } else {}
+    } catch (e) {}
   }
 
-  static Future<void> fetchBudgetData(Map<String, dynamic> budgetDataParam) async {
+  static Future<void> fetchBudgetData(
+      Map<String, dynamic> budgetDataParam) async {
     final String budgetId =
         budgetDataParam['_id']?.toString() ?? '67b84fdcfab72f34be29c893';
 
     final String apiUrl = BudgetRoutes.getBudgetSpents(bid: budgetId);
-   
+
     try {
       var response = await getDataApiCall(apiUrl);
-     
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-       
-        selectedBudgetPeriod = budgetDataParam['budgetPeriod']?.toLowerCase() ?? 'monthly';
+
+        selectedBudgetPeriod =
+            budgetDataParam['budgetPeriod']?.toLowerCase() ?? 'monthly';
         budgetTransactions = data['data'] != null
             ? data['data']['finalResult']['transactions'] ?? []
             : data['transactions'] ?? [];
@@ -59,11 +58,10 @@ class BudgetService {
         }).toList();
 
         budgetChartData.clear();
-        
 
-         
-        final String createdDateStr = budgetDataParam['createdAt']?.toString() ??
-            '2025-01-01T00:00:00.000Z';
+        final String createdDateStr =
+            budgetDataParam['createdAt']?.toString() ??
+                '2025-01-01T00:00:00.000Z';
 
         final String endDateStr =
             budgetDataParam['endDate'] ?? '2025-03-04T12:07:11.028Z';
@@ -73,7 +71,6 @@ class BudgetService {
         DateTime endDate = DateTime.parse(endDateStr).toLocal();
         //startDate = DateTime(startDate.year, startDate.month, startDate.day);
         endDate = DateTime(endDate.year, endDate.month, endDate.day);
-        
 
         if (selectedBudgetPeriod == 'yearly') {
           // Use backend-provided labels directly from transactions
@@ -102,13 +99,11 @@ class BudgetService {
 
           Map<int, double> dailySpent = {};
           for (var transaction in budgetTransactions) {
-            DateTime date =
-                DateFormat('yyyy-MM-dd').parse(transaction['_id']);
+            DateTime date = DateFormat('yyyy-MM-dd').parse(transaction['_id']);
             int dayIndex = date.difference(startDate).inDays;
             if (dayIndex >= 0 && dayIndex < totalDays) {
               dailySpent[dayIndex] =
-                  (transaction['debitTotalAmount'] as num?)?.toDouble() ??
-                      0.0;
+                  (transaction['debitTotalAmount'] as num?)?.toDouble() ?? 0.0;
             }
           }
 
@@ -122,18 +117,15 @@ class BudgetService {
             ));
           }
         } else if (selectedBudgetPeriod == 'weekly') {
-          int totalDays =
-              math.min(endDate.difference(startDate).inDays + 1, 7);
+          int totalDays = math.min(endDate.difference(startDate).inDays + 1, 7);
 
           Map<int, double> dailySpent = {};
           for (var transaction in budgetTransactions) {
-            DateTime date =
-                DateFormat('yyyy-MM-dd').parse(transaction['_id']);
+            DateTime date = DateFormat('yyyy-MM-dd').parse(transaction['_id']);
             int dayIndex = date.difference(startDate).inDays;
             if (dayIndex >= -1 && dayIndex < totalDays) {
               dailySpent[dayIndex] =
-                  (transaction['debitTotalAmount'] as num?)?.toDouble() ??
-                      0.0;
+                  (transaction['debitTotalAmount'] as num?)?.toDouble() ?? 0.0;
             }
           }
 
@@ -147,11 +139,8 @@ class BudgetService {
             ));
           }
         }
-        
-      } else {
-      }
-    } catch (e) {
-    }
+      } else {}
+    } catch (e) {}
   }
 
   static Future<void> deleteBudget(
@@ -162,7 +151,7 @@ class BudgetService {
     isBudgetDeleting = true;
 
     // final String apiUrl = '$url/budget/$budgetId';
-     final String apiUrl = BudgetRoutes.deleteBudget(bid: budgetId);
+    final String apiUrl = BudgetRoutes.deleteBudget(bid: budgetId);
 
     try {
       var response = await deleteDataApiCall(apiUrl);
@@ -180,8 +169,9 @@ class BudgetService {
     }
   }
 }
+
 void getTopFiveCater() async {
-  String urlPath =BankTransactionRoutes.getBudgetTopFiveCategories;
+  String urlPath = BankTransactionRoutes.getBudgetTopFiveCategories;
   try {
     var responce = await getDataApiCall(urlPath);
     if (getFlagOfResponse(responce)) {
@@ -192,8 +182,9 @@ void getTopFiveCater() async {
     }
   } catch (e) {}
 }
+
 Future<void> getBudget() async {
-  String urlPath =BudgetRoutes.getAllBudgets;
+  String urlPath = BudgetRoutes.getAllBudgets;
   try {
     var responce = await getDataApiCall(urlPath);
     if (getFlagOfResponse(responce)) {
@@ -202,16 +193,17 @@ Future<void> getBudget() async {
       budgetList.clear();
       budgetList.addAll(obj);
       budgetLength.value = obj.length;
-      if(!getCreditCardBudgetDebts.value)getCreditCardBudgetDebts.value=budgetList.isNotEmpty;
+      if (!getCreditCardBudgetDebts.value)
+        getCreditCardBudgetDebts.value = budgetList.isNotEmpty;
     }
   } catch (e) {}
 }
+
 void addBudget(BuildContext context, String name, String amount,
     List expenseCategory, String budgetPeriod) async {
-  
   List filteredCategories = expenseCategory
-      .where((e) => !isZeroAmount(e['amount'].toString()))
-      .toList();
+       .where((e) => !isZeroAmount(e['amount'].toString()))
+       .toList();
 
   if (filteredCategories.isEmpty) {
     createBudget.value = false;
@@ -226,7 +218,6 @@ void addBudget(BuildContext context, String name, String amount,
   };
 
   final response = await postDataApiCall('${url}/budget/', body);
- 
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     getBudget();
@@ -245,15 +236,13 @@ void addBudget(BuildContext context, String name, String amount,
 
 void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     budgetPeriod, id) async {
-  
   final response = await postDataApiCall('${url}/budget/edit/${id}', {
-      'name': name.toString(),
-      'amount': amount.toString(),
-      'expenseCategories': expenseCategory,
-      'budgetType': budgetType.toString(),
-      'budgetPeriod': budgetPeriod.toString(),
-    }
-  );
+    'name': name.toString(),
+    'amount': amount.toString(),
+    'expenseCategories': expenseCategory,
+    'budgetType': budgetType.toString(),
+    'budgetPeriod': budgetPeriod.toString(),
+  });
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, SnackbarData().budgetUpdated);
@@ -263,7 +252,6 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     snackBarCalledfail(context, SnackbarData().budgetUpdateFailed, Colors.red);
   }
 }
-
 
 void getInsights(context, String id) async {
   var response = await getDataApiCall("${url}/budget/get-insights/$id");

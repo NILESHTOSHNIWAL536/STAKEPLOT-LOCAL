@@ -1,7 +1,7 @@
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/home_screen_state/home_page.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 

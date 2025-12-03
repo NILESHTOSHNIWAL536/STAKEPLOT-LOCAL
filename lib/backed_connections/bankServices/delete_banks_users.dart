@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/repository/finance_repository.dart';
 import 'package:flutter_application_code_stakeplot/repository/finora_repository.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:get/get.dart';

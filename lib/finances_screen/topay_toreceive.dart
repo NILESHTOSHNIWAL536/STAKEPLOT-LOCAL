@@ -2,7 +2,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart';
+import 'package:flutter_application_code_stakeplot/finances_screen/pending_users.dart';
 import 'package:get/get.dart';
 
 import '../Constants/colors.dart';

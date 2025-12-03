@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/amount_entry_modal.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -103,67 +103,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // addedMembers.isNotEmpty
-                //     ? Container(
-                //         width: MediaQuery.of(context).size.width,
-                //         height: MediaQuery.of(context).size.width / 5,
-                //         child: ListView(
-                //           scrollDirection: Axis.horizontal,
-                //           children: addedMembers.map((element) {
-                //             return Container(
-                //               width: MediaQuery.of(context).size.width / 6,
-                //               height: MediaQuery.of(context).size.width / 7,
-                //               child: Column(
-                //                 mainAxisAlignment: MainAxisAlignment.start,
-                //                 crossAxisAlignment: CrossAxisAlignment.center,
-                //                 children: [
-                //                   Stack(
-                //                     children: [
-                //                       Padding(
-                //                           padding: const EdgeInsets.all(0.0),
-                //                           child: AvatarProfile(
-                //                               name: element['name'],
-                //                               width: 12,
-                //                               height: 12,
-                //                               background:
-                //                                   element['avatarBackGround'])),
-                //                       Positioned(
-                //                         right: 0,
-                //                         top: 0,
-                //                         child: InkWell(
-                //                           onTap: () {
-                //                             setState(() {
-                //                               addedMembers.removeWhere((ele) =>
-                //                                   ele['id'] == element['id']);
-                //                               addedUser.remove(element['id']);
-                //                             });
-                //                           },
-                //                           child: const Icon(
-                //                             Icons.remove_circle,
-                //                             color: AppColors.accentColor,
-                //                           ),
-                //                         ),
-                //                       ),
-                //                     ],
-                //                   ),
-                //                   Center(
-                //                     child: Text(
-                //                       element['name'],
-                //                       style: FontManager().getTextStyle(
-                //                         context,
-                //                         fontSize: 12,
-                //                         maxLines: 1,
-                //                       ),
-                //                       overflow: TextOverflow.ellipsis,
-                //                     ),
-                //                   ),
-                //                 ],
-                //               ),
-                //             );
-                //           }).toList(),
-                //         ),
-                //       )
-                //     : const SizedBox.shrink(),
+                
                 commentedData(),
                 if (widget.showContinueButton)
                   Center(

@@ -8,7 +8,7 @@ import "package:flutter_application_code_stakeplot/Constants/colors.dart";
 import "package:flutter_application_code_stakeplot/controllers/controllerManagement.dart";
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 import "package:flutter_application_code_stakeplot/components/helper.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/home_screen_state/home_page.dart";
 
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 

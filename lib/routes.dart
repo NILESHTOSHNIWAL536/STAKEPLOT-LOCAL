@@ -20,7 +20,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/login_screen.dart';
-import 'Home_Screen/Home/home_page.dart';
+import 'Home_Screen/home_screen_state/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'email_sync/add_credit_card_bank.dart';
 import 'finances_screen/creditCard_slider.dart';

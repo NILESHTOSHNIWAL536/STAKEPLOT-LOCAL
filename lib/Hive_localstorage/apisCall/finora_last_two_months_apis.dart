@@ -1,7 +1,7 @@
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/finora_prev_months/finora_last_two_months_model.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:hive/hive.dart';
-import '../../Home_Screen/finora_last2months_dashboard.dart';
+import '../../Home_Screen/finora_analytics/finora_last2months_dashboard.dart';
 import 'init_hive.dart';
 
 class FinoraLastTwoMonthsStorage {
