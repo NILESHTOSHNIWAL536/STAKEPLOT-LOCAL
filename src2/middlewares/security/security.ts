@@ -1,11 +1,12 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
-const rateLimit = require('express-rate-limit');
-const crypto = require('crypto');
+import { Application, Request, Response, NextFunction } from 'express';
+import express from 'express';
+import bodyParser from 'body-parser';
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+import rateLimit from 'express-rate-limit';
+import crypto from 'crypto';
 
-function securityMiddleware(app) {
+export function securityMiddleware(app: Application): void {
   // ✅ Body parsers
   app.use(express.json({ limit: '5mb' }));
   app.use(bodyParser.json({ limit: '5mb' }));
@@ -17,6 +18,7 @@ function securityMiddleware(app) {
       crossOriginResourcePolicy: { policy: 'same-origin' },
     })
   );
+
   app.use(helmet.noSniff());
   app.use(helmet.hidePoweredBy());
 
@@ -34,34 +36,37 @@ function securityMiddleware(app) {
   app.use(
     mongoSanitize({
       replaceWith: '_',
-      onSanitize: ({ req, key }) => {
-        console.warn(`[SECURITY] NoSQL injection attempt blocked: ${key} from IP: ${req.ip}`);
+      onSanitize: ({ req, key }: { req: Request; key: string }) => {
+        console.warn(
+          `[SECURITY] NoSQL injection attempt blocked: ${key} from IP: ${req.ip}`
+        );
       },
     })
   );
 
-  // ✅ Rate limiter (recommended)
+  // ✅ Rate limiter
   const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 200, // requests per IP
+    windowMs: 15 * 60 * 1000,
+    max: 200,
     message: { error: 'Too many requests, please try again later.' },
   });
+
   app.use(limiter);
 
   // ✅ CSP nonce
-  app.use((req, res, next) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     res.locals.cspNonce = crypto.randomBytes(16).toString('hex');
     next();
   });
 
-  // ✅ Strict Content Security Policy
+  // ✅ Strict CSP
   app.use(
     helmet.contentSecurityPolicy({
       useDefaults: false,
       directives: {
         'default-src': ["'self'"],
         'script-src': ["'self'"],
-        'style-src': ["'self'", (req, res) => `'nonce-${res.locals.cspNonce}'`],
+        'style-src': ["'self'", (_req, res) => `'nonce-${res.locals.cspNonce}'`],
         'img-src': ["'self'", 'data:'],
         'font-src': ["'self'"],
         'object-src': ["'none'"],
@@ -74,10 +79,8 @@ function securityMiddleware(app) {
   );
 
   // ✅ Baseline header
-  app.use((req, res, next) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     next();
   });
 }
-
-module.exports = { securityMiddleware };

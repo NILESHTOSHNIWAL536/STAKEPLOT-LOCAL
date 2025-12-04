@@ -1,6 +1,6 @@
 const express = require("express");
 const { TransactionController } = require("../controllers");
-const { AuthMiddlewares } = require("../middlewares");
+const { AuthMiddlewares } = require("../../src2/middlewares");
 const router = express.Router();
 router.use(express.json());
 

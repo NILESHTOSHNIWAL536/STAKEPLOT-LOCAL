@@ -1,11 +1,18 @@
-function notFoundHandler(req, res) {
+import { Request, Response, NextFunction } from 'express';
+
+export function notFoundHandler(req: Request, res: Response): void {
   res.status(404).json({
     error: 'Not Found',
     message: 'The requested resource does not exist',
   });
 }
 
-function globalErrorHandler(err, req, res, next) {
+export function globalErrorHandler(
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   res.setHeader('X-Content-Type-Options', 'nosniff');
 
   console.error('[ERROR]', {
@@ -16,11 +23,10 @@ function globalErrorHandler(err, req, res, next) {
     ip: req.ip,
   });
 
-  const statusCode = err.statusCode || 500;
+  const statusCode: number = err.statusCode || 500;
+
   res.status(statusCode).json({
     error: statusCode === 500 ? 'Internal Server Error' : err.message,
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
 }
-
-module.exports = { notFoundHandler, globalErrorHandler };

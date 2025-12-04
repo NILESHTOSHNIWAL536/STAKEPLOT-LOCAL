@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { AuthMiddlewares, validateRequestMiddleware } = require('../../middlewares');
+const { AuthMiddlewares, validateRequestMiddleware } = require('../../../src2/middlewares');
 const { TransactionAutoController } = require('../../controllers');
 const {
   categorizeGroupedTransaction,

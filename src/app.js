@@ -1,8 +1,8 @@
 const express = require('express');
-const { securityMiddleware } = require('./middlewares/security/security');
-const { corsMiddleware } = require('./middlewares/security/cors');
-const { metricsMiddleware } = require('./middlewares/security/metrics');
-const { notFoundHandler, globalErrorHandler } = require('./middlewares/security/errorHandlers');
+const { securityMiddleware } = require('../src2/middlewares/security/security');
+const { corsMiddleware } = require('../src2/middlewares/security/cors');
+const { metricsMiddleware } = require('../src2/middlewares/security/metrics');
+const { notFoundHandler, globalErrorHandler } = require('../src2/middlewares/security/errorHandlers');
 const webHook  = require('./utils/webHook');
 const apiRoutes = require('./routes');
 

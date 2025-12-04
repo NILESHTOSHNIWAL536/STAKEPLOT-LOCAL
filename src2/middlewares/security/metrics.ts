@@ -1,8 +1,9 @@
-const { sendMetric, logRequest } = require('../../utils/cloud-watch');
+import { Application, Request, Response, NextFunction } from 'express';
+import { sendMetric, logRequest } from '../../utils/cloud-watch.js';
 
-function metricsMiddleware(app) {
+export function metricsMiddleware(app: Application): void {
   // ✅ CloudWatch metrics
-  app.use(async (req, res, next) => {
+  app.use(async (req: Request, res: Response, next: NextFunction) => {
     try {
       await sendMetric(req.path, req.method);
     } catch (error) {
@@ -12,10 +13,12 @@ function metricsMiddleware(app) {
   });
 
   // ✅ Request logging
-  app.use((req, res, next) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     const startTime = Date.now();
+
     res.on('finish', async () => {
       const duration = Date.now() - startTime;
+
       try {
         await logRequest({
           method: req.method,
@@ -28,8 +31,7 @@ function metricsMiddleware(app) {
         console.error('CloudWatch logging error:', error);
       }
     });
+
     next();
   });
 }
-
-module.exports = { metricsMiddleware };

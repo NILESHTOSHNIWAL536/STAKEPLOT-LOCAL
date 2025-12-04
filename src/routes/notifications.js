@@ -1,5 +1,5 @@
 const { pushNotificationController } = require('../controllers');
-const { AuthMiddlewares } = require('../middlewares');
+const { AuthMiddlewares } = require('../../src2/middlewares');
 const express = require('express');
 const router = express.Router();
 
