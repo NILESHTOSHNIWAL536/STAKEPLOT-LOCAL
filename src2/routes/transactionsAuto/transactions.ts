@@ -1,8 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const { AuthMiddlewares, validateRequestMiddleware } = require('../../../src2/middlewares');
+import express from 'express';
+import { AuthMiddlewares, validateRequestMiddleware } from '../../middlewares';
 const { TransactionAutoController } = require('../../controllers');
-const {
+import {
   categorizeGroupedTransaction,
   verifyPendingTransaction,
   updateTransaction,
@@ -19,9 +18,11 @@ const {
   getPreviousTransactions,
   deleteBankAccount,
   deleteTransactionsSchema,
-} = require('../../validators/transaction-validators');
+} from '../../validators/transaction-validators';
 
-// router.post('/', AuthMiddlewares.protect, TransactionAutoController.createUserDetails);
+const router = express.Router();
+router.use(express.json());
+
 router.post(
   '/grouped/:groupId/categorize',
   AuthMiddlewares.protect,
@@ -51,8 +52,8 @@ router.get(
 );
 router.get('/categorize', AuthMiddlewares.protect, TransactionAutoController.categorizeTransactions);
 // **************************************** NEWLY ADDED APIS ****************************************
-router.post("/create", AuthMiddlewares.protect, TransactionAutoController.createTransaction);
-router.get("/top-five-categories", AuthMiddlewares.protect, TransactionAutoController.getTopFiveCategories);
+router.post('/create', AuthMiddlewares.protect, TransactionAutoController.createTransaction);
+router.get('/top-five-categories', AuthMiddlewares.protect, TransactionAutoController.getTopFiveCategories);
 router.get('/category-wise-spendings', AuthMiddlewares.protect, TransactionAutoController.getCategoryWiseSpendings);
 router.get('/budget-transactions', AuthMiddlewares.protect, TransactionAutoController.getBudgetTransactions);
 router.get('/get-budget-spents', AuthMiddlewares.protect, TransactionAutoController.getBudgetSpents);
@@ -68,9 +69,6 @@ router.get('/get-day-wise-transactions/:date', AuthMiddlewares.protect, validate
 router.get('/get-recurring-payments/:isActive', AuthMiddlewares.protect, validateRequestMiddleware(getRecurringPayments), TransactionAutoController.getRecurringPayments);
 router.patch('/recurring-payments/:id', AuthMiddlewares.protect, validateRequestMiddleware(updateOrDeleteRecurringpayment), TransactionAutoController.updateRecurringPayment);
 router.delete('/recurring-payments/:id', AuthMiddlewares.protect, validateRequestMiddleware(updateOrDeleteRecurringpayment), TransactionAutoController.deleteRecurringPayment);
-
-// This API is dummy API to get the transactions for the map (not used by the frontend)
-// router.get("/map", (req, res) => detectRecurringPayments('6814781900017d24d5bf4c99'));
 
 // these routes are for the transaction graphs
 router.post('/get-loan-calculation', AuthMiddlewares.protect, validateRequestMiddleware(getLoanCalculation), TransactionAutoController.getLoanCalculation);
@@ -102,8 +100,7 @@ router.get(
   validateRequestMiddleware(getPreviousTransactions),
   TransactionAutoController.getPreviousTransactions
 );
-router.get('/get-headsup-messages', AuthMiddlewares.protect, TransactionAutoController.getHeadsUpMessages);
-router.get('/get-money-map-messages', AuthMiddlewares.protect, TransactionAutoController.getMoneyMapMessages);
+
 router.get('/top-three-transactions-of-week', AuthMiddlewares.protect, TransactionAutoController.getTopThreeTransactionsOfWeek);
 router.get('/get-income-average-monthly-category-expenses', AuthMiddlewares.protect, TransactionAutoController.getIncomeAndCategorySpent);
 
@@ -111,4 +108,4 @@ router.get('/get-income-average-monthly-category-expenses', AuthMiddlewares.prot
 router.delete('/:bankId/:accountId', AuthMiddlewares.protect, validateRequestMiddleware(deleteBankAccount), TransactionAutoController.deleteBankAccount);
 router.post('/delete', AuthMiddlewares.protect, validateRequestMiddleware(deleteTransactionsSchema), TransactionAutoController.deleteTransactions);
 
-module.exports = router;
+export default router;

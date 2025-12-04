@@ -1,9 +1,12 @@
+import express from 'express';
+import { AuthMiddlewares } from '../middlewares';
 const { pushNotificationController } = require('../controllers');
-import { protect } from '../middlewares/auth-middleware';
-const express = require('express');
-const router = express.Router();
 
-router.post('/addDeviceToNotify', protect, pushNotificationController.addDeviceToNotify);
-router.post('/SendNotificationToDevice', protect, pushNotificationController.SendNotificationToDevice);
-router.get('/SendNotification', protect, pushNotificationController.SendNotification);
-module.exports = router;
+const router = express.Router();
+router.use(express.json());
+
+router.post('/addDeviceToNotify', AuthMiddlewares.protect, pushNotificationController.addDeviceToNotify);
+router.post('/SendNotificationToDevice', AuthMiddlewares.protect, pushNotificationController.SendNotificationToDevice);
+router.get('/SendNotification', AuthMiddlewares.protect, pushNotificationController.SendNotification);
+
+export default router;
