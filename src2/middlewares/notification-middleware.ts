@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
-import { notificationTracker } from '../models/index.js';
+import { notificationTracker } from '../models';
 
 export interface NotificationRequest extends Request {
   notificationTracker?: any;

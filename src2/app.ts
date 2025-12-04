@@ -1,13 +1,13 @@
 import express, { Application, Request, Response } from 'express';
-import { securityMiddleware } from './middlewares/security/security.js';
-import { corsMiddleware } from './middlewares/security/cors.js';
-import { metricsMiddleware } from './middlewares/security/metrics.js';
+import { securityMiddleware } from './middlewares/security/security';
+import { corsMiddleware } from './middlewares/security/cors';
+import { metricsMiddleware } from './middlewares/security/metrics';
 import {
   notFoundHandler,
   globalErrorHandler
-} from './middlewares/security/errorHandlers.js';
-import webHook from './utils/webHook.ts';
-import apiRoutes from './routes/index.js';
+} from './middlewares/security/errorHandlers';
+import webHook from './utils/webHook';
+import apiRoutes from './routes';
 
 const app: Application = express();
 

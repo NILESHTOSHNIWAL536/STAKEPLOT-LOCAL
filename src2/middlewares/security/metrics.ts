@@ -1,11 +1,11 @@
 import { Application, Request, Response, NextFunction } from 'express';
-import { sendMetric, logRequest } from '../../utils/cloud-watch.js';
+import { sendMetric, logRequest } from '../../utils/cloud-watch';
 
 export function metricsMiddleware(app: Application): void {
   // ✅ CloudWatch metrics
   app.use(async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await sendMetric(req.path, req.method);
+      await sendMetric(req.path, req.method, res.statusCode);
     } catch (error) {
       console.error('CloudWatch metric error:', error);
     }

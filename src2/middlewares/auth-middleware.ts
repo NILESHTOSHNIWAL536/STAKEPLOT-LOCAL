@@ -3,9 +3,9 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 
 import { User, Session } from '../models';
-import AppError from '../utils/errors/app-error.js';
-import { ErrorResponse } from '../utils/common/index.js';
-import { ServerConfig } from '../config/index.js';
+import AppError from '../utils/errors/app-error';
+import { ErrorResponse } from '../utils/common';
+import { ServerConfig } from '../config';
 
 /**
  * Extend Express Request to safely attach user

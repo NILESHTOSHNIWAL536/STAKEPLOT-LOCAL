@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // ✅ Logger instance
-export const logger = winston.createLogger({
+const logger = winston.createLogger({
   level: process.env.NODE_ENV === "production" ? "info" : "debug",
 
   format: winston.format.combine(
@@ -51,3 +51,6 @@ export const logger = winston.createLogger({
 
   transports,
 });
+
+
+export default logger;

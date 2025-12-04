@@ -1,25 +1,24 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import app from './app.js';
-import { ServerConfig } from './config/index.js';
-import logger from './utils/common/logger.js';
-import { initCloudWatchLogs } from './utils/cloud-watch.js';
-import redisClient from './config/redis-config.js';
-import initCategoryWatcher from './config/categoryWatcher.js';
+import app from './app';
+import config from './config';
+import logger from './utils/common/logger';
+// import { initCloudWatchLogs } from './utils/cloud-watch';
+import redisClient from './config/redis-config';
 
 dotenv.config({ path: `./config/.env.${process.env.NODE_ENV}` });
 
 const startServer = async (): Promise<void> => {
   try {
-    const server = app.listen(ServerConfig.PORT, '0.0.0.0', async () => {
-      logger.info(`Server running on port: ${ServerConfig.PORT}`);
+    const port = parseInt(config.ServerConfig.PORT || '5000', 10);
+    const server = app.listen(port, '0.0.0.0', async () => {
+      logger.info(`Server running on port: ${port}`);
     });
 
-    await mongoose.connect(ServerConfig.MONGO_URI);
-    await initCloudWatchLogs();
-    await redisClient.connect();
-    initCategoryWatcher();
-    await import('./utils/cron-jobs.js');
+  await mongoose.connect(config.ServerConfig.MONGO_URI!);
+  // await initCloudWatchLogs();
+  await redisClient.connect();
+  // await import('./utils/cron-jobs');
   } catch (error) {
     console.error('Server Start Error:', error);
     process.exit(1);
