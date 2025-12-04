@@ -18,11 +18,7 @@ interface DecodedToken extends JwtPayload {
   id: string;
 }
 
-export const protect = async (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const protect = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -36,10 +32,7 @@ export const protect = async (
 
     if (tokenType === 'Bearer') {
       try {
-        const decoded = jwt.verify(
-          token,
-          ServerConfig.JWT_SECRET
-        ) as DecodedToken;
+        const decoded = jwt.verify(token, ServerConfig.JWT_SECRET) as DecodedToken;
 
         const user = await User.findOne({ _id: decoded.id }).select('-password');
 

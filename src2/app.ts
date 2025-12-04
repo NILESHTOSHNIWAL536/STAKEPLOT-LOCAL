@@ -6,7 +6,7 @@ import {
   notFoundHandler,
   globalErrorHandler
 } from './middlewares/security/errorHandlers.js';
-import webHook from './utils/webHook.js';
+import webHook from './utils/webHook.ts';
 import apiRoutes from './routes/index.js';
 
 const app: Application = express();

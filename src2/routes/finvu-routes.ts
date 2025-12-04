@@ -1,6 +1,6 @@
-import express from "express";
+const express = require("express");
 const {FinvuController} = require("../controllers");
-import {AuthMiddlwares} from "../middlewares/auth-middleware";
+const { AuthMiddlewares } = require("../../src2/middlewares");
 const router = express.Router();
 router.use(express.json());
 
