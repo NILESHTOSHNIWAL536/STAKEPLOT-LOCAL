@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 
-import { User, Session } from '../models/index.js';
+import { User, Session } from '../models';
 import AppError from '../utils/errors/app-error.js';
 import { ErrorResponse } from '../utils/common/index.js';
 import { ServerConfig } from '../config/index.js';
