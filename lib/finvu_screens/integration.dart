@@ -10,7 +10,6 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
-
 import '../Utils/finspaceStrings.dart';
 import '../loginservices/login.dart';
 import '../routes/route_finvu.dart';

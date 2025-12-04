@@ -19,8 +19,10 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/image_service/profile.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:get/get.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../Constants/custom_keypad.dart';
 import '../../components/shared_utils.dart';
 import '../../routes/index_route.dart';
 
@@ -28,7 +30,7 @@ bool isDebit = true;
 
 class ModalContent extends StatefulWidget {
   final bool isDebit;
-  const ModalContent(this.isDebit, {Key? key}) : super(key: key);
+  const ModalContent(this.isDebit, {Key? key,}) : super(key: key);
 
   @override
   _ModalContentState createState() => _ModalContentState();
@@ -53,8 +55,9 @@ class _ModalContentState extends State<ModalContent>
   // List  addedUser=[];
   // List addedMembers=[];
   bool _isAmountFieldFocused = true;
+   final FocusNode _amountFocusNode = FocusNode(); 
   late IO.Socket socket;
-
+ String _amountText = ''; // keypad input text
   @override
   void initState() {
     super.initState();
@@ -91,6 +94,7 @@ class _ModalContentState extends State<ModalContent>
   }
 
   void dispose() {
+     _amountFocusNode.dispose(); 
     _confettiController.dispose();
     _iconAnimationController.dispose();
     super.dispose();
@@ -165,7 +169,73 @@ class _ModalContentState extends State<ModalContent>
     });
   }
 
- 
+ void _onKeypadNumberTap(String value) {
+    setState(() {
+      _amountText += value;
+      _amountController.text = _amountText;
+      amount = double.tryParse(_amountText);
+
+      if (!widget.isDebit) {
+        selectedCategory = "Income";
+        categoryFieldController.text = "Income";
+      }
+
+      fin = null;
+    });
+  }
+
+  void _onKeypadBackspace() {
+    if (_amountText.isEmpty) return;
+    setState(() {
+      _amountText = _amountText.substring(0, _amountText.length - 1);
+      _amountController.text = _amountText;
+      amount = double.tryParse(_amountText);
+      fin = null;
+    });
+  }
+
+  void _onKeypadSubmit() {
+    FocusScope.of(context).unfocus();
+
+    if (amount == null || amount == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid amount')),
+      );
+      return;
+    }
+
+    if (selectedCategory != null) {
+      setState(() {
+        fin = '$selectedCategory'
+            '${selectedSubCategory != null ? " ($selectedSubCategory)" : ""}';
+      });
+    }
+  }
+  void _submitAmount() {
+  final value = _amountController.text.trim();
+
+  if (value.isEmpty) {
+   snackBarCalledfail(context, "Please enter a valid amount");
+    return;
+  }
+
+  setState(() {
+    amount = double.tryParse(value);
+
+    if (!isDebit) {
+      selectedCategory = "Income";
+      categoryFieldController.text = "Income";
+    }
+
+    // This was earlier in onEditingComplete
+    fin = '$selectedCategory ($selectedSubCategory)';
+    _isAmountFieldFocused = false;
+  });
+
+  // Hide keyboard
+  FocusScope.of(context).unfocus();
+}
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -198,6 +268,26 @@ class _ModalContentState extends State<ModalContent>
                               color: AppColors.accentColor),
                         ),
                         const SizedBox(height: 16),
+                        //  if ((selectedCategory == null &&
+                        //         selectedSubCategory == null) ||
+                        //     !widget.isDebit) ...[
+                        //   Row(
+                        //     children: [
+                        //       Expanded(child: AmountWidget()),
+                        //     ],
+                        //   ),
+                        //   const SizedBox(height: 16),
+                        //   SizedBox(
+                        //     height: 240,
+                        //     child: CustomKeypad(
+                        //       onKeyTap: _onKeypadNumberTap,
+                        //       onBackspace: _onKeypadBackspace,
+                        //       onSubmit: _onKeypadSubmit,
+                        //     ),
+                        //   ),
+                        //   const SizedBox(height: 16),
+                        // ],
+
                         if ((selectedCategory == null &&
                                 selectedSubCategory == null) ||
                             !widget.isDebit) ...[
@@ -292,10 +382,14 @@ class _ModalContentState extends State<ModalContent>
     return TextField(
       controller: _amountController,
       keyboardType: TextInputType.number,
+      
+      // readOnly: true,
+      textInputAction: TextInputAction.done, 
       autofocus: _isAmountFieldFocused,
       inputFormatters: allowDecimalInput(),
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
+        
 
         hintText: HomepageStringsDart().enterAmount,
         fillColor: AppColors.button,
@@ -341,6 +435,9 @@ class _ModalContentState extends State<ModalContent>
         fin = '$selectedCategory ($selectedSubCategory)';
         FocusScope.of(context).unfocus(); // Dismiss keyboard when done
       },
+      onSubmitted: (value) {
+      _submitAmount();   // 👈 same as tapping ✔
+    },
     );
   }
 
@@ -350,6 +447,7 @@ Widget categoryWidget() {
     child: TextField(
       controller: categoryFieldController,
       readOnly: !isDebit,
+
       decoration: InputDecoration(
         hintText: HomepageStringsDart().selectCategory,
         fillColor: AppColors.button,
@@ -736,3 +834,4 @@ Widget categoryExpandedWidget() {
   }
 
     }
+
