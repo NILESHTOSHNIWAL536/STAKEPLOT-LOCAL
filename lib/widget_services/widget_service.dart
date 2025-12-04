@@ -6,7 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:home_widget/home_widget.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart'; // Import for 'url' global
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+
+import '../Profile/friends.dart';
+import 'widget_bridge.dart'; // Import for 'url' global
 
 const List<String> monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -211,4 +214,66 @@ void initializeWidgetService() {
     "one-off-widget-update",
     constraints: Constraints(networkType: NetworkType.connected),
   );
+}
+
+
+
+
+void init_widget_main(){
+  
+   WidgetBridge.getLastWidgetSelection().then((opt) {
+      if (opt != null) {
+        // react: maybe show a toast or set UI state
+      }
+    });
+
+    // 2) Listen for runtime events when Android calls into Flutter (onNewIntent)
+    WidgetBridge.setMethodCallHandler((args) {
+      if (args.containsKey('tab')) {
+        final tab = args['tab'];
+        // navigate to tab in your HomeShell, e.g. set selectedIndex
+      } else if (args.containsKey('option')) {
+        final option = args['option'];
+        // react to raw clicked option
+      } else if (args.containsKey('navigate_to_tab')) {
+        final nav = args['navigate_to_tab'];
+        // handle older getInitialRoute map
+      }
+    });
+    try {
+      final friendNames = globalFriendsList
+          .take(4)
+          .map((e) =>
+              (e != null && e['name'] != null) ? e['name'].toString() : '')
+          .where((s) => s.isNotEmpty)
+          .toList();
+      WidgetBridge.setWidgetFriends(friendNames);
+    } catch (e) {
+      // ignore
+    }
+
+}
+
+void updateNextFetchWidget() {
+  String dateStr = nextFecthDate.value;
+  DateTime? parsed;
+  try {
+    parsed = DateTime.parse(dateStr);
+  } catch (_) {
+    parsed = null;
+  }
+
+  if (parsed == null) {
+    DateTime now = DateTime.now();
+    int daysToFriday = (DateTime.friday - now.weekday + 7) % 7;
+    if (daysToFriday == 0 && now.hour >= 8) daysToFriday = 7;
+    parsed = now.add(Duration(days: daysToFriday)).copyWith(hour: 8, minute: 0, second: 0);
+  }
+
+  final int epochMs = parsed.toUtc().millisecondsSinceEpoch;
+  HomeWidget.saveWidgetData<String>('next_fetch_date', parsed.toUtc().toIso8601String());
+  HomeWidget.saveWidgetData<String>('next_fetch_date_ms', epochMs.toString());
+  HomeWidget.saveWidgetData<String>('fetch_status', isFected.value ? 'Fetching...' : 'Ready to fetch');
+  HomeWidget.updateWidget(name: 'NextFetchWidgetProvider');
+  
 }

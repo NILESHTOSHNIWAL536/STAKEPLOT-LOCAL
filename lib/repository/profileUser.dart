@@ -4,7 +4,6 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import '../Hive_localstorage/apisCall/post_apis.dart';
 import '../Hive_localstorage/hive_storage.dart';
+import '../loginservices/login.dart';
 import '../routes/route_post.dart';
 
 

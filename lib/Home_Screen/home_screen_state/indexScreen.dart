@@ -8,7 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/headsUpAndMoneyMa
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_analytics/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';

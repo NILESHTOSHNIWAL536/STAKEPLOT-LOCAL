@@ -5,8 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/home_screen_state
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd_with_token.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -18,6 +17,7 @@ import '../Hive_localstorage/apisCall/bank_apis.dart';
 import '../Hive_localstorage/apisCall/fipmetric_apis.dart';
 import '../Home_Screen/banksCardsSlider.dart';
 import '../Utils/snackBar.dart';
+import '../loginservices/login.dart';
 import '../model/fips_metric_model.dart';
 import '../routes/route_finvu.dart';
 

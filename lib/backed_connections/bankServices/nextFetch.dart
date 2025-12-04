@@ -13,13 +13,13 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
-import 'package:home_widget/home_widget.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/shared_utils.dart';
 import '../../model/fips_metric_model.dart';
 import '../../repository/bankinfo.dart';
+import '../../widget_services/widget_service.dart';
 import 'bank_progress.dart';
 
 RxBool isBankLinked = false.obs;
@@ -57,29 +57,6 @@ updateNextFetchWidget();
 
     // Initialize homepage strings
   }
-void updateNextFetchWidget() {
-  String dateStr = nextFecthDate.value;
-  DateTime? parsed;
-  try {
-    parsed = DateTime.parse(dateStr);
-  } catch (_) {
-    parsed = null;
-  }
-
-  if (parsed == null) {
-    DateTime now = DateTime.now();
-    int daysToFriday = (DateTime.friday - now.weekday + 7) % 7;
-    if (daysToFriday == 0 && now.hour >= 8) daysToFriday = 7;
-    parsed = now.add(Duration(days: daysToFriday)).copyWith(hour: 8, minute: 0, second: 0);
-  }
-
-  final int epochMs = parsed.toUtc().millisecondsSinceEpoch;
-  HomeWidget.saveWidgetData<String>('next_fetch_date', parsed.toUtc().toIso8601String());
-  HomeWidget.saveWidgetData<String>('next_fetch_date_ms', epochMs.toString());
-  HomeWidget.saveWidgetData<String>('fetch_status', isFected.value ? 'Fetching...' : 'Ready to fetch');
-  HomeWidget.updateWidget(name: 'NextFetchWidgetProvider');
-  
-}
 
   @override
   Widget build(BuildContext context) {

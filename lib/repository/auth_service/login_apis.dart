@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.da
 import 'package:flutter_application_code_stakeplot/repository/auth_service/force_logout.dart';
 import 'package:flutter_application_code_stakeplot/repository/auth_service/otp_service.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/login.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
@@ -13,10 +13,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/two_factor_email_verification.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Utils/snackBar.dart';
 import '../../Home_Screen/Home/init_Api_Calls.dart';
-import '../../backed_connections/apiAutomations/secure_storage.dart';
-import '../../backed_connections/apiConnect/signInAndOut.dart';
+import '../../Home_Screen/home_screen_state/home_page.dart';
+import '../../services/secure_storage.dart';
+import '../../loginservices/screenTime.dart';
+import '../../loginservices/login_screen.dart';
 import '../../backed_connections/googlesignin/credentials.dart';
 import '../bankinfo.dart';
 import '../../routes/route_user_login.dart';
@@ -275,4 +278,45 @@ void updateDeviceData(RxMap deviceData) {
   deviceData['os'] = (deviceData['os']?.toString().trim().isNotEmpty ?? false)
       ? deviceData['os'].toString()
       : 'UNKNOWN_OS';
+}
+Future<void> screenDataLocalStorage() async {
+  final pref = await SharedPreferences.getInstance();
+  String userId =await  SecureStorageService().read("accessToken").toString();
+  final todayKey =
+      'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId';
+  int dailyLoginCount = pref.getInt(todayKey) ?? 0;
+  dailyLoginCount++;
+  await pref.setInt(todayKey, dailyLoginCount);
+
+  final List<String> loginHistory =
+      pref.getStringList('login_history_$userId') ?? [];
+  final todayEntry = '$todayKey:$dailyLoginCount';
+  if (loginHistory.any((entry) => entry.startsWith(todayKey))) {
+    loginHistory.removeWhere((entry) => entry.startsWith(todayKey));
+  }
+  loginHistory.add(todayEntry);
+  await pref.setStringList('login_history_$userId', loginHistory);
+
+  await ScreenTimeTracker().setUser(userId);
+  ScreenTimeTracker().startSession();
+  ScreenTimeTracker().switchTab('Home');
+}
+
+
+
+
+void addThisDeviceToBackendDevice(SharedPreferences pref, context) async 
+{
+  await _addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
+}
+
+Future<void> _addThisDeviceToBackend(deviceData, context) async {
+   try {
+     await postDataApiCall(SendNotificationsRoutes.addDeviceToNotify, deviceData);
+   } catch (e) {}
+}
+
+Future<Widget> checkAuthAndNavigate() async {
+  final bool isLoggedIn = await SecureStorageService().containsKey("accessToken");
+  return isLoggedIn ? HomePage() : LoginScreen();
 }

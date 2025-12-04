@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';

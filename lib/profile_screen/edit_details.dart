@@ -5,7 +5,6 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
@@ -21,8 +20,9 @@ import 'package:flutter_application_code_stakeplot/signInOut/emailUpdateOtp.dart
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../Utils/credit_card.dart';
-import '../backed_connections/apiAutomations/share_data.dart';
+import '../backed_connections/bankServices/share_data.dart';
 import '../image_service/avatarProfile.dart';
+import '../loginservices/login.dart';
 import '../repository/bankinfo.dart';
 import '../repository/delete_banks_users.dart';
 import '../show_modal/theme_modal.dart';

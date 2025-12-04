@@ -5,10 +5,10 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransacti
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 
 import '../../image_service/avatarProfile.dart';
+import '../../repository/transactions_repository.dart';
 
 
 class Manualtransaction extends StatefulWidget {

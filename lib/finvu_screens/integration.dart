@@ -3,7 +3,6 @@ import 'package:finvu_flutter_sdk/finvu_config.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
@@ -12,9 +11,10 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 
-import '../../Utils/finspaceStrings.dart';
-import '../../routes/route_finvu.dart';
-import '../googlesignin/credentials.dart';
+import '../Utils/finspaceStrings.dart';
+import '../loginservices/login.dart';
+import '../routes/route_finvu.dart';
+import '../backed_connections/googlesignin/credentials.dart';
 
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(

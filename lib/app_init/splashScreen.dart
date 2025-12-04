@@ -13,13 +13,13 @@ import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/components/main_helper.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import '../Hive_localstorage/apisCall/init_hive.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
 import '../Utils/credit_card.dart';
+import '../repository/auth_service/login_apis.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

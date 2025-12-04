@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/insights_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/screenTime.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../backed_connections/apiAutomations/secure_storage.dart';
+import '../services/secure_storage.dart';
 import '../routes/route_transactions.dart';
 
 class InsightsController extends GetxController {

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/helper.dart';
 import '../../components/shared_utils.dart';
+import '../../repository/transactions_repository.dart';
 
 class AmountRangeField extends StatelessWidget {
   const AmountRangeField({

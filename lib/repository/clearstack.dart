@@ -8,8 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/insightsControlle
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -27,7 +26,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 
 import '../controllers/credit_card_controller.dart';
 import '../controllers/theme_controller.dart';
-import '../backed_connections/apiAutomations/secure_storage.dart';
+import '../services/secure_storage.dart';
+import '../loginservices/login.dart';
 import 'delete_banks_users.dart';
 
 void clearStack(BuildContext context) {

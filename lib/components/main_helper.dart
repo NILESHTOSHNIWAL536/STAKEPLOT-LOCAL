@@ -102,38 +102,3 @@ Future<void> checkForUpdate() async {
   }
 }
 
-
-void init_widget_main(){
-  
-   WidgetBridge.getLastWidgetSelection().then((opt) {
-      if (opt != null) {
-        // react: maybe show a toast or set UI state
-      }
-    });
-
-    // 2) Listen for runtime events when Android calls into Flutter (onNewIntent)
-    WidgetBridge.setMethodCallHandler((args) {
-      if (args.containsKey('tab')) {
-        final tab = args['tab'];
-        // navigate to tab in your HomeShell, e.g. set selectedIndex
-      } else if (args.containsKey('option')) {
-        final option = args['option'];
-        // react to raw clicked option
-      } else if (args.containsKey('navigate_to_tab')) {
-        final nav = args['navigate_to_tab'];
-        // handle older getInitialRoute map
-      }
-    });
-    try {
-      final friendNames = globalFriendsList
-          .take(4)
-          .map((e) =>
-              (e != null && e['name'] != null) ? e['name'].toString() : '')
-          .where((s) => s.isNotEmpty)
-          .toList();
-      WidgetBridge.setWidgetFriends(friendNames);
-    } catch (e) {
-      // ignore
-    }
-
-}

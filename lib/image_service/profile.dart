@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../backed_connections/apiAutomations/secure_storage.dart';
+import '../services/secure_storage.dart';
 import '../routes/route_user_login.dart';
 import '../signInOut/userName.dart';
 

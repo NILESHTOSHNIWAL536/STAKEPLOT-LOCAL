@@ -5,11 +5,13 @@ import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.da
 import 'package:flutter_application_code_stakeplot/routes/routes.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'appTheme.dart';
+
+import 'app_init/AppTheme.dart';
 import 'repository/clearstack.dart';
 import 'controllers/controllerManagement.dart';
 import 'controllers/theme_controller.dart';
 import 'components/main_helper.dart';
+import 'widget_services/widget_service.dart';
 
 FinvuManager finvuManager = FinvuManager();
 late IO.Socket mainPageWebSocket;
@@ -21,7 +23,6 @@ void main() async
   WidgetsFlutterBinding.ensureInitialized();
   main_apis_call_init();
 }
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 

@@ -15,7 +15,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../repository/auth_service/login_apis.dart';
-import '../backed_connections/apiAutomations/secure_storage.dart';
+import '../services/secure_storage.dart';
 import '../backed_connections/googlesignin/credentials.dart';
 
 RxBool isValidUser=false.obs;

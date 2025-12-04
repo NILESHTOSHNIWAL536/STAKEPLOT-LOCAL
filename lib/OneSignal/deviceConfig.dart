@@ -12,8 +12,7 @@ import 'package:flutter_application_code_stakeplot/repository/notification_repos
 import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/repository/reward_repository.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/room_poll_chart.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
+import 'package:flutter_application_code_stakeplot/loginservices/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/firebase_options.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
@@ -25,6 +24,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../components/shared_utils.dart';
+import '../repository/auth_service/login_apis.dart';
 import '../routes/index_route.dart';
 
 
