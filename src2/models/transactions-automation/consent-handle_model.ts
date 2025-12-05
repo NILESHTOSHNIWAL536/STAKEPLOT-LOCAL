@@ -1,19 +1,5 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
-
-/* ============================
-   ConsentHandleId Interface
-============================ */
-
-export interface IConsentHandleId extends Document {
-  custId: string;
-  handleId: string;
-  userId?: Types.ObjectId;
-  expiresAt: Date;
-}
-
-/* ============================
-   ConsentHandleId Schema
-============================ */
+import mongoose, { Schema, Document, Types } from 'mongoose';
+import { IConsentHandleId } from '@/types/bank';
 
 const ConsentHandleIdSchema = new Schema<IConsentHandleId>({
   custId: {
@@ -28,23 +14,16 @@ const ConsentHandleIdSchema = new Schema<IConsentHandleId>({
 
   userId: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
   },
 
   expiresAt: {
     type: Date,
     default: () => new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-    index: { expires: "5d" }, // TTL index: auto-delete after 5 days
+    index: { expires: '5d' }, // TTL index: auto-delete after 5 days
   },
 });
 
-/* ============================
-   Export Model
-============================ */
-
-const ConsentHandleId = mongoose.model<IConsentHandleId>(
-  "ConsentHandleId",
-  ConsentHandleIdSchema
-);
+const ConsentHandleId = mongoose.model<IConsentHandleId>('ConsentHandleId', ConsentHandleIdSchema);
 
 export default ConsentHandleId;

@@ -1,39 +1,5 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
-
-/* ============================
-   Encrypted Field Type
-============================ */
-
-interface IEncryptedField {
-  encryptedData: string;
-  iv: string;
-  authTag: string;
-}
-
-const encryptedFieldSchema = {
-  type: {
-    encryptedData: String,
-    iv: String,
-    authTag: String,
-  },
-  _id: false,
-};
-
-/* ============================
-   Profile Interface
-============================ */
-
-export interface IProfile extends Document {
-  holder: Map<string, IEncryptedField>;
-  type: IEncryptedField;
-  accountId: Types.ObjectId;
-  userId: Types.ObjectId;
-  encryptedDEK: string;
-}
-
-/* ============================
-   Profile Schema
-============================ */
+import mongoose, { Schema, Document, Types } from 'mongoose';
+import { IProfile, encryptedFieldSchema } from '@/types/bank';
 
 const profileSchema = new Schema<IProfile>({
   holder: {
@@ -49,13 +15,13 @@ const profileSchema = new Schema<IProfile>({
 
   accountId: {
     type: Schema.Types.ObjectId,
-    ref: "Account",
+    ref: 'Account',
     required: true,
   },
 
   userId: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
 
@@ -65,9 +31,5 @@ const profileSchema = new Schema<IProfile>({
   },
 });
 
-/* ============================
-   Export Model
-============================ */
-
-const Profile = mongoose.model<IProfile>("Profile", profileSchema);
+const Profile = mongoose.model<IProfile>('Profile', profileSchema);
 export default Profile;

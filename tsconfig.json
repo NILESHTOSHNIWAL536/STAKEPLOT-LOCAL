@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
     "rootDir": "./src2",
+    "baseUrl": "./src2",
+    "paths": {
+      "@/*": ["*"]
+    },
+
     "outDir": "./dist",
 
     "module": "NodeNext",

@@ -1,35 +1,10 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
-
-/* ============================
-   Grouped Transaction Interface
-============================ */
-
-export interface IGroupedTransaction extends Document {
-  userId: Types.ObjectId;
-
-  groupKey: string;
-
-  transactions: Types.ObjectId[];
-
-  narrationPattern: string;
-
-  totalAmount: number;
-  count: number;
-
-  suggestedCategory: string;
-
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-/* ============================
-   Grouped Transaction Schema
-============================ */
+import mongoose, { Schema, Document, Types } from 'mongoose';
+import { IGroupedTransaction } from '@/types/bank';
 
 const groupedTransactionSchema = new Schema<IGroupedTransaction>({
   userId: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
     index: true,
   },
@@ -42,7 +17,7 @@ const groupedTransactionSchema = new Schema<IGroupedTransaction>({
   transactions: [
     {
       type: Schema.Types.ObjectId,
-      ref: "BankTransaction",
+      ref: 'BankTransaction',
       required: true,
     },
   ],
@@ -64,7 +39,7 @@ const groupedTransactionSchema = new Schema<IGroupedTransaction>({
 
   suggestedCategory: {
     type: String,
-    default: "Untagged",
+    default: 'Untagged',
   },
 
   createdAt: {
@@ -83,7 +58,7 @@ const groupedTransactionSchema = new Schema<IGroupedTransaction>({
 ============================ */
 
 // Update `updatedAt` before saving
-groupedTransactionSchema.pre<IGroupedTransaction>("save", function (next) {
+groupedTransactionSchema.pre<IGroupedTransaction>('save', function (next) {
   this.updatedAt = new Date();
   next();
 });
@@ -92,18 +67,12 @@ groupedTransactionSchema.pre<IGroupedTransaction>("save", function (next) {
    Indexes
 ============================ */
 
-groupedTransactionSchema.index(
-  { userId: 1, groupKey: 1 },
-  { unique: true }
-);
+groupedTransactionSchema.index({ userId: 1, groupKey: 1 }, { unique: true });
 
 /* ============================
    Export Model
 ============================ */
 
-const GroupedTransaction = mongoose.model<IGroupedTransaction>(
-  "GroupedTransaction",
-  groupedTransactionSchema
-);
+const GroupedTransaction = mongoose.model<IGroupedTransaction>('GroupedTransaction', groupedTransactionSchema);
 
 export default GroupedTransaction;

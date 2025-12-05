@@ -1,48 +1,17 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
-
-/* ============================
-   Recurring Payment Interface
-============================ */
-
-export interface IRecurringPayment extends Document {
-  recentMostTransactionId: Types.ObjectId;
-  userId: Types.ObjectId;
-  merchant: string;
-
-  frequency: "daily" | "weekly" | "monthly" | "quarterly" | "biannual";
-
-  amount: number;
-  recentMostTransactionTimestamp: Date;
-  nextReminderAt: Date;
-
-  narration?: string;
-  source?: string;
-
-  recentMostTwoOccurrences?: Date[];
-
-  occurrencesCount: number;
-  isActive: boolean;
-  isDaily: boolean;
-
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-/* ============================
-   Recurring Payment Schema
-============================ */
+import mongoose, { Schema, Types } from 'mongoose';
+import { IRecurringPayment } from '@/types/bank';
 
 const recurringPaymentSchema = new Schema<IRecurringPayment>(
   {
     recentMostTransactionId: {
       type: Schema.Types.ObjectId,
-      ref: "BankTransaction",
+      ref: 'BankTransaction',
       required: true,
     },
 
     userId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
 
@@ -53,7 +22,7 @@ const recurringPaymentSchema = new Schema<IRecurringPayment>(
 
     frequency: {
       type: String,
-      enum: ["daily", "weekly", "monthly", "quarterly", "biannual"],
+      enum: ['daily', 'weekly', 'monthly', 'quarterly', 'biannual'],
       required: true,
     },
 
@@ -82,10 +51,7 @@ const recurringPaymentSchema = new Schema<IRecurringPayment>(
 
     recentMostTwoOccurrences: {
       type: [Date],
-      validate: [
-        (array: Date[]) => array.length <= 2,
-        "Must contain at most 2 dates",
-      ],
+      validate: [(array: Date[]) => array.length <= 2, 'Must contain at most 2 dates'],
     },
 
     occurrencesCount: {
@@ -119,9 +85,6 @@ recurringPaymentSchema.index({ nextReminderAt: 1 });
    Export Model
 ============================ */
 
-const RecurringPayment = mongoose.model<IRecurringPayment>(
-  "RecurringPayment",
-  recurringPaymentSchema
-);
+const RecurringPayment = mongoose.model<IRecurringPayment>('RecurringPayment', recurringPaymentSchema);
 
 export default RecurringPayment;

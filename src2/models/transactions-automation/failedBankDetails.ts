@@ -1,27 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-
-/* ============================
-   Failed Transaction Interface
-============================ */
-
-export interface IFailedTransaction extends Document {
-  custId?: string;
-  userId?: string;
-  fipId?: string;
-  consentId?: string;
-  consendHandleId?: string; // Keeping original field name as-is
-  bankName?: string;
-  accountId?: string;
-  fetchCount?: string;
-
-  FROM?: Date;
-
-  retryCount: number;
-}
-
-/* ============================
-   Failed Transaction Schema
-============================ */
+import { IFailedTransaction } from '@/types/bank';
 
 const FailedTransactionSchema = new Schema<IFailedTransaction>({
   custId: {

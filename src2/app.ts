@@ -2,10 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import { securityMiddleware } from './middlewares/security/security';
 import { corsMiddleware } from './middlewares/security/cors';
 import { metricsMiddleware } from './middlewares/security/metrics';
-import {
-  notFoundHandler,
-  globalErrorHandler
-} from './middlewares/security/errorHandlers';
+import { notFoundHandler, globalErrorHandler } from './middlewares/security/errorHandlers';
 import webHook from './utils/webHook';
 import apiRoutes from './routes';
 

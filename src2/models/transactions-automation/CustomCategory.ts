@@ -1,29 +1,5 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
-
-/* ============================
-   Category Sub Document Type
-============================ */
-
-interface ICategoryItem {
-  name: string;
-  imageUrl: string;
-  narration: string;
-}
-
-/* ============================
-   Custom Category Interface
-============================ */
-
-export interface IUserCustomCategories extends Document {
-  userId: Types.ObjectId;
-  categories: ICategoryItem[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-/* ============================
-   Custom Category Schema
-============================ */
+import { IUserCustomCategories } from '@/types/bank';
 
 const customCategorySchema = new Schema<IUserCustomCategories>(
   {

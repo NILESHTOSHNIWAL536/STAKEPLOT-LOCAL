@@ -1,51 +1,5 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
-
-/* ============================
-   Encrypted Field Type
-============================ */
-
-interface IEncryptedField {
-  encryptedData: string;
-  iv: string;
-  authTag: string;
-}
-
-const encryptedFieldSchema = {
-  type: {
-    encryptedData: String,
-    iv: String,
-    authTag: String,
-  },
-  _id: false,
-};
-
-/* ============================
-   Account Interface
-============================ */
-
-export interface IAccount extends Document {
-  linkedAccRef: IEncryptedField;
-  type: IEncryptedField;
-  maskedAccNumber: IEncryptedField;
-  version: IEncryptedField;
-  schemaLocation?: IEncryptedField;
-
-  startDate?: Date;
-  endDate?: Date;
-
-  bankId: Types.ObjectId;
-  userId: Types.ObjectId;
-
-  fetchCount: number;
-  nextFetch?: Date;
-  lastFetch?: Date;
-
-  encryptedDEK: string;
-}
-
-/* ============================
-   Account Schema
-============================ */
+import mongoose, { Schema, Types } from 'mongoose';
+import { IAccount, encryptedFieldSchema } from '@/types/bank';
 
 const accountSchema = new Schema<IAccount>({
   linkedAccRef: {
@@ -56,7 +10,7 @@ const accountSchema = new Schema<IAccount>({
 
   type: {
     ...encryptedFieldSchema,
-    enum: ["term_deposit", "recurring_deposit", "deposit"],
+    enum: ['term_deposit', 'recurring_deposit', 'deposit'],
     required: true,
   },
 
@@ -86,13 +40,13 @@ const accountSchema = new Schema<IAccount>({
 
   bankId: {
     type: Schema.Types.ObjectId,
-    ref: "Bank",
+    ref: 'Bank',
     required: true,
   },
 
   userId: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
 
@@ -119,5 +73,5 @@ const accountSchema = new Schema<IAccount>({
    Export Model
 ============================ */
 
-const Account = mongoose.model<IAccount>("Account", accountSchema);
+const Account = mongoose.model<IAccount>('Account', accountSchema);
 export default Account;
