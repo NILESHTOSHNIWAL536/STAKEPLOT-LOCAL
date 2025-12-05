@@ -1,12 +1,38 @@
-const logger = require("../common/logger");
-const bankLogos = require("../../config/bankLogos");
+import logger from '../common/logger';
+import bankLogos from '../../config/bankLogos';
 
-function extractImportantInfo(narration) {
-  
+// ------------------- Types & Interfaces ------------------- //
+
+export interface Bank {
+  _id: string;
+  fipId: string;
+  fipName: string;
+}
+
+export interface Transaction {
+  _id: string;
+  accountId?: {
+    bankId?: string;
+  };
+  bankId?: string;
+  category: string;
+  narration: string;
+  toObject: () => any;
+}
+
+export interface EnrichedTransaction extends ReturnType<Transaction['toObject']> {
+  title: string;
+  bankId: string | null;
+  bankName: string | null;
+  bankLogo: string | null;
+}
+
+// ------------------ extractImportantInfo ------------------ //
+
+export function extractImportantInfo(narration: string): string {
   if (!narration || typeof narration !== 'string') return 'Unknown Transaction';
 
   if (narration === 'NEFT CHARGES') return 'NEFT Charges';
-
   if (narration.startsWith('INT PAYOUT:')) return 'Interest Payout';
   if (narration.startsWith('PRINC PAYOUT:')) return 'Principal Payout';
 
@@ -23,7 +49,9 @@ function extractImportantInfo(narration) {
   if (upiArAbMatch) {
     const name = upiArAbMatch[3].trim();
     if (['PhonePe', 'IRCTC Rail APP', 'ZEPTO', 'AMAZON PAY', 'Swiggy L'].includes(name)) return name;
-    if (name && !name.match(/^[A-Za-z0-9]+@[a-z]+$/)) return name;
+
+    if (!name.match(/^[A-Za-z0-9]+@[a-z]+$/)) return name;
+
     const vpa = narration.match(/\/([^/]+)$/);
     if (vpa) {
       const vpaStr = vpa[1].trim();
@@ -44,7 +72,7 @@ function extractImportantInfo(narration) {
   const upiSlashCrDrMatch = narration.match(/UPI\/[0-9]+\/(CR|DR)\/([^/]+)\/[A-Z]{3,}\//);
   if (upiSlashCrDrMatch) {
     const name = upiSlashCrDrMatch[2].trim();
-    if (name && !name.match(/^[A-Za-z0-9]+@[a-z]+$/)) return name;
+    if (!name.match(/^[A-Za-z0-9]+@[a-z]+$/)) return name;
     if (narration.includes('Paytm')) return 'Paytm';
     if (narration.includes('PhonePe')) return 'PhonePe';
   }
@@ -52,23 +80,23 @@ function extractImportantInfo(narration) {
   const upiDashMatch = narration.match(/UPI-(CR|DR)-([0-9]+)-(.*?)-([A-Z]{4}-)/);
   if (upiDashMatch) {
     const parts = narration.split('-');
-    const fourthPos = parts[3]?.trim() || '';
-    if (fourthPos && !fourthPos.match(/^[A-Z]{4}$/) && !fourthPos.match(/^[A-Za-z0-9]+@[a-z]+$/)) {
-      return fourthPos;
+    const fourth = parts[3]?.trim() || '';
+    if (fourth && !fourth.match(/^[A-Z]{4}$/) && !fourth.match(/^[A-Za-z0-9]+@[a-z]+$/)) {
+      return fourth;
     }
-    const thirdPos = upiDashMatch[3].trim();
-    if (thirdPos && !thirdPos.match(/^[A-Za-z0-9]+@[a-z]+$/)) return thirdPos;
+    const third = upiDashMatch[3].trim();
+    if (!third.match(/^[A-Za-z0-9]+@[a-z]+$/)) return third;
     if (narration.includes('Paytm')) return 'Paytm';
     if (narration.includes('PhonePe')) return 'PhonePe';
   }
-
-  
 
   const upiNameMatch = narration.match(/^UPI-([^-]+)-([A-Za-z0-9@]+|[0-9]+-?[0-9]*@?[A-Za-z]*)-[A-Z]{4,}/);
   if (upiNameMatch) {
     const name = upiNameMatch[1].trim();
     if (['PhonePe', 'IRCTC Rail APP', 'ZEPTO', 'AMAZON PAY'].includes(name)) return name;
+
     if (narration.includes('PAID VIA NAVI UPI') || narration.includes('PAYMENT FROM PHONE') || narration.includes('PAY TO MERCHANT')) return name;
+
     return name;
   }
 
@@ -78,9 +106,10 @@ function extractImportantInfo(narration) {
     if (recipient.includes('paytmqr') || recipient.includes('paytm-') || recipient.includes('PTYS') || recipient.includes('PTYBL')) return 'Paytm';
     if (recipient.includes('BHARATPE')) return 'BharatPe';
     if (recipient.includes('gpay-') || recipient.includes('OKBIZAXIS') || recipient.includes('OKAXIS')) return 'Google Pay';
+
     if (recipient.match(/^[A-Za-z0-9]+@[a-z]+$/)) {
       if (recipient.endsWith('@ybl')) return 'Paytm';
-      if (recipient.endsWith('@ok') || recipient.endsWith('OKAXIS')) return 'Google Pay';
+      if (recipient.includes('ok') || recipient.includes('OKAXIS')) return 'Google Pay';
     }
     return recipient;
   }
@@ -91,104 +120,126 @@ function extractImportantInfo(narration) {
   if (narration.includes('HUNGERBOX ORDER')) return 'Hungerbox';
   if (narration.includes('PAY TO MERCHANT')) return 'Merchant Payment';
 
-  // 🔽 FINAL fallback: Extract a meaningful name from narration using delimiters
-  // const parts = narration.split(/[-/_\s]+/).filter(Boolean);
-  const blacklist = ['UPI', 'CR', 'DR', 'TXN', 'TRANSFER', 'PAYMENT', 'FROM', 'TO', 'REF', 'VIA','RTGS','TPT','TRF'];
+  const blacklist = ['UPI', 'CR', 'DR', 'TXN', 'TRANSFER', 'PAYMENT', 'FROM', 'TO', 'REF', 'VIA', 'RTGS', 'TPT', 'TRF'];
 
-
-
-  return extractCleanName(narration,blacklist) || narration;
+  return extractCleanName(narration, blacklist) || narration;
 }
 
+// ------------------ extractCleanName ------------------ //
 
-function extractCleanName(narration, blacklist = []) {
+function extractCleanName(narration: string, blacklist: string[] = []): string | null {
   const parts = narration.split('-');
   const parts2 = narration.split('/');
-  const candidates = [
-    parts[1]?.trim(),
-    parts[2]?.trim(),
-    parts[3]?.trim(),
-    parts2[1]?.trim(),
-    parts2[2]?.trim(),
-    parts2[3]?.trim()
-  ];
+  const candidates = [parts[1]?.trim(), parts[2]?.trim(), parts[3]?.trim(), parts2[1]?.trim(), parts2[2]?.trim(), parts2[3]?.trim()];
 
   for (const name of candidates) {
-    if (
-      name &&
-      /^[A-Za-z\s]+$/.test(name) &&      // only letters and spaces
-      !blacklist.includes(name)
-    ) {
+    if (name && /^[A-Za-z\s]+$/.test(name) && !blacklist.includes(name)) {
       return name;
     }
   }
-var list = [
-  'AMAZON', 'FLIPKART', 'MYNTRA', 'ZEPTO', 'SWIGGY', 'ZOMATO', 'IRCTC',
-  'MEESHO', 'AJIO', 'NYKAA', 'OLA', 'UBER', 'PAYTM', 'PHONEPE', 'GOOGLE',
-  'MICROSOFT', 'APPLE', 'NETFLIX', 'SPOTIFY', 'HOTSTAR', 'YOUTUBE',
-  'JIO', 'AIRTEL', 'VI', 'BSNL', 'CRED', 'TATASKY', 'BIGBASKET',
-  'DUNZO', 'LIC', 'HDFCLIFE', 'ICICIPRULIFE', 'MOBIKWIK', 'FREECHARGE',
-  'TATA', 'RELIANCE', 'BYJU', 'UNACADEMY', 'NAVI', 'BAJAJFINSERV',
-  'CROMA', 'REDBUS', 'MAKEMYTRIP', 'BOOKMYSHOW', 'INDIGO', 'AIRINDIA',
-  'VISTARA', 'GOFIRST', 'SPICEJET', 'DMART', 'RELIANCETRENDS',
-  'SNAPDEAL', 'SHOPCLUES'
-];
-  
-  const found = list.find(keyword =>
-      narration.toUpperCase().includes(keyword.toUpperCase())
-  );
-    
-  if(found)return found;
 
-  return parts.length==1? narration: null;
+  const knownBrands = [
+    'AMAZON',
+    'FLIPKART',
+    'MYNTRA',
+    'ZEPTO',
+    'SWIGGY',
+    'ZOMATO',
+    'IRCTC',
+    'MEESHO',
+    'AJIO',
+    'NYKAA',
+    'OLA',
+    'UBER',
+    'PAYTM',
+    'PHONEPE',
+    'GOOGLE',
+    'MICROSOFT',
+    'APPLE',
+    'NETFLIX',
+    'SPOTIFY',
+    'HOTSTAR',
+    'YOUTUBE',
+    'JIO',
+    'AIRTEL',
+    'VI',
+    'BSNL',
+    'CRED',
+    'TATASKY',
+    'BIGBASKET',
+    'DUNZO',
+    'LIC',
+    'HDFCLIFE',
+    'ICICIPRULIFE',
+    'MOBIKWIK',
+    'FREECHARGE',
+    'TATA',
+    'RELIANCE',
+    'BYJU',
+    'UNACADEMY',
+    'NAVI',
+    'BAJAJFINSERV',
+    'CROMA',
+    'REDBUS',
+    'MAKEMYTRIP',
+    'BOOKMYSHOW',
+    'INDIGO',
+    'AIRINDIA',
+    'VISTARA',
+    'GOFIRST',
+    'SPICEJET',
+    'DMART',
+    'RELIANCETRENDS',
+    'SNAPDEAL',
+    'SHOPCLUES',
+  ];
+
+  const found = knownBrands.find((b) => narration.toUpperCase().includes(b));
+
+  if (found) return found;
+
+  return parts.length === 1 ? narration : null;
 }
 
-async function enrichTransactionWithBankDetails(transactions, banks) {
-  const bankMap = new Map(banks.map(bank => [bank._id.toString(), bank]));
+// ------------------ enrichTransactionWithBankDetails ------------------ //
+
+export async function enrichTransactionWithBankDetails(transactions: Transaction[], banks: Bank[]): Promise<EnrichedTransaction[]> {
+  const bankMap = new Map(banks.map((b) => [b._id, b]));
 
   return Promise.all(
     transactions.map(async (txn) => {
-
       try {
-        if (!txn.accountId)
-           {
+        if (!txn.accountId) {
           return {
             ...txn.toObject(),
+            title: extractImportantInfo(txn.narration || txn.category),
             bankId: null,
             bankName: null,
             bankLogo: null,
           };
         }
 
-        let bank = null;
-
-        if (txn.bankId) {
-          bank = bankMap.get(txn.bankId.toString());
-        } else if (txn.accountId.bankId) {
-          bank = bankMap.get(txn.accountId.bankId.toString());
-        }
+        const bank = (txn.bankId && bankMap.get(txn.bankId)) || (txn.accountId.bankId && bankMap.get(txn.accountId.bankId)) || null;
 
         if (!bank) {
           logger.warn(`Bank not found for transaction ${txn._id}`);
         }
 
-        const bankLogo = bank ? bankLogos[bank.fipId] || 'https://cdn.finvu.in/finvulogos/bank_large_light.png' : null;
-        const narration = await extractImportantInfo(txn.narration || txn.category);
-        
+        const bankLogo = bank?.fipId && bankLogos[bank.fipId] ? bankLogos[bank.fipId] : 'https://cdn.finvu.in/finvulogos/bank_large_light.png';
+
+        const title = extractImportantInfo(txn.narration || txn.category);
+
         return {
           ...txn.toObject(),
-          title:narration || txn.category ,
+          title,
           bankId: bank?.fipId || null,
           bankName: bank?.fipName || null,
           bankLogo,
         };
-      } 
-      catch (err) {
+      } catch (err: any) {
         logger.error(`Error enriching transaction ${txn._id}: ${err.message}`);
         throw err;
       }
     })
   );
 }
-
-module.exports = {enrichTransactionWithBankDetails,extractImportantInfo};
