@@ -9,7 +9,7 @@ export interface IBankTransaction extends Document {
   transactionalBalance: number;
   balanceOut: number;
 
-  transactionTimestamp: Date;
+  transactionTimestamp?: Date;
   valueDate?: Date;
 
   txnId: string;

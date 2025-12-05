@@ -1,4 +1,6 @@
+import { Types } from 'mongoose';
 import categories from '../../config/categories';
+import { IBankTransaction } from '@/types/bank';
 
 export interface TransactionInput {
   narration: string;
@@ -13,19 +15,6 @@ export interface TransactionInput {
   [key: string]: any; // fallback for extra fields
 }
 
-export interface CategorizedTransaction extends TransactionInput {
-  currentBalance: number;
-  transactionTimestamp: Date | null;
-  valueDate: Date | null;
-  category: string;
-  subcategory: string;
-  manualTransaction: boolean;
-  accountId: string;
-  userId: string;
-  bankId: string;
-  needsReview: boolean;
-}
-
 export interface TransactionRule {
   category?: string;
   subcategory?: string;
@@ -33,7 +22,7 @@ export interface TransactionRule {
 
 type RuleMap = Map<string, TransactionRule>;
 
-export function categorizeTransactions(transactionsData: TransactionInput[], accountId: string, userId: string, bankId: string, ruleMap: RuleMap): CategorizedTransaction[] {
+export function categorizeTransactions(transactionsData: TransactionInput[], accountId: Types.ObjectId, userId: Types.ObjectId, bankId: Types.ObjectId, ruleMap: RuleMap): IBankTransaction[] {
   return transactionsData.map((transaction) => {
     const narration = transaction.narration ? transaction.narration.toLowerCase() : '';
 
