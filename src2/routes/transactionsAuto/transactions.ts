@@ -1,6 +1,6 @@
 import express from 'express';
 import { AuthMiddlewares, validateRequestMiddleware } from '../../middlewares';
-const { TransactionAutoController } = require('../../controllers');
+import { TransactionAutoController } from '@/controllers';
 import {
   categorizeGroupedTransaction,
   verifyPendingTransaction,

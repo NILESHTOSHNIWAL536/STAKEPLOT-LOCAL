@@ -1,6 +1,6 @@
 import express from 'express';
 import { AuthMiddlewares } from '../../middlewares';
-const { CustomCategoryController } = require('../../controllers');
+import { CustomCategoryController } from '@/controllers';
 
 const router = express.Router();
 router.use(express.json());

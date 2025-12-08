@@ -269,24 +269,26 @@ export const deleteBankAccount = {
 // ----------------------
 // deleteTransactionsSchema
 // ----------------------
-export const deleteTransactionsSchema = Joi.object({
-  transactionIds: Joi.array()
-    .items(
-      Joi.string()
-        .custom((value, helpers) => {
-          if (!mongoose.Types.ObjectId.isValid(value)) {
-            return helpers.error('any.invalid');
-          }
-          return value;
-        }, 'ObjectId validation')
-        .required()
-    )
-    .min(1)
-    .required()
-    .messages({
-      'array.base': 'transactionIds must be an array',
-      'array.min': 'transactionIds cannot be empty',
-      'any.required': 'transactionIds are required',
-      'any.invalid': 'transactionIds must contain valid ObjectIds',
-    }),
-});
+export const deleteTransactionsSchema = {
+  body: Joi.object({
+    transactionIds: Joi.array()
+      .items(
+        Joi.string()
+          .custom((value, helpers) => {
+            if (!mongoose.Types.ObjectId.isValid(value)) {
+              return helpers.error('any.invalid');
+            }
+            return value;
+          }, 'ObjectId validation')
+          .required()
+      )
+      .min(1)
+      .required()
+      .messages({
+        'array.base': 'transactionIds must be an array',
+        'array.min': 'transactionIds cannot be empty',
+        'any.required': 'transactionIds are required',
+        'any.invalid': 'transactionIds must contain valid ObjectIds',
+      }),
+  }),
+};

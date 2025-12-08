@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import * as Common from '../../utils/common';
+import * as Common from '@/utils/common';
 import * as BankService from '../../services/bank-service';
-import monthNames from '../../config/monthNames';
-import { Transaction } from '../../models';
+import monthNames from '@/config/monthNames';
+import { Transaction } from '@/models';
 import { Types as MongooseTypes, ObjectId as MongooseObjectId } from 'mongoose';
 import { getDateRange, initializeResults, fillTransactionData } from '../../utils/helpers/dateUtils';
-import { AccountRepository, FipRepository } from '../../respositories';
-import logger from '../../utils/common/logger';
+import { AccountRepository, FipRepository } from '@/repositories';
+import logger from '@/utils/common/logger';
 import moment from 'moment';
 import mongoose from 'mongoose';
 
@@ -27,10 +27,6 @@ interface UserPayload {
   email?: string;
   role?: string;
   [key: string]: any;
-}
-
-interface AuthRequest extends Request {
-  user: UserPayload;
 }
 
 /* Helpers to avoid TS complaints about common responses being mutated */
@@ -76,9 +72,9 @@ export const updateBankDetails = async (details: any[], consentHandleId: string,
    Controllers
    --------------------------- */
 
-export const getMap = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getMap = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     // AccountRepository typing left as any
     const response = await new (AccountRepository as any)().getMap(userId);
     return res.status(StatusCodes.OK).json(response);
@@ -89,9 +85,9 @@ export const getMap = async (req: AuthRequest, res: Response): Promise<Response>
   }
 };
 
-export const getUser = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getUser = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).getUserDetails(userId);
 
     SuccessResponse.data = response;
@@ -103,9 +99,9 @@ export const getUser = async (req: AuthRequest, res: Response): Promise<Response
   }
 };
 
-export const getBanksLinkedAndAccounts = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getBanksLinkedAndAccounts = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).getBanksLinkedAndAccounts(userId);
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -116,9 +112,9 @@ export const getBanksLinkedAndAccounts = async (req: AuthRequest, res: Response)
   }
 };
 
-export const getAllTransactions = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getAllTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { page } = req.params;
     const pageNum = page ? Number(page) : 1;
     const response = await (BankService as any).getAllTransactions(userId, pageNum);
@@ -132,9 +128,9 @@ export const getAllTransactions = async (req: AuthRequest, res: Response): Promi
   }
 };
 
-export const getMonthlyTransactionsHistory = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getMonthlyTransactionsHistory = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { type, page } = req.params;
     const pageNum = page ? Number(page) : 1;
     const response = await (BankService as any).getMonthlyTransactionsHistory(userId, type, pageNum);
@@ -147,9 +143,9 @@ export const getMonthlyTransactionsHistory = async (req: AuthRequest, res: Respo
   }
 };
 
-export const getAllTransactionsOfUser = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getAllTransactionsOfUser = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).getAllTransactionsOfUser(userId);
     return res.status(StatusCodes.OK).json(response);
   } catch (error: any) {
@@ -159,10 +155,10 @@ export const getAllTransactionsOfUser = async (req: AuthRequest, res: Response):
   }
 };
 
-export const getAllTransactionsForAccount = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getAllTransactionsForAccount = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { accountId, page } = req.params;
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const pageNum = page ? Number(page) : 1;
     const response = await (BankService as any).getAllTransactionsForAccount(userId, accountId, pageNum);
 
@@ -175,9 +171,9 @@ export const getAllTransactionsForAccount = async (req: AuthRequest, res: Respon
   }
 };
 
-export const getHideTransactions = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getHideTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).getHideTransactions(userId);
 
     SuccessResponse.data = response;
@@ -191,9 +187,9 @@ export const getHideTransactions = async (req: AuthRequest, res: Response): Prom
   }
 };
 
-export const categorizeTransactions = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const categorizeTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).categorizeTransactions(userId);
 
     SuccessResponse.data = response;
@@ -205,9 +201,9 @@ export const categorizeTransactions = async (req: AuthRequest, res: Response): P
   }
 };
 
-export const createTransaction = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const createTransaction = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { transactions } = req.body;
     const response = await (BankService as any).createTransaction(userId, transactions);
 
@@ -220,9 +216,9 @@ export const createTransaction = async (req: AuthRequest, res: Response): Promis
   }
 };
 
-export const getTopFiveCategories = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getTopFiveCategories = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).getTopFiveCategories(userId);
 
     SuccessResponse.data = response;
@@ -234,9 +230,9 @@ export const getTopFiveCategories = async (req: AuthRequest, res: Response): Pro
   }
 };
 
-export const getCategoryWiseSpendings = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getCategoryWiseSpendings = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { categoryNames = '', startDate, endDate } = req.query;
     const categoryNamesArray = typeof categoryNames === 'string' && categoryNames.length ? categoryNames.split(',') : [];
 
@@ -252,9 +248,9 @@ export const getCategoryWiseSpendings = async (req: AuthRequest, res: Response):
   }
 };
 
-export const getBudgetTransactions = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getBudgetTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { categoryNames = '', groupBy, startDate, endDate } = req.query;
     const categoryNamesArray = typeof categoryNames === 'string' && categoryNames.length ? categoryNames.split(',') : [];
 
@@ -269,9 +265,9 @@ export const getBudgetTransactions = async (req: AuthRequest, res: Response): Pr
   }
 };
 
-export const getBudgetSpents = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getBudgetSpents = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { categoryNames = '', startDate, endDate } = req.query;
     const categoryNamesArray = typeof categoryNames === 'string' && categoryNames.length ? categoryNames.split(',') : [];
 
@@ -286,9 +282,9 @@ export const getBudgetSpents = async (req: AuthRequest, res: Response): Promise<
   }
 };
 
-export const updateUserDetails = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const updateUserDetails = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const data = req.body;
     const response = await (BankService as any).updateUserDetails(userId, data);
 
@@ -301,9 +297,9 @@ export const updateUserDetails = async (req: AuthRequest, res: Response): Promis
   }
 };
 
-export const updateTransaction = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const updateTransaction = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { transactionId } = req.params;
     const updateData = req.body;
     const response = await (BankService as any).updateTransaction(updateData, userId, transactionId);
@@ -315,9 +311,9 @@ export const updateTransaction = async (req: AuthRequest, res: Response): Promis
   }
 };
 
-export const getPreviousTransactions = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getPreviousTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const date = req.params.date;
     const accountId = req.params.accountId;
     const response = await (BankService as any).getPreviousTransactions(userId, date, accountId);
@@ -331,9 +327,9 @@ export const getPreviousTransactions = async (req: AuthRequest, res: Response): 
 /* Grouping & Auto-categorize */
 
 // 1. get grouped transactions
-export const getGroupedTransactions = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getGroupedTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).getGroupedTransactions(userId);
 
     SuccessResponse.data = response;
@@ -345,9 +341,9 @@ export const getGroupedTransactions = async (req: AuthRequest, res: Response): P
 };
 
 // 2. categorize grouped transaction
-export const categorizeGroupedTransaction = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const categorizeGroupedTransaction = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const groupId = req.params.groupId;
     const { category, subcategory, removedTransactions = [] } = req.body;
     if (!category || !subcategory) {
@@ -366,9 +362,9 @@ export const categorizeGroupedTransaction = async (req: AuthRequest, res: Respon
 };
 
 // 3. get pending transaction which needs for review
-export const getPendingForReviewTransactions = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getPendingForReviewTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).getPendingForReviewTransactions(userId);
 
     SuccessResponse.data = response;
@@ -381,9 +377,9 @@ export const getPendingForReviewTransactions = async (req: AuthRequest, res: Res
 };
 
 // 4. verify pending transaction
-export const verifyPendingTransaction = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const verifyPendingTransaction = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { transactionId, isCorrect } = req.params;
     const response = await (BankService as any).verifyPendingTransaction(userId, transactionId, isCorrect);
 
@@ -400,14 +396,16 @@ export const verifyPendingTransaction = async (req: AuthRequest, res: Response):
 /* Graphs */
 
 // 1. Get all transactions for a specific account (custom range)
-export const getAllCustomTransactions = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getAllCustomTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { type, value, accountId } = req.params;
     const accountIdObj = new MongooseTypes.ObjectId(accountId);
-    const userId = req.user._id;
+    const userId = req.user!._id;
 
-    const { startDate, endDate, groupBy } = getDateRange(type, value);
-    const result = initializeResults(type, new Date(startDate), new Date(endDate), monthNames);
+    type RangeType = 'month' | 'week' | 'custom' | 'year';
+
+    const { startDate, endDate, groupBy } = getDateRange(type as RangeType, value);
+    const result = initializeResults(type as RangeType, new Date(startDate), new Date(endDate), monthNames);
 
     // Get previous period's start and end date
     let prevStartDate: Date | undefined, prevEndDate: Date | undefined;
@@ -427,7 +425,7 @@ export const getAllCustomTransactions = async (req: AuthRequest, res: Response):
 
     // 1. Fetch current period transactions
     const response = await (BankService as any).getAllTransactionsByTimeLine(userId, accountIdObj, startDate, endDate, groupBy);
-    const transactionData = fillTransactionData(response, result, type, monthNames);
+    const transactionData = fillTransactionData(response, result, type as RangeType, monthNames);
 
     // 2. Fetch previous period lastTimePeriodDebit
     const getLastPeriodDebit = await (BankService as any).getLastPeriodDebit(userId, accountIdObj, prevStartDate, prevEndDate, groupBy);
@@ -456,17 +454,18 @@ export const getAllCustomTransactions = async (req: AuthRequest, res: Response):
 };
 
 // 2. Get all transactions for all accounts including manual transactions
-export const getWholeTransactionsGraph = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getWholeTransactionsGraph = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { type, value } = req.params;
-    const userId = req.user._id;
+    const userId = req.user!._id;
+    type RangeType = 'month' | 'week' | 'custom' | 'year';
 
-    const { startDate, endDate, groupBy } = getDateRange(type, value);
-    const result = initializeResults(type, new Date(startDate), new Date(endDate), monthNames);
+    const { startDate, endDate, groupBy } = getDateRange(type as RangeType, value);
+    const result = initializeResults(type as RangeType, new Date(startDate), new Date(endDate), monthNames);
 
     const response = await (BankService as any).getAllTransactionsForMainGraph(userId, startDate, endDate, groupBy);
 
-    const transactionData = fillTransactionData(response, result, type, monthNames);
+    const transactionData = fillTransactionData(response, result, type as RangeType, monthNames);
 
     SuccessResponse.data = transactionData;
 
@@ -479,9 +478,9 @@ export const getWholeTransactionsGraph = async (req: AuthRequest, res: Response)
   }
 };
 
-export const getTopThreeTransactionsOfWeek = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getTopThreeTransactionsOfWeek = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).getTopThreeTransactionsOfWeek(userId);
 
     SuccessResponse.data = response;
@@ -493,9 +492,9 @@ export const getTopThreeTransactionsOfWeek = async (req: AuthRequest, res: Respo
   }
 };
 
-export const getIncomeAndCategorySpent = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getIncomeAndCategorySpent = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).getIncomeAndCategorySpent(userId);
 
     SuccessResponse.data = response;
@@ -507,7 +506,7 @@ export const getIncomeAndCategorySpent = async (req: AuthRequest, res: Response)
   }
 };
 
-export const getLoanCalculation = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getLoanCalculation = async (req: Request, res: Response): Promise<Response> => {
   try {
     const data = req.body;
     const response = await (BankService as any).getLoanCalculation(data);
@@ -521,9 +520,9 @@ export const getLoanCalculation = async (req: AuthRequest, res: Response): Promi
   }
 };
 
-export const getSearchedTransactions = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getSearchedTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { page, search, isBankAccount } = req.params;
 
     const response = await (BankService as any).getSearchedTransactions(userId, page, search, isBankAccount, req.query);
@@ -537,9 +536,9 @@ export const getSearchedTransactions = async (req: AuthRequest, res: Response): 
   }
 };
 
-export const getDayWiseTransactionsSummary = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getDayWiseTransactionsSummary = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const response = await (BankService as any).getDayWiseTransactionsSummary(userId);
 
     SuccessResponse.data = response;
@@ -550,9 +549,9 @@ export const getDayWiseTransactionsSummary = async (req: AuthRequest, res: Respo
   }
 };
 
-export const getTransactionsByDate = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getTransactionsByDate = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { date } = req.params;
 
     const response = await (BankService as any).getTransactionsByDate(userId, date);
@@ -565,9 +564,9 @@ export const getTransactionsByDate = async (req: AuthRequest, res: Response): Pr
   }
 };
 
-export const getRecurringPayments = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getRecurringPayments = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const type = req.params.isActive;
     const response = await (BankService as any).getRecurringPayments(userId, type);
 
@@ -580,9 +579,9 @@ export const getRecurringPayments = async (req: AuthRequest, res: Response): Pro
   }
 };
 
-export const updateRecurringPayment = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const updateRecurringPayment = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const recurringPaymentId = new MongooseTypes.ObjectId(req.params.id);
     const data = req.body;
     const response = await (BankService as any).updateRecurringPayment(recurringPaymentId, userId, data);
@@ -596,7 +595,7 @@ export const updateRecurringPayment = async (req: AuthRequest, res: Response): P
   }
 };
 
-export const deleteRecurringPayment = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const deleteRecurringPayment = async (req: Request, res: Response): Promise<Response> => {
   try {
     const recurringPaymentId = new MongooseTypes.ObjectId(req.params.id);
     const response = await (BankService as any).deleteRecurringPayment(recurringPaymentId);
@@ -610,10 +609,10 @@ export const deleteRecurringPayment = async (req: AuthRequest, res: Response): P
   }
 };
 
-export const deleteTransactions = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const deleteTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { transactionIds } = req.body;
-    const userId = req.user._id;
+    const userId = req.user!._id;
     if (!Array.isArray(transactionIds) || transactionIds.length === 0) {
       return res.status(StatusCodes.BAD_REQUEST).json({ ...ErrorResponse, error: 'transactionIds must be a non-empty array.' });
     }
@@ -633,9 +632,9 @@ export const deleteTransactions = async (req: AuthRequest, res: Response): Promi
   }
 };
 
-export const deleteBankAccount = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const deleteBankAccount = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const { bankId, accountId } = req.params;
 
     // delete bank account
@@ -651,9 +650,9 @@ export const deleteBankAccount = async (req: AuthRequest, res: Response): Promis
   }
 };
 
-export const getUserMonthlySpending = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getUserMonthlySpending = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const userId = req.user._id;
+    const userId = req.user!._id;
     SuccessResponse.data = await (BankService as any).getUserSpending(userId);
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {

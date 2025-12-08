@@ -1,17 +1,6 @@
 import { Request, Response } from 'express';
 import { CustomCategory } from '../../models';
-
-interface Category {
-  name: string;
-  imageUrl: string;
-  narration?: string;
-}
-
-interface UserCategoryDocument {
-  userId: string;
-  categories: Category[];
-  save: () => Promise<any>;
-}
+import { IUserCustomCategories } from '@/types/bank';
 
 export const addCustomCategory = async (req: Request, res: Response): Promise<any> => {
   const userId = req.user!._id;
@@ -24,7 +13,7 @@ export const addCustomCategory = async (req: Request, res: Response): Promise<an
   const safeNarration = narration ?? '';
 
   try {
-    let userCategory = (await CustomCategory.findOne({ userId })) as UserCategoryDocument | null;
+    let userCategory = (await CustomCategory.findOne({ userId })) as IUserCustomCategories | null;
 
     if (!userCategory) {
       // Create new document if user doesn't exist
