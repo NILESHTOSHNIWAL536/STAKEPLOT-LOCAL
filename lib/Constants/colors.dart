@@ -62,8 +62,9 @@ class AppColors {
   static const Color white = Colors.white;
   static const Color whiteOpacity07 = Color.fromARGB(179, 255, 255, 255); //0.7
   static const Color whiteOpacity03 = Color.fromARGB(77, 255, 255, 255); //0.3
-  static const Color whiteOpacity085 = Color(0xD9FFFFFF); 
-  static const Color whiteOpacity015 = Color(0x26FFFFFF); 
-  static const Color whiteOpacity092 = Color(0xEBFFFFFF); 
-  static const Color whiteOpacity08 = Color(0xCCFFFFFF); 
+  static const Color whiteOpacity085 = Color(0xD9FFFFFF);
+  static const Color whiteOpacity015 = Color(0x26FFFFFF);
+  static const Color whiteOpacity092 = Color(0xEBFFFFFF);
+  static const Color whiteOpacity08 = Color(0xCCFFFFFF);
+  static const Color newbg = Color(0xFFFFF9F0); 
 }

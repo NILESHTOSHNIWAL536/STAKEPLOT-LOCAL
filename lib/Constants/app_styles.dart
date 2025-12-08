@@ -18,6 +18,8 @@ class PlotFinanceIcons {
   static String currencyConverter = "assets/icons/plotFinance/currencyConverter.svg";
   static String goalCreation = "assets/icons/plotFinance/goalCreation.svg";
   static String reserve = "assets/icons/plotFinance/reserve.svg";
+  static String calculator = "assets/icons/plotFinance/calculator.svg";
+  static String foodie = "assets/icons/plotFinance/foodie.svg";
  
 }
 

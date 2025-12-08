@@ -88,25 +88,25 @@ class SliderAdddingFinances extends StatelessWidget {
               )
             else ...[
               // Display Credit Cards
-              ...creditCards.take(CreditCardScreenStrings().showCreditCard.value?2:0).toList().map((card) => Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
-                    child: SizedBox(
-                      width: containerWidth - 95,
-                      child: CreditCardTransactionCard2(
-                        txn: CreditCardTransaction2(
-                          bank: card.bank,
-                          date: card.date,
-                          transactionId: card.transactionId,
-                          amount: card.amount,
-                          cardNumber: card.cardNumber,
-                          merchant: 'merchant',
-                          logo: card.logo,
-                          bankName: card.bankName,
-                        ),
-                      ), // Use custom credit card widget
-                    ),
-                  )),
+              // ...creditCards.take(CreditCardScreenStrings().showCreditCard.value?2:0).toList().map((card) => Padding(
+              //       padding:
+              //           const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+              //       child: SizedBox(
+              //         width: containerWidth - 95,
+              //         child: CreditCardTransactionCard2(
+              //           txn: CreditCardTransaction2(
+              //             bank: card.bank,
+              //             date: card.date,
+              //             transactionId: card.transactionId,
+              //             amount: card.amount,
+              //             cardNumber: card.cardNumber,
+              //             merchant: 'merchant',
+              //             logo: card.logo,
+              //             bankName: card.bankName,
+              //           ),
+              //         ), // Use custom credit card widget
+              //       ),
+              //     )),
               // Display Budgets
               ...budgets.take(2).toList().map((budget) => Padding(
                     padding:

@@ -200,215 +200,367 @@ class CardBuilders {
       ),
     );
   }
+static Widget budgetCard(BuildContext context, dynamic data) {
+  double budgetAmount =
+      double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
+  double spentAmount =
+      double.tryParse(data['spentAmount']?.toString() ?? '0') ?? 0;
 
-  static Widget budgetCard(BuildContext context, dynamic data) {
-    double budgetAmount =
-        double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
-    double spentAmount =
-        double.tryParse(data['spentAmount']?.toString() ?? '0') ?? 0;
+  // Clamp values
+  if (spentAmount < 0) spentAmount = 0;
+  if (budgetAmount < 0) budgetAmount = 0;
 
-    double percentageSpent =
-        budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
-    if (percentageSpent > 100) percentageSpent = 100;
+  double remaining = budgetAmount - spentAmount;
+  if (remaining < 0) remaining = 0;
 
-    List<ChartData> chartData = [
-      ChartData(
-        PlotFinanceStaticData().spent,
-        spentAmount > budgetAmount ? spentAmount : spentAmount,
-        AppColors.primaryColor.withOpacity(0.9),
-      ),
-      ChartData(
-        PlotFinanceStaticData().remaining,
-        spentAmount > budgetAmount ? 0 : budgetAmount - spentAmount,
-        Colors.grey[300]!.withOpacity(0.7),
-      ),
-    ];
+  double progress =
+      budgetAmount > 0 ? (spentAmount / budgetAmount).clamp(0.0, 1.0) : 0.0;
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MyBudgetScreen(
-                    data: data,
-                  )),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
-        constraints: BoxConstraints(
-          minHeight: 140,
-          maxWidth: MediaQuery.of(context).size.width * 0.85,
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyBudgetScreen(data: data),
         ),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Color(0xFFF3F4F6),
-            width: 1,
+      );
+    },
+    child: Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      constraints: BoxConstraints(
+        minHeight: 80,
+        maxWidth: MediaQuery.of(context).size.width * 0.85,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFFF3F4F6),
+          width: 1,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.05),
+            offset: Offset(0, 1),
+            blurRadius: 2,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.05),
-              offset: Offset(0, 1),
-              blurRadius: 2,
-            ),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(20),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyBudgetScreen(data: data)),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Flexible(
-                    flex: 3,
-                    child: Column(
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyBudgetScreen(data: data),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Top title: "Your Budget"
+                globalText(
+                  context: context,
+                  text: 'Your Budget',
+                  fontWeight: FontWeight.w600,
+                  fontsize: 14,
+                  color: AppColors.accentColor,
+                ),
+                const SizedBox(height: 10),
+
+                // Row with Total Spent and Remaining
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    // Total Spent
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
                       children: [
                         globalText(
                           context: context,
-                          text: data['name']?.toString() ??
-                              PlotFinanceStaticData().unnamedBudget,
+                          text:
+                              formatMoneyIndian(spentAmount.toStringAsFixed(0)),
                           fontWeight: FontWeight.w700,
-                          fontsize: 18,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          color: AppColors.accentColor,
+                          fontsize: 24,
+                          color: AppColors.primaryColor,
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 2),
                         globalText(
                           context: context,
-                          text: data['budgetPeriod']?.toString() ??
-                              PlotFinanceStaticData().unknownPeriod,
-                          fontWeight: FontWeight.w500,
-                          fontsize: 13,
-                          color: Colors.grey[600]!,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            globalText(
-                              context: context,
-                              text: PlotFinanceStaticData().budgetPrefix,
-                              fontWeight: FontWeight.w600,
-                              fontsize: 14,
-                              color: AppColors.accentColor.withOpacity(0.9),
-                            ),
-                            Flexible(
-                              child: globalText(
-                                context: context,
-                                text:
-                                    '₹${formatMoneyIndian(budgetAmount.toStringAsFixed(2))}',
-                                fontWeight: FontWeight.w600,
-                                fontsize: 14,
-                                color: AppColors.primaryColor,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            globalText(
-                              context: context,
-                              text: PlotFinanceStaticData().spentPrefix,
-                              fontWeight: FontWeight.w500,
-                              fontsize: 12,
-                              color: AppColors.accentColor.withOpacity(0.9),
-                            ),
-                            Flexible(
-                              child: globalText(
-                                context: context,
-                                text:
-                                    '₹${formatMoneyIndian(spentAmount.toStringAsFixed(2))}',
-                                fontWeight: FontWeight.w500,
-                                fontsize: 12,
-                                color: Colors.redAccent,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        globalText(
-                          context: context,
-                          text: PlotFinanceStaticData()
-                              .percentageSpent
-                              .replaceFirst(
-                                  '{percentage}',
-                                  percentageSpent
-                                      .toStringAsFixed(1)), // Updated
+                          text: 'Total Spent',
                           fontWeight: FontWeight.w500,
                           fontsize: 12,
-                          color: percentageSpent > 80
-                              ? Colors.redAccent
-                              : AppColors.primaryColor,
+                          color: Colors.grey[600]!,
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    flex: 2,
-                    child: Container(
-                      height: 110,
-                      constraints: const BoxConstraints(maxWidth: 110),
-                      child: SfCircularChart(
-                        series: <CircularSeries>[
-                          DoughnutSeries<ChartData, String>(
-                            dataSource: chartData,
-                            xValueMapper: (ChartData data, _) => data.category,
-                            yValueMapper: (ChartData data, _) => data.value,
-                            pointColorMapper: (ChartData data, _) => data.color,
-                            innerRadius: '60%',
-                            radius: '100%',
-                            dataLabelSettings: const DataLabelSettings(
-                              isVisible: false,
-                              labelPosition: ChartDataLabelPosition.outside,
-                              textStyle: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.backgroundColor,
-                              ),
-                            ),
-                            dataLabelMapper: (ChartData data, _) =>
-                                '${(data.value / budgetAmount * 100).toStringAsFixed(0)}%',
-                            animationDuration: 800,
-                            enableTooltip: true,
-                          ),
-                        ],
-                        tooltipBehavior: TooltipBehavior(
-                          enable: true,
-                          format: 'point.x: ₹point.y',
+
+                    // Remaining
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        globalText(
+                          context: context,
+                          text:
+                              formatMoneyIndian(remaining.toStringAsFixed(0)),
+                          fontWeight: FontWeight.w700,
+                          fontsize: 24,
+                          color: AppColors.accentColor,
                         ),
+                        const SizedBox(height: 2),
+                        globalText(
+                          context: context,
+                          text: 'Remaining',
+                          fontWeight: FontWeight.w500,
+                          fontsize: 12,
+                          color: Colors.grey[600]!,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // Horizontal progress bar
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                    height: 6,
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      backgroundColor: Colors.grey[300],
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColors.primaryColor.withOpacity(0.9),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+  // static Widget budgetCard(BuildContext context, dynamic data) {
+  //   double budgetAmount =
+  //       double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
+  //   double spentAmount =
+  //       double.tryParse(data['spentAmount']?.toString() ?? '0') ?? 0;
+
+  //   double percentageSpent =
+  //       budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
+  //   if (percentageSpent > 100) percentageSpent = 100;
+
+  //   List<ChartData> chartData = [
+  //     ChartData(
+  //       PlotFinanceStaticData().spent,
+  //       spentAmount > budgetAmount ? spentAmount : spentAmount,
+  //       AppColors.primaryColor.withOpacity(0.9),
+  //     ),
+  //     ChartData(
+  //       PlotFinanceStaticData().remaining,
+  //       spentAmount > budgetAmount ? 0 : budgetAmount - spentAmount,
+  //       Colors.grey[300]!.withOpacity(0.7),
+  //     ),
+  //   ];
+
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //             builder: (context) => MyBudgetScreen(
+  //                   data: data,
+  //                 )),
+  //       );
+  //     },
+  //     child: Container(
+  //       margin: const EdgeInsets.symmetric(vertical: 8.0),
+  //       constraints: BoxConstraints(
+  //         minHeight: 140,
+  //         maxWidth: MediaQuery.of(context).size.width * 0.85,
+  //       ),
+  //       decoration: BoxDecoration(
+  //         color: AppColors.backgroundColor,
+  //         borderRadius: BorderRadius.circular(16),
+  //         border: Border.all(
+  //           color: Color(0xFFF3F4F6),
+  //           width: 1,
+  //         ),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Color.fromRGBO(0, 0, 0, 0.05),
+  //             offset: Offset(0, 1),
+  //             blurRadius: 2,
+  //           ),
+  //         ],
+  //       ),
+  //       child: Material(
+  //         color: Colors.transparent,
+  //         borderRadius: BorderRadius.circular(20),
+  //         child: InkWell(
+  //           borderRadius: BorderRadius.circular(20),
+  //           onTap: () {
+  //             Navigator.push(
+  //               context,
+  //               MaterialPageRoute(
+  //                   builder: (context) => MyBudgetScreen(data: data)),
+  //             );
+  //           },
+  //           child: Padding(
+  //             padding: const EdgeInsets.all(16.0),
+  //             child: Row(
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               children: [
+  //                 Flexible(
+  //                   flex: 3,
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: [
+  //                       globalText(
+  //                         context: context,
+  //                         text: data['name']?.toString() ??
+  //                             PlotFinanceStaticData().unnamedBudget,
+  //                         fontWeight: FontWeight.w700,
+  //                         fontsize: 18,
+  //                         overflow: TextOverflow.ellipsis,
+  //                         maxLines: 1,
+  //                         color: AppColors.accentColor,
+  //                       ),
+  //                       const SizedBox(height: 6),
+  //                       globalText(
+  //                         context: context,
+  //                         text: data['budgetPeriod']?.toString() ??
+  //                             PlotFinanceStaticData().unknownPeriod,
+  //                         fontWeight: FontWeight.w500,
+  //                         fontsize: 13,
+  //                         color: Colors.grey[600]!,
+  //                         overflow: TextOverflow.ellipsis,
+  //                         maxLines: 1,
+  //                       ),
+  //                       const SizedBox(height: 10),
+  //                       Row(
+  //                         children: [
+  //                           globalText(
+  //                             context: context,
+  //                             text: PlotFinanceStaticData().budgetPrefix,
+  //                             fontWeight: FontWeight.w600,
+  //                             fontsize: 14,
+  //                             color: AppColors.accentColor.withOpacity(0.9),
+  //                           ),
+  //                           Flexible(
+  //                             child: globalText(
+  //                               context: context,
+  //                               text:
+  //                                   '₹${formatMoneyIndian(budgetAmount.toStringAsFixed(2))}',
+  //                               fontWeight: FontWeight.w600,
+  //                               fontsize: 14,
+  //                               color: AppColors.primaryColor,
+  //                               overflow: TextOverflow.ellipsis,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                       const SizedBox(height: 4),
+  //                       Row(
+  //                         children: [
+  //                           globalText(
+  //                             context: context,
+  //                             text: PlotFinanceStaticData().spentPrefix,
+  //                             fontWeight: FontWeight.w500,
+  //                             fontsize: 12,
+  //                             color: AppColors.accentColor.withOpacity(0.9),
+  //                           ),
+  //                           Flexible(
+  //                             child: globalText(
+  //                               context: context,
+  //                               text:
+  //                                   '₹${formatMoneyIndian(spentAmount.toStringAsFixed(2))}',
+  //                               fontWeight: FontWeight.w500,
+  //                               fontsize: 12,
+  //                               color: Colors.redAccent,
+  //                               overflow: TextOverflow.ellipsis,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                       const SizedBox(height: 8),
+  //                       globalText(
+  //                         context: context,
+  //                         text: PlotFinanceStaticData()
+  //                             .percentageSpent
+  //                             .replaceFirst(
+  //                                 '{percentage}',
+  //                                 percentageSpent
+  //                                     .toStringAsFixed(1)), // Updated
+  //                         fontWeight: FontWeight.w500,
+  //                         fontsize: 12,
+  //                         color: percentageSpent > 80
+  //                             ? Colors.redAccent
+  //                             : AppColors.primaryColor,
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 const SizedBox(width: 12),
+  //                 Flexible(
+  //                   flex: 2,
+  //                   child: Container(
+  //                     height: 110,
+  //                     constraints: const BoxConstraints(maxWidth: 110),
+  //                     child: SfCircularChart(
+  //                       series: <CircularSeries>[
+  //                         DoughnutSeries<ChartData, String>(
+  //                           dataSource: chartData,
+  //                           xValueMapper: (ChartData data, _) => data.category,
+  //                           yValueMapper: (ChartData data, _) => data.value,
+  //                           pointColorMapper: (ChartData data, _) => data.color,
+  //                           innerRadius: '60%',
+  //                           radius: '100%',
+  //                           dataLabelSettings: const DataLabelSettings(
+  //                             isVisible: false,
+  //                             labelPosition: ChartDataLabelPosition.outside,
+  //                             textStyle: TextStyle(
+  //                               fontSize: 10,
+  //                               fontWeight: FontWeight.bold,
+  //                               color: AppColors.backgroundColor,
+  //                             ),
+  //                           ),
+  //                           dataLabelMapper: (ChartData data, _) =>
+  //                               '${(data.value / budgetAmount * 100).toStringAsFixed(0)}%',
+  //                           animationDuration: 800,
+  //                           enableTooltip: true,
+  //                         ),
+  //                       ],
+  //                       tooltipBehavior: TooltipBehavior(
+  //                         enable: true,
+  //                         format: 'point.x: ₹point.y',
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   static Widget budgetCard2(BuildContext context, dynamic data) {
     double budgetAmount =
