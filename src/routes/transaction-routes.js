@@ -6,7 +6,6 @@ router.use(express.json());
 
 router.post("/add", AuthMiddlewares.protect, TransactionController.enterTransaction);
 
-router.get("/groupedTransactions", AuthMiddlewares.protect, TransactionController.groupTransactions);
 router.get("/all", AuthMiddlewares.protect, TransactionController.getAllTransactions);
 // router.get("/history", AuthMiddlewares.protect, TransactionController.transactionHistory);
 router.get("/budgetHistory/:budgetId", AuthMiddlewares.protect, TransactionController.getBudgetHistory);

@@ -5,6 +5,8 @@ import logger from '../utils/common/logger';
 import { incrementScore, handleDailyCounter } from '@/utils/helpers/increment_score';
 import { scoreToAdd, scoreToGetReward } from '@/utils/common/enums';
 import { TransactionRepository, AutoTransactionRepository } from '@/repositories';
+import { Types } from 'mongoose';
+import { IBankTransaction } from '@/types/bank';
 
 // Initialize repositories
 const autoTransactionRepository = new AutoTransactionRepository();
@@ -70,9 +72,9 @@ export async function enterTransaction(data: EnterTransactionInput) {
   }
 }
 
-export async function getAllTransactions(data: any) {
+export async function getAllTransactions(userId: Types.ObjectId): Promise<IBankTransaction[]> {
   try {
-    const response = await transactionRepository.getAllTransactions(data);
+    const response = await transactionRepository.getAllTransactions(userId);
     return response;
   } catch (error) {
     logger.debug(`error from getAllTransactions: ${error}`);

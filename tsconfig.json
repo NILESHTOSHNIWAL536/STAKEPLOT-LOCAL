@@ -3,7 +3,8 @@
     "rootDir": "./src2",
     "baseUrl": "./src2",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["*"],
+     "typeRoots": ["./src2/types", "./node_modules/@types"]
     },
 
     "outDir": "./dist",

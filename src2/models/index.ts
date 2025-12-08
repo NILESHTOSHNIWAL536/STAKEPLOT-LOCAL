@@ -32,6 +32,7 @@ import FipsMetric from "./fips-metric";
 import sendingNotification from "./deviceNotifications";
 import UserActivity from "./user-activity";
 import Notification from "./notification-model";
+import notificationTracker from "./notification-tracker";
 
 export {
   User,
@@ -67,4 +68,5 @@ export {
   sendingNotification,
   UserActivity,
   Notification,
+  notificationTracker
 };

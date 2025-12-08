@@ -24,4 +24,4 @@ function getISTTimestamp() {
   return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}.${ms}+05:30`;
 }
 
-module.exports = getISTTimestamp;
+export default getISTTimestamp;

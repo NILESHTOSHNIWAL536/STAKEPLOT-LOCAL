@@ -18,7 +18,7 @@ interface LoginResponse {
   body: LoginResponseBody;
 }
 
-export async function generateToken(): Promise<string | { message: string } | unknown> {
+async function generateToken(): Promise<string> {
   try {
     const loginResponse = await apiClient.post<LoginResponse>(`${baseUrl}/User/Login`, null, {
       header: headers,
@@ -27,10 +27,6 @@ export async function generateToken(): Promise<string | { message: string } | un
         password: process.env.FINVU_PASSWORD,
       },
     });
-
-    if (loginResponse.status !== 200 && loginResponse.status !== 201) {
-      return { message: 'Login failed' };
-    }
 
     const token = `Bearer ${loginResponse.data.body.token}`;
 
@@ -49,7 +45,7 @@ export async function generateToken(): Promise<string | { message: string } | un
     return token;
   } catch (error) {
     logger.error('Error generating FINVU token', error);
-    return error;
+    throw error;
   }
 }
 

@@ -104,7 +104,7 @@ class TransactionRepository extends CrudRepository<typeof Transaction> {
   // ----------------------------------------------------
   // GET ALL USER TRANSACTIONS
   // ----------------------------------------------------
-  async getAllTransactions(userId: string): Promise<IBankTransaction[]> {
+  async getAllTransactions(userId: string | Types.ObjectId): Promise<IBankTransaction[]> {
     try {
       return (await Transaction.find({ userId })) as IBankTransaction[];
     } catch (error: any) {
