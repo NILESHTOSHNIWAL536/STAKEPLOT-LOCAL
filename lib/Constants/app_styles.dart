@@ -11,6 +11,15 @@ class NavBarIcons {
   static String home = "assets/icons/Navigation_bar/navfilled.svg";
   //Home page icons
 }
+class PlotFinanceIcons {
+  static String budgetPlanner = "assets/icons/plotFinance/budgetPlanner.svg";
+  static String comics = "assets/icons/plotFinance/comics.svg";
+  static String crediCardBg = "assets/icons/plotFinance/creditCardBg.svg";
+  static String currencyConverter = "assets/icons/plotFinance/currencyConverter.svg";
+  static String goalCreation = "assets/icons/plotFinance/goalCreation.svg";
+  static String reserve = "assets/icons/plotFinance/reserve.svg";
+ 
+}
 
 class FinSpaceIcons {
   static String welcome = "assets/icons/finSpaceIcons/finspaceWelcome.svg";

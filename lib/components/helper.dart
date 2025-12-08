@@ -175,109 +175,284 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
     },
   );
 }
-
-Widget getBankAccountList(context, [fromPdf = true]) {
+Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
-    // decoration: BoxDecoration(
-    //    borderRadius: BorderRadius.circular(5),
-    // color: AppColors.backgroundColor,
-    // boxShadow: [
-    //   BoxShadow(
-    //     color: Color.fromRGBO(156, 156, 156, 0.25),
-    //     blurRadius: 4,
-    //     spreadRadius: 0,
-    //     offset: Offset(0, 0),
-    //   ),
-    // ],
-    // ),
     child: Column(
       children: bankAccountLinkedList.map((account) {
-        return Obx(() => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: AppColors.backgroundColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromRGBO(156, 156, 156, 0.25),
-                    blurRadius: 4,
-                    spreadRadius: 0,
-                    offset: Offset(0, 0),
+        return Obx(
+          () => Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: AppColors.backgroundColor,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color.fromRGBO(156, 156, 156, 0.25),
+                  blurRadius: 4,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 0),
+                ),
+              ],
+            ),
+            margin:
+                const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+            child: ListTile(
+              leading: SizedBox(
+                width: 40,
+                height: 40,
+                child: Image.network(
+                  account.bankLogo,
+                  width: 22,
+                  height: 22,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  textStyle(
+                    context: context,
+                    text: account.bankName,
+                    fontsize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  const SizedBox(height: 4),
+                  textStyle(
+                    context: context,
+                    text: "Acc No: ${account.maskedAccNumber}",
+                    fontsize: 11,
+                    fontWeight: FontWeight.w500,
                   ),
                 ],
               ),
-              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-              child: ListTile(
-                leading: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: Image.network(
-                    account["bankLogo"],
-                    width: 22,
-                    height: 22,
+              trailing: Theme(
+                data: Theme.of(context).copyWith(
+                  checkboxTheme: const CheckboxThemeData(
+                    shape: CircleBorder(),
                   ),
                 ),
-                title: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      textStyle(
-                        context: context,
-                        text: account["bankName"],
-                        fontsize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      textStyle(
-                        context: context,
-                        text: "Acc No:" + account["maskedAccNumber"],
-                        fontsize: 11,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ]),
-                trailing: Theme(
-                  data: Theme.of(context).copyWith(
-                    checkboxTheme: CheckboxThemeData(
-                      shape: const CircleBorder(),
-                    ),
-                  ),
-                  child: Checkbox(
-                    value: (fromPdf
-                            ? accountIdPdf.value
-                            : accountSelected.value) ==
-                        account["accountId"].toString(),
-                    onChanged: (isChecked) {
-                      if (isChecked == true) {
-                        if (fromPdf)
-                          accountIdPdf.value = account["accountId"].toString();
-                        else
-                          accountSelected.value =
-                              account["accountId"].toString();
+                child: Checkbox(
+                  value: (fromPdf
+                          ? accountIdPdf.value
+                          : accountSelected.value) ==
+                      account.accountId,
+                  onChanged: (isChecked) {
+                    if (isChecked == true) {
+                      if (fromPdf) {
+                        accountIdPdf.value = account.accountId;
                       } else {
-                        if (fromPdf)
-                          accountIdPdf.value = "-";
-                        else
-                          accountSelected.value = "-";
+                        accountSelected.value = account.accountId;
                       }
-                    },
-                  ),
+                    } else {
+                      if (fromPdf) {
+                        accountIdPdf.value = "-";
+                      } else {
+                        accountSelected.value = "-";
+                      }
+                    }
+                  },
                 ),
               ),
-            ));
+            ),
+          ),
+        );
       }).toList(),
     ),
   );
 }
 
-Widget getBankAccountListForFilter(context, [fromPdf = true]) {
+// Widget getBankAccountList(context, [fromPdf = true]) {
+//   return Container(
+//     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
+//     // decoration: BoxDecoration(
+//     //    borderRadius: BorderRadius.circular(5),
+//     // color: AppColors.backgroundColor,
+//     // boxShadow: [
+//     //   BoxShadow(
+//     //     color: Color.fromRGBO(156, 156, 156, 0.25),
+//     //     blurRadius: 4,
+//     //     spreadRadius: 0,
+//     //     offset: Offset(0, 0),
+//     //   ),
+//     // ],
+//     // ),
+//     child: Column(
+//       children: bankAccountLinkedList.map((account) {
+//         return Obx(() => Container(
+//               decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.circular(5),
+//                 color: AppColors.backgroundColor,
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Color.fromRGBO(156, 156, 156, 0.25),
+//                     blurRadius: 4,
+//                     spreadRadius: 0,
+//                     offset: Offset(0, 0),
+//                   ),
+//                 ],
+//               ),
+//               margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+//               child: ListTile(
+//                 leading: SizedBox(
+//                   width: 40,
+//                   height: 40,
+//                   child: Image.network(
+//                     account["bankLogo"],
+//                     width: 22,
+//                     height: 22,
+//                   ),
+//                 ),
+//                 title: Column(
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       textStyle(
+//                         context: context,
+//                         text: account["bankName"],
+//                         fontsize: 15,
+//                         fontWeight: FontWeight.w500,
+//                       ),
+//                       const SizedBox(
+//                         height: 4,
+//                       ),
+//                       textStyle(
+//                         context: context,
+//                         text: "Acc No:" + account["maskedAccNumber"],
+//                         fontsize: 11,
+//                         fontWeight: FontWeight.w500,
+//                       ),
+//                     ]),
+//                 trailing: Theme(
+//                   data: Theme.of(context).copyWith(
+//                     checkboxTheme: CheckboxThemeData(
+//                       shape: const CircleBorder(),
+//                     ),
+//                   ),
+//                   child: Checkbox(
+//                     value: (fromPdf
+//                             ? accountIdPdf.value
+//                             : accountSelected.value) ==
+//                         account["accountId"].toString(),
+//                     onChanged: (isChecked) {
+//                       if (isChecked == true) {
+//                         if (fromPdf)
+//                           accountIdPdf.value = account["accountId"].toString();
+//                         else
+//                           accountSelected.value =
+//                               account["accountId"].toString();
+//                       } else {
+//                         if (fromPdf)
+//                           accountIdPdf.value = "-";
+//                         else
+//                           accountSelected.value = "-";
+//                       }
+//                     },
+//                   ),
+//                 ),
+//               ),
+//             ));
+//       }).toList(),
+//     ),
+//   );
+// }
+
+// Widget getBankAccountListForFilter(context, [fromPdf = true]) {
+//   return Row(
+//     children: bankAccountLinkedList.map((account) {
+//       return Obx(() {
+//         bool isSelected =
+//             (fromPdf ? accountIdPdf.value : accountSelected.value) ==
+//                 account["accountId"].toString();
+
+//         Widget content = Padding(
+//           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+//           child: Row(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               SizedBox(
+//                 width: 20,
+//                 height: 20,
+//                 child: Image.network(
+//                   account["bankLogo"],
+//                   width: 22,
+//                   height: 22,
+//                 ),
+//               ),
+//               const SizedBox(width: 6),
+//               Center(
+//                 child: textStyleImage(
+//                     context: context,
+//                     text:
+//                         "${account["maskedAccNumber"].toString().substring(account["maskedAccNumber"].toString().length - 6)}",
+//                     fontsize: 12,
+//                     fontWeight: FontWeight.w600,
+//                     c: isSelected ? AppColors.backgroundColor : AppColors.bg1),
+//               ),
+//             ],
+//           ),
+//         );
+
+//         return GestureDetector(
+//           onTap: () {
+//             String accId = account["accountId"].toString();
+//             if (isSelected) {
+//               if (fromPdf)
+//                 accountIdPdf.value = "-";
+//               else
+//                 accountSelected.value = "-";
+//             } else {
+//               if (fromPdf)
+//                 accountIdPdf.value = accId;
+//               else
+//                 accountSelected.value = accId;
+//             }
+
+//             // Optional: auto filter on tap
+//             onChanedAutoTransactionStatus(context);
+//           },
+//           child: isSelected
+//               ? Container(
+//                   margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+//                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+//                   decoration: BoxDecoration(
+//                     color: AppColors.primaryColor,
+//                     borderRadius: BorderRadius.circular(8),
+//                   ),
+//                   child: content,
+//                 )
+//               : Container(
+//                   margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+//                   padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+//                   child: DottedBorderBox(
+//                     dashWidth: 4,
+//                     space: 5,
+//                     dashHeight: 1,
+//                     color: AppColors.grey,
+//                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+//                     child: content,
+//                   ),
+//                 ),
+//         );
+//       });
+//     }).toList(),
+//   );
+// }
+Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) {
   return Row(
     children: bankAccountLinkedList.map((account) {
       return Obx(() {
-        bool isSelected =
-            (fromPdf ? accountIdPdf.value : accountSelected.value) ==
-                account["accountId"].toString();
+        final String currentSelectedId =
+            fromPdf ? accountIdPdf.value : accountSelected.value;
+
+        final bool isSelected = currentSelectedId == account.accountId;
+
+        // Safely get last 6 characters of maskedAccNumber
+        final String masked = account.maskedAccNumber;
+        final String lastSix = masked.length > 6
+            ? masked.substring(masked.length - 6)
+            : masked;
 
         Widget content = Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -289,20 +464,23 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
                 width: 20,
                 height: 20,
                 child: Image.network(
-                  account["bankLogo"],
+                  account.bankLogo,
                   width: 22,
                   height: 22,
+                  fit: BoxFit.contain,
                 ),
               ),
               const SizedBox(width: 6),
               Center(
                 child: textStyleImage(
-                    context: context,
-                    text:
-                        "${account["maskedAccNumber"].toString().substring(account["maskedAccNumber"].toString().length - 6)}",
-                    fontsize: 12,
-                    fontWeight: FontWeight.w600,
-                    c: isSelected ? AppColors.backgroundColor : AppColors.bg1),
+                  context: context,
+                  text: lastSix,
+                  fontsize: 12,
+                  fontWeight: FontWeight.w600,
+                  c: isSelected
+                      ? AppColors.backgroundColor
+                      : AppColors.bg1,
+                ),
               ),
             ],
           ),
@@ -310,17 +488,19 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
 
         return GestureDetector(
           onTap: () {
-            String accId = account["accountId"].toString();
+            String accId = account.accountId;
             if (isSelected) {
-              if (fromPdf)
+              if (fromPdf) {
                 accountIdPdf.value = "-";
-              else
+              } else {
                 accountSelected.value = "-";
+              }
             } else {
-              if (fromPdf)
+              if (fromPdf) {
                 accountIdPdf.value = accId;
-              else
+              } else {
                 accountSelected.value = accId;
+              }
             }
 
             // Optional: auto filter on tap
@@ -328,8 +508,10 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
           },
           child: isSelected
               ? Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(8),
@@ -337,14 +519,17 @@ Widget getBankAccountListForFilter(context, [fromPdf = true]) {
                   child: content,
                 )
               : Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   child: DottedBorderBox(
                     dashWidth: 4,
                     space: 5,
                     dashHeight: 1,
                     color: AppColors.grey,
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 2),
                     child: content,
                   ),
                 ),
@@ -738,16 +923,26 @@ Widget filterTransaction(context) {
   );
 }
 
+// String getBankLogo() {
+//   for (var bankAccount in bankAccountLinkedList) {
+//     if (bankAccount['accountId'] == accountIdPdf.value) {
+//       return bankAccount['bankLogo'];
+//     }
+//   }
+
+//   return bankImage; // return null if no match found
+// }
+
 String getBankLogo() {
   for (var bankAccount in bankAccountLinkedList) {
-    if (bankAccount['accountId'] == accountIdPdf.value) {
-      return bankAccount['bankLogo'];
+    // bankAccount is BankAccountModel now
+    if (bankAccount.accountId == accountIdPdf.value) {
+      return bankAccount.bankLogo;
     }
   }
 
-  return bankImage; // return null if no match found
+  return bankImage; // default if no match
 }
-
 
 
 String getDaysLeftInMonth() {

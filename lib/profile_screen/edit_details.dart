@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/controllers/controllerManagem
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
+import 'package:flutter_application_code_stakeplot/model/bank_model.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/revoke_access.dart';
@@ -272,23 +273,39 @@ class _EditDetailsState extends State<EditDetails> {
     );
   }
 
+Widget getListOfBankConnected() {
+  return Container(
+    child: Obx(
+      () => Column(
+        children: bankAccountLinkedList.map((e) {
+          return _buildAccountDetails(
+            e.bankName,
+            e.maskedAccNumber,
+            e,           // pass the whole model instead of Map
+            e.bankLogo,
+          );
+        }).toList(),
+      ),
+    ),
+  );
+}
 
-  Widget getListOfBankConnected() {
+  // Widget getListOfBankConnected() {
   
-    return Container(
-      child: Obx(() => Column(
-            children: bankAccountLinkedList.map((e) {
+  //   return Container(
+  //     child: Obx(() => Column(
+  //           children: bankAccountLinkedList.map((e) {
              
-              return _buildAccountDetails(
-                e['bankName'],
-                e['maskedAccNumber'],
-                e,
-                e['bankLogo'],
-              );
-            }).toList(),
-          )),
-    );
-  }
+  //             return _buildAccountDetails(
+  //               e['bankName'],
+  //               e['maskedAccNumber'],
+  //               e,
+  //               e['bankLogo'],
+  //             );
+  //           }).toList(),
+  //         )),
+  //   );
+  // }
 
   Widget _buildNonEditableField(IconData icon, String label, String value) {
     final isEmailField = label == ProfileScreenStrings().emailLabel;
@@ -538,10 +555,11 @@ class _EditDetailsState extends State<EditDetails> {
   }
 
   Widget _buildAccountDetails(
-      String bankName, String accountNumber, var data, String logo) {
+      String bankName, String accountNumber, BankAccountModel data, String logo, ) {
     return InkWell(
       onTap: () {
-        shareBankData(data);
+        // shareBankData(bankAccountLinkedList[index]);
+        shareBankDataFromModel(data);
       },
       child: Card(
         elevation: 2,
@@ -590,10 +608,15 @@ class _EditDetailsState extends State<EditDetails> {
                       TextButton(
                         onPressed: () {
                           deleteBankAccount(
-                            bankid: data['bankId'],
-                            AccountId: data['accountId'],
+                            bankid: data.bankId,
+                            AccountId: data.accountId,
                             context: context,
                           );
+                          // deleteBankAccount(
+                          //   bankid: data['bankId'],
+                          //   AccountId: data['accountId'],
+                          //   context: context,
+                          // );
                           Navigator.of(context).pop();
                         },
                         child: const Text('Delete'),

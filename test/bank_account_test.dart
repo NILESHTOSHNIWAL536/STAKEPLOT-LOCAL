@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
+import 'package:flutter_application_code_stakeplot/model/bank_model.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -32,9 +33,13 @@ String accessToken =
       appLog('Consent & Handle Details Count: ${consentAndHandleDetails.length}');
       expect(bankAccountLinkedList.isNotEmpty, true, reason: 'Bank account list should not be empty');
 
-      final firstBank = bankAccountLinkedList[0];
-      appLog('First Bank Name: ${firstBank['bankName']}');
-      appLog('First Bank Account ID: ${firstBank['accountId']}');
+      // final firstBank = bankAccountLinkedList[0];
+            final BankAccountModel firstBank = bankAccountLinkedList[0];
+      appLog('First Bank Name: ${firstBank.bankName}');
+      appLog('First Bank Account ID: ${firstBank.accountId}');
+
+      // appLog('First Bank Name: ${firstBank['bankName']}');
+      // appLog('First Bank Account ID: ${firstBank['accountId']}');
 
       appLog('\n--- Step 2: Call addBankApiCall() ---');
       storeBankDataApi();

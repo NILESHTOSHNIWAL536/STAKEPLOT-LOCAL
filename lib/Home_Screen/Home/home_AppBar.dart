@@ -120,11 +120,18 @@ PreferredSizeWidget historyAppBar(context) {
               snackBarCalled(context, SnackbarData().noBankForLinking);
             }
             
-            else {
-              accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
-              showModalForPdfDownloadBankUiCheckBox(context);
-            }
-          },
+          //   else {
+          //     accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
+          //     showModalForPdfDownloadBankUiCheckBox(context);
+          //   }
+          // },
+          else {
+  if (bankAccountLinkedList.isNotEmpty) {
+    accountIdPdf.value = bankAccountLinkedList[0].accountId;
+    showModalForPdfDownloadBankUiCheckBox(context);
+  }
+}},
+
           splashColor:
               AppColors.accentColor.withOpacity(0.2), // Subtle splash effect
           borderRadius: BorderRadius.circular(12), // Rounded ripple effect

@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
 
 import '../components/shared_utils.dart';
+import '../model/bank_model.dart';
 
 RxInt firstDigit = 0.obs;
 RxInt secondDigit = 0.obs;
@@ -59,138 +60,262 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   controller: PageController(viewportFraction: 1.0,initialPage:scrollBankPage.value ),
                    onPageChanged: (index) {
                       if (bankAccountLinkedList.isEmpty) return;
-                      accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
-                      LastFetchDate.value = bankAccountLinkedList[index]['lastFetch'].toString();
-                      nextFecthDate.value = bankAccountLinkedList[index]['nextFetch'].toString();
-                      fetchCount.value = bankAccountLinkedList[index]['fetchCount'].toString();
-                      BankName.value = bankAccountLinkedList[index]['bankName'].toString();
-                      BankUrl.value = bankAccountLinkedList[index]['bankLogo'].toString();
-                      scrollBankPage.value = index;
-                      calledFunctionToFetchData(context);
+                      // accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
+                      // LastFetchDate.value = bankAccountLinkedList[index]['lastFetch'].toString();
+                      // nextFecthDate.value = bankAccountLinkedList[index]['nextFetch'].toString();
+                      // fetchCount.value = bankAccountLinkedList[index]['fetchCount'].toString();
+                      // BankName.value = bankAccountLinkedList[index]['bankName'].toString();
+                      // BankUrl.value = bankAccountLinkedList[index]['bankLogo'].toString();
+                      // scrollBankPage.value = index;
+                      // calledFunctionToFetchData(context);
+                       final account = bankAccountLinkedList[index];
+
+              accountId.value = account.accountId;
+              LastFetchDate.value = account.lastFetch;
+              nextFecthDate.value = account.nextFetch;
+              fetchCount.value = account.fetchCount.toString();
+              BankName.value = account.bankName;
+              BankUrl.value = account.bankLogo;
+              scrollBankPage.value = index;
+              calledFunctionToFetchData(context);
                     },
-                  itemBuilder: (context, index) {
-                    return AnimatedBuilder(
-                      animation: PageController(viewportFraction: 1.0),
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: 1.0, // customize scale effect
-                          child: child,
-                        );
-                      },
-                      child: Padding(
-                        padding:  EdgeInsets.fromLTRB(0,2,2,2),
-                        child: getListViewBankInfo(bankAccountLinkedList[index]),
-                      ),
-                    );
-                  },
-                );
+                //   itemBuilder: (context, index) {
+                //     return AnimatedBuilder(
+                //       animation: PageController(viewportFraction: 1.0),
+                //       builder: (context, child) {
+                //         return Transform.scale(
+                //           scale: 1.0, // customize scale effect
+                //           child: child,
+                //         );
+                //       },
+                //       child: Padding(
+                //         padding:  EdgeInsets.fromLTRB(0,2,2,2),
+                //         child: getListViewBankInfo(bankAccountLinkedList[index]),
+                //       ),
+                //     );
+                //   },
+                // );
 
+  // }
+
+ itemBuilder: (context, index) {
+              final account = bankAccountLinkedList[index];
+              return AnimatedBuilder(
+                animation:
+                    PageController(viewportFraction: 1.0), // dummy controller
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: 1.0,
+                    child: child,
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 2, 2, 2),
+                  child: getListViewBankInfo(account),
+                ),
+              );
+            },
+          );
   }
-
-  Widget getListViewBankInfo(data) {
+  Widget getListViewBankInfo(BankAccountModel data) {
     int randomIndex = Random().nextInt(lock.length);
     if (randomIndex == lock.length) randomIndex = 0;
-   
+
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: Colorcodes.paddingHorizontal,vertical: Colorcodes.paddingHorizontal / 6),
-        decoration: BoxDecoration(
-          color: AppColors.accentColor,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(height: Colorcodes.borderRadius10),
-            Row(
-              children: [
-            Image.network
-            (
-                data['bankLogo'],
+      padding: EdgeInsets.symmetric(
+        horizontal: Colorcodes.paddingHorizontal,
+        vertical: Colorcodes.paddingHorizontal / 6,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.accentColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          SizedBox(height: Colorcodes.borderRadius10),
+          Row(
+            children: [
+              Image.network(
+                data.bankLogo,
                 width: 30,
                 height: 30,
                 fit: BoxFit.fitWidth,
                 errorBuilder: getErrorBankLogo(),
-            ),
-             SizedBox(width: Colorcodes.borderRadius10),
-                Text(
-                  data['bankName'],
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.normal,
-                      fontSize: 18,
-                      color: AppColors.backgroundColor),
+              ),
+              SizedBox(width: Colorcodes.borderRadius10),
+              Text(
+                data.bankName,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.normal,
+                  fontSize: 18,
+                  color: AppColors.backgroundColor,
                 ),
-              ],
+              ),
+            ],
+          ),
+          SizedBox(height: Colorcodes.borderRadius),
+          Text(
+            HomepageStringsDart().accountNumberLabel +
+                data.maskedAccNumber,
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.bold,
+              fontSize: 16,
+              color: AppColors.backgroundColor,
             ),
-            SizedBox(height: Colorcodes.borderRadius),
-            Text(
-              HomepageStringsDart().accountNumberLabel + data['maskedAccNumber'],
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.backgroundColor),
+          ),
+          SizedBox(height: Colorcodes.borderRadius10),
+          Text(
+            HomepageStringsDart().availableBalanceLabel,
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w400,
+              fontSize: 12,
+              color: AppColors.backgroundColor,
             ),
-            SizedBox(height: Colorcodes.borderRadius10),
-            Text(HomepageStringsDart().availableBalanceLabel,
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.w400,
-                    fontSize: 12,
-                    color: AppColors.backgroundColor)),
-            
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Obx(() {
-  // use .value so Obx actually depends on these reactive variables
-  final String pin = userController.cupertinoPin.value;
-  final bool hide = hideBackAccountPassword.value;
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(() {
+                final String pin =
+                    userController.cupertinoPin.value;
+                final bool hide =
+                    hideBackAccountPassword.value;
 
-  final balance = data['currentBalance'];
+                final double balance = data.currentBalance;
 
-  // If API didn't return balance -> show small text (no lock)
-  if (balance == null) {
-    return Text(
-      "Balance not available",
-      style: FontManager().getTextStyle(
-        context,
-        lWeight: FontWeight.w500,
-        fontSize: 14,
-        color: AppColors.backgroundColor,
+                // If you consider 0.0 as "no data", you can handle it:
+                // if (balance == 0.0) { ... }
+
+                final bool showBalance =
+                    (pin == "0" || pin == "00" || hide);
+
+                return Text(
+                  '\u{20B9} ${showBalance ? formatMoneyIndian(balance.toString(), lock[randomIndex]) : lock[randomIndex]}',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: AppColors.backgroundColor,
+                  ),
+                );
+              }),
+              setPinForAccountHide(context),
+            ],
+          ),
+          SizedBox(height: Colorcodes.elevation5),
+        ],
       ),
     );
   }
+//   Widget getListViewBankInfo(data) {
+//     int randomIndex = Random().nextInt(lock.length);
+//     if (randomIndex == lock.length) randomIndex = 0;
+   
+//     return Container(
+//         padding: EdgeInsets.symmetric(horizontal: Colorcodes.paddingHorizontal,vertical: Colorcodes.paddingHorizontal / 6),
+//         decoration: BoxDecoration(
+//           color: AppColors.accentColor,
+//           borderRadius: BorderRadius.circular(16),
+//         ),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           children: [
+//             SizedBox(height: Colorcodes.borderRadius10),
+//             Row(
+//               children: [
+//             Image.network
+//             (
+//                 data['bankLogo'],
+//                 width: 30,
+//                 height: 30,
+//                 fit: BoxFit.fitWidth,
+//                 errorBuilder: getErrorBankLogo(),
+//             ),
+//              SizedBox(width: Colorcodes.borderRadius10),
+//                 Text(
+//                   data['bankName'],
+//                   style: FontManager().getTextStyle(context,
+//                       lWeight: FontWeight.normal,
+//                       fontSize: 18,
+//                       color: AppColors.backgroundColor),
+//                 ),
+//               ],
+//             ),
+//             SizedBox(height: Colorcodes.borderRadius),
+//             Text(
+//               HomepageStringsDart().accountNumberLabel + data['maskedAccNumber'],
+//               style: FontManager().getTextStyle(context,
+//                   lWeight: FontWeight.bold,
+//                   fontSize: 16,
+//                   color: AppColors.backgroundColor),
+//             ),
+//             SizedBox(height: Colorcodes.borderRadius10),
+//             Text(HomepageStringsDart().availableBalanceLabel,
+//                 style: FontManager().getTextStyle(context,
+//                     lWeight: FontWeight.w400,
+//                     fontSize: 12,
+//                     color: AppColors.backgroundColor)),
+            
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 Obx(() {
+//   // use .value so Obx actually depends on these reactive variables
+//   final String pin = userController.cupertinoPin.value;
+//   final bool hide = hideBackAccountPassword.value;
 
-  // compute showBalance inside Obx using reactive values
-  final bool showBalance = (pin == "0" || pin == "00" || hide);
+//   final balance = data['currentBalance'];
 
-  return Text(
-    '\u{20B9} ${showBalance ? formatMoneyIndian(balance, lock[randomIndex]) : lock[randomIndex]}',
-    style: FontManager().getTextStyle(
-      context,
-      lWeight: FontWeight.bold,
-      fontSize: 20,
-      color: AppColors.backgroundColor,
-    ),
-  );
-})
-,
-              //  Obx(()=> 
-              //  Text(
-              //     '\u{20B9} ${(hideBackAccountPassword.value || userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00") ? formatMoneyIndian(data['currentBalance'] ?? "null",lock[randomIndex]) : lock[randomIndex]}',
-              //     style: FontManager().getTextStyle(context,
-              //         lWeight: FontWeight.bold,
-              //         fontSize: 20,
-              //         color: AppColors.backgroundColor),
-              //  )
-              //  ),
-                //  locker(context),
-                setPinForAccountHide(context)
-              ],
-            ),
-            SizedBox(height: Colorcodes.elevation5),
-          ],
-        ));
-  }
+//   // If API didn't return balance -> show small text (no lock)
+//   if (balance == null) {
+//     return Text(
+//       "Balance not available",
+//       style: FontManager().getTextStyle(
+//         context,
+//         lWeight: FontWeight.w500,
+//         fontSize: 14,
+//         color: AppColors.backgroundColor,
+//       ),
+//     );
+//   }
+
+//   // compute showBalance inside Obx using reactive values
+//   final bool showBalance = (pin == "0" || pin == "00" || hide);
+
+//   return Text(
+//     '\u{20B9} ${showBalance ? formatMoneyIndian(balance, lock[randomIndex]) : lock[randomIndex]}',
+//     style: FontManager().getTextStyle(
+//       context,
+//       lWeight: FontWeight.bold,
+//       fontSize: 20,
+//       color: AppColors.backgroundColor,
+//     ),
+//   );
+// })
+// ,
+//               //  Obx(()=> 
+//               //  Text(
+//               //     '\u{20B9} ${(hideBackAccountPassword.value || userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00") ? formatMoneyIndian(data['currentBalance'] ?? "null",lock[randomIndex]) : lock[randomIndex]}',
+//               //     style: FontManager().getTextStyle(context,
+//               //         lWeight: FontWeight.bold,
+//               //         fontSize: 20,
+//               //         color: AppColors.backgroundColor),
+//               //  )
+//               //  ),
+//                 //  locker(context),
+//                 setPinForAccountHide(context)
+//               ],
+//             ),
+//             SizedBox(height: Colorcodes.elevation5),
+//           ],
+//         ));
+//   }
 
   Widget locker(context) {
     return Row(
