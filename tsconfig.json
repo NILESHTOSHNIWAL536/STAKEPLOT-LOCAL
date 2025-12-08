@@ -19,6 +19,6 @@
     "strict": true,
     "sourceMap": true
   },
-  "include": ["src2/**/*.ts"],
+  "include": ["src2/**/*.ts", "src2/repositories/crud-repository.ts"],
   "exclude": ["node_modules", "dist"]
 }

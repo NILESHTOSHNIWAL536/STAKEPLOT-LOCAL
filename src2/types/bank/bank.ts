@@ -8,6 +8,7 @@ export interface IBank extends Document {
   custId: IEncryptedField;
   consentId: IEncryptedField;
   consentHandleId: IEncryptedField;
+  sessionId: IEncryptedField;
 
   fiAccountInfo: IFiAccountInfo[];
 

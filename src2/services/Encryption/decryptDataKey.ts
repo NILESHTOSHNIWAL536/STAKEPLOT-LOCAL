@@ -1,9 +1,9 @@
 const { KMSClient, DecryptCommand } = require('@aws-sdk/client-kms');
-const logger = require("../../utils/common/logger");
+const logger = require('../../utils/common/logger');
 
-const kmsClient = new KMSClient({region: process.env.AWS_REGION});
+const kmsClient = new KMSClient({ region: process.env.AWS_REGION });
 
-async function decryptDataKey(ciphertextBlob) {
+async function decryptDataKey(ciphertextBlob: string) {
   try {
     if (!ciphertextBlob || typeof ciphertextBlob !== 'string') {
       throw new Error('Invalid or missing ciphertextBlob');
@@ -13,17 +13,17 @@ async function decryptDataKey(ciphertextBlob) {
     }
     const params = {
       CiphertextBlob: Buffer.from(ciphertextBlob, 'base64'),
-      KeyId: process.env.KMS_KEY_ID
+      KeyId: process.env.KMS_KEY_ID,
     };
     const result = await kmsClient.send(new DecryptCommand(params));
     return result.Plaintext;
-  } catch (error) {
+  } catch (error: any) {
     logger.error(`Error decrypting data key: ${error.message}`, {
       stack: error.stack,
-      ciphertextBlob: ciphertextBlob.substring(0, 50) // Log partial for safety
+      ciphertextBlob: ciphertextBlob.substring(0, 50), // Log partial for safety
     });
     throw error;
   }
 }
 
-module.exports = decryptDataKey;
+export default decryptDataKey;

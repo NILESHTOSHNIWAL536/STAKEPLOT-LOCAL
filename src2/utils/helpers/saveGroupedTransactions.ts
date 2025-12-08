@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import { GroupedTransaction } from '../../models';
-import { AutoTransactionRepository } from '../../respositories';
+import { GroupedTransaction } from '@/models';
+import { AutoTransactionRepository } from '@/repositories';
+import { Types } from 'mongoose';
 
 // ---- Interfaces to type group data ---- //
 interface IGroupedTransactionItem {
@@ -14,7 +15,7 @@ interface IGroupedTransactionItem {
   suggestedCategory?: string;
 }
 
-export async function saveGroupedTransactions(userId: string): Promise<void> {
+async function saveGroupedTransactions(userId: string | Types.ObjectId): Promise<void> {
   const repo = new AutoTransactionRepository();
 
   const groups = (await repo.groupSimilarTransactions(userId)) as IGroupedTransactionItem[];
@@ -42,3 +43,5 @@ export async function saveGroupedTransactions(userId: string): Promise<void> {
     );
   }
 }
+
+export default saveGroupedTransactions;
