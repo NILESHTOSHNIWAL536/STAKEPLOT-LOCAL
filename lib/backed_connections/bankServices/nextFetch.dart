@@ -687,7 +687,7 @@ class _RotatingIconState extends State<Nextfetch>
                         text:
                             isFected.value ? "" : formattedNextFetch,
                         fontWeight: FontWeight.bold,
-                        c: AppColors.primaryColor,
+                        c: AppColors.backgroundColor,
                         fontsize: 13,
                       ),
                     ],

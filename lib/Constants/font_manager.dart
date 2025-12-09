@@ -21,7 +21,7 @@ class FontManager {
     decorationThickness = 0.0,
     decorationStyle = TextDecorationStyle.solid,
   }) {
-    return GoogleFonts.urbanist(
+    return GoogleFonts.roboto(
       fontSize: fontSize,
       fontWeight: lWeight,
       height: lineHeight,

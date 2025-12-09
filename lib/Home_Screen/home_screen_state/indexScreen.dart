@@ -42,9 +42,9 @@ class IndexScreen extends StatelessWidget {
           controller: scrollControllerHome,
           child: Column(
             children: [
-              Nextfetch(),
+              // Nextfetch(),
               SizedBox(
-                height: height * 0.23,
+                height: height * 0.4,
                 child: NumberPickerScreen(),
               ),
               const SizedBox(

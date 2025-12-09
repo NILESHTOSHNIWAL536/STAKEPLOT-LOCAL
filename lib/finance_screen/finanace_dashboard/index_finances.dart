@@ -277,6 +277,9 @@
 // //     );
 // //   }
 // // }
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
@@ -293,6 +296,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDe
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
 import 'package:flutter_application_code_stakeplot/repository/debt_service.dart';
 import 'package:flutter_application_code_stakeplot/repository/payables_repository.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -525,8 +529,12 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildTopSection(context, size),
-                      _buildBottomSection(context),
+                      Container(
+                       
+                        child: _buildTopSection(context, size)),
+                      Container(
+                       
+                        child: _buildBottomSection(context)),
                     ],
                   ),
                 ),
@@ -963,36 +971,43 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     );
   }
 
-  // ===================== MAIN TOP SECTION =====================
-
+ 
   Widget _buildTopSection(BuildContext context, Size size) {
     return Container(
       color: AppColors.newbg,
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+      
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Explore Tools',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: 24,
-              color: AppColors.primaryColor,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Explore Tools',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Smart tools for your daily needs',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.grey,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            'Smart tools for your daily needs',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w500,
-              fontSize: 14,
-              color: AppColors.grey,
-            ),
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
 
           // Comics & Community banner
           InkWell(
@@ -1002,10 +1017,13 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                 MaterialPageRoute(builder: (context) => const Community()),
               );
             },
-            child: SvgPicture.asset(
-              PlotFinanceIcons.comics,
-              fit: BoxFit.contain,
-              width: MediaQuery.sizeOf(context).width,
+            child: AspectRatio(
+               aspectRatio: 16 / 7,
+              child: SvgPicture.asset(
+                PlotFinanceIcons.comics,
+                fit: BoxFit.contain,
+                width: MediaQuery.sizeOf(context).width,
+              ),
             ),
           ),
         ],
@@ -1013,146 +1031,101 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     );
   }
 
-  // ===================== BOTTOM GRID (TOOLS) =====================
-
+ 
   Widget _buildBottomSection(BuildContext context) {
     return Container(
       color: AppColors.newbg,
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+      padding: const EdgeInsets.fromLTRB(16, 0, 12, 0),
       child: _buildToolsGrid(context),
     );
   }
 
-  Widget _buildToolsGrid(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    const double spacing = 5;
-    final double cardWidth = (screenWidth - spacing * 2) / 2;
+ Widget _buildToolsGrid(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 6),
+    child: MasonryGridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,          // 💥 EXACTLY LIKE YOUR IMAGE
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
+      itemCount: 6,
+      itemBuilder: (context, index) {
+        switch (index) {
 
-    return Column(
-      children: [
-        // Row 1: Currency + Credit Card (taller)
-        Row(
-          children: [
-            Expanded(
-              child: _ImageToolCard(
-                svgPath: PlotFinanceIcons.currencyConverter,
-                height: 130,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CurrencyConverterScreen(),
-                    ),
-                  );
-                },
+          case 0:
+            return _ImageToolCard(
+              svgPath: PlotFinanceIcons.currencyConverter,
+              height: 120,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CurrencyConverterScreen()),
               ),
-            ),
-            const SizedBox(width: spacing),
-            Expanded(
-              child: _ImageToolCard(
-                svgPath: PlotFinanceIcons.crediCardBg,
-                height: 190,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CreditCard(),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: spacing),
+            );
 
-        // Row 2: Budget + Finance Tools
-        Row(
-          children: [
-            Expanded(
-              child: _ImageToolCard(
-                svgPath: PlotFinanceIcons.budgetPlanner,
-                height: 150,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Budget(),
-                    ),
-                  );
-                },
+          case 1:
+            return _ImageToolCard(
+              svgPath: PlotFinanceIcons.crediCardBg,
+              height: 180,     // 💥 taller card like screenshot
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CreditCard()),
               ),
-            ),
-            const SizedBox(width: spacing),
-            Expanded(
-              child: _FinanceToolsCard(
-                width: cardWidth,
-                onTapC: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const VegNonVegCalculator(),
-                    ),
-                  );
-                },
-                onTapD: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => AllCalculatorScreen(),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: spacing),
+            );
 
-        // Row 3: Reserve + Goal Creation
-        Row(
-          children: [
-            Expanded(
-              child: _ImageToolCard(
-                svgPath: PlotFinanceIcons.reserve,
-                height: 150,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const CurrencyConverterScreen(),
-                    ),
-                  );
-                },
+          case 2:
+            return _ImageToolCard(
+              svgPath: PlotFinanceIcons.budgetPlanner,
+              height: 160,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const Budget()),
               ),
-            ),
-            const SizedBox(width: spacing),
-            Expanded(
-              child: _ImageToolCard(
-                svgPath: PlotFinanceIcons.goalCreation,
-                height: 150,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const CurrencyConverterScreen(),
-                    ),
-                  );
-                },
+            );
+
+          case 3:
+            return _FinanceToolsCard(
+              height: 100,     // behaves like "Finance Fusion"
+              onTapC: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const VegNonVegCalculator()),
               ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+              onTapD: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => AllCalculatorScreen()),
+              ),
+            );
+
+          case 4:
+            return _ImageToolCard(
+              svgPath: PlotFinanceIcons.reserve,
+              height: 150,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CurrencyConverterScreen()),
+              ),
+            );
+
+          case 5:
+            return _ImageToolCard(
+              svgPath: PlotFinanceIcons.goalCreation,
+              height: 150,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CurrencyConverterScreen()),
+              ),
+            );
+        }
+
+        return const SizedBox();
+      },
+    ),
+  );
 }
 
-// ===================== HELPER WIDGETS =====================
 
-/// Simple image-based tool card (matches Figma white cards)
+}
+
 class _ImageToolCard extends StatelessWidget {
   final String svgPath;
   final double height;
@@ -1168,25 +1141,57 @@ class _ImageToolCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-    
+     
       onTap: onTap,
-      child: SvgPicture.asset(
-        svgPath,
-        fit: BoxFit.contain,
+      child: SizedBox(
+        height: height,
+        child: SvgPicture.asset(
+          svgPath,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
 }
 
+// class _ImageToolCard extends StatelessWidget {
+//   final String svgPath;
+//   final double height;
+//   final VoidCallback? onTap;
+
+//   const _ImageToolCard({
+//     super.key,
+//     required this.svgPath,
+//     required this.height,
+//     this.onTap,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 160,
+//       child: InkWell(
+      
+//         onTap: onTap,
+//         child: SvgPicture.asset(
+//           svgPath,
+          
+//           fit: BoxFit.contain,
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 /// Finance Tools card: collapses like Finance Fusion card but interactive
 class _FinanceToolsCard extends StatefulWidget {
-  final double width;
+  final double height;
   final VoidCallback? onTapC;
   final VoidCallback? onTapD;
 
   const _FinanceToolsCard({
     super.key,
-    required this.width,
+    required this.height,
     this.onTapC,
     this.onTapD,
   });
@@ -1202,8 +1207,9 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
+      height: expanded ? widget.height + 80 : widget.height,
       curve: Curves.easeOutCubic,
-      height: expanded ? 180 : 120,
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -1211,94 +1217,55 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
+          )
         ],
       ),
-      padding: const EdgeInsets.all(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(22),
-        onTap: () {
-          setState(() => expanded = !expanded);
-        },
+        onTap: () => setState(() => expanded = !expanded),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Finance Tools',
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w600,
+              "Finance Tools",
+              style: TextStyle(
                 fontSize: 14,
+                fontWeight: FontWeight.w600,
                 color: AppColors.primaryColor,
               ),
             ),
             const SizedBox(height: 10),
 
-            // Collapsed → 2 icons row
             if (!expanded)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SvgPicture.asset(
-                    PlotFinanceIcons.calculator,
-                    height: 40,
-                    width: 40,
-                  ),
-                  SvgPicture.asset(
-                    PlotFinanceIcons.foodie,
-                    height: 40,
-                    width: 40,
-                  ),
+                  SvgPicture.asset(PlotFinanceIcons.calculator, height: 34),
+                  SvgPicture.asset(PlotFinanceIcons.foodie, height: 34),
                 ],
               ),
 
-            // Expanded → 2 rows with icon + text
             if (expanded)
               Column(
                 children: [
                   GestureDetector(
-                    onTap: widget.onTapD, // All Calculators
+                    onTap: widget.onTapD,
                     child: Row(
                       children: [
-                        SvgPicture.asset(
-                          PlotFinanceIcons.calculator,
-                          height: 32,
-                          width: 32,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'All Calculators',
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
+                        SvgPicture.asset(PlotFinanceIcons.calculator, height: 30),
+                        const SizedBox(width: 10),
+                        Text("All Calculators")
                       ],
                     ),
                   ),
                   const SizedBox(height: 12),
                   GestureDetector(
-                    onTap: widget.onTapC, // Foodie funds / Veg-NonVeg
+                    onTap: widget.onTapC,
                     child: Row(
                       children: [
-                        SvgPicture.asset(
-                          PlotFinanceIcons.foodie,
-                          height: 32,
-                          width: 32,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Foodie Funds',
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
+                        SvgPicture.asset(PlotFinanceIcons.foodie, height: 30),
+                        const SizedBox(width: 10),
+                        Text("Foodie Funds"),
                       ],
                     ),
                   ),
