@@ -13,7 +13,7 @@ interface CreateProfileData {
   holder: Record<string, any>;
   type: string;
   accountId: string;
-  userId: string;
+  userId: string | Types.ObjectId;
 }
 
 interface UpdateProfileData {
@@ -31,7 +31,7 @@ class UserProfileRepository extends CrudRepository<typeof Profile> {
   // ----------------------------------------------------
   // CREATE PROFILE
   // ----------------------------------------------------
-  async createProfile(data: CreateProfileData, plaintextKey: string | Buffer, ciphertextBlob: string) {
+  async createProfile(data: CreateProfileData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
     try {
       const existingProfiles = await this.model.find({
         accountId: data.accountId,

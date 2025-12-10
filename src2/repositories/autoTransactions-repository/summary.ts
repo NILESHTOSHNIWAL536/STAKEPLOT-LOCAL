@@ -11,7 +11,7 @@ import { Types } from 'mongoose';
 interface CreateSummaryData {
   data: Record<string, any>;
   accountId: string;
-  userId: string;
+  userId: string | Types.ObjectId;
 }
 
 interface UpdateSummaryData {
@@ -28,7 +28,7 @@ class SummaryRepository extends CrudRepository<typeof Summary> {
   // ----------------------------------------------------
   // CREATE SUMMARY
   // ----------------------------------------------------
-  async createSummary(data: CreateSummaryData, plaintextKey: string | Buffer, ciphertextBlob: string) {
+  async createSummary(data: CreateSummaryData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
     try {
       // Check if summary already exists
       const existingSummary = await this.model.find({

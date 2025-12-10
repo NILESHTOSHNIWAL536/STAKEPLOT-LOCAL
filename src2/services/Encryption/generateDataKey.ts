@@ -5,7 +5,7 @@ const kmsClient = new KMSClient({ region: process.env.AWS_REGION });
 const keyId = process.env.KMS_KEY_ID as string;
 
 export async function generateDataKey(): Promise<{
-  plaintextKey: Uint8Array | undefined;
+  plaintextKey: Uint8Array | string;
   ciphertextBlob: string;
 }> {
   try {
@@ -16,12 +16,15 @@ export async function generateDataKey(): Promise<{
 
     const result = await kmsClient.send(new GenerateDataKeyCommand(params));
 
-    const base64Ciphertext = Buffer.from(result.CiphertextBlob!).toString('base64');
-
-    // Validate base64 format
-    if (!/^[A-Za-z0-9+/=]+$/.test(base64Ciphertext)) {
-      throw new Error('Generated ciphertextBlob is not a valid base64 string');
+    if (!result.Plaintext) {
+      throw new Error("KMS did not return a plaintext data key");
     }
+
+    if (!result.CiphertextBlob) {
+      throw new Error("KMS did not return a ciphertext data key");
+    }
+
+    const base64Ciphertext = Buffer.from(result.CiphertextBlob).toString('base64');
 
     return {
       plaintextKey: result.Plaintext,
@@ -32,5 +35,3 @@ export async function generateDataKey(): Promise<{
     throw error;
   }
 }
-
-export default { generateDataKey };

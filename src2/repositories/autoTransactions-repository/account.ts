@@ -33,7 +33,7 @@ class AccountRepository extends CrudRepository<typeof Account> {
   // -----------------------------
   // CREATE ACCOUNT
   // -----------------------------
-  async createAccount(data: CreateAccountData, plaintextKey: string | Buffer, ciphertextBlob: string) {
+  async createAccount(data: CreateAccountData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
     try {
       const fieldsToEncrypt = [data.type, data.maskedAccNumber, data.version, data.linkedAccRef, data.schemaLocation];
 
@@ -84,8 +84,8 @@ class AccountRepository extends CrudRepository<typeof Account> {
   // -----------------------------
   // GET ALL ACCOUNTS BY BANK
   // -----------------------------
-  async getAccounts(bankId: string) {
-    const response = await this.get(bankId);
+  async getAccounts(query: Object | string) {
+    const response = await this.get(query);
 
     if (!response || response.length === 0) {
       return '';
@@ -146,7 +146,7 @@ class AccountRepository extends CrudRepository<typeof Account> {
   // -----------------------------
   // UPDATE ACCOUNT
   // -----------------------------
-  async updateAccount(accountId: string, data: CreateAccountData, plaintextKey: string | Buffer, ciphertextBlob: string) {
+  async updateAccount(accountId: string, data: CreateAccountData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
     const fieldsToEncrypt = [data.type, data.maskedAccNumber, data.version, data.linkedAccRef, data.schemaLocation];
 
     const encryptedFields = await Promise.all(fieldsToEncrypt.map((field) => encrypt(field, plaintextKey)));

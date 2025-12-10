@@ -1,17 +1,6 @@
-export interface TransactionInput {
-  narration: string;
-  type: string; // e.g., "CREDIT" | "DEBIT"
-  amount: number;
-  transactionalBalance?: number | string;
-  currentBalance?: number | string;
-  transactionTimestamp?: string | Date | null;
-  valueDate?: string | Date | null;
-  subcategory?: string;
-  manualTransaction?: boolean;
-  [key: string]: any; // fallback for extra fields
-}
+import { IBankTransaction } from '@/types/bank';
 
-export function deduplicateTransactions<T extends TransactionInput>(transactions: T[]): T[] {
+function deduplicateTransactions<T extends IBankTransaction>(transactions: Partial<T>[]): Partial<T>[] {
   const seen = new Map<string, boolean>();
 
   return transactions.filter((transaction) => {
@@ -34,4 +23,4 @@ export function deduplicateTransactions<T extends TransactionInput>(transactions
   });
 }
 
-export default { deduplicateTransactions };
+export default deduplicateTransactions;

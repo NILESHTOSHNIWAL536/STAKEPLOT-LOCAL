@@ -148,7 +148,7 @@ export function calculateNextReminder(input: { recentMostTransactionTimestamp: s
 // ----------------------------
 // Main: detect recurring payments
 // ----------------------------
-export async function detectRecurringPayments(userId: string, options: DetectRecurringOptions = {}): Promise<AutoPayInfo[]> {
+export async function detectRecurringPayments(userId: string | Types.ObjectId, options: DetectRecurringOptions = {}): Promise<AutoPayInfo[]> {
   const { fromDate, timeWindowMonths = 4 } = options;
 
   let cutoffDate: Date;

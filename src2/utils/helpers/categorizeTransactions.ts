@@ -22,7 +22,13 @@ export interface TransactionRule {
 
 type RuleMap = Map<string, TransactionRule>;
 
-export function categorizeTransactions(transactionsData: TransactionInput[], accountId: Types.ObjectId, userId: Types.ObjectId, bankId: Types.ObjectId, ruleMap: RuleMap): IBankTransaction[] {
+function categorizeTransactions(
+  transactionsData: Partial<IBankTransaction>[],
+  accountId: string | Types.ObjectId,
+  userId: string | Types.ObjectId,
+  bankId: string | Types.ObjectId,
+  ruleMap: RuleMap
+): IBankTransaction[] {
   return transactionsData.map((transaction) => {
     const narration = transaction.narration ? transaction.narration.toLowerCase() : '';
 
@@ -115,3 +121,5 @@ export function categorizeTransactions(transactionsData: TransactionInput[], acc
     };
   });
 }
+
+export default categorizeTransactions;

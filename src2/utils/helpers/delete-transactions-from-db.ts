@@ -5,7 +5,7 @@ interface DuplicateAggregationResult {
   duplicateIds: Types.ObjectId[];
 }
 
-export async function deduplicateAllTransactions(userId: string): Promise<void> {
+export async function deduplicateAllTransactions(userId: string | Types.ObjectId): Promise<void> {
   try {
     // -------------------------------
     // Step 1: Find duplicate _ids

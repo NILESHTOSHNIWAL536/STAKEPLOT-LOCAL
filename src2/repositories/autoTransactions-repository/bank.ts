@@ -5,7 +5,7 @@ import decryptDataKey from '@/services/Encryption/decryptDataKey';
 import AppError from '@/utils/errors/app-error';
 import logger from '@/utils/common/logger';
 import { StatusCodes } from 'http-status-codes';
-import { IBank, IEncryptedField, IFiAccountInfo } from '@/types/bank';
+import { IAccount, IBank, IEncryptedField, IFiAccountInfo } from '@/types/bank';
 import { Types } from 'mongoose';
 
 interface CreateFipData {
@@ -29,7 +29,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
   // ----------------------------------------------------
   // CREATE FIP RECORD
   // ----------------------------------------------------
-  async createFipRecord(fipData: CreateFipData, plaintextKey: string | Buffer, ciphertextBlob: string) {
+  async createFipRecord(fipData: any, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
     const existingBanks = await Bank.find({ userId: fipData.userId });
 
     // Check duplicates
@@ -48,7 +48,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
 
     // Encrypt FI account list
     const fiAccountInfo: IFiAccountInfo[] = await Promise.all(
-      fipData.fiAccountInfo.map(async (acc) => ({
+      fipData.fiAccountInfo.map(async (acc: any) => ({
         accountRefNo: await encrypt(acc.accountRefNo, plaintextKey),
         linkRefNo: await encrypt(acc.linkRefNo, plaintextKey),
       }))
@@ -87,7 +87,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
   // ----------------------------------------------------
   // GET ALL BANK RECORDS FOR USER
   // ----------------------------------------------------
-  async getBank(userId: string) {
+  async getBank(userId: string | Types.ObjectId) {
     try {
       const response = await this.get({ userId });
 
@@ -118,7 +118,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
   // ----------------------------------------------------
   // GET BANK BY NAME + CONSENT HANDLE ID
   // ----------------------------------------------------
-  async getBankByName(userId: string, fipName: string, consentHandleId: string) {
+  async getBankByName(userId: string | Types.ObjectId, fipName: string, consentHandleId: string) {
     const records = await this.get({ userId });
 
     for (const record of records as IBank[]) {
@@ -214,10 +214,10 @@ class FipRepository extends CrudRepository<typeof Bank> {
   // ----------------------------------------------------
   // UPDATE FIP RECORD
   // ----------------------------------------------------
-  async updateFipRecord(bankId: string | Types.ObjectId, data: CreateFipData, plaintextKey: string | Buffer, ciphertextBlob: string) {
+  async updateFipRecord(bankId: string | Types.ObjectId, data: any, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
     // Encrypt fiAccountInfo
     const fiAccountInfo = await Promise.all(
-      data.fiAccountInfo.map(async (acc) => ({
+      data.fiAccountInfo.map(async (acc: any) => ({
         accountRefNo: await encrypt(acc.accountRefNo, plaintextKey),
         linkRefNo: await encrypt(acc.linkRefNo, plaintextKey),
       }))

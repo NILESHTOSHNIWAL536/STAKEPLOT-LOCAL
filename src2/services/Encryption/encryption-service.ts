@@ -19,7 +19,7 @@ export interface EncryptedObject {
 // -------------------------
 // Encryption function
 // -------------------------
-export async function encrypt(text: string, plaintextKey: string | Buffer): Promise<EncryptedPayload> {
+export async function encrypt(text: string, plaintextKey: string | Uint8Array): Promise<EncryptedPayload> {
   if (!text) {
     return { encryptedData: '', iv: '', authTag: '' };
   }
@@ -48,7 +48,7 @@ export async function encrypt(text: string, plaintextKey: string | Buffer): Prom
 // -------------------------
 // Decryption function
 // -------------------------
-export function decrypt(encryptedData: string, ivHex: string, authTagHex: string, plaintextKey: string | Buffer): string {
+export function decrypt(encryptedData: string, ivHex: string, authTagHex: string, plaintextKey: string | Uint8Array): string {
   const keyBuffer = Buffer.isBuffer(plaintextKey) ? plaintextKey : Buffer.from(plaintextKey);
 
   const iv = Buffer.from(ivHex, 'hex');
@@ -66,7 +66,7 @@ export function decrypt(encryptedData: string, ivHex: string, authTagHex: string
 // -------------------------
 // Encrypt an object
 // -------------------------
-export async function encryptObject(obj: Record<string, any> | Map<string, any>, plaintextKey: string | Buffer): Promise<EncryptedObject> {
+export async function encryptObject(obj: Record<string, any> | Map<string, any>, plaintextKey: string | Uint8Array): Promise<EncryptedObject> {
   const encryptedObj: EncryptedObject = {};
   const entries = obj instanceof Map ? obj.entries() : Object.entries(obj);
 
@@ -84,7 +84,7 @@ export async function encryptObject(obj: Record<string, any> | Map<string, any>,
 // -------------------------
 // Decrypt an object
 // -------------------------
-export async function decryptObject(obj: Record<string, EncryptedPayload> | Map<string, EncryptedPayload>, plaintextKey: string | Buffer): Promise<Record<string, any>> {
+export async function decryptObject(obj: Record<string, EncryptedPayload> | Map<string, EncryptedPayload>, plaintextKey: string | Uint8Array): Promise<Record<string, any>> {
   const decryptedObj: Record<string, any> = {};
   const entries = obj instanceof Map ? obj.entries() : Object.entries(obj);
 
