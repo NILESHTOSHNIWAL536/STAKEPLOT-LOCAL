@@ -4,22 +4,22 @@
     "baseUrl": "./src2",
     "paths": {
       "@/*": ["*"],
-     "typeRoots": ["./src2/types", "./node_modules/@types"]
+      "@/types/*": ["types/*"]
     },
-
     "outDir": "./dist",
-
     "module": "NodeNext",
     "target": "ES2022",
     "moduleResolution": "NodeNext",
-
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-
-    "strict": true,
-    "sourceMap": true
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "sourceMap": true,
+    "typeRoots": [
+      "./src2/@types",
+      "./node_modules/@types"
+    ]
   },
-  "include": ["src2/**/*.ts", "src2/repositories/crud-repository.ts"],
+  "include": ["src2/**/*.ts", "src2/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

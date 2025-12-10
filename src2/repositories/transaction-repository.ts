@@ -145,7 +145,7 @@ class TransactionRepository extends CrudRepository<typeof Transaction> {
   // ----------------------------------------------------
   // DELETE A SPECIFIC TRANSACTION ENTRY (FROM Sub-Array)
   // ----------------------------------------------------
-  async deleteSpecificTransaction(userId: string, transactionId: string): Promise<{ message: string }> {
+  async deleteSpecificTransaction(userId: string | Types.ObjectId, transactionId: string): Promise<{ message: string }> {
     const result = await Transaction.updateOne({ userId, 'Transactions._id': transactionId }, { $pull: { Transactions: { _id: transactionId } } });
 
     if (result.modifiedCount === 0) {
@@ -158,7 +158,7 @@ class TransactionRepository extends CrudRepository<typeof Transaction> {
   // ----------------------------------------------------
   // UPDATE GROUP TRANSACTION
   // ----------------------------------------------------
-  async updateGroupTransaction(userId: string, transactionId: string, body: { amount: number }) {
+  async updateGroupTransaction(userId: string | Types.ObjectId, transactionId: string, body: { amount: number }) {
     try {
       const result = await Transaction.updateOne(
         { userId, _id: transactionId },

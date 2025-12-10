@@ -1,14 +1,19 @@
-async function getTransactions(
-  model,
-  userId,
-  startDate,
-  endDate,
-  groupBy = "day",
-  accountId = null
+import { IBankTransaction } from '@/types/bank';
+import { Model, Types } from "mongoose";
+
+type GroupBy = "day" | "week" | "month";
+
+export async function getTransactions(
+  model: Model<IBankTransaction>,
+  userId: string | Types.ObjectId,
+  startDate: string | Date,
+  endDate: string | Date,
+  groupBy: GroupBy = "day",
+  accountId: string | Types.ObjectId | null = null
 ) {
   const dateFormat = groupBy === "month" ? "%Y-%m" : "%Y-%m-%d";
 
-  const matchCondition = {
+  const matchCondition: any = {
     userId,
     transactionTimestamp: {
       $gte: new Date(startDate),
@@ -17,7 +22,6 @@ async function getTransactions(
     isExcluded: false,
   };
 
-  // Add accountId condition if provided
   if (accountId) {
     matchCondition.accountId = accountId;
   }
@@ -47,5 +51,3 @@ async function getTransactions(
 
   return response;
 }
-
-module.exports = { getTransactions };

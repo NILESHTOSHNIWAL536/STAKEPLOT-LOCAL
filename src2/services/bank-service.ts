@@ -19,6 +19,8 @@ import { IBankTransaction } from '@/types/bank';
 
 // Helper type for userId inputs
 type UserIdLike = string | Types.ObjectId;
+type GroupBy = "day" | "week" | "month";
+
 
 const autoTransactionRepo = new AutoTransactionRepository();
 
@@ -164,7 +166,7 @@ export async function updateBankDetails(data: any, consentHandleId: string, user
       let nextFetch: Date | string | number;
       const lastFetch = getISTTimestamp();
 
-      if (matchedAccount.fetchCount === 4) {
+      if (matchedAccount.accounts.fetchCount === 4) {
         nextFetch = getNextMonthFetch();
       } else {
         nextFetch = getNextFetch();
@@ -228,7 +230,7 @@ export async function updateBankDetails(data: any, consentHandleId: string, user
       }
 
       if (fiObject.Transactions?.Transaction) {
-        await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, accountId, userId, bank._id);
+        await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, accountId, userId, bank!._id);
         await saveGroupedTransactions(userId);
       }
     }
@@ -393,7 +395,7 @@ export async function getAllTransactionsOfUser(userId: UserIdLike): Promise<any>
   }
 }
 
-export async function getAllTransactionsForAccount(userId: UserIdLike, accountId: string | Types.ObjectId, page?: number): Promise<any> {
+export async function getAllTransactionsForAccount(userId: UserIdLike, accountId: string | Types.ObjectId, page: number): Promise<any> {
   try {
     return await autoTransactionRepo.getTransactionsForAccount(userId, accountId, page);
   } catch (error: any) {
@@ -443,7 +445,7 @@ export async function verifyPendingTransaction(userId: UserIdLike, transactionId
   }
 }
 
-export async function getMonthlyTransactionsHistory(userId: UserIdLike, type: string, page?: number): Promise<any> {
+export async function getMonthlyTransactionsHistory(userId: UserIdLike, type: string, page: number): Promise<any> {
   try {
     return await new AutoTransactionRepository().getMonthlyTransactionsHistory(userId, type, page);
   } catch (error: any) {
@@ -499,7 +501,7 @@ export async function getTopFiveCategories(userId: UserIdLike): Promise<any> {
   }
 }
 
-export async function getAllTransactionsByTimeLine(userId: UserIdLike, accountId: string | Types.ObjectId | null, startDate: Date, endDate: Date, groupBy: string): Promise<any> {
+export async function getAllTransactionsByTimeLine(userId: UserIdLike, accountId: string | Types.ObjectId | null, startDate: Date, endDate: Date, groupBy: GroupBy): Promise<any> {
   try {
     return await new AutoTransactionRepository().getAllTransactionsByTimeLine(userId, accountId, startDate, endDate, groupBy);
   } catch (error: any) {
@@ -507,7 +509,7 @@ export async function getAllTransactionsByTimeLine(userId: UserIdLike, accountId
   }
 }
 
-export async function getAllTransactionsForMainGraph(userId: UserIdLike, startDate: Date, endDate: Date, groupBy: string): Promise<any> {
+export async function getAllTransactionsForMainGraph(userId: UserIdLike, startDate: Date, endDate: Date, groupBy: GroupBy): Promise<any> {
   try {
     return await new AutoTransactionRepository().getAllTransactionsForMainGraph(userId, startDate, endDate, groupBy);
   } catch (error: any) {
@@ -531,7 +533,7 @@ export async function getHideTransactions(userId: UserIdLike): Promise<any> {
 }
 
 // Recurring payments
-export async function getRecurringPayments(userId: UserIdLike, type?: string): Promise<any> {
+export async function getRecurringPayments(userId: UserIdLike, type: boolean): Promise<any> {
   try {
     return await new AutoTransactionRepository().getRecurringPayments(userId, type);
   } catch (error: any) {
@@ -557,12 +559,7 @@ export async function updateTransaction(updateData: any, userId: UserIdLike, tra
     }
 
     const ObjectId = new mongoose.Types.ObjectId(transactionId);
-    const response = await new AutoTransactionRepository().updateTransaction(updateData, userId, ObjectId);
-
-    if (response && response.data && response.data.userId) {
-      await headsUpMessages(response.data.userId);
-      await moneyMapMessages(response.data.userId);
-    }
+    const response = await new AutoTransactionRepository().updateTransaction(userId, ObjectId, updateData);
 
     return response;
   } catch (error: any) {
@@ -596,7 +593,7 @@ export async function getDayWiseTransactionsSummary(userId: UserIdLike): Promise
   }
 }
 
-export async function getTransactionsByDate(userId: UserIdLike, date: Date): Promise<any> {
+export async function getTransactionsByDate(userId: UserIdLike, date: string): Promise<any> {
   try {
     return await new AutoTransactionRepository().getTransactionsByDate(userId, date);
   } catch (error: any) {
@@ -605,7 +602,7 @@ export async function getTransactionsByDate(userId: UserIdLike, date: Date): Pro
 }
 
 // Budget related
-export async function getBudgetTransactions(userId: UserIdLike, startDate: Date, endDate: Date, categories: string[], groupBy: string): Promise<any> {
+export async function getBudgetTransactions(userId: UserIdLike, startDate: Date, endDate: Date, categories: string[], groupBy: GroupBy): Promise<any> {
   try {
     return await new AutoTransactionRepository().getBudgetTransactions(userId, startDate, endDate, categories, groupBy);
   } catch (error: any) {
@@ -616,14 +613,6 @@ export async function getBudgetTransactions(userId: UserIdLike, startDate: Date,
 export async function getBudgetSpents(userId: UserIdLike, startDate: Date, endDate: Date, categories: string[]): Promise<any> {
   try {
     return await new AutoTransactionRepository().getSpentAmounts(userId, startDate, endDate, categories);
-  } catch (error: any) {
-    return error;
-  }
-}
-
-export async function updateTransactionById(userId: UserIdLike, transactionId: string | Types.ObjectId, updateData: any): Promise<any> {
-  try {
-    return await new AutoTransactionRepository().updateTransactionById(userId, transactionId, updateData);
   } catch (error: any) {
     return error;
   }
@@ -868,5 +857,4 @@ export default {
   getTopFiveCategories,
   getBudgetSpents,
   createTransaction,
-  updateTransactionById,
 };

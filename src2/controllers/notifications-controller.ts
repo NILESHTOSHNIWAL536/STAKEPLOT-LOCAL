@@ -95,7 +95,7 @@ export const SendNotificationToDevice = async (req: Request, res: Response, next
 ----------------------------------------------*/
 export const addDeviceToNotify = async (req: Request, res: Response) => {
   try {
-    const messages = await pushNotificationService.addDevice(req.user!._id, req.body);
+    const messages = await pushNotificationService.addDevice(req.user._id, req.body);
     SuccessResponse.data = messages;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {

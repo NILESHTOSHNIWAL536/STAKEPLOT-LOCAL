@@ -88,7 +88,7 @@ class AccountRepository extends CrudRepository<typeof Account> {
     const response = await this.get(query);
 
     if (!response || response.length === 0) {
-      return '';
+      return [];
     }
 
     const accountData = await Promise.all(
@@ -172,7 +172,7 @@ class AccountRepository extends CrudRepository<typeof Account> {
   // -----------------------------
   // GET MAP (linkedAccRef → _id)
   // -----------------------------
-  async getMap(userId: string) {
+  async getMap(userId: string | Types.ObjectId) {
     const accounts = await this.get({ userId });
 
     if (!accounts || accounts.length === 0) {
@@ -197,7 +197,7 @@ class AccountRepository extends CrudRepository<typeof Account> {
   // -----------------------------
   // DELETE ACCOUNT(S)
   // -----------------------------
-  async deleteAccount(userId: string, accountId?: string) {
+  async deleteAccount(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId) {
     try {
       if (accountId) {
         return await this.deleteOne({ userId, _id: accountId });

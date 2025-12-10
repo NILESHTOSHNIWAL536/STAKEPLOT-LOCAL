@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import app from './app';
-import config from './config';
+import { ServerConfig } from './config';
 import logger from './utils/common/logger';
 import { initCloudWatchLogs } from './utils/cloud-watch';
 import redisClient from './config/redis-config';
@@ -10,12 +10,12 @@ dotenv.config({ path: `./config/.env.${process.env.NODE_ENV}` });
 
 const startServer = async (): Promise<void> => {
   try {
-    const port = parseInt(config.ServerConfig.PORT || '5000', 10);
+    const port = parseInt(ServerConfig.PORT || '5000', 10);
     const server = app.listen(port, '0.0.0.0', async () => {
       logger.info(`Server running on port: ${port}`);
     });
 
-    await mongoose.connect(config.ServerConfig.MONGO_URI!);
+    await mongoose.connect(ServerConfig.MONGO_URI!);
     await initCloudWatchLogs();
     await redisClient.connect();
     // await import('./utils/cron-jobs');

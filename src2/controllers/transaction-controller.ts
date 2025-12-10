@@ -37,7 +37,7 @@ function filterAndAddTotalByDate(data: IBankTransaction[]) {
 
 export async function enterTransaction(req: Request, res: Response) {
   try {
-    const userId = req.user!._id;
+    const userId = req.user._id;
     const response = await TransactionService.enterTransaction({
       ...req.body,
       userId,
@@ -53,7 +53,7 @@ export async function enterTransaction(req: Request, res: Response) {
 
 export async function getAllTransactions(req: Request, res: Response) {
   try {
-    const userId = req.user!._id;
+    const userId = req.user._id;
     const transactions = await TransactionService.getAllTransactions(userId);
     const filteredData = filterAndAddTotalByDate(transactions);
 
@@ -68,7 +68,7 @@ export async function getAllTransactions(req: Request, res: Response) {
 export async function deleteSpecificTransaction(req: Request, res: Response) {
   try {
     const transactionId = req.params.id;
-    const userId = req.user!._id;
+    const userId = req.user._id;
 
     const response = await TransactionService.deleteSpecificTransaction(userId, transactionId);
 
@@ -83,7 +83,7 @@ export async function deleteSpecificTransaction(req: Request, res: Response) {
 export async function updateGroupTransaction(req: Request, res: Response) {
   try {
     const transactionId = req.params.id;
-    const userId = req.user!._id;
+    const userId = req.user._id;
     const body = req.body;
 
     const response = await TransactionService.updateGroupTransaction(userId, transactionId, body);

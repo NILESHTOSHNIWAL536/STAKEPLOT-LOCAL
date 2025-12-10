@@ -26,45 +26,46 @@ export interface EnterTransactionInput {
   isSplit?: boolean;
 }
 
-export async function enterTransaction(data: EnterTransactionInput) {
+export async function enterTransaction(data: Partial<IBankTransaction>) {
   try {
     if (!data) {
       throw new AppError('No transaction data provided', StatusCodes.BAD_REQUEST);
     }
 
     const id = data.userId;
+    if(!id) throw new AppError('Cannot add a new transaction Object', StatusCodes.INTERNAL_SERVER_ERROR);
 
     await handleDailyCounter(id, 'dailyTransaction', 1, '', scoreToAdd.Transaction, scoreToGetReward.Transaction);
 
-    const transactionData = {
-      transactions: [
-        {
-          type: data.isDebit ? 'DEBIT' : 'CREDIT',
-          mode: 'CASH',
-          amount: data.amount,
-          transactionalBalance: '0',
-          transactionTimestamp: new Date(),
-          valueDate: new Date(),
-          txnId: data.merchantId || '',
-          narration: data.label,
-          category: data.category,
-          subcategory: data.label,
-          reference: data.remainderId || '',
-          manualTransaction: true,
-          isDebt: data.isDebt ?? false,
-          isBill: data.isBill ?? false,
-          isSplit: data.isSplit ?? false,
-          userId: data.userId,
-        },
-      ],
-      userId: data.userId,
+    // Create a properly typed transaction
+    const transaction: Partial<IBankTransaction> = {
+      type: data?.isDebit ? 'DEBIT' : 'CREDIT',
+      mode: 'CASH',
+      amount: data.amount,
+      transactionalBalance: 0,
+      transactionTimestamp: new Date(),
+      valueDate: new Date(),
+      txnId: data.merchantId || '',
+      narration: data.label,
+      category: data.category,
+      subcategory: data.label,
+      reference: data.remainderId || '',
+      manualTransaction: true,
+      isDebt: data.isDebt ?? false,
+      isBill: data.isBill ?? false,
+      isSplit: data.isSplit ?? false,
+      userId: id,
     };
 
-    const response = await autoTransactionRepository.createTransaction(transactionData.transactions, null, data.userId);
+    const response = await autoTransactionRepository.createTransaction(
+      [transaction], 
+      null, 
+      id, 
+      null
+    );
 
-    await redisClient.del(`categorizedTransactions:${data.userId}`);
-    await redisClient.del(`all-budgets-${data.userId}`);
-
+    await redisClient.del(`categorizedTransactions:${id}`);  
+    await redisClient.del(`all-budgets-${id}`);  
     return response;
   } catch (error: any) {
     logger.error(`[ERROR] enterTransaction() failed: ${error.stack || error}`);
@@ -72,7 +73,7 @@ export async function enterTransaction(data: EnterTransactionInput) {
   }
 }
 
-export async function getAllTransactions(userId: Types.ObjectId): Promise<IBankTransaction[]> {
+export async function getAllTransactions(userId: string | Types.ObjectId): Promise<IBankTransaction[]> {
   try {
     const response = await transactionRepository.getAllTransactions(userId);
     return response;
@@ -82,7 +83,7 @@ export async function getAllTransactions(userId: Types.ObjectId): Promise<IBankT
   }
 }
 
-export async function deleteSpecificTransaction(userId: string, transactionId: string) {
+export async function deleteSpecificTransaction(userId: string | Types.ObjectId, transactionId: string) {
   try {
     const response = await transactionRepository.deleteSpecificTransaction(userId, transactionId);
 
@@ -93,7 +94,7 @@ export async function deleteSpecificTransaction(userId: string, transactionId: s
   }
 }
 
-export async function updateGroupTransaction(userId: string, transactionId: string, body: any) {
+export async function updateGroupTransaction(userId: string | Types.ObjectId, transactionId: string, body: any) {
   try {
     const response = await transactionRepository.updateGroupTransaction(userId, transactionId, body);
 

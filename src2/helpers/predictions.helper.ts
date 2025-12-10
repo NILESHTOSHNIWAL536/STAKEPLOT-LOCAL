@@ -1,7 +1,5 @@
-// src2/helpers/predictions.helper.ts
-
 import axios from "axios";
-import { PREDICT_URL } from "../config/env"; // define this as needed
+import { ServerConfig } from "@/config";
 
 /**
  * Takes a list of transactions → returns same list with predicted categories appended.
@@ -12,7 +10,7 @@ export const predictCategoriesForTransactions = async (transactions: any[]) => {
   try {
     const narrations = transactions.map((t) => t.narration);
 
-    const { data } = await axios.post(`${PREDICT_URL}/predict`, {
+    const { data } = await axios.post(`${ServerConfig.PREDICT_URL}/predict`, {
       narrations
     });
 

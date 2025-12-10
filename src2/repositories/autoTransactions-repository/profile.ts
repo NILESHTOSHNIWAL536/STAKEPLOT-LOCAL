@@ -19,8 +19,8 @@ interface CreateProfileData {
 interface UpdateProfileData {
   holder: Record<string, any>;
   type: string;
-  accountId: string;
-  userId: string;
+  accountId?: string | Types.ObjectId;
+  userId: string | Types.ObjectId; 
 }
 
 class UserProfileRepository extends CrudRepository<typeof Profile> {
@@ -68,7 +68,7 @@ class UserProfileRepository extends CrudRepository<typeof Profile> {
   // ----------------------------------------------------
   // GET PROFILES BY ACCOUNT IDS
   // ----------------------------------------------------
-  async getProfile({ accountIds }: { accountIds: string[] }) {
+  async getProfile({ accountIds }: { accountIds: (string | Types.ObjectId)[] }) {
     const results = await this.get({ accountId: { $in: accountIds } });
 
     if (!results || results.length === 0) throw new AppError('No profiles found', StatusCodes.NOT_FOUND);
@@ -91,7 +91,7 @@ class UserProfileRepository extends CrudRepository<typeof Profile> {
   // ----------------------------------------------------
   // UPDATE PROFILE
   // ----------------------------------------------------
-  async updateProfile(query: { accountId: string }, data: UpdateProfileData, plaintextKey: string | Buffer, ciphertextBlob: string) {
+  async updateProfile(query: { accountId: string | Types.ObjectId }, data: UpdateProfileData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
     try {
       const existingProfile = await Profile.findOne({
         accountId: query.accountId,
@@ -118,7 +118,7 @@ class UserProfileRepository extends CrudRepository<typeof Profile> {
   // ----------------------------------------------------
   // DELETE PROFILE
   // ----------------------------------------------------
-  async deleteProfile(userId: string, accountId?: string) {
+  async deleteProfile(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId) {
     try {
       if (accountId) {
         return await this.deleteOne({ userId, accountId });

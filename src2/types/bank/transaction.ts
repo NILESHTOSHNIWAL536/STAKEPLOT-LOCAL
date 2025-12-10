@@ -13,7 +13,7 @@ export interface IBankTransaction extends Document {
   valueDate?: Date;
 
   txnId: string;
-  narration?: string;
+  narration: string;
   reference: string;
 
   manualTransaction: boolean;
@@ -34,7 +34,14 @@ export interface IBankTransaction extends Document {
   merchant: string;
   expectedFrequency: string;
 
-  accountId?: Types.ObjectId;
-  userId: Types.ObjectId;
-  bankId?: Types.ObjectId;
+  accountId?: string |Types.ObjectId | null;
+  userId: string | Types.ObjectId;
+  bankId?: string | Types.ObjectId | null;
+
+
+  merchantId?: string,
+  isDebit?: string,
+  label?: string,
+  remainderId?: string
+  currentBalance?: string | number
 }

@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import logger from './common/logger';
-import redisClient from '../config/redis-config';
-import bankLogos from '../config/bankLogos';
+import redisClient from '@/config/redis-config';
+import bankLogos from '@/config/bankLogos';
 import generateToken from './helpers/generate-finvu-token';
-import { FinvuController, TransactionAutoController } from '../controllers';
-import { NotificationRepository } from '../respositories';
-import { FailedTransaction, Finvu } from '../models';
+import { FinvuController, TransactionAutoController } from '@/controllers';
+import { NotificationRepository } from '@/repositories';
+import { FailedTransaction, Finvu } from '@/models';
 
 // ✅ Initialize notification repository
 const notificationRepository = new NotificationRepository();

@@ -6,6 +6,7 @@ import { scoreToAdd } from '../common/enums';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import redisClient from '../../config/redis-config';
+import {Types} from "mongoose"
 
 /* ============================================================
    Local Interfaces (NOT imported from model)
@@ -31,7 +32,7 @@ interface IUserActivity {
   score: number;
   unclaimedCount: number;
 
-  transactionIdList: string[];
+  transactionIdList: (string | Types.ObjectId)[];
 
   hasReached50: boolean;
 
@@ -153,10 +154,10 @@ export const postScoreCounter = async (userId: string, postId: string, isDelete:
 ============================================================ */
 
 export const handleDailyCounter = async (
-  userId: string,
+  userId: string | Types.ObjectId,
   counterField: keyof IUserActivity,
   points: number,
-  objectId: string,
+  objectId: string | Types.ObjectId,
   incScoreCount: number,
   countBreak: number
 ): Promise<number> => {
@@ -210,7 +211,7 @@ export const handleDailyCounter = async (
 
         if (claimToday.count < 2) {
           setTimeout(() => {
-            publishSocketEvent(userId, 'addUserToSocket', {
+            publishSocketEvent(userId as string, 'addUserToSocket', {
               type: 'Reward',
               data: { count: user.unclaimedCount },
             });
@@ -220,7 +221,7 @@ export const handleDailyCounter = async (
     }
 
     if (!objectId || !exists) {
-      await incrementScore(userId, incScoreCount);
+      await incrementScore(userId as string, incScoreCount);
     }
 
     await user.save();

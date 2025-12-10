@@ -5,6 +5,8 @@ export interface IGroupedTransaction extends Document {
 
   groupKey: string;
 
+  amount? : number;
+
   transactions: Types.ObjectId[];
 
   narrationPattern: string;

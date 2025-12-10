@@ -9,9 +9,9 @@ import type { AggregationPipeline } from '@/types/bank/pipeline.types';
  * For monthly/weekly we use '%Y-%m-%d' (day)
  * For yearly we return full month name using '%B'
  */
-export const buildBudgetPipeline = (userId: any, startDate: Date, endDate: Date, categories: string[], groupBy: 'monthly' | 'weekly' | 'yearly'): AggregationPipeline => {
+export const buildBudgetPipeline = (userId: any, startDate: Date, endDate: Date, categories: string[], groupBy: 'day' | 'week' | 'month'): AggregationPipeline => {
   let dateFormat = '%Y-%m-%d';
-  if (groupBy === 'yearly') dateFormat = '%B';
+  if (groupBy === 'month') dateFormat = '%B';
 
   return [
     {

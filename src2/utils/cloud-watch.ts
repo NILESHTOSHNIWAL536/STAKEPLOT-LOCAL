@@ -31,7 +31,7 @@ interface LogRequestPayload {
   path: string;
   duration: number;
   statusCode: number;
-  ip: string;
+  ip?: string;
 }
 
 export async function initCloudWatchLogs(): Promise<void> {

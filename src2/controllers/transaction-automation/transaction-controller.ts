@@ -20,6 +20,8 @@ import mongoose from 'mongoose';
 /* Helpers to avoid TS complaints about common responses being mutated */
 const SuccessResponse: any = (Common as any).SuccessResponse;
 const ErrorResponse: any = (Common as any).ErrorResponse;
+type GroupBy = "day" | "week" | "month";
+
 
 /* ---------------------------
    Non-controller exports (business helpers)
@@ -284,7 +286,7 @@ export const getBudgetTransactions = async (req: Request, res: Response): Promis
 
     const categoryNamesArray = typeof categoryNames === 'string' && categoryNames.length ? categoryNames.split(',') : [];
 
-    const response = await BankService.getBudgetTransactions(userId, modifiedStartDate, modifiedEndDate, categoryNamesArray, groupBy as string);
+    const response = await BankService.getBudgetTransactions(userId, modifiedStartDate, modifiedEndDate, categoryNamesArray, groupBy as GroupBy);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -627,17 +629,7 @@ export const getTransactionsByDate = async (req: Request, res: Response): Promis
     const userId = req.user!._id;
     const { date } = req.params;
 
-    // Convert to Date
-    const parsedDate = new Date(date);
-
-    // Validate date
-    if (isNaN(parsedDate.getTime())) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        error: 'Invalid date format. Expected a valid date string.',
-      });
-    }
-
-    const response = await BankService.getTransactionsByDate(userId, parsedDate);
+    const response = await BankService.getTransactionsByDate(userId, date);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -651,7 +643,8 @@ export const getRecurringPayments = async (req: Request, res: Response): Promise
   try {
     const userId = req.user!._id;
     const type = req.params.isActive;
-    const response = await BankService.getRecurringPayments(userId, type);
+    const boolIsActive = type === 'true' ? true : false
+    const response = await BankService.getRecurringPayments(userId, boolIsActive);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);

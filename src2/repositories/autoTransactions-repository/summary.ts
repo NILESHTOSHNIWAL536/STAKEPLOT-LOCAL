@@ -17,7 +17,7 @@ interface CreateSummaryData {
 interface UpdateSummaryData {
   data: Record<string, any>;
   accountId: string;
-  userId: string;
+  userId: string | Types.ObjectId;
 }
 
 class SummaryRepository extends CrudRepository<typeof Summary> {
@@ -61,7 +61,7 @@ class SummaryRepository extends CrudRepository<typeof Summary> {
   // ----------------------------------------------------
   // GET SUMMARY FOR MULTIPLE ACCOUNTS
   // ----------------------------------------------------
-  async getSummary({ accountIds }: { accountIds: string | Types.ObjectId[] }) {
+  async getSummary({ accountIds }: { accountIds: (string | Types.ObjectId)[] }) {
     const results = await this.get({ accountId: { $in: accountIds } });
 
     if (!results || results.length === 0) {
@@ -84,7 +84,7 @@ class SummaryRepository extends CrudRepository<typeof Summary> {
   // ----------------------------------------------------
   // UPDATE SUMMARY
   // ----------------------------------------------------
-  async updateSummary(query: { accountId: string | Types.ObjectId }, data: UpdateSummaryData, plaintextKey: string | Buffer, ciphertextBlob: string) {
+  async updateSummary(query: { accountId: string | Types.ObjectId }, data: UpdateSummaryData, plaintextKey: string | Uint8Array, ciphertextBlob: string) {
     try {
       const existingSummary = await Summary.findOne({
         accountId: query.accountId,

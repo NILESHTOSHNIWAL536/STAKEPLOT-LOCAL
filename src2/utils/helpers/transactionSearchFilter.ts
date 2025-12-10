@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Transaction } from '../../models';
-
+import { Types } from 'mongoose';
 // ---------------------- Types ---------------------- //
 
 export type SearchFilter = { amount: number } | { type: RegExp } | { category: RegExp } | { narration: RegExp } | { subcategory: RegExp };
@@ -40,7 +40,7 @@ export const escapeRegex = (str: string): string => str.replace(/[.*+?^${}()|[\]
 
 // ---------------------- getMatchedKeywords ---------------------- //
 
-export const getMatchedKeywords = async (userId: string, searchText: string): Promise<string[]> => {
+export const getMatchedKeywords = async (userId: string | Types.ObjectId, searchText: string): Promise<string[]> => {
   if (!searchText || searchText.trim() === '' || searchText.trim() === 'empty') return [];
 
   const trimmedSearch = searchText.trim().toLowerCase();

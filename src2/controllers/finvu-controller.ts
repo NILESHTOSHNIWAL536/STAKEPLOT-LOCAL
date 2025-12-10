@@ -46,7 +46,7 @@ interface FIStatusResponse {
 }
 
 // Redis-based WebSocket publish helper
-async function publishSocketEvent(userId: string, event: string, data: any) {
+async function publishSocketEvent(userId: string | Types.ObjectId, event: string, data: any) {
   await redisClient.publish('bank_events', JSON.stringify({ userId, event, data }));
 }
 
@@ -71,7 +71,7 @@ export async function deleteConsentHandleById(handleId: string) {
   }
 }
 
-export async function storeOrUpdateConsentHandle({ custId, handleId, userId }: { custId: string; handleId: string; userId: string }) {
+export async function storeOrUpdateConsentHandle({ custId, handleId, userId }: { custId: string; handleId: string; userId: string | Types.ObjectId }) {
   try {
     return await ConsentHandleId.findOneAndUpdate(
       { handleId },
@@ -95,7 +95,7 @@ export async function storeOrUpdateConsentHandle({ custId, handleId, userId }: {
 
 export async function loginAndGetHandleId(req: Request, res: Response) {
   try {
-    const userId = req.user!._id;
+    const userId = req.user._id;
     const { custId, number } = req.body as LoginRequestBody;
 
     const token = await generateToken();
@@ -275,7 +275,7 @@ export async function fetchConsentDetails(token: string, consentId: string) {
 // Initiate FI Request
 // =======================================
 
-export async function initiateFIRequest(token: string, handleId: string, custId: string, consentId: string, from: string, to: string, userId: string): Promise<string | null> {
+export async function initiateFIRequest(token: string, handleId: string, custId: string, consentId: string, from: string, to: string, userId: string | Types.ObjectId): Promise<string | null> {
   try {
     const response = await axios.post(
       `${baseUrl}/FIRequest`,
@@ -434,7 +434,7 @@ export async function getFipsDetails(req: Request, res: Response) {
 // Helpers
 // =======================================
 
-async function sendFailedNotification(userId: string) {
+async function sendFailedNotification(userId: string | Types.ObjectId) {
   // Update fetchInProgress to false
   await User.findByIdAndUpdate(userId, { fetchInProgress: false }, { new: true, runValidators: true });
 

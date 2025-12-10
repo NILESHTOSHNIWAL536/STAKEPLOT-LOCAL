@@ -24,11 +24,11 @@ type RuleMap = Map<string, TransactionRule>;
 
 function categorizeTransactions(
   transactionsData: Partial<IBankTransaction>[],
-  accountId: string | Types.ObjectId,
+  accountId: string | Types.ObjectId | null,
   userId: string | Types.ObjectId,
-  bankId: string | Types.ObjectId,
+  bankId: string | Types.ObjectId | null,
   ruleMap: RuleMap
-): IBankTransaction[] {
+): Partial<IBankTransaction>[] {
   return transactionsData.map((transaction) => {
     const narration = transaction.narration ? transaction.narration.toLowerCase() : '';
 
@@ -40,12 +40,14 @@ function categorizeTransactions(
     if (transaction.type === 'CREDIT') {
       matchedCategory = 'Income';
 
-      const narrationParts = transaction.narration.split(/[-/]/);
-      for (const part of narrationParts) {
-        const trimmed = part.trim();
-        if (trimmed && trimmed !== 'UPI' && trimmed !== 'CR' && !/^\d+$/.test(trimmed)) {
-          matchedSubcategory = trimmed;
-          break;
+      const narrationParts = transaction.narration?.split(/[-/]/);
+      if (narrationParts) {
+        for (const part of narrationParts) {
+          const trimmed = part.trim();
+          if (trimmed && trimmed !== 'UPI' && trimmed !== 'CR' && !/^\d+$/.test(trimmed)) {
+            matchedSubcategory = trimmed;
+            break;
+          }
         }
       }
     } else {
@@ -71,8 +73,8 @@ function categorizeTransactions(
         // Step 4: Existing logic
         if (narration.startsWith('upi-cr') || narration.startsWith('upi cr')) {
           matchedCategory = 'Personal Transfer Received';
-          const parts = transaction.narration.split('-');
-          if (parts.length > 2) matchedSubcategory = parts[2].trim();
+          const parts = transaction.narration?.split('-');
+          if (parts && parts.length > 2) matchedSubcategory = parts[2].trim();
         } else if (narration.startsWith('pos') || narration.startsWith('cash wdl') || narration.startsWith('atm') || narration.startsWith('to:')) {
           matchedCategory = 'Personal Transfer';
         } else if (narration.startsWith('neft-cr') || narration.startsWith('neft cr')) {
@@ -109,8 +111,8 @@ function categorizeTransactions(
     return {
       ...transaction,
       currentBalance,
-      transactionTimestamp: transaction.transactionTimestamp ? new Date(transaction.transactionTimestamp) : null,
-      valueDate: transaction.valueDate ? new Date(transaction.valueDate) : null,
+      transactionTimestamp: transaction.transactionTimestamp ? new Date(transaction.transactionTimestamp) : undefined,
+      valueDate: transaction.valueDate ? new Date(transaction.valueDate) : undefined,
       category: matchedCategory,
       subcategory: transaction.subcategory || matchedSubcategory,
       manualTransaction: transaction.manualTransaction !== undefined ? transaction.manualTransaction : false,

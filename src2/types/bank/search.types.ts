@@ -18,5 +18,5 @@ export interface SearchPipelineInput {
   maxAmount?: number;
   startDate?: Date;
   endDate?: Date;
-  isCash: boolean;
+  isCash?: boolean;
 }

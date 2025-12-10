@@ -6,6 +6,7 @@ import { redisClient } from '@/config';
 import { StatusCodes } from 'http-status-codes';
 import { Document } from 'mongoose';
 import { ServerConfig } from '@/config';
+import { Types } from 'mongoose';
 
 // ------------------------------
 // TYPES
@@ -64,7 +65,7 @@ export async function SendNotification(data: IOneSignalNotificationPayload, call
 // ADD / UPDATE DEVICE LOGINS
 // ------------------------------
 
-export async function addDevice(userId: string, deviceInfo: IDeviceInfo): Promise<Document> {
+export async function addDevice(userId: string | Types.ObjectId, deviceInfo: IDeviceInfo): Promise<Document> {
   try {
     const { deviceId = 'unknown-device-id', brand = 'Unknown Brand', deviceName = 'Unknown Device', model = 'Unknown Model', os = 'Unknown OS' } = deviceInfo || {};
 

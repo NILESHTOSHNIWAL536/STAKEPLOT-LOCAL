@@ -9,7 +9,7 @@ const profileSchema = new Schema<IProfile>({
   },
 
   type: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,
     required: true,
   },
 

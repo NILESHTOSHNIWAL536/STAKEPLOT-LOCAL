@@ -11,9 +11,9 @@ import deduplicateAllTransactions from '@/utils/helpers/delete-transactions-from
 
 interface CreateTxInput {
   transactions: Partial<IBankTransaction>[];
-  accountId: string | Types.ObjectId;
+  accountId: string | Types.ObjectId | null;
   userId: string | Types.ObjectId;
-  bankId: string | Types.ObjectId;
+  bankId: string | Types.ObjectId | null;
   Transaction: Model<IBankTransaction>;
   TransactionRule: Model<ITransactionRule>;
 }

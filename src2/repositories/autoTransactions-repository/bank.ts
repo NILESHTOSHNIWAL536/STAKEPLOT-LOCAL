@@ -253,7 +253,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
   // ----------------------------------------------------
   // DELETE BANK
   // ----------------------------------------------------
-  async deleteBank(userId: string, bankId?: string) {
+  async deleteBank(userId: string | Types.ObjectId, bankId?: string | Types.ObjectId) {
     if (bankId) {
       const record = await Bank.findOne({ _id: bankId, userId });
 

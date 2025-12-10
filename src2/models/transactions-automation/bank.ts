@@ -3,39 +3,39 @@ import { IBank, encryptedFieldSchema, IFiAccountInfo } from '@/types/bank';
 
 const fiAccountInfoSchema = new Schema<IFiAccountInfo>({
   accountRefNo: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,  // ✅ Changed from spread
     required: true,
   },
 
   linkRefNo: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,  // ✅ Changed from spread
     required: true,
   },
 });
 
 const bankSchema = new Schema<IBank>({
   fipId: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,  // ✅ Changed from spread
     required: true,
   },
 
   fipName: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,  // ✅ Changed from spread
     required: true,
   },
 
   custId: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,  // ✅ Changed from spread
     required: true,
   },
 
   consentId: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,  // ✅ Changed from spread
     required: true,
   },
 
   consentHandleId: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,  // ✅ Changed from spread
     required: true,
   },
 

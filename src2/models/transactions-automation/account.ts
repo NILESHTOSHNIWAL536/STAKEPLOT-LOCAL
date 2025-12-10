@@ -3,29 +3,29 @@ import { IAccount, encryptedFieldSchema } from '@/types/bank';
 
 const accountSchema = new Schema<IAccount>({
   linkedAccRef: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,
     required: true,
     unique: true,
   },
 
   type: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,
     enum: ['term_deposit', 'recurring_deposit', 'deposit'],
     required: true,
   },
 
   maskedAccNumber: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,
     required: true,
   },
 
   version: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,  // ✅ Changed from spread
     required: true,
   },
 
   schemaLocation: {
-    ...encryptedFieldSchema,
+    type: encryptedFieldSchema,  // ✅ Changed from spread
   },
 
   startDate: {

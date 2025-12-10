@@ -1,22 +1,22 @@
 // src2/helpers/transaction-update.helper.ts
 
-import type { Model } from "mongoose";
-import type { ITransaction } from "../types/transaction.types";
-import type { ITransactionRule } from "../types/rule.types";
+import type { Model, Types } from "mongoose";
+import { IBankTransaction } from '@/types/bank';
+import type { ITransactionRule } from "@/models/transactions-automation/transactionRule";
 
-import extractNarrationPattern from "../utils/extractNarrationPattern"; // your util
-import { PredictedCategories } from "../models"; // adjust import based on your project
-import { handleDailyCounter } from "../utils/increment_score";
+import extractNarrationPattern from "@/utils/helpers/extractNarrationPattern";
+import { PredictedCategories } from "@/models"; // adjust import based on your project
+import { handleDailyCounter } from "@/utils/helpers/increment_score";
 import { scoreToAdd, scoreToGetReward } from "../utils/common/enums";
 
 interface UpdateInput {
-  userId: string;
-  txId: string;
-  data: Partial<ITransaction> & {
+  userId: string | Types.ObjectId;
+  txId: string | Types.ObjectId
+  data: Partial<IBankTransaction> & {
     predictedCategories?: any[];
     selectedCategory?: string;
   };
-  Transaction: Model<ITransaction>;
+  Transaction: Model<IBankTransaction>;
   TransactionRule: Model<ITransactionRule>;
 }
 
@@ -39,19 +39,20 @@ export const updateTransactionLogic = async ({
 
   // If category changed → update TransactionRule
   if ("category" in data) {
-    const narrationPattern = extractNarrationPattern(
-      updated.narration
-    ).toLowerCase();
+
+    const narrationPattern = extractNarrationPattern(updated.narration);
+    const pattern = narrationPattern?.toLowerCase() || '';
+  
 
     await TransactionRule.findOneAndUpdate(
       {
         userId: updated.userId,
-        narrationPattern,
+        narrationPattern: pattern,
         amount: updated.amount
       },
       {
         userId: updated.userId,
-        narrationPattern,
+        narrationPattern: pattern,
         amount: updated.amount,
         category: updated.category,
         subcategory: updated.subcategory ?? "",
