@@ -69,7 +69,7 @@ class _FinancePageState extends State<FinancePage> {
                       fontSize: fontSizeFactor * 4.0,
                       color: AppColors.accentColor),
                 ),
-                historyButton(fontSizeFactor, context),
+                // historyButton(context),
               ],
             ),
             Row(
@@ -820,3 +820,4 @@ class ChartData {
   final String x;
   final double y;
 }
+

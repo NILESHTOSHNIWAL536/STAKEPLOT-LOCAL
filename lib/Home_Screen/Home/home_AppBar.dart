@@ -20,68 +20,78 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/app_styles.dart';
 import '../../components/shared_utils.dart';
 
-PreferredSizeWidget getAppBar(context) {
-  final userController = ControllerManagement.userController;
+// PreferredSizeWidget getAppBar(context) {
+//   final userController = ControllerManagement.userController;
 
-  return PreferredSize(
-    preferredSize: const Size.fromHeight(60),
-    child: AppBar(
-      backgroundColor: AppColors.backgroundColor,
-      automaticallyImplyLeading: false,
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 10, top: 6, left: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Obx(() => GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const EditDetails(),
-                        ),
-                      );
-                    },
-                    child: AvatarProfile(
-                      name: userController.userName.value,
-                      width: 30,
-                      height: 13,
-                      background: userController.avatarBackGround.value,
-                    ),
-                  )),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  textStyle(
-                      context: context,
-                      text: getTimeBasedGreeting(),
-                      fontWeight: FontWeight.w500,
-                      fontsize: 15),
-                  Obx(() => textStyle(
-                      context: context,
-                      text: toUpperCase(userController.userName.value),
-                      // text: toUpperCase(userName.value),
-                      fontWeight: FontWeight.bold,
-                      fontsize: 15)),
-                ],
-              )
-            ],
+//   return PreferredSize(
+//     preferredSize: const Size.fromHeight(60),
+//     child: AppBar(
+//       backgroundColor: AppColors.backgroundColor,
+//       automaticallyImplyLeading: false,
+//       actions: [
+//         Padding(
+//           padding: const EdgeInsets.only(right: 10, top: 6, left: 10),
+//           child: Row(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             // crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//                GestureDetector(
+//                     onTap: () {
+                    
+//                     },
+//                     child: AvatarProfileImage(
+//                       url: Strides.stride,
+//                       width: 30,
+//                       height: 30,
+                     
+//                     ),
+//                   )
+             
+//             ],
+//           ),
+//         ),
+//         Spacer(),
+//         NotificationsBudget(
+//           child: Text(""),
+//         ),
+//       ],
+//     ),
+//   );
+// }
+
+class TopRightIconsWidget extends StatelessWidget {
+  const TopRightIconsWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        /// PROFILE ICON
+        GestureDetector(
+          onTap: () {
+            // TODO: Add your navigation or action here
+          },
+          child: AvatarProfileImage(
+            url: Strides.stride,
+            width: 30,
+            height: 30,
           ),
         ),
-        Spacer(),
+
+        const SizedBox(width: 16),
+
+        /// NOTIFICATION BUTTON
         NotificationsBudget(
-          child: Text(""),
+          child: const SizedBox(),
         ),
       ],
-    ),
-  );
+    );
+  }
 }
-
 
 
 PreferredSizeWidget historyAppBar(context) {

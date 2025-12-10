@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/notification_repository.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -36,40 +37,18 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
      child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                     InkWell(
-                      onTap: (){
-                        HapticFeedback.mediumImpact();
-                              Navigator.pushNamed(context, '/Notifications');
-                          },
-                       child: Container(
-                         padding: EdgeInsets.all(8),
-                         decoration: BoxDecoration(
-                            color: AppColors.button,
-                            borderRadius: BorderRadius.circular(10)
-                         ),
-                         
-                            child: SvgPicture.asset(HomePageIcons.notification,
-                                height: 22, width: 10,color: Colorcodes.black,),
-                                         ),
-                     ),
-                     
-             Obx(()=> !hasGetNewNotifications.value?   SizedBox.shrink():   Positioned(
-                        right: 10,
-                        top: 9,
-                        child: Container(
-                          width: 7,
-                          height: 7,
-                          decoration: BoxDecoration(
-                            color: AppColors.redColor,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      )),
-                    ],
-                  ),
+                  InkWell(
+                   onTap: (){
+                     HapticFeedback.mediumImpact();
+                           Navigator.pushNamed(context, '/Notifications');
+                       },
+                    child: Obx(()=> !hasGetNewNotifications.value? 
+                    AvatarProfileImageZero(url: HomePageIcons.notification, width: 30, height: 30):
+                     AvatarProfileImageZero(url: HomePageIcons.notificationStack, width: 30, height: 30)
+                    )
+                    
+                  )
+                             
                 ],
              ),
    );

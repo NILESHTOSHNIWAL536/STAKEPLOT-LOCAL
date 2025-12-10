@@ -1161,3 +1161,72 @@ String getCurrentFormattedDate() {
   String formattedDate = DateFormat('yyyy-MM-dd').format(now);
   return formattedDate;
 }
+
+Widget manualTransactionButton( BuildContext context) {
+  return InkWell(
+    onTap: () {
+     
+    },
+    borderRadius: BorderRadius.circular(10),
+    child: Container(
+      width: 157.28,
+      height: 38,
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      decoration: BoxDecoration(
+        // base white fill
+        color: AppColors.backgroundColor,
+        // semi-opaque white overlay (matches your linear-gradient with same stops)
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.backgroundColor.withOpacity(0.80),
+            AppColors.backgroundColor.withOpacity(0.80),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(10), // nice rounded corners similar to SVG
+        border: Border.all(
+          color: AppColors.primaryColor, // stroke color from SVG
+          width: 1,
+        ),
+        // subtle elevation feel — optional, remove if you don't want it
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.accentColor.withOpacity(0.03),
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Icon — tune width/height to fit the 38px container
+          // using AvatarProfileImage to keep your existing component
+          AvatarProfileImage(
+            url: HomePageIcons.cash,
+            width: MediaQuery.of(context).size.width * (20 / 375),
+            height: MediaQuery.of(context).size.width * (20 / 375),
+          ),
+
+          const SizedBox(width: 4),
+
+          // Text label
+          Container(
+            width: 100,
+            child: Text(
+              'Cash transactions',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w500,
+                fontSize: 12,
+                lineHeight: 1.0,
+                color: AppColors.accentColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}

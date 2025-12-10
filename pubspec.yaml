@@ -163,6 +163,7 @@ flutter:
     - assets/onboarding/
     - assets/icons/finSpaceIcons/
     - assets/icons/maskAvatars/
+    - assets/icons/strides/
     
     - assets/icons/Categories2/
     - assets/icons/subCategoryIcons2/

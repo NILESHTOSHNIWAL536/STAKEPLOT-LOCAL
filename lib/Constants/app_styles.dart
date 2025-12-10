@@ -2,6 +2,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+
+
+class Strides {
+  static String stride = "assets/icons/strides/stride.svg";
+  }
 class NavBarIcons {
   static String community = "assets/icons/Navigation_bar/communityfilled.svg";
   static String community1 = "assets/icons/Navigation_bar/communitystroke.svg";
@@ -35,7 +40,8 @@ class HomePageIcons {
   static String history = "assets/icons/Home-page/TransactionHistoryBtn.svg";
   static String manualTransaction =
       "assets/icons/Home-page/manual_transaction.svg";
-  static String notification = "assets/icons/Home-page/notification.svg";
+  static String notification = "assets/icons/Home-page/notificationIcon.svg";
+  static String notificationStack = "assets/icons/Home-page/notificationIcon2.svg";
   static String refresh = "assets/icons/Home-page/Refresh.svg";
   static String fetch = "assets/icons/Home-page/fetch.svg";
   static String none = "assets/icons/Home-page/none.svg";
@@ -55,6 +61,10 @@ class HomePageIcons {
   static String tagIcon = "assets/icons/Home-page/tagIcon2.svg";
   static String mt1 = "assets/icons/Home-page/mt1.svg";
   static String mt2 = "assets/icons/Home-page/mt2.svg";
+  static String bankContainerBg = "assets/icons/Home-page/bankBg.svg";
+  static String setPin = "assets/icons/Home-page/pin.svg";
+  static String background = "assets/icons/Home-page/background.svg";
+  static String cash = "assets/icons/Home-page/manualTransactionButton.svg";
 }
 
 class Categories {
