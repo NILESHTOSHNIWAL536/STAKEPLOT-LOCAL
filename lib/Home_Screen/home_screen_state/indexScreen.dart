@@ -115,8 +115,8 @@ Stack(
                       height: 10,
                     ),
                     SizedBox(
-                      height: height * 0.51,
-                      child: FinancePage(),
+                      height: height * 0.2,
+                      child: SpendingCardTwoPanels(),
                     ),
                     SizedBox(
                       height: height * 0.16,

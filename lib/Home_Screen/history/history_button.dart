@@ -66,9 +66,9 @@ Widget historyButton(BuildContext context) {
     },
     borderRadius: BorderRadius.circular(10),
     child: Container(
-      width: 157.28, // approx 157.277px
-      height: 38,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      width: MediaQuery.sizeOf(context).width/2.1,
+      height: MediaQuery.sizeOf(context).height/21,
+      padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
         // base white fill
         color: Colors.white,
@@ -101,20 +101,22 @@ Widget historyButton(BuildContext context) {
           
           AvatarProfileImage(
             url: HomePageIcons.history,
-            width:(20 / 375),
-            height: MediaQuery.of(context).size.width * (20 / 375),
+             width: 5,
+              height: 26,
           ),
 
           const SizedBox(width: 8),
 
           // Text label
-          Text(
-            'History',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w500,
-              fontSize: 12,
-              color: AppColors.accentColor,
+          Center(
+            child: Text(
+              'History',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w400,
+                fontSize: 12,
+                color: AppColors.accentColor,
+              ),
             ),
           ),
         ],

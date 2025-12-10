@@ -4,8 +4,6 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/finance_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -48,10 +46,10 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
   //   return;
   // }
 
-  if ((weekORmonth == 'month' || weekORmonth == 'Month') && !isSplashScreen) {
-    await FinanceLocalStorage.loadFinanceFromHive(
-        accountId.value, storedPeriod, formattedDate, endDate);
-  }
+  // if ((weekORmonth == 'month' || weekORmonth == 'Month') && !isSplashScreen) {
+  //   await FinanceLocalStorage.loadFinanceFromHive(
+  //       accountId.value, storedPeriod, formattedDate, endDate);
+  // }
 
   List<String> labelsLocal = [];
   List<double> debitList = [];

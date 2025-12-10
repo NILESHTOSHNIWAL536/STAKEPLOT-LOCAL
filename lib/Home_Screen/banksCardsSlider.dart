@@ -742,7 +742,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
         // --- SVG Background
         Positioned.fill(
           
-          child: AvatarProfileImageZero(url: HomePageIcons.bankContainerBg, width: 1, height: 2.6),
+          child: AvatarProfileImageZero(url: HomePageIcons.bankContainerBg, width: 1, height: 2.4),
         ),
 
         Container(

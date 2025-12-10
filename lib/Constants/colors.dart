@@ -67,4 +67,5 @@ class AppColors {
   static const Color whiteOpacity092 = Color(0xEBFFFFFF);
   static const Color whiteOpacity08 = Color(0xCCFFFFFF);
   static const Color newbg = Color(0xFFFFF9F0); 
+  static const Color debitedAmount = Color(0xFF9394B8); 
 }

@@ -1039,151 +1039,67 @@ class _FinanceDashboardState extends State<FinanceDashboard>
       child: _buildToolsGrid(context),
     );
   }
-
- Widget _buildToolsGrid(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 6),
-    child: MasonryGridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,          // 💥 EXACTLY LIKE YOUR IMAGE
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      itemCount: 6,
-      itemBuilder: (context, index) {
-        switch (index) {
-
-          case 0:
-            return _ImageToolCard(
-              svgPath: PlotFinanceIcons.currencyConverter,
-              height: 120,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const CurrencyConverterScreen()),
-              ),
-            );
-
-          case 1:
-            return _ImageToolCard(
-              svgPath: PlotFinanceIcons.crediCardBg,
-              height: 180,     // 💥 taller card like screenshot
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const CreditCard()),
-              ),
-            );
-
-          case 2:
-            return _ImageToolCard(
-              svgPath: PlotFinanceIcons.budgetPlanner,
-              height: 160,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const Budget()),
-              ),
-            );
-
-          case 3:
-            return _FinanceToolsCard(
-              height: 100,     // behaves like "Finance Fusion"
-              onTapC: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const VegNonVegCalculator()),
-              ),
-              onTapD: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => AllCalculatorScreen()),
-              ),
-            );
-
-          case 4:
-            return _ImageToolCard(
-              svgPath: PlotFinanceIcons.reserve,
-              height: 150,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const CurrencyConverterScreen()),
-              ),
-            );
-
-          case 5:
-            return _ImageToolCard(
-              svgPath: PlotFinanceIcons.goalCreation,
-              height: 150,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const CurrencyConverterScreen()),
-              ),
-            );
-        }
-
-        return const SizedBox();
-      },
-    ),
-  );
-}
-
-
-}
-
-class _ImageToolCard extends StatelessWidget {
-  final String svgPath;
-  final double height;
-  final VoidCallback? onTap;
-
-  const _ImageToolCard({
-    super.key,
-    required this.svgPath,
-    required this.height,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-     
-      onTap: onTap,
-      child: SizedBox(
-        height: height,
-        child: SvgPicture.asset(
-          svgPath,
-          fit: BoxFit.contain,
-        ),
-      ),
-    );
-  }
-}
-
-// class _ImageToolCard extends StatelessWidget {
-//   final String svgPath;
-//   final double height;
-//   final VoidCallback? onTap;
-
-//   const _ImageToolCard({
-//     super.key,
-//     required this.svgPath,
-//     required this.height,
-//     this.onTap,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: 160,
-//       child: InkWell(
+Widget _buildToolsGrid(BuildContext context) {
+  return  Row(
+   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+   children: [
+     Column(
+       mainAxisAlignment: MainAxisAlignment.start,
+       children: [
+         SvgPicture.asset(
+       PlotFinanceIcons.currencyConverter,
+       fit: BoxFit.contain,
       
-//         onTap: onTap,
-//         child: SvgPicture.asset(
-//           svgPath,
+     ),
+     SizedBox(height: 10,),
+         SvgPicture.asset(
+       PlotFinanceIcons.budgetPlanner,
+       fit: BoxFit.contain,
+     ),
+     SizedBox(height: 10,),
+         SvgPicture.asset(
+       PlotFinanceIcons.reserve,
+       fit: BoxFit.contain,
+     )
+        
+       ],
+     ),
+     Padding(
+       padding: const EdgeInsets.only(bottom: 60),
+       child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+         children: [
+           SvgPicture.asset(
+         PlotFinanceIcons.crediCardBg,
+         fit: BoxFit.contain,
+       ),
+       SizedBox(height: 10,),
+         _FinanceToolsCard(
+             height: 100,   
+             onTapC: () => Navigator.push(
+               context,
+               MaterialPageRoute(builder: (_) => const VegNonVegCalculator()),
+             ),
+             onTapD: () => Navigator.push(
+               context,
+               MaterialPageRoute(builder: (_) => AllCalculatorScreen()),
+             ),
+           ),
+           SizedBox(height: 10,), 
+           SvgPicture.asset(
+         PlotFinanceIcons.goalCreation,
+         fit: BoxFit.contain,
+       )
           
-//           fit: BoxFit.contain,
-//         ),
-//       ),
-//     );
-//   }
-// }
+         ],
+       ),
+     ),
+  
+   ],
+  );}
 
-/// Finance Tools card: collapses like Finance Fusion card but interactive
+}
+
 class _FinanceToolsCard extends StatefulWidget {
   final double height;
   final VoidCallback? onTapC;
@@ -1207,7 +1123,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
-      height: expanded ? widget.height + 80 : widget.height,
+      height: expanded ? widget.height + 40 : widget.height,
       curve: Curves.easeOutCubic,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -1229,9 +1145,9 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
             Text(
               "Finance Tools",
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: AppColors.primaryColor,
+                color: AppColors.accentColor,
               ),
             ),
             const SizedBox(height: 10),
@@ -1240,8 +1156,8 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SvgPicture.asset(PlotFinanceIcons.calculator, height: 34),
-                  SvgPicture.asset(PlotFinanceIcons.foodie, height: 34),
+                  SvgPicture.asset(PlotFinanceIcons.calculator, height: 24),
+                  SvgPicture.asset(PlotFinanceIcons.foodie, height: 24),
                 ],
               ),
 

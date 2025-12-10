@@ -1169,8 +1169,8 @@ Widget manualTransactionButton( BuildContext context) {
     },
     borderRadius: BorderRadius.circular(10),
     child: Container(
-      width: 157.28,
-      height: 38,
+      width: MediaQuery.sizeOf(context).width/2.14,
+      height: MediaQuery.sizeOf(context).height/21,
       padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
         // base white fill
@@ -1205,24 +1205,21 @@ Widget manualTransactionButton( BuildContext context) {
           // using AvatarProfileImage to keep your existing component
           AvatarProfileImage(
             url: HomePageIcons.cash,
-            width: MediaQuery.of(context).size.width * (20 / 375),
-            height: MediaQuery.of(context).size.width * (20 / 375),
+            width: 5,
+            height: 26,
           ),
 
-          const SizedBox(width: 4),
+
 
           // Text label
-          Container(
-            width: 100,
-            child: Text(
-              'Cash transactions',
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w500,
-                fontSize: 12,
-                lineHeight: 1.0,
-                color: AppColors.accentColor,
-              ),
+          Text(
+            'Cash transactions',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w400,
+              fontSize: 12,
+              lineHeight: 1.0,
+              color: AppColors.accentColor,
             ),
           ),
         ],
