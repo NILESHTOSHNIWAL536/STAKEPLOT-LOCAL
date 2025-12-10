@@ -4,7 +4,7 @@
 import mongoose, { Types } from 'mongoose';
 import { StatusCodes } from 'http-status-codes';
 import AppError from '../utils/errors/app-error';
-import { FipRepository, AccountRepository, ProfileRepository, SummaryRepository, autoTransactionRepo } from '@/repositories';
+import { FipRepository, AccountRepository, ProfileRepository, SummaryRepository, AutoTransactionRepository } from '@/repositories';
 import redisClient from '../config/redis-config';
 import logger from '../utils/common/logger';
 import { PendingTransaction, GroupedTransaction, Transaction } from '@/models';
@@ -19,6 +19,8 @@ import { IBankTransaction } from '@/types/bank';
 
 // Helper type for userId inputs
 type UserIdLike = string | Types.ObjectId;
+
+const autoTransactionRepo = new AutoTransactionRepository();
 
 // -------------------------
 // CREATE BANK DETAILS
@@ -361,13 +363,23 @@ export async function getBanksLinkedAndAccounts(userId: UserIdLike): Promise<any
 // -------------------------
 // TRANSACTION RELATED
 // -------------------------
-export async function getAllTransactions(userId: UserIdLike, page?: number): Promise<any> {
+export async function getAllTransactions(userId: UserIdLike, page: number): Promise<any> {
   return await autoTransactionRepo.getTransactions(userId, page);
 }
 
 export async function getSearchedTransactions(userId: UserIdLike, page: number, search: string, isBankAccount?: boolean, query?: any): Promise<any> {
   try {
-    return await autoTransactionRepo.getSearchedTransactions(userId, page, search, isBankAccount, query);
+    return await autoTransactionRepo.getSearchedTransactions({
+      userId,
+      page,
+      searchFilter: search ? search.split(' ') : undefined,
+      minAmount: query?.minAmount ? Number(query.minAmount) : undefined,
+      maxAmount: query?.maxAmount ? Number(query.maxAmount) : undefined,
+      startDate: query?.startDate ? new Date(query.startDate) : undefined,
+      endDate: query?.endDate ? new Date(query.endDate) : undefined,
+      accountId: query?.accountId,
+      isCash: !isBankAccount, // invert BOOL based on your domain logic
+    });
   } catch (error: any) {
     return error;
   }
@@ -559,7 +571,7 @@ export async function updateTransaction(updateData: any, userId: UserIdLike, tra
 }
 
 // last period debit
-export async function getLastPeriodDebit(userId: UserIdLike, accountId: string | Types.ObjectId | null, startDate: Date, endDate: Date): Promise<any> {
+export async function getLastPeriodDebit(userId: UserIdLike, accountId: string | Types.ObjectId, startDate: Date, endDate: Date): Promise<any> {
   try {
     return await new AutoTransactionRepository().getLastPeriodDebit(userId, accountId, startDate, endDate);
   } catch (error: any) {
@@ -841,8 +853,6 @@ export default {
   getPreviousTransactions,
   categoryWiseSpendings,
   getMap,
-  getHeadsUpMessages,
-  getMoneyMapMessages,
   getSearchedTransactions,
   deleteBankAccount,
   deleteWholeBankData,

@@ -1,7 +1,7 @@
 import { Types, Model } from 'mongoose';
 
 import { IBankTransaction, IRecurringPayment } from '@/types/bank';
-import type { ITransactionRule } from '@/types/bank/rule.types';
+import { ITransactionRule } from '@/models/transactions-automation/transactionRule';
 
 import { buildSearchPipeline } from '@/pipelines/search.pipeline';
 import { buildMonthlyCategorizationPipeline } from '@/pipelines/categorize-monthly.pipeline';
@@ -16,11 +16,12 @@ import { updateTransactionLogic } from '@/helpers/transaction-update.helper';
 import { predictCategoriesForTransactions } from '@/helpers/predictions.helper';
 import { calculateLoanEligibilityTS } from '@/helpers/loan-calculation.helper';
 
-import { Transaction } from '@/models';
+import { Transaction, TransactionRule, RecurringPayment } from '@/models';
 
 import CrudRepository from '../crud-repository';
 import logger from '@/utils/common/logger';
 import FipRepository from './bank';
+import extractNarrationPattern from '@/utils/helpers/extractNarrationPattern';
 
 /**
  * AutoTransactionRepository:
@@ -29,19 +30,23 @@ import FipRepository from './bank';
  */
 
 export default class AutoTransactionRepository extends CrudRepository<typeof Transaction> {
-  constructor(
-    private TransactionModel: Model<IBankTransaction>,
-    private RuleModel: Model<ITransactionRule>,
-    private RecurringModel: Model<IRecurringPayment>,
-    private BankRepo: new (...args: any[]) => FipRepository
-  ) {
-    super(TransactionModel);
+  protected readonly TransactionModel: Model<IBankTransaction> = Transaction;
+  protected readonly RuleModel: Model<ITransactionRule> = TransactionRule;
+  protected readonly RecurringModel: Model<IRecurringPayment> = RecurringPayment;
+  protected readonly BankRepo = FipRepository;
+  constructor() {
+    super(Transaction);
   }
 
   // -------------------------
   // 1. Create transactions
   // -------------------------
-  async createTransaction(transactions: Partial<IBankTransaction>[], accountId: string | Types.ObjectId, userId: string | Types.ObjectId, bankId: string | Types.ObjectId) {
+  async createTransaction(
+    transactions: Partial<IBankTransaction>[],
+    accountId: string | Types.ObjectId | null,
+    userId: string | Types.ObjectId,
+    bankId: string | Types.ObjectId | null
+  ) {
     try {
       return await createTransactionsBulk({
         transactions,
@@ -60,15 +65,16 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   // 2. Paginated get
   // -------------------------
-  async getTransactions(userId: string, page: number) {
+  async getTransactions(userId: string | Types.ObjectId, page: number) {
     try {
       const limit = 20;
       const skip = (page - 1) * limit;
 
-      const transactions = await this.TransactionModel.find({
-        userId,
-        Hidden: false,
-      })
+      const transactions = await this.model
+        .find({
+          userId,
+          Hidden: false,
+        })
         .sort({ transactionTimestamp: -1 })
         .skip(skip)
         .limit(limit)
@@ -91,7 +97,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // 3. Search transactions
   // -------------------------
   async getSearchedTransactions(params: {
-    userId: string;
+    userId: string | Types.ObjectId;
     page: number;
     searchFilter?: any[];
     minAmount?: number;
@@ -99,7 +105,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
     startDate?: Date;
     endDate?: Date;
     accountId?: string;
-    isCash: boolean;
+    isCash?: boolean;
   }) {
     const { userId, page, searchFilter, minAmount, maxAmount, startDate, endDate, accountId, isCash } = params;
 
@@ -120,7 +126,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
 
       pipeline.push({ $skip: skip }, { $limit: limit });
 
-      const transactions = await this.TransactionModel.aggregate(pipeline);
+      const transactions = await this.model.aggregate(pipeline);
 
       const banks = await new this.BankRepo().getBank(userId);
       const withBank = await enrichWithBankDetails(transactions, banks);
@@ -141,7 +147,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
 
     const pipeline = buildMonthlyCategorizationPipeline(userObj, startDate, endDate);
 
-    return await this.TransactionModel.aggregate(pipeline);
+    return await this.model.aggregate(pipeline);
   }
 
   // -------------------------
@@ -150,7 +156,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   async getFrequentPayments(userId: string, start: Date, end: Date) {
     const pipeline = buildFrequencyAnalysisPipeline(new Types.ObjectId(userId), start, end);
 
-    return this.TransactionModel.aggregate(pipeline);
+    return this.model.aggregate(pipeline);
   }
 
   // -------------------------
@@ -158,7 +164,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   async groupSimilarTransactions(userId: string) {
     const pipeline = groupSimilarTransactionsPipeline(new Types.ObjectId(userId));
-    return this.TransactionModel.aggregate(pipeline);
+    return this.model.aggregate(pipeline);
   }
 
   // -------------------------
@@ -166,7 +172,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   async getBudgetData(userId: string, startDate: Date, endDate: Date, categories: string[], groupBy: 'monthly' | 'weekly' | 'yearly') {
     const pipeline = buildBudgetPipeline(new Types.ObjectId(userId), startDate, endDate, categories, groupBy);
-    return this.TransactionModel.aggregate(pipeline);
+    return this.model.aggregate(pipeline);
   }
 
   // -------------------------
@@ -175,17 +181,19 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   async getSpentAmounts(userId: string, startDate: Date, endDate: Date, categories: string[]) {
     const pipeline = buildSpendingPipeline(new Types.ObjectId(userId), startDate, endDate, categories);
 
-    return this.TransactionModel.aggregate(pipeline);
+    return this.model.aggregate(pipeline);
   }
 
   // -------------------------
   // 9. Hide transactions
   // -------------------------
   async getHiddenTransactions(userId: string) {
-    const tx = await this.TransactionModel.find({
-      userId,
-      Hidden: true,
-    }).populate('accountId', 'bankId');
+    const tx = await this.model
+      .find({
+        userId,
+        Hidden: true,
+      })
+      .populate('accountId', 'bankId');
 
     const banks = await new this.BankRepo().getBank(userId);
     return enrichWithBankDetails(tx, banks);
@@ -236,5 +244,55 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
     const result = await this.TransactionModel.deleteMany(criteria);
     return result.deletedCount ?? 0;
   }
-  
+
+  async verifyPendingTransaction(userId: string | Types.ObjectId, transactionId: string | Types.ObjectId, isCorrect: boolean) {
+    try {
+      const transaction = await Transaction.findOne({
+        _id: transactionId,
+        userId,
+      });
+      if (!transaction) return { message: 'Transaction not found' };
+
+      isCorrect = String(isCorrect).toLowerCase() === 'true';
+      const narrationPattern = extractNarrationPattern(transaction.narration)?.toLowerCase();
+
+      if (isCorrect) {
+        transaction.needsReview = false;
+        await transaction.save();
+
+        await TransactionRule.findOneAndUpdate(
+          {
+            userId,
+            narrationPattern,
+            amount: transaction.amount,
+          },
+          {
+            userId,
+            narrationPattern,
+            amount: transaction.amount,
+            category: transaction.category,
+            subcategory: transaction.subcategory || '',
+            source: 'manual',
+          },
+          { upsert: true }
+        );
+      } else {
+        transaction.category = 'Untagged';
+        transaction.subcategory = '';
+        transaction.needsReview = false;
+        await transaction.save();
+
+        await TransactionRule.deleteOne({
+          userId,
+          narrationPattern,
+          amount: transaction.amount,
+        });
+      }
+
+      return { message: 'Transaction categorized successfully' };
+    } catch (error) {
+      logger.error(`response from the transactions repository: ${error}`);
+      throw error;
+    }
+  }
 }

@@ -17,18 +17,6 @@ import mongoose from 'mongoose';
  * - Common.SuccessResponse and Common.ErrorResponse are treated as mutable objects (same as original).
  */
 
-/* ---------------------------
-   Types
-   --------------------------- */
-
-interface UserPayload {
-  _id: string | MongooseTypes.ObjectId;
-  name?: string;
-  email?: string;
-  role?: string;
-  [key: string]: any;
-}
-
 /* Helpers to avoid TS complaints about common responses being mutated */
 const SuccessResponse: any = (Common as any).SuccessResponse;
 const ErrorResponse: any = (Common as any).ErrorResponse;
@@ -43,7 +31,7 @@ export const createBankDetails = async (details: any[], consentHandleId: string,
       // BankService.createBankDetails may be typed in your codebase; this is any to match original behavior.
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      await (BankService as any).createBankDetails(bankData, consentHandleId, userId);
+      await BankService.createBankDetails(bankData, consentHandleId, userId);
     }
     return { success: true };
   } catch (error: any) {
@@ -58,7 +46,7 @@ export const updateBankDetails = async (details: any[], consentHandleId: string,
     for (const bankData of details) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      await (BankService as any).updateBankDetails(bankData, consentHandleId, userId);
+      await BankService.updateBankDetails(bankData, consentHandleId, userId);
     }
     return { success: true };
   } catch (error: any) {
@@ -88,7 +76,7 @@ export const getMap = async (req: Request, res: Response): Promise<Response> => 
 export const getUser = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).getUserDetails(userId);
+    const response = await BankService.getUserDetails(userId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -102,7 +90,7 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
 export const getBanksLinkedAndAccounts = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).getBanksLinkedAndAccounts(userId);
+    const response = await BankService.getBanksLinkedAndAccounts(userId);
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
@@ -117,7 +105,7 @@ export const getAllTransactions = async (req: Request, res: Response): Promise<R
     const userId = req.user!._id;
     const { page } = req.params;
     const pageNum = page ? Number(page) : 1;
-    const response = await (BankService as any).getAllTransactions(userId, pageNum);
+    const response = await BankService.getAllTransactions(userId, pageNum);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -133,7 +121,7 @@ export const getMonthlyTransactionsHistory = async (req: Request, res: Response)
     const userId = req.user!._id;
     const { type, page } = req.params;
     const pageNum = page ? Number(page) : 1;
-    const response = await (BankService as any).getMonthlyTransactionsHistory(userId, type, pageNum);
+    const response = await BankService.getMonthlyTransactionsHistory(userId, type, pageNum);
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
@@ -146,7 +134,7 @@ export const getMonthlyTransactionsHistory = async (req: Request, res: Response)
 export const getAllTransactionsOfUser = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).getAllTransactionsOfUser(userId);
+    const response = await BankService.getAllTransactionsOfUser(userId);
     return res.status(StatusCodes.OK).json(response);
   } catch (error: any) {
     ErrorResponse.error = error;
@@ -160,7 +148,7 @@ export const getAllTransactionsForAccount = async (req: Request, res: Response):
     const { accountId, page } = req.params;
     const userId = req.user!._id;
     const pageNum = page ? Number(page) : 1;
-    const response = await (BankService as any).getAllTransactionsForAccount(userId, accountId, pageNum);
+    const response = await BankService.getAllTransactionsForAccount(userId, accountId, pageNum);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -174,7 +162,7 @@ export const getAllTransactionsForAccount = async (req: Request, res: Response):
 export const getHideTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).getHideTransactions(userId);
+    const response = await BankService.getHideTransactions(userId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -190,7 +178,7 @@ export const getHideTransactions = async (req: Request, res: Response): Promise<
 export const categorizeTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).categorizeTransactions(userId);
+    const response = await BankService.categorizeTransactions(userId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -205,7 +193,7 @@ export const createTransaction = async (req: Request, res: Response): Promise<Re
   try {
     const userId = req.user!._id;
     const { transactions } = req.body;
-    const response = await (BankService as any).createTransaction(userId, transactions);
+    const response = await BankService.createTransaction(userId, transactions);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -219,7 +207,7 @@ export const createTransaction = async (req: Request, res: Response): Promise<Re
 export const getTopFiveCategories = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).getTopFiveCategories(userId);
+    const response = await BankService.getTopFiveCategories(userId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -233,10 +221,31 @@ export const getTopFiveCategories = async (req: Request, res: Response): Promise
 export const getCategoryWiseSpendings = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const { categoryNames = '', startDate, endDate } = req.query;
+    const { categoryNames = '', groupBy } = req.query;
+    const startDate = req.query.startDate as string | undefined;
+    const endDate = req.query.endDate as string | undefined;
+
+    // Enforce required query params
+    if (!startDate || !endDate) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'startDate and endDate are required',
+      });
+    }
+
+    // Convert safely
+    const modifiedStartDate = new Date(startDate);
+    const modifiedEndDate = new Date(endDate);
+
+    // Validate converted dates
+    if (isNaN(modifiedStartDate.getTime()) || isNaN(modifiedEndDate.getTime())) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Invalid date format for startDate or endDate',
+      });
+    }
+
     const categoryNamesArray = typeof categoryNames === 'string' && categoryNames.length ? categoryNames.split(',') : [];
 
-    const response = await (BankService as any).categoryWiseSpendings(userId, categoryNamesArray, startDate as string, endDate as string);
+    const response = await BankService.categoryWiseSpendings(userId, categoryNamesArray, modifiedStartDate, modifiedEndDate);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -251,10 +260,31 @@ export const getCategoryWiseSpendings = async (req: Request, res: Response): Pro
 export const getBudgetTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const { categoryNames = '', groupBy, startDate, endDate } = req.query;
+    const { categoryNames = '', groupBy } = req.query;
+    const startDate = req.query.startDate as string | undefined;
+    const endDate = req.query.endDate as string | undefined;
+
+    // Enforce required query params
+    if (!startDate || !endDate) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'startDate and endDate are required',
+      });
+    }
+
+    // Convert safely
+    const modifiedStartDate = new Date(startDate);
+    const modifiedEndDate = new Date(endDate);
+
+    // Validate converted dates
+    if (isNaN(modifiedStartDate.getTime()) || isNaN(modifiedEndDate.getTime())) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Invalid date format for startDate or endDate',
+      });
+    }
+
     const categoryNamesArray = typeof categoryNames === 'string' && categoryNames.length ? categoryNames.split(',') : [];
 
-    const response = await (BankService as any).getBudgetTransactions(userId, startDate as string, endDate as string, categoryNamesArray, groupBy as string);
+    const response = await BankService.getBudgetTransactions(userId, modifiedStartDate, modifiedEndDate, categoryNamesArray, groupBy as string);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -268,25 +298,32 @@ export const getBudgetTransactions = async (req: Request, res: Response): Promis
 export const getBudgetSpents = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const { categoryNames = '', startDate, endDate } = req.query;
+    const { categoryNames = '' } = req.query;
+
+    const startDate = req.query.startDate as string | undefined;
+    const endDate = req.query.endDate as string | undefined;
+
+    // Enforce required query params
+    if (!startDate || !endDate) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'startDate and endDate are required',
+      });
+    }
+
+    // Convert safely
+    const modifiedStartDate = new Date(startDate);
+    const modifiedEndDate = new Date(endDate);
+
+    // Validate converted dates
+    if (isNaN(modifiedStartDate.getTime()) || isNaN(modifiedEndDate.getTime())) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Invalid date format for startDate or endDate',
+      });
+    }
+
     const categoryNamesArray = typeof categoryNames === 'string' && categoryNames.length ? categoryNames.split(',') : [];
 
-    const response = await (BankService as any).getBudgetSpents(userId, startDate as string, endDate as string, categoryNamesArray);
-
-    SuccessResponse.data = response;
-    return res.status(StatusCodes.OK).json(SuccessResponse);
-  } catch (error: any) {
-    ErrorResponse.error = error;
-    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
-    return res.status(statusCode).json(ErrorResponse);
-  }
-};
-
-export const updateUserDetails = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const userId = req.user!._id;
-    const data = req.body;
-    const response = await (BankService as any).updateUserDetails(userId, data);
+    const response = await BankService.getBudgetSpents(userId, modifiedStartDate, modifiedEndDate, categoryNamesArray);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -302,7 +339,7 @@ export const updateTransaction = async (req: Request, res: Response): Promise<Re
     const userId = req.user!._id;
     const { transactionId } = req.params;
     const updateData = req.body;
-    const response = await (BankService as any).updateTransaction(updateData, userId, transactionId);
+    const response = await BankService.updateTransaction(updateData, userId, transactionId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -315,8 +352,16 @@ export const getPreviousTransactions = async (req: Request, res: Response): Prom
   try {
     const userId = req.user!._id;
     const date = req.params.date;
+    const modifiedDate = new Date(date);
+
+    if (isNaN(modifiedDate.getTime())) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Invalid date format for startDate or endDate',
+      });
+    }
+
     const accountId = req.params.accountId;
-    const response = await (BankService as any).getPreviousTransactions(userId, date, accountId);
+    const response = await BankService.getPreviousTransactions(userId, modifiedDate, accountId);
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
@@ -330,7 +375,7 @@ export const getPreviousTransactions = async (req: Request, res: Response): Prom
 export const getGroupedTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).getGroupedTransactions(userId);
+    const response = await BankService.getGroupedTransactions(userId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -350,7 +395,7 @@ export const categorizeGroupedTransaction = async (req: Request, res: Response):
       return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Category and subcategory are required' });
     }
 
-    const response = await (BankService as any).categorizeGroupedTransaction(userId, groupId, category, subcategory, removedTransactions);
+    const response = await BankService.categorizeGroupedTransaction(userId, groupId, category, subcategory, removedTransactions);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -365,7 +410,7 @@ export const categorizeGroupedTransaction = async (req: Request, res: Response):
 export const getPendingForReviewTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).getPendingForReviewTransactions(userId);
+    const response = await BankService.getPendingForReviewTransactions(userId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -381,7 +426,16 @@ export const verifyPendingTransaction = async (req: Request, res: Response): Pro
   try {
     const userId = req.user!._id;
     const { transactionId, isCorrect } = req.params;
-    const response = await (BankService as any).verifyPendingTransaction(userId, transactionId, isCorrect);
+
+    // Convert string → boolean
+    const parsedIsCorrect = isCorrect === 'true' ? true : isCorrect === 'false' ? false : null;
+
+    if (parsedIsCorrect === null) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: "isCorrect must be 'true' or 'false'",
+      });
+    }
+    const response = await BankService.verifyPendingTransaction(userId, transactionId, parsedIsCorrect);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -408,7 +462,9 @@ export const getAllCustomTransactions = async (req: Request, res: Response): Pro
     const result = initializeResults(type as RangeType, new Date(startDate), new Date(endDate), monthNames);
 
     // Get previous period's start and end date
-    let prevStartDate: Date | undefined, prevEndDate: Date | undefined;
+    let prevStartDate: Date | null = null;
+    let prevEndDate: Date | null = null;
+
     if (type === 'month') {
       const prevMonth = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth() - 1, 1, 0, 0, 0, 0));
       prevStartDate = prevMonth;
@@ -423,12 +479,19 @@ export const getAllCustomTransactions = async (req: Request, res: Response): Pro
       prevEndDate.setUTCHours(23, 59, 59, 999);
     }
 
+    //  BEFORE calling the service → Validate
+    if (!prevStartDate || !prevEndDate) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: `Previous period is not defined for range type '${type}'`,
+      });
+    }
+
     // 1. Fetch current period transactions
-    const response = await (BankService as any).getAllTransactionsByTimeLine(userId, accountIdObj, startDate, endDate, groupBy);
+    const response = await BankService.getAllTransactionsByTimeLine(userId, accountIdObj, startDate, endDate, groupBy);
     const transactionData = fillTransactionData(response, result, type as RangeType, monthNames);
 
     // 2. Fetch previous period lastTimePeriodDebit
-    const getLastPeriodDebit = await (BankService as any).getLastPeriodDebit(userId, accountIdObj, prevStartDate, prevEndDate, groupBy);
+    const getLastPeriodDebit = await BankService.getLastPeriodDebit(userId, accountIdObj, prevStartDate, prevEndDate);
     const lastTimePeriodDebit = getLastPeriodDebit?.[0]?.totalDebit || 0;
 
     // Calculate percentage change (protect against divide by zero)
@@ -463,7 +526,7 @@ export const getWholeTransactionsGraph = async (req: Request, res: Response): Pr
     const { startDate, endDate, groupBy } = getDateRange(type as RangeType, value);
     const result = initializeResults(type as RangeType, new Date(startDate), new Date(endDate), monthNames);
 
-    const response = await (BankService as any).getAllTransactionsForMainGraph(userId, startDate, endDate, groupBy);
+    const response = await BankService.getAllTransactionsForMainGraph(userId, startDate, endDate, groupBy);
 
     const transactionData = fillTransactionData(response, result, type as RangeType, monthNames);
 
@@ -481,7 +544,7 @@ export const getWholeTransactionsGraph = async (req: Request, res: Response): Pr
 export const getTopThreeTransactionsOfWeek = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).getTopThreeTransactionsOfWeek(userId);
+    const response = await BankService.getTopThreeTransactionsOfWeek(userId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -495,7 +558,7 @@ export const getTopThreeTransactionsOfWeek = async (req: Request, res: Response)
 export const getIncomeAndCategorySpent = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).getIncomeAndCategorySpent(userId);
+    const response = await BankService.getIncomeAndCategorySpent(userId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -509,7 +572,7 @@ export const getIncomeAndCategorySpent = async (req: Request, res: Response): Pr
 export const getLoanCalculation = async (req: Request, res: Response): Promise<Response> => {
   try {
     const data = req.body;
-    const response = await (BankService as any).getLoanCalculation(data);
+    const response = await BankService.getLoanCalculation(data);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -524,8 +587,18 @@ export const getSearchedTransactions = async (req: Request, res: Response): Prom
   try {
     const userId = req.user!._id;
     const { page, search, isBankAccount } = req.params;
+    // Convert page to number
+    const pageNumber = Number(page);
+    const modifiedIsBankAccount = isBankAccount === 'true' ? true : false;
 
-    const response = await (BankService as any).getSearchedTransactions(userId, page, search, isBankAccount, req.query);
+    // Validate page number
+    if (isNaN(pageNumber) || pageNumber < 1) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Page must be a valid positive number.',
+      });
+    }
+
+    const response = await BankService.getSearchedTransactions(userId, pageNumber, search, modifiedIsBankAccount, req.query);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -539,7 +612,7 @@ export const getSearchedTransactions = async (req: Request, res: Response): Prom
 export const getDayWiseTransactionsSummary = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    const response = await (BankService as any).getDayWiseTransactionsSummary(userId);
+    const response = await BankService.getDayWiseTransactionsSummary(userId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -554,7 +627,17 @@ export const getTransactionsByDate = async (req: Request, res: Response): Promis
     const userId = req.user!._id;
     const { date } = req.params;
 
-    const response = await (BankService as any).getTransactionsByDate(userId, date);
+    // Convert to Date
+    const parsedDate = new Date(date);
+
+    // Validate date
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Invalid date format. Expected a valid date string.',
+      });
+    }
+
+    const response = await BankService.getTransactionsByDate(userId, parsedDate);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -568,7 +651,7 @@ export const getRecurringPayments = async (req: Request, res: Response): Promise
   try {
     const userId = req.user!._id;
     const type = req.params.isActive;
-    const response = await (BankService as any).getRecurringPayments(userId, type);
+    const response = await BankService.getRecurringPayments(userId, type);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -584,7 +667,7 @@ export const updateRecurringPayment = async (req: Request, res: Response): Promi
     const userId = req.user!._id;
     const recurringPaymentId = new MongooseTypes.ObjectId(req.params.id);
     const data = req.body;
-    const response = await (BankService as any).updateRecurringPayment(recurringPaymentId, userId, data);
+    const response = await BankService.updateRecurringPayment(recurringPaymentId, userId, data);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -598,7 +681,7 @@ export const updateRecurringPayment = async (req: Request, res: Response): Promi
 export const deleteRecurringPayment = async (req: Request, res: Response): Promise<Response> => {
   try {
     const recurringPaymentId = new MongooseTypes.ObjectId(req.params.id);
-    const response = await (BankService as any).deleteRecurringPayment(recurringPaymentId);
+    const response = await BankService.deleteRecurringPayment(recurringPaymentId);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -638,7 +721,7 @@ export const deleteBankAccount = async (req: Request, res: Response): Promise<Re
     const { bankId, accountId } = req.params;
 
     // delete bank account
-    await (BankService as any).deleteBankAccount(userId, bankId, accountId);
+    await BankService.deleteBankAccount(userId, bankId, accountId);
 
     SuccessResponse.data = 'Bank data deleted successfully';
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -653,7 +736,7 @@ export const deleteBankAccount = async (req: Request, res: Response): Promise<Re
 export const getUserMonthlySpending = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
-    SuccessResponse.data = await (BankService as any).getUserSpending(userId);
+    SuccessResponse.data = await BankService.getUserSpending(userId);
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     return res.status(500).json({ message: 'Internal server error' });
