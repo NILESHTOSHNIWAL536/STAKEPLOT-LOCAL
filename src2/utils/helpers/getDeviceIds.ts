@@ -1,4 +1,5 @@
-import { User, sendingNotification, UserActivity } from '../../models';
+import { User, sendingNotification, UserActivity } from '@/models';
+import { Types } from "mongoose";
 
 // ---- Interfaces for minimal typing ---- //
 
@@ -51,7 +52,7 @@ export async function getDeviceIdsFriends(id: string): Promise<string[]> {
   return deviceIds;
 }
 
-export async function getDeviceIdsByUserId(userId: string): Promise<string[]> {
+export async function getDeviceIdsByUserId(userId: string | Types.ObjectId): Promise<string[]> {
   const deviceIds: string[] = [];
 
   const friendNotification = (await sendingNotification.findOne({ userId }).lean()) as INotificationDocument | null;

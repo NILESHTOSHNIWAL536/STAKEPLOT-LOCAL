@@ -105,7 +105,7 @@ export async function addDevice(userId: string | Types.ObjectId, deviceInfo: IDe
 // SEND NOTIFICATION TO SPECIFIC DEVICES
 // ------------------------------
 
-export async function SendNotificationToDeviceSpecific(userId: string, msg: string, deviceIds: string[], screen: string, title: string, pic?: string): Promise<void> {
+export async function SendNotificationToDeviceSpecific(userId: string | Types.ObjectId, msg: string, deviceIds: string[], screen: string, title: string, pic?: string): Promise<void> {
   const message: IOneSignalNotificationPayload = {
     app_id: ServerConfig.ONE_SIGNAL_ID,
     contents: { en: msg },

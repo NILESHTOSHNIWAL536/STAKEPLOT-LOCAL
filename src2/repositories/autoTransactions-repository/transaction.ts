@@ -524,7 +524,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   async getHideTransactions(userId: string | Types.ObjectId) {
     try {
-      const transactions = await this.model.find({ userId, Hidden: true }).populate('accountId', 'bankId');
+      const transactions = await this.model.find({ userId, Hidden: true }).populate('accountId', 'bankId').lean();
 
       const banks = await new this.BankRepo().getBank(userId);
       const txWithBank = await enrichWithBankDetails(transactions, banks);
