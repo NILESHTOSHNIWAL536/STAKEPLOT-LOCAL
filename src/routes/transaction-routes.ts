@@ -1,6 +1,6 @@
 import express from 'express';
 import { TransactionController } from '@/controllers';
-import { AuthMiddlewares } from '../../src2/middlewares';
+import { AuthMiddlewares } from '../middlewares';
 
 const router = express.Router();
 router.use(express.json());

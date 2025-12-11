@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "rootDir": "./src2",
-    "baseUrl": "./src2",
+    "rootDir": "./src",
+    "baseUrl": "./src",
     "paths": {
       "@/*": ["*"],
       "@/types/*": ["types/*"]
@@ -16,10 +16,10 @@
     "strict": false,
     "sourceMap": true,
     "typeRoots": [
-      "./src2/@types",
+      "./src/@types",
       "./node_modules/@types"
     ]
   },
-  "include": ["src2/**/*.ts", "src2/**/*.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
