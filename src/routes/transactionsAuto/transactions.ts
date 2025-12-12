@@ -74,7 +74,6 @@ router.get(
   TransactionAutoController.getWholeTransactionsGraph
 );
 
-router.get('/get-hide-transactions', AuthMiddlewares.protect, TransactionAutoController.getHideTransactions);
 router.get('/user-details', AuthMiddlewares.protect, TransactionAutoController.getUser);
 router.get('/get-banks-linked', AuthMiddlewares.protect, TransactionAutoController.getBanksLinkedAndAccounts);
 router.get(

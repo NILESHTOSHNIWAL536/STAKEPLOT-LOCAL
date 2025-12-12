@@ -379,27 +379,6 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   }
 
   // -------------------------
-  // 14. Hidden Transactions
-  // -------------------------
-  async getHideTransactions(userId: string | Types.ObjectId) {
-    try {
-      const transactions = await this.model.find({ userId, Hidden: true }).populate('accountId', 'bankId').lean();
-
-      const banks = await new this.BankRepo().getBank(userId);
-      const txWithBank = await enrichTransactionWithBankDetails(transactions, banks);
-
-      return txWithBank;
-    } catch (error: any) {
-      logger.error(`Error fetching hidden transactions: ${error.stack}`);
-      throw error;
-    }
-  }
-
-  async getHiddenTransactions(userId: string | Types.ObjectId) {
-    return this.getHideTransactions(userId);
-  }
-
-  // -------------------------
   // 15. Update a Transaction
   // -------------------------
   async updateTransaction(userId: string | Types.ObjectId, txId: string | Types.ObjectId, data: Partial<IBankTransaction>) {

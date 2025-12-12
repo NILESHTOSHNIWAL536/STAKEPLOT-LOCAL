@@ -128,22 +128,6 @@ export const getAllTransactionsOfUser = async (req: Request, res: Response): Pro
   }
 };
 
-export const getHideTransactions = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const userId = req.user!._id;
-    const response = await BankService.getHideTransactions(userId);
-
-    SuccessResponse.data = response;
-    return res.status(StatusCodes.OK).json(SuccessResponse);
-  } catch (error: any) {
-    // original code returned res.status(500) with message; preserve that behavior
-    return res.status(500).json({
-      success: false,
-      error: (error as Error).message,
-    });
-  }
-};
-
 export const categorizeTransactions = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
@@ -561,11 +545,12 @@ export const getSearchedTransactions = async (req: Request, res: Response) => {
 
     if (!page || page < 1) return res.status(400).json({ error: 'Page must be >= 1' });
 
-    const { search = '', type, manualTransaction, accountId, minAmount, maxAmount, startDate, endDate } = req.query;
+    const { search = '', type, manualTransaction, isHidden, accountId, minAmount, maxAmount, startDate, endDate } = req.query;
 
     const response = await BankService.getSearchedTransactions({
       userId,
       page,
+      Hidden: isHidden === 'true',
       search: String(search),
       type: type ? String(type) : undefined,
       manualTransaction: manualTransaction === 'true',

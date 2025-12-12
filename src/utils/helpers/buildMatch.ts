@@ -1,10 +1,12 @@
 import { Types } from 'mongoose';
 
-function buildMatch({ userId, keywords, type, manualTransaction, accountId, minAmount, maxAmount, startDate, endDate }) {
+function buildMatch({ userId, keywords, type, manualTransaction, Hidden, accountId, minAmount, maxAmount, startDate, endDate }) {
   const match: any = {
     userId: new Types.ObjectId(userId),
-    Hidden: false,
   };
+
+  if (Hidden) match.Hidden = true;
+  else match.Hidden = false;
 
   if (type) match.type = type;
   if (manualTransaction === true) match.manualTransaction = true;

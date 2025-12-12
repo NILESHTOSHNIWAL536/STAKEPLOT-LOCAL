@@ -536,21 +536,6 @@ export async function getAllTransactionsForMainGraph(userId: UserIdLike, startDa
   }
 }
 
-// getHideTransactions with caching
-export async function getHideTransactions(userId: UserIdLike): Promise<any> {
-  try {
-    const cacheKey = `hiddenTransactions:${userId}`;
-    const cachedData = await redisClient.get(cacheKey);
-    if (cachedData) return JSON.parse(cachedData);
-
-    const response = await new AutoTransactionRepository().getHideTransactions(userId);
-    await redisClient.setEx(cacheKey, 3600, JSON.stringify(response));
-    return response;
-  } catch (error: any) {
-    return error;
-  }
-}
-
 // Recurring payments
 export async function getRecurringPayments(userId: UserIdLike, type: boolean): Promise<any> {
   try {
@@ -844,7 +829,6 @@ export default {
   getUserDetails,
   categorizeTransactions,
   getAllTransactionsByTimeLine,
-  getHideTransactions,
   updateTransaction,
   getGroupedTransactions,
   categorizeGroupedTransaction,
