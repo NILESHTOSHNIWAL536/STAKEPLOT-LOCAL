@@ -670,15 +670,17 @@ class _RotatingIconState extends State<Nextfetch>
                             ),
                       Padding(
                         padding:
-                            const EdgeInsets.symmetric(horizontal: 5),
+                            const EdgeInsets.symmetric(horizontal:2),
+                            // const EdgeInsets.only(right:10,left:6,bottom: 2),
                         child: textStyle(
                           context: context,
                           text: isFected.value
                               ? HomepageStringsDart()
                                   .fetchingInProgress
                               : HomepageStringsDart().nextFetchLabel,
-                          fontWeight: FontWeight.bold,
-                          c: AppColors.bg1,
+                          fontWeight: FontWeight.w600,
+                        
+                          c: AppColors.backgroundColor,
                           fontsize: isFected.value ? 10 : 13,
                         ),
                       ),
@@ -686,9 +688,9 @@ class _RotatingIconState extends State<Nextfetch>
                         context: context,
                         text:
                             isFected.value ? "" : formattedNextFetch,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         c: AppColors.backgroundColor,
-                        fontsize: 13,
+                        fontsize: 14,
                       ),
                     ],
                   ),
