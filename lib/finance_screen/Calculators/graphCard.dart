@@ -185,19 +185,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
     return PieChartSectionData(
       value: data['value'],
       showTitle: false,
-      // badgeWidget: Container(
-      //   padding: EdgeInsets.all(10),
-      //   decoration: BoxDecoration(
-      //       color: pieChatColor[index], borderRadius: BorderRadius.circular(4)),
-      //   child: textStyleOnly(
-      //       context: context,
-      //      text: data['title'],
-      //       fontWeight: FontWeight.bold,
-      //       fontsize: 12,
-      //       c: index - 1 == 0 ? pieChatColor[0] : pieChatColor[1]),
-      // ),
-
-      // title: data['title'],
+      
       color: pieChatColor[index] ?? AppColors.uncoloredPie,
       radius: 50,
       // titlePositionPercentageOffset: 1.8,

@@ -66,7 +66,7 @@ Widget historyButton(BuildContext context) {
     },
     borderRadius: BorderRadius.circular(10),
     child: Container(
-      width: MediaQuery.sizeOf(context).width/2.1,
+      width: MediaQuery.sizeOf(context).width/2.2,
       height: MediaQuery.sizeOf(context).height/21,
       padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(

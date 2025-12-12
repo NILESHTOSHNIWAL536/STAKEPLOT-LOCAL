@@ -25,6 +25,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week_of_year/week_of_year.dart';
 
+import '../Home_Screen/ManuallyTransactions/manually.dart';
 import '../backed_connections/bankServices/pdf.dart';
 import '../Home_Screen/history/amount_range.dart';
 import '../repository/transactions_repository.dart';
@@ -1165,11 +1166,14 @@ String getCurrentFormattedDate() {
 Widget manualTransactionButton( BuildContext context) {
   return InkWell(
     onTap: () {
-     
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ManualTransactionPage()),
+      );
     },
     borderRadius: BorderRadius.circular(10),
     child: Container(
-      width: MediaQuery.sizeOf(context).width/2.14,
+      width: MediaQuery.sizeOf(context).width/2.2,
       height: MediaQuery.sizeOf(context).height/21,
       padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(

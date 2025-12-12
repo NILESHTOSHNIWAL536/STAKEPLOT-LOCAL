@@ -635,6 +635,7 @@ class AllCardsScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+                              
                               ],
                             ),
                           ),
@@ -645,7 +646,7 @@ class AllCardsScreen extends StatelessWidget {
                         return Padding(
                           padding: EdgeInsets.symmetric(
                             vertical: verticalPadding / 1.4,
-                            horizontal: screenSize.width * 0.075,
+                            horizontal: 10,
                           ),
                           child: SizedBox(
                             width: cardWidth,

@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manually.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_button.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 
@@ -153,83 +154,16 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildBottomNavItem(
-              icon: AvatarProfileImage(
-                url: HomePageIcons.cashIn,
-                height: 32,
-                width: 34,
-              ),
-              label: 'Cash In',
-              index: 0,
-              screenWidth: screenWidth,
-            ),
-            _buildBottomNavItem(
-              icon: AvatarProfileImage(
-                url: HomePageIcons.cashOut,
-                height: 32,
-                width: 34,
-              ),
-              label: 'Cash Out',
-              index: 1,
-              screenWidth: screenWidth,
-            ),
-            _buildBottomNavItem(
-              icon: AvatarProfileImage(
-                url: HomePageIcons.transactionHistoryIcon,
-                height: 32,
-                width: 34,
-              ),
-              label: 'History',
-              index: 2,
-              screenWidth: screenWidth,
-            ),
+            manualTransactionButton(context),
+           
+           historyButton(context),
+           
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBottomNavItem({
-    required Widget icon,
-    required String label,
-    required int index,
-    required double screenWidth,
-  }) {
-    final isSelected = _selectedIndex == index;
-
-    return GestureDetector(
-      onTap: () => tapNavigate(index),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          icon,
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w500,
-              fontSize: 12,
-              color: AppColors.bg1,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ---------------------------------------------------
-  // NAVIGATION TAPS
-  // ---------------------------------------------------
-  void tapNavigate(int index) {
-    if (index == 0) {
-      isDebit = false;
-      showCustomModal(context, isDebit);
-    } else if (index == 1) {
-      isDebit = true;
-      showCustomModal(context, isDebit);
-    } else if (index == 2) {
-      navToHistory(context);
-    }
-  }
+ 
+  
 }

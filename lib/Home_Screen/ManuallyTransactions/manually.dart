@@ -11,131 +11,181 @@ import '../../image_service/avatarProfile.dart';
 import '../../repository/transactions_repository.dart';
 
 
-class Manualtransaction extends StatefulWidget {
-  const Manualtransaction({super.key});
+
+
+
+
+class ManualTransactionPage extends StatefulWidget {
+  const ManualTransactionPage({Key? key}) : super(key: key);
 
   @override
-  State<Manualtransaction> createState() => _ManualtransactionState();
+  _ManualTransactionPageState createState() => _ManualTransactionPageState();
 }
 
-class _ManualtransactionState extends State<Manualtransaction> {
+class _ManualTransactionPageState extends State<ManualTransactionPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
-    getCustomCategory(context);
+    // two tabs: index 0 = Cash in (debit true), index 1 = Cash out (debit false)
+    _tabController = TabController(length: 2, vsync: this);
   }
 
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.sizeOf(context).width / 0.8,
-      decoration: BoxDecoration(
-        color: AppColors.mt,
-        borderRadius: BorderRadius.circular(16),
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  // Small reusable back button in the circular style from your screenshot
+  Widget _buildCircularBackButton(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(28),
+      onTap: () => Navigator.of(context).pop(),
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.accentColor.withOpacity(0.02),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            )
+          ],
+        ),
+        child: const Icon(Icons.arrow_back, size: 20, color: AppColors.accentColor,),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Header height so contents below match your design
+    const double headerHeight = 160;
+
+    return Scaffold(
+      backgroundColor: AppColors.border, // page background to match modal look
+      body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              AvatarProfileImage(
-                url: HomePageIcons.manualTransaction,
-                height: 24,
-                width: 24,
+          // Top rounded header area (similar to screenshot)
+          Container(
+            height: headerHeight,
+            decoration: BoxDecoration(
+              color: AppColors.newbg,
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(18),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width / 52),
-              Container(
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.accentColor.withOpacity(0.02),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(HomepageStringsDart().manualTransaction,
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w600,
-                            fontSize: MediaQuery.of(context).size.width * 0.04,
-                            color: AppColors.accentColor)),
-                    const SizedBox(height: 8),
-                    Container(
-                        decoration: BoxDecoration(
-                                  color: AppColors.button,
-                                 // borderRadius: BorderRadius.circular(16)
-                                  ),
+                    // top row: circular back button (left) & centered title
+                    SizedBox(
+                      height: 56,
                       child: Row(
                         children: [
-                          InkWell(
-                            onTap: () {
-                              isDebit = false;
-                              showCustomModal(context,isDebit);
-                           },
-                            child: Container(
-                              height: Colorcodes.paddingSize * 1.5,
-                              width: Colorcodes.paddingSize * 3,
-                              
-                              child: Center(
-                                child: Text(HomepageStringsDart().cashIn,
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 12,
-                                        color: AppColors.primaryColor)),
+                          _buildCircularBackButton(context),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                'Cash Transactions',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: AppColors.accentColor,
+                                ),
                               ),
                             ),
                           ),
-                         Container(
-                            width: 0.5, // Width of the divider
-                            height: Colorcodes.paddingSize * 1.2, // Match the height of the buttons
-                            color: AppColors.accentColor, // Color of the divider
-                          ),
-                          InkWell(
-                            onTap: () {
-                              isDebit = true;
-                              showCustomModal(context,isDebit);
-                            },
-                            child: Container(
-                              height: Colorcodes.paddingSize * 1.5,
-                              width: Colorcodes.paddingSize * 3,
-                             
-                              child: Center(
-                                child: Text(HomepageStringsDart().cashOut,
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 12,
-                                        color: AppColors.primaryColor)),
-                              ),
-                            ),
-                          ),
+                          // placeholder space to keep title centered
+                          SizedBox(width: 44),
                         ],
                       ),
-                    )
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    // TabBar styled as segmented control
+                    Material(
+                      color: Colors.transparent,
+                      child: TabBar(
+  controller: _tabController,
+
+  indicator: const UnderlineTabIndicator(
+    borderSide: BorderSide(
+      width: 2,
+      color: AppColors.primaryColor, // change to AppColors.primaryColor
+    ),
+    insets: EdgeInsets.symmetric(horizontal: 90), 
+  ),
+
+  labelColor: AppColors.primaryColor,
+  unselectedLabelColor: AppColors.accentColor,
+
+  labelStyle: FontManager().getTextStyle(
+    context,
+    lWeight: FontWeight.w500,
+    fontSize: 14,
+    color: AppColors.primaryColor,
+  ),
+
+  unselectedLabelStyle: FontManager().getTextStyle(
+    context,
+    lWeight: FontWeight.normal,
+    fontSize: 14,
+    color: AppColors.accentColor,
+  ),
+
+  tabs: const [
+    Tab(text: 'Cash Out', ),
+    Tab(text: 'Cash In'),
+  ],
+)
+
+                    ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-          AvatarProfileImage(
-            url: LikeComment.manualTransaction,
-            height: 10,
-            width: 14,
-          )
+
+          // The content area — TabBarView will show your ModalContent pages
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // Page for Cash in (isDebit true)
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ModalContent(true),
+                ),
+
+                // Page for Cash out (isDebit false)
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ModalContent(false),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 }
-
-void showCustomModal(BuildContext context, bool isDebit) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: AppColors.mt,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(16),
-      ),
-    ),
-    builder: (BuildContext context) {
-      return SafeArea(
-          child: ModalContent(isDebit)); // Use the modal widget here
-    },
-  );
-}
-

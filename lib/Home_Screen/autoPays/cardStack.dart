@@ -1,4 +1,395 @@
 
+// import 'package:flutter/material.dart';
+// import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/allcardsScreen.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardWidget.dart';
+// import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+// import 'package:flutter_application_code_stakeplot/components/autopay_card_clip.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+// import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
+// import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
+// import 'package:flutter_application_code_stakeplot/repository/autopay_repository.dart';
+// import 'package:get/get.dart';
+
+// class CardStackScreen extends StatefulWidget {
+//   @override
+//   _CardStackScreenState createState() => _CardStackScreenState();
+// }
+
+// class _CardStackScreenState extends State<CardStackScreen>
+//     with TickerProviderStateMixin {
+//   late List<AnimationController> _controllers;
+//   late List<Animation<Offset>> _slideAnimations;
+//   final RxList<CardData> cards = <CardData>[].obs;
+//   final RxList<CardData> allCards = <CardData>[].obs;
+//   final RxInt selectedCardIndex = (-1).obs;
+//   final RxBool isLoading = true.obs;
+//   final RxMap<String, bool> toggleStates = <String, bool>{}.obs;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _fetchAutoPayData();
+//     _initializeAnimations();
+//   }
+
+//   void _initializeAnimations() {
+//     _controllers = List.generate(
+//       cards.length + 1,
+//       (index) => AnimationController(
+//         duration: Duration(milliseconds: 500),
+//         vsync: this,
+//       ),
+//     );
+//     _slideAnimations = _controllers.map((controller) {
+//       return Tween<Offset>(begin: Offset.zero, end: Offset(0, -0.8)).animate(
+//         CurvedAnimation(parent: controller, curve: Curves.easeInOut),
+//       );
+//     }).toList();
+//   }
+
+//   void _showCustomCalendarPopup(BuildContext parentContext, String cardId) {
+//     final screenSize = MediaQuery.of(parentContext).size;
+//     final fontScale = screenSize.width / 375;
+//     final now = DateTime.now();
+//     final currentYear = now.year;
+//     final currentMonth = now.month;
+//     final currentDay = now.day;
+
+//     showDialog(
+//       context: parentContext,
+//       useRootNavigator: false,
+//       builder: (dialogContext) {
+//         return AlertDialog(
+//           backgroundColor: AppColors.primaryColor,
+//           elevation: 1,
+//           shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(16 * fontScale),
+//           ),
+//           insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+//           title: Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Text(
+//                 "Choose a Day for Your Reminder",
+//                 style: FontManager().getTextStyle(
+//                   dialogContext,
+//                   lWeight: FontWeight.w600,
+//                   fontSize: 18 * fontScale,
+//                   color: AppColors.backgroundColor,
+//                 ),
+//               ),
+//             ],
+//           ),
+//           content: SizedBox(
+//             height: screenSize.height * 0.3,
+//             width: screenSize.width * 0.9,
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   "Tap a day on the calendar to schedule your upcoming reminder.",
+//                   style: FontManager().getTextStyle(
+//                     dialogContext,
+//                     lWeight: FontWeight.w600,
+//                     fontSize: 14 * fontScale,
+//                     color: AppColors.backgroundColor,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 12),
+//                 Expanded(
+//                   child: GridView.builder(
+//                     itemCount: 31,
+//                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                       crossAxisCount: 7,
+//                       crossAxisSpacing: 8 * fontScale,
+//                       mainAxisSpacing: 8 * fontScale,
+//                       childAspectRatio: 1,
+//                     ),
+//                     itemBuilder: (context, index) {
+//                       final selectedDay = index + 1;
+
+//                       return ElevatedButton(
+//                         style: ElevatedButton.styleFrom(
+//                           backgroundColor: AppColors.backgroundColor,
+//                           padding: EdgeInsets.zero,
+//                           shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(8 * fontScale),
+//                           ),
+//                         ),
+//                         onPressed: () async {
+//                           DateTime reminderDate;
+//                           if (selectedDay >= currentDay) {
+//                             reminderDate = DateTime(
+//                                 currentYear, currentMonth, selectedDay);
+//                           } else {
+//                             final nextMonth =
+//                                 currentMonth == 12 ? 1 : currentMonth + 1;
+//                             final nextYear = currentMonth == 12
+//                                 ? currentYear + 1
+//                                 : currentYear;
+//                             final daysInNextMonth =
+//                                 DateTime(nextYear, nextMonth + 1, 0).day;
+
+//                             if (selectedDay <= daysInNextMonth) {
+//                               reminderDate =
+//                                   DateTime(nextYear, nextMonth, selectedDay);
+//                             } else {
+//                               reminderDate = DateTime(
+//                                   nextYear, nextMonth, daysInNextMonth);
+//                             }
+
+//                             if (now.isAfter(reminderDate)) {
+//                               final followingMonth =
+//                                   nextMonth == 12 ? 1 : nextMonth + 1;
+//                               final followingYear =
+//                                   nextMonth == 12 ? nextYear + 1 : nextYear;
+//                               final daysInFollowingMonth =
+//                                   DateTime(followingYear, followingMonth + 1, 0)
+//                                       .day;
+//                               final validDay =
+//                                   selectedDay <= daysInFollowingMonth
+//                                       ? selectedDay
+//                                       : daysInFollowingMonth;
+//                               reminderDate = DateTime(
+//                                   followingYear, followingMonth, validDay);
+//                             }
+//                           }
+
+//                           final formattedDate =
+//                               "${reminderDate.day}/${reminderDate.month}/${reminderDate.year}";
+//                           Navigator.pop(dialogContext);
+
+//                           final success = await updateRecurringPaymentDate(
+//                             cardId,
+//                             reminderDate,
+//                             true,
+//                           );
+//                           if (success) {
+//                             await getAutoPayInfo(); // force fresh API update
+
+//                             // final addSuccess =
+//                             //     await addRecurringPayment(cardId, true, );
+//                             snackBarCalled(
+//                               parentContext, // Use parentContext instead of dialogContext
+//                               success
+//                                   ? "Added and reminder set for $formattedDate"
+//                                   : "Failed to add payment",
+//                             );
+//                             if (success) {
+//                               toggleStates[cardId] = true;
+//                               await _fetchAutoPayData();
+//                             }
+//                           } else {
+//                             snackBarCalled(
+//                               parentContext,
+//                               "Failed to set reminder",
+//                             );
+//                           }
+//                         },
+//                         child: Center(
+//                           child: Text(
+//                             '$selectedDay',
+//                             style: FontManager().getTextStyle(
+//                               dialogContext,
+//                               lWeight: FontWeight.w600,
+//                               fontSize: 14 * fontScale,
+//                               color: AppColors.accentColor,
+//                             ),
+//                           ),
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+
+//   Future<void> _fetchAutoPayData() async {
+//     isLoading.value = true;
+//     final fetchedCards = await getAutoPayInfo();
+
+//     isAutoPayFected.value = !isAutoPayFected.value;
+//     allCards.clear();
+//     allCards.assignAll(fetchedCards);
+//     cards.assignAll(fetchedCards.take(3).toList());
+//     isLoading.value = false;
+//     toggleStates.clear();
+//     for (var card in cards) {
+//       toggleStates[card.id] = card.isActive;
+//     }
+//     _controllers.forEach((controller) => controller.dispose());
+//      _initializeAnimations();
+//   }
+
+//   @override
+//   void dispose() {
+//     _controllers.forEach((controller) => controller.dispose());
+//     super.dispose();
+//   }
+
+//   void _onCardTap(int index, BuildContext context) {
+//     if (index == cards.length) {
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(
+//           builder: (context) => AllCardsScreen(
+//             cards: allCards,
+//             toggleStates: toggleStates,
+//             onToggleChanged: (id, value) => toggleStates[id] = value,
+//             onSetReminder: (cardId) =>
+//                 _showCustomCalendarPopup(context, cardId),
+//             onDataChanged: _fetchAutoPayData,
+//           ),
+//         ),
+//       );
+//     } else {
+//       if (selectedCardIndex.value == index) {
+//         _controllers[index].reverse();
+//         selectedCardIndex.value = -1;
+//       } else {
+//         if (selectedCardIndex.value != -1)
+//           _controllers[selectedCardIndex.value].reverse();
+//         selectedCardIndex.value = index;
+//         _controllers[index].forward();
+//       }
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final screenSize = MediaQuery.of(context).size;
+//     final fontScale = screenSize.width / 375;
+//     final cardHeight = screenSize.height * 0.22;
+//     final stackHeight = screenSize.height * 0.37;
+//     final horizontalPadding = screenSize.width * 0.03;
+//     final horizontalPaddingForStack = screenSize.width * 0.016;
+//     final cardSpacing = screenSize.height * 0.05;
+
+//     return Scaffold(
+//       body: SafeArea(
+//         child: Padding(
+//           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
+//           child: Obx(() => Column(
+//                 children: [
+//                   if (isLoading.value)
+//                     Center(child: Spinner())
+//                   else
+//                     Container(
+//                       height: stackHeight,
+//                       decoration: BoxDecoration(
+//                         gradient: LinearGradient(
+//                           begin: Alignment.topLeft,
+//                           end: Alignment.bottomRight,
+//                           colors: [
+//                             Color(0xFF4A4A6A).withOpacity(0.9),
+//                             Color(0xFF3A3A5A).withOpacity(0.8),
+//                             Color(0xFF2A2A4A).withOpacity(0.7),
+//                           ],
+//                         ),
+//                         borderRadius: BorderRadius.circular(16),
+//                         // boxShadow: [
+//                         //   BoxShadow(
+//                         //     color: AppColors.accentColor.withOpacity(0.3),
+//                         //     blurRadius: 20 * fontScale,
+//                         //     offset: Offset(0, 8 * fontScale),
+//                         //   ),
+//                         // ],
+//                       ),
+//                       child: Stack(
+//                         clipBehavior: Clip.none,
+//                         children: [
+//                           for (int i = cards.length; i >= 0; i--)
+//                             Positioned(
+//                               top: (cards.length - i) * cardSpacing,
+//                               left: horizontalPadding,
+//                               right: horizontalPadding,
+//                               child: AnimatedBuilder(
+//                                 animation: _controllers[i],
+//                                 builder: (context, child) {
+//                                   return SlideTransition(
+//                                     position: _slideAnimations[i],
+//                                     child: GestureDetector(
+//                                       onTap: () => _onCardTap(i, context),
+//                                       child: i == cards.length
+//                                           ? Container(
+//                                               height: cardHeight,
+//                                               decoration: BoxDecoration(
+//                                                 color: AppColors.backgroundColor
+//                                                     .withOpacity(0.2),
+//                                                 borderRadius:
+//                                                     BorderRadius.circular(
+//                                                         16 * fontScale),
+//                                                 boxShadow: [
+//                                                   BoxShadow(
+//                                                     color: AppColors.accentColor
+//                                                         .withOpacity(0.25),
+//                                                     blurRadius: 12 * fontScale,
+//                                                     offset: Offset(
+//                                                         0, 6 * fontScale),
+//                                                   ),
+//                                                 ],
+//                                               ),
+//                                               child: Padding(
+//                                                 padding: EdgeInsets.all(
+//                                                     10.0 * fontScale),
+//                                                 child: Text(
+//                                                   "View All",
+//                                                   style: FontManager()
+//                                                       .getTextStyle(
+//                                                     context,
+//                                                     lWeight: FontWeight.w600,
+//                                                     fontSize: 16 * fontScale,
+//                                                     color: AppColors
+//                                                         .backgroundColor,
+//                                                   ),
+//                                                   textAlign: TextAlign.center,
+//                                                 ),
+//                                               ),
+//                                             )
+//                                           : CardWidget(
+//                                               card: cards[i],
+//                                               toggleStates: toggleStates,
+//                                               onToggleChanged: (id, value) =>
+//                                                   toggleStates[id] = value,
+//                                               onSetReminder: (cardId) =>
+//                                                   _showCustomCalendarPopup(
+//                                                       context, cardId),
+//                                               parentContext: context,
+//                                               onDataChanged: _fetchAutoPayData,
+//                                               index: i,
+//                                             ),
+//                                     ),
+//                                   );
+//                                 },
+//                               ),
+//                             ),
+//                           Positioned(
+//                             bottom: 12 * fontScale,
+//                             left: horizontalPaddingForStack,
+//                             child: CustomNeumorphicContainer(
+//                               width: MediaQuery.of(context).size.width * 0.88,
+//                               height: MediaQuery.of(context).size.height * 0.16,
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                 ],
+//               )),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/allcardsScreen.dart';
@@ -17,10 +408,7 @@ class CardStackScreen extends StatefulWidget {
   _CardStackScreenState createState() => _CardStackScreenState();
 }
 
-class _CardStackScreenState extends State<CardStackScreen>
-    with TickerProviderStateMixin {
-  late List<AnimationController> _controllers;
-  late List<Animation<Offset>> _slideAnimations;
+class _CardStackScreenState extends State<CardStackScreen> {
   final RxList<CardData> cards = <CardData>[].obs;
   final RxList<CardData> allCards = <CardData>[].obs;
   final RxInt selectedCardIndex = (-1).obs;
@@ -31,24 +419,9 @@ class _CardStackScreenState extends State<CardStackScreen>
   void initState() {
     super.initState();
     _fetchAutoPayData();
-    _initializeAnimations();
   }
 
-  void _initializeAnimations() {
-    _controllers = List.generate(
-      cards.length + 1,
-      (index) => AnimationController(
-        duration: Duration(milliseconds: 500),
-        vsync: this,
-      ),
-    );
-    _slideAnimations = _controllers.map((controller) {
-      return Tween<Offset>(begin: Offset.zero, end: Offset(0, -0.8)).animate(
-        CurvedAnimation(parent: controller, curve: Curves.easeInOut),
-      );
-    }).toList();
-  }
-
+  // Keep the calendar popup as you provided
   void _showCustomCalendarPopup(BuildContext parentContext, String cardId) {
     final screenSize = MediaQuery.of(parentContext).size;
     final fontScale = screenSize.width / 375;
@@ -121,8 +494,8 @@ class _CardStackScreenState extends State<CardStackScreen>
                         onPressed: () async {
                           DateTime reminderDate;
                           if (selectedDay >= currentDay) {
-                            reminderDate = DateTime(
-                                currentYear, currentMonth, selectedDay);
+                            reminderDate =
+                                DateTime(currentYear, currentMonth, selectedDay);
                           } else {
                             final nextMonth =
                                 currentMonth == 12 ? 1 : currentMonth + 1;
@@ -168,11 +541,8 @@ class _CardStackScreenState extends State<CardStackScreen>
                           );
                           if (success) {
                             await getAutoPayInfo(); // force fresh API update
-
-                            // final addSuccess =
-                            //     await addRecurringPayment(cardId, true, );
                             snackBarCalled(
-                              parentContext, // Use parentContext instead of dialogContext
+                              parentContext,
                               success
                                   ? "Added and reminder set for $formattedDate"
                                   : "Failed to add payment",
@@ -213,176 +583,139 @@ class _CardStackScreenState extends State<CardStackScreen>
 
   Future<void> _fetchAutoPayData() async {
     isLoading.value = true;
-    final fetchedCards = await getAutoPayInfo();
-
-    isAutoPayFected.value = !isAutoPayFected.value;
-    allCards.clear();
-    allCards.assignAll(fetchedCards);
-    cards.assignAll(fetchedCards.take(3).toList());
-    isLoading.value = false;
-    toggleStates.clear();
-    for (var card in cards) {
-      toggleStates[card.id] = card.isActive;
-    }
-    _controllers.forEach((controller) => controller.dispose());
-     _initializeAnimations();
-  }
-
-  @override
-  void dispose() {
-    _controllers.forEach((controller) => controller.dispose());
-    super.dispose();
-  }
-
-  void _onCardTap(int index, BuildContext context) {
-    if (index == cards.length) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AllCardsScreen(
-            cards: allCards,
-            toggleStates: toggleStates,
-            onToggleChanged: (id, value) => toggleStates[id] = value,
-            onSetReminder: (cardId) =>
-                _showCustomCalendarPopup(context, cardId),
-            onDataChanged: _fetchAutoPayData,
-          ),
-        ),
-      );
-    } else {
-      if (selectedCardIndex.value == index) {
-        _controllers[index].reverse();
-        selectedCardIndex.value = -1;
-      } else {
-        if (selectedCardIndex.value != -1)
-          _controllers[selectedCardIndex.value].reverse();
-        selectedCardIndex.value = index;
-        _controllers[index].forward();
+    try {
+      final fetchedCards = await getAutoPayInfo();
+      allCards.clear();
+      allCards.assignAll(fetchedCards);
+      // Show only up to 2 cards in the preview row
+      cards.clear();
+      cards.assignAll(fetchedCards.take(2).toList());
+      // Initialize toggle states
+      toggleStates.clear();
+      for (var card in fetchedCards) {
+        toggleStates[card.id] = card.isActive;
       }
+    } catch (e) {
+      // handle errors silently or show snackbar if needed
+    } finally {
+      isLoading.value = false;
     }
+  }
+
+  void _onViewAll(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AllCardsScreen(
+          cards: allCards,
+          toggleStates: toggleStates,
+          onToggleChanged: (id, value) => toggleStates[id] = value,
+          onSetReminder: (cardId) => _showCustomCalendarPopup(context, cardId),
+          onDataChanged: _fetchAutoPayData,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final fontScale = screenSize.width / 375;
+    final cardWidth = screenSize.width * 0.72; // width for horizontal card
     final cardHeight = screenSize.height * 0.22;
-    final stackHeight = screenSize.height * 0.37;
-    final horizontalPadding = screenSize.width * 0.03;
-    final horizontalPaddingForStack = screenSize.width * 0.016;
-    final cardSpacing = screenSize.height * 0.05;
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
-          child: Obx(() => Column(
-                children: [
-                  if (isLoading.value)
-                    Center(child: Spinner())
-                  else
-                    Container(
-                      height: stackHeight,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xFF4A4A6A).withOpacity(0.9),
-                            Color(0xFF3A3A5A).withOpacity(0.8),
-                            Color(0xFF2A2A4A).withOpacity(0.7),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        // boxShadow: [
-                        //   BoxShadow(
-                        //     color: AppColors.accentColor.withOpacity(0.3),
-                        //     blurRadius: 20 * fontScale,
-                        //     offset: Offset(0, 8 * fontScale),
-                        //   ),
-                        // ],
-                      ),
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          for (int i = cards.length; i >= 0; i--)
-                            Positioned(
-                              top: (cards.length - i) * cardSpacing,
-                              left: horizontalPadding,
-                              right: horizontalPadding,
-                              child: AnimatedBuilder(
-                                animation: _controllers[i],
-                                builder: (context, child) {
-                                  return SlideTransition(
-                                    position: _slideAnimations[i],
-                                    child: GestureDetector(
-                                      onTap: () => _onCardTap(i, context),
-                                      child: i == cards.length
-                                          ? Container(
-                                              height: cardHeight,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.backgroundColor
-                                                    .withOpacity(0.2),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        16 * fontScale),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: AppColors.accentColor
-                                                        .withOpacity(0.25),
-                                                    blurRadius: 12 * fontScale,
-                                                    offset: Offset(
-                                                        0, 6 * fontScale),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(
-                                                    10.0 * fontScale),
-                                                child: Text(
-                                                  "View All",
-                                                  style: FontManager()
-                                                      .getTextStyle(
-                                                    context,
-                                                    lWeight: FontWeight.w600,
-                                                    fontSize: 16 * fontScale,
-                                                    color: AppColors
-                                                        .backgroundColor,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            )
-                                          : CardWidget(
-                                              card: cards[i],
-                                              toggleStates: toggleStates,
-                                              onToggleChanged: (id, value) =>
-                                                  toggleStates[id] = value,
-                                              onSetReminder: (cardId) =>
-                                                  _showCustomCalendarPopup(
-                                                      context, cardId),
-                                              parentContext: context,
-                                              onDataChanged: _fetchAutoPayData,
-                                              index: i,
-                                            ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          Positioned(
-                            bottom: 12 * fontScale,
-                            left: horizontalPaddingForStack,
-                            child: CustomNeumorphicContainer(
-                              width: MediaQuery.of(context).size.width * 0.88,
-                              height: MediaQuery.of(context).size.height * 0.16,
-                            ),
-                          ),
-                        ],
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          child: Obx(() {
+            if (isLoading.value) {
+              return Center(child: Spinner());
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top title row with View All button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "AutoPay", // change title if you want
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w700,
+                        fontSize: 18 * fontScale,
+                        color: AppColors.accentColor,
                       ),
                     ),
-                ],
-              )),
+                    TextButton(
+                      onPressed: () => _onViewAll(context),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12 * fontScale, vertical: 8 * fontScale),
+                        backgroundColor: AppColors.backgroundColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8 * fontScale),
+                        ),
+                      ),
+                      child: Text(
+                        "View All",
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 14 * fontScale,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.0),
+                // Horizontal scroll row showing up to 2 cards
+                SizedBox(
+                  height: cardHeight,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: cards.length,
+                    separatorBuilder: (context, index) =>
+                        SizedBox(width: 12.0),
+                    itemBuilder: (context, index) {
+                      final card = cards[index];
+                      return SizedBox(
+                        width: cardWidth,
+                        child: CardWidget(
+                          card: card,
+                          toggleStates: toggleStates,
+                          onToggleChanged: (id, value) =>
+                              toggleStates[id] = value,
+                          onSetReminder: (cardId) =>
+                              _showCustomCalendarPopup(context, cardId),
+                          parentContext: context,
+                          onDataChanged: _fetchAutoPayData,
+                          index: index,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                // If no cards to preview, show message
+                if (cards.isEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: Text(
+                      "No autopay cards available.",
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 14 * fontScale,
+                        color: AppColors.bg3,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          }),
         ),
       ),
     );

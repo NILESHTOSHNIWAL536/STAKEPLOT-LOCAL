@@ -68,4 +68,5 @@ class AppColors {
   static const Color whiteOpacity08 = Color(0xCCFFFFFF);
   static const Color newbg = Color(0xFFFFF9F0); 
   static const Color debitedAmount = Color(0xFF9394B8); 
+  static const Color strokeColor = Color(0xFF989CDA); 
 }
