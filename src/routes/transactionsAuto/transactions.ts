@@ -36,26 +36,15 @@ router.post(
   TransactionAutoController.verifyPendingTransaction
 );
 router.patch('/updateTransaction/:transactionId', AuthMiddlewares.protect, validateRequestMiddleware(updateTransaction), TransactionAutoController.updateTransaction);
-router.get('/getTransactions/:page', AuthMiddlewares.protect, validateRequestMiddleware(getAllTransactions), TransactionAutoController.getAllTransactions);
-router.get(
-  '/getTransactions/:page/:search/:isBankAccount',
-  AuthMiddlewares.protect,
-  validateRequestMiddleware(getSearchedTransactions),
-  TransactionAutoController.getSearchedTransactions
-);
+router.get('/getTransactions/:page', AuthMiddlewares.protect, validateRequestMiddleware(getSearchedTransactions), TransactionAutoController.getSearchedTransactions);
 router.get('/getTransactionsOfUser', AuthMiddlewares.protect, TransactionAutoController.getAllTransactionsOfUser);
-router.get(
-  '/getTransactionsForAccount/:accountId/:page',
-  AuthMiddlewares.protect,
-  validateRequestMiddleware(getAllTransactionsForAccount),
-  TransactionAutoController.getAllTransactionsForAccount
-);
+
 router.get('/categorize', AuthMiddlewares.protect, TransactionAutoController.categorizeTransactions);
 // **************************************** NEWLY ADDED APIS ****************************************
 router.post('/create', AuthMiddlewares.protect, TransactionAutoController.createTransaction);
 router.get('/top-five-categories', AuthMiddlewares.protect, TransactionAutoController.getTopFiveCategories);
 router.get('/category-wise-spendings', AuthMiddlewares.protect, TransactionAutoController.getCategoryWiseSpendings);
-router.get('/budget-transactions', AuthMiddlewares.protect, TransactionAutoController.getBudgetTransactions); 
+router.get('/budget-transactions', AuthMiddlewares.protect, TransactionAutoController.getBudgetTransactions);
 router.get('/get-budget-spents', AuthMiddlewares.protect, TransactionAutoController.getBudgetSpents);
 router.put('/:transactionId', AuthMiddlewares.protect, TransactionAutoController.updateTransaction);
 // ******************************************************************************************************

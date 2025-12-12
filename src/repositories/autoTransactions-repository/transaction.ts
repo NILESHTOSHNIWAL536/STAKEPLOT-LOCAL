@@ -10,7 +10,7 @@ import { groupSimilarTransactionsPipeline } from '@/pipelines/group-similar.pipe
 import { buildBudgetPipeline } from '@/pipelines/budget.pipeline';
 import { buildSpendingPipeline } from '@/pipelines/spending.pipeline';
 
-import { enrichWithBankDetails } from '@/helpers/enrich-bank.helper';
+import { enrichTransactionWithBankDetails } from '@/helpers/enrich-bank.helper';
 import { createTransactionsBulk } from '@/helpers/transaction-create.helper';
 import { updateTransactionLogic } from '@/helpers/transaction-update.helper';
 import { predictCategoriesForTransactions } from '@/helpers/predictions.helper';
@@ -70,144 +70,15 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   }
 
   // -------------------------
-  // 2. Paginated get
-  // -------------------------
-  async getTransactions(userId: string | Types.ObjectId, page: number) {
-    try {
-      const limit = 20;
-      const skip = (page - 1) * limit;
-
-      const transactions = await this.model
-        .find({
-          userId,
-          Hidden: false,
-        })
-        .sort({ transactionTimestamp: -1 })
-        .skip(skip)
-        .limit(limit)
-        .populate('accountId', 'bankId');
-
-      const banks = await new this.BankRepo().getBank(userId);
-      const enriched = await enrichWithBankDetails(transactions, banks);
-      const predicted = await predictCategoriesForTransactions(enriched);
-
-      return predicted;
-    } catch (error: any) {
-      logger.error('Error fetching transactions:', error);
-      throw error;
-    }
-  }
-
-  // -------------------------
   // 3. Search transactions
   // -------------------------
-  async getSearchedTransactions(params: {
-    userId: string | Types.ObjectId;
-    page: number;
-    searchFilter?: any[];
-    minAmount?: number;
-    maxAmount?: number;
-    startDate?: Date;
-    endDate?: Date;
-    accountId?: string;
-    isCash?: boolean;
-    search?: string;
-  }) {
-    const { userId, page, searchFilter, minAmount, maxAmount, startDate, endDate, accountId, isCash, search } = params;
+  async getTransactions(match: any, page: number) {
+    const limit = 20;
+    const skip = (page - 1) * limit;
 
-    try {
-      const limit = 20;
-      const skip = (page - 1) * limit;
+    const pipeline: PipelineStage[] = [{ $match: match }, { $sort: { transactionTimestamp: -1 } as const }, { $skip: skip }, { $limit: limit }];
 
-      const pipeline = buildSearchPipeline({
-        userId: new Types.ObjectId(userId as string),
-        searchFilter,
-        accountId: accountId ? new Types.ObjectId(accountId) : undefined,
-        minAmount,
-        maxAmount,
-        startDate,
-        endDate,
-        isCash,
-      });
-
-      // Build base query for totals calculation
-      const baseQuery: any = {
-        userId: new Types.ObjectId(userId as string),
-        Hidden: false,
-        ...(isCash ? { manualTransaction: true } : {}),
-        ...(searchFilter && searchFilter.length > 0 ? { $or: searchFilter } : {}),
-        ...(accountId ? { accountId: new Types.ObjectId(accountId) } : {}),
-        ...(minAmount !== undefined || maxAmount !== undefined
-          ? {
-              amount: {
-                ...(minAmount !== undefined ? { $gte: minAmount } : {}),
-                ...(maxAmount !== undefined ? { $lte: maxAmount } : {}),
-              },
-            }
-          : {}),
-        ...(startDate || endDate
-          ? {
-              transactionTimestamp: {
-                ...(startDate ? { $gte: startDate } : {}),
-                ...(endDate ? { $lte: endDate } : {}),
-              },
-            }
-          : {}),
-      };
-
-      const now = new Date();
-      const lastWeekStart = startOfWeek(subDays(now, 7), { weekStartsOn: 1 });
-      const lastWeekEnd = endOfWeek(subDays(now, 7), { weekStartsOn: 1 });
-      const currentMonthStart = startOfMonth(now);
-      const currentMonthEnd = endOfMonth(now);
-
-      const getTotals = async (start: Date, end: Date) => {
-        const match = {
-          ...baseQuery,
-          transactionTimestamp: { $gte: start, $lte: end },
-        };
-
-        const result = await this.model.aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: '$type',
-              total: { $sum: '$amount' },
-            },
-          },
-        ]);
-
-        const totals = { credit: 0, debit: 0 };
-        result.forEach((r: any) => {
-          if (r._id === 'CREDIT') totals.credit = Math.round(r.total);
-          if (r._id === 'DEBIT') totals.debit = Math.round(r.total);
-        });
-        return totals;
-      };
-
-      const lastWeekTotals = await getTotals(lastWeekStart, lastWeekEnd);
-      const currentMonthTotals = await getTotals(currentMonthStart, currentMonthEnd);
-
-      pipeline.push({ $skip: skip }, { $limit: limit });
-
-      const transactions = await this.model.aggregate(pipeline);
-
-      const banks = await new this.BankRepo().getBank(userId);
-      const withBank = await enrichWithBankDetails(transactions, banks);
-      const predicted = await predictCategoriesForTransactions(withBank);
-
-      const matchedKeywords = search ? await getMatchedKeywords(userId, search) : [];
-
-      return {
-        transactions: predicted,
-        lastWeek: lastWeekTotals,
-        lastMonth: currentMonthTotals,
-        matchedKeywords,
-      };
-    } catch (error) {
-      logger.error('Error in getSearchedTransactions:', error);
-      throw error;
-    }
+    return this.model.aggregate(pipeline);
   }
 
   // -------------------------
@@ -215,18 +86,6 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   async getTransactionsOfUser(userId: string | Types.ObjectId) {
     const response = await this.model.find({ userId, Hidden: false });
-    return response;
-  }
-
-  // -------------------------
-  // 5. Get transactions for specific account
-  // -------------------------
-  async getTransactionsForAccount(userId: string | Types.ObjectId, accountId: string | Types.ObjectId, page: number) {
-    const limit = 20;
-    const skip = (page - 1) * limit;
-
-    const response = await this.model.find({ userId, accountId, Hidden: false }).sort({ transactionTimestamp: -1 }).skip(skip).limit(limit);
-
     return response;
   }
 
@@ -385,7 +244,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       .limit(limit);
 
     const banks = await new this.BankRepo().getBank(userId);
-    const txWithBank = await enrichWithBankDetails(transactions, banks);
+    const txWithBank = await enrichTransactionWithBankDetails(transactions, banks);
     const txWithPredictions = await predictCategoriesForTransactions(txWithBank);
 
     return { transactions: txWithPredictions };
@@ -453,7 +312,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       .sort({ transactionTimestamp: -1 });
 
     const banks = await new this.BankRepo().getBank(userId);
-    const txWithBank = await enrichWithBankDetails(transactions, banks);
+    const txWithBank = await enrichTransactionWithBankDetails(transactions, banks);
     const txWithPredictions = await predictCategoriesForTransactions(txWithBank);
 
     return txWithPredictions;
@@ -527,7 +386,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       const transactions = await this.model.find({ userId, Hidden: true }).populate('accountId', 'bankId').lean();
 
       const banks = await new this.BankRepo().getBank(userId);
-      const txWithBank = await enrichWithBankDetails(transactions, banks);
+      const txWithBank = await enrichTransactionWithBankDetails(transactions, banks);
 
       return txWithBank;
     } catch (error: any) {
@@ -742,7 +601,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
         .populate('accountId', 'bankId');
 
       const banks = await new this.BankRepo().getBank(userId);
-      const transactionsWithBankLogo = await enrichWithBankDetails(transactions, banks);
+      const transactionsWithBankLogo = await enrichTransactionWithBankDetails(transactions, banks);
 
       return transactionsWithBankLogo;
     } catch (error) {
@@ -847,5 +706,31 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       logger.error(`Error deleting transactions: ${error}`);
       throw error;
     }
+  }
+
+  async getTotals(baseMatch: any, start: Date, end: Date) {
+    const match = {
+      ...baseMatch,
+      transactionTimestamp: { $gte: start, $lte: end },
+    };
+
+    const result = await this.model.aggregate([
+      { $match: match },
+      {
+        $group: {
+          _id: '$type',
+          total: { $sum: '$amount' },
+        },
+      },
+    ]);
+
+    const totals = { credit: 0, debit: 0 };
+
+    result.forEach((r) => {
+      if (r._id === 'CREDIT') totals.credit = Math.round(r.total);
+      if (r._id === 'DEBIT') totals.debit = Math.round(r.total);
+    });
+
+    return totals;
   }
 }

@@ -6,16 +6,19 @@ import type { SearchPipelineInput } from '@/types/bank/search.types';
  * This mirrors the JS baseQuery logic from your original repository.
  */
 export const buildSearchPipeline = (input: SearchPipelineInput): PipelineStage[] => {
-  const { userId, searchFilter, accountId, minAmount, maxAmount, startDate, endDate, isCash } = input;
+  const { userId, searchFilter, accountId, minAmount, maxAmount, startDate, endDate } = input;
+  console.log('input from here: ', input);
+
+  const hasCash = Array.isArray(searchFilter) && searchFilter.some((f) => typeof f === 'string' && f.toLowerCase() === 'cash');
 
   const baseMatch: Record<string, any> = {
     userId,
     Hidden: false,
   };
 
-  if (isCash) baseMatch.manualTransaction = true;
+  if (hasCash) baseMatch.manualTransaction = true;
   if (searchFilter && searchFilter.length > 0) baseMatch.$or = searchFilter;
-  if (accountId) baseMatch.accountId = accountId;
+  if (accountId && accountId != '-') baseMatch.accountId = accountId;
 
   if (minAmount !== undefined || maxAmount !== undefined) {
     baseMatch.amount = {};

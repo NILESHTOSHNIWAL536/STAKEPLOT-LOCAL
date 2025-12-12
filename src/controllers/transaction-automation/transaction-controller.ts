@@ -20,8 +20,7 @@ import mongoose from 'mongoose';
 /* Helpers to avoid TS complaints about common responses being mutated */
 const SuccessResponse: any = (Common as any).SuccessResponse;
 const ErrorResponse: any = (Common as any).ErrorResponse;
-type GroupBy = "day" | "week" | "month";
-
+type GroupBy = 'day' | 'week' | 'month';
 
 /* ---------------------------
    Non-controller exports (business helpers)
@@ -102,22 +101,6 @@ export const getBanksLinkedAndAccounts = async (req: Request, res: Response): Pr
   }
 };
 
-export const getAllTransactions = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const userId = req.user!._id;
-    const { page } = req.params;
-    const pageNum = page ? Number(page) : 1;
-    const response = await BankService.getAllTransactions(userId, pageNum);
-
-    SuccessResponse.data = response;
-    return res.status(StatusCodes.OK).json(SuccessResponse);
-  } catch (error: any) {
-    ErrorResponse.error = error;
-    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
-    return res.status(statusCode).json(ErrorResponse);
-  }
-};
-
 export const getMonthlyTransactionsHistory = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.user!._id;
@@ -138,22 +121,6 @@ export const getAllTransactionsOfUser = async (req: Request, res: Response): Pro
     const userId = req.user!._id;
     const response = await BankService.getAllTransactionsOfUser(userId);
     return res.status(StatusCodes.OK).json(response);
-  } catch (error: any) {
-    ErrorResponse.error = error;
-    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
-    return res.status(statusCode).json(ErrorResponse);
-  }
-};
-
-export const getAllTransactionsForAccount = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const { accountId, page } = req.params;
-    const userId = req.user!._id;
-    const pageNum = page ? Number(page) : 1;
-    const response = await BankService.getAllTransactionsForAccount(userId, accountId, pageNum);
-
-    SuccessResponse.data = response;
-    return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     ErrorResponse.error = error;
     const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
@@ -397,7 +364,9 @@ export const categorizeGroupedTransaction = async (req: Request, res: Response):
       return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Category and subcategory are required' });
     }
 
-    const response = await BankService.categorizeGroupedTransaction(userId, groupId, category, subcategory, removedTransactions);
+    const modifiedGroupId = new MongooseTypes.ObjectId(groupId);
+
+    const response = await BankService.categorizeGroupedTransaction(userId, modifiedGroupId, category, subcategory, removedTransactions);
 
     SuccessResponse.data = response;
     return res.status(StatusCodes.OK).json(SuccessResponse);
@@ -585,29 +554,32 @@ export const getLoanCalculation = async (req: Request, res: Response): Promise<R
   }
 };
 
-export const getSearchedTransactions = async (req: Request, res: Response): Promise<Response> => {
+export const getSearchedTransactions = async (req: Request, res: Response) => {
   try {
-    const userId = req.user!._id;
-    const { page, search, isBankAccount } = req.params;
-    // Convert page to number
-    const pageNumber = Number(page);
-    const modifiedIsBankAccount = isBankAccount === 'true' ? true : false;
+    const userId = req.user._id;
+    const page = Number(req.params.page);
 
-    // Validate page number
-    if (isNaN(pageNumber) || pageNumber < 1) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        error: 'Page must be a valid positive number.',
-      });
-    }
+    if (!page || page < 1) return res.status(400).json({ error: 'Page must be >= 1' });
 
-    const response = await BankService.getSearchedTransactions(userId, pageNumber, search, modifiedIsBankAccount, req.query);
+    const { search = '', type, manualTransaction, accountId, minAmount, maxAmount, startDate, endDate } = req.query;
 
-    SuccessResponse.data = response;
-    return res.status(StatusCodes.OK).json(SuccessResponse);
-  } catch (error: any) {
-    ErrorResponse.error = error;
-    const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
-    return res.status(statusCode).json(ErrorResponse);
+    const response = await BankService.getSearchedTransactions({
+      userId,
+      page,
+      search: String(search),
+      type: type ? String(type) : undefined,
+      manualTransaction: manualTransaction === 'true',
+      accountId, // single or multiple (string or array)
+      minAmount: minAmount ? Number(minAmount) : undefined,
+      maxAmount: maxAmount ? Number(maxAmount) : undefined,
+      startDate: startDate ? new Date(startDate as string) : undefined,
+      endDate: endDate ? new Date(endDate as string) : undefined,
+    });
+
+    return res.json({ data: response });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: e });
   }
 };
 
@@ -643,7 +615,7 @@ export const getRecurringPayments = async (req: Request, res: Response): Promise
   try {
     const userId = req.user!._id;
     const type = req.params.isActive;
-    const boolIsActive = type === 'true' ? true : false
+    const boolIsActive = type === 'true' ? true : false;
     const response = await BankService.getRecurringPayments(userId, boolIsActive);
 
     SuccessResponse.data = response;

@@ -86,8 +86,6 @@ export const getAllTransactions = {
 export const getSearchedTransactions = {
   params: Joi.object({
     page: Joi.number().integer().min(1).default(1),
-    search: Joi.string().required(),
-    isBankAccount: Joi.string().required(),
   }),
 };
 

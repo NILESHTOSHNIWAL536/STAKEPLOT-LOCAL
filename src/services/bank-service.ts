@@ -6,7 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import AppError from '../utils/errors/app-error';
 import { FipRepository, AccountRepository, ProfileRepository, SummaryRepository, AutoTransactionRepository } from '@/repositories';
 import redisClient from '../config/redis-config';
-import logger from '../utils/common/logger';
+import logger from '@/utils/common/logger';
 import { PendingTransaction, GroupedTransaction, Transaction } from '@/models';
 import saveGroupedTransactions from '../utils/helpers/saveGroupedTransactions';
 import detectRecurringPayments from '../utils/helpers/detect-recurring-payments';
@@ -16,11 +16,15 @@ import getISTTimestamp from '@/utils/helpers/get-IST-timeStamp';
 import bankLogos from '@/config/bankLogos';
 import fetch from 'node-fetch'; // used for IFSC fetch; ensure node-fetch is installed
 import { IBankTransaction } from '@/types/bank';
+import { enrichTransactionWithBankDetails } from '@/helpers/enrich-bank.helper';
+import { predictCategoriesForTransactions } from '@/helpers/predictions.helper';
+import { startOfWeek, endOfWeek, subDays, startOfMonth, endOfMonth } from 'date-fns';
+import buildMatch from '@/utils/helpers/buildMatch';
+import { getMatchedKeywords } from '@/utils/helpers/transactionSearchFilter';
 
 // Helper type for userId inputs
 type UserIdLike = string | Types.ObjectId;
-type GroupBy = "day" | "week" | "month";
-
+type GroupBy = 'day' | 'week' | 'month';
 
 const autoTransactionRepo = new AutoTransactionRepository();
 
@@ -365,39 +369,48 @@ export async function getBanksLinkedAndAccounts(userId: UserIdLike): Promise<any
 // -------------------------
 // TRANSACTION RELATED
 // -------------------------
-export async function getAllTransactions(userId: UserIdLike, page: number): Promise<any> {
-  return await autoTransactionRepo.getTransactions(userId, page);
-}
+export async function getSearchedTransactions(params: any) {
+  const keywords = params.search ? params.search.split(' ').filter(Boolean) : [];
 
-export async function getSearchedTransactions(userId: UserIdLike, page: number, search: string, isBankAccount?: boolean, query?: any): Promise<any> {
-  try {
-    return await autoTransactionRepo.getSearchedTransactions({
-      userId,
-      page,
-      searchFilter: search ? search.split(' ') : undefined,
-      minAmount: query?.minAmount ? Number(query.minAmount) : undefined,
-      maxAmount: query?.maxAmount ? Number(query.maxAmount) : undefined,
-      startDate: query?.startDate ? new Date(query.startDate) : undefined,
-      endDate: query?.endDate ? new Date(query.endDate) : undefined,
-      accountId: query?.accountId,
-      isCash: !isBankAccount, // invert BOOL based on your domain logic
-    });
-  } catch (error: any) {
-    return error;
-  }
+  // Build shared match object ONCE
+  const match = buildMatch({
+    ...params,
+    keywords,
+  });
+
+  // 1. Fetch paginated transactions
+  const transactions = await autoTransactionRepo.getTransactions(match, params.page);
+
+  // 2. Add bank data + category AI
+  const banks = await new FipRepository().getBank(params.userId);
+  const enriched = await enrichTransactionWithBankDetails(transactions, banks);
+  const predicted = await predictCategoriesForTransactions(enriched);
+
+  // 3. Totals (last week, current month)
+  const now = new Date();
+  const lastWeekStart = startOfWeek(subDays(now, 7), { weekStartsOn: 1 });
+  const lastWeekEnd = endOfWeek(subDays(now, 7), { weekStartsOn: 1 });
+
+  const monthStart = startOfMonth(now);
+  const monthEnd = endOfMonth(now);
+
+  const lastWeekTotals = await autoTransactionRepo.getTotals(match, lastWeekStart, lastWeekEnd);
+  const currentMonthTotals = await autoTransactionRepo.getTotals(match, monthStart, monthEnd);
+
+  // 4. Keyword suggestions (optional)
+  const matchedKeywords = params.search ? await getMatchedKeywords(params.userId, params.search) : [];
+
+  return {
+    transactions: predicted,
+    lastWeek: lastWeekTotals,
+    lastMonth: currentMonthTotals,
+    matchedKeywords,
+  };
 }
 
 export async function getAllTransactionsOfUser(userId: UserIdLike): Promise<any> {
   try {
     return await autoTransactionRepo.getTransactionsOfUser(userId);
-  } catch (error: any) {
-    return error;
-  }
-}
-
-export async function getAllTransactionsForAccount(userId: UserIdLike, accountId: string | Types.ObjectId, page: number): Promise<any> {
-  try {
-    return await autoTransactionRepo.getTransactionsForAccount(userId, accountId, page);
   } catch (error: any) {
     return error;
   }
@@ -412,7 +425,13 @@ export async function getGroupedTransactions(userId: UserIdLike): Promise<any> {
   }
 }
 
-export async function categorizeGroupedTransaction(userId: UserIdLike, groupId: string, category: string, subcategory: string, removedTransactions: any[]): Promise<any> {
+export async function categorizeGroupedTransaction(
+  userId: UserIdLike,
+  groupId: string | Types.ObjectId,
+  category: string,
+  subcategory: string,
+  removedTransactions: any[]
+): Promise<any> {
   try {
     const response = await autoTransactionRepo.categorizeGroupedTransaction(userId, groupId, category, subcategory, removedTransactions);
 
@@ -823,12 +842,10 @@ export default {
   createBankDetails,
   updateBankDetails,
   getUserDetails,
-  getAllTransactions,
   categorizeTransactions,
   getAllTransactionsByTimeLine,
   getHideTransactions,
   updateTransaction,
-  getAllTransactionsForAccount,
   getGroupedTransactions,
   categorizeGroupedTransaction,
   getPendingForReviewTransactions,

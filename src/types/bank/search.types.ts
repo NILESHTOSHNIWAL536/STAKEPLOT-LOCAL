@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export interface SearchFilters {
   minAmount?: number;
@@ -13,7 +13,7 @@ export interface SearchFilters {
 export interface SearchPipelineInput {
   userId: Types.ObjectId;
   searchFilter?: any[];
-  accountId?: Types.ObjectId;
+  accountId?: string | Types.ObjectId;
   minAmount?: number;
   maxAmount?: number;
   startDate?: Date;
