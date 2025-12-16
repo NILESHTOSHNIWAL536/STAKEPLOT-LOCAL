@@ -627,7 +627,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
           child: Obx(() {
             if (isLoading.value) {
               return Center(child: Spinner());
@@ -673,7 +673,8 @@ class _CardStackScreenState extends State<CardStackScreen> {
                 ),
                 SizedBox(height: 12.0),
                 // Horizontal scroll row showing up to 2 cards
-                SizedBox(
+                Container(
+                 
                   height: cardHeight,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,

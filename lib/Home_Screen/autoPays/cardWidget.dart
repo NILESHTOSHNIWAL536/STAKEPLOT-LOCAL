@@ -524,11 +524,11 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:flutter_application_code_stakeplot/repository/autopay_repository.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:get/get.dart';
 
 import '../../components/shared_utils.dart';
@@ -576,6 +576,7 @@ class CardWidget extends StatelessWidget {
        decoration: BoxDecoration(
     color: Colors.white, // background: #FFF
     borderRadius: BorderRadius.circular(10.0), // border-radius: 10px
+    border: Border.all(color: AppColors.mt),
     boxShadow: [
       BoxShadow(
         color: const Color.fromRGBO(142, 142, 142, 0.25), // rgba(142,142,142,0.25)
