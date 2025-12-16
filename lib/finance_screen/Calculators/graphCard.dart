@@ -24,12 +24,12 @@ class PieChartGraph extends StatefulWidget {
 class _PieChartGraphState extends State<PieChartGraph> {
   List pieChatColor = [
     AppColors.primaryColor,
-    AppColors.uncoloredPie,
-    AppColors.bg6,
-    AppColors.message,
-    AppColors.border,
-    AppColors.bg6,
-    AppColors.message,
+    AppColors.newuncoloredpie,
+    //  AppColors.bg6,
+    // AppColors.message,
+    // AppColors.border,
+    // AppColors.bg6,
+    // AppColors.message,
     AppColors.border,
   ];
 
@@ -40,25 +40,21 @@ class _PieChartGraphState extends State<PieChartGraph> {
 
   Widget buildPieChart() {
     return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+      
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)
+      ),
+      
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.all(Colorcodes.paddingSize / 2),
-            child: textStyle(
-                context: context,
-                fontsize: 20,
-                fontWeight: FontWeight.w800,
-                c: AppColors.primaryColor,
-                text: widget.title),
-          ),
+         
           Padding(
             padding: EdgeInsets.only(
-                top: Colorcodes.paddingSize / 2,
+                // top: Colorcodes.paddingSize / 2,
                 left: Colorcodes.paddingSize / 2,
-                bottom: Colorcodes.paddingSize / 2),
+                // bottom: Colorcodes.paddingSize / 2
+                ),
             // child: Column(
             //   children: widget.graphDisc.map((e) => getSubtext(e)).toList(),
             // ),
@@ -83,9 +79,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
             height: Colorcodes.paddingSize,
           ),
           getGraph(),
-          SizedBox(
-            height: Colorcodes.paddingSize * 2,
-          ),
+          
         ],
       ),
     );
@@ -97,7 +91,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
+      child:  Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -136,75 +130,226 @@ class _PieChartGraphState extends State<PieChartGraph> {
   }
 
   Widget getSubtext(data) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          textStyle(
-              context: context,
-              fontWeight: FontWeight.w300,
-              fontsize: 16,
-              c: AppColors.accentColor,
-              text: data['title']),
-          const SizedBox(
-            width: 10,
-          ),
-          textStyle(
-              context: context,
-              fontWeight: FontWeight.w300,
-              fontsize: 16,
-              c: AppColors.accentColor,
-              text: data['amount'].toString()),
-        ],
-      ),
-    );
-  }
-
-  Widget getGraph() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
-      width: MediaQuery.of(context).size.width / 1.1,
-      height: MediaQuery.of(context).size.height / 4,
-      child: PieChart(
-        PieChartData(
-            borderData: FlBorderData(
-              show: false,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            textStyle(
+                context: context,
+                fontWeight: FontWeight.w300,
+                fontsize: 16,
+                c: AppColors.accentColor,
+                text: data['title']),
+            const SizedBox(
+              width: 10,
             ),
-            sections: widget.graphData
-                .asMap()
-                .entries
-                .map((entry) => getPieChartSectionData(entry.value, entry.key))
-                .toList()),
+            textStyle(
+                context: context,
+                fontWeight: FontWeight.w300,
+                fontsize: 16,
+                c: AppColors.accentColor,
+                text: data['amount'].toString()),
+          ],
+        ),
       ),
     );
   }
 
-  PieChartSectionData getPieChartSectionData(data, index) {
-    return PieChartSectionData(
-      value: data['value'],
-      showTitle: false,
-      // badgeWidget: Container(
-      //   padding: EdgeInsets.all(10),
-      //   decoration: BoxDecoration(
-      //       color: pieChatColor[index], borderRadius: BorderRadius.circular(4)),
-      //   child: textStyleOnly(
-      //       context: context,
-      //      text: data['title'],
-      //       fontWeight: FontWeight.bold,
-      //       fontsize: 12,
-      //       c: index - 1 == 0 ? pieChatColor[0] : pieChatColor[1]),
-      // ),
-
-      // title: data['title'],
-      color: pieChatColor[index] ?? AppColors.uncoloredPie,
-      radius: 50,
-      // titlePositionPercentageOffset: 1.8,
-      badgePositionPercentageOffset: 1.7,
-    );
-  }
+Widget getGraph() {
+  return Container(
+    margin: EdgeInsets.only(top: 10),
+    padding: EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.1),
+          spreadRadius: 1,
+          blurRadius: 5,
+          offset: Offset(0, 2),
+        ),
+      ],
+    ),
+    width: MediaQuery.of(context).size.width / 1.1,
+    child: Column(
+      
+      children: [
+        // Title at the top
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              'Principal vs Interest',
+              style: TextStyle(
+                
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20),
+        // Pie Chart
+        SizedBox(
+          height: MediaQuery.of(context).size.height / 4,
+          child: PieChart(
+            PieChartData(
+              borderData: FlBorderData(
+                show: false,
+              ),
+              sectionsSpace: 0,
+              sections: widget.graphData
+                  .asMap()
+                  .entries
+                  .map((entry) => getPieChartSectionData(entry.value, entry.key))
+                  .toList(),
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+        // Legend at the bottom
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildLegendItem(Color(0xFF9ECAD7), 'Principal'),
+            SizedBox(width: 20),
+            _buildLegendItem(Color(0xFF4B4D73), 'Interest'),
+          ],
+        ),
+      ],
+    ),
+  );
 }
+
+// Helper method for legend items
+Widget _buildLegendItem(Color color, String label) {
+  return Row(
+    children: [
+      Container(
+        width: 12,
+        height: 12,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.zero,
+        ),
+      ),
+      SizedBox(width: 8),
+      Text(
+        label,
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.black87,
+        ),
+      ),
+    ],
+  );
+}
+
+// PieChartSectionData getPieChartSectionData(data, index) {
+//   // Define specific colors for Principal and Interest
+//   Color sectionColor;
+  
+//   if (data['title'].toString().toLowerCase().contains('principal')) {
+//     sectionColor = Color(0xFF9ECAD7); // Principal color (light blue)
+//   } else if (data['title'].toString().toLowerCase().contains('interest')) {
+//     sectionColor = Color(0xFF4B4D73); // Interest color (dark blue)
+//   } else {
+//     sectionColor = pieChatColor[index] ?? AppColors.uncoloredPie;
+//   }
+  
+//   return PieChartSectionData(
+//     value: data['value'],
+//     showTitle: true,
+//     title: '${data['title']}\n${data['value'].toStringAsFixed(1)}%',
+//     titleStyle: TextStyle(
+//       fontSize: 14,
+//       fontWeight: FontWeight.w600,
+//       color: Colors.white,
+//     ),
+//     color: sectionColor,
+//     radius: 100,
+//     titlePositionPercentageOffset: 0.5,
+//   );
+// }
+// }
+PieChartSectionData getPieChartSectionData(dynamic data, int index) {
+  Color sectionColor;
+
+  if (data['title'].toString().toLowerCase().contains('principal')) {
+    sectionColor = const Color(0xFF9ECAD7); // Principal
+  } else if (data['title'].toString().toLowerCase().contains('interest')) {
+    sectionColor = const Color(0xFF4B4D73); // Interest
+  } else {
+    sectionColor = pieChatColor[index] ?? AppColors.uncoloredPie;
+  }
+
+  return PieChartSectionData(
+    value: data['value'], // used only for slice size
+    showTitle: true,
+
+    // ✅ ONLY percentage text
+    title: '${data['value'].toStringAsFixed(1)}%',
+
+    titleStyle: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: Colors.white,
+    ),
+
+    color: sectionColor,
+    radius: 110,
+    titlePositionPercentageOffset: 0.55,
+  );
+}
+}
+  // Widget getGraph() {
+  //   return Container(
+  //     margin: EdgeInsets.only(top: 10),
+  //     width: MediaQuery.of(context).size.width / 1.1,
+  //     height: MediaQuery.of(context).size.height / 4,
+  //     child: PieChart(
+  //       PieChartData(
+  //           borderData: FlBorderData(
+  //             show: false,
+  //           ),
+  //           sections: widget.graphData
+  //               .asMap()
+  //               .entries
+  //               .map((entry) => getPieChartSectionData(entry.value, entry.key))
+  //               .toList()),
+  //     ),
+  //   );
+  // }
+
+  // PieChartSectionData getPieChartSectionData(data, index) {
+  //   return PieChartSectionData(
+  //     value: data['value'],
+  //     showTitle: false,
+  //     // badgeWidget: Container(
+  //     //   padding: EdgeInsets.all(10),
+  //     //   decoration: BoxDecoration(
+  //     //       color: pieChatColor[index], borderRadius: BorderRadius.circular(4)),
+  //     //   child: textStyleOnly(
+  //     //       context: context,
+  //     //      text: data['title'],
+  //     //       fontWeight: FontWeight.bold,
+  //     //       fontsize: 12,
+  //     //       c: index - 1 == 0 ? pieChatColor[0] : pieChatColor[1]),
+  //     // ),
+
+  //     // title: data['title'],
+  //     color: pieChatColor[index] ?? AppColors.uncoloredPie,
+  //     radius: 50,
+  //     // titlePositionPercentageOffset: 1.8,
+  //     badgePositionPercentageOffset: 1.7,
+  //   );
+  // }
+
 
 // import 'package:flutter/material.dart';
 // import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';

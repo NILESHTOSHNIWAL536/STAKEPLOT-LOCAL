@@ -50,7 +50,7 @@ class _SliderPageState extends State<SliderPage> {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
+        color: AppColors.backgroundColor ,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(

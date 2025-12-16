@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
@@ -132,11 +133,11 @@ class _EmiState extends State<Emi> {
     }
     super.dispose();
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: AppColors. newbg,
       // appBar: appbarHeader("EMI Calculator", context),
       body: SafeArea(
         child: Padding(
@@ -145,19 +146,41 @@ class _EmiState extends State<Emi> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
+                Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: AppColors.primaryColor,
+                    Padding(
+                      padding: const EdgeInsets.only(left:15),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        
+                         decoration: BoxDecoration(
+                            color: Colors.white,           // ✅ white background
+                          shape: BoxShape.circle,        // ✅ rounded
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_rounded,
+                            color: Color(0xFF061D3D), // arrow color
+                            size: 22,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
                     ),
+                    SizedBox(width:50)
+,
                     Padding(
                       padding: const EdgeInsets.only(left: 14),
                       child: GestureDetector(
@@ -178,13 +201,14 @@ class _EmiState extends State<Emi> {
                             }
                           });
                         },
+                       
                         child: Text(
                           "EMI Calculator",
                           style: FontManager().getTextStyle(
                             context,
-                            lWeight: FontWeight.w800,
-                            fontSize: 40,
-                            color: AppColors.primaryColor,
+                            lWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: AppColors.newtitlecolor,
                           ),
                         ),
                       ),
@@ -218,7 +242,7 @@ class _EmiState extends State<Emi> {
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
-                                fontSize: 14,
+                                fontSize: 11,
                                 color: AppColors.backgroundColor,
                               ),
                               textAlign: TextAlign.center,
@@ -231,20 +255,30 @@ class _EmiState extends State<Emi> {
                   slidersList: slidersList,
                   onSliderValueChanged: updateSliderValue,
                 ),
+                 Padding(
+            padding: EdgeInsets.all(Colorcodes.paddingSize / 2),
+            child: textStyle(
+                context: context,
+                fontsize: 20,
+                fontWeight: FontWeight.w800,
+                c: AppColors.primaryColor,
+                text: "Breakdown"),
+          ),
                 Container(
+                 
                     margin:
                         EdgeInsets.only(left: 4, right: 4, top: 0,),
                     decoration: BoxDecoration(
-                        color: AppColors.backgroundColor,
+                        color: AppColors.redColor,
                         borderRadius: BorderRadius.circular(12)),
-                    child: graph()),
+                     child: graph()),
                 SizedBox(
                   height: 10,
                 ),
                 CustomExpansionTile(
                   howToUseContent: howToUseContent,
                   howItWorksContent: howItWorksContent,
-                ),
+                 ),
               ],
             ),
           ),
@@ -254,30 +288,35 @@ class _EmiState extends State<Emi> {
   }
 
   Widget graph() {
-    return PieChartGraph(
-      title: "EMI Details",
-      graphData: [
-        {
-          'title':
-              "Principal: ₹${formatMoneyIndian(loanAmount.toStringAsFixed(0))}",
-          'value': loanAmount
-        },
-        {
-          'title': "Interest: ₹${totalInterestPaid.toStringAsFixed(0)}",
-          'value': totalInterestPaid
-        },
-      ],
-      graphDisc: [
-        {
-          'title': 'EMI:',
-          'amount': "₹${formatMoneyIndian(emi.toStringAsFixed(2))}"
-        },
-        {
-          'title': 'Total Interest Paid:',
-          'amount':
-              "₹${formatMoneyIndian(totalInterestPaid.toStringAsFixed(0))}"
-        },
-      ],
+    return Container(
+    
+    
+     
+      child: PieChartGraph(
+        title: "Breakdown",
+        graphData: [
+          {
+            'title':
+                "Principal: ₹${formatMoneyIndian(loanAmount.toStringAsFixed(0))}",
+            'value': loanAmount
+          },
+          {
+            'title': "Interest: ₹${totalInterestPaid.toStringAsFixed(0)}",
+            'value': totalInterestPaid
+          },
+        ],
+        graphDisc: [
+          {
+            'title': 'EMI:',
+            'amount': "₹${formatMoneyIndian(emi.toStringAsFixed(2))}"
+          },
+          {
+            'title': 'Total Interest Paid:',
+            'amount':
+                "₹${formatMoneyIndian(totalInterestPaid.toStringAsFixed(0))}"
+          },
+        ],
+      ),
     );
   }
 }

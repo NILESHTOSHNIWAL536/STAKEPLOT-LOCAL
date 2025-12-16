@@ -23,6 +23,7 @@ class CustomExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+     
       margin: EdgeInsets.only(left: 4, right: 4, top: 0, bottom: 15),
       padding: EdgeInsets.symmetric(horizontal: 8),
       child: Column(
@@ -107,6 +108,7 @@ class CustomExpansionTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: Column(
+      
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
