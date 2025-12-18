@@ -519,21 +519,17 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
                   ),
                   child: content,
                 )
-              : Container(
-                  margin:
+              :  Container(
+                 margin:
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  child: DottedBorderBox(
-                    dashWidth: 4,
-                    space: 5,
-                    dashHeight: 1,
-                    color: AppColors.grey,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 2),
-                    child: content,
-                  ),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                child: content,
+              )
         );
       });
     }).toList(),
@@ -669,17 +665,17 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
                 ),
                 child: content,
               )
-            : DottedBorderBox(
-                dashWidth: 4,
-                space: 5,
-                dashHeight: 1,
-                color: AppColors.grey,
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-                child: ClipRRect(
+            : Container(
+                 margin:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.border,
                   borderRadius: BorderRadius.circular(8),
-                  child: content,
                 ),
-              ),
+                child: content,
+              )
       );
     }),
   );
@@ -688,8 +684,8 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
 Widget getCheckBoxwithText2(
     BuildContext context, String text, VoidCallback onTap) {
   return Container(
-    height: 40,
-    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+    
+    margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
     child: Obx(() {
       bool isSelected = accountIdPdf.value == text;
       Widget content = Padding(
@@ -733,18 +729,13 @@ Widget getCheckBoxwithText2(
                 ),
                 child: content,
               )
-            : Container(
-                child: DottedBorderBox(
-                  dashWidth: 4,
-                  space: 5,
-                  dashHeight: 1,
-                  color: AppColors.grey,
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: content,
-                  ),
+            :  Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                child: content,
               ),
       );
     }),
@@ -755,10 +746,11 @@ Widget filterTransaction(context) {
   return Column(
     children: [
       Container(
-        color: AppColors.backgroundColor,
+        color: AppColors.newbg,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height /
-            (bankAccountLinkedList.length <= 1 ? 16 : 14),
+            (bankAccountLinkedList.length <= 1 ? 18 : 20),
+            
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
@@ -775,140 +767,133 @@ Widget filterTransaction(context) {
               // Navigator.pop(context);
             }),
             bankAccountLinkedList.length >= 2
-                ? getBankAccountListForFilter(context, false)
+                ? Container(
+                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                  child: getBankAccountListForFilter(context, false))
                 : SizedBox.shrink(),
 
             Obx(
-              () => Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: GestureDetector(
-                  onTap: toggleAmountFilter, // ✅ Entire container is tappable
-                  child: Container(
-                    child: showAmountFilter.value
-                        ? Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    "Filter by Amount",
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: showAmountFilter.value
-                                          ? AppColors.backgroundColor
-                                          : AppColors.accentColor,
-                                    ),
-                                  ),
-                                ],
+              () => GestureDetector(
+                onTap: toggleAmountFilter, // ✅ Entire container is tappable
+                child: Container(
+                  child: showAmountFilter.value
+                      ? Container(
+                        margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Filter by Amount",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: showAmountFilter.value
+                                      ? AppColors.backgroundColor
+                                      : AppColors.accentColor,
+                                ),
                               ),
-                            ),
-                          )
-                        : DottedBorderBox(
-                            dashWidth: 4,
-                            space: 5,
-                            dashHeight: 1,
-                            color: AppColors.grey,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (showAmountFilter.value)
-                                    const Icon(Icons.check,
-                                        size: 18, color: Colors.green),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    "Filter by Amount",
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: AppColors.accentColor,
-                                    ),
+                            ],
+                          ),
+                        )
+                      : Container(
+               margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child:  Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (showAmountFilter.value)
+                                  const Icon(Icons.check,
+                                      size: 18, color: Colors.green),
+                                const SizedBox(width: 4),
+                                Text(
+                                  "Filter by Amount",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: AppColors.accentColor,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                  ),
+                        
                 ),
               ),
             ),
             const SizedBox(width: 10),
             // --------- Date Button ---------
             Obx(
-              () => Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: GestureDetector(
-                  onTap: toggleDateFilter, // ✅ Whole container is tappable
-                  child: Container(
-                    child: showDateFilter.value
-                        ? Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    "Filter by Date",
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: showDateFilter.value
-                                          ? AppColors.backgroundColor
-                                          : AppColors.accentColor,
-                                    ),
+              () => GestureDetector(
+                onTap: toggleDateFilter, // ✅ Whole container is tappable
+                child: Container(
+                  child: showDateFilter.value
+                      ? Container(
+                         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Filter by Date",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: showDateFilter.value
+                                        ? AppColors.backgroundColor
+                                        : AppColors.accentColor,
                                   ),
-                                ],
-                              ),
-                            ),
-                          )
-                        : DottedBorderBox(
-                            dashWidth: 4,
-                            space: 5,
-                            dashHeight: 1,
-                            color: AppColors.grey,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    "Filter by Date",
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: AppColors.accentColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                  ),
-                ),
+                        )
+                      : Container(
+               margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: BorderRadius.circular(8),
               ),
+              child:  Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Filter by Date",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: AppColors.accentColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                ),
+              
             ),
           ],
         ),

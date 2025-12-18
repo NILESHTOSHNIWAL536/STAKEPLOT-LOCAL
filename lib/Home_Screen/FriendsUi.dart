@@ -330,3 +330,4 @@ class _FriendsUiState extends State<FriendsUi> {
     );
   }
 }
+

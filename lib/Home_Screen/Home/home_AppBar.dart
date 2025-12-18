@@ -22,6 +22,7 @@ import 'package:get/get.dart';
 
 import '../../Constants/app_styles.dart';
 import '../../components/shared_utils.dart';
+import '../history/recent_transactions.dart';
 
 // PreferredSizeWidget getAppBar(context) {
 //   final userController = ControllerManagement.userController;
@@ -94,64 +95,229 @@ class TopRightIconsWidget extends StatelessWidget {
 }
 
 
-PreferredSizeWidget historyAppBar(context) {
-  return AppBar(
-    backgroundColor: AppColors.primaryColor,
-    // Flat design for a modern look
-    title: Text(
-      HomepageStringsDart().historyTitle,
-      style: FontManager().getTextStyle(
-        context,
-        lWeight: FontWeight.w600,
-        fontSize: 18, // Slightly larger for better readability
-        color: AppColors.backgroundColor,
-      ),
-    ),
-    // Center the title for symmetry
-    leading: IconButton(
-      icon: Icon(
-        Icons.arrow_back_ios, // More refined back icon
-        color: AppColors.backgroundColor,
-        size: 24, // Slightly smaller for balance
-      ),
-      onPressed: () {
-        clearTransactions(context: context);
-        Navigator.pop(context);
-      },
-      splashRadius: 20, // Smaller splash radius for a subtle effect
-    ),
-    actions: [
-      Padding(
-        padding: const EdgeInsets.only(right: 16.0), // Proper spacing
-        child: InkWell(
-          onTap: () {
-            int len = bankAccountLinkedList.length;
-            if (len == 0) {
-              snackBarCalled(context, SnackbarData().noBankForLinking);
-            }
+// PreferredSizeWidget historyAppBar(context, fromAutoPay) {
+//   return AppBar(
+//     backgroundColor: AppColors.newbg,
+//     // Flat design for a modern look
+//     title: Text(
+//       !fromAutoPay?
+//       HomepageStringsDart().historyTitle:"Select Transaction",
+//       style: FontManager().getTextStyle(
+//         context,
+//         lWeight: FontWeight.w600,
+//         fontSize: 18, // Slightly larger for better readability
+//         color: AppColors.primaryColor,
+//       ),
+//     ),
+//     // Center the title for symmetry
+//     leading: IconButton(
+//       icon: Icon(
+//         Icons.arrow_back_ios, // More refined back icon
+//         color: AppColors.accentColor,
+//         size: 24, // Slightly smaller for balance
+//       ),
+//       onPressed: () {
+//         clearTransactions(context: context);
+//         Navigator.pop(context);
+//       },
+//       splashRadius: 20, // Smaller splash radius for a subtle effect
+//     ),
+//     actions:fromAutoPay?null: [
+//       Padding(
+//         padding: const EdgeInsets.only(right: 16.0), // Proper spacing
+//         child: InkWell(
+//           onTap: () {
+//             int len = bankAccountLinkedList.length;
+//             if (len == 0) {
+//               snackBarCalled(context, SnackbarData().noBankForLinking);
+//             }
             
-          //   else {
-          //     accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
-          //     showModalForPdfDownloadBankUiCheckBox(context);
-          //   }
-          // },
-          else {
-  if (bankAccountLinkedList.isNotEmpty) {
-    accountIdPdf.value = bankAccountLinkedList[0].accountId;
-    showModalForPdfDownloadBankUiCheckBox(context);
-  }
-}},
+//           //   else {
+//           //     accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
+//           //     showModalForPdfDownloadBankUiCheckBox(context);
+//           //   }
+//           // },
+//           else {
+//   if (bankAccountLinkedList.isNotEmpty) {
+//     accountIdPdf.value = bankAccountLinkedList[0].accountId;
+//     showModalForPdfDownloadBankUiCheckBox(context);
+//   }
+// }},
 
-          splashColor:
-              AppColors.accentColor.withOpacity(0.2), // Subtle splash effect
-          borderRadius: BorderRadius.circular(12), // Rounded ripple effect
-          child: Icon(
-            Icons.download,
-            size: 24,
-            color: AppColors.backgroundColor,
+//           splashColor:
+//               AppColors.accentColor.withOpacity(0.2), // Subtle splash effect
+//           borderRadius: BorderRadius.circular(12), // Rounded ripple effect
+//           child: Icon(
+//             Icons.download,
+//             size: 24,
+//             color: AppColors.primaryColor,
+//           ),
+//         ),
+//       ),
+//     ],
+//   );
+// }
+
+
+Widget historyHeader(BuildContext context, bool fromAutoPay) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    decoration: BoxDecoration(
+      color: AppColors.newbg,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 6,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: SafeArea(
+      bottom: false,
+      child: Row(
+        children: [
+          // Back button
+          InkWell(
+            onTap: () {
+              clearTransactions(context: context);
+              Navigator.pop(context);
+            },
+            borderRadius: BorderRadius.circular(20),
+            child: Padding(
+              padding: const EdgeInsets.all(6),
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: AppColors.accentColor,
+                size: 22,
+              ),
+            ),
           ),
+
+          const SizedBox(width: 12),
+
+          // Title
+          Expanded(
+            child: Text(
+              !fromAutoPay
+                  ? HomepageStringsDart().historyTitle
+                  : "Select Transaction",
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w600,
+                fontSize: 18,
+                color: AppColors.primaryColor,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+
+          // Download icon (only when not fromAutoPay)
+          if (!fromAutoPay)
+          
+   
+    const SizedBox(width: 8),
+
+   GestureDetector(
+    onTap: (){
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const RecentTransactionsScreen(),
+        ),
+      );
+    },
+     child: AutoHintIcon(
+       iconUrl: HomePageIcons.recentTransactions,
+       text: "Today View",
+     ),
+   ),
+
+  
+           
+
+        ],
+      ),
+    ),
+  );
+}
+
+
+class AutoHintIcon extends StatefulWidget {
+  final String text;
+  final String iconUrl;
+
+  const AutoHintIcon({
+    super.key,
+    required this.text,
+    required this.iconUrl,
+  });
+
+  @override
+  State<AutoHintIcon> createState() => _AutoHintIconState();
+}
+
+class _AutoHintIconState extends State<AutoHintIcon> {
+  bool _showText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _showOnce();
+  }
+
+   void _showOnce() async {
+    // small delay so layout is ready
+    await Future.delayed(const Duration(milliseconds: 400));
+    if (!mounted) return;
+
+    setState(() => _showText = true);
+
+    // keep visible for some time
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+
+    setState(() => _showText = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+      child: Container(
+        padding:  EdgeInsets.symmetric(horizontal:_showText ? 6: 2, vertical: 2),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icon (always visible)
+            
+
+            // Space + text only when visible
+            if (_showText) ...[
+             
+              Text(
+                widget.text,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: 11,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ],
+            AvatarProfileImage(
+              url: widget.iconUrl,
+              width: 36,
+              height: 36,
+            ),
+          ],
         ),
       ),
-    ],
-  );
+    );
+  }
 }

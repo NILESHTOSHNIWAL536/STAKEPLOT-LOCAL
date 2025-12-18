@@ -393,6 +393,7 @@ Future<void> excludeCashFlowTransaction(
 }
 
 
+
 void getAllAutoTransactions() async {
   var res = await getDataApiCall(BankTransactionRoutes.getPendingForReviewTransactions);
   if (getFlagOfResponse(res))

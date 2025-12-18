@@ -29,7 +29,7 @@ class IndexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-final double sectionHeight = height * 0.52; // adjust as needed
+final double sectionHeight = height * 0.54; // adjust as needed
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),

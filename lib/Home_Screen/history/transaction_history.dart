@@ -41,12 +41,14 @@ class TransactionHistory extends StatefulWidget {
   final bool? showIcon;
   bool expandedPage;
   bool pageTransition;
+  final bool fromAutoPay; 
   TransactionHistory(
       {this.isflag = false,
       this.showIcon = false,
       this.isYearView = false,
       this.pageTransition = false,
       this.expandedPage = false,
+      this.fromAutoPay = false,
       super.key});
 
   @override
@@ -95,15 +97,18 @@ class _TransactionHistoryState extends State<TransactionHistory>
       child: Container(
         child: Column(
           children: [
+           
             Obx(() => getBoolForSearch()
                 ? searchTextControllerBool.value
                     ? getSearchListAndCreditDebit()
                     : getSearchListAndCreditDebit()
                 : SizedBox.shrink()),
             Obx(() {
+              
               if (widget.showIcon ?? false) {
                 return reloadHistory.value ? getlist() : getlist();
-              } else {
+              } 
+              else {
                 return allOrGroupTransactionsName.value ==
                         StringConstant.allTransactions
                     ? (reloadHistory.value ? getlist() : getlist())
@@ -230,7 +235,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 index: transactionIndex,
                 context: context,
                 hideReview: true,
-                isExpanded: widget.expandedPage),
+                isExpanded: widget.expandedPage,
+                fromAutoPay: widget.fromAutoPay
+                ),
           );
         }
 

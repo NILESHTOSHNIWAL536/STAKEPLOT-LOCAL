@@ -68,12 +68,22 @@ class CategoryAndSplitIcons extends StatelessWidget {
                               },
                             );
                           },
-                    child: textStyleImage(
-                      context: context,
-                      text: toUpperCase(category),
-                      c: AppColors.primaryColor,
-                      fontsize: fontSizeMedium,
-                      fontWeight: FontWeight.w600,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 5),
+                      decoration: BoxDecoration(
+                        
+                        color: const Color(0xFF4B4D73).withOpacity(0.10), 
+    // Border Radius: 2px
+    borderRadius: BorderRadius.circular(2.0),
+                      ),
+                      child: textStyleImage(
+                        context: context,
+                        text: toUpperCase(category),
+                        c: AppColors.primaryColor,
+                        fontsize: fontSizeMedium,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
             ((transaction.isBalanceOut ?? false) && formatAmountBalance != "₹-1")
