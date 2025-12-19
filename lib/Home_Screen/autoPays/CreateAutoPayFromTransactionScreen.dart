@@ -4,10 +4,9 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
 import '../../Constants/font_manager.dart';
 
-/// ---------------- ENUM ----------------
 enum AutoPayStep { selectDate, confirm }
 
-/// ---------------- SCREEN ----------------
+
 class CreateAutoPayFromTransactionScreen extends StatefulWidget {
   final TransactionModel transaction;
 
@@ -38,7 +37,7 @@ class _CreateAutoPayFromTransactionScreenState
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: AppColors.accentColor),
           onPressed: () {
             if (currentStep == AutoPayStep.selectDate) {
               Navigator.pop(context);
@@ -85,11 +84,11 @@ class _CreateAutoPayFromTransactionScreenState
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: const [
           BoxShadow(
-            color: Color.fromRGBO(142, 142, 142, 0.25),
+            color: AppColors.transactionCardShadow,
             blurRadius: 4,
           ),
         ],
@@ -187,7 +186,7 @@ class _CreateAutoPayFromTransactionScreenState
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.primaryColor
-                      : Colors.white,
+                      : AppColors.backgroundColor,
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(
                     color: isSelected
@@ -223,7 +222,6 @@ class _CreateAutoPayFromTransactionScreenState
     );
   }
 
-  /// ---------------- STEP 2 : CONFIRM ----------------
   Widget _confirmUI() {
     return Column(
       children: [

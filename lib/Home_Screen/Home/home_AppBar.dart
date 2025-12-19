@@ -21,6 +21,7 @@ import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.d
 import 'package:get/get.dart';
 
 import '../../Constants/app_styles.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 import '../history/recent_transactions.dart';
 
@@ -161,16 +162,10 @@ class TopRightIconsWidget extends StatelessWidget {
 
 Widget historyHeader(BuildContext context, bool fromAutoPay) {
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-    decoration: BoxDecoration(
+    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p6, vertical: AppSizes.p12),
+    decoration: const BoxDecoration(
       color: AppColors.newbg,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 6,
-          offset: const Offset(0, 2),
-        ),
-      ],
+      
     ),
     child: SafeArea(
       bottom: false,
@@ -182,9 +177,9 @@ Widget historyHeader(BuildContext context, bool fromAutoPay) {
               clearTransactions(context: context);
               Navigator.pop(context);
             },
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppSizes.r16),
             child: Padding(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(AppSizes.p6),
               child: Icon(
                 Icons.arrow_back_ios,
                 color: AppColors.accentColor,
@@ -196,7 +191,9 @@ Widget historyHeader(BuildContext context, bool fromAutoPay) {
           const SizedBox(width: 12),
 
           // Title
-          Expanded(
+          Container(
+            width: MediaQuery.of(context).size.width - (fromAutoPay ? 100 : 170),
+            
             child: Text(
               !fromAutoPay
                   ? HomepageStringsDart().historyTitle
@@ -216,7 +213,7 @@ Widget historyHeader(BuildContext context, bool fromAutoPay) {
           if (!fromAutoPay)
           
    
-    const SizedBox(width: 8),
+   
 
    GestureDetector(
     onTap: (){
@@ -282,41 +279,49 @@ class _AutoHintIconState extends State<AutoHintIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeIn,
-      child: Container(
-        padding:  EdgeInsets.symmetric(horizontal:_showText ? 6: 2, vertical: 2),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Icon (always visible)
-            
+    return Container(
 
-            // Space + text only when visible
-            if (_showText) ...[
-             
-              Text(
-                widget.text,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w400,
-                  fontSize: 11,
-                  color: AppColors.primaryColor,
-                ),
+      child: Row(
+        children: [
+          _showText?SizedBox.shrink(): SizedBox(width: MediaQuery.of(context).size.width * 0.17),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+            child: Container(
+              padding:  EdgeInsets.symmetric(horizontal:_showText ? 4: 2, vertical: 2),
+              decoration: BoxDecoration(
+                color: AppColors.backgroundColor,
+                borderRadius: BorderRadius.circular(8),
               ),
-            ],
-            AvatarProfileImage(
-              url: widget.iconUrl,
-              width: 36,
-              height: 36,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Icon (always visible)
+                   
+          
+                  // Space + text only when visible
+                  if (_showText) ...[
+                   
+                    Text(
+                      widget.text,
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w400,
+                        fontSize: 11,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                  ],
+                  AvatarProfileImage(
+                    url: widget.iconUrl,
+                    width: 36,
+                    height: 36,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

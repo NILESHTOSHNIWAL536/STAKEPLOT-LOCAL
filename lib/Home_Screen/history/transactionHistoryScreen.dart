@@ -404,8 +404,7 @@ import 'package:get/get.dart';
 import 'dart:async';
 
 import '../../Constants/core/container_border.dart';
-import 'collections/create_collection_data.dart';
-import 'collections/create_collection_pages/create_collection_flow.dart';
+import 'collections/collections_list_widget.dart';
 
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
@@ -474,10 +473,6 @@ _searchScaleAnim = Tween<double>(
         _openSearch();
       }
     });
-
-    // -----------------------------------------------------------------------
-    // 🔴 YOUR ORIGINAL initState CODE (UNCHANGED)
-    // -----------------------------------------------------------------------
     currentPage = 1;
     showFilter.value = false;
     accountSelected.value = '';
@@ -497,9 +492,7 @@ _searchScaleAnim = Tween<double>(
     scrollController.addListener(_onScroll);
   }
 
-  // ---------------------------------------------------------------------------
-  // 🔥 NEW: Search open / close (SAFE)
-  // ---------------------------------------------------------------------------
+ 
   void _openSearch() {
     if (isSearchActive) return;
     HapticFeedback.selectionClick();
@@ -554,7 +547,7 @@ _searchScaleAnim = Tween<double>(
   child: Obx(() {
     return selectedTab.value == "All"
         ? _buildTransactionBody(context, screenHeight)
-        : _buildCollectionsBody();
+        : buildCollectionsBody(context);
   }),
 ),
 
@@ -565,259 +558,7 @@ _searchScaleAnim = Tween<double>(
       ),
     );
   }
-  Widget _buildCollectionsBody() {
-  // TEMP flag – replace with API data later
-  final bool hasCollections = false;
-
-  return hasCollections
-      ? _buildCollectionsList()
-      : _buildEmptyCollectionsUI();
-}
-Widget _buildCollectionsList() {
-  return SingleChildScrollView(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // _sectionTitle("All Collections"),
-
-        _collectionCard(
-          title: "Kerala Trip",
-          date: "05 Nov",
-          description: "Figma ipsum component variant main layer. Flows scrolling.",
-        ),
-
-        _collectionCard(
-          title: "Goa Trip",
-          date: "05 Nov",
-          description: "Figma ipsum component variant main layer. Flows scrolling.",
-          members: ["A", "B", "C", "D", "E"],
-          amount: "₹320",
-        ),
-
-        const SizedBox(height: 24),
-
-        // _sectionTitle("Closed Collections"),
-
-        _collectionCard(
-          title: "Goa Trip",
-          date: "05 Nov",
-          description: "Figma ipsum component variant main layer. Flows scrolling.",
-          members: ["A", "B", "C", "+2"],
-          amount: "₹320",
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _collectionCard({
-  required String title,
-  required String date,
-  required String description,
-  List<String>? members,
-  String? amount,
-}) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 14),
-    padding: const EdgeInsets.all(14),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: FontManager().getTextStyle(
-                context,
-                fontSize: 15,
-                lWeight: FontWeight.w600,
-              ),
-            ),
-            Text(
-              date,
-              style: FontManager().getTextStyle(
-                context,
-                fontSize: 12,
-                color: AppColors.accentColor,
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 6),
-
-        Text(
-          description,
-          style: FontManager().getTextStyle(
-            context,
-            fontSize: 12,
-            color: AppColors.accentColor,
-          ),
-        ),
-
-        if (members != null) ...[
-          const SizedBox(height: 10),
-
-          Row(
-            children: [
-              ...members.map(
-                (e) => Container(
-                  margin: const EdgeInsets.only(right: 6),
-                  padding: const EdgeInsets.all(6),
-                  decoration: const BoxDecoration(
-                    color: AppColors.button,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    e,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                    ),
-                  ),
-                ),
-              ),
-
-              if (amount != null)
-                Container(
-                  margin: const EdgeInsets.only(left: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.bg5,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    "Contributed: $amount",
-                    style: const TextStyle(fontSize: 11),
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ],
-    ),
-  );
-}
-
-Widget _buildEmptyCollectionsUI() {
-  return Center(
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 20),
-
-          /// Icon
-         Center(
-    child: Stack(
-      alignment: Alignment.center,
-      children: [
-        // OUTER CIRCLE
-        Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: const Color(0xFFE6E7F0).withOpacity(0.7),
-          ),
-        ),
-
-        // MIDDLE CIRCLE
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: const Color(0xFFE6E7F0).withOpacity(0.9),
-          ),
-        ),
-
-        // CENTER CIRCLE
-        AvatarProfileImage(url: HomePageIcons.noCollection, width: 20, height: 20),
-      ],
-    ),
-  ),
-
-
-        
-          const SizedBox(height: 24),
-
-          Text(
-            "No collections yet!",
-            style: FontManager().getTextStyle(
-              context,
-              fontSize: 22,
-              lWeight: FontWeight.w700,
-            ),
-          ),
-
-          const SizedBox(height: 10),
-
-          Text(
-            "Start organizing your finances by creating your first collection — it can be just for you or shared with someone.",
-            textAlign: TextAlign.center,
-            style: FontManager().getTextStyle(
-              context,
-              fontSize: 14,
-              lWeight: FontWeight.w400,
-              color: AppColors.grey,
-            ),
-          ),
-
-          const SizedBox(height: 30),
-
-          /// Create Button
-          SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              onPressed: () {
-               
-                collectionDraft.name = null;
-                collectionDraft.type = null;
-                collectionDraft.members = [];
-                collectionDraft.roles = {};
-                collectionDraft.duration = null;
-                collectionDraft.description = null;
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreateCollectionFlow(),
-                  ),
-                );
-              },
-              child:  Text(
-                "+ Create Collection",
-                style:  FontManager().getTextStyle(
-              context,
-              fontSize: 16,
-              lWeight: FontWeight.w500,
-              color: AppColors.backgroundColor,
-            ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
+ 
 
 Widget _buildBackArrow() {
   return IconButton(
@@ -959,10 +700,6 @@ Widget _buildSearchIcon() {
   );
 }
 
-
-  // ---------------------------------------------------------------------------
-  // 🔥 MODIFIED: ONLY SEARCH FIELD IS ANIMATED
-  // ---------------------------------------------------------------------------
  Widget _buildSearchField(BuildContext context, bool fromAutoPay) {
   return AnimatedBuilder(
     animation: _searchAnimController,

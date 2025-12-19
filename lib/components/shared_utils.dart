@@ -477,3 +477,70 @@ Future<String?> getToken() async {
     return accessToken;
   }
 }
+ String formatNumber(double v) {
+    if (v >= 10000000) return '${(v / 10000000).toStringAsFixed(1)}Cr';
+    if (v >= 100000) return '${(v / 100000).toStringAsFixed(1)}L';
+    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}K';
+    return v.toStringAsFixed(0);
+  }
+
+
+  class VerticalDashDivider extends StatelessWidget {
+  final double height;
+  final double dashHeight;
+  final double dashGap;
+  final Color color;
+
+  const VerticalDashDivider({
+    super.key,
+    this.height = 100,
+    this.dashHeight = 3,
+    this.dashGap = 3,
+    this.color = const Color(0xFF48484A), // soft grey like screenshot
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: Size(1, height),
+      painter: _VerticalDashPainter(
+        dashHeight: dashHeight,
+        dashGap: dashGap,
+        color: color,
+      ),
+    );
+  }
+}
+
+class _VerticalDashPainter extends CustomPainter {
+  final double dashHeight;
+  final double dashGap;
+  final Color color;
+
+  _VerticalDashPainter({
+    required this.dashHeight,
+    required this.dashGap,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+
+    double y = 0;
+    while (y < size.height) {
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(0, y + dashHeight),
+        paint,
+      );
+      y += dashHeight + dashGap;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}

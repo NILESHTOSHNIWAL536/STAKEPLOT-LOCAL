@@ -205,7 +205,8 @@ class TransactionDetailsPage extends StatelessWidget {
         child: Column(
           children: [
             _header(context),
-            Expanded(
+            Container(
+              height: MediaQuery.of(context).size.height/1.2,
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -256,7 +257,8 @@ class TransactionDetailsPage extends StatelessWidget {
             child: const Icon(Icons.arrow_back_ios,
                 size: 20, color: AppColors.accentColor),
           ),
-          Expanded(
+          Container(
+            width: MediaQuery.of(context).size.width * 0.75,
             child: Center(
               child: Text(
                 "Overview",
@@ -467,7 +469,8 @@ class TransactionDetailsPage extends StatelessWidget {
       children: [
         const Icon(Icons.show_chart, color: AppColors.primaryColor),
         const SizedBox(width: 12),
-        Expanded(
+        Container(
+          width: MediaQuery.of(context).size.width * 0.55,
           child: Text(
             "Exclude from Cash Flow",
             style: FontManager().getTextStyle(
@@ -495,9 +498,9 @@ class TransactionDetailsPage extends StatelessWidget {
       Navigator.pop(context);
     },
     activeColor: AppColors.primaryColor,
-    inactiveThumbColor: Colors.grey,
+    inactiveThumbColor: AppColors.grey,
 
-    inactiveTrackColor: Colors.grey.withOpacity(0.4),
+    inactiveTrackColor: AppColors.grey.withOpacity(0.4),
   );
 })
 
@@ -517,7 +520,8 @@ class TransactionDetailsPage extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
+        Container(
+          width: MediaQuery.of(context).size.width * 0.76,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -591,62 +595,3 @@ class TransactionDetailsPage extends StatelessWidget {
 
 }
 
-class VerticalDashDivider extends StatelessWidget {
-  final double height;
-  final double dashHeight;
-  final double dashGap;
-  final Color color;
-
-  const VerticalDashDivider({
-    super.key,
-    this.height = 100,
-    this.dashHeight = 3,
-    this.dashGap = 3,
-    this.color = const Color(0xFF48484A), // soft grey like screenshot
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(1, height),
-      painter: _VerticalDashPainter(
-        dashHeight: dashHeight,
-        dashGap: dashGap,
-        color: color,
-      ),
-    );
-  }
-}
-
-class _VerticalDashPainter extends CustomPainter {
-  final double dashHeight;
-  final double dashGap;
-  final Color color;
-
-  _VerticalDashPainter({
-    required this.dashHeight,
-    required this.dashGap,
-    required this.color,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 1
-      ..style = PaintingStyle.stroke;
-
-    double y = 0;
-    while (y < size.height) {
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(0, y + dashHeight),
-        paint,
-      );
-      y += dashHeight + dashGap;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}

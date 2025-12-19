@@ -100,7 +100,8 @@ class _ManualTransactionPageState extends State<ManualTransactionPage>
                       child: Row(
                         children: [
                           _buildCircularBackButton(context),
-                          Expanded(
+                          Container(
+                            width: MediaQuery.of(context).size.width - 128,
                             child: Center(
                               child: Text(
                                 'Cash Transactions',
@@ -123,7 +124,7 @@ class _ManualTransactionPageState extends State<ManualTransactionPage>
 
                     // TabBar styled as segmented control
                     Material(
-                      color: Colors.transparent,
+                      color: AppColors.transparentColor,
                       child: TabBar(
   controller: _tabController,
 

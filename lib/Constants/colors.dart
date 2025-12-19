@@ -70,4 +70,7 @@ class AppColors {
   static const Color debitedAmount = Color(0xFF9394B8); 
   static const Color strokeColor = Color(0xFF989CDA); 
   static const Color transactionDetails = Color(0xFF4B5563); 
+  static const Color transactionCardShadow = Color.fromRGBO(142, 142, 142, 0.25); 
+  static const Color financeChartBorder = Color(0xFFE6E9EB); 
+  
 }

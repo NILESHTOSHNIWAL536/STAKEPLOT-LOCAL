@@ -828,6 +828,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../Constants/colors.dart';
 import '../../Constants/font_manager.dart';
+import '../../components/shared_utils.dart';
 import 'expanded_finance.dart';
 
 class SpendingCardTwoPanels extends StatefulWidget {
@@ -896,13 +897,13 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
       width: MediaQuery.sizeOf(context).width,
       margin: EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor, // #FFFFFF
         borderRadius: BorderRadius.circular(10), // 10px
         border: Border.all(
-          color: const Color(0xFFE6E9EB), // #E6E9EB
+          color: AppColors.financeChartBorder, // #E6E9EB
           width: 1,
         ),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2))],
+        boxShadow: [BoxShadow(color: AppColors.accentColorOpacity, blurRadius: 6, offset: Offset(0, 2))],
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -911,11 +912,11 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
           children: [
             // Left data container (keeps your mediaquery width)
             Material(
-              color: Colors.transparent,
+              color: AppColors.transparentColor,
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
                 onTap: () async {
-                  debugPrint('Left panel tapped');
+                 
                   final Map<String, List<double>> chartMap = {
                     'credited': List<double>.from(credited),
                     'debited': List<double>.from(debited),
@@ -938,7 +939,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                       ),
                     ),
                   );
-                  debugPrint('Returned from ExpandedChartView');
+                 
                 },
                 child: Container(
                   width: MediaQuery.sizeOf(context).width / 3.3,
@@ -953,7 +954,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('₹ ${_formatNumber(selCred)}',
+                          Text('₹ ${formatNumber(selCred)}',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w500, fontSize: 14, color: AppColors.primaryColor)),
                           const SizedBox(width: 8),
@@ -966,7 +967,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('₹ ${_formatNumber(selDeb)}',
+                          Text('₹ ${formatNumber(selDeb)}',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w500, fontSize: 14, color: AppColors.debitedAmount)),
                           const SizedBox(width: 8),
@@ -1093,10 +1094,5 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
     );
   }
 
-  String _formatNumber(double v) {
-    if (v >= 10000000) return '${(v / 10000000).toStringAsFixed(1)}Cr';
-    if (v >= 100000) return '${(v / 100000).toStringAsFixed(1)}L';
-    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}K';
-    return v.toStringAsFixed(0);
-  }
+ 
 }

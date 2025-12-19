@@ -54,14 +54,20 @@ class RecentTransactionsScreen extends StatelessWidget {
                   child: Icon(Icons.arrow_back_ios,
                       size: 18, color: AppColors.accentColor),
                 ),
-                const SizedBox(width: 50),
-                Text(
-                  "Recent Transactions",
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 18,
-                    lWeight: FontWeight.w600,
-                    color: AppColors.primaryColor,
+                
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.77,
+                  
+                  child: Center(
+                    child: Text(
+                      "Recent Transactions",
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 18,
+                        lWeight: FontWeight.w600,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
                   ),
                 ),
               ],

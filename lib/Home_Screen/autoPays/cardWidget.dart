@@ -559,16 +559,8 @@ class CardWidget extends StatelessWidget {
     final cardHeight = screenSize.height * 0.2; // Responsive card height
     final fontScale = screenSize.width / 375; // Base font scaling
     final padding = screenSize.width * 0.03; // Responsive padding
-    const List<Color> _autoPayColors = [
-      AppColors.autoPay1,
-      AppColors.autoPay2,
-      AppColors.autoPay3,
-      AppColors.autoPay4,
-      AppColors.autoPay5,
-    ];
-    Color _getColorForIndex() {
-      return _autoPayColors[index % _autoPayColors.length];
-    }
+    
+    
 
     
     return Container(
@@ -577,9 +569,9 @@ class CardWidget extends StatelessWidget {
     color: Colors.white, // background: #FFF
     borderRadius: BorderRadius.circular(10.0), // border-radius: 10px
     border: Border.all(color: AppColors.mt),
-    boxShadow: [
+    boxShadow: const [
       BoxShadow(
-        color: const Color.fromRGBO(142, 142, 142, 0.25), // rgba(142,142,142,0.25)
+        color: AppColors.transactionCardShadow, // rgba(142,142,142,0.25)
         blurRadius: 4.0, // blur of 4px
         spreadRadius: 0.0,
         offset: Offset(0, 0), // 0 0 (no offset)

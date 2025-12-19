@@ -289,6 +289,7 @@ import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.da
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/helper.dart';
+import '../../components/shared_utils.dart';
 import '../../repository/expanded_finance_repository.dart';
 import '../../repository/finance_repository.dart';
 import '../../repository/transactions_repository.dart';
@@ -589,7 +590,7 @@ if (_selectedDayIndex >= 0 &&
           ),
         ),
         child: Text(
-          'Credit  :  ₹${_formatNumber(_credited[_selectedDayIndex])}',
+          'Credit  :  ₹${formatNumber(_credited[_selectedDayIndex])}',
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w500,
@@ -616,7 +617,7 @@ if (_selectedDayIndex >= 0 &&
           ),
         ),
         child: Text(
-          'Debit  :  ₹${_formatNumber(_debited[_selectedDayIndex])}',
+          'Debit  :  ₹${formatNumber(_debited[_selectedDayIndex])}',
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w500,
@@ -643,7 +644,7 @@ else
                 height: MediaQuery.sizeOf(context).height/3.8,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: const Color(0xFFE6E9EB), width: 1)),
+                    color: AppColors.backgroundColor, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.financeChartBorder, width: 1)),
                 padding: const EdgeInsets.all(14),
                 child: _loadingChart
                     ? SizedBox(height: screenHeight / chartAreaHeightFactor, child: Center(child: Spinner(size: 30)))
@@ -813,7 +814,8 @@ AppBar appbarWidget() {
           Row(
             children: [
               
-              Expanded(
+              Container(
+                width: MediaQuery.sizeOf(context).width * 0.72,
                 child: SizedBox(
                   height: pillHeight,
                   child: ListView.builder(
@@ -919,12 +921,7 @@ AppBar appbarWidget() {
         : TransactionHistory(isYearView: isYearView.value, isflag: true, showIcon: true, expandedPage: true));
   }
 
-  String _formatNumber(double v) {
-    if (v >= 10000000) return '${(v / 10000000).toStringAsFixed(1)}Cr';
-    if (v >= 100000) return '${(v / 100000).toStringAsFixed(1)}L';
-    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}K';
-    return v.toStringAsFixed(0);
-  }
+
 
   // Preserve original callback behavior
   void callBackApi() {
