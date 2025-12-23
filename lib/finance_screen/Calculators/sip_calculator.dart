@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
@@ -116,26 +117,55 @@ class _SIPCalculatorState extends State<SIPCalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      body: SafeArea(
+      backgroundColor: AppColors.newbg,
+      body:Padding(
+    
+  padding: EdgeInsets.only(
+    top: MediaQuery.of(context).size.height * 0.06,
+  
+
+
+  ),child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: AppColors.primaryColor,
+                    Padding(
+                      padding: const EdgeInsets.only(left:15,bottom:10 ),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        
+                         decoration: BoxDecoration(
+                            color: Colors.white,           // ✅ white background
+                          shape: BoxShape.circle,        // ✅ rounded
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_rounded,
+                            color: Color(0xFF061D3D), // arrow color
+                            size: 22,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
                     ),
+                    SizedBox(width:50)
+,
                     Padding(
                       padding: const EdgeInsets.only(left: 14),
                       child: GestureDetector(
@@ -155,13 +185,16 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                             }
                           });
                         },
-                        child: Text(
-                          "SIP Calculator",
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w800,
-                            fontSize: 40,
-                            color: AppColors.primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom:10),
+                          child: Text(
+                            "SIP Calculator",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w800,
+                              fontSize: 20,
+                              color: AppColors.newtitlecolor,
+                            ),
                           ),
                         ),
                       ),
@@ -195,7 +228,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
-                                fontSize: 14,
+                                fontSize: 11,
                                 color: AppColors.backgroundColor,
                               ),
                               textAlign: TextAlign.center,
@@ -208,19 +241,23 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                   slidersList: slidersList,
                   onSliderValueChanged: updateSliderValue,
                 ),
+                Padding(
+            padding: EdgeInsets.all(Colorcodes.paddingSize / 2),
+            child: textStyle(
+                context: context,
+                fontsize: 20,
+                fontWeight: FontWeight.w800,
+                c: AppColors.primaryColor,
+                text: "Breakdown"),
+          ),
                 Container(
-                  margin: EdgeInsets.only(
-                    left: 4,
-                    right: 4,
-                    top: 0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: graph(),
+                    decoration: BoxDecoration(
+                        color: AppColors.newbg,
+                        borderRadius: BorderRadius.circular(12)),
+                     child: graph()),
+                SizedBox(
+                  height: 10,
                 ),
-                SizedBox(height: 10),
                 CustomExpansionTile(
                   howToUseContent: [
                     ListItemModel(
@@ -262,7 +299,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
           ),
         ),
       ),
-    );
+    ),);
   }
 
   Widget graph() {

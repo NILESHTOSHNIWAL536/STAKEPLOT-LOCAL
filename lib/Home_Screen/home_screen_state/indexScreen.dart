@@ -96,7 +96,7 @@ Stack(
 
              
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, ),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, ),
                 child: Column(
                   children: [
                     SizedBox(
@@ -115,13 +115,10 @@ Stack(
                       height: 10,
                     ),
                     SizedBox(
-                      height: height * 0.51,
-                      child: FinancePage(),
+                      height: height * 0.25,
+                      child: SpendingCardTwoPanels(),
                     ),
-                    SizedBox(
-                      height: height * 0.16,
-                      child: Manualtransaction(),
-                    ),
+                   
                     const SizedBox(
                       height: 14,
                     ),

@@ -65,6 +65,7 @@ class HomePageIcons {
   static String setPin = "assets/icons/Home-page/pin.svg";
   static String background = "assets/icons/Home-page/background.svg";
   static String cash = "assets/icons/Home-page/manualTransactionButton.svg";
+  static String addAmount = "assets/icons/Home-page/addAmount.svg";
 }
 
 class Categories {

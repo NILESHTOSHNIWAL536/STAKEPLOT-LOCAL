@@ -51,7 +51,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
          
           Padding(
             padding: EdgeInsets.only(
-                // top: Colorcodes.paddingSize / 2,
+                 top: Colorcodes.paddingSize / 2,
                 left: Colorcodes.paddingSize / 2,
                 // bottom: Colorcodes.paddingSize / 2
                 ),
@@ -60,19 +60,48 @@ class _PieChartGraphState extends State<PieChartGraph> {
             // ),
             child: Column(
               children: [
-                Column(
-                  children: List.generate(
-                    widget.graphDisc.length,
-                    (index) => getSubtext(widget.graphDisc[index]),
+                // Column(
+                //   children: List.generate(
+                //     widget.graphDisc.length,
+                //     (index) => getSubtext(widget.graphDisc[index]),
+                //   ),
+                // ),
+                Padding(
+                  padding: const EdgeInsets.only(right:15 ),
+                  child: Row(
+                    children: List.generate(
+                      widget.graphDisc.length,
+                      (index) => Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            right: index == widget.graphDisc.length - 1 ? 0 : 12, // ✅ spacing
+                          ),
+                          child: getSubtext(widget.graphDisc[index]),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                Column(
-                  children: List.generate(
-                    widget.graphData.length,
-                    (index) => getSubtext2(widget.graphData[index]),
-                  ),
-                ),
-              ],
+
+                // Padding(
+                //   padding: const EdgeInsets.only(right:15),
+                //   child: Row(
+                //     children: List.generate(
+                //       widget.graphData.length,
+                //       (index) => Expanded(
+                //         child: Padding(
+                //           padding: EdgeInsets.only(
+                //             right: index == widget.graphData.length - 1 ? 0 : 12, // ✅ spacing
+                //           ),
+                //            child: getSubtext2(widget.graphData[index]),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+
+
+      ],
             ),
           ),
           SizedBox(
@@ -90,22 +119,53 @@ class _PieChartGraphState extends State<PieChartGraph> {
     // Get index for color
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child:  Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 12,
-            height: 12,
-            decoration: BoxDecoration(
-              color: pieChatColor[index], // Match pie chart color
-              borderRadius: BorderRadius.circular(2),
-            ),
+      padding: const EdgeInsets.only(top:20),
+      child: Container(
+         width:60,
+         height:80,
+         padding: const EdgeInsets.symmetric(horizontal: 12),
+        //  color:Colors.pink,
+         decoration: BoxDecoration(
+        color: Colors.white, // ✅ white card
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
+        ],
+      ),
+      
+     
+        child:  Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Container(
+                
+                
+                
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundColor, // Match pie chart color
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            const SizedBox(width:20),
+            // Expanded(
+            //   child: Container(
+           
+                
+            //     decoration: BoxDecoration(
+            //        color: AppColors.backgroundColor,// Match pie chart color
+            //       borderRadius: BorderRadius.circular(2),
+            //     ),
+            //   ),
+            // ),
+           
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -113,55 +173,74 @@ class _PieChartGraphState extends State<PieChartGraph> {
                     textStyle(
                       context: context,
                       fontWeight: FontWeight.w300,
-                      fontsize: 16,
-                      c: AppColors.accentColor,
+                      fontsize: 70,
+                      c: AppColors.newfontcolor,
                       text: graphData[
                           'title'], // Title from graphData (PieChartSectionData)
                     ),
-                    const SizedBox(width: 5),
+                    // const SizedBox(width: 5),
                   ],
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget getSubtext(data) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            textStyle(
-                context: context,
-                fontWeight: FontWeight.w300,
-                fontsize: 16,
-                c: AppColors.accentColor,
-                text: data['title']),
-            const SizedBox(
-              width: 10,
-            ),
-            textStyle(
-                context: context,
-                fontWeight: FontWeight.w300,
-                fontsize: 16,
-                c: AppColors.accentColor,
-                text: data['amount'].toString()),
           ],
         ),
       ),
     );
   }
 
-Widget getGraph() {
+
+
+ Widget getSubtext(Map<String, dynamic> data) {
   return Container(
-    margin: EdgeInsets.only(top: 10),
-    padding: EdgeInsets.all(20),
+    height: 80,
+    width: 150,
+    padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: Colors.grey.withOpacity(0.15),
+      ),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // TITLE
+        textStyle(
+          context: context,
+          fontWeight: FontWeight.w700,
+          fontsize: 12,
+          c: AppColors.newfontcolor,
+          text: data['title'], // ✅ from graphDisc
+        ),
+
+         const SizedBox(height: 15), // ✅ vertical gap works in Column
+
+        // AMOUNT
+        textStyle(
+          context: context,
+          fontWeight: FontWeight.w500,
+          fontsize: 12,
+          c: AppColors.newfontcolor,
+          text: data['amount'], // ✅ already formatted string
+        ),
+      ],
+    ),
+  );
+}
+
+
+Widget getGraph() {
+  final double total = widget.graphData.fold(
+  0.0,
+  (sum, item) => sum + (item['value'] as double),
+);
+
+  return Container(
+    margin: EdgeInsets.only(top: 10,left:6),
+    padding: const EdgeInsets.only(left:10,top:20),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
@@ -187,7 +266,7 @@ Widget getGraph() {
               style: TextStyle(
                 
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 color: Colors.black,
               ),
             ),
@@ -204,10 +283,17 @@ Widget getGraph() {
               ),
               sectionsSpace: 0,
               sections: widget.graphData
-                  .asMap()
-                  .entries
-                  .map((entry) => getPieChartSectionData(entry.value, entry.key))
-                  .toList(),
+    .asMap()
+    .entries
+    .map(
+      (entry) => getPieChartSectionData(
+        entry.value,
+        entry.key,
+        total, // ✅ THIS is the key
+      ),
+    )
+    .toList(),
+
             ),
           ),
         ),
@@ -218,12 +304,14 @@ Widget getGraph() {
           children: [
             _buildLegendItem(Color(0xFF9ECAD7), 'Principal'),
             SizedBox(width: 20),
-            _buildLegendItem(Color(0xFF4B4D73), 'Interest'),
+              _buildLegendItem(Color(0xFF4B4D73), 'Interest'),
           ],
         ),
+         SizedBox(height: 20),
       ],
     ),
   );
+  
 }
 
 // Helper method for legend items
@@ -232,7 +320,7 @@ Widget _buildLegendItem(Color color, String label) {
     children: [
       Container(
         width: 12,
-        height: 12,
+        height: 12,   
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.zero,
@@ -243,64 +331,74 @@ Widget _buildLegendItem(Color color, String label) {
         label,
         style: TextStyle(
           fontSize: 14,
-          color: Colors.black87,
+          color: Colors.black,
         ),
       ),
     ],
   );
 }
 
-// PieChartSectionData getPieChartSectionData(data, index) {
-//   // Define specific colors for Principal and Interest
+
+// PieChartSectionData getPieChartSectionData(dynamic data, int index) {
 //   Color sectionColor;
-  
+
 //   if (data['title'].toString().toLowerCase().contains('principal')) {
-//     sectionColor = Color(0xFF9ECAD7); // Principal color (light blue)
+//     sectionColor = const Color(0xFF9ECAD7); // Principal
 //   } else if (data['title'].toString().toLowerCase().contains('interest')) {
-//     sectionColor = Color(0xFF4B4D73); // Interest color (dark blue)
+//     sectionColor = const Color(0xFF4B4D73); // Interest
 //   } else {
 //     sectionColor = pieChatColor[index] ?? AppColors.uncoloredPie;
 //   }
-  
+
 //   return PieChartSectionData(
-//     value: data['value'],
+//     value: data['value'], // used only for slice size
 //     showTitle: true,
-//     title: '${data['title']}\n${data['value'].toStringAsFixed(1)}%',
-//     titleStyle: TextStyle(
+
+//     // ✅ ONLY percentage text
+//     title: '${data['value'].toStringAsFixed(1)}%',
+
+//     titleStyle: const TextStyle(
 //       fontSize: 14,
 //       fontWeight: FontWeight.w600,
 //       color: Colors.white,
 //     ),
+
 //     color: sectionColor,
-//     radius: 100,
-//     titlePositionPercentageOffset: 0.5,
+//     radius: 110,
+//     titlePositionPercentageOffset: 0.55,
 //   );
 // }
 // }
-PieChartSectionData getPieChartSectionData(dynamic data, int index) {
+
+PieChartSectionData getPieChartSectionData(
+  dynamic data,
+  int index,
+  double total,
+) {
   Color sectionColor;
+  String label;
 
   if (data['title'].toString().toLowerCase().contains('principal')) {
-    sectionColor = const Color(0xFF9ECAD7); // Principal
-  } else if (data['title'].toString().toLowerCase().contains('interest')) {
-    sectionColor = const Color(0xFF4B4D73); // Interest
+    sectionColor = const Color(0xFF9ECAD7);
+    label = 'Principal';
   } else {
-    sectionColor = pieChatColor[index] ?? AppColors.uncoloredPie;
+    sectionColor = const Color(0xFF4B4D73);
+    label = 'Interest';
   }
 
+  final double value = data['value'];
+  final double percent = total == 0 ? 0 : (value / total) * 100;
+
   return PieChartSectionData(
-    value: data['value'], // used only for slice size
+    value: value, // slice size (amount)
     showTitle: true,
-
-    // ✅ ONLY percentage text
-    title: '${data['value'].toStringAsFixed(1)}%',
-
+    title: '$label\n${percent.toStringAsFixed(1)}%', // ✅ NAME + %
     titleStyle: const TextStyle(
-      fontSize: 14,
+      fontSize: 13,
       fontWeight: FontWeight.w600,
       color: Colors.white,
+      height: 1.3, // spacing between lines
     ),
-
     color: sectionColor,
     radius: 110,
     titlePositionPercentageOffset: 0.55,
