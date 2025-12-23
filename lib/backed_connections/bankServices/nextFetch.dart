@@ -549,6 +549,7 @@
 //     return Colors.green; // Good
 //   }
 // }
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
@@ -573,8 +574,11 @@ import '../../model/fips_metric_model.dart';
 import '../../repository/bankinfo.dart';
 import '../../widget_services/widget_service.dart';
 import 'bank_progress.dart';
+import 'bank_sync_flow.dart';
 
 RxBool isBankLinked = false.obs;
+RxInt modalPage = 0.obs;
+final PageController modalPageController = PageController();
 
 class Nextfetch extends StatefulWidget {
   @override
@@ -604,7 +608,7 @@ class _RotatingIconState extends State<Nextfetch>
     _timer2 = Timer.periodic(Duration(minutes: 1), (timer) {
       currentTime.value = getTime();
     });
-
+  // modalPageController = PageController(initialPage: 0);
     updateNextFetchWidget();
   }
 
@@ -635,8 +639,9 @@ class _RotatingIconState extends State<Nextfetch>
                   c: AppColors.bg1,
                 )
               : Container(
+                // color: Colors.green,
                   width:
-                      MediaQuery.of(context).size.width / 1,
+                      MediaQuery.of(context).size.width / 1.4,
                   child: Row(
                     children: [
                       isFected.value
@@ -663,8 +668,8 @@ class _RotatingIconState extends State<Nextfetch>
                                         begin: 1.0, end: 0.0)),
                                 child: AvatarProfileImageNextFetch(
                                   url: HomePageIcons.fetch,
-                                  width: 30,
-                                  height: 25,
+                                  width: 40,
+                                  height: 35,
                                 ),
                               ),
                             ),
@@ -717,338 +722,175 @@ class _RotatingIconState extends State<Nextfetch>
     return '$hoursLeft:${minutesLeft.toString().padLeft(2, '0')}';
   }
 
-  showFetchModal(BuildContext context) {
-    if (consentAndHandleDetails.isEmpty) {
-      return;
-    }
+   showFetchModal(BuildContext context) {
+  if (consentAndHandleDetails.isEmpty) return;
 
-    String nextFetch = nextFecthDate.value;
-    String lastFetch = LastFetchDate.value;
+  // modalPageController.jumpToPage(0); // 🔑 reset to first page
 
-    DateTime nextFetchDate;
-    DateTime lastFetchDate;
+  String nextFetch = nextFecthDate.value;
+  String lastFetch = LastFetchDate.value;
 
-    try {
-      nextFetchDate = nextFetch.isNotEmpty
-          ? DateTime.parse(nextFetch)
-          : DateTime.now();
-    } catch (e) {
-      nextFetchDate = DateTime.now();
-    }
+  DateTime nextFetchDate;
+  DateTime lastFetchDate;
 
-    try {
-      lastFetchDate = lastFetch.isNotEmpty
-          ? DateTime.parse(lastFetch)
-          : DateTime.now();
-    } catch (e) {
-      lastFetchDate = DateTime.now();
-    }
+  try {
+    nextFetchDate =
+        nextFetch.isNotEmpty ? DateTime.parse(nextFetch) : DateTime.now();
+  } catch (_) {
+    nextFetchDate = DateTime.now();
+  }
 
-    String formattedNextFetch =
-        formatWhatsAppDate2(nextFetchDate);
-    String formattedLastFetch =
-        formatWhatsAppDate(lastFetchDate);
+  try {
+    lastFetchDate =
+        lastFetch.isNotEmpty ? DateTime.parse(lastFetch) : DateTime.now();
+  } catch (_) {
+    lastFetchDate = DateTime.now();
+  }
 
-    final double screenWidth =
-        MediaQuery.of(context).size.width;
+  String formattedNextFetch = formatWhatsAppDate2(nextFetchDate);
+  String formattedLastFetch = formatWhatsAppDate(lastFetchDate);
 
-    bool limit = int.parse(fetchCount.value) >= 5;
+  final double screenWidth = MediaQuery.of(context).size.width;
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      backgroundColor: AppColors.transparentColor,
-      builder: (context) {
-        return SafeArea(
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            padding: EdgeInsets.only(
-              bottom:
-                  MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.all(screenWidth * 0.06),
-              decoration: BoxDecoration(
-                color: AppColors.backgroundColor,
-                borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(24)),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppColors.backgroundColor,
-                    Colors.grey[50]!,
-                  ],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.accentColor
-                        .withOpacity(0.1),
-                    blurRadius: 20,
-                    spreadRadius: 5,
-                    offset: const Offset(0, -5),
-                  ),
-                ],
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment:
-                      CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 4,
-                      margin: EdgeInsets.only(
-                          bottom: screenWidth * 0.04),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius:
-                            BorderRadius.circular(2),
+  bool limit = int.parse(fetchCount.value) >= 5;
+  if (fipsMetricList.isEmpty) return;
+
+  final FipsMetric metric = fipsMetricList.firstWhere(
+    (item) => item.BankName == BankName.value,
+    orElse: () => fipsMetricList.first,
+  );
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: AppColors.transparentColor,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (context) {
+      return SafeArea(
+        child: Container(
+          padding: EdgeInsets.all(screenWidth * 0.06),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.48, // 🔑 modal height
+            child: PageView(
+              controller: modalPageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                /// ================= PAGE 0 =================
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textStyle(
+                        context: context,
+                        text: "Connected Banks",
+                        fontsize: 16,
+                        c: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                            width: Colorcodes.borderRadius),
-                        Image.network(
-                          BankUrl.value,
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.fitWidth,
-                          errorBuilder:
-                              getErrorBankLogo(),
-                        ),
-                        SizedBox(
-                            width:
-                                Colorcodes.borderRadius10),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          padding:
-                              const EdgeInsets.symmetric(
-                                  vertical: 10),
-                          child: textStyle(
-                            context: context,
-                            text: BankName.value,
-                            fontsize: 16,
-                            c: AppColors.primaryColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    BankProgress(
-                      percent: getPersentage(),
-                    ),
-                    getInfoAboutBank(context),
-                    const SizedBox(height: 10),
-                    _buildInfoCard(
-                      context: context,
-                      title: HomepageStringsDart()
-                          .lastFetchLabel,
-                      value: formattedLastFetch,
-                    ),
-                    SizedBox(
-                        height: screenWidth * 0.04),
-                    _buildInfoCard(
-                      context: context,
-                      title: HomepageStringsDart()
-                          .nextFetchTitle,
-                      value: formattedNextFetch,
-                    ),
-                    SizedBox(
-                        height: screenWidth * 0.04),
-                    _buildInfoCard(
-                      context: context,
-                      title: HomepageStringsDart()
-                          .fetchCountTitle,
-                      value:
-                          '${!limit ? fetchCount.value : "5"}/5',
-                    ),
-                    limit
-                        ? SizedBox.shrink()
-                        : Padding(
-                            padding:
-                                EdgeInsets.symmetric(
-                                    vertical: 10),
-                            child: textStyle(
+
+                      const SizedBox(height: 16),
+
+                      Center(
+                        child: Column(
+                          children: [
+                            Image.network(
+                              BankUrl.value,
+                              width: 30,
+                              height: 30,
+                              errorBuilder: getErrorBankLogo(),
+                            ),
+                            const SizedBox(height: 8),
+                            textStyle(
                               context: context,
-                              text: HomepageStringsDart()
-                                  .fetchingDuration,
-                              fontsize: 13,
+                              text: BankName.value,
+                              fontsize: 16,
                               c: AppColors.primaryColor,
-                              fontWeight:
-                                  FontWeight.bold,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      _buildInfoCard(
+                        context: context,
+                        title: "Average latency",
+                        value: "${metric.latencyAvgMs + 40}ms",
+                      ),
+                      const SizedBox(height: 12),
+
+                      _buildInfoCard(
+                        context: context,
+                        title: HomepageStringsDart().lastFetchLabel,
+                        value: formattedLastFetch,
+                      ),
+                      const SizedBox(height: 12),
+
+                      _buildInfoCard(
+                        context: context,
+                        title: HomepageStringsDart().nextFetchTitle,
+                        value: formattedNextFetch,
+                      ),
+                      const SizedBox(height: 12),
+
+                      _buildInfoCard(
+                        context: context,
+                        title: HomepageStringsDart().fetchCountTitle,
+                        value: '${!limit ? fetchCount.value : "5"}/5',
+                      ),
+                      const SizedBox(height: 20),
+
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            modalPageController.animateToPage(
+                              1,
+                              duration:
+                                  const Duration(milliseconds: 350),
+                              curve: Curves.easeInOut,
+                            );
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 1.14,
+                            height: MediaQuery.of(context).size.height / 16,
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: textStyleOnly2(
+                                context: context,
+                                text: "Continue",
+                                fontsize: 16,
+                                color: AppColors.backgroundColor,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                    limit
-                        ? SizedBox.shrink()
-                        : textStyleOnly2(
-                            context: context,
-                            text: HomepageStringsDart()
-                                .fetchPrompt,
-                            fontsize: screenWidth < 400
-                                ? 12
-                                : 14,
-                            color: AppColors.bg1,
-                            fontWeight:
-                                FontWeight.w500,
-                          ),
-                    SizedBox(
-                        height: screenWidth * 0.03),
-                    fetchCount.value == "5"
-                        ? textStyleOnly2(
-                            context: context,
-                            text: HomepageStringsDart()
-                                .fetchLimitReached,
-                            fontsize: screenWidth < 400
-                                ? 12
-                                : 14,
-                            color:
-                                AppColors.primaryColor,
-                            fontWeight:
-                                FontWeight.bold,
-                          )
-                        : Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (fetchNow.value)
-                                    return;
-                                  fetchNow.value = true;
-                                  checkAndFetchData();
-                                },
-                                style: ElevatedButton
-                                    .styleFrom(
-                                  backgroundColor:
-                                      AppColors
-                                          .primaryColor,
-                                  foregroundColor:
-                                      AppColors
-                                          .backgroundColor,
-                                  padding: EdgeInsets
-                                      .symmetric(
-                                    horizontal:
-                                        screenWidth *
-                                            0.06,
-                                    vertical:
-                                        screenWidth *
-                                            0.04,
-                                  ),
-                                  shape:
-                                      RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius
-                                            .circular(
-                                                12),
-                                  ),
-                                  elevation: 2,
-                                  minimumSize: Size(
-                                      screenWidth *
-                                          0.3,
-                                      0),
-                                ),
-                                child: Obx(
-                                  () => fetchNow.value
-                                      ? Padding(
-                                          padding: const EdgeInsets
-                                              .symmetric(
-                                              horizontal:
-                                                  40),
-                                          child:
-                                              Spinner(
-                                            size: 10,
-                                            color: Colorcodes
-                                                .white,
-                                          ),
-                                        )
-                                      : textStyleOnly2(
-                                          context:
-                                              context,
-                                          text: HomepageStringsDart()
-                                              .fetchNowButton,
-                                          fontsize: screenWidth <
-                                                  400
-                                              ? 12
-                                              : 14,
-                                          color: AppColors
-                                              .backgroundColor,
-                                          fontWeight:
-                                              FontWeight
-                                                  .w500,
-                                        ),
-                                ),
-                              ),
-                              SizedBox(
-                                  width: screenWidth *
-                                      0.03),
-                              OutlinedButton(
-                                onPressed: () =>
-                                    Navigator.pop(
-                                        context),
-                                style: OutlinedButton
-                                    .styleFrom(
-                                  side: BorderSide(
-                                    color:
-                                        AppColors.bg1,
-                                    width: 2,
-                                  ),
-                                  padding: EdgeInsets
-                                      .symmetric(
-                                    horizontal:
-                                        screenWidth *
-                                            0.06,
-                                    vertical:
-                                        screenWidth *
-                                            0.04,
-                                  ),
-                                  shape:
-                                      RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius
-                                            .circular(
-                                                12),
-                                  ),
-                                  minimumSize: Size(
-                                      screenWidth *
-                                          0.3,
-                                      0),
-                                ),
-                                child: textStyleOnly2(
-                                  context: context,
-                                  text: HomepageStringsDart()
-                                      .notNowButton,
-                                  fontsize: screenWidth <
-                                          400
-                                      ? 12
-                                      : 14,
-                                  color:
-                                      AppColors.bg1,
-                                  fontWeight:
-                                      FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                  ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+
+                /// ================= PAGE 1 =================
+                const BankSyncFlow(),
+              ],
             ),
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
+
 
   double getPersentage() {
     if (BankName.value == "") return 100.0;
@@ -1069,8 +911,7 @@ class _RotatingIconState extends State<Nextfetch>
 
     final String text = _generateBankFetchInfo(metric) +
         "\nAverage latency: ${metric.latencyAvgMs + 40}ms. ";
-    final Color textColor =
-        _getColorFromSuccessPercent(metric.successPercent);
+    
 
     return Padding(
       padding:
@@ -1104,15 +945,7 @@ class _RotatingIconState extends State<Nextfetch>
     return text2;
   }
 
-  Color _getColorFromSuccessPercent(num successPercent) {
-    if (successPercent < 40) {
-      return Colors.red;
-    } else if (successPercent < 70) {
-      return Colors.orange;
-    } else {
-      return Colors.green;
-    }
-  }
+ 
 
   Widget _buildInfoCard({
     required BuildContext context,
@@ -1126,8 +959,8 @@ class _RotatingIconState extends State<Nextfetch>
       width: double.infinity,
       padding: EdgeInsets.all(screenWidth * 0.04),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.newbg,
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey, width: 1),
       ),
       child: Row(
@@ -1182,14 +1015,7 @@ class _RotatingIconState extends State<Nextfetch>
     callApi(context);
     Navigator.pop(context);
   }
+
 }
 
-Color getFetchStatusColor(num successPercent) {
-  if (successPercent < 40) {
-    return Colors.redAccent;
-  } else if (successPercent < 70) {
-    return Colors.orangeAccent;
-  } else {
-    return Colors.green;
-  }
-}
+

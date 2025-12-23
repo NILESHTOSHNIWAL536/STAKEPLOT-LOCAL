@@ -55,7 +55,7 @@ Stack(
   children: [
     // BACKGROUND IMAGE for the whole section
     SizedBox(
-      height: sectionHeight,
+      height: MediaQuery.sizeOf(context).height/4,
       width: double.infinity,
       child: SvgPicture.asset(
         HomePageIcons.background, // <-- verify this path
@@ -64,8 +64,9 @@ Stack(
     ),
 
     // FOREGROUND content (kept transparent)
-    SizedBox(
-      height: sectionHeight,
+    Container(
+      height: MediaQuery.sizeOf(context).height/2.33,
+      // color: Colors.green,
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -78,8 +79,9 @@ Stack(
             TopRightIconsWidget(),
 
             // number picker area — wrap in transparent material so it doesn't draw white bg
-            SizedBox(
-              height: height * 0.4,
+            Container(
+              height: height * 0.3,
+              // color: Colors.amber,
               child: Material(
                 type: MaterialType.transparency, // IMPORTANT: makes child transparent
                 child: NumberPickerScreen(),
@@ -125,9 +127,7 @@ Stack(
                     Obx(() => isFinoraVisible.value
                         ? GetFinora(height)
                         : GetFinora(height)),
-                    const SizedBox(
-                      height: 14,
-                    ),
+                    
                     Obx(() => isAutoPayFected.value
                         ? GetAutopays(height)
                         : GetAutopays(height)),
@@ -158,13 +158,15 @@ Stack(
   Widget GetAutopays(height) {
     return allAutoPayData.isEmpty
         ? SizedBox.shrink()
-        : SizedBox(height: height * 0.4, child: CardStackScreen());
+        : Container(
+          color: Colors.amber,
+          height: height * 0.4, child: CardStackScreen());
   }
 
   Widget GetFinora(double height) {
     return Obx(() {
       return SizedBox(
-        height: height * (totalDebitThisMonth.value <= 0 ? 0.54 : 0.21),
+        height: height * (totalDebitThisMonth.value <= 0 ? 0.54 : 0.2),
         child: totalDebitThisMonth.value <= 0
             ? FinoraLastTwoMonthsDashboard()
             : SwipeableCardsScreen(),

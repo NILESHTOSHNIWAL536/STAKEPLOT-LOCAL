@@ -27,10 +27,10 @@ class HomepageStringsDart {
   String notScheduled = "Not scheduled";
    List lockPatterns =  [
     "( ◐ o ◑ )",
-    "  (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ ",
+    
     "(¬‿¬)",
     " (-‿◦)",
-    " ヽ(͡◕ ͜ʖ ͡◕)ﾉ"
+    
   ];
 
 // Number picker screen

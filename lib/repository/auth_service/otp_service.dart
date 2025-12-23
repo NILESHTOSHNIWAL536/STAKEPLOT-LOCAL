@@ -103,7 +103,7 @@ class OtpService {
         acceptReset.value = false;
         if (verify) LoginService.pushToRegister(context, email);
       } else if (isForcedLogin) {
-        acceptReset.value = false;
+        // acceptReset.value = false;
         ForceLogout.forceLogoutUser(
             sessionId: loginResponse['existingSessionId'],
             email: email,

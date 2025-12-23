@@ -774,13 +774,13 @@ Widget filterTransaction(context) {
 
             Obx(
               () => GestureDetector(
-                onTap: toggleAmountFilter, // ✅ Entire container is tappable
+                onTap: toggleAmountFilter,
                 child: Container(
                   child: showAmountFilter.value
                       ? Container(
-                        margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
                           padding: EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                              horizontal: 12, vertical: 4),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(8),
@@ -803,7 +803,7 @@ Widget filterTransaction(context) {
                           ),
                         )
                       : Container(
-               margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+               margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
@@ -841,7 +841,7 @@ Widget filterTransaction(context) {
                 child: Container(
                   child: showDateFilter.value
                       ? Container(
-                         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(

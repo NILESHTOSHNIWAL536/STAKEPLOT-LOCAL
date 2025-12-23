@@ -9,6 +9,8 @@ import 'package:flutter_application_code_stakeplot/repository/notification_repos
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../Home_Screen/Home/new_updates_screen.dart';
+
 
 class NotificationsBudget extends StatefulWidget {
 Widget child;
@@ -32,7 +34,7 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
   @override
   Widget build(BuildContext context){
    return  Container(
-     width: MediaQuery.of(context).size.width/6,
+     width: MediaQuery.of(context).size.width/4,
      padding: EdgeInsets.symmetric(horizontal: 10),
      child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -47,7 +49,24 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
                      AvatarProfileImageZero(url: HomePageIcons.notificationStack, width: 30, height: 30)
                     )
                     
-                  )
+                  ),
+                  SizedBox(width: 10,),
+                  InkWell(
+                   onTap: (){
+                     HapticFeedback.mediumImpact();
+                           Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UpdatesScreen(),
+          ),
+        );
+                       },
+                    child: 
+                    AvatarProfileImageZero(url: HomePageIcons.appUpdates, width: 30, height: 30)
+                     
+                    )
+                    
+                  
                              
                 ],
              ),

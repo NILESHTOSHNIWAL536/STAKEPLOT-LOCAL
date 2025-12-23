@@ -8,29 +8,8 @@ import 'package:get/get.dart';
 import '../../components/shared_utils.dart';
 
 final RxString selectedPeriod = 'Month'.obs;
-class SwipeableCardsScreen extends StatefulWidget {
-  @override
-  _SwipeableCardsScreenState createState() => _SwipeableCardsScreenState();
-}
-
-class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
-  final PageController _pageController = PageController(viewportFraction: 0.9);
-  final RxInt _currentIndex = 0.obs;
-  final int _totalCards = 3;
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _onPageChanged(int index) {
-    _currentIndex.value = index;
-  }
+class SwipeableCardsScreen extends StatelessWidget {
+  const SwipeableCardsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +18,18 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.mt,
+        // color: AppColors.redColor,
         borderRadius: BorderRadius.circular(padding),
+        
       ),
       padding: EdgeInsets.symmetric(
-          horizontal: padding / 2, vertical: padding * 0.2),
+        horizontal: padding / 2,
+        vertical: padding * 0.2,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// TITLE
           Padding(
             padding: EdgeInsets.only(
               top: padding / 2,
@@ -61,115 +44,66 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // PageView for Cards
-              sliderCard(padding, screenSize),
-              // Indicator Dots
-              indicators(padding),
-            ],
+
+          const SizedBox(height: 8),
+
+          /// HORIZONTAL SCROLL (NO SWIPE / NO PAGEVIEW)
+          SizedBox(
+            height: screenSize.height * 0.14,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: [
+                  _buildCardWrapper(
+                    context,
+                    screenSize,
+                    TotalSpendingCard(),
+                  ),
+                  _buildCardWrapper(
+                    context,
+                    screenSize,
+                    OverspentCategoriesCard(),
+                  ),
+                  _buildCardWrapper(
+                    context,
+                    screenSize,
+                    FrequentTransactionCard(),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget sliderCard(padding, screenSize) {
-    return SizedBox(
-      height: screenSize.height * 0.14,
-      width: screenSize.width / 1.2,
-      child: PageView.builder(
-        controller: _pageController,
-        scrollDirection: Axis.vertical,
-        physics: const ClampingScrollPhysics(),
-        onPageChanged: _onPageChanged,
-        clipBehavior: Clip.hardEdge,
-        itemCount: _totalCards,
-        itemBuilder: (context, index) {
-          final cardIndex = index % _totalCards;
-          return AnimatedBuilder(
-            animation: _pageController,
-            builder: (context, child) {
-              double value = 1.0;
-              if (_pageController.position.haveDimensions) {
-                value = (index.toDouble() - (_pageController.page ?? 0.0))
-                    .clamp(-1.0, 1.0);
-                value = (1.0 - (value.abs() * 0.2)).clamp(0.8, 1.0);
-              }
-              return Center(
-                child: Transform.scale(
-                  scale: value,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: padding * 0.3,
-                      vertical: padding * 0.2,
-                    ),
-                    child: _buildCard(cardIndex, context, screenSize),
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  Widget indicators(padding) {
-    return Padding(
-      padding: EdgeInsets.only(right: padding * 0.1),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          _totalCards,
-          (index) => Obx(
-            () => Container(
-              margin: EdgeInsets.symmetric(vertical: padding * 0.3),
-              width: _currentIndex.value == index ? 6.0 : 4.0,
-              height: _currentIndex.value == index ? 6.0 : 4.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _currentIndex.value == index
-                    ? AppColors.primaryColor
-                    : AppColors.bg3,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCard(int cardIndex, BuildContext context, Size screenSize) {
-    Widget card;
-    switch (cardIndex) {
-      case 0:
-        card = TotalSpendingCard();
-        break;
-      case 1:
-        card = OverspentCategoriesCard();
-        break;
-      case 2:
-        card = FrequentTransactionCard();
-        break;
-      default:
-        return SizedBox.shrink();
-    }
-
-    return Container(
-      width: screenSize.width * 0.85,
+ Widget _buildCardWrapper(
+  BuildContext context,
+  Size screenSize,
+  Widget card,
+) {
+  return Padding(
+    padding: const EdgeInsets.only(right: 12), 
+    child: Container(
+      width: screenSize.width * 0.8, // 👈 KEY CHANGE (peek effect)
       height: screenSize.height * 0.14,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(screenSize.width * 0.03),
+        border: Border.all(
+          color: AppColors.border,
+          width: 1,
+        ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(screenSize.width * 0.03),
         child: card,
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
 
 class TotalSpendingCard extends StatelessWidget {
@@ -190,14 +124,19 @@ class TotalSpendingCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Monthly',
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w500,
-                  fontSize: screenSize.width * 0.02,
-                  color: AppColors.bg3,
-                ),
+              Row(
+                children: [
+                 
+                  Text(
+                    'Monthly Summary',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: screenSize.width * 0.03,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(
                 height: 5,
@@ -218,8 +157,8 @@ class TotalSpendingCard extends StatelessWidget {
                             'Total Spending',
                             style: FontManager().getTextStyle(
                               context,
-                              lWeight: FontWeight.w500,
-                              fontSize: screenSize.width * 0.04,
+                              lWeight: FontWeight.w400,
+                              fontSize: screenSize.width * 0.05,
                               color: AppColors.primaryColor,
                             ),
                           ),
@@ -240,7 +179,7 @@ class TotalSpendingCard extends StatelessWidget {
                                         8)
                                     ? screenSize.width * 0.05
                                     : screenSize.width * 0.056,
-                            color: AppColors.accentColor,
+                            color: AppColors.primaryColor,
                           ),
                         ),
                       ),
@@ -254,8 +193,8 @@ class TotalSpendingCard extends StatelessWidget {
                         'Average/Day',
                         style: FontManager().getTextStyle(
                           context,
-                          lWeight: FontWeight.w500,
-                          fontSize: screenSize.width * 0.04,
+                          lWeight: FontWeight.w400,
+                          fontSize: screenSize.width * 0.05,
                           color: AppColors.primaryColor,
                         ),
                       ),
@@ -273,7 +212,7 @@ class TotalSpendingCard extends StatelessWidget {
                                           8)
                                       ? screenSize.width * 0.05
                                       : screenSize.width * 0.056,
-                              color: AppColors.accentColor,
+                              color: AppColors.primaryColor,
                               overflow: TextOverflow.ellipsis),
                         ),
                       ),
@@ -434,11 +373,13 @@ class FrequentTransactionCard extends StatelessWidget {
           children: [
             Text(
               'Most Frequent Payment',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: screenSize.width * 0.04,
-                color: AppColors.primaryColor,
-              ),
+
+              style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w400,
+                          fontSize: screenSize.width * 0.04,
+                          color: AppColors.primaryColor,
+                        ),
             ),
             frequentPayments.isEmpty
                 ? Text(
@@ -454,7 +395,7 @@ class FrequentTransactionCard extends StatelessWidget {
                     frequentPayments[0]['name'].toString(),
                     style: FontManager().getTextStyle(
                       context,
-                      lWeight: FontWeight.w500,
+                      lWeight: FontWeight.w600,
                       fontSize: screenSize.width * 0.04,
                       color: AppColors.accentColor,
                     ),
@@ -469,9 +410,9 @@ class FrequentTransactionCard extends StatelessWidget {
                         '${frequentPayments[0]['count']} Transactions',
                         style: FontManager().getTextStyle(
                           context,
-                          lWeight: FontWeight.w500,
+                          lWeight: FontWeight.w400,
                           fontSize: screenSize.width * 0.035,
-                          color: AppColors.accentColor,
+                          color: AppColors.bg3,
                         ),
                       ),
                       Text(
@@ -479,8 +420,8 @@ class FrequentTransactionCard extends StatelessWidget {
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w500,
-                          fontSize: screenSize.width * 0.035,
-                          color: AppColors.accentColor,
+                          fontSize: screenSize.width * 0.05,
+                          color: AppColors.primaryColor,
                         ),
                       ),
                     ],

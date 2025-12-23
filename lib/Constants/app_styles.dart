@@ -70,7 +70,12 @@ class HomePageIcons {
   static String noCollection = "assets/icons/Home-page/noCollection.svg";
   static String personal = "assets/icons/Home-page/personalCollection.svg";
   static String shared = "assets/icons/Home-page/shared.svg";
+  static String noTransactionsInCollection = "assets/icons/Home-page/notnx.svg";
+  static String noTransactionsInCollection2 = "assets/icons/Home-page/noTnx1.svg";
+  static String settings = "assets/icons/Home-page/collectionSetting.svg";
+  static String appUpdates = "assets/icons/Home-page/appUpdates.svg";
 }
+
 
 class Categories {
   static String link = "assets/icons/Categories2/";

@@ -4,6 +4,7 @@ import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../image_service/avatarProfile.dart';
+import 'collections_empty_page.dart';
 import 'create_collection_data.dart';
 import 'create_collection_pages/create_collection_flow.dart';
 
@@ -11,7 +12,7 @@ Widget buildCollectionsBody(BuildContext context) {
   // TEMP flag – replace with API data later
   final bool hasCollections = false;
 
-  return hasCollections
+  return !hasCollections
       ? _buildCollectionsList(context)
       : _buildEmptyCollectionsUI(context);
 }
@@ -82,12 +83,10 @@ Widget _timelineItem(
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      /// TIMELINE COLUMN
       SizedBox(
         width: 32,
         child: Column(
           children: [
-            /// CIRCLE
             Container(
               width: 16,
               height: 16,
@@ -100,20 +99,31 @@ Widget _timelineItem(
                 shape: BoxShape.circle,
               ),
             ),
-
-            /// LINE
             if (!isLast)
               Container(
                 width: 1.5,
-                height: 120, // controls distance between cards
+                height: 120,
                 color: AppColors.primaryColor,
               ),
           ],
         ),
       ),
 
-      /// CARD
-      child,
+      /// 👇 TAP HANDLER ADDED
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const CollectionDetailsPage(
+                title: "Kerala Trip", // later pass dynamically
+                hasTransactions: true,
+              ),
+            ),
+          );
+        },
+        child: child,
+      ),
     ],
   );
 }

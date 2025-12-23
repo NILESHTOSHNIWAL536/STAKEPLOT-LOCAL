@@ -16,11 +16,13 @@ class AmountRangeField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      
       width: MediaQuery.of(context).size.width,
-      color: Colorcodes.white,
+      color: AppColors.newbg,
       child: Center(
         child: Container(
           width: MediaQuery.of(context).size.width / 1.1,
+          height: MediaQuery.sizeOf(context).height / 22,
           margin: EdgeInsets.symmetric(vertical: 4, horizontal: 0),
           child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Expanded(
@@ -38,10 +40,18 @@ class AmountRangeField extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                   hintText: 'Enter min amount',
                   filled: true,
-                  fillColor: Colors.grey[100],
-                  border: OutlineInputBorder(
+                  fillColor: AppColors.newbg,
+                  
+                 
+                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+                  borderSide: BorderSide(
+    color: AppColors.border, // 👈 your border color
+    width: 1,
+  ),
+                    
+                  
+                    
                   ),
                   hintStyle: FontManager().getTextStyle(
                     context,
@@ -74,10 +84,13 @@ class AmountRangeField extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                   hintText: 'Enter max amount',
                   filled: true,
-                  fillColor: Colors.grey[100],
+                  fillColor: AppColors.newbg,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+                    borderSide: BorderSide(
+    color: AppColors.border, // 👈 your border color
+    width: 1,
+  ),
                   ),
                   hintStyle: FontManager().getTextStyle(
                     context,

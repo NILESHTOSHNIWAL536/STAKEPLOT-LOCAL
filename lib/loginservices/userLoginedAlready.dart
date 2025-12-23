@@ -8,85 +8,183 @@ import 'package:flutter_application_code_stakeplot/loginservices/two_factor_emai
 import 'package:get/get.dart';
 import '../repository/auth_service/otp_service.dart';
 
+// class UserLoginedAlready extends StatelessWidget {
+//   var data;
+//   TextEditingController email;
+
+//   var isLoading = false.obs;
+
+//   UserLoginedAlready(
+//       {Key? key,
+//       required this.data,
+//       required this.email,
+//     })
+//       : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     var body = data['explanation'];
+//     return Container(
+//       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+//       width: MediaQuery.of(context).size.width,
+//       height: MediaQuery.of(context).size.height / 2,
+//       decoration: BoxDecoration(
+//           color: AppColors.backgroundColor,
+//           borderRadius: const BorderRadius.only(
+//             topLeft: Radius.circular(20),
+//             topRight: Radius.circular(20),
+//           )),
+//       child: Column(
+//         children: [
+//           Container(
+//               width: MediaQuery.of(context).size.width / 2,
+//               height: MediaQuery.of(context).size.height / 4.5,
+//               child: AvatarProfileImage(
+//                   url: "assets/icons/lock.svg", width: 10, height: 10)),
+//           getContainer(context, body['message']),
+//           getContainer(context, "Device Limit Exceeded"),
+//           getContainer(
+//               context,
+//               body['loggedInDevice'] != ""
+//                   ? body['loggedInDevice']['device'] ?? ""
+//                   : ""),
+//           getContainer(
+//               context,
+//               body['loggedInDevice'] != ""
+//                   ? body['loggedInDevice']['brand'] ?? ""
+//                   : ""),
+//           InkWell(
+//               onTap: () {
+//                 isLoading.value = true;
+
+//               OtpService.getOTPForTwoFactorAuth(context," body['user']['name']", email.text.toString());
+
+//                 // Navigate to the OTP verification screen
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) => TwoFactorEmailVerification(
+//                       data: {
+//                         'email': email.text.toString(),
+//                         'response': body,
+//                         'isForcedLogin': true,
+//                         'newUser':false
+//                       },
+//                       // Pass the base URL
+//                     ),
+//                   ),
+//                 );
+//               },
+//               child: Obx(() => isLoading.value
+//                   ? getspinner(context, 30)
+//                   : getButton(context, "Logout User")))
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget getContainer(context, text) {
+//     return Container(
+//         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+//         width: MediaQuery.of(context).size.width / 1.1,
+//         child: textStyle(context: context, text: text, fontsize: 14));
+//   }
+// }
 class UserLoginedAlready extends StatelessWidget {
-  var data;
-  TextEditingController email;
+  final dynamic data;
+  final TextEditingController email;
 
-  var isLoading = false.obs;
+  final RxBool isLoading = false.obs;
 
-  UserLoginedAlready(
-      {Key? key,
-      required this.data,
-      required this.email,
-    })
-      : super(key: key);
+  UserLoginedAlready({
+    Key? key,
+    required this.data,
+    required this.email,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var body = data['explanation'];
+    final Map<String, dynamic> body =
+        (data != null && data['explanation'] != null)
+            ? Map<String, dynamic>.from(data['explanation'])
+            : {};
+
+    final loggedDevice =
+        body['loggedInDevice'] is Map ? body['loggedInDevice'] : {};
+
+    final user = body['user'] is Map ? body['user'] : {};
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 2,
       decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          )),
+        color: AppColors.backgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       child: Column(
         children: [
-          Container(
-              width: MediaQuery.of(context).size.width / 2,
-              height: MediaQuery.of(context).size.height / 4.5,
-              child: AvatarProfileImage(
-                  url: "assets/icons/lock.svg", width: 10, height: 10)),
-          getContainer(context, body['message']),
-          getContainer(context, "Device Limit Exceeded"),
-          getContainer(
-              context,
-              body['loggedInDevice'] != ""
-                  ? body['loggedInDevice']['device'] ?? ""
-                  : ""),
-          getContainer(
-              context,
-              body['loggedInDevice'] != ""
-                  ? body['loggedInDevice']['brand'] ?? ""
-                  : ""),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 2,
+            height: MediaQuery.of(context).size.height / 4.5,
+            child: AvatarProfileImage(
+              url: "assets/icons/lock.svg",
+              width: 10,
+              height: 10,
+            ),
+          ),
+
+          _item(context, body['message'] ?? "Session already active"),
+          _item(context, "Device Limit Exceeded"),
+          _item(context, loggedDevice['device'] ?? ""),
+          _item(context, loggedDevice['brand'] ?? ""),
+
+          const SizedBox(height: 10),
+
           InkWell(
-              onTap: () {
-                isLoading.value = true;
+            onTap: () {
+              isLoading.value = true;
 
-              OtpService.getOTPForTwoFactorAuth(context," body['user']['name']", email.text.toString());
+              OtpService.getOTPForTwoFactorAuth(
+                context,
+                user['name'] ?? "",
+                email.text,
+              );
 
-                // Navigate to the OTP verification screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TwoFactorEmailVerification(
-                      data: {
-                        'email': email.text.toString(),
-                        'response': body,
-                        'isForcedLogin': true,
-                        'newUser':false
-                      },
-                      // Pass the base URL
-                    ),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TwoFactorEmailVerification(
+                    data: {
+                      'email': email.text,
+                      'response': body,
+                      'isForcedLogin': true,
+                      'newUser': false,
+                    },
                   ),
-                );
-              },
-              child: Obx(() => isLoading.value
+                ),
+              );
+            },
+            child: Obx(
+              () => isLoading.value
                   ? getspinner(context, 30)
-                  : getButton(context, "Logout User")))
+                  : getButton(context, "Logout User"),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget getContainer(context, text) {
+  Widget _item(BuildContext context, String text) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: MediaQuery.of(context).size.width / 1.1,
-        child: textStyle(context: context, text: text, fontsize: 14));
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      width: MediaQuery.of(context).size.width / 1.1,
+      child: textStyle(
+        context: context,
+        text: text,
+        fontsize: 14,
+      ),
+    );
   }
 }

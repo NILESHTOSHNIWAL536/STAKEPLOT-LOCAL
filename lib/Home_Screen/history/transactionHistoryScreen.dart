@@ -403,8 +403,10 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:get/get.dart';
 import 'dart:async';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/container_border.dart';
 import 'collections/collections_list_widget.dart';
+import 'recent_transactions.dart';
 
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
@@ -413,7 +415,8 @@ final RxString selectedTab = "All".obs;
 
 class TransactionHistoryScreen extends StatefulWidget {
   final bool fromAutoPay;
-  const TransactionHistoryScreen({super.key, this.fromAutoPay = false});
+  final bool isFromCollection;
+  const TransactionHistoryScreen({super.key, this.fromAutoPay = false, this.isFromCollection = false});
 
   @override
   State<TransactionHistoryScreen> createState() =>
@@ -524,7 +527,7 @@ _searchScaleAnim = Tween<double>(
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.sizeOf(context).height;
+    double screenHeight = widget.isFromCollection? MediaQuery.sizeOf(context).height/ 1.5:MediaQuery.sizeOf(context).height;
 
     return GestureDetector(
       onTap: () { FocusScope.of(context).unfocus(); 
@@ -532,27 +535,55 @@ _searchScaleAnim = Tween<double>(
       
       },
       child: Scaffold(
-        backgroundColor: AppColors.newbg,
+        backgroundColor: AppColors.backgroundColor,
         // appBar: isSearchActive?null: historyAppBar(context, widget.fromAutoPay),
         body: SafeArea(
           child: Container(
             color: AppColors.border,
-            child: Column(
+            child: widget.isFromCollection?
+            Column(
               children: [
-                isSearchActive?SizedBox():historyHeader(context, widget.fromAutoPay),
-                
-                _buildSearchAndTabsSection(context),
-                Container(
-                  height: MediaQuery.sizeOf(context).height / 1.27,
-  child: Obx(() {
-    return selectedTab.value == "All"
-        ? _buildTransactionBody(context, screenHeight)
-        : buildCollectionsBody(context);
-  }),
+
+                _buildSearchFieldForCollection(context, widget.isFromCollection),
+                Expanded(child: _buildTransactionBody(context, screenHeight)),
+              ],
+            ):
+          Column(
+  children: [
+    isSearchActive?
+        _buildSearchAndTabsSection(context)
+        : historyHeader(context, widget.fromAutoPay),
+
+    Obx(() {
+      if (isSearchActive) {
+        return const SizedBox.shrink();
+      }
+
+      if (showFilter.value || isDateSummaryView.value) {
+        return Column(
+          children: [
+            _buildTabsOrCheckbox(),
+            _buildTagHideButtons(),
+            _buildFilterSection(),
+          ],
+        );
+      }
+
+      return _buildSearchAndTabsSection(context);
+    }),
+
+    Container(
+      color: AppColors.border,
+      height: isSearchActive?MediaQuery.sizeOf(context).height / 1.14: MediaQuery.sizeOf(context).height / 1.27,
+      child: Obx(() {
+        return selectedTab.value == "All"
+            ? _buildTransactionBody(context, screenHeight)
+            : buildCollectionsBody(context);
+      }),
+    ),
+  ],
 ),
 
-              ],
-            ),
           ),
         ),
       ),
@@ -607,7 +638,102 @@ Widget _buildTabChip(String title) {
   });
 }
 
- 
+ Widget historyHeader(BuildContext context, bool fromAutoPay) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p6, vertical: AppSizes.p12),
+    decoration: const BoxDecoration(
+      color: AppColors.newbg,
+      
+    ),
+    child: SafeArea(
+      bottom: false,
+      child: Row(
+        children: [
+          // Back button
+          InkWell(
+            onTap: () {
+              clearTransactions(context: context);
+              Navigator.pop(context);
+            },
+            borderRadius: BorderRadius.circular(AppSizes.r16),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSizes.p6),
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: AppColors.accentColor,
+                size: 22,
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          // Title
+Obx(() {
+  final calculatedWidth = showFilter.value || isDateSummaryView.value
+      ? MediaQuery.sizeOf(context).width / 1.4
+      : MediaQuery.sizeOf(context).width - (fromAutoPay ? 100 : 170);
+
+  return Center(
+    child: Container(
+      width: calculatedWidth,
+      child: Text(
+        !fromAutoPay
+            ? HomepageStringsDart().historyTitle
+            : "Select Transaction",
+        style: FontManager().getTextStyle(
+          context,
+          lWeight: FontWeight.w600,
+          fontSize: 18,
+          color: AppColors.primaryColor,
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    ),
+  );
+}),
+
+          // Download icon (only when not fromAutoPay)
+          if (!fromAutoPay)
+          
+
+      // RIGHT ACTION AREA
+Obx(() => _buildHeaderRightAction(context)),
+
+
+
+
+        ],
+      ),
+    ),
+  );
+}
+Widget _buildHeaderRightAction(BuildContext context) {
+  if (showFilter.value) {
+    return _buildFilterButton();
+  }
+
+  if (isDateSummaryView.value) {
+    return _buildToggleDateSummaryBtn();
+  }
+
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const RecentTransactionsScreen(),
+        ),
+      );
+    },
+    child: AutoHintIcon(
+      iconUrl: HomePageIcons.recentTransactions,
+      text: "Today View",
+    ),
+  );
+}
+
 Widget _buildSearchAndTabsSection(BuildContext context) {
   return AnimatedContainer(
     duration: const Duration(milliseconds: 250),
@@ -736,6 +862,58 @@ Widget _buildSearchIcon() {
         ),
       );
     },
+  );
+}
+
+// Change the search field for collection screen
+Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollection) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+       
+        SizedBox(
+          width: MediaQuery.of(context).size.width / 1.25,
+          height: MediaQuery.of(context).size.width / 10,
+          child: TextField(
+            controller: searchController,
+            focusNode: focusNodeSearchFeild,
+            onChanged: _onSearchChanged,
+            decoration: InputDecoration(
+              hintText: HomepageStringsDart().searchTransactions,
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: _buildClearButton(),
+              filled: true,
+              fillColor: AppColors.backgroundColor,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+            ),
+            style: const TextStyle(color: AppColors.accentColor),
+          ),
+        ),
+          const SizedBox(width: 10),
+         Container(
+          
+          child: !isFromCollection
+              ? const SizedBox.shrink()
+              : GestureDetector(
+                onTap: () {
+                 
+                },
+                child: const CustomStyledContainer(
+                    radius: 5.0, 
+                    height: 36,
+                    width: 36,
+                    child: Icon(Icons.add, color: AppColors.primaryColor, size: 24, ),
+                     ),
+              )),
+      ],
+    ),
   );
 }
 
