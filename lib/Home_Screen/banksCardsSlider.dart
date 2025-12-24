@@ -1404,6 +1404,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
    
     // Check for zero to avoid division by zero
     return Container(
+      
         // Wrap content with SingleChildScrollView
         child: Obx(() => loadBanks.value ? BankSlider() :loadBalance.value?  avatarSlider(): avatarSlider()));
   }

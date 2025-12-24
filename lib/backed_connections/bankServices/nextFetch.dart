@@ -568,6 +568,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Constants/font_manager.dart';
 import '../../components/shared_utils.dart';
 import '../../model/fips_metric_model.dart';
 // <-- make sure this is imported
@@ -776,8 +777,71 @@ class _RotatingIconState extends State<Nextfetch>
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.48, // 🔑 modal height
-            child: PageView(
+            height: MediaQuery.of(context).size.height * 0.48, 
+            child: isFected.value?Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(color: AppColors.border, shape: BoxShape.circle),
+            child: Icon(Icons.sync, size: 26, color: AppColors.primaryColor),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            "Sync in progress",
+            textAlign: TextAlign.center,
+             style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: 
+                  Colors.black,
+                                  ),
+           
+          ),
+          const SizedBox(height: 10),
+          Text(
+            "Please wait while we retrieve the latest data from your bank. The process may take a moment depending on your bank's server response.",
+            textAlign: TextAlign.center,
+              style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w300,
+                                    fontSize: 12,
+                                    color: AppColors.grey
+                                  ),
+          
+          ),
+           SizedBox(height: MediaQuery.sizeOf(context).height/30),
+          SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton(
+        onPressed: () {
+        Navigator.pop(context);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primaryColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        ),
+        child: Center(
+          child: Text("Done", 
+           style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color:  AppColors.backgroundColor
+                                  ),)
+         
+        ),
+        
+      ),
+    )
+        ],
+      ):
+            PageView(
               controller: modalPageController,
               physics: const NeverScrollableScrollPhysics(),
               children: [

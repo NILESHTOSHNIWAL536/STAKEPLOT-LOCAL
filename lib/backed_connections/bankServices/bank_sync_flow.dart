@@ -7,7 +7,6 @@ import '../../Constants/colors.dart';
 import '../../Constants/font_manager.dart';
 import '../../Home_Screen/Home/init_Api_Calls.dart';
 import '../../OneSignal/deviceConfig.dart';
-import '../../finance_screen/Budgets/Budget.dart';
 import '../../repository/bankinfo.dart';
 import '../apis_connect.dart';
 
@@ -31,8 +30,8 @@ class _BankSyncFlowState extends State<BankSyncFlow> {
 
     _pageController = PageController(initialPage: 0);
 
-    /// 🔥 Auto move steps every 3 seconds
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    
+    _timer = Timer.periodic(const Duration(seconds: 5000), (timer) {
       if (currentStep < totalSteps - 1) {
         _goToStep(currentStep + 1);
       } else {
@@ -71,7 +70,7 @@ class _BankSyncFlowState extends State<BankSyncFlow> {
         mainAxisSize: MainAxisSize.min,
         children: [
           _stepIndicator(),
-          const SizedBox(height: 30),
+           SizedBox(height: MediaQuery.sizeOf(context).height/20),
 
           /// 🔥 PAGEVIEW (SOURCE OF TRUTH)
           SizedBox(
@@ -88,7 +87,7 @@ class _BankSyncFlowState extends State<BankSyncFlow> {
             ),
           ),
 
-          const SizedBox(height: 20),
+           SizedBox(height: MediaQuery.sizeOf(context).height/30),
 
           /// 🔥 PROGRESS / CTA
           currentStep == totalSteps - 1
@@ -144,9 +143,9 @@ class _BankSyncFlowState extends State<BankSyncFlow> {
 
   Widget _line() {
     return Container(
-      width: 50,
+      width: MediaQuery.sizeOf(context).width/6,
       height: 2,
-      color: AppColors.primaryColor,
+      color:  AppColors.primaryColor,
     );
   }
 
@@ -157,7 +156,7 @@ class _BankSyncFlowState extends State<BankSyncFlow> {
       height: 6,
       decoration: BoxDecoration(
         color: const Color(0xFFEDEEF4),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: FractionallySizedBox(
         alignment: Alignment.centerLeft,
@@ -165,7 +164,7 @@ class _BankSyncFlowState extends State<BankSyncFlow> {
         child: Container(
           decoration: BoxDecoration(
             color: const Color(0xFF4B4D73),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
       ),
