@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/login_screen.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/onboarding_user.dart';
 import '../Home_Screen/home_screen_state/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import '../email_sync/add_credit_card_bank.dart';
@@ -46,6 +47,7 @@ var routes =
       '/CreditCard':(context) => const CreditCard() ,
       '/emi':(context) => const Emi() ,
       '/rent_buy':(context) => const RentBuy() ,
+      '/user_onboarding':(context) => const UserOnboarding() ,
       
     
      

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/skipFInvuProcess.dart';
 
+import '../Constants/colors.dart';
+
 AppBar getAppBar(context) {
   return AppBar(
+    backgroundColor: AppColors.newbg,
     toolbarHeight: 40,
     actions: [
       Padding(

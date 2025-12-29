@@ -73,13 +73,13 @@ class _MobileNumberState extends State<MobileNumber> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: AppColors.newbg,
         bottomNavigationBar: SafeArea(child: BottomBar()),
          appBar: getAppBar(context),
         body: SafeArea(
           child: Container(
             height: MediaQuery.of(context).size.height,
-            padding: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 5),
+            padding: EdgeInsets.only(top: 10, left: 12, right: 12, bottom: 5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -109,97 +109,116 @@ class _MobileNumberState extends State<MobileNumber> {
                       ),
                     ),
                     // TextField for entering phone number
-                   TextFormField(
-                      controller: _phoneController,
-                      maxLength: 10,
-                      enableInteractiveSelection: false, 
-                      autocorrect: false,
-                      enableSuggestions: false,
-                      keyboardType: TextInputType.phone,
-                      inputFormatters:  [
-                        FilteringTextInputFormatter.allow(regex),
-                      ],
-                      onChanged: (c){
-                         loadConsentId.value=false;
-                      },
-                      contextMenuBuilder: (context, editableTextState) {
-                            return Container(); // returns empty widget to disable menu
-                          },
-                      decoration: InputDecoration(
-                        
-                        prefixIcon: const Icon(Icons.phone_android_outlined),
-                        prefixIconColor: AppColors.primaryColor,
-                        hintText: FinvuStrings().enter10DigitNumber,
-                        hintStyle: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: AppColors.bg3,
-                        ),
-                        filled: true,
-                        fillColor: AppColors.button,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide.none,
-                        ),
-                      )
-                                    
-                        //prefixIcon: Icon(Icons.phone),
-                        //hintText: 'Mobile Number',
-                      ),
-                    
-                    SizedBox(
-                        height: 60), // Add spacing between TextField and button
-                    // Button for "Get OTP"
-                    GestureDetector(
-                      onTap: () async {
-                        // Handle OTP logic here
-                        if(loadConsentId.value)return;
-                        if (_phoneController.text.length != 10) {
-                          snackBarCalledfail(context,SnackbarData().enterValidMobile, Colorcodes.red);
-                          return;
-                        }
-          
-                        // final uuid = Uuid();
-                        // handleId.value = uuid.v4();
-          
-                        String phoneNumber = _phoneController.text;
-                        number.value = phoneNumber;
-          
-                       loadConsentId.value=true;
-                      await   getConsentHandleId(context);
-                     String otpRef =   await login(context);
-                     if(otpRef!=""){
-                        otpController = TextEditingController();
-                        startOtpTimer();
-                        isOtpWrong.value = false;
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (BuildContext context) {
-                              return verifyaotp(context);
-                            });
-                     }else
-                     {
-                       snackBarCalledSignup(context, SnackbarData().errorGeneratingOtp);
-                     }
-                       loadConsentId.value=false;
-                      },
-                      child: Obx(()=> loadConsentId.value?  getspinner(context,""):getButton(context, FinvuStrings().continueButton)),
-                    ),
+                   
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 40),
+                Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.sizeOf(context).width/1.2,
+                      child: TextFormField(
+                        
+                            controller: _phoneController,
+                            maxLength: 10,
+                            enableInteractiveSelection: false, 
+                            autocorrect: false,
+                            enableSuggestions: false,
+                            keyboardType: TextInputType.phone,
+                            inputFormatters:  [
+                              FilteringTextInputFormatter.allow(regex),
+                            ],
+                            onChanged: (c){
+                               loadConsentId.value=false;
+                            },
+                            contextMenuBuilder: (context, editableTextState) {
+                                  return Container(); // returns empty widget to disable menu
+                                },
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(horizontal: 2,vertical: 16),
+                              
+                              prefixIcon: const Icon(Icons.phone_android_outlined),
+                              prefixIconColor: AppColors.primaryColor,
+                              hintText: FinvuStrings().enter10DigitNumber,
+                              hintStyle: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: AppColors.bg3,
+                              ),
+                              // filled: true,
+                              // fillColor: AppColors.button,
+                             enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AppColors.primaryColor,
+                              width: 1,
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AppColors.primaryColor,
+                              width: 2,
+                            ),
+                          ),
+                            )
+                                          
+                              //prefixIcon: Icon(Icons.phone),
+                              //hintText: 'Mobile Number',
+                            ),
+                    ),
+                        
+                        SizedBox(
+                            height: 20), // Add spacing between TextField and button
+                        // Button for "Get OTP"
+                        GestureDetector(
+                          onTap: () async {
+                            // Handle OTP logic here
+                            if(loadConsentId.value)return;
+                            if (_phoneController.text.length != 10) {
+                              snackBarCalledfail(context,SnackbarData().enterValidMobile, Colorcodes.red);
+                              return;
+                            }
+                              
+                            // final uuid = Uuid();
+                            // handleId.value = uuid.v4();
+                              
+                            String phoneNumber = _phoneController.text;
+                            number.value = phoneNumber;
+                              
+                           loadConsentId.value=true;
+                          await   getConsentHandleId(context);
+                         String otpRef =   await login(context);
+                         if(otpRef!=""){
+                            otpController = TextEditingController();
+                            startOtpTimer();
+                            isOtpWrong.value = false;
+                            showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return verifyaotp(context);
+                                });
+                         }else
+                         {
+                           snackBarCalledSignup(context, SnackbarData().errorGeneratingOtp);
+                         }
+                           loadConsentId.value=false;
+                          },
+                          child: Obx(()=> loadConsentId.value?  getspinner(context,""):getButton(context, FinvuStrings().continueButton)),
+                        ),
+                   SizedBox(
+                            height: 40), 
+                  Padding(
+                  padding: const EdgeInsets.only(top: 40, left: 30, right: 30),
                   child: Center(
                     child: RichText(
                       text: TextSpan(
+
                         text: FinvuStrings().termsAndConditionsAgreement,
                         style: FontManager().getTextStyle(
                           context,
-                          lWeight: FontWeight.w500,
-                          fontSize: 10,
-                          color: AppColors.bg1,
+                          lWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: AppColors.grey,
                         ),
                         children: [
                           TextSpan(
@@ -207,8 +226,8 @@ class _MobileNumberState extends State<MobileNumber> {
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w500,
-                                fontSize: 12,
-                                //decoration: UnderlineInputBorder(),
+                                fontSize: 14,
+                                ///decoration: UnderlineInputBorder(),
                                 color: Colors.blue,
                               ),
                               recognizer: TapGestureRecognizer()
@@ -218,11 +237,17 @@ class _MobileNumberState extends State<MobileNumber> {
                               // Make it clickable
           
                               ),
+                             
                         ],
                       ),
                     ),
                   ),
                 ),
+              SizedBox(height: 30,)
+                  ],
+                ),
+                  
+               
               ],
             ),
           ),

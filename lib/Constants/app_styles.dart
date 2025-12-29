@@ -298,6 +298,8 @@ class Sign {
   static String management = "assets/icons/Signup/Management.svg";
   static String finvu = "assets/icons/Signup/finvu.svg";
   static String googleIcon = "assets/icons/Signup/gIcon.svg";
+  static String appSignInimage = "assets/icons/Signup/signInImage.svg";
+  static String userOnboard = "assets/icons/Signup/userOnboard1.svg";
 }
 
 class Finance {

@@ -30,11 +30,23 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
         }
       },
       child: Container(
-        width: MediaQuery.sizeOf(context).width / 5,
+        width: MediaQuery.sizeOf(context).width / 3,
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
+  border: Border.all(
+    color: const Color(0xFFE5E7EB),
+    width: 1,
+  ),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black.withOpacity(0.05),
+      offset: const Offset(0, 1),
+      blurRadius: 2,
+      spreadRadius: 0,
+    ),
+  ],
         ),
         child: Obx(
           () => googleSignInBool.value

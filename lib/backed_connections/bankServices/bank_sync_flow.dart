@@ -98,7 +98,7 @@ class _BankSyncFlowState extends State<BankSyncFlow> {
     );
   }
 
-  /// ---------------- STEP INDICATOR ----------------
+  
   Widget _stepIndicator() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -35,7 +35,7 @@ class FinvuStrings {
   String linkedAccount = "Linked Account";
   String enterText = "Enter text";
   String verifyAndLink = "Verify And Link";
-  String otpVerification = "OTP Verification";
+  String otpVerification = "Verify your phone number";
   String finvuOtpMessage = "Finvu will send an OTP to your mobile number.";
   String enter10DigitNumber = "Enter 10 digit Number";
   String continueButton = "Continue";

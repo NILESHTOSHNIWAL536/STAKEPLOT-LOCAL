@@ -316,7 +316,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
 Widget getButton(context, str,[color=AppColors.primaryColor,textColor=AppColors.bg5]) {
   return Container(
     width: MediaQuery.of(context).size.width / 1.1,
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
     decoration: BoxDecoration(
         color: color, borderRadius: BorderRadius.circular(8)),
     child: Center(

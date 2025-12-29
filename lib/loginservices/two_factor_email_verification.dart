@@ -10,6 +10,8 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import '../Constants/app_styles.dart';
+import '../image_service/avatarProfile.dart';
 import '../repository/auth_service/otp_service.dart';
 
 class TwoFactorEmailVerification extends StatefulWidget {
@@ -75,14 +77,7 @@ class _TwoFactorEmailVerificationState
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF6568A7),
-                Color(0xFF272841),
-              ],
-            ),
+           color: AppColors.newbg
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,26 +87,21 @@ class _TwoFactorEmailVerificationState
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
                     topHeader(),
-                    textStyleOnly2(
-                      context: context,
-                      text: "Enter the 6-digit OTP sent to your email",
-                      fontWeight: FontWeight.w300,
-                      fontsize: 14,
-                      color: Colorcodes.white,
-                    ),
-                    const SizedBox(height: 40),
+                    
+                    const SizedBox(height: 340),
                     verifyOpt(),
-                    acceptButton(),
-                    SizedBox(height: Colorcodes.paddingSize * 2),
+                    
+                    SizedBox(height: 10),
                     resendOtp(),
+                     acceptButton(),
                   ],
                 ),
               ),
-              buildBottomWaves(context),
+             
             ],
           ),
         ),
@@ -120,17 +110,19 @@ class _TwoFactorEmailVerificationState
   }
 
   Widget topHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Text(
-        "Verify Your Email",
-        style: FontManager().getTextStyle(
-          context,
-          lWeight: FontWeight.bold,
-          fontSize: 22,
-          color: Colorcodes.white,
-        ),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AvatarProfileImageZero(url: Sign.appSignInimage, width: 14, height: 14),
+        const SizedBox(height: 8),
+        textStyle(
+            context: context,
+            text: 'OTP sent to your email',
+            fontWeight: FontWeight.w300,
+            fontsize: 18,
+            c: AppColors.accentColor
+            ),
+      ],
     );
   }
 
@@ -139,9 +131,9 @@ class _TwoFactorEmailVerificationState
       child: Container(
         width: MediaQuery.of(context).size.width / 1.1,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: Colorcodes.white,
+          color: AppColors.primaryColor,
           borderRadius: BorderRadius.circular(Colorcodes.borderRadius10),
         ),
         child: InkWell(
@@ -151,14 +143,14 @@ class _TwoFactorEmailVerificationState
           child: Obx(
             () => Center(
               child: acceptReset.value
-                  ? Verify() // Your loading widget
+                  ? Verify()
                   : Text(
-                      "Verify & Accept",
+                      "Verify",
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: Colorcodes.black,
+                        color: AppColors.backgroundColor,
                       ),
                     ),
             ),
@@ -169,93 +161,127 @@ class _TwoFactorEmailVerificationState
   }
 
   Widget resendOtp() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize / 3),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Didn't you receive the OTP? ",
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w400,
-                fontSize: 14,
-                color: Colorcodes.white,
-              ),
-            ),
-            Obx(
-              () => GestureDetector(
-                onTap: canResendOtp2.value
-                    ? () {
-                        resendOtpToUser(
-                          context,
-                          widget.data['email'],
-                          widget.data['name'],
-                        );
-                        startOtpTimer2();
-                        isOtpWrong2.value = false;
-                        otpController.clear();
-                        _otpCode.value = "";
-                        _isOtpValid.value = false;
-                      }
-                    : null,
-                child: Text(
-                  canResendOtp2.value
-                      ? "Resend OTP"
-                      : "Resend in ${otpCountdown2.value} seconds",
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 12,
-                    color: canResendOtp2.value
-                        ? AppColors.backgroundColor
-                        : AppColors.backgroundColor,
-                  ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+         
+          Obx(
+            () => GestureDetector(
+              onTap: canResendOtp2.value
+                  ? () {
+                      // resendOtpToUser(
+                      //   context,
+                      //   widget.data['email'],
+                      //   widget.data['name'],
+                      // );
+                      // startOtpTimer2();
+                      // isOtpWrong2.value = false;
+                      // otpController.clear();
+                      // _otpCode.value = "";
+                      // _isOtpValid.value = false;
+                    }
+                  : null,
+              child: Text(
+                canResendOtp2.value
+                    ? ""
+                    : "${otpCountdown2.value} S",
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: canResendOtp2.value
+                      ? AppColors.accentColor
+                      : AppColors.accentColor,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        
+          Obx(
+            () => GestureDetector(
+              onTap: canResendOtp2.value
+                  ? () {
+                      // resendOtpToUser(
+                      //   context,
+                      //   widget.data['email'],
+                      //   widget.data['name'],
+                      // );
+                      // startOtpTimer2();
+                      // isOtpWrong2.value = false;
+                      // otpController.clear();
+                      // _otpCode.value = "";
+                      // _isOtpValid.value = false;
+                    }
+                  : null,
+              child: Text(
+                
+                    "Resend OTP"
+                   ,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color:canResendOtp2.value
+                      ? AppColors.accentColor
+                      : AppColors.greyCard,
+                ),
+              ),
+            ),
+          ),
+        
+        ],
       ),
     );
   }
 
   Widget verifyOpt() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: PinCodeTextField(
-        appContext: context,
-        length: _otpLength,
-        controller: otpController,
-        keyboardType: TextInputType.number,
-        autoFocus: true,
-        animationType: AnimationType.fade,
-        pinTheme: PinTheme(
-          shape: PinCodeFieldShape.box,
-          borderRadius: BorderRadius.circular(10),
-          fieldHeight: MediaQuery.of(context).size.width * 0.13,
-          fieldWidth: MediaQuery.of(context).size.width * 0.13,
-          activeFillColor: AppColors.backgroundColor,
-          activeColor: AppColors.finSpaceColor,
-          selectedFillColor: AppColors.backgroundColor,
-          selectedColor: Colors.blue,
-          inactiveFillColor: Colors.grey[200],
-          inactiveColor: AppColors.backgroundColor,
-        ),
-        enableActiveFill: true,
-        textStyle: const TextStyle(fontSize: 20, color: AppColors.accentColor),
-        onChanged: (value) {
-          _otpCode.value = value;
-          _isOtpValid.value = value.length == _otpLength;
-          if (_isOtpValid.value) {
-            verifyEmail();
-          }
-        },
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    child: PinCodeTextField(
+      appContext: context,
+      length: _otpLength,
+      controller: otpController,
+      keyboardType: TextInputType.number,
+      autoFocus: true,
+      animationType: AnimationType.fade,
+
+      pinTheme: PinTheme(
+        shape: PinCodeFieldShape.underline,
+
+        fieldHeight: MediaQuery.of(context).size.width * 0.13,
+        fieldWidth: MediaQuery.of(context).size.width * 0.13,
+
+        // underline colors
+        inactiveColor: Colors.grey.shade400,
+        selectedColor: AppColors.finSpaceColor,
+        activeColor: AppColors.finSpaceColor,
+
+        // these must be transparent for underline style
+        inactiveFillColor: Colors.transparent,
+        selectedFillColor: Colors.transparent,
+        activeFillColor: Colors.transparent,
       ),
-    );
-  }
+
+      enableActiveFill: false, // 🔴 IMPORTANT for underline
+      textStyle: const TextStyle(
+        fontSize: 20,
+        color: AppColors.accentColor,
+        fontWeight: FontWeight.w600,
+      ),
+
+      onChanged: (value) {
+        _otpCode.value = value;
+        _isOtpValid.value = value.length == _otpLength;
+        if (_isOtpValid.value) {
+          verifyEmail();
+        }
+      },
+    ),
+  );
+}
 
   void verifyEmail() async {
     if (otpController.text.isEmpty) {
