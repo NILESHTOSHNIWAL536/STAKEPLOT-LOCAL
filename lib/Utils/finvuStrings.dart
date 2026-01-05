@@ -82,6 +82,7 @@ class FinvuStrings {
   String dataFetchedSuccessfully = "Data is Fetched successfully....";
   String waitingForBankResponse = "waiting for response from bank.....";
   String pickAtLeastOne = "Pick atleast one to proceed";
+  String unableToSupport = "Unable to support joint account holders";
   String searchForBanks = "Search for banks";
   String poweredByRbi = "Powered by RBI-Regulated AA";
 

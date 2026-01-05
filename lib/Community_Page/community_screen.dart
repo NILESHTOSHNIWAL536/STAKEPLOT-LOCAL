@@ -97,38 +97,42 @@ class CommunityState extends State<Community> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Obx(() =>
-          postController.isTrending.value ? SizedBox.shrink() : PostImage()),
+      // floatingActionButton: Obx(() =>
+      //     postController.isTrending.value ? SizedBox.shrink() : PostImage()),
       bottomNavigationBar: SafeArea(
         child: BottomNavigations(
           data: 2,
           onCommunityDoubleTap: _scrollToTop, // Pass callback
         ),
       ),
-      body: SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height / 1.1,
-          padding:
-              const EdgeInsets.only(left: 0.0, right: 0.0, bottom: 0, top: 8.0),
-          child: SingleChildScrollView(
-            controller: scrollControllerPost,
-            // controller: scrollController, uncomment this if anythimg goes wrong with pagination
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildWelcomeRow(context),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 12.0, right: 12.0, top: 4),
-                  child: Obx(() => postController.isTrending.value
-                      ? getTabs(context)
-                      : getTabs(context)),
-                ),
-                Obx(() => postController.isTrending.value
-                    ? getTrandingWidget()
-                    : getFeed()),
-              ],
-            ),
+      body: Container(
+        height: MediaQuery.of(context).size.height / 1.1,
+        padding:
+            const EdgeInsets.only(left: 0.0, right: 0.0, bottom: 0, top: 0.0),
+        child: SingleChildScrollView(
+          controller: scrollControllerPost,
+          // controller: scrollController, uncomment this if anythimg goes wrong with pagination
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // buildWelcomeRow(context),
+              ArenaHeader(
+      initialTab: 1, // Polls
+      onTabChanged: (index) {
+      
+      },
+    ),
+              // Padding(
+              //   padding:
+              //       const EdgeInsets.only(left: 12.0, right: 12.0, top: 4),
+              //   child: Obx(() => postController.isTrending.value
+              //       ? getTabs(context)
+              //       : getTabs(context)),
+              // ),
+              Obx(() => postController.isTrending.value
+                  ? getTrandingWidget()
+                  : getFeed()),
+            ],
           ),
         ),
       ),
@@ -458,13 +462,13 @@ class CommunityState extends State<Community> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => PollScreen(
-                                  userInfo: post,
-                                  onPollPosted: (pollData) {
-                                    setState(() {
-                                      posts.add(pollData);
-                                    });
-                                    Navigator.pop(context);
-                                  },
+                                  // userInfo: post,
+                                  // onPollPosted: (pollData) {
+                                  //   setState(() {
+                                  //     posts.add(pollData);
+                                  //   });
+                                  //   Navigator.pop(context);
+                                  // },
                                 ),
                               ),
                             );
@@ -532,4 +536,5 @@ class CommunityState extends State<Community> {
       },
     );
   }
+
 }

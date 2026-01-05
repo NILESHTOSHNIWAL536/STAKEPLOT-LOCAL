@@ -58,10 +58,7 @@ class UserController extends GetxController {
   Future<void> fetchUserInfo() async {
     try {
       isLoading.value = true;
-   
       var response=await getDataApiCall(UserRoutes.getInfo);
-      print('User Info Response: ${response.body}');
-
       if (response.statusCode == 200) {
         final res = jsonDecode(response.body);
 

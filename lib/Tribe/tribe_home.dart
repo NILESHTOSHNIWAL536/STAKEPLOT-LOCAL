@@ -114,122 +114,123 @@ Widget popUpBox(id, context) {
 
 Widget vote(context, PostModel dataObj, data) {
   String idData = dataObj.id;
-  return Obx(() => Padding(
+  return Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 23.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              child: Row(
-                children: [
-                  Obx(() {
-                    String likeKey = "liked" + dataObj.id;
-                    bool isLiked = userController.likedPosts.contains(likeKey);
+            // Container(
+            //   child: Row(
+            //     children: [
+            //       Obx(() {
+            //         String likeKey = "liked" + dataObj.id;
+            //         bool isLiked = userController.likedPosts.contains(likeKey);
 
-                    return GestureDetector(
-                      onTap: () {
-                        if (userController.maskedName.value.trim().isEmpty) {
-                          MaskedNameDialogBox.showMaskedNameDialog(context);
-                        } else {
-                          if (isLiked) {
-                            userController.likedPosts.remove(likeKey);
-                            postController.postCount[idData] =
-                                postController.postCount[idData]! - 1;
-                            if (postController.postCount[idData]! < 0) {
-                              postController.postCount[idData] = 0;
-                            }
-                          } else {
-                            userController.likedPosts.add(likeKey);
-                            postController.postCount[idData] =
-                                postController.postCount[idData]! + 1;
-                          }
+            //         return GestureDetector(
+            //           onTap: () {
+            //             if (userController.maskedName.value.trim().isEmpty) {
+            //               MaskedNameDialogBox.showMaskedNameDialog(context);
+            //             } else {
+            //               if (isLiked) {
+            //                 userController.likedPosts.remove(likeKey);
+            //                 postController.postCount[idData] =
+            //                     postController.postCount[idData]! - 1;
+            //                 if (postController.postCount[idData]! < 0) {
+            //                   postController.postCount[idData] = 0;
+            //                 }
+            //               } else {
+            //                 userController.likedPosts.add(likeKey);
+            //                 postController.postCount[idData] =
+            //                     postController.postCount[idData]! + 1;
+            //               }
 
-                          // Update the server with new vote status
-                          upvoteGlobal(context, "Post", dataObj.id, dataObj);
-                          reRender.value = !reRender.value;
-                        }
-                      },
-                      child: likeIcon(context, isLiked),
-                    );
-                  }),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child: Text(
-                      reRender.value
-                          ? postController.postCount[dataObj.id]! < 0
-                              ? '0'
-                              : (postController.postCount[dataObj.id]
-                                  .toString())
-                          : (postController.postCount[dataObj.id].toString()),
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 16,
-                          color: AppColors.bg1),
-                    ),
-                  ),
-                  SizedBox(width: 4),
-                  InkWell(
-                    onTap: () {
-                      if (userController.maskedName.value.trim().isEmpty) {
-                        MaskedNameDialogBox.showMaskedNameDialog(context);
-                      } else {
-                        showModalBottomSheet(
-                          context: context,
-                          backgroundColor: AppColors.commentbg,
-                          isScrollControlled: true,
-                          builder: (context) {
-                            return Container(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
-                              width: MediaQuery.sizeOf(context).width,
-                              decoration: BoxDecoration(
-                                  color: AppColors.commentbg,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(36),
-                                      topRight: Radius.circular(36))),
-                              child: TribeUnique(
-                                id: dataObj.id,
-                                dataObj: dataObj,
-                                popBox: true.obs,
-                              ),
-                            );
-                          },
-                        );
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                      child: Row(
-                        children: [
-                          Container(
-                              height: 24,
-                              child: SvgPicture.asset(
-                                LikeComment.commentPost,
-                                height: 24,
-                              )),
-                          const SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            postController.postCommentCount[idData]
-                                        .toString() ==
-                                    'null'
-                                ? dataObj.comments.toString()
-                                : postController.postCommentCount[idData]
-                                    .toString(),
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: AppColors.likesharecommentCount),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            //               // Update the server with new vote status
+            //               upvoteGlobal(context, "Post", dataObj.id, dataObj);
+            //               reRender.value = !reRender.value;
+            //             }
+            //           },
+            //           child: likeIcon(context, isLiked),
+            //         );
+            //       }),
+            //       Padding(
+            //         padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            //         child: Text(
+            //           reRender.value
+            //               ? postController.postCount[dataObj.id]! < 0
+            //                   ? '0'
+            //                   : (postController.postCount[dataObj.id]
+            //                       .toString())
+            //               : (postController.postCount[dataObj.id].toString()),
+            //           style: FontManager().getTextStyle(context,
+            //               lWeight: FontWeight.w400,
+            //               fontSize: 16,
+            //               color: AppColors.bg1),
+            //         ),
+            //       ),
+            //       SizedBox(width: 4),
+            //       InkWell(
+            //         onTap: () {
+            //           if (userController.maskedName.value.trim().isEmpty) {
+            //             MaskedNameDialogBox.showMaskedNameDialog(context);
+            //           } else {
+            //             showModalBottomSheet(
+            //               context: context,
+            //               backgroundColor: AppColors.commentbg,
+            //               isScrollControlled: true,
+            //               builder: (context) {
+            //                 return Container(
+            //                   padding:
+            //                       const EdgeInsets.symmetric(vertical: 16.0),
+            //                   width: MediaQuery.sizeOf(context).width,
+            //                   decoration: BoxDecoration(
+            //                       color: AppColors.commentbg,
+            //                       borderRadius: BorderRadius.only(
+            //                           topLeft: Radius.circular(36),
+            //                           topRight: Radius.circular(36))),
+            //                   child: TribeUnique(
+            //                     id: dataObj.id,
+            //                     dataObj: dataObj,
+            //                     popBox: true.obs,
+            //                   ),
+            //                 );
+            //               },
+            //             );
+            //           }
+            //         },
+            //         child: Container(
+            //           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            //           child: Row(
+            //             children: [
+            //               Container(
+            //                   height: 24,
+            //                   child: SvgPicture.asset(
+            //                     LikeComment.commentPost,
+            //                     height: 24,
+            //                   )),
+            //               const SizedBox(
+            //                 width: 6,
+            //               ),
+            //               Text(
+            //                 postController.postCommentCount[idData]
+            //                             .toString() ==
+            //                         'null'
+            //                     ? dataObj.comments.toString()
+            //                     : postController.postCommentCount[idData]
+            //                         .toString(),
+            //                 style: FontManager().getTextStyle(context,
+            //                     lWeight: FontWeight.w400,
+            //                     fontSize: 16,
+            //                     color: AppColors.likesharecommentCount),
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            
             Container(
               // color: Colors.green,
               width: MediaQuery.sizeOf(context).width / 5,
@@ -259,7 +260,7 @@ Widget vote(context, PostModel dataObj, data) {
                           height: 24,
                         ));
                   }),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 6),
                   Container(
                     child: InkWell(
                       onTap: () {
@@ -285,7 +286,7 @@ Widget vote(context, PostModel dataObj, data) {
               ),
             )
           ],
-        ),
+        
       ));
 }
 

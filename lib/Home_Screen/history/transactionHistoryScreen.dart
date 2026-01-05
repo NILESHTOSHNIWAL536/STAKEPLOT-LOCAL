@@ -535,11 +535,11 @@ _searchScaleAnim = Tween<double>(
       
       },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: AppColors.newbg,
         // appBar: isSearchActive?null: historyAppBar(context, widget.fromAutoPay),
         body: SafeArea(
           child: Container(
-            color: AppColors.border,
+            color: widget.isFromCollection? AppColors.border: AppColors.newbg,
             child: widget.isFromCollection?
             Column(
               children: [

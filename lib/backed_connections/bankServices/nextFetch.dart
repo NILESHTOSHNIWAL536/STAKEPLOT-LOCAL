@@ -860,28 +860,13 @@ class _RotatingIconState extends State<Nextfetch>
 
                       const SizedBox(height: 16),
 
-                      Center(
-                        child: Column(
-                          children: [
-                            Image.network(
-                              BankUrl.value,
-                              width: 30,
-                              height: 30,
-                              errorBuilder: getErrorBankLogo(),
-                            ),
-                            const SizedBox(height: 8),
-                            textStyle(
-                              context: context,
-                              text: BankName.value,
-                              fontsize: 16,
-                              c: AppColors.primaryColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ],
-                        ),
-                      ),
+                   
 
-                      const SizedBox(height: 16),
+connectedBanksRow(context),
+
+const SizedBox(height: 20),
+
+
 
                       _buildInfoCard(
                         context: context,
@@ -955,6 +940,79 @@ class _RotatingIconState extends State<Nextfetch>
   );
 }
 
+Widget connectedBanksRow(BuildContext context) {
+  if (bankAccountLinkedList.isEmpty) return const SizedBox();
+
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+    decoration: BoxDecoration(
+      color: AppColors.backgroundColor,
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(
+        color: AppColors.button,
+        width: 1,
+      ),
+    ),
+    child: SizedBox(
+      height: 60,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: bankAccountLinkedList.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 2),
+        itemBuilder: (context, index) {
+          final bank = bankAccountLinkedList[index];
+          final bool isActive = bank.bankName == BankName.value;
+
+          return GestureDetector(
+            onTap: () {
+              BankName.value = bank.bankName;
+              BankUrl.value = bank.bankLogo;
+              accountId.value = bank.accountId;
+              LastFetchDate.value = bank.lastFetch;
+              nextFecthDate.value = bank.nextFetch;
+              fetchCount.value = bank.fetchCount.toString();
+
+              calledFunctionToFetchData(context);
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(
+                vertical: 6,
+                horizontal: 10,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.network(
+                    bank.bankLogo,
+                    width: 28,
+                    height: 28,
+                    errorBuilder: getErrorBankLogo(),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    bank.bankName,
+                    style: FontManager().getTextStyle(
+                      context,
+                      fontSize: 11,
+                      lWeight: FontWeight.w500,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+  );
+}
 
   double getPersentage() {
     if (BankName.value == "") return 100.0;

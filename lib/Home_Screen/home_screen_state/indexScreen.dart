@@ -51,7 +51,7 @@ Stack(
   children: [
     // BACKGROUND IMAGE for the whole section
     SizedBox(
-      height: MediaQuery.sizeOf(context).height/4,
+      height: MediaQuery.sizeOf(context).height/3.6,
       width: double.infinity,
       child: SvgPicture.asset(
         HomePageIcons.background, // <-- verify this path
@@ -61,11 +61,11 @@ Stack(
 
     
     Container(
-      height: MediaQuery.sizeOf(context).height/2.33,
+      height: MediaQuery.sizeOf(context).height/2.36,
       // color: Colors.green,
       width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -93,7 +93,7 @@ Stack(
 
              
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, ),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, ),
                 child: Column(
                   children: [
                     SizedBox(
@@ -109,7 +109,7 @@ Stack(
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     SizedBox(
                       height: height * 0.25,
@@ -117,7 +117,7 @@ Stack(
                     ),
                    
                     const SizedBox(
-                      height: 14,
+                      height: 20,
                     ),
                     Obx(() => isFinoraVisible.value
                         ? GetFinora(height)

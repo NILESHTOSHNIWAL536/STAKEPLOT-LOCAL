@@ -895,7 +895,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
     // Outer white card (single container)
     return Container(
       width: MediaQuery.sizeOf(context).width,
-      margin: EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 2),
+      // margin: EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 2),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor, // #FFFFFF
         borderRadius: BorderRadius.circular(10), // 10px

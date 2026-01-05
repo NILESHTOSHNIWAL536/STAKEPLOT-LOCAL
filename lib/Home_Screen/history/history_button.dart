@@ -66,7 +66,7 @@ Widget historyButton(BuildContext context) {
     },
     borderRadius: BorderRadius.circular(10),
     child: Container(
-      width: MediaQuery.sizeOf(context).width/2.2,
+      width: MediaQuery.sizeOf(context).width/2.3,
       height: MediaQuery.sizeOf(context).height/21,
       padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
@@ -95,31 +95,31 @@ Widget historyButton(BuildContext context) {
           ),
         ],
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          
-          AvatarProfileImage(
-            url: HomePageIcons.history,
-             width: 5,
-              height: 26,
-          ),
-
-          const SizedBox(width: 8),
-
-          // Text label
-          Center(
-            child: Text(
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            
+            AvatarProfileImageZero(
+              url: HomePageIcons.history,
+               width: 5,
+                height: 30,
+            ),
+        
+            const SizedBox(width: 8),
+        
+            // Text label
+            Text(
               'History',
               style: FontManager().getTextStyle(
                 context,
-                lWeight: FontWeight.w400,
-                fontSize: 12,
+                lWeight: FontWeight.w500,
+                fontSize: 14,
                 color: AppColors.accentColor,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );

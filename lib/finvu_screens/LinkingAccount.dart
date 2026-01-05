@@ -19,7 +19,6 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
 
-// Reactive variables (unchanged)
 RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded = <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
 RxMap<String, String> bankImgMap = <String, String>{}.obs;
 RxMap<String, FinvuFIPDetails> FinvuFIPDetailsList = <String, FinvuFIPDetails>{}.obs;
@@ -54,12 +53,20 @@ class LinkingAccount extends StatefulWidget {
   _LinkingAccountState createState() => _LinkingAccountState();
 }
 
-class _LinkingAccountState extends State<LinkingAccount> {
+class _LinkingAccountState extends State<LinkingAccount> with SingleTickerProviderStateMixin {
   final int _otpCodeLength = 6;
   RxString _otpCode = "".obs;
   RxBool _isOtpValid = false.obs;
   TextEditingController otpController = TextEditingController();
   late double textScale;
+  RxString revealedAccountId = "".obs;
+late AnimationController _swipeAnimController;
+late Animation<double> _swipeAnimation;
+
+RxBool showSwipeHint = true.obs;
+RxBool swipeHintShown = false.obs;
+RxString firstUnsharedAccountId = "".obs;
+
 
   @override
   void initState() {
@@ -71,6 +78,29 @@ class _LinkingAccountState extends State<LinkingAccount> {
     getData();
     getinfo();
     getFetch.value = false;
+    _swipeAnimController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 600),
+  );
+
+  _swipeAnimation = Tween<double>(
+    begin: 0,
+    end: 40, // swipe distance
+  ).animate(
+    CurvedAnimation(
+      parent: _swipeAnimController,
+      curve: Curves.easeInOut,
+    ),
+  );
+
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    if (showSwipeHint.value) {
+      await _swipeAnimController.forward();
+      await Future.delayed(const Duration(milliseconds: 200));
+      await _swipeAnimController.reverse();
+    }
+  });
+
   }
 
   void getinfo() async {
@@ -86,7 +116,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   @override
   void dispose() {
-    otpController.dispose(); // Add this
+   _swipeAnimController.dispose();
+  otpController.dispose(); // Add this
     super.dispose();
   }
 
@@ -95,9 +126,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     textScale = screenWidth / 375;
-    count.value=0;
+    // count.value=0;
 
     return Scaffold(
+      backgroundColor: AppColors.newbg,
       bottomNavigationBar: SafeArea(child: BottomBar()),
       appBar: getAppBar(context),
       body: SafeArea(
@@ -139,7 +171,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
     return Obx(() {
       // Debugging: Print state to verify conditions
       // Simplified condition: Show button if there are linked accounts or all banks are processed
-      bool shouldShowButton = (accountLinked.isNotEmpty || loopCount.value == widget.listOfBankAccount.length) && count.value > 0;
+      bool shouldShowButton =
+    (accountLinked.isNotEmpty || accountAdded.isNotEmpty)
+    && loopCount.value == widget.listOfBankAccount.length;
+
 
       if (!shouldShowButton) {
         return SizedBox(height: 0);
@@ -147,7 +182,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
       return InkWell(
         onTap: () {
-          if (accountAdded.isNotEmpty) {return;}
+          
           showModalBottomSheet(
             context: context,
             builder: (context) => accountLinkedUi(screenWidth),
@@ -159,7 +194,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
           margin: EdgeInsets.only(bottom: 10 * textScale),
           decoration: BoxDecoration(
             color: accountAdded.isNotEmpty ? AppColors.bg3 : AppColors.primaryColor,
-            borderRadius: BorderRadius.circular(12 * textScale),
+            borderRadius: BorderRadius.circular(8 * textScale),
           ),
           child: Center(
             child: Text(
@@ -217,7 +252,6 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 ),
     );
   }
-
   Widget getLinkNow(String title, String des, String btnText, double screenWidth) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -340,11 +374,11 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
-  Widget getListOfFinvuBanksAccounts(List<FinvuDiscoveredAccountInfo> account, FinvuFIPDetails fipDetails,FinvuFIPInfo bankInfo) {
+  Widget getListOfFinvuBanksAccounts(List<FinvuDiscoveredAccountInfo> account, FinvuFIPDetails fipDetails,FinvuFIPInfo bankInfo, int bankIndex) {
     loopCount.value++;
     return account.isEmpty
         ? getNoBankAccount()
-        : Column(children: account.map((bankData) => getBackUi(bankData, fipDetails,bankInfo)).toList());
+        : Column(children: account.asMap().entries.map((entry) => getBackUi(entry.value, fipDetails,bankInfo, isFirst: bankIndex == 0 && entry.key == 0, )).toList());
   }
 
   void LinkingBank(FinvuFIPDetails fipDetails, String fipId, FinvuFIPInfo info) async {
@@ -570,35 +604,239 @@ class _LinkingAccountState extends State<LinkingAccount> {
     }
   }
 
-  Widget getBackUi(FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails,FinvuFIPInfo bankInfo) {
 
-    String id = bankData.accountReferenceNumber.toString();
-    String maskedAccountNumber = bankData.maskedAccountNumber.toString();
+Widget getBackUi(
+  FinvuDiscoveredAccountInfo bankData,
+  FinvuFIPDetails fipDetails,
+  FinvuFIPInfo bankInfo,
+  {bool isFirst = false}
+) {
+  String id = bankData.accountReferenceNumber.toString();
+  String maskedAccountNumber = bankData.maskedAccountNumber.toString();
+ 
+bool isLinked = listofLinkedAccount.contains(id);
+bool isShared = FipIdsConnected.contains(maskedAccountNumber);
 
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3 * textScale),
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                formatMaskedAccount(bankData),
-                SizedBox(height: 2 * textScale),
-                Obx(() =>( listofLinkedAccount.contains(id))
-                    ? textStyle(FipIdsConnected.contains(maskedAccountNumber) ? FinvuStrings().shared
-                          : FinvuStrings().linked, 13 * textScale, Colorcodes.graphColor2)
-                    : SizedBox(height: 0)),
-              ],
+bool showHintForThisAccount =
+    !isShared &&
+    showSwipeHint.value &&
+    firstUnsharedAccountId.value == id;
+
+  return Obx(() {
+    bool isRevealed = revealedAccountId.value == id;
+    bool isSelected =
+        accountAdded.contains(bankData.accountReferenceNumber);
+
+    return GestureDetector(
+      onHorizontalDragEnd:isShared
+    ? null // 🚫 only shared is blocked
+
+    : (details) {
+        
+
+        if (details.primaryVelocity != null &&
+            details.primaryVelocity! > 0) {
+
+         
+          showSwipeHint.value = false;
+          _swipeAnimController.stop();
+
+          // TOGGLE SELECTION
+          if (isRevealed && isSelected) {
+            revealedAccountId.value = "";
+            accountAdded.clear();
+            listOfAccountAdded.clear();
+            return;
+          }
+
+          revealedAccountId.value = id;
+          accountAdded.clear();
+          listOfAccountAdded.clear();
+
+          addAccountToMap(
+            fipDetails.fipId,
+            bankData.accountReferenceNumber,
+            bankData,
+            bankInfo,
+          );
+        }
+      },
+ 
+ child: AnimatedBuilder(
+  animation: _swipeAnimation,
+  builder: (context, child) {
+    return Transform.translate(
+      offset: Offset(
+  (!isShared &&
+   showSwipeHint.value &&
+   firstUnsharedAccountId.value == id)
+      ? _swipeAnimation.value  
+      : 0,
+  0,
+),
+
+      child: child,
+    );
+  },
+
+  child: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // ✅ CHECKBOX OUTSIDE CONTAINER
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          width: isRevealed ? 40 * textScale : 0,
+          alignment: Alignment.topCenter,
+          child: isRevealed
+              ? 
+              Padding(
+    padding: EdgeInsets.only(top: 12), // OUTER spacing
+    child: Transform.scale(
+      scale: 1.2, // makes box bigger → looks like inner padding
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          checkboxTheme: CheckboxThemeData(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
             ),
-            Spacer(),
-            checkBoxForAccountLink(bankData, fipDetails, id,maskedAccountNumber,bankInfo),
-          ],
+            side: MaterialStateBorderSide.resolveWith((states) {
+              return BorderSide(
+                color: AppColors.primaryColor,
+                width: 1,
+              );
+            }),
+            checkColor: MaterialStateProperty.all(AppColors.primaryColor),
+            fillColor: MaterialStateProperty.all(Colors.transparent),
+          ),
+        ),
+        child:
+         Checkbox(
+          value: isSelected,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.compact,
+          onChanged: (_) {
+            showSwipeHint.value = false;
+            revealedAccountId.value = "";
+            
+            accountAdded.clear();
+            listOfAccountAdded.clear();
+          },
         ),
       ),
+    ),
+    )
+    
+              : const SizedBox.shrink(),
+        ),
+    
+        // 🟦 ACCOUNT CONTAINER WITH BORDER
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width:isRevealed? MediaQuery.sizeOf(context).width/1.35:MediaQuery.sizeOf(context).width/1.18,
+              
+              margin: EdgeInsets.symmetric(vertical: 6 * textScale),
+              padding: EdgeInsets.symmetric(
+                horizontal: 10 * textScale,
+                vertical: 8 * textScale,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.newbg,
+                borderRadius: BorderRadius.circular(8 * textScale),
+                border: Border.all(
+                  color: isRevealed
+                      ? AppColors.primaryColor.withOpacity(0.6)
+                      : Colors.grey.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+            
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      formatMaskedAccount(bankData),
+                      SizedBox(height: 2 * textScale),
+                      if (listofLinkedAccount.contains(id))
+                        textStyle(
+                          FipIdsConnected.contains(maskedAccountNumber)
+                              ? FinvuStrings().shared
+                              : FinvuStrings().linked,
+                          13 * textScale,
+                          Colorcodes.graphColor2,
+                        ),
+                          
+                      // 👇 HINT (ONLY FIRST ACCOUNT)
+                    
+                    ],
+                  ),
+                  
+                ],
+              ),
+            ),
+              if (showHintForThisAccount)
+                    Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Row(
+                        children: [
+                          Icon(Icons.swipe_right, size: 22,),
+                          SizedBox(width: 6,),
+                          Text(
+                            "Swipe to select the account",
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 12 * textScale,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+          ],
+        ),
+        
+      ],
+    ),
+  ),
+),
+
     );
-  }
+  });
+}
+
+  // Widget getBackUi(FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails,FinvuFIPInfo bankInfo) {
+
+  //   String id = bankData.accountReferenceNumber.toString();
+  //   String maskedAccountNumber = bankData.maskedAccountNumber.toString();
+
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(vertical: 3 * textScale),
+  //     child: Container(
+  //       width: MediaQuery.of(context).size.width,
+  //       child: Row(
+  //         children: [
+  //           Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               formatMaskedAccount(bankData),
+  //               SizedBox(height: 2 * textScale),
+  //               Obx(() =>( listofLinkedAccount.contains(id))
+  //                   ? textStyle(FipIdsConnected.contains(maskedAccountNumber) ? FinvuStrings().shared
+  //                         : FinvuStrings().linked, 13 * textScale, Colorcodes.graphColor2)
+  //                   : SizedBox(height: 0)),
+  //             ],
+  //           ),
+  //           Spacer(),
+  //           checkBoxForAccountLink(bankData, fipDetails, id,maskedAccountNumber,bankInfo),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget formatMaskedAccount(FinvuDiscoveredAccountInfo bankData) {
     int length = bankData.maskedAccountNumber.toString().length;
@@ -623,6 +861,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
             activeColor: AppColors.primaryColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4 * textScale)),
           )
+          
 
         );
   }
@@ -664,6 +903,19 @@ class _LinkingAccountState extends State<LinkingAccount> {
         count.value = 0;
       }
        discoverAccountMap[fipId]=info;
+       if (firstUnsharedAccountId.value.isEmpty) {
+  for (var acc in info) {
+    String accId = acc.accountReferenceNumber.toString();
+    String masked = acc.maskedAccountNumber.toString();
+
+    bool isShared = FipIdsConnected.contains(masked);
+
+    if (!isShared) {
+      firstUnsharedAccountId.value = accId;
+      break; // VERY IMPORTANT
+    }
+  }
+}
        count.value += info.length;
        count.refresh();
     } catch (e) {
@@ -672,8 +924,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
     }
 
     return Container(
+      
       width: MediaQuery.of(context).size.width,
-      child: getListOfFinvuBanksAccounts(info, fipDetails,bankData),
+      child: getListOfFinvuBanksAccounts(info, fipDetails,bankData, index),
     );
   }
 
@@ -721,6 +974,26 @@ class _LinkingAccountState extends State<LinkingAccount> {
       ),
     );
   }
+
+// void addAccountToMap(
+//   String fipId,
+//   String accountReferenceNumber,
+//   FinvuDiscoveredAccountInfo bankData,
+//   FinvuFIPInfo bankInfo,
+// ) {
+//   bool alreadySelected = accountAdded.contains(accountReferenceNumber);
+
+//   // CLEAR previous selection (ONLY ONE ALLOWED)
+//   accountAdded.clear();
+//   listOfAccountAdded.clear();
+
+//   if (!alreadySelected) {
+//     accountAdded.add(accountReferenceNumber);
+//     listOfAccountAdded[fipId] = [bankData];
+//   }
+//   accountAdded.refresh();
+//   listOfAccountAdded.refresh();
+// }
 
   void addAccountToMap(String fipId, String accountReferenceNumber, FinvuDiscoveredAccountInfo bankData,FinvuFIPInfo bankInfo) {
     bool flag = accountAdded.contains(accountReferenceNumber);

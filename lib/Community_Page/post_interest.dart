@@ -7,6 +7,10 @@ import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
+import '../Home_Screen/history/dotted_Border.dart';
+import '../backed_connections/apis_connect.dart';
+
+
 void showTagListOfInterestModal({
   required BuildContext context,
   required VoidCallback onConfirm,
@@ -85,4 +89,526 @@ void showTagListOfInterestModal({
       );
     },
   );
+}
+
+
+
+class InterestSelectionPage extends StatelessWidget {
+  final String question;
+  final List<Map<String, dynamic>> options;
+  final Function(String, List<Map<String, dynamic>>) onConfirm;
+
+
+
+  const InterestSelectionPage({
+    Key? key,
+     required this.question,
+    required this.options,
+    required this.onConfirm,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+   
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PollStepHeader(
+  title: "Create Poll",
+  step: 2,
+),
+
+          /// Interest list
+          /// 
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
+                    child: Text(
+                                  "Select a Category",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w700,
+                                    fontSize: 24,
+                                    color: AppColors.accentColor,
+                                  ),
+                      ),
+                  ),
+                    const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
+                    child: Text(
+                                  "Choose the topic that best fits your poll",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                    color: AppColors.primaryColor,
+                                  ),
+                      ),
+                  ),
+                  const SizedBox(height: 16),
+            
+                    Container(
+              height: MediaQuery.sizeOf(context).height/1.6,
+              child: GetListOfInterest(
+                height: 0,
+                limitTagbool: true,
+                enableAnimations: false,
+              ),
+            ),
+                  
+            const SizedBox(height: 16),
+                  
+            /// Continue button
+            Obx(
+              () => InkWell(
+                onTap: () async{
+                  if (!isListEnabled.value) return;
+               final result = await Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (_) => PollPreviewPage(
+      question: question,
+      options: options,
+      selectedCategories: selectedCategories.toList(),
+    ),
+  ),
+);
+
+if (result != null) {
+  onConfirm(result["question"], result["options"]);
+}
+
+
+
+
+                  // onConfirm();
+                  // Navigator.pop(context);
+                },
+                child: isListEnabled.value
+                    ? getButton(context, "Continue")
+                    : getButton(
+                        context,
+                        "Add",
+                        Colors.grey.shade400,
+                        AppColors.bg1,
+                      ),
+              ),
+            ),
+                    
+              ],
+            ),
+          ),
+          
+        ],
+      ),
+    );
+  }
+}
+
+
+
+class PollStepHeader extends StatelessWidget {
+  final String title;
+  final int step; // 1 or 2
+  final int totalSteps;
+
+  const PollStepHeader({
+    Key? key,
+    required this.title,
+    required this.step,
+    this.totalSteps = 3,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = step / totalSteps;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 60, 12, 20),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF4B4D73),
+            Color(0xFF8E91D9),
+          ],
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Top row
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const Spacer(),
+              Text(
+                title,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w500,
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
+              ),
+              const Spacer(flex: 2),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          /// Progress bar + step text
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Container(
+                  width: MediaQuery.sizeOf(context).width/1.56,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 6,
+                      backgroundColor: Colors.white.withOpacity(0.3),
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  "Step $step of $totalSteps",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 12,
+                    lWeight: FontWeight.w400,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class PollPreviewPage extends StatefulWidget {
+  final String question;
+  final List<Map<String, dynamic>> options;
+  final List<String> selectedCategories;
+
+  const PollPreviewPage({
+    Key? key,
+    required this.question,
+    required this.options,
+    required this.selectedCategories,
+  }) : super(key: key);
+
+  @override
+  State<PollPreviewPage> createState() => _PollPreviewPageState();
+}
+
+class _PollPreviewPageState extends State<PollPreviewPage> {
+  late TextEditingController questionCtrl;
+  late List<TextEditingController> optionCtrls;
+
+  @override
+  void initState() {
+    super.initState();
+
+    questionCtrl = TextEditingController(text: widget.question);
+
+    optionCtrls = widget.options
+        .map((e) => TextEditingController(text: e["option"]))
+        .toList();
+  }
+
+  /// ➕ ADD OPTION
+  void addOption() {
+    if (optionCtrls.length >= 4) {
+      snackBarCalledfail(context, "Maximum 4 options allowed");
+      return;
+    }
+    setState(() {
+      optionCtrls.add(TextEditingController());
+    });
+  }
+
+  /// ❌ REMOVE OPTION
+  void removeOption(int index) {
+    if (optionCtrls.length <= 2) {
+      snackBarCalledfail(context, "At least 2 options are required");
+      return;
+    }
+    setState(() {
+      optionCtrls.removeAt(index);
+    });
+  }
+
+  /// ✅ RETURN FINAL DATA
+  void postPoll() {
+    if (questionCtrl.text.trim().isEmpty) {
+      snackBarCalledfail(context, "Question cannot be empty");
+      return;
+    }
+
+    if (optionCtrls.any((c) => c.text.trim().isEmpty)) {
+      snackBarCalledfail(context, "Options cannot be empty");
+      return;
+    }
+
+    Navigator.pop(context, {
+      "question": questionCtrl.text.trim(),
+      "options": optionCtrls
+          .map((c) => {"option": c.text.trim()})
+          .toList(),
+    });
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.border,
+      body: Column(
+        children: [
+          PollStepHeader(
+            title: "Create Poll",
+            step: 3,
+            totalSteps: 3,
+          ),
+
+          Expanded(
+            child: SingleChildScrollView(
+           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  /// QUESTION (EDITABLE)
+                   /// CATEGORIES (READ ONLY)
+                  Text(
+                    "Selected Categories",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                 SingleChildScrollView(
+  scrollDirection: Axis.horizontal,
+  child: Row(
+    children: widget.selectedCategories.map((tag) {
+      return Padding(
+        padding: const EdgeInsets.only(right: 4), // 👈 tight spacing
+        child: Chip(
+          label:  Text(
+                    tag,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+          backgroundColor: AppColors.backgroundColor,
+          shape: RoundedRectangleBorder(
+             borderRadius: BorderRadius.circular(6),
+    side: BorderSide(
+      color: AppColors.backgroundColor,
+      width: 1,
+    ),
+  ),
+          visualDensity: VisualDensity.compact, // 👈 reduces height
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+      );
+    }).toList(),
+  ),
+),
+
+
+                  const SizedBox(height: 20),
+                  Text(
+                    "Your Question",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  _previewCard(
+                    context,
+                    TextField(
+                      controller: questionCtrl,
+                      maxLines: 3,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// OPTIONS HEADER
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Answer Options",
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                     
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  /// OPTIONS LIST (EDIT + REMOVE)
+                  ...optionCtrls.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final ctrl = entry.value;
+
+                   return Padding(
+  padding: const EdgeInsets.only(bottom: 10),
+  child: Row(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      /// OPTION CONTAINER
+      Container(
+        width: MediaQuery.sizeOf(context).width/1.3,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Colors.grey.shade300,
+          ),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 14,
+              backgroundColor: const Color(0xFFE0E0E0),
+              child: Text(
+                "${index + 1}",
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+            const SizedBox(width: 12),
+
+            Expanded(
+              child: TextField(
+                controller: ctrl,
+                decoration: const InputDecoration(
+                  hintText: "",
+                  border: InputBorder.none,
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      /// DELETE ICON (OUTSIDE CONTAINER)
+      if (optionCtrls.length > 2)
+        InkWell(
+          onTap: () => removeOption(index),
+          borderRadius: BorderRadius.circular(20),
+          child: const Icon(
+            Icons.close,
+            size: 26,
+            color: Colors.red,
+          ),
+        ),
+    ],
+  ),
+);
+
+                  }),
+
+                  const SizedBox(height: 20),
+                   if (optionCtrls.length < 4)
+                              GestureDetector
+                              
+                              (
+                                onTap:addOption,
+                                child: DottedBorderBox(
+
+                                  
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.add),
+                                      Text(
+                                      "Add Option",
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: 14,
+                                        color: AppColors.bg1,
+                                      ),
+                                    )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                  
+
+                 
+                ],
+              ),
+            ),
+          ),
+
+          /// POST BUTTON
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: InkWell(
+              onTap: postPoll,
+              child: getButton(context, "Post Poll"),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _previewCard(BuildContext context, Widget child) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: child,
+    );
+  }
 }

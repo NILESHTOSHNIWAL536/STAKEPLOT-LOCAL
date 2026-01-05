@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-
 class Strides {
   static String stride = "assets/icons/strides/stride.svg";
   }
@@ -19,7 +18,7 @@ class NavBarIcons {
 class PlotFinanceIcons {
   static String budgetPlanner = "assets/icons/plotFinance/budgetPlanner.svg";
   static String comics = "assets/icons/plotFinance/comics.svg";
-  static String crediCardBg = "assets/icons/plotFinance/creditCardBg.svg";
+  static String crediCardBg = "assets/icons/plotFinance/creditCardBg3.svg";
   static String currencyConverter = "assets/icons/plotFinance/currencyConverter.svg";
   static String goalCreation = "assets/icons/plotFinance/goalCreation.svg";
   static String reserve = "assets/icons/plotFinance/reserve.svg";

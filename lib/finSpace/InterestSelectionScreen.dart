@@ -446,12 +446,12 @@ class CategoryChip extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: Container(
               padding: const EdgeInsets.symmetric(
-                  horizontal: 10, vertical: 6), // Further reduced padding
+                  horizontal: 10, vertical: 10), // Further reduced padding
               decoration: BoxDecoration(
                 color: isSelected
                     ? AppColors.finSpaceColor
                     : AppColors.backgroundColor,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: isSelected
                       ? const Color(0xFF4A4E69)
