@@ -25,6 +25,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 
 
+import "../Constants/font_manager.dart";
 import "shared_utils.dart";
 import "../finance_screen/finanace_dashboard/index_finances.dart";
 
@@ -45,7 +46,7 @@ class BottomNavigations extends StatefulWidget {
 }
 
 class _BottomNavigationsState extends State<BottomNavigations> {
-  final List<String> _tabNames = ['Home', 'Finance', 'Community', 'Profile'];
+  final List<String> _tabNames = ['Home', 'Plot', 'Finance', 'Profile'];
   @override
   void initState() {
     super.initState();
@@ -120,45 +121,110 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       ),
     );
   }
+Widget imageurl(String url, int index) {
+  bool isSelected = widget.data == index;
+  String iconPath = url;
+  UserController userController = ControllerManagement.userController;
 
-  Widget imageurl(String url, int index) {
-    bool isSelected = widget.data == index;
-    String iconPath = url; // Default to the passed url
-    UserController userController = ControllerManagement.userController;
-    // Toggle icons based on selection
-    if (url == NavBarIcons.home) {
-      iconPath = isSelected ? NavBarIcons.home : NavBarIcons.home1;
-    } else if (url == NavBarIcons.screen2) {
-      iconPath = isSelected ? NavBarIcons.screen21 : NavBarIcons.screen2;
-    } else if (url == NavBarIcons.community) {
-      iconPath = isSelected ? NavBarIcons.community : NavBarIcons.community1;
-    } else if (url == 'assets/images/room.svg') {
-      iconPath = url;
-    } else if (url == svgIconPath.bottom4) {
-      iconPath = avaterUrlPath(userController.userName.value);
-    }
-    bool ifAvatar = index == 3 || index == 4;
-
-    return Center(
-      child: ifAvatar
-          ? Obx(() => AvatarProfile(
-              name: userController.userName.value,
-              width: 5,
-              height: 14,
-              background: userController.avatarBackGround.value))
-          : SvgPicture.asset(
-              iconPath,
-              width: MediaQuery.of(context).size.width /
-                  30, // Adjust the multiplier as needed
-              height: MediaQuery.of(context).size.height /
-                  30, // Adjust the multiplier as needed
-              // colorFilter: isSelected
-              //     ? ColorFilter.mode(AppColors.finSpaceColor, BlendMode.srcIn)
-              //     : ColorFilter.mode(
-              //         AppColors.bg1, BlendMode.srcIn),
-            ),
-    );
+  if (url == NavBarIcons.home) {
+    iconPath = isSelected ? NavBarIcons.home : NavBarIcons.home1;
+  } else if (url == NavBarIcons.screen2) {
+    iconPath = isSelected ? NavBarIcons.screen21 : NavBarIcons.screen2;
+  } else if (url == NavBarIcons.community) {
+    iconPath = isSelected ? NavBarIcons.community : NavBarIcons.community1;
+  } else if (url == svgIconPath.bottom4) {
+    iconPath = avaterUrlPath(userController.userName.value);
   }
+
+  bool isAvatar = index == 3 || index == 4;
+
+  return Padding(
+    padding: isAvatar?const EdgeInsets.only(bottom: 2):EdgeInsets.all(0),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        /// ICON
+        isAvatar
+            ? Obx(() => CircleAvatar(
+              backgroundColor: AppColors.primaryColor,
+            child: Text(
+    userController.userName.value.trim().isNotEmpty
+        ? userController.userName.value.trim()[0].toUpperCase()
+        : '',
+        style: FontManager().getTextStyle(context, color: AppColors.backgroundColor, fontSize: 16),
+    ),
+    
+              radius: 17,
+            ))
+            // AvatarProfile(
+            //       name: userController.userName.value,
+            //       width: 8,
+            //       height: 16,
+            //       background: userController.avatarBackGround.value,
+            //     ))
+            : SvgPicture.asset(
+                iconPath,
+                width: MediaQuery.of(context).size.width / 30,
+                height: MediaQuery.of(context).size.height / 30,
+              ),
+    
+        const SizedBox(height: 4),
+    
+        /// TEXT LABEL
+        Text(
+          _tabNames[index],
+          style: FontManager().getTextStyle(
+            context,
+            fontSize: 10,
+            lWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+            color: isSelected
+                ? AppColors.finSpaceColor
+                : AppColors.bg1,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+  // Widget imageurl(String url, int index) {
+  //   bool isSelected = widget.data == index;
+  //   String iconPath = url; // Default to the passed url
+  //   UserController userController = ControllerManagement.userController;
+  //   // Toggle icons based on selection
+  //   if (url == NavBarIcons.home) {
+  //     iconPath = isSelected ? NavBarIcons.home : NavBarIcons.home1;
+  //   } else if (url == NavBarIcons.screen2) {
+  //     iconPath = isSelected ? NavBarIcons.screen21 : NavBarIcons.screen2;
+  //   } else if (url == NavBarIcons.community) {
+  //     iconPath = isSelected ? NavBarIcons.community : NavBarIcons.community1;
+  //   } else if (url == 'assets/images/room.svg') {
+  //     iconPath = url;
+  //   } else if (url == svgIconPath.bottom4) {
+  //     iconPath = avaterUrlPath(userController.userName.value);
+  //   }
+  //   bool ifAvatar = index == 3 || index == 4;
+
+  //   return Center(
+  //     child: ifAvatar
+  //         ? Obx(() => AvatarProfile(
+  //             name: userController.userName.value,
+  //             width: 5,
+  //             height: 14,
+  //             background: userController.avatarBackGround.value))
+  //         : SvgPicture.asset(
+  //             iconPath,
+  //             width: MediaQuery.of(context).size.width /
+  //                 30, // Adjust the multiplier as needed
+  //             height: MediaQuery.of(context).size.height /
+  //                 30, // Adjust the multiplier as needed
+  //             // colorFilter: isSelected
+  //             //     ? ColorFilter.mode(AppColors.finSpaceColor, BlendMode.srcIn)
+  //             //     : ColorFilter.mode(
+  //             //         AppColors.bg1, BlendMode.srcIn),
+  //           ),
+  //   );
+  // }
 
   Widget getContainer(url, i) {
     bool isSelected =

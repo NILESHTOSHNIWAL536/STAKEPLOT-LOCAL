@@ -93,7 +93,7 @@ Stack(
 
              
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, ),
+                padding: const EdgeInsets.symmetric(horizontal: 30.0, ),
                 child: Column(
                   children: [
                     SizedBox(
@@ -112,16 +112,21 @@ Stack(
                       height: 20,
                     ),
                     SizedBox(
-                      height: height * 0.25,
+                      height: height * 0.2,
                       child: SpendingCardTwoPanels(),
                     ),
                    
                     const SizedBox(
                       height: 20,
                     ),
+                    //  SizedBox(
+                    //   height: height * 0.2,
+                    //   child: SwipeableCardsScreen(),
+                    // ),
+                    
                     Obx(() => isFinoraVisible.value
-                        ? GetFinora(height)
-                        : GetFinora(height)),
+                        ?SwipeableCardsScreen()
+                        : SwipeableCardsScreen()),
                     
                     Obx(() => isAutoPayFected.value
                         ? GetAutopays(height)

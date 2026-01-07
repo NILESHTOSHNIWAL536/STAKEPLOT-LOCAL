@@ -1753,7 +1753,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
           /// 🔁 TOP-RIGHT OTHER BANK LOGOS (CORRECT POSITION)
           if (bankAccountLinkedList.length > 1)
             Positioned(
-              top: 10,
+              top: 8,
               right: 0,
               child: Container(
                 height: 35,
@@ -1761,7 +1761,12 @@ Widget getListViewBankInfo(BankAccountModel data) {
                     const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(16),
+                    bottomRight: Radius.circular(6),
+                    topLeft: Radius.circular(6),
+                    bottomLeft: Radius.circular(6),
+                   ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

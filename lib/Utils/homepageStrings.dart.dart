@@ -75,7 +75,7 @@ class HomepageStringsDart {
 
 
   //Finora;
-  String finora = "Finora";
+  String finora = "FINORA";
 
  //headsup 
  String yourHighlights = "Your Highlights";

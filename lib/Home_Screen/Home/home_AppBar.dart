@@ -77,10 +77,18 @@ class TopRightIconsWidget extends StatelessWidget {
           onTap: () {
             // TODO: Add your navigation or action here
           },
-          child: AvatarProfileImage(
-            url: Strides.stride,
-            width: 30,
-            height: 30,
+          child: Container(
+            padding: EdgeInsets.all(1),
+            margin: EdgeInsets.only(left: 4),
+            decoration: BoxDecoration(
+             color: AppColors.border,
+             borderRadius: BorderRadius.circular(12)
+            ),
+            child: AvatarProfileImageZero(
+              url: Strides.stride,
+              width: 30,
+              height: 30,
+            ),
           ),
         ),
 
@@ -210,10 +218,10 @@ class _AutoHintIconState extends State<AutoHintIcon> {
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeIn,
             child: Container(
-              padding:  EdgeInsets.symmetric(horizontal:_showText ? 4: 2, vertical: 2),
+              padding:  EdgeInsets.symmetric(horizontal:_showText ? 8: 2, vertical: 2),
               decoration: BoxDecoration(
                 color: AppColors.backgroundColor,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: _showText?BorderRadius.circular(30):BorderRadius.circular(12),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

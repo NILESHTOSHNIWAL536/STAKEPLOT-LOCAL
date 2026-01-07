@@ -539,6 +539,7 @@ _searchScaleAnim = Tween<double>(
         // appBar: isSearchActive?null: historyAppBar(context, widget.fromAutoPay),
         body: SafeArea(
           child: Container(
+            
             color: widget.isFromCollection? AppColors.border: AppColors.newbg,
             child: widget.isFromCollection?
             Column(
@@ -613,24 +614,34 @@ Widget _buildTabChip(String title) {
         // if (title == "Collections") { ... }
       },
       child: Container(
-        width: MediaQuery.of(context).size.width / 3.7,
+        width: MediaQuery.of(context).size.width / 3.8,
         margin: const EdgeInsets.only(left: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primaryColor
               : AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(10),
+           boxShadow: const [
+      BoxShadow(
+        color: Color.fromRGBO(0, 0, 0, 0.10),
+        offset: Offset(4, 4),
+        blurRadius: 16,
+      ),
+    ],
         ),
-        child: Text(
-          title,
-          style: FontManager().getTextStyle(
-            context,
-            fontSize: 13,
-            lWeight: FontWeight.w600,
-            color: isSelected
-                ? AppColors.backgroundColor
-                : AppColors.grey,
+        child: Center(
+          child: Text(
+            title,
+            style: FontManager().getTextStyle(
+              context,
+              fontSize: 14,
+              lineHeight: 1.0,
+              lWeight: FontWeight.w600,
+              color: isSelected
+                  ? AppColors.backgroundColor
+                  : AppColors.grey,
+            ),
           ),
         ),
       ),
@@ -640,7 +651,7 @@ Widget _buildTabChip(String title) {
 
  Widget historyHeader(BuildContext context, bool fromAutoPay) {
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p6, vertical: AppSizes.p12),
+    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p12),
     decoration: const BoxDecoration(
       color: AppColors.newbg,
       
@@ -648,51 +659,64 @@ Widget _buildTabChip(String title) {
     child: SafeArea(
       bottom: false,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Back button
-          InkWell(
-            onTap: () {
-              clearTransactions(context: context);
-              Navigator.pop(context);
-            },
-            borderRadius: BorderRadius.circular(AppSizes.r16),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.p6),
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: AppColors.accentColor,
-                size: 22,
+          Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  clearTransactions(context: context);
+                  Navigator.pop(context);
+                },
+                borderRadius: BorderRadius.circular(AppSizes.r16),
+                child: CustomStyledContainer(
+                  radius: 20,
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSizes.p6),
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: AppColors.accentColor,
+                      size: 24,
+                    ),
+                  ),
+                ),
               ),
-            ),
+              
+              const SizedBox(width: 12),
+              
+              // Title
+                       Obx(() {
+                final calculatedWidth = showFilter.value || isDateSummaryView.value
+                    ? MediaQuery.sizeOf(context).width / 1.4
+                    : MediaQuery.sizeOf(context).width - (fromAutoPay ? 100 : 220);
+              
+                return Container(
+                
+                  // color: Colors.red,
+                  width: calculatedWidth,
+                  child: Center(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        !fromAutoPay
+                                    ? HomepageStringsDart().historyTitle
+                                    : "Select Transaction",
+                        style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                  color: AppColors.accentColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ],
           ),
-
-          const SizedBox(width: 12),
-
-          // Title
-Obx(() {
-  final calculatedWidth = showFilter.value || isDateSummaryView.value
-      ? MediaQuery.sizeOf(context).width / 1.4
-      : MediaQuery.sizeOf(context).width - (fromAutoPay ? 100 : 170);
-
-  return Center(
-    child: Container(
-      width: calculatedWidth,
-      child: Text(
-        !fromAutoPay
-            ? HomepageStringsDart().historyTitle
-            : "Select Transaction",
-        style: FontManager().getTextStyle(
-          context,
-          lWeight: FontWeight.w600,
-          fontSize: 18,
-          color: AppColors.primaryColor,
-        ),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-    ),
-  );
-}),
 
           // Download icon (only when not fromAutoPay)
           if (!fromAutoPay)
@@ -745,7 +769,7 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
        
         Padding(
           padding: EdgeInsets.only(
-            left: 0,
+            left: 10,
             right: 0,
             bottom: (groupTransactionList.isEmpty ? 4 : 3),
           ),
@@ -766,6 +790,7 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
     _buildTabChip("Collections"),
 
     
+               SizedBox(width: 6),
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 400),
                 transitionBuilder: (child, animation) {
@@ -785,11 +810,11 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
                     ? _buildSearchField(context, widget.fromAutoPay)
                     : _buildSearchIcon(),
               ),
-              SizedBox(width: 4),
+              SizedBox(width: 2),
 
               if (!widget.fromAutoPay && !isSearchActive)
                 _buildToggleDateSummaryBtn(),
-SizedBox(width: 8),
+SizedBox(width: 10),
               if (!widget.fromAutoPay && !isSearchActive)
                 _buildFilterButton(),
     ]
@@ -838,26 +863,39 @@ Widget _buildSearchIcon() {
             width: 
                  MediaQuery.of(context).size.width / 1.1,
                 
-            height: MediaQuery.of(context).size.width / 10,
-            child: TextField(
-              controller: searchController,
-              focusNode: focusNodeSearchFeild,
-              onChanged: _onSearchChanged,
-              decoration: InputDecoration(
-                hintText: HomepageStringsDart().searchTransactions,
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _buildClearButton(),
-                filled: true,
-                fillColor: AppColors.bg5,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
-              ),
-              style: const TextStyle(color: AppColors.accentColor),
-            ),
+    height: MediaQuery.of(context).size.width / 10,
+    child: Container(
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(8),
+       boxShadow: [
+      BoxShadow(
+        color: Color.fromRGBO(0, 0, 0, 0.06),
+        blurRadius: 25,
+        offset: Offset(0, 0),
+      ),
+    ],
+      ),
+      child: TextField(
+        controller: searchController,
+        focusNode: focusNodeSearchFeild,
+        onChanged: _onSearchChanged,
+        decoration: InputDecoration(
+          hintText: HomepageStringsDart().searchTransactions,
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: _buildClearButton(),
+          filled: true,
+          fillColor: AppColors.backgroundColor,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+        ),
+        style: const TextStyle(color: AppColors.accentColor),
+      ),
+    ),
           ),
         ),
       );

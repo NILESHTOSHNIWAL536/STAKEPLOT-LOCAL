@@ -551,6 +551,7 @@
 // }
 
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
@@ -654,25 +655,33 @@ class _RotatingIconState extends State<Nextfetch>
                             )
                           : InkWell(
                               onTap: () => showFetchModal(context),
-                              child: RotationTransition(
-                                turns: Tween(
-                                  begin: 0.0,
-                                  end: 1.0,
-                                )
-                                    .animate(
-                                      CurvedAnimation(
-                                        parent: _controller,
-                                        curve: Curves.linear,
-                                      ),
-                                    )
-                                    .drive(Tween(
-                                        begin: 1.0, end: 0.0)),
-                                child: AvatarProfileImageNextFetch(
-                                  url: HomePageIcons.fetch,
-                                  width: 40,
-                                  height: 35,
-                                ),
-                              ),
+                              child:
+                                RotatingStopwatchIcon(
+    size: 22,
+    color: AppColors.backgroundColor,
+  ),
+                              //  RotationTransition(
+                              //   turns: Tween(
+                              //     begin: 0.0,
+                              //     end: 1.0,
+                              //   )
+                              //       .animate(
+                              //         CurvedAnimation(
+                              //           parent: _controller,
+                              //           curve: Curves.linear,
+                              //         ),
+                              //       )
+                              //       .drive(Tween(
+                              //           begin: 1.0, end: 0.0)),
+                              //   child:
+                              
+                              //    AvatarProfileImageNextFetch(
+                              //     url: HomePageIcons.fetch,
+                              //     width: 40,
+                              //     height: 35,
+                              //   ),
+                              // ),
+                           
                             ),
                       Padding(
                         padding:
@@ -683,18 +692,18 @@ class _RotatingIconState extends State<Nextfetch>
                               ? HomepageStringsDart()
                                   .fetchingInProgress
                               : HomepageStringsDart().nextFetchLabel,
-                          fontWeight: FontWeight.bold,
-                          c: AppColors.bg1,
-                          fontsize: isFected.value ? 10 : 13,
+                          fontWeight: FontWeight.w500,
+                          c: AppColors.backgroundColor,
+                          fontsize: isFected.value ? 14 : 14,
                         ),
                       ),
                       textStyle(
                         context: context,
                         text:
                             isFected.value ? "" : formattedNextFetch,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
                         c: AppColors.backgroundColor,
-                        fontsize: 13,
+                        fontsize: 14,
                       ),
                     ],
                   ),
@@ -1141,3 +1150,77 @@ Widget connectedBanksRow(BuildContext context) {
 }
 
 
+
+
+class RotatingStopwatchIcon extends StatefulWidget {
+  final double size;
+  final Color color;
+
+  const RotatingStopwatchIcon({
+    Key? key,
+    this.size = 26,
+    this.color = Colors.white,
+  }) : super(key: key);
+
+  @override
+  State<RotatingStopwatchIcon> createState() =>
+      _RotatingStopwatchIconState();
+}
+
+class _RotatingStopwatchIconState extends State<RotatingStopwatchIcon>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2), // speed of rotation
+    )..repeat(); // continuous rotation
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: widget.size,
+      height: widget.size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          /// Stopwatch outline
+          Icon(
+            Icons.timer_outlined,
+            size: widget.size,
+            color: widget.color,
+          ),
+
+          /// Rotating hand
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (_, child) {
+              return Transform.rotate(
+                angle: _controller.value * 2 * pi,
+                child: child,
+              );
+            },
+            child: Container(
+              width: 2,
+              height: widget.size * 0.32,
+              decoration: BoxDecoration(
+                color: widget.color,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

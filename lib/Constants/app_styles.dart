@@ -24,6 +24,7 @@ class PlotFinanceIcons {
   static String reserve = "assets/icons/plotFinance/reserve.svg";
   static String calculator = "assets/icons/plotFinance/calculator.svg";
   static String foodie = "assets/icons/plotFinance/foodie.svg";
+  static String creditcardcomponent = "assets/icons/plotFinance/creditComponent1.svg";
  
 }
 
@@ -73,6 +74,7 @@ class HomePageIcons {
   static String noTransactionsInCollection2 = "assets/icons/Home-page/noTnx1.svg";
   static String settings = "assets/icons/Home-page/collectionSetting.svg";
   static String appUpdates = "assets/icons/Home-page/appUpdates.svg";
+  static String finoraIcon = "assets/icons/Home-page/finoraIcon.svg";
 }
 
 

@@ -503,6 +503,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     return Scaffold(
       backgroundColor: AppColors.newbg,
       bottomNavigationBar: SafeArea(
+
         child: BottomNavigations(
           data: 1,
         ),
@@ -1074,15 +1075,82 @@ Widget _buildToolsGrid(BuildContext context) {
          ],
        ),
        Padding(
-         padding: const EdgeInsets.only(top: 8),
+         padding: const EdgeInsets.only(top: 5),
          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
            children: [
-            AvatarProfileImageZero(
-              url: PlotFinanceIcons.crediCardBg,
-              height: 5.7,
-              width: 6,
+            Stack(
+              children: [
+                AvatarProfileImageZero(
+                  url: PlotFinanceIcons.crediCardBg,
+                  height: 5.7,
+                  width: 6,
+                  
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(255, 255, 255, 0.08),
+                              borderRadius: BorderRadius.circular(13)
+                            ),
+                            child: AvatarProfileImageZero(
+                              url: PlotFinanceIcons.creditcardcomponent,
+                              height: 50,
+                              width: 6,
+                              
+                            ),
+                          ),
+                          SizedBox(width: 6),
+                            Text("Credit Card", 
+                                style: FontManager().getTextStyle(context,
+                                color:  AppColors.backgroundColor ,
+                                fontSize: 12,
+                                lWeight: FontWeight.w400
+                      
+                                ),
+                                ),
+                                 SizedBox(width: 16,),
+                               Container(
+                                padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(255, 255, 255, 0.08),
+                              borderRadius: BorderRadius.circular(20)
+                            ),
+                                 child: Container(
+                                          padding: EdgeInsets.all(2),
+                                         decoration: BoxDecoration(
+                                           color: Colors.white,
+                                           shape: BoxShape.circle,
+                                         ),
+                                         child: const Icon(
+                                           Icons.add,
+                                           color: Color(0xFF6E6F8F),
+                                           size: 20,
+                                         ),
+                                       ),
+                               ),
+                        ],
+                      ),
+                        Text("Link & Manage", 
+                                style: FontManager().getTextStyle(context,
+                                color:  const Color.fromRGBO(255, 255, 255, 0.05) ,
+                                fontSize: 12,
+                                lWeight: FontWeight.w600
+                      
+                                ),
+                                ),
+                    ],
+                  ),
+                ),
               
+              ],
             ),
                 //     SvgPicture.asset(
                 //   PlotFinanceIcons.crediCardBg,
@@ -1144,7 +1212,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
       height: expanded ? widget.height + 60 : widget.height,
       width: MediaQuery.sizeOf(context).width/2.4,
       curve: Curves.easeOutCubic,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(22),
@@ -1161,15 +1229,15 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Finance Tools",
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppColors.accentColor,
-              ),
-            ),
-            const SizedBox(height: 10),
+            Text("Finance Fusion", 
+                          style: FontManager().getTextStyle(context,
+                          color:  const Color(0xFF061D3D) ,
+                          fontSize: 12,
+                          lWeight: FontWeight.w400
+
+                          ),
+                          ),
+            const SizedBox(height: 12),
 
             if (!expanded)
               Row(
@@ -1200,19 +1268,20 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                   GestureDetector(
                     onTap: widget.onTapD,
                     child: Container(
-                       padding: EdgeInsets.all(6),
+                       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: AppColors.border,
                     borderRadius: BorderRadius.all(Radius.circular(8))
                     ),
                       child: Row(
                         children: [
-                          SvgPicture.asset(PlotFinanceIcons.calculator, height: 30),
+                          SvgPicture.asset(PlotFinanceIcons.calculator, height: 24),
                           const SizedBox(width: 10),
-                          Text("All Calculators", 
+                          Text("Calculators", 
                           style: FontManager().getTextStyle(context,
-                          color: AppColors.primaryColor ,
-                          fontSize: 12
+                          color:  Color.fromRGBO(6, 29, 61, 0.5) ,
+                          fontSize: 12,
+                          lWeight: FontWeight.w500
 
                           ),
                           )
@@ -1224,18 +1293,19 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                   GestureDetector(
                     onTap: widget.onTapC,
                     child: Container(
-                       padding: EdgeInsets.all(6),
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: AppColors.border,
                     borderRadius: BorderRadius.all(Radius.circular(8))
                     ),
                       child: Row(
                         children: [
-                          SvgPicture.asset(PlotFinanceIcons.foodie, height: 30),
+                          SvgPicture.asset(PlotFinanceIcons.foodie, height: 24),
                           const SizedBox(width: 10),
                           Text("Foodie Funds",
                            style: FontManager().getTextStyle(context,
-                          color: AppColors.primaryColor ,
+                          color:  Color.fromRGBO(6, 29, 61, 0.5) ,
+                          lWeight: FontWeight.w500,
                           fontSize: 12)
                           ),
                         ],

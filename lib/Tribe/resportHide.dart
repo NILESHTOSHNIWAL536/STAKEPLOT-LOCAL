@@ -8,6 +8,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
   String? selectedOption; // To track the selected report option
 
   return AnimatedContainer(
+    padding: EdgeInsets.symmetric(horizontal: 20),
     duration: const Duration(milliseconds: 300),
     curve: Curves.easeInOut,
     height: MediaQuery.of(context).size.height * 0.55,
@@ -28,7 +29,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
               child: Column(
                 children: [
                   Container(
@@ -45,8 +46,8 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                     style: FontManager().getTextStyle(
                                 context,
                                 lWeight:  FontWeight.w500,
-                                fontSize: 18,
-                                color: AppColors.bg1,
+                                fontSize: 20,
+                                color: AppColors.accentColor,
                               ),
                   ),
                 ],
@@ -69,7 +70,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                       });
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Row(
                         children: [
                           option['isDescription'] == true
@@ -93,9 +94,9 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                                     visualDensity: VisualDensity.compact,
                                     
                                   ),
-                              
+                              option['isDescription'] == true?SizedBox.shrink():SizedBox(width: 16,),
                            Container(
-                             width: option['isDescription'] == true?MediaQuery.sizeOf(context).width/1.1:MediaQuery.sizeOf(context).width/1.4,
+                             width: option['isDescription'] == true?MediaQuery.sizeOf(context).width/1.2:MediaQuery.sizeOf(context).width/1.4,
                              child: Text(
                                 option['title']!,
                                 style: FontManager().getTextStyle(
@@ -104,7 +105,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                                       ? FontWeight.w600
                                       : FontWeight.w500,
                                   fontSize: option['isDescription'] == true ? 16 : 14,
-                                  color: AppColors.bg1,
+                                  color: AppColors.accentColor,
                                   overflow: TextOverflow.visible,
                                   maxLines: 4
                                 ),
@@ -137,7 +138,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                             },
                       style: TextButton.styleFrom(
                         minimumSize: const Size(double.infinity, 48),
-                        backgroundColor:  AppColors.finSpaceColor,
+                        backgroundColor:  AppColors.redColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -157,15 +158,16 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                       onPressed: () => Navigator.pop(context),
                       style: TextButton.styleFrom(
                         minimumSize: const Size(double.infinity, 48),
-                        backgroundColor: Colors.grey[100],
+                        backgroundColor: AppColors.backgroundColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(color: AppColors.redColor)
                         ),
                       ),
                       child: Text(
                         'Cancel',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: Colors.grey[800],
+                              color: AppColors.redColor,
                               fontWeight: FontWeight.w600,
                             ),
                       ),

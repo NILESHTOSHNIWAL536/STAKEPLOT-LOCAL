@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:get/get.dart';
 import '../../components/shared_utils.dart';
 
@@ -30,24 +32,20 @@ class SwipeableCardsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// TITLE
-          Padding(
-            padding: EdgeInsets.only(
-              top: padding / 2,
-              right: padding,
-              left: padding,
-            ),
-            child: textStyleImage(
-              context: context,
-              text: HomepageStringsDart().finora,
-              fontsize: screenSize.width * 0.05,
-              c: AppColors.accentColor,
-              fontWeight: FontWeight.w600,
-            ),
+          Row(
+            children: [
+              AvatarProfileImageZero(url: HomePageIcons.finoraIcon, width: 30, height: 40),
+              SizedBox(width: 10),
+              Text( HomepageStringsDart().finora,
+              style: FontManager().getTextStyle(context, color: AppColors.primaryColor, letterSpacing: 2.2, fontSize: 16, lWeight: FontWeight.w500),
+              )
+             
+            ],
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
 
-          /// HORIZONTAL SCROLL (NO SWIPE / NO PAGEVIEW)
+          
           SizedBox(
             height: screenSize.height * 0.14,
             child: SingleChildScrollView(
@@ -126,20 +124,28 @@ class TotalSpendingCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                 
+                 Container(
+                   padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      
+                       color: const Color.fromRGBO(75, 77, 115, 0.04),
+    borderRadius: BorderRadius.circular(13),
+                    ),
+                  child: Icon(Icons.sunny, color: AppColors.primaryColor,size: 24,)),
+                 SizedBox(width: 8),
                   Text(
                     'Monthly Summary',
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w400,
-                      fontSize: screenSize.width * 0.03,
+                      fontSize: 16,
                       color: AppColors.primaryColor,
                     ),
                   ),
                 ],
               ),
               SizedBox(
-                height: 5,
+                height: 20,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -149,20 +155,14 @@ class TotalSpendingCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Total Spending',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w400,
-                              fontSize: screenSize.width * 0.05,
-                              color: AppColors.primaryColor,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Total Spending',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: AppColors.primaryColor,
+                        ),
                       ),
                       SizedBox(
                         height: 7,
@@ -174,11 +174,8 @@ class TotalSpendingCard extends StatelessWidget {
                           style: FontManager().getTextStyle(
                             context,
                             lWeight: FontWeight.w500,
-                            fontSize:
-                                (totalDebitThisMonth.value.toString().length >
-                                        8)
-                                    ? screenSize.width * 0.05
-                                    : screenSize.width * 0.056,
+                            fontSize:20,
+                               
                             color: AppColors.primaryColor,
                           ),
                         ),
@@ -194,7 +191,7 @@ class TotalSpendingCard extends StatelessWidget {
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w400,
-                          fontSize: screenSize.width * 0.05,
+                          fontSize: 14,
                           color: AppColors.primaryColor,
                         ),
                       ),
@@ -207,11 +204,8 @@ class TotalSpendingCard extends StatelessWidget {
                           '₹${formatMoneyIndian(((totalDebitThisMonth.value / (DateTime.now().day == 0 ? 1 : DateTime.now().day)).toStringAsFixed(0)))}',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w500,
-                              fontSize:
-                                  (totalDebitThisMonth.value.toString().length >
-                                          8)
-                                      ? screenSize.width * 0.05
-                                      : screenSize.width * 0.056,
+                              fontSize:20,
+                                 
                               color: AppColors.primaryColor,
                               overflow: TextOverflow.ellipsis),
                         ),
@@ -371,15 +365,28 @@ class FrequentTransactionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Most Frequent Payment',
-
-              style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w400,
-                          fontSize: screenSize.width * 0.04,
-                          color: AppColors.primaryColor,
-                        ),
+            Row(
+              children: [
+                  Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      
+                       color: const Color.fromRGBO(75, 77, 115, 0.04),
+    borderRadius: BorderRadius.circular(13),
+                    ),
+                    child: Icon(Icons.graphic_eq, color: AppColors.primaryColor,size: 24,)),
+                 SizedBox(width: 8),
+                  Text(
+                    'Most Frequent Payment',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+              
+              ],
             ),
             frequentPayments.isEmpty
                 ? Text(

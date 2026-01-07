@@ -66,7 +66,7 @@ Widget historyButton(BuildContext context) {
     },
     borderRadius: BorderRadius.circular(10),
     child: Container(
-      width: MediaQuery.sizeOf(context).width/2.3,
+      width: MediaQuery.sizeOf(context).width/2.4,
       height: MediaQuery.sizeOf(context).height/21,
       padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
@@ -103,7 +103,7 @@ Widget historyButton(BuildContext context) {
             AvatarProfileImageZero(
               url: HomePageIcons.history,
                width: 5,
-                height: 30,
+                height: 32,
             ),
         
             const SizedBox(width: 8),
@@ -114,7 +114,7 @@ Widget historyButton(BuildContext context) {
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.w500,
-                fontSize: 14,
+                fontSize: 13,
                 color: AppColors.accentColor,
               ),
             ),

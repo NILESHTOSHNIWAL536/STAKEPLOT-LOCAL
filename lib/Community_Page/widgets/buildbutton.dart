@@ -300,7 +300,8 @@ class _ArenaHeaderState extends State<ArenaHeader> {
               builder: (context) => PollScreen()
             ),
           );
-                     }):SizedBox.shrink(),
+                     })
+                     :const SizedBox.shrink(),
                      const SizedBox(width: 16),
                      _circleIcon(Icons.bookmark, () {
               // bookmark action
