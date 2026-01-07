@@ -63,28 +63,28 @@ class ActionIcons extends StatelessWidget {
           ),
         ),
         SizedBox(width: 8 * scaleFactor),
-        Tooltip(
-          message: HomepageStringsDart().splitWithFriendsTooltip,
-          child: GestureDetector(
-            onTap: () async {
-              FocusScope.of(context).unfocus();
-              transactionsId.value = transaction.id;
-              await showCustomFriendsModalTransactionHistory(
-                context,
-                amount,
-                false,
-                category,
-                subcategory,
-                false,
-              );
-            },
-            child: AvatarProfileImage(
-              url: HomePageIcons.splitIcon,
-              width: 120,
-              height: 46,
-            ),
-          ),
-        ),
+        // Tooltip(
+        //   message: HomepageStringsDart().splitWithFriendsTooltip,
+        //   child: GestureDetector(
+        //     onTap: () async {
+        //       FocusScope.of(context).unfocus();
+        //       transactionsId.value = transaction.id;
+        //       await showCustomFriendsModalTransactionHistory(
+        //         context,
+        //         amount,
+        //         false,
+        //         category,
+        //         subcategory,
+        //         false,
+        //       );
+        //     },
+        //     child: AvatarProfileImage(
+        //       url: HomePageIcons.splitIcon,
+        //       width: 120,
+        //       height: 46,
+        //     ),
+        //   ),
+        // ),
         getRightSidePart(
           category,
           context,

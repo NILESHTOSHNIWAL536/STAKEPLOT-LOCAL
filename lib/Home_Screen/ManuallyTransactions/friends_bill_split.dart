@@ -363,3 +363,6 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
     );
   }
 }
+
+//-----------------------------------------------------------------------
+

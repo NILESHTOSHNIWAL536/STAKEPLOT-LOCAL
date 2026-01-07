@@ -828,6 +828,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../Constants/colors.dart';
 import '../../Constants/font_manager.dart';
+import '../../components/shared_utils.dart';
 import 'expanded_finance.dart';
 
 class SpendingCardTwoPanels extends StatefulWidget {
@@ -896,13 +897,13 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
       width: MediaQuery.sizeOf(context).width,
       margin: EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor, // #FFFFFF
         borderRadius: BorderRadius.circular(10), // 10px
         border: Border.all(
-          color: const Color(0xFFE6E9EB), // #E6E9EB
+          color: AppColors.financeChartBorder, // #E6E9EB
           width: 1,
         ),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2))],
+        boxShadow: [BoxShadow(color: AppColors.accentColorOpacity, blurRadius: 6, offset: Offset(0, 2))],
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -911,11 +912,11 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
           children: [
             // Left data container (keeps your mediaquery width)
             Material(
-              color: Colors.transparent,
+              color: AppColors.transparentColor,
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
                 onTap: () async {
-                  debugPrint('Left panel tapped');
+                 
                   final Map<String, List<double>> chartMap = {
                     'credited': List<double>.from(credited),
                     'debited': List<double>.from(debited),
@@ -924,8 +925,6 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
 
                   // selectedButton is an RxString in your app — fallback to 'Month' here
                   final String selBtn = 'Month';
-
-                  // await the navigation to avoid duplicate pushes from multiple taps
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -938,7 +937,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                       ),
                     ),
                   );
-                  debugPrint('Returned from ExpandedChartView');
+                 
                 },
                 child: Container(
                   width: MediaQuery.sizeOf(context).width / 3.3,
@@ -953,7 +952,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('₹ ${_formatNumber(selCred)}',
+                          Text('₹ ${formatNumber(selCred)}',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w500, fontSize: 14, color: AppColors.primaryColor)),
                           const SizedBox(width: 8),
@@ -966,7 +965,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('₹ ${_formatNumber(selDeb)}',
+                          Text('₹ ${formatNumber(selDeb)}',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w500, fontSize: 14, color: AppColors.debitedAmount)),
                           const SizedBox(width: 8),
@@ -1093,10 +1092,325 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
     );
   }
 
-  String _formatNumber(double v) {
-    if (v >= 10000000) return '${(v / 10000000).toStringAsFixed(1)}Cr';
-    if (v >= 100000) return '${(v / 100000).toStringAsFixed(1)}L';
-    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}K';
-    return v.toStringAsFixed(0);
-  }
+ 
 }
+
+
+
+
+
+// import 'dart:math';
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+
+// import '../../Constants/colors.dart';
+// import '../../Constants/font_manager.dart';
+// import '../../backed_connections/apis_connect.dart';
+// import '../../components/shared_utils.dart';
+// import '../../repository/finance_repository.dart';
+// import '../finance_analytics/expanded_finance.dart';
+// import '../../backed_connections/apiAutomations/getTrasactions.dart';
+
+// class SpendingCardTwoPanels extends StatefulWidget {
+//   const SpendingCardTwoPanels({super.key});
+
+//   @override
+//   State<SpendingCardTwoPanels> createState() =>
+//       _SpendingCardTwoPanelsState();
+// }
+
+// class ChartData {
+//   ChartData(this.label, this.credit, this.debit);
+//   final String label;
+//   final double credit;
+//   final double debit;
+// }
+
+// class _SpendingCardTwoPanelsState
+//     extends State<SpendingCardTwoPanels> {
+//   int selectedIndex = 0;
+//   final double chartMaxHeight = 180;
+
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     /// 🔥 Call REAL API (Month data)
+//     getWeeklyGraphAndCustomDateGraph(
+//       DateTime.now().toIso8601String(),
+//       context,
+//       weekORmonth: 'Month',
+//     );
+//   }
+
+//   /// 🔹 Find index of TODAY in labels (dd format)
+//   int findTodayIndex(List<String> labels) {
+//     final String today =
+//         DateTime.now().day.toString().padLeft(2, '0');
+
+//     return labels.lastIndexWhere((l) => l == today);
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Obx(() {
+//       if (!getGraphData.value) {
+//         return const SizedBox(
+//           height: 220,
+//           child: Center(child: CircularProgressIndicator()),
+//         );
+//       }
+
+//       final List<double> credited =
+//           List<double>.from(transactionChatGraph['credited'] ?? []);
+//       final List<double> debited =
+//           List<double>.from(transactionChatGraph['debited'] ?? []);
+//       final List<String> dayLabels =
+//           labels.map((e) => e.toString()).toList();
+
+//       if (credited.isEmpty ||
+//           debited.isEmpty ||
+//           dayLabels.isEmpty) {
+//         return const SizedBox(
+//           height: 220,
+//           child: Center(child: Text('No data available')),
+//         );
+//       }
+
+//       /// 🔥 TODAY → LAST 7 DAYS LOGIC
+//       final int todayIndex = findTodayIndex(dayLabels);
+
+//       /// If today not found, fallback to last available day
+//       final int endIndex =
+//           todayIndex != -1 ? todayIndex : dayLabels.length - 1;
+
+//       final int startIndex = max(0, endIndex - 6);
+
+//       final List<double> visibleCredited =
+//           credited.sublist(startIndex, endIndex + 1);
+//       final List<double> visibleDebited =
+//           debited.sublist(startIndex, endIndex + 1);
+//       final List<String> visibleLabels =
+//           dayLabels.sublist(startIndex, endIndex + 1);
+
+//       /// Always select TODAY bar
+//       selectedIndex = visibleLabels.length - 1;
+
+//       return _buildCard(
+//         context,
+//         visibleCredited,
+//         visibleDebited,
+//         visibleLabels,
+//       );
+//     });
+//   }
+
+//   Widget _buildCard(
+//     BuildContext context,
+//     List<double> credited,
+//     List<double> debited,
+//     List<String> labels,
+//   ) {
+//     final List<ChartData> data = List.generate(labels.length, (i) {
+//       return ChartData(labels[i], credited[i], debited[i]);
+//     });
+
+//     final double selCred = data[selectedIndex].credit;
+//     final double selDeb = data[selectedIndex].debit;
+
+//     final double maxTotal = data
+//         .map((e) => e.credit + e.debit)
+//         .fold(0, max);
+
+//     final double yMax = maxTotal == 0 ? 1 : maxTotal * 1.2;
+
+//     final double screenWidth = MediaQuery.of(context).size.width;
+//     final double rightVisible = min(screenWidth * 0.55, 260);
+
+//     return Container(
+//       margin: const EdgeInsets.all(6),
+//       decoration: BoxDecoration(
+//         color: AppColors.backgroundColor,
+//         borderRadius: BorderRadius.circular(10),
+//         border: Border.all(color: AppColors.financeChartBorder),
+//         boxShadow: [
+//           BoxShadow(
+//             color: AppColors.accentColorOpacity,
+//             blurRadius: 6,
+//             offset: const Offset(0, 2),
+//           )
+//         ],
+//       ),
+//       child: Padding(
+//         padding: const EdgeInsets.all(12),
+//         child: Row(
+//           children: [
+//             /// LEFT PANEL
+//             InkWell(
+//               onTap: () {
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (_) => ExpandedChartView(
+//                       chartData: {
+//                         'credited': credited,
+//                         'debited': debited,
+//                       },
+//                       days: labels,
+//                       selectedButton: 'Month',
+//                       selectedYear: DateTime.now().year,
+//                       selectedMonth: DateTime.now().month,
+//                     ),
+//                   ),
+//                 );
+//               },
+//               child: SizedBox(
+//                 width: screenWidth / 3.2,
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       'My Spending',
+//                       style: FontManager().getTextStyle(
+//                         context,
+//                         lWeight: FontWeight.w500,
+//                         fontSize: 14,
+//                         color: AppColors.primaryColor,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 16),
+//                     Text(
+//                       '₹ ${formatNumber(selCred)}',
+//                       style: FontManager().getTextStyle(
+//                         context,
+//                         lWeight: FontWeight.w500,
+//                         fontSize: 14,
+//                         color: AppColors.primaryColor,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 6),
+//                     Text(
+//                       'Credited',
+//                       style: FontManager().getTextStyle(
+//                         context,
+//                         fontSize: 12,
+//                         color: AppColors.primaryColor,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 16),
+//                     Text(
+//                       '₹ ${formatNumber(selDeb)}',
+//                       style: FontManager().getTextStyle(
+//                         context,
+//                         lWeight: FontWeight.w500,
+//                         fontSize: 14,
+//                         color: AppColors.debitedAmount,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 6),
+//                     Text(
+//                       'Debited',
+//                       style: FontManager().getTextStyle(
+//                         context,
+//                         fontSize: 12,
+//                         color: AppColors.debitedAmount,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+
+//             const SizedBox(width: 12),
+
+//             /// RIGHT STACKED BAR CHART (TODAY → LAST 7 DAYS)
+//             SizedBox(
+//               width: rightVisible,
+//               height: chartMaxHeight,
+//               child: Row(
+//                 crossAxisAlignment: CrossAxisAlignment.end,
+//                 mainAxisAlignment:
+//                     MainAxisAlignment.spaceBetween,
+//                 children: List.generate(data.length, (i) {
+//                   final d = data[i];
+//                   final bool isSel = i == selectedIndex;
+
+//                   final double creditH =
+//                       (d.credit / yMax) * chartMaxHeight;
+//                   final double debitH =
+//                       (d.debit / yMax) * chartMaxHeight;
+
+//                   return InkWell(
+//                     onTap: () {
+//                       setState(() => selectedIndex = i);
+//                     },
+//                     child: Column(
+//                       mainAxisAlignment: MainAxisAlignment.end,
+//                       children: [
+//                         Container(
+//                           width: rightVisible / 8,
+//                           decoration: BoxDecoration(
+//                             borderRadius:
+//                                 BorderRadius.circular(6),
+//                             border: Border.all(
+//                               color: const Color(0xFFE8EAF0),
+//                             ),
+//                           ),
+//                           child: Column(
+//                             mainAxisAlignment:
+//                                 MainAxisAlignment.end,
+//                             children: [
+//                               AnimatedContainer(
+//                                 duration: const Duration(
+//                                     milliseconds: 200),
+//                                 height: creditH,
+//                                 decoration: BoxDecoration(
+//                                   color: isSel
+//                                       ? AppColors.primaryColor
+//                                       : AppColors.primaryColor
+//                                           .withOpacity(0.3),
+//                                   borderRadius:
+//                                       const BorderRadius.vertical(
+//                                     top: Radius.circular(6),
+//                                   ),
+//                                 ),
+//                               ),
+//                               AnimatedContainer(
+//                                 duration: const Duration(
+//                                     milliseconds: 200),
+//                                 height: debitH,
+//                                 decoration: BoxDecoration(
+//                                   color: isSel
+//                                       ? AppColors.debitedAmount
+//                                       : AppColors.debitedAmount
+//                                           .withOpacity(0.3),
+//                                   borderRadius:
+//                                       const BorderRadius.vertical(
+//                                     bottom: Radius.circular(6),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                         const SizedBox(height: 6),
+//                         Text(
+//                           d.label,
+//                           style: FontManager().getTextStyle(
+//                             context,
+//                             fontSize: 11,
+//                             color: AppColors.debitedAmount,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   );
+//                 }),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -488,6 +488,8 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardWidg
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:get/get.dart';
 
+import 'add_pay_cycle.dart';
+
 class AllCardsScreen extends StatelessWidget {
   final RxList<CardData> cards;
   final RxMap<String, bool> toggleStates;
@@ -518,6 +520,24 @@ class AllCardsScreen extends StatelessWidget {
           style: TextStyle(fontSize: 20 * fontScale),
         ),
         backgroundColor: AppColors.backgroundColor,
+         actions: [
+    IconButton(
+      icon: Icon(
+        Icons.add,
+        size: 26,
+        color: AppColors.primaryColor,
+      ),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AddPaycycleFromTransactionsScreen(),
+          ),
+        );
+      },
+    ),
+  ],
+
       ),
       body: SafeArea(
         child: Padding(

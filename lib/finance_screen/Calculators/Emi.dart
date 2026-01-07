@@ -146,7 +146,7 @@ class _EmiState extends State<Emi> {
       body: Padding(
     
   padding: EdgeInsets.only(
-    top: MediaQuery.of(context).size.height * 0.06,
+    top: MediaQuery.of(context).size.height * 0.02,
   
 
 
@@ -165,10 +165,14 @@ class _EmiState extends State<Emi> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(bottom:10,left:15),
+                        padding: const EdgeInsets.only(bottom:10,left:10), 
                         child: Container(
-                          width: 40,
-                          height: 40,
+                           width: MediaQuery.sizeOf(context).width/8,
+                           
+                         
+                          height: MediaQuery.sizeOf(context).height/22,
+                          //  width:40,
+                          // height:40,
                           
                            decoration: BoxDecoration(
                               color: Colors.white,           // ✅ white background
@@ -183,7 +187,7 @@ class _EmiState extends State<Emi> {
                           ),
                           child: IconButton(
                             icon: Icon(
-                              Icons.arrow_back_rounded,
+                               Icons.arrow_back_rounded,
                               color: Color(0xFF061D3D), // arrow color
                               size: 22,
                             ),
@@ -193,7 +197,7 @@ class _EmiState extends State<Emi> {
                           ),
                         ),
                       ),
-                      SizedBox(width:50)
+                      SizedBox(  width: MediaQuery.of(context).size.width * 0.15)
                           ,
                       Padding(
                         padding: const EdgeInsets.only(left: 14),

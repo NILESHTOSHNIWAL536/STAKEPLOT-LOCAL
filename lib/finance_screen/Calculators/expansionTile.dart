@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ListItemModel {
   final String title;
@@ -31,7 +32,8 @@ class CustomExpansionTile extends StatelessWidget {
           _buildExpansionTile(
             context,
             title: "How to use the calculator?",
-            icon: Icons.timer_outlined,
+     icon: "assets/icons/financeScreen/calculator.svg", 
+            
             content: howToUseContent
                 .map((item) => _buildStringListItem(context, item))
                 .toList(),
@@ -40,7 +42,7 @@ class CustomExpansionTile extends StatelessWidget {
           _buildExpansionTile(
             context,
             title: "How it works?",
-            icon: Icons.settings,
+             icon: "assets/icons/financeScreen/calculator.svg", 
             content: howItWorksContent
                 .map((item) => _buildListItem(context, item))
                 .toList(),
@@ -54,35 +56,44 @@ class CustomExpansionTile extends StatelessWidget {
   Widget _buildExpansionTile(
     BuildContext context, {
     required String title,
-    required IconData icon,
+   required String icon,  // now accepts SVG path
+
     required List<Widget> content,
   }) {
     return Container(
       // Ensure the container background is set to your theme color
       decoration: BoxDecoration(
-          color: AppColors.amtCal, borderRadius: BorderRadius.circular(8)),
+          color: AppColors.backgroundColor, borderRadius: BorderRadius.circular(10)
+          ,border: Border.all(color: Color(0xFF374151)),),
+
       child: Theme(
         data: ThemeData(
-          dividerColor:
-              AppColors.transparentColor, // This removes the divider between tiles
+          // dividerColor:
+          //     AppColors.accentColor, // This removes the divider between tiles
           splashColor: AppColors.transparentColor, // This removes the splash effect
           highlightColor:
               AppColors.transparentColor, // This removes the highlight effect
         ),
         child: ExpansionTile(
-          iconColor: AppColors.backgroundColor, // Color when expanded
-          collapsedIconColor: AppColors.backgroundColor,
+          iconColor: AppColors.primaryColor, // Color when expanded
+          collapsedIconColor: AppColors.primaryColor,
           title: Row(
             children: [
-              Icon(icon, color: AppColors.backgroundColor),
+             SvgPicture.asset(
+  icon,
+  height: 24,
+  width: 24,
+  colorFilter: ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+),
+
               const SizedBox(width: 10),
               Text(
                 title,
                 style: FontManager().getTextStyle(
                   context,
-                  lWeight: FontWeight.w300,
-                  fontSize: MediaQuery.sizeOf(context).height / 60,
-                  color: AppColors.backgroundColor,
+                  lWeight: FontWeight.w500,
+                  fontSize: MediaQuery.sizeOf(context).height / 55,
+                  color: AppColors.primaryColor,
                 ),
               ),
             ],
@@ -117,7 +128,7 @@ class CustomExpansionTile extends StatelessWidget {
               context,
               lWeight: FontWeight.bold,
               fontSize: 14,
-              color: AppColors.backgroundColor,
+              color: AppColors.accentColor,
             ),
           ),
           const SizedBox(height: 5),
@@ -125,9 +136,9 @@ class CustomExpansionTile extends StatelessWidget {
             item.description,
             style: FontManager().getTextStyle(
               context,
-              lWeight: FontWeight.w300,
+              lWeight: FontWeight.w400,
               fontSize: 14,
-              color: Colors.white54,
+              color: AppColors.newfontcolor,
             ),
           ),
         ],
@@ -148,7 +159,7 @@ class CustomExpansionTile extends StatelessWidget {
               context,
               lWeight: FontWeight.bold,
               fontSize: 14,
-              color: AppColors.backgroundColor,
+              color: AppColors.accentColor,
             ),
           ),
           const SizedBox(height: 5),
@@ -156,9 +167,9 @@ class CustomExpansionTile extends StatelessWidget {
             item.description,
             style: FontManager().getTextStyle(
               context,
-              lWeight: FontWeight.w300,
+              lWeight: FontWeight.w400,
               fontSize: 14,
-              color: Colors.white54,
+              color: AppColors.newfontcolor,
             ),
           ),
         ],

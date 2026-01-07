@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 
@@ -223,28 +224,58 @@ class _RentBuyState extends State<RentBuy> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: AppColors.newbg,
       // appBar: appbarHeader("Rent vs Buy Calculator", context),
-      body: SafeArea(
+      body:  Padding(
+    
+  padding: EdgeInsets.only(
+    top: MediaQuery.of(context).size.height * 0.02,
+  
+
+
+  ),child:SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
+                Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: AppColors.primaryColor,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                 children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:10,left:10),
+                        child: Container(
+                         width: MediaQuery.sizeOf(context).width/8,
+                           
+                         
+                          height: MediaQuery.sizeOf(context).height/22,
+                          
+                           decoration: BoxDecoration(
+                              color: Colors.white,           // ✅ white background
+                            shape: BoxShape.circle,        // ✅ rounded
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.08),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_back_rounded,
+                              color: Color(0xFF061D3D), // arrow color
+                              size: 22,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+             SizedBox(  width: MediaQuery.of(context).size.width * 0.15),
                     Padding(
                       padding: const EdgeInsets.only(left: 14),
                       child: GestureDetector(
@@ -263,13 +294,16 @@ class _RentBuyState extends State<RentBuy> {
                             }
                           });
                         },
-                        child: Text(
-                          "Rent vs Buy Calculator",
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w800,
-                            fontSize: 40,
-                            color: AppColors.primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom:10),
+                          child: Text(
+                            "Rent vs Buy ",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w800,
+                              fontSize: 20,
+                              color: AppColors.newtitlecolor,
+                            ),
                           ),
                         ),
                       ),
@@ -304,7 +338,7 @@ class _RentBuyState extends State<RentBuy> {
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
-                                fontSize: 14,
+                                fontSize: 11,
                                 color: AppColors.backgroundColor,
                               ),
                               textAlign: TextAlign.center,
@@ -317,59 +351,133 @@ class _RentBuyState extends State<RentBuy> {
                   slidersList: slidersList,
                   onSliderValueChanged: updateSliderValue,
                 ),
-                Container(
-                    margin: EdgeInsets.only(
-                      left: 4,
-                      right: 4,
-                      top: 0,
-                    ),
-                    decoration: BoxDecoration(
-                        color: AppColors.backgroundColor,
-                        borderRadius: BorderRadius.circular(12)),
-                    child: graph()),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomExpansionTile(
-                  howToUseContent: howToUseContent,
-                  howItWorksContent: howItWorksContent,
-                ),
-              ],
+                Padding(
+              padding: EdgeInsets.all(Colorcodes.paddingSize / 2),
+              child: textStyle(
+                  context: context,
+                  fontsize: 20,
+                  fontWeight: FontWeight.w800,
+                  c: AppColors.primaryColor,
+                  text: "Breakdown"),
+                          ),
+                  Container(
+                      decoration: BoxDecoration(
+                          color: AppColors.newbg,
+                          borderRadius: BorderRadius.circular(12)),
+                       child: graph()),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  CustomExpansionTile(
+                    howToUseContent: howToUseContent,
+                    howItWorksContent: howItWorksContent,
+                   ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      ),);
+    
   }
 
-  Widget graph() {
-    return PieChartGraph(
-      title: "Rent vs Buy Details:",
-      graphData: [
-        {
-          'title':
-              'Total Buy Cost: ₹${formatMoneyIndian(totalBuyingCost.toStringAsFixed(0))}',
-          'value': totalBuyingCost
-        },
-        {
-          'title':
-              'Total Renting Cost: ₹${formatMoneyIndian(totalRentingCost.toStringAsFixed(0))}',
-          'value': totalRentingCost
-        },
-      ],
-      graphDisc: [
-        {
-          'title': 'Total Cost of Renting:',
-          'amount': "₹${formatMoneyIndian(totalRentingCost.toStringAsFixed(0))}"
-        },
-        {
-          'title': 'Total Cost of Buying:',
-          'amount': "₹${formatMoneyIndian(totalBuyingCost.toStringAsFixed(0))}"
-        },
-      ],
-    );
-  }
+//   Widget graph() {
+//     return PieChartGraph(
+//       title: "Rent vs Buy Details:",
+//       graphData: [
+//         {
+//           'title':
+//               'Total Buy Cost: ₹${formatMoneyIndian(totalBuyingCost.toStringAsFixed(0))}',
+//           'value': totalBuyingCost
+//         },
+//         {
+//           'title':
+//               'Total Renting Cost: ₹${formatMoneyIndian(totalRentingCost.toStringAsFixed(0))}',
+//           'value': totalRentingCost
+//         },
+//       ],
+//       graphDisc: [
+//         {
+//           'title': 'Total Cost of Renting:',
+//           'amount': "₹${formatMoneyIndian(totalRentingCost.toStringAsFixed(0))}"
+//         },
+//         {
+//           'title': 'Total Cost of Buying:',
+//           'amount': "₹${formatMoneyIndian(totalBuyingCost.toStringAsFixed(0))}"
+//         },
+//       ],
+//     );
+//   }
+// }
+
+Widget graph() {
+  // ---------- BUY SIDE ----------
+  double downPaymentAmount = (downPayment / 100) * homePrice;
+  double loanPrincipal = homePrice - downPaymentAmount;
+
+  double monthlyInterestRate = loanInterestRate / 12 / 100;
+  double emi = loanPrincipal *
+      monthlyInterestRate *
+      (pow(1 + monthlyInterestRate, loanTenure) /
+          (pow(1 + monthlyInterestRate, loanTenure) - 1));
+
+  double totalLoanPaid = emi * loanTenure;
+  double loanInterest = totalLoanPaid - loanPrincipal;
+
+  double totalPropertyTax =
+      (propertyTaxRate / 100) * homePrice * (loanTenure / 12);
+  double totalMaintenanceCost =
+      (maintenanceCost / 100) * homePrice * (loanTenure / 12);
+
+  double appreciatedValue =
+      homePrice * pow(1 + (homeAppreciationRate / 100), loanTenure / 12);
+
+  // ---------- PRINCIPAL ----------
+  double principal = downPaymentAmount + appreciatedValue;
+
+  // ---------- INTEREST / COST ----------
+  double interest =
+      loanInterest +
+      totalPropertyTax +
+      totalMaintenanceCost +
+      totalRentingCost;
+
+  // ---------- PIE TOTAL ----------
+  double pieTotal = principal + interest;
+  if (pieTotal <= 0) pieTotal = 1;
+
+  double principalPercent = (principal / pieTotal) * 100;
+  double interestPercent = (interest / pieTotal) * 100;
+
+  return PieChartGraph(
+    title: "Principal vs Cost",
+    graphData: [
+      {
+        'title':
+            'Principal\n${principalPercent.toStringAsFixed(1)}%\n₹${formatMoneyIndian(principal.toStringAsFixed(0))}',
+        'value': principal,
+      },
+      {
+        'title':
+            'Interest / Cost\n${interestPercent.toStringAsFixed(1)}%\n₹${formatMoneyIndian(interest.toStringAsFixed(0))}',
+        'value': interest,
+      },
+    ],
+    graphDisc: [
+      {
+        'title': 'Total Cost of Renting:',
+        'amount': "₹${formatMoneyIndian(principal.toStringAsFixed(0))}",
+      },
+      {
+        'title': 'Total Cost of Buying:',
+        'amount': "₹${formatMoneyIndian(interest.toStringAsFixed(0))}",
+      },
+    ],
+  );
 }
+}
+
+
 
 PreferredSizeWidget appbarHeader(String title, BuildContext context) {
   return AppBar(

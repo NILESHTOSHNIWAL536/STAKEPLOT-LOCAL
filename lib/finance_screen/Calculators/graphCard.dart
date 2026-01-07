@@ -221,9 +221,9 @@ class _PieChartGraphState extends State<PieChartGraph> {
         // AMOUNT
         textStyle(
           context: context,
-          fontWeight: FontWeight.w500,
-          fontsize: 12,
-          c: AppColors.newfontcolor,
+          fontWeight: FontWeight.bold,
+          fontsize: 14,
+          c: AppColors.accentColor,
           text: data['amount'], // ✅ already formatted string
         ),
       ],

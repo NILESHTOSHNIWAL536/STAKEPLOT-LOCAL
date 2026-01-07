@@ -14,6 +14,8 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/services.dart';
 
+import '../../autoPays/CreateAutoPayFromTransactionScreen.dart';
+
 class TransactionContainer extends StatelessWidget {
   final TransactionModel transaction;
   final String id;
@@ -36,7 +38,7 @@ class TransactionContainer extends StatelessWidget {
   final Color amtColor;
   final bool isExpanded;
   final BuildContext context;
-
+  final bool fromAutoPay;
   const TransactionContainer({
     required this.transaction,
     required this.id,
@@ -59,16 +61,40 @@ class TransactionContainer extends StatelessWidget {
     required this.amtColor,
     required this.isExpanded,
     required this.context,
+    required this.fromAutoPay,
   });
+void _navigateToAutoPayPage(
+  BuildContext context,
+  TransactionModel transaction,
+) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => CreateAutoPayFromTransactionScreen(
+        transaction: transaction,
+      ),
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: isExcluded
-          ? () => _showExcludeConfirmationDialog(context, transaction.id, index)
-          : () => _handleTap(context, transaction, id, index, isManual, hide),
-      onLongPress: isExcluded || hide || isExpanded
+    ? () => _showExcludeConfirmationDialog(context, transaction.id, index)
+    : () {
+        if (fromAutoPay) {
+          _navigateToAutoPayPage(context, transaction);
+        } else {
+          _handleTap(context, transaction, id, index, isManual, hide);
+        }
+      },
+
+      // onTap: isExcluded
+      //     ? () => _showExcludeConfirmationDialog(context, transaction.id, index)
+      //     : () => _handleTap(context, transaction, id, index, isManual, hide),
+      onLongPress: isExcluded || hide || isExpanded ||fromAutoPay
           ? null
           : () {
               showCheckBox.value = true;
@@ -275,12 +301,18 @@ class TransactionContainer extends StatelessWidget {
         HapticFeedback.selectionClick();
       }
     } else if (!isManual && !hide) {
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return TransactionDetailsPage(transaction: transaction);
-        },
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TransactionDetailsPage(transaction: transaction, index: index,),
+        ),
       );
+      // showModalBottomSheet(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return TransactionDetailsPage(transaction: transaction);
+      //   },
+      // );
     } else if (isManual) {
       snackBarCalled(context, "This transaction was added manually.");
     }

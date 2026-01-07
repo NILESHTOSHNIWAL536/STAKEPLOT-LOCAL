@@ -28,41 +28,73 @@ class _InflationCalculatorState extends State<InflationCalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      body: SafeArea(
+      backgroundColor: AppColors.newbg,
+      body:  Padding(
+    
+  padding: EdgeInsets.only(
+    top: MediaQuery.of(context).size.height * 0.02,
+  ),
+  
+
+
+   child:SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
+                Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: AppColors.primaryColor,
-                        size: 28,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:10,left:10), 
+                        child: Container(
+                           width: MediaQuery.sizeOf(context).width/8,
+                           
+                         
+                          height: MediaQuery.sizeOf(context).height/22,
+                          //  width:40,
+                          // height:40,
+                          
+                           decoration: BoxDecoration(
+                              color: Colors.white,           // ✅ white background
+                            shape: BoxShape.circle,        // ✅ rounded
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.08),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                               Icons.arrow_back_rounded,
+                              color: Color(0xFF061D3D), // arrow color
+                              size: 22,
+                            ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 14),
+                    SizedBox(  width: MediaQuery.of(context).size.width * 0.15)
+                          ,
+                  Padding(
+                      padding: const EdgeInsets.only(left: 10,top:10),
                       child: Text(
                         "Inflation Calculator",
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w800,
-                          fontSize: 40,
-                          color: AppColors.primaryColor,
+                          fontSize: 20,
+                          color: AppColors.newtitlecolor,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 48),
+                    // const SizedBox(width: 48),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -318,6 +350,6 @@ class _InflationCalculatorState extends State<InflationCalculator> {
           ),
         ),
       ),
-    );
+    ),);
   }
 }

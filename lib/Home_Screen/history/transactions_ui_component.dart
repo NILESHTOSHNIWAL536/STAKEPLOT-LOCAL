@@ -32,6 +32,7 @@ class HistoryTransactions extends StatelessWidget {
   final bool isExpanded;
   final bool hide;
   final BuildContext context;
+  final bool fromAutoPay;
 
   const HistoryTransactions({
     Key? key,
@@ -42,6 +43,7 @@ class HistoryTransactions extends StatelessWidget {
     this.hideReview = false,
     this.isExpanded = false,
     this.hide = false,
+    this.fromAutoPay = false,
   }) : super(key: key);
 
   @override
@@ -110,6 +112,7 @@ class HistoryTransactions extends StatelessWidget {
         amtColor: amtColor,
         isExpanded: isExpanded,
         context: context,
+        fromAutoPay: fromAutoPay,
       ),
     );
   }

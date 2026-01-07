@@ -139,9 +139,9 @@ class _SliderPageState extends State<SliderPage> {
             style: FontManager().getTextStyle(
               context,
 
-              color: AppColors.backgroundColor, // Change this to your desired color
+              color: AppColors.primaryColor, // Change this to your desired color
               fontSize: 14, // Optional: change font size
-              lWeight: FontWeight.w400, // Optional: make it bolder/lighter
+              lWeight: FontWeight.w600, // Optional: make it bolder/lighter
             ),
             textAlign: TextAlign.center,
             // decoration: InputDecoration(

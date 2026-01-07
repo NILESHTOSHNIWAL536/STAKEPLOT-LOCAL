@@ -525,8 +525,8 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
         child: Column(
           children: [
             Container(
-              // color: Colors,
-              height: MediaQuery.sizeOf(context).height / 1.35,
+               
+              height: MediaQuery.sizeOf(context).height / 1.24,
               child: Obx(() => isDateSummaryView.value
                   ? _buildDateBreakdownView(context)
                   : _buildCalendarView(context)),
@@ -784,7 +784,8 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
 
         // Calendar Grid
         Container(
-          height: MediaQuery.of(context).size.height / 1.3,
+          height: MediaQuery.of(context).size.height / 1.4,
+          color: AppColors.backgroundColor,
           child: Obx(() => GridView.builder(
                 padding: const EdgeInsets.all(12),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -847,15 +848,21 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
     child: Container(
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(27),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(75, 77, 115, 0.25),
-            blurRadius: 2,
-            offset: Offset(0, 2),
-            spreadRadius: 0,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(17),
+        border: Border.all(
+          color:
+               AppColors.border
+              
+          
+        ),
+        // boxShadow: const [
+        //   BoxShadow(
+        //     color: Color.fromRGBO(75, 77, 115, 0.25),
+        //     blurRadius: 2,
+        //     offset: Offset(0, 2),
+        //     spreadRadius: 0,
+        //   ),
+        // ],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -921,35 +928,6 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
   );
 }
 
-  Widget _buildDottedDivider() {
-    return Container(
-      height: 1,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          final boxWidth = constraints.constrainWidth();
-          final dashWidth = 1.7;
-          final dashHeight = 1.0;
-          final dashCount = (boxWidth / (2 * dashWidth)).floor();
-          return Flex(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            direction: Axis.horizontal,
-            children: List.generate(dashCount, (_) {
-              return SizedBox(
-                width: dashWidth,
-                height: dashHeight,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: AppColors.historyCalenderDivider,
-                  ),
-                ),
-              );
-            }),
-          );
-        },
-      ),
-    );
-  }
-
   Widget _buildCreditDebitSummary(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
@@ -966,14 +944,24 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
   Widget getContainerCreditDebit(title, amount) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
-      child: Container(
-        child: DottedBorderBox(
-          dashWidth: 7,
-          space: 5,
-          dashHeight: 1,
-          color: AppColors.primaryColor,
-          child: Row(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            color: AppColors.primaryColor.withOpacity(0.6),
+          ),
+          // boxShadow: const [
+          //   BoxShadow(
+          //     color: Color.fromRGBO(75, 77, 115, 0.25),
+          //     blurRadius: 2,
+          //     offset: Offset(0, 2),
+          //     spreadRadius: 0,
+          //   ),
+          // ],
+        ),
+        child:  Row(
             children: [
               Text(
                 title,
@@ -995,84 +983,9 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
                   )),
             ],
           ),
-        ),
-      ),
+        
+      
     );
   }
 }
 
-class OvalTransactionWidget extends StatelessWidget {
-  final String day;
-  final String transactionCount;
-  final double width;
-  final double height;
-  final Color backgroundColor;
-  final Color borderColor;
-  final Color textColor;
-
-  const OvalTransactionWidget({
-    Key? key,
-    required this.day,
-    required this.transactionCount,
-    this.width = 120,
-    this.height = 120,
-    this.backgroundColor = AppColors.backgroundColor,
-    this.borderColor = const Color(0xFFE5E7EB),
-    this.textColor = const Color(0xFF374151),
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        border: Border.all(
-          color: borderColor,
-          width: 2,
-        ),
-        borderRadius: BorderRadius.circular(width / 2),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Top section - Day
-          Expanded(
-            flex: 3,
-            child: Center(
-              child: Text(
-                day,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w600,
-                  color: textColor,
-                ),
-              ),
-            ),
-          ),
-          // Divider line
-          Container(
-            height: 1,
-            width: width * 0.7,
-            color: borderColor,
-          ),
-          // Bottom section - Transaction count
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Text(
-                '$transactionCount tnxs',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: textColor,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

@@ -45,7 +45,7 @@ class HomePageIcons {
   static String refresh = "assets/icons/Home-page/Refresh.svg";
   static String fetch = "assets/icons/Home-page/fetch.svg";
   static String none = "assets/icons/Home-page/none.svg";
-  static String isSplit = "assets/icons/Home-page/splitIcon3.svg";
+  static String isSplit = "assets/icons/Home-page/tnxSplit.svg";
   static String transactionSplit =
       "assets/icons/Home-page/TransactionSplitIcon.svg";
   static String cashIn = "assets/icons/Home-page/cashIn.svg";
@@ -55,8 +55,8 @@ class HomePageIcons {
   static String noAccLink = "assets/icons/Home-page/noAccLink.svg";
   static String filterIcon = "assets/icons/Home-page/filterIcon2.svg";
   static String filterOn = "assets/icons/Home-page/filterOn.svg";
-  static String dayWiseIcon1 = "assets/icons/Home-page/dayWiseIcon2.svg";
-  static String dayWiseIcon2 = "assets/icons/Home-page/button2.svg";
+  static String dayWiseIcon1 = "assets/icons/Home-page/dayWiseSelected.svg";
+  static String dayWiseIcon2 = "assets/icons/Home-page/dayWiseUnselected.svg";
   static String splitIcon = "assets/icons/Home-page/splitIcon2.svg";
   static String tagIcon = "assets/icons/Home-page/tagIcon2.svg";
   static String mt1 = "assets/icons/Home-page/mt1.svg";
@@ -66,7 +66,16 @@ class HomePageIcons {
   static String background = "assets/icons/Home-page/background.svg";
   static String cash = "assets/icons/Home-page/manualTransactionButton.svg";
   static String addAmount = "assets/icons/Home-page/addAmount.svg";
+  static String recentTransactions = "assets/icons/Home-page/todayView.svg";
+  static String noCollection = "assets/icons/Home-page/noCollection.svg";
+  static String personal = "assets/icons/Home-page/personalCollection.svg";
+  static String shared = "assets/icons/Home-page/shared.svg";
+  static String noTransactionsInCollection = "assets/icons/Home-page/notnx.svg";
+  static String noTransactionsInCollection2 = "assets/icons/Home-page/noTnx1.svg";
+  static String settings = "assets/icons/Home-page/collectionSetting.svg";
+  static String appUpdates = "assets/icons/Home-page/appUpdates.svg";
 }
+
 
 class Categories {
   static String link = "assets/icons/Categories2/";

@@ -129,13 +129,13 @@ class _CreditCardState extends State<CreditCard> {
       body:Padding(
     
   padding: EdgeInsets.only(
-    top: MediaQuery.of(context).size.height * 0.06,
+    top: MediaQuery.of(context).size.height * 0.02,
   
 
 
   ),child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(12),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,10 +145,12 @@ class _CreditCardState extends State<CreditCard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left:15,bottom:10),
+                      padding: const EdgeInsets.only(left:10,bottom:10),
                       child: Container(
-                        width: 40,
-                        height: 40,
+                               width: MediaQuery.sizeOf(context).width/10,
+                           
+                         
+                          height: MediaQuery.sizeOf(context).height/22,
                         
                          decoration: BoxDecoration(
                             color: Colors.white,           // ✅ white background
@@ -173,7 +175,7 @@ class _CreditCardState extends State<CreditCard> {
                         ),
                       ),
                     ),
-                    SizedBox(width:50)
+                   SizedBox(  width: MediaQuery.of(context).size.width * 0.15)
 ,
                     Padding(
                       padding: const EdgeInsets.only(left: 14),

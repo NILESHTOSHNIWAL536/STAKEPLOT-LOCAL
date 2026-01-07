@@ -121,7 +121,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
       body:Padding(
     
   padding: EdgeInsets.only(
-    top: MediaQuery.of(context).size.height * 0.06,
+    top: MediaQuery.of(context).size.height * 0.02,
   
 
 
@@ -136,10 +136,12 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left:15,bottom:10 ),
+                      padding: const EdgeInsets.only(left:10,bottom:10 ),
                       child: Container(
-                        width: 40,
-                        height: 40,
+                       width: MediaQuery.sizeOf(context).width/8,
+                           
+                         
+                          height: MediaQuery.sizeOf(context).height/22,
                         
                          decoration: BoxDecoration(
                             color: Colors.white,           // ✅ white background
@@ -164,7 +166,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                         ),
                       ),
                     ),
-                    SizedBox(width:50)
+                SizedBox(  width: MediaQuery.of(context).size.width * 0.15)
 ,
                     Padding(
                       padding: const EdgeInsets.only(left: 14),
@@ -303,34 +305,54 @@ class _SIPCalculatorState extends State<SIPCalculator> {
   }
 
   Widget graph() {
-    return PieChartGraph(
-      title: "Investment Breakdown",
-      graphData: [
-        {
-          'title':
-              'Invested: ₹${formatMoneyIndian(totalInvested.toStringAsFixed(0))}',
-          'value': totalInvested,
-        },
-        {
-          'title':
-              'Returns: ₹${formatMoneyIndian(totalReturns.toStringAsFixed(0))}',
-          'value': totalReturns,
-        },
-      ],
-      graphDisc: [
-        {
-          'title': 'Future Value:',
-          'amount': "₹${formatMoneyIndian(futureValue.toStringAsFixed(2))}",
-        },
-        {
-          'title': 'Total Invested:',
-          'amount': "₹${formatMoneyIndian(totalInvested.toStringAsFixed(2))}",
-        },
-        {
-          'title': 'Total Returns:',
-          'amount': "₹${formatMoneyIndian(totalReturns.toStringAsFixed(2))}",
-        },
-      ],
-    );
+  // --- PRINCIPAL & RETURNS ---
+  double principal = totalInvested;
+  double returns = totalReturns;
+
+  // --- TOTAL FOR PIE CALCULATION ---
+  double pieTotal = principal + returns;
+
+  // --- SAFETY CHECK ---
+  if (pieTotal == 0) {
+    pieTotal = 1; // prevents division by zero
   }
+
+  // --- PERCENTAGES (FOR DISPLAY IF NEEDED) ---
+  double principalPercent = (principal / pieTotal) * 100;
+  double returnsPercent = (returns / pieTotal) * 100;
+
+  return PieChartGraph(
+    title: "Investment Breakdown",
+
+    // 🔵 PIE DATA → ONLY PRINCIPAL VS RETURNS
+    graphData: [
+      {
+        'title':
+            'Principal\n${principalPercent.toStringAsFixed(1)}%\n₹${formatMoneyIndian(principal.toStringAsFixed(0))}',
+        'value': principal, // slice size
+      },
+      {
+        'title':
+            'Returns\n${returnsPercent.toStringAsFixed(1)}%\n₹${formatMoneyIndian(returns.toStringAsFixed(0))}',
+        'value': returns, // slice size
+      },
+    ],
+
+    // 📋 BELOW-PIE DETAILS (UNCHANGED)
+    graphDisc: [
+      {
+        'title': 'Future Value:',
+        'amount': "₹${formatMoneyIndian(futureValue.toStringAsFixed(0))}",
+      },
+      {
+        'title': 'Total Invested:',
+        'amount': "₹${formatMoneyIndian(principal.toStringAsFixed(0))}",
+      },
+      {
+        'title': 'Total Returns:',
+        'amount': "₹${formatMoneyIndian(returns.toStringAsFixed(0))}",
+      },
+    ],
+  );
+}
 }
