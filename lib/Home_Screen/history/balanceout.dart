@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/balanceout_mismatch.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/tagandhidebutton.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -76,7 +78,7 @@ class BalanceOutDialog extends StatelessWidget {
                       context,
                       fontSize: 18,
                       lWeight: FontWeight.w600,
-                      color: AppColors.finSpaceColor
+                      color: AppColors.accentColor
                     ),
                   ),
                   InkWell(
@@ -86,16 +88,7 @@ class BalanceOutDialog extends StatelessWidget {
                         builder: (context) => CashOutDialog(maxAmount: max,),
                       );
                     },
-                    child: Container(
-                      height: 25,
-                      width: 25,
-                      decoration:  BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(5),
-                        color: Color(0xFFF6F6F6),
-                      ),
-                      child: const Icon(Icons.add, size: 16, color: Color(0xFF403E6A)),
-                    ),
+                    child: const Icon(Icons.add_box_outlined, size: 26, color: AppColors.primaryColor),
                   )
                 ],
               ),
@@ -106,8 +99,9 @@ class BalanceOutDialog extends StatelessWidget {
                 "Balancing them out will help keep your expense summary accurate.",
                 style: FontManager().getTextStyle(
                   context,
-                  fontSize: 12,
-                  color: Colors.grey,
+                  fontSize: 14,
+                  lWeight: FontWeight.w400,
+                  color: AppColors.grey,
                 ),
               ),
 
@@ -130,7 +124,7 @@ class BalanceOutDialog extends StatelessWidget {
 Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
    return Column(
      children: [
-             dottedDivider(),
+            //  dottedDivider(),
               const SizedBox(height: 12),
               // Total
               Row(
@@ -150,7 +144,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                       context,
                       fontSize: 20,
                       lWeight: FontWeight.bold,
-                      color: netAmount > 0 ? const Color(0xFF403E6A) : Colors.red,
+                      color: netAmount > 0 ? AppColors.primaryColor : AppColors.debitColor,
                     ),
                   ),
                 ],
@@ -258,7 +252,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                       context,
                                       fontSize: 11,
                                       lWeight: FontWeight.w500,
-                                      color: AppColors.finSpaceColor,
+                                      color: AppColors.accentColor,
                                     ),
                                   ),
                                 ),
@@ -270,14 +264,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                  width: MediaQuery.sizeOf(context).width/9,
                                   child: Container(
                                                            child: tx.manualTransaction
-                                      ? Lottie.asset(
-                                          'assets/splashScreen/manualTransactionIcon.json',
-                                          height: 30,
-                                          width: 30,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return const Icon(Icons.error);
-                                          },
-                                        )
+                                      ? AvatarProfileImageZero(url: HomePageIcons.cashTnx, width: 40, height: 40)
                                       : Image.network(
                                           tx.bankLogo ?? "",
                                           width: 22,

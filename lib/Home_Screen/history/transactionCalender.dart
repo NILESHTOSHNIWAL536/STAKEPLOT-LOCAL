@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
@@ -11,7 +10,6 @@ import 'package:flutter_application_code_stakeplot/repository/autopay_repository
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:intl/intl.dart';
 
@@ -54,6 +52,8 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
   final RxInt endYear = (DateTime.now().year + 1).obs;
   List dateList = [];
   final RxList<CardData> cards = <CardData>[].obs;
+final RxInt totalTransactionsCount = 0.obs;
+final RxInt totalBillsCount = 0.obs;
 
   @override
   void initState() {
@@ -65,13 +65,38 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
     dateScrollController.addListener(_onDateScroll);
   }
 
- Future<void> _fetchAutoPayData() async {
+//  Future<void> _fetchAutoPayData() async {
+//   final fetchedCards = await getAutoPayInfo();
+//   if (mounted) {
+//     setState(() {
+//       cards.assignAll(fetchedCards);
+//       totalBillsCount.value =
+//     fetchedCards.where((c) => c.isActive == true).length;
+//     });
+//   }
+// }
+Future<void> _fetchAutoPayData() async {
   final fetchedCards = await getAutoPayInfo();
-  if (mounted) {
-    setState(() {
-      cards.assignAll(fetchedCards);
-    });
-  }
+
+  if (!mounted) return;
+
+  final int selectedMonth =
+      DateFormat('MMMM').parse(currentMonth.value).month;
+  final int selectedYear = currentYear.value;
+
+  final activeCardsThisMonth = fetchedCards.where((card) {
+    if (card.isActive != true) return false;
+    if (card.nextReminderAt == null) return false;
+
+    final reminderDate = card.nextReminderAt!;
+    return reminderDate.month == selectedMonth &&
+           reminderDate.year == selectedYear;
+  }).toList();
+
+  setState(() {
+    cards.assignAll(fetchedCards);
+    totalBillsCount.value = activeCardsThisMonth.length;
+  });
 }
 
   Future<void> _fetchDayWiseTransactions() async {
@@ -212,6 +237,11 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
       final amount = transaction['debitAmount'] ?? 0;
       return sum + (amount is num ? amount.toDouble() : 0.0);
     });
+     totalTransactionsCount.value =
+      dayWiseTransactions.fold(0, (sum, transaction) {
+    final count = transaction['count'] ?? 0;
+    return sum + (count is int ? count : 0);
+  });
   }
 
   void _calculateDateTotals() {
@@ -524,13 +554,9 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-               
-              height: MediaQuery.sizeOf(context).height / 1.24,
-              child: Obx(() => isDateSummaryView.value
-                  ? _buildDateBreakdownView(context)
-                  : _buildCalendarView(context)),
-            ),
+            Obx(() => isDateSummaryView.value
+                ? _buildDateBreakdownView(context)
+                : _buildCalendarView(context)),
           ],
         ),
       ),
@@ -748,6 +774,7 @@ class _CalendarTransactionScreenState extends State<CalendarTransactionScreen> {
       children: [
         // Month Header with Navigation
         Container(
+          color: AppColors.newbg,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -889,7 +916,7 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
                     children: [
                         // SizedBox(width: 4 * fontScale),
                       chatAvatartImage(
-                        url: 'assets/icons/Home-page/autoPayDate.svg',
+                        url:HomePageIcons.autoPaydate,
                         height: 60 * fontScale, // Reduced size to fit calendar item
                         width: 60 * fontScale,
                       ),
@@ -930,16 +957,62 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
 
   Widget _buildCreditDebitSummary(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          getContainerCreditDebit('Credit', totalCredit.value),
-          getContainerCreditDebit('Debit', totalDebit.value),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              getContainerCreditDebit('Credit', totalCredit.value),
+              getContainerCreditDebit('Debit', totalDebit.value),
+              getContainerCount('No. of bills', totalBillsCount),
+              
+            ],
+          ),
+          Container(
+            width: MediaQuery.sizeOf(context).width/2,
+            child: getContainerCount('Total Transactions', totalTransactionsCount)),
         ],
       ),
     );
   }
+Widget getContainerCount(String title, RxInt count) {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+    decoration: BoxDecoration(
+      color: AppColors.backgroundColor,
+      borderRadius: BorderRadius.circular(5),
+      border: Border.all(
+        color: AppColors.primaryColor.withOpacity(0.2),
+      ),
+    ),
+    child: Obx(() => Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 12,
+                color: AppColors.accentColor,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              count.value.toString(),
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 12,
+                lWeight: FontWeight.w600,
+                color: AppColors.accentColor,
+              ),
+            ),
+          ],
+        )),
+  );
+}
 
   Widget getContainerCreditDebit(title, amount) {
     return Container(
@@ -950,7 +1023,7 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(
-            color: AppColors.primaryColor.withOpacity(0.6),
+            color: AppColors.primaryColor.withOpacity(0.2),
           ),
           // boxShadow: const [
           //   BoxShadow(
@@ -967,16 +1040,16 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
                 title,
                 style: FontManager().getTextStyle(
                   context,
-                  fontSize: 14,
+                  fontSize: 12,
                   color: AppColors.accentColor,
                 ),
               ),
-              SizedBox(width: 16),
+              SizedBox(width: 10),
               Obx(() => Text(
                     '₹ ${title == 'Credit' ? totalCredit.value.toStringAsFixed(0) : totalDebit.value.toStringAsFixed(0)}',
                     style: FontManager().getTextStyle(
                       context,
-                      fontSize: 14,
+                      fontSize: 12,
                       lWeight: FontWeight.w600,
                       color: AppColors.accentColor,
                     ),

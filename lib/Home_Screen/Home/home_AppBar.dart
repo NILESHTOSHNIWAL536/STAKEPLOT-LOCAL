@@ -1,29 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Constants/search.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/components/userNavigator.dart';
-import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-
-import 'package:flutter_application_code_stakeplot/app_init/splashScreen.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
-import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/components/notification_icon.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
-import 'package:get/get.dart';
-
 import '../../Constants/app_styles.dart';
-import '../../Constants/core/app_padding_sizes.dart';
-import '../../components/shared_utils.dart';
-import '../history/recent_transactions.dart';
 
 // PreferredSizeWidget getAppBar(context) {
 //   final userController = ControllerManagement.userController;
@@ -78,8 +58,8 @@ class TopRightIconsWidget extends StatelessWidget {
             // TODO: Add your navigation or action here
           },
           child: Container(
-            padding: EdgeInsets.all(1),
-            margin: EdgeInsets.only(left: 4),
+            padding: const EdgeInsets.all(1),
+            margin: const EdgeInsets.only(left: 4),
             decoration: BoxDecoration(
              color: AppColors.border,
              borderRadius: BorderRadius.circular(12)

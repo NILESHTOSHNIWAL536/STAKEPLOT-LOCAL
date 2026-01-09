@@ -19,6 +19,7 @@ import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../Constants/app_styles.dart';
 import '../repository/auth_service/login_apis.dart';
@@ -68,7 +69,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Welcome Text
                       _buildWelcomeText(),
 
-                      const SizedBox(height: 360),
+                      // const SizedBox(height: 360),
+                    Image.asset(
+      'assets/splashScreen/login.gif',
+      width: MediaQuery.sizeOf(context).width,
+      height: 260,
+      fit: BoxFit.contain,
+      gaplessPlayback: true, // prevents flicker
+    ),
 
                       // Email Field
                       _buildEmailField(),

@@ -173,7 +173,7 @@ Widget reviewTagTransactions(
             ),
         ],
       ),
-      SizedBox(height: 4,)
+      const SizedBox(height: 4,)
     ],
   );
 }
@@ -207,7 +207,7 @@ Widget animatedIconTransition(BuildContext context) {
         position: offset,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
-          child: Container(
+          child: SizedBox(
             key: ValueKey(showMt1),
             width: 50,
             height: 50,

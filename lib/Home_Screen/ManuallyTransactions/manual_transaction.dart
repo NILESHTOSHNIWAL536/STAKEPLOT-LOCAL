@@ -7,25 +7,24 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/friends_bill_split.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/manual_transaction_repository.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/image_service/profile.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:get/get.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-import '../../Constants/custom_keypad.dart';
+import '../../Constants/core/app_shadows.dart';
 import '../../components/shared_utils.dart';
 import '../../routes/index_route.dart';
+import 'custom_keyboard.dart';
 
 bool isDebit = true;
+bool showKeyboard = true;
 
 class ModalContent extends StatefulWidget {
   final bool isDebit;
@@ -213,10 +212,49 @@ class _ModalContentState extends State<ModalContent>
       selectedSubCategory = null;
       isCategoryFieldExpanded = false;
       _isAmountFieldFocused = false;
-      // re-populate filteredCategories according to tab
+
       _populateInitialFilteredCategories();
     });
   }
+void _onKeyTap(String value) {
+  final text = _amountController.text;
+
+  // Allow digits
+  if (RegExp(r'^\d$').hasMatch(value)) {
+    _append(value);
+    return;
+  }
+
+  // Allow only ONE decimal point
+  if (value == '.') {
+    if (!text.contains('.')) {
+      _append(value);
+    }
+    return;
+  }
+
+  
+
+}
+
+void _append(String value) {
+  setState(() {
+    _amountController.text += value;
+    _amountController.selection = TextSelection.fromPosition(
+      TextPosition(offset: _amountController.text.length),
+    );
+  });
+}
+
+
+void _onBackspace() {
+  if (_amountController.text.isEmpty) return;
+
+  setState(() {
+    _amountController.text = _amountController.text
+        .substring(0, _amountController.text.length - 1);
+  });
+}
 
   // Helper to scroll the category widget to the top of the visible scroll area (with padding)
   Future<void> _scrollCategoryToTop({double topPadding = 6.0}) async {
@@ -306,10 +344,10 @@ class _ModalContentState extends State<ModalContent>
   void _submitAmount() {
     final value = _amountController.text.trim();
 
-    if (value.isEmpty) {
-      snackBarCalledfail(context, "Please enter a valid amount");
-      return;
-    }
+    if (value.isEmpty || value.contains(".") || value.contains("-")) {
+    snackBarCalledfail(context, "Enter a valid amount");
+    return;
+  }
 
     setState(() {
       amount = double.tryParse(value);
@@ -336,58 +374,159 @@ class _ModalContentState extends State<ModalContent>
 
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: AnimatedPadding(
-                padding: MediaQuery.of(context).viewInsets,
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeOut,
-                child: Container(
-                  color: AppColors.border,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if ((selectedCategory == null &&
-                                  selectedSubCategory == null) ||
-                              !widget.isDebit) ...[
-                            Row(
-                              children: [
-                                Expanded(child: AmountWidget()),
-                                const SizedBox(width: 8),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-                          if (amount != null) ...[
-                            categoryWidget(),
-                          ],
-                           const SizedBox(height: 6),
-                         
-                          if (isCategoryFieldExpanded) ...[
-                          categoryExpandedWidget(),
-                          // getListOfCustomCategory(),
+      child: AnimatedPadding(
+              padding: MediaQuery.of(context).viewInsets,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+              child: Container(
+                color: AppColors.border,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: 
+                   showKeyboard? 
+                   GestureDetector(
+                     behavior: HitTestBehavior.opaque,
+  onTap: showKeyboard
+      ? () {
+          setState(() => showKeyboard = false);
+        }
+      : null,
+                     child: Column(
+                      //  mainAxisSize: MainAxisSize.min,
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         if ((selectedCategory == null &&
+                                 selectedSubCategory == null) ||
+                             !widget.isDebit) ...[
+                               GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                                                      onTap: () {
+                                                        setState(() => showKeyboard = true);
+                                                      },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: AmountWidget(),
+                              )),
+                                                      
+                                                          const SizedBox(height: 16),
+                           (showKeyboard)?
+                                                       GestureDetector(
+                                                                               behavior: HitTestBehavior.translucent,
+                                                                               onTap: () {
+                                                                                 setState(() => showKeyboard = false);
+                                                                               },
+                                                                               child: CustomNumericKeyboard(
+                                                   onKeyTap: _onKeyTap,
+                                                   onBackspace: _onBackspace,
+                                                   onSubmit: () {
+                                                     _submitAmount();
+                                                     setState(() => showKeyboard = false);
+                                                   },
+                                                   onDismiss: () {
+                                                     setState(() => showKeyboard = false);
+                                                   },
+                                                                               ),
+                                                       ):const SizedBox.shrink(),
+                          
+                         ],
+                        
+                        
+                         ],
+                      
+                       
+                     ),
+                   ):
+                
+                  SingleChildScrollView(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if ((selectedCategory == null &&
+                                selectedSubCategory == null) ||
+                            !widget.isDebit) ...[
+                          Column(
+                                  children: [
+                                    // ✅ Amount widget NOT wrapped
+                                    GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  setState(() => showKeyboard = true);
+                                },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                        child: AmountWidget(),
+                                      )),
+                                
+                                    const SizedBox(height: 16),
+                                
+                                    // ✅ Outside tap dismiss only when keyboard open
+                                    if (showKeyboard)
+                                      GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  setState(() => showKeyboard = false);
+                                },
+                                child: Column(
+                                  children: [
+                                    CustomNumericKeyboard(
+                                      onKeyTap: _onKeyTap,
+                                      onBackspace: _onBackspace,
+                                      onSubmit: () {
+                                        _submitAmount();
+                                        setState(() => showKeyboard = false);
+                                      },
+                                      onDismiss: () {
+                                        setState(() => showKeyboard = false);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                      ),
+                                  ],
+                                ),
+                          const SizedBox(height: 16),
                         ],
-                          if (selectedCategory != null &&
-                              selectedSubCategory == null) ...[
-                            subcategoryWidget(),
-                          ],
-                          if (fin != null) ...[
-                            widget.isDebit ? SplitLendButton() : SizedBox.shrink(),
-                            continueButton(),
-                          ],
+                        if (amount != null) ...[
+                          Padding(
+                           padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: categoryWidget(),
+                          ),
                         ],
-                      ),
+                         const SizedBox(height: 6),
+                       
+                        if (isCategoryFieldExpanded) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: categoryExpandedWidget(),
+                        ),
+                        // getListOfCustomCategory(),
+                      ],
+                        if (selectedCategory != null &&
+                            selectedSubCategory == null) ...[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: subcategoryWidget(),
+                          ),
+                        ],
+                        if (fin != null) ...[
+                          Padding(
+                         padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: widget.isDebit ? SplitLendButton() : const SizedBox.shrink(),
+                          ),
+                          continueButton(),
+                        ],
+                     
+                      ],
                     ),
                   ),
+                
                 ),
               ),
-      ),
+            ),
     );
   }
 
@@ -398,13 +537,9 @@ class _ModalContentState extends State<ModalContent>
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.accentColor.withOpacity(0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
+        AppShadows.soft
         ],
-        border: Border.all(color: AppColors.accentColor.withOpacity(0.06)),
+        border: AppBorders.soft
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Column(
@@ -421,11 +556,9 @@ class _ModalContentState extends State<ModalContent>
             ),
           ),
           const SizedBox(height: 8),
-          Divider(
-            height: 1,
-            color: AppColors.accentColor.withOpacity(0.15),
-            thickness: 1,
-          ),
+
+          AppDividers.soft,
+
           const SizedBox(height: 12),
           Row(
             children: [
@@ -436,7 +569,7 @@ class _ModalContentState extends State<ModalContent>
                   color: AppColors.button,
                   borderRadius: BorderRadius.circular(10),
                   border:
-                      Border.all(color: AppColors.accentColor.withOpacity(0.06)),
+                      AppBorders.soft
                 ),
                 child: Center(
                   child: AvatarProfileImage(
@@ -447,52 +580,69 @@ class _ModalContentState extends State<ModalContent>
                 ),
               ),
               const SizedBox(width: 12),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: TextField(
-                  controller: _amountController,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.done,
-                  autofocus: _isAmountFieldFocused,
-                  inputFormatters: allowDecimalInput(),
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 16,
-                    color: AppColors.accentColor,
-                  ),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                    hintText: HomepageStringsDart().enterAmount,
-                    hintStyle: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.normal,
-                      fontSize: 16,
-                      color: AppColors.accentColor.withOpacity(0.45),
-                    ),
-                    border: InputBorder.none,
-                  ),
-                  onChanged: (value) {
+              IgnorePointer(
+                child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                   onTap: () {
                     setState(() {
-                      amount = double.tryParse(value);
-                      if (!widget.isDebit) {
-                        selectedCategory = "Income";
-                        categoryFieldController.text = "Income";
-                      }
-                      fin = null;
-                      _isAmountFieldFocused = false;
+                       showKeyboard = true;
                     });
                   },
-                  onEditingComplete: () {
-                    fin = '$selectedCategory ($selectedSubCategory)';
-                    FocusScope.of(context).unfocus();
-                  },
-                  onSubmitted: (value) {
-                    _submitAmount();
-                  },
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: TextField(
+                      controller: _amountController,
+                      // keyboardType: TextInputType.number,
+                      readOnly: true, // 👈 IMPORTANT
+                  showCursor: true,
+                  
+                  
+
+                  
+                      textInputAction: TextInputAction.done,
+                      autofocus: _isAmountFieldFocused,
+                      inputFormatters: allowDecimalInput(),
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 16,
+                        color: AppColors.accentColor,
+                      ),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                        hintText: HomepageStringsDart().enterAmount,
+                        hintStyle: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 16,
+                          color: AppColors.accentColor.withOpacity(0.45),
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          amount = double.tryParse(value);
+                          if (!widget.isDebit) {
+                            selectedCategory = "Income";
+                            categoryFieldController.text = "Income";
+                          }
+                          fin = null;
+                          _isAmountFieldFocused = false;
+                        });
+                      },
+                      onEditingComplete: () {
+                        fin = '$selectedCategory ($selectedSubCategory)';
+                        FocusScope.of(context).unfocus();
+                      },
+                      onSubmitted: (value) {
+                        _submitAmount();
+                      },
+                    ),
+                  ),
                 ),
               ),
+            
             ],
           ),
         ],
@@ -508,13 +658,9 @@ class _ModalContentState extends State<ModalContent>
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.accentColor.withOpacity(0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
+         AppShadows.soft
         ],
-        border: Border.all(color: AppColors.accentColor.withOpacity(0.06)),
+        border: AppBorders.soft
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Column(
@@ -522,7 +668,7 @@ class _ModalContentState extends State<ModalContent>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            HomepageStringsDart().selectCategory ?? 'Select Category',
+            HomepageStringsDart().selectCategory ,
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.bold,
@@ -531,11 +677,8 @@ class _ModalContentState extends State<ModalContent>
             ),
           ),
           const SizedBox(height: 8),
-          Divider(
-            height: 1,
-            color: AppColors.accentColor.withOpacity(0.12),
-            thickness: 1,
-          ),
+          AppDividers.soft,
+
           const SizedBox(height: 12),
           Row(
             children: [
@@ -545,12 +688,12 @@ class _ModalContentState extends State<ModalContent>
                 decoration: BoxDecoration(
                   color: AppColors.button,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.accentColor.withOpacity(0.06)),
+                  border: AppBorders.soft
                 ),
                 child: const Center(child: Icon(Icons.search, color: AppColors.accentColor)),
               ),
               const SizedBox(width: 12),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: TextField(
                   controller: categoryFieldController,
@@ -622,13 +765,9 @@ class _ModalContentState extends State<ModalContent>
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.accentColor.withOpacity(0.02),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
+          AppShadows.soft
         ],
-        border: Border.all(color: AppColors.accentColor.withOpacity(0.04)),
+        border:  AppBorders.soft,
       ),
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.6,
@@ -746,7 +885,7 @@ class _ModalContentState extends State<ModalContent>
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.accentColor.withOpacity(0.04)),
+        border:  AppBorders.soft
       ),
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.35),
@@ -759,7 +898,7 @@ class _ModalContentState extends State<ModalContent>
           final imageUrl = category['imageUrl'] ?? '';
 
           return ListTile(
-            leading: Container(
+            leading: SizedBox(
               height: 40,
               width: 40,
               child: AvatarProfileImage(
@@ -804,13 +943,9 @@ class _ModalContentState extends State<ModalContent>
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.accentColor.withOpacity(0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
+          AppShadows.soft
         ],
-        border: Border.all(color: AppColors.accentColor.withOpacity(0.06)),
+        border:  AppBorders.soft,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -825,11 +960,7 @@ class _ModalContentState extends State<ModalContent>
             ),
           ),
           const SizedBox(height: 8),
-          Divider(
-            height: 1,
-            thickness: 1,
-            color: AppColors.accentColor.withOpacity(0.15),
-          ),
+          AppDividers.soft,
           const SizedBox(height: 12),
           Wrap(
             spacing: 10,
@@ -859,9 +990,7 @@ class _ModalContentState extends State<ModalContent>
                   decoration: BoxDecoration(
                     color: AppColors.backgroundColor,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: AppColors.accentColor.withOpacity(0.15),
-                    ),
+                    border:  AppBorders.soft
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

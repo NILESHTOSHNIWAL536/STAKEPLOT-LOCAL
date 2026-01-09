@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:flutter_application_code_stakeplot/user_chat/openShowModal.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_shadows.dart';
 import '../components/shared_utils.dart';
 
 RxString tagName = "".obs;
@@ -67,12 +68,12 @@ class _TagShowmodalState extends State<TagShowmodal>
     UrlPathImage.value = getIconPath(widget.data.category.toLowerCase());
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
 
     _animation = Tween<Offset>(
-      begin: Offset(0, 3), // Start from below
-      end: Offset(0, 0), // Move to normal position
+      begin:const Offset(0, 3), // Start from below
+      end: const Offset(0, 0), // Move to normal position
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeOut,
@@ -91,7 +92,7 @@ class _TagShowmodalState extends State<TagShowmodal>
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      padding:const  EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 1.1,
       decoration: BoxDecoration(
@@ -660,15 +661,16 @@ class _TagShowmodalState extends State<TagShowmodal>
                   child: Container(
                     margin: const EdgeInsets.all(10),
                      decoration:  BoxDecoration(
-                        shape: BoxShape.rectangle,
+                        
                         borderRadius: BorderRadius.circular(5),
-                        color: Color(0xFFF6F6F6),
+                        color: AppColors.backgroundColor,
+                        border: AppBorders.soft
                       ),
                     child: Obx(() => AvatarProfileImage(
                           url: UrlPathImage
                               .value, //: Categories.link +(imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
-                          height: 16,
-                          width: 20,
+                          height: 26,
+                          width: 30,
                         )),
                   ),
                 ),

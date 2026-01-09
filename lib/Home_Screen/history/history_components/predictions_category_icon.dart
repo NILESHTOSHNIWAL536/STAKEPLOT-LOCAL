@@ -50,12 +50,7 @@ Widget getRightSidePart(String category, BuildContext context, bool isManual,
         ),
       SizedBox(width: 8 * scaleFactor),
       isManual
-          ? Container(
-              child: Lottie.asset(
-                'assets/splashScreen/manualTransactionIcon.json',
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-              ),
-            )
+          ? AvatarProfileImageZero(url: HomePageIcons.cashTnx, width: 40, height: 40)
           : Image.network(
               logo,
               width: 22,

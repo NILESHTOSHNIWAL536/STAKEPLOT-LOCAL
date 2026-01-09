@@ -1370,11 +1370,10 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
-
+import '../Constants/core/app_component_sizes.dart';
 import '../backed_connections/bankServices/nextFetch.dart';
 import '../components/shared_utils.dart';
 import '../model/bank_model.dart';
@@ -1421,19 +1420,13 @@ void initState() {
   Widget build(BuildContext context) {
    
     // Check for zero to avoid division by zero
-    return Container(
-      
-        // Wrap content with SingleChildScrollView
-        // child: Obx(() => loadBanks.value ? BankSlider() :loadBalance.value?  avatarSlider(): avatarSlider())
-        child: Obx(() {
-  if (loadBanks.value) return BankSlider();
-
-  return showFlipSlider
-      ? avatarSlider2() // 🔥 flip UI
-      : avatarSlider(); // 👈 normal swipe UI
-}),
-
-        );
+    return Obx(() {
+      if (loadBanks.value) return const BankSlider();
+    
+      return showFlipSlider
+          ? avatarSlider2() // 🔥 flip UI
+          : avatarSlider(); // 👈 normal swipe UI
+    });
   }
 
 Widget avatarSlider() {
@@ -1442,9 +1435,9 @@ Widget avatarSlider() {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Container(
+      SizedBox(
         // color: Colors.red,
-        height: MediaQuery.sizeOf(context).height/4,
+        height: AppComponentSizes.h4,
         child: PageView.builder(
           itemCount: bankAccountLinkedList.length,
           controller: PageController(
@@ -1472,17 +1465,17 @@ Widget avatarSlider() {
         ),
       ),
   
-      SizedBox(height: 6),
+     const  SizedBox(height: 6),
   
       Obx(() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           bankAccountLinkedList.length,
           (index) => AnimatedContainer(
-            duration: Duration(milliseconds: 250),
-            margin: EdgeInsets.symmetric(horizontal: 4),
+            duration: const Duration(milliseconds: 250),
+            margin: const EdgeInsets.symmetric(horizontal: 4),
             height: 8,
-            width: scrollBankPage.value == index ? 8 : 8,  // active dot grows
+            width:  8,  // active dot grows
             decoration: BoxDecoration(
               color: scrollBankPage.value == index
                   ? AppColors.primaryColor
@@ -1498,7 +1491,6 @@ Widget avatarSlider() {
   );
 }
 
- 
 
  Widget avatarSlider2() {
   if (bankAccountLinkedList.isEmpty) return connectBankAccount(context);
@@ -1533,7 +1525,7 @@ Future.microtask(() {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Container(
+      SizedBox(
         // color: Colors.red,
         height: MediaQuery.sizeOf(context).height/4,
         child:
@@ -1600,17 +1592,17 @@ Future.microtask(() {
 
       ),
   
-      SizedBox(height: 6),
+      const SizedBox(height: 6),
   
       Obx(() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           bankAccountLinkedList.length,
           (index) => AnimatedContainer(
-            duration: Duration(milliseconds: 250),
-            margin: EdgeInsets.symmetric(horizontal: 4),
+            duration:const  Duration(milliseconds: 250),
+            margin:const  EdgeInsets.symmetric(horizontal: 4),
             height: 8,
-            width: scrollBankPage.value == index ? 8 : 8,  // active dot grows
+            width:  8,  // active dot grows
             decoration: BoxDecoration(
               color: scrollBankPage.value == index
                   ? AppColors.primaryColor
@@ -1676,7 +1668,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
                         context,
                         fontSize: 16,
                         lWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: AppColors.backgroundColor,
                       ),
                     ),
                   ],
@@ -1691,7 +1683,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
                     context,
                     fontSize: 11,
                     lWeight: FontWeight.w400,
-                    color: Colors.white70,
+                    color: AppColors.grey,
                   ),
                 ),
 
@@ -1820,7 +1812,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
         width: 1.2,
         height: 15,
         color: AppColors.backgroundColor,
-        margin: EdgeInsets.symmetric(horizontal: 2),
+        margin: const EdgeInsets.symmetric(horizontal: 2),
       ),
         _buildPicker("secondDigit", context),
       ],
@@ -1837,13 +1829,12 @@ Widget getListViewBankInfo(BankAccountModel data) {
   }
 
   Widget _buildPicker(String controllerValue, BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
 
     return Container(
       width: 40,
       height:40,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
+      decoration:  BoxDecoration(
+        color: AppColors.transparentColor,
       ),
       
       child: CupertinoPicker(
@@ -1918,7 +1909,7 @@ Widget setPinForAccountHide(context) {
         context,
         lWeight: FontWeight.bold,
         fontSize: 14,           
-        color: Colors.white,   
+        color: AppColors.backgroundColor,   
       ),
       textAlign: TextAlign.center,
     ),
@@ -1953,14 +1944,14 @@ Widget setPinForAccountHide(context) {
     return SafeArea(
       child: Container(
         //  color: AppColors.backgroundColor,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(16), topRight: Radius.circular(16)),
           color: AppColors.backgroundColor,
         ),
         width: MediaQuery.of(context).size.width,
         height: height > 0 ? height / 3.8 : 100, // Fallback height
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2029,7 +2020,7 @@ Widget setPinForAccountHide(context) {
                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
                       decoration: BoxDecoration(
                         color: isInvalidPin
-                            ? AppColors.bg3
+                            ? AppColors.grey
                             : AppColors.primaryColor, // Button color based on validity
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -2040,7 +2031,7 @@ Widget setPinForAccountHide(context) {
                             context,
                             lWeight: FontWeight.bold,
                             fontSize: 18,
-                            color: AppColors.bg5,
+                            color: AppColors.backgroundColor,
                           ),
                         ),
                       ),
@@ -2085,7 +2076,7 @@ Widget setPinForAccountHide(context) {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                               height: 30,
                               width: 30,
                               child: Lottie.asset("assets/splashScreen/fetchLoad.json"),
@@ -2114,7 +2105,7 @@ Widget setPinForAccountHide(context) {
                       context,
                       lWeight: FontWeight.w500,
                       fontSize: 15,
-                      color: Colorcodes.white,
+                      color: AppColors.backgroundColor,
                     ),
                     textAlign: TextAlign.center,
                   ),

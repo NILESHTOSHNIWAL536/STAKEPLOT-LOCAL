@@ -384,8 +384,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/collections/create_collection_pages/collection_people_selector.dart';
 import 'package:flutter_application_code_stakeplot/repository/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
@@ -438,7 +438,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   // ---------------------------------------------------------------------------
   late AnimationController _searchAnimController;
   late Animation<Offset> _searchSlideAnim;
-  late Animation<double> _searchHeightAnim;
+  
   bool isSearchActive = false;
 late Animation<double> _searchScaleAnim;
 
@@ -526,7 +526,7 @@ _searchScaleAnim = Tween<double>(
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ) {
     double screenHeight = widget.isFromCollection? MediaQuery.sizeOf(context).height/ 1.5:MediaQuery.sizeOf(context).height;
 
     return GestureDetector(
@@ -540,7 +540,7 @@ _searchScaleAnim = Tween<double>(
         body: SafeArea(
           child: Container(
             
-            color: widget.isFromCollection? AppColors.border: AppColors.newbg,
+            color: widget.isFromCollection? AppColors.border: AppColors.border,
             child: widget.isFromCollection?
             Column(
               children: [
@@ -551,31 +551,44 @@ _searchScaleAnim = Tween<double>(
             ):
           Column(
   children: [
-    isSearchActive?
-        _buildSearchAndTabsSection(context)
-        : historyHeader(context, widget.fromAutoPay),
-
-    Obx(() {
-      if (isSearchActive) {
-        return const SizedBox.shrink();
-      }
-
-      if (showFilter.value || isDateSummaryView.value) {
-        return Column(
-          children: [
-            _buildTabsOrCheckbox(),
-            _buildTagHideButtons(),
-            _buildFilterSection(),
-          ],
-        );
-      }
-
-      return _buildSearchAndTabsSection(context);
-    }),
+    Container(
+      color: AppColors.newbg,
+      child: Column(
+        children: [
+          isSearchActive?
+              _buildSearchAndTabsSection(context)
+              : historyHeader(context, widget.fromAutoPay),
+          
+          Obx(() {
+            if (isSearchActive) {
+              return const SizedBox.shrink();
+            }
+            if (widget.fromAutoPay) {
+              return const SizedBox.shrink();
+            }
+          
+            if (showFilter.value || isDateSummaryView.value) {
+              return Column(
+                children: [
+                  _buildTabsOrCheckbox(),
+                  _buildTagHideButtons(),
+                  _buildFilterSection(),
+                ],
+              );
+            }
+          
+            return _buildSearchAndTabsSection(context);
+          }),
+        ],
+      ),
+    ),
 
     Container(
       color: AppColors.border,
-      height: isSearchActive?MediaQuery.sizeOf(context).height / 1.14: MediaQuery.sizeOf(context).height / 1.27,
+      height: isSearchActive?
+      MediaQuery.sizeOf(context).height / 1.12:
+      isDateSummaryView.value?MediaQuery.sizeOf(context).height /1.1:
+       MediaQuery.sizeOf(context).height / 1.28,
       child: Obx(() {
         return selectedTab.value == "All"
             ? _buildTransactionBody(context, screenHeight)
@@ -593,14 +606,12 @@ _searchScaleAnim = Tween<double>(
  
 
 Widget _buildBackArrow() {
-  return IconButton(
-    icon: const Icon(
-      Icons.arrow_back_ios_new,
-      color: AppColors.accentColor,
-      size: 20,
-    ),
-    onPressed: _closeSearch,
+  return  GestureDetector(
+    onTap: _closeSearch,
+    child: globalbackArrow()
+  
   );
+  
 }
 Widget _buildTabChip(String title) {
   return Obx(() {
@@ -622,12 +633,8 @@ Widget _buildTabChip(String title) {
               ? AppColors.primaryColor
               : AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(10),
-           boxShadow: const [
-      BoxShadow(
-        color: Color.fromRGBO(0, 0, 0, 0.10),
-        offset: Offset(4, 4),
-        blurRadius: 16,
-      ),
+           boxShadow:  [
+    AppShadows.tabs
     ],
         ),
         child: Center(
@@ -669,18 +676,7 @@ Widget _buildTabChip(String title) {
                   clearTransactions(context: context);
                   Navigator.pop(context);
                 },
-                borderRadius: BorderRadius.circular(AppSizes.r16),
-                child: CustomStyledContainer(
-                  radius: 20,
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSizes.p6),
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: AppColors.accentColor,
-                      size: 24,
-                    ),
-                  ),
-                ),
+               child: globalbackArrow(),
               ),
               
               const SizedBox(width: 12),
@@ -688,10 +684,10 @@ Widget _buildTabChip(String title) {
               // Title
                        Obx(() {
                 final calculatedWidth = showFilter.value || isDateSummaryView.value
-                    ? MediaQuery.sizeOf(context).width / 1.4
-                    : MediaQuery.sizeOf(context).width - (fromAutoPay ? 100 : 220);
+                    ?MediaQuery.sizeOf(context).width - (fromAutoPay ? 200 : 220)
+                    : MediaQuery.sizeOf(context).width - (fromAutoPay ? 200 : 220);
               
-                return Container(
+                return SizedBox(
                 
                   // color: Colors.red,
                   width: calculatedWidth,
@@ -719,11 +715,12 @@ Widget _buildTabChip(String title) {
           ),
 
           // Download icon (only when not fromAutoPay)
-          if (!fromAutoPay)
-          
+        if (!fromAutoPay)
+  Obx(() => _buildHeaderRightAction(context))
+else
+    _buildSearchIcon(),
 
-      // RIGHT ACTION AREA
-Obx(() => _buildHeaderRightAction(context)),
+              
 
 
 
@@ -762,7 +759,7 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
   return AnimatedContainer(
     duration: const Duration(milliseconds: 250),
     width: double.infinity,
-    decoration:  BoxDecoration(color: AppColors.newbg,),
+    decoration:  const BoxDecoration(color: AppColors.newbg,),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -771,7 +768,7 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
           padding: EdgeInsets.only(
             left: 10,
             right: 0,
-            bottom: (groupTransactionList.isEmpty ? 4 : 3),
+            bottom: (isSearchActive?16: 3),
           ),
           child: 
           Row(
@@ -780,8 +777,9 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
               
                if (isSearchActive) ...[
       _buildBackArrow(),
-      Container(
-        width: MediaQuery.of(context).size.width / 1.2,
+      const SizedBox(width: 12,),
+      SizedBox(
+        width: MediaQuery.of(context).size.width / 1.3,
         child: _buildSearchField(context, widget.fromAutoPay),
       ),
     ]
@@ -790,7 +788,7 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
     _buildTabChip("Collections"),
 
     
-               SizedBox(width: 6),
+               const SizedBox(width: 6),
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 400),
                 transitionBuilder: (child, animation) {
@@ -810,11 +808,11 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
                     ? _buildSearchField(context, widget.fromAutoPay)
                     : _buildSearchIcon(),
               ),
-              SizedBox(width: 2),
+              const SizedBox(width: 2),
 
               if (!widget.fromAutoPay && !isSearchActive)
                 _buildToggleDateSummaryBtn(),
-SizedBox(width: 10),
+  const SizedBox(width: 10),
               if (!widget.fromAutoPay && !isSearchActive)
                 _buildFilterButton(),
     ]
@@ -839,7 +837,7 @@ Widget _buildSearchIcon() {
  width: 36,
       height: 36, // <-- Passing a custom radius
    
-    child: Icon(Icons.search, color: AppColors.primaryColor, size: 24, ),
+    child: Icon(Icons.search, color: AppColors.primaryColor, size: 24 ),
   ),
     
    
@@ -869,11 +867,7 @@ Widget _buildSearchIcon() {
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(8),
        boxShadow: [
-      BoxShadow(
-        color: Color.fromRGBO(0, 0, 0, 0.06),
-        blurRadius: 25,
-        offset: Offset(0, 0),
-      ),
+     AppShadows.tabs
     ],
       ),
       child: TextField(
@@ -971,7 +965,7 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
   _buildClearButton() {
     return searchController.text.isNotEmpty
         ? IconButton(
-            icon: Icon(Icons.clear, color: AppColors.accentColor),
+            icon:  const Icon(Icons.clear, color: AppColors.accentColor),
             onPressed: () {
               searchController.clear();
               searchTextController.value = '';
@@ -995,8 +989,8 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
           url: isDateSummaryView.value
               ? HomePageIcons.dayWiseIcon1
               : HomePageIcons.dayWiseIcon2,
-          width: 70,
-          height: 36,
+          width: 66,
+          height: 30,
         ),
         )
       )
@@ -1029,7 +1023,7 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
       return IndexedStack(
         index: isDateSummaryView.value ? 0 : 1,
         children: [
-          CalendarTransactionScreen(),
+          const CalendarTransactionScreen(),
           SingleChildScrollView(
             controller: scrollController,
             child: TransactionHistory(
@@ -1098,7 +1092,7 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
       width: MediaQuery.of(context).size.width / 2.5,
       height: MediaQuery.of(context).size.height / 26,
       decoration: BoxDecoration(
-        color: bg ?? Colors.transparent,
+        color: bg ?? AppColors.transparentColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Center(

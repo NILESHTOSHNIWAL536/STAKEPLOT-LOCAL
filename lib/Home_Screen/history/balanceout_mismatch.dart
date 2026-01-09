@@ -173,33 +173,68 @@ class BalanceOutMismatchUI extends StatelessWidget {
     return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Oops! The shared amounts don't add up correctly.",
-                style: fontManager.getTextStyle(
-                  context,
-                  lWeight: FontWeight.w500,
-                  fontSize: 15,
-                  color: Colorcodes.redDeleteIcon.withOpacity(0.9),
+              Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+
+                   color: const Color(0xFFFEF2F2), // background
+    borderRadius: BorderRadius.circular(12), // border-radius
+    border: Border.all(
+      color: const Color(0xFFFEE2E2), // border color
+      width: 1,
+    ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "In Balance Out, the highest amount selected is considered the main transaction. The rest of the amounts must add up exactly to it.",
-                style: fontManager.getTextStyle(
-                  context,
-                  lWeight: FontWeight.w400,
-                  fontSize: 15,
-                  color: Colors.black87,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.backspace
+                        ),
+                        Text(
+                          "Oops! The shared amounts don't add up correctly.",
+                          style: fontManager.getTextStyle(
+                            context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 15,
+                            color: AppColors.accentColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "In Balance Out, the highest amount selected is considered the main transaction. The rest of the amounts must add up exactly to it.",
+                      style: fontManager.getTextStyle(
+                        context,
+                        lWeight: FontWeight.w400,
+                        fontSize: 15,
+                        color: AppColors.grey,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 20),
-              Text(
-                "👉 Please review and enter values that add up correctly.",
-                style: fontManager.getTextStyle(
-                  context,
-                  lWeight: FontWeight.w500,
-                  fontSize: 15,
-                  color: Colors.deepOrange,
+              Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+
+                   color: const Color(0xFFFEF2F2), // background
+    borderRadius: BorderRadius.circular(12), // border-radius
+    border: Border.all(
+      color: const Color(0xFFFEE2E2), // border color
+      width: 1,
+    ),
+                ),
+                child: Text(
+                  "Please review and enter values that add up correctly.",
+                  style: fontManager.getTextStyle(
+                    context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 15,
+                    color: AppColors.accentColor,
+                  ),
                 ),
               ),
  

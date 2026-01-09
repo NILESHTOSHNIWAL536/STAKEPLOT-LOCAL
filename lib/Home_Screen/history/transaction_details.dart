@@ -174,6 +174,7 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:get/get.dart';
 import '../../Constants/app_styles.dart';
+import '../../Constants/core/app_shadows.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/shared_utils.dart';
 import '../../finance_screen/Budgets/Budget.dart';
@@ -205,7 +206,7 @@ class TransactionDetailsPage extends StatelessWidget {
         child: Column(
           children: [
             _header(context),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height/1.2,
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -215,9 +216,9 @@ class TransactionDetailsPage extends StatelessWidget {
                     Row(
                       children: [
                         _amountSection(context, isDebit),
-                        SizedBox(width: 16),
+                       const  SizedBox(width: 16),
                          const VerticalDashDivider(),
-                        SizedBox(width: 16),
+                       const  SizedBox(width: 16),
                         _balanceOutSection(context, isDebit),
                       ],
                     ):
@@ -254,11 +255,10 @@ class TransactionDetailsPage extends StatelessWidget {
         children: [
           InkWell(
             onTap: () => Navigator.pop(context),
-            child: const Icon(Icons.arrow_back_ios,
-                size: 20, color: AppColors.accentColor),
+            child:globalbackArrow(),
           ),
           Container(
-            width: MediaQuery.of(context).size.width * 0.75,
+            width: MediaQuery.of(context).size.width * 0.7,
             child: Center(
               child: Text(
                 "Overview",
@@ -275,8 +275,9 @@ class TransactionDetailsPage extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.1,
             height: MediaQuery.of(context).size.width * 0.1,
             decoration: BoxDecoration(
-              color: AppColors.bg5,
+              color: AppColors.backgroundColor,
               borderRadius: BorderRadius.circular(10),
+              boxShadow: [AppShadows.tabs]
             ),
             child:  AvatarProfileImage(url: HomePageIcons.splitIcon, width: 50, height: 50),
           ),
@@ -298,7 +299,7 @@ class TransactionDetailsPage extends StatelessWidget {
             fontSize: 32,
             lWeight: FontWeight.bold,
             color: isDebit
-                ? const Color(0xFFD36B6B)
+                ? AppColors.redColor
                 : AppColors.primaryColor,
           ),
         ),
@@ -337,7 +338,7 @@ class TransactionDetailsPage extends StatelessWidget {
             fontSize: 24,
             lWeight: FontWeight.bold,
             color: isDebit
-                ? const Color(0xFFD36B6B)
+                ? AppColors.debitColor
                 : AppColors.primaryColor,
           ),
         ) : const SizedBox.shrink(),
@@ -427,7 +428,7 @@ class TransactionDetailsPage extends StatelessWidget {
             context,
             fontSize: 16,
             lWeight: FontWeight.w600,
-            color: AppColors.accentColor,
+            color: AppColors.bg1,
           ),
         ),
         const SizedBox(height: 10),
@@ -477,7 +478,7 @@ class TransactionDetailsPage extends StatelessWidget {
               context,
               fontSize: 14,
               lWeight: FontWeight.w500,
-              color: AppColors.transactionDetails,
+              color: AppColors.accentColor,
             ),
           ),
         ),
@@ -520,7 +521,7 @@ class TransactionDetailsPage extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width * 0.76,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -531,7 +532,7 @@ class TransactionDetailsPage extends StatelessWidget {
                   context,
                   fontSize: 14,
                   lWeight: FontWeight.w400,
-                  color: AppColors.transactionDetails,
+                  color: AppColors.grey,
                 ),
               ),
               const SizedBox(height: 4),
@@ -541,7 +542,7 @@ class TransactionDetailsPage extends StatelessWidget {
                   context,
                   fontSize: 14,
                   lWeight: FontWeight.w500,
-                  color: AppColors.primaryColor,
+                  color: AppColors.accentColor,
                 ),
               ),
             ],
@@ -573,7 +574,7 @@ class TransactionDetailsPage extends StatelessWidget {
                   context,
                   fontSize: 14,
                   lWeight: FontWeight.w400,
-                  color: AppColors.transactionDetails,
+                  color: AppColors.grey,
                 ),
               ),
               const SizedBox(height: 4),

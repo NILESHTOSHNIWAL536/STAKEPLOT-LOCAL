@@ -25,6 +25,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week_of_year/week_of_year.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+import '../Constants/core/app_shadows.dart';
+import '../Constants/core/container_border.dart';
 import '../Home_Screen/ManuallyTransactions/manually.dart';
 import '../backed_connections/bankServices/pdf.dart';
 import '../Home_Screen/history/amount_range.dart';
@@ -1153,7 +1156,7 @@ Widget manualTransactionButton( BuildContext context) {
     onTap: () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ManualTransactionPage()),
+        MaterialPageRoute(builder: (context) => const ManualTransactionPage()),
       );
     },
     borderRadius: BorderRadius.circular(10),
@@ -1165,14 +1168,7 @@ Widget manualTransactionButton( BuildContext context) {
         // base white fill
         color: AppColors.backgroundColor,
         // semi-opaque white overlay (matches your linear-gradient with same stops)
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColors.backgroundColor.withOpacity(0.80),
-            AppColors.backgroundColor.withOpacity(0.80),
-          ],
-        ),
+        
         borderRadius: BorderRadius.circular(10), // nice rounded corners similar to SVG
         border: Border.all(
           color: AppColors.primaryColor, // stroke color from SVG
@@ -1180,11 +1176,7 @@ Widget manualTransactionButton( BuildContext context) {
         ),
         // subtle elevation feel — optional, remove if you don't want it
         boxShadow: [
-          BoxShadow(
-            color: AppColors.accentColor.withOpacity(0.03),
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
+          AppShadows.soft
         ],
       ),
       child: Center(
@@ -1217,4 +1209,18 @@ Widget manualTransactionButton( BuildContext context) {
       ),
     ),
   );
+}
+
+Widget globalbackArrow(){
+  return  const CustomStyledContainer(
+                    radius: 20,
+                    child: Padding(
+                      padding:  EdgeInsets.all(AppSizes.p6),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: AppColors.accentColor,
+                        size: 24,
+                      ),
+                    ),
+                  );
 }

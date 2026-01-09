@@ -6,7 +6,7 @@ class AppColors {
 ;
   static const Color primaryColorHeader = Color(0xFF404266);
   // static const Color primaryColor =  Color(0xFF004856);
-  static const Color accentColor = Color(0xFF1E1E1E);
+  static const Color accentColor = Color(0xFF2A2A2A);
   static const Color accentColorOpacity = Color(0x1A1E1E1E);
   static const Color mt = Color(0xFFF4F4F4); // for app bg
   static const Color button = Color(0xFFE6EAEB); // for buttons bg and using for
@@ -33,7 +33,7 @@ class AppColors {
   static const Color likesharecommentCount = Color(0xFF454545);
   static const Color debitColor = Color.fromARGB(255, 207, 118, 113);
   static Color creditColor = Colors.green.shade700;
-  static Color grey = Colors.black54;
+  static Color grey = Color(0xFF8A8A8A);
   static Color greyColor = Colors.grey;
   static Color redColor = Colors.red;
   static Color transparentColor = Colors.transparent;
@@ -72,5 +72,6 @@ class AppColors {
   static const Color transactionDetails = Color(0xFF4B5563); 
   static const Color transactionCardShadow = Color.fromRGBO(142, 142, 142, 0.25); 
   static const Color financeChartBorder = Color(0xFFE6E9EB); 
+  static const Color financeChartBarBorder = Color(0xFFE8EAF0); 
   
 }

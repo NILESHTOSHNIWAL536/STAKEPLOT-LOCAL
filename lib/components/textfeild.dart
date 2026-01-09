@@ -94,7 +94,7 @@ class TextFeildWidget extends StatelessWidget {
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(color: AppColors.primaryColor)
+                      borderSide: BorderSide(color: AppColors.grey)
                     ),
                  
                   suffixIcon:SignupData().usernameLabel==heading?  

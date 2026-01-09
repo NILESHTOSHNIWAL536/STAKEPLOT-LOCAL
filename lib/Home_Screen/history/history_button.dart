@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 
+import '../../Constants/core/app_shadows.dart';
+
 
 void navToHistory(context)
 {
@@ -71,28 +73,17 @@ Widget historyButton(BuildContext context) {
       padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
         // base white fill
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         // semi-opaque white overlay (matches your linear-gradient with same stops)
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.white.withOpacity(0.80),
-            Colors.white.withOpacity(0.80),
-          ],
-        ),
+       
         borderRadius: BorderRadius.circular(10), // nice rounded corners similar to SVG
         border: Border.all(
-          color: Color(0xFF47496D), // stroke color from SVG
+          color: AppColors.primaryColor, // stroke color from SVG
           width: 1,
         ),
         // subtle elevation feel — optional, remove if you don't want it
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
+          AppShadows.soft
         ],
       ),
       child: Center(

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_components/transactions_content.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
@@ -106,18 +107,11 @@ void _navigateToAutoPayPage(
             vertical: fontSizes.margin / 2, horizontal: fontSizes.margin),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(10),
           border: !isReview
-              ? Border.all(color: Colorcodes.greyLight, width: 0.1)
-              : Border.all(color: Colorcodes.red, width: 0.5),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromRGBO(155, 155, 155, 0.25),
-              offset: const Offset(0, 0),
-              blurRadius: 4,
-              spreadRadius: 0,
-            ),
-          ],
+              ? Border.all(color: AppColors.grey, width: 0.1)
+              : Border.all(color: AppColors.redColor, width: 0.5),
+         
         ),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
@@ -171,11 +165,8 @@ void _navigateToAutoPayPage(
                 Positioned(
                   top: 0,
                   right: -2,
-                  child: SvgPicture.asset(
-                    'assets/icons/Home-page/notMIne.svg',
-                    height: 20,
-                    width: 60,
-                  ),
+                  child: AvatarProfileImageZero(url: HomePageIcons.notMIne, width: 50, height: 50)
+                  
                 ),
             ],
           ),
@@ -207,7 +198,7 @@ void _navigateToAutoPayPage(
                   textStyle(
                     context: context,
                     text: "Include transaction?",
-                    c: AppColors.bg1,
+                    c: AppColors.accentColor,
                     fontsize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -218,7 +209,7 @@ void _navigateToAutoPayPage(
                         "Are you sure you want to add this transaction? It will be included in your category spending and reflected in your insights.",
                     c: AppColors.grey,
                     fontsize: 14,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w400,
                     iswrap: true,
                   ),
                   const SizedBox(height: 16),
@@ -233,7 +224,7 @@ void _navigateToAutoPayPage(
                           decoration: BoxDecoration(
                             color: AppColors.backgroundColor,
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: AppColors.bg1),
+                            border: Border.all(color: AppColors.grey),
                           ),
                           child: textStyle(
                             context: context,

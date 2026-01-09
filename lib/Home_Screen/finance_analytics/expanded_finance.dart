@@ -550,7 +550,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         body: SingleChildScrollView(
           controller: outerScrollController,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal:4.0, vertical: 8.0),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // Row: months (chart+transaction selector) + year pill
               
@@ -579,7 +579,7 @@ if (_selectedDayIndex >= 0 &&
     children: [
       // Credited container
       Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 14,
         ),
@@ -594,7 +594,7 @@ if (_selectedDayIndex >= 0 &&
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w500,
-            fontSize: fontSizeFactor * 3.4,
+            fontSize: 14,
             color: AppColors.primaryColor,
           ),
           maxLines: 1,
@@ -606,7 +606,7 @@ if (_selectedDayIndex >= 0 &&
 
       // Debited container
       Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 14,
         ),
@@ -621,7 +621,7 @@ if (_selectedDayIndex >= 0 &&
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w500,
-            fontSize: fontSizeFactor * 3.4,
+            fontSize: 14,
             color: AppColors.primaryColor,
           ),
           maxLines: 1,

@@ -281,34 +281,25 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/all_calculators.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
-import 'package:flutter_application_code_stakeplot/repository/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/add_credit_card_bank.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
 import 'package:flutter_application_code_stakeplot/repository/debt_service.dart';
 import 'package:flutter_application_code_stakeplot/repository/payables_repository.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-
 import '../../Utils/credit_card.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/bottomNavigations.dart';
-import '../../Constants/colorcodes.dart';
 import '../../controllers/credit_card_controller.dart';
 import '../../image_service/avatarProfile.dart';
-import '../Budgets/Budget.dart';
-import 'searchfinance.dart';
 import 'slider_addding_finances.dart';
 
 class FinanceDashboard extends StatefulWidget {
@@ -341,6 +332,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   @override
   void initState() {
     super.initState();
+    
     Get.put(CardDueController());
 
     _panelController = AnimationController(
@@ -493,6 +485,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
 
   @override
   Widget build(BuildContext context) {
+    
     final Size size = MediaQuery.of(context).size;
 
     final double panelTopOffset =
@@ -992,8 +985,9 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                   'Money Console',
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 24,
+                    lWeight: FontWeight.w500,
+                    fontSize: 20,
+                    lineHeight: 28/16,
                     color: AppColors.accentColor,
                   ),
                 ),
@@ -1002,8 +996,9 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                   'Smart tools for your daily needs',
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.w500,
+                    lWeight: FontWeight.w400,
                     fontSize: 14,
+                    lineHeight: 20/14,
                     color: AppColors.grey,
                   ),
                 ),
@@ -1038,7 +1033,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   Widget _buildBottomSection(BuildContext context) {
     return Container(
       color: AppColors.newbg,
-      padding: const EdgeInsets.fromLTRB(16, 0, 12, 0),
+      padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
       child: _buildToolsGrid(context),
     );
   }
@@ -1057,14 +1052,14 @@ Widget _buildToolsGrid(BuildContext context) {
               width: 4,
               
             ),
-       SizedBox(height: 20,),
+       const SizedBox(height: 20,),
             AvatarProfileImageZero(
               url: PlotFinanceIcons.budgetPlanner,
               height: 6,
               width: 4,
               
             ),
-       SizedBox(height: 20,),
+       const SizedBox(height: 20,),
             AvatarProfileImageZero(
               url: PlotFinanceIcons.reserve,
               height: 6,
@@ -1095,7 +1090,7 @@ Widget _buildToolsGrid(BuildContext context) {
                       Row(
                         children: [
                           Container(
-                            padding: EdgeInsets.all(4),
+                            padding:const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               color: const Color.fromRGBO(255, 255, 255, 0.08),
                               borderRadius: BorderRadius.circular(13)
@@ -1107,7 +1102,7 @@ Widget _buildToolsGrid(BuildContext context) {
                               
                             ),
                           ),
-                          SizedBox(width: 6),
+                          const SizedBox(width: 6),
                             Text("Credit Card", 
                                 style: FontManager().getTextStyle(context,
                                 color:  AppColors.backgroundColor ,
@@ -1116,17 +1111,17 @@ Widget _buildToolsGrid(BuildContext context) {
                       
                                 ),
                                 ),
-                                 SizedBox(width: 16,),
+                                 const SizedBox(width: 16,),
                                Container(
-                                padding: EdgeInsets.all(4),
+                                padding:const  EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               color: const Color.fromRGBO(255, 255, 255, 0.08),
                               borderRadius: BorderRadius.circular(20)
                             ),
                                  child: Container(
-                                          padding: EdgeInsets.all(2),
-                                         decoration: BoxDecoration(
-                                           color: Colors.white,
+                                          padding: const EdgeInsets.all(2),
+                                         decoration:const  BoxDecoration(
+                                           color: AppColors.backgroundColor,
                                            shape: BoxShape.circle,
                                          ),
                                          child: const Icon(
@@ -1156,7 +1151,7 @@ Widget _buildToolsGrid(BuildContext context) {
                 //   PlotFinanceIcons.crediCardBg,
                 //   fit: BoxFit.contain,
                 // ),
-         SizedBox(height: 16,),
+        const  SizedBox(height: 16,),
            _FinanceToolsCard(
                height: 100,   
                onTapC: () => Navigator.push(
@@ -1168,7 +1163,7 @@ Widget _buildToolsGrid(BuildContext context) {
                  MaterialPageRoute(builder: (_) => AllCalculatorScreen()),
                ),
              ),
-             SizedBox(height: 24,), 
+            const  SizedBox(height: 24,), 
             AvatarProfileImageZero(
                 url: PlotFinanceIcons.goalCreation,
                 height: 6,
@@ -1217,10 +1212,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-          )
+         AppShadows.soft
         ],
       ),
       child: InkWell(
@@ -1231,7 +1223,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
           children: [
             Text("Finance Fusion", 
                           style: FontManager().getTextStyle(context,
-                          color:  const Color(0xFF061D3D) ,
+                          color:  AppColors.primaryColor ,
                           fontSize: 12,
                           lWeight: FontWeight.w400
 
@@ -1244,19 +1236,21 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
+                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                    decoration:const  BoxDecoration(
                       color: AppColors.border,
                     borderRadius: BorderRadius.all(Radius.circular(8))
                     ),
-                    child: SvgPicture.asset(PlotFinanceIcons.calculator, height: 24)),
+                    child: AvatarProfileImageZero(url: PlotFinanceIcons.calculator, width: 20, height: 32)
+                    
+                    ),
                   Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
+                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                    decoration: const BoxDecoration(
                       color: AppColors.border,
                     borderRadius: BorderRadius.all(Radius.circular(8))
                     ),
-                    child: SvgPicture.asset(PlotFinanceIcons.foodie, height: 24)),
+                    child: AvatarProfileImageZero(url: PlotFinanceIcons.foodie, width: 20, height: 32)),
                  
                  
                 ],
@@ -1268,8 +1262,8 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                   GestureDetector(
                     onTap: widget.onTapD,
                     child: Container(
-                       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
+                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: const BoxDecoration(
                       color: AppColors.border,
                     borderRadius: BorderRadius.all(Radius.circular(8))
                     ),
@@ -1293,8 +1287,8 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                   GestureDetector(
                     onTap: widget.onTapC,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: const BoxDecoration(
                       color: AppColors.border,
                     borderRadius: BorderRadius.all(Radius.circular(8))
                     ),
@@ -1304,7 +1298,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                           const SizedBox(width: 10),
                           Text("Foodie Funds",
                            style: FontManager().getTextStyle(context,
-                          color:  Color.fromRGBO(6, 29, 61, 0.5) ,
+                          color: const   Color.fromRGBO(6, 29, 61, 0.5) ,
                           lWeight: FontWeight.w500,
                           fontSize: 12)
                           ),

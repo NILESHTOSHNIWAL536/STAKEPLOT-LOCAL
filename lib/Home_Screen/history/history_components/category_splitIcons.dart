@@ -73,7 +73,7 @@ class CategoryAndSplitIcons extends StatelessWidget {
                           horizontal: 8, vertical: 5),
                       decoration: BoxDecoration(
                         
-                        color: const Color(0xFF4B4D73).withOpacity(0.10), 
+                        color:  AppColors.primaryColor.withOpacity(0.10), 
     // Border Radius: 2px
     borderRadius: BorderRadius.circular(2.0),
                       ),
@@ -81,7 +81,7 @@ class CategoryAndSplitIcons extends StatelessWidget {
                         context: context,
                         text: toUpperCase(category),
                         c: AppColors.primaryColor,
-                        fontsize: fontSizeMedium,
+                        fontsize: 13,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -103,7 +103,7 @@ class CategoryAndSplitIcons extends StatelessWidget {
           ],
         ),
         if (isSplit)
-          Container(
+          SizedBox(
             width: MediaQuery.sizeOf(context).width / 11,
             child: AvatarProfileImage(
               url: HomePageIcons.isSplit,

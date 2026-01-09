@@ -823,9 +823,8 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'dart:math';
-import 'package:syncfusion_flutter_charts/charts.dart';
-
 import '../../Constants/colors.dart';
 import '../../Constants/font_manager.dart';
 import '../../components/shared_utils.dart';
@@ -881,7 +880,6 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
     // Layout calculations (no Expanded)
     final mq = MediaQuery.of(context);
     final sw = mq.size.width;
-    final horizontalMargin = 2.0;
 
     final gapBetween = 8.0;
 
@@ -903,10 +901,12 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
           color: AppColors.financeChartBorder, // #E6E9EB
           width: 1,
         ),
-        boxShadow: [BoxShadow(color: AppColors.accentColorOpacity, blurRadius: 6, offset: Offset(0, 2))],
+        boxShadow: [
+         AppShadows.tabs
+          ],
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1009,7 +1009,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(8),
                             onTap: () {
-                              debugPrint('Bar $i tapped');
+                            
                               setState(() => selectedIndex = i);
                             },
                             child: Column(
@@ -1020,14 +1020,14 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                                   width: (rightVisible / 8), // ensures 7 bars fit comfortably
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(color: const Color(0xFFE8EAF0), width: 1),
+                                    border: Border.all(color: AppColors.financeChartBarBorder, width: 1),
                                   ),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      // Credit portion
+                                     
                                       AnimatedContainer(
-                                        duration: Duration(milliseconds: 220),
+                                        duration: const Duration(milliseconds: 220),
                                         height: creditH.clamp(0.0, maxBarH),
                                         width: double.infinity,
                                         decoration: BoxDecoration(
