@@ -228,7 +228,7 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
           children: [
             Container(
              
-              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
               width: MediaQuery.sizeOf(context).width/1.5,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -328,9 +328,10 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
                                                   context,
                                                   lWeight: FontWeight.w500,
                                                   fontSize: 14,
-                                                  color: isSe
-                                                      ? AppColors.accentColor
-                                                      : AppColors.bg1)),
+                                                  lineHeight: 24/fontSize,
+                                                  color: 
+                                                       AppColors.accentColor
+                                                      )),
                                         ),
                                         myvote.value
                                             ? Text(

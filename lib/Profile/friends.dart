@@ -15,6 +15,8 @@ import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
 import "package:get/get.dart";
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
+
+import "../Constants/core/app_padding_sizes.dart";
 RxList globalFriendsList = [].obs;
 class Friends extends StatefulWidget {
   bool isMasked = false;
@@ -141,7 +143,7 @@ class _FriendsState extends State<Friends> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
                 Obx(() => frdsList.isEmpty
                     ? noFriend(context, "", widget.isMasked)
                     : Column(

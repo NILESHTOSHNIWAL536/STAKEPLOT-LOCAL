@@ -486,7 +486,7 @@ void postCustomCategory(context,name,urlPath,narr)async
     LoadTag.value=!LoadTag.value;
     custom=getthelist();
     Navigator.pop(context);
-    snackBarCalled(context, SnackbarData().categoryAdded, Colors.green);
+    snackBarCalled(context, SnackbarData().categoryAdded, );
   }
 
 }

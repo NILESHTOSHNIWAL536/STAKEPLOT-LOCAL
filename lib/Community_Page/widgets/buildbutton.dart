@@ -15,6 +15,8 @@ import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.d
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 Widget buildOptionButton({
     required BuildContext context,
     required IconData icon,
@@ -223,7 +225,7 @@ class _ArenaHeaderState extends State<ArenaHeader> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTopRow(context),
-          const SizedBox(height: 14),
+          SizedBox(height: AppSizes.h14),
           _buildTabs(context),
         ],
       ),
@@ -302,7 +304,7 @@ class _ArenaHeaderState extends State<ArenaHeader> {
           );
                      })
                      :const SizedBox.shrink(),
-                     const SizedBox(width: 16),
+                     SizedBox(width: AppSizes.w16),
                      _circleIcon(Icons.bookmark, () {
               // bookmark action
                 Navigator.push(
@@ -399,7 +401,7 @@ class _ArenaHeaderForSavedState extends State<ArenaHeaderForSaved> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTopRow(context),
-          const SizedBox(height: 14),
+          SizedBox(height: AppSizes.h14),
           _buildTabs(context),
         ],
       ),

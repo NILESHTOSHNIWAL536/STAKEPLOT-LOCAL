@@ -33,7 +33,7 @@ class AppColors {
   static const Color likesharecommentCount = Color(0xFF454545);
   static const Color debitColor = Color.fromARGB(255, 207, 118, 113);
   static Color creditColor = Colors.green.shade700;
-  static Color grey = Color(0xFF8A8A8A);
+  static Color grey = const Color(0xFF8A8A8A);
   static Color greyColor = Colors.grey;
   static Color redColor = Colors.red;
   static Color transparentColor = Colors.transparent;
@@ -73,5 +73,12 @@ class AppColors {
   static const Color transactionCardShadow = Color.fromRGBO(142, 142, 142, 0.25); 
   static const Color financeChartBorder = Color(0xFFE6E9EB); 
   static const Color financeChartBarBorder = Color(0xFFE8EAF0); 
+  static const Color snackbarcolor = Color(0xFFDBD7D7); 
+  static const Color foodieFundsTitle =   Color.fromRGBO(6, 29, 61, 0.5); 
+  static const Color linkManage =    Color.fromRGBO(255, 255, 255, 0.05); 
+  static const Color addCreditCardIcon =    Color(0xFF6E6F8F); 
+  static const Color filterBorders =    Color(0xFFD6D6D6); 
+  static const Color creditCardComponentColor =    Color.fromRGBO(255, 255, 255, 0.08); 
+  static const Color filterContainer =     Color.fromRGBO(75, 77, 115, 0.08); 
   
 }

@@ -3,7 +3,9 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/components/notification_icon.dart';
+import 'package:lottie/lottie.dart';
 import '../../Constants/app_styles.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 
 // PreferredSizeWidget getAppBar(context) {
 //   final userController = ControllerManagement.userController;
@@ -56,6 +58,7 @@ class TopRightIconsWidget extends StatelessWidget {
         GestureDetector(
           onTap: () {
             // TODO: Add your navigation or action here
+           
           },
           child: Container(
             padding: const EdgeInsets.all(1),
@@ -72,7 +75,7 @@ class TopRightIconsWidget extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(width: 16),
+         SizedBox(width: AppSizes.w16),
 
         /// NOTIFICATION BUTTON
         NotificationsBudget(
@@ -189,50 +192,47 @@ class _AutoHintIconState extends State<AutoHintIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-
-      child: Row(
-        children: [
-          _showText?SizedBox.shrink(): SizedBox(width: MediaQuery.of(context).size.width * 0.17),
-          AnimatedSize(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeIn,
-            child: Container(
-              padding:  EdgeInsets.symmetric(horizontal:_showText ? 8: 2, vertical: 2),
-              decoration: BoxDecoration(
-                color: AppColors.backgroundColor,
-                borderRadius: _showText?BorderRadius.circular(30):BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Icon (always visible)
-                   
-          
-                  // Space + text only when visible
-                  if (_showText) ...[
-                   
-                    Text(
-                      widget.text,
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w400,
-                        fontSize: 11,
-                        color: AppColors.primaryColor,
-                      ),
+    return Row(
+      children: [
+        _showText?SizedBox.shrink(): SizedBox(width: MediaQuery.of(context).size.width * 0.17),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+          child: Container(
+            padding:  EdgeInsets.symmetric(horizontal:_showText ? 8: 2, vertical: _showText?4:2),
+            decoration: BoxDecoration(
+              color: AppColors.backgroundColor,
+              borderRadius: _showText?BorderRadius.circular(30):BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon (always visible)
+                 
+        
+                // Space + text only when visible
+                if (_showText) ...[
+                 
+                  Text(
+                    widget.text,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 11,
+                      color: AppColors.primaryColor,
                     ),
-                  ],
-                  AvatarProfileImage(
-                    url: widget.iconUrl,
-                    width: 36,
-                    height: 36,
                   ),
                 ],
-              ),
+                AvatarProfileImage(
+                  url: widget.iconUrl,
+                  width: 36,
+                  height: 36,
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

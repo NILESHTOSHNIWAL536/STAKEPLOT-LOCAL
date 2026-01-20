@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:intl/intl.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 // final TextEditingController searchController = TextEditingController();
@@ -497,7 +498,7 @@ Future<void> _fetchAutoPayData() async {
         getListOfDateScroll(now),
 
         _buildCreditDebitSummary(context),
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.height / 1.69,
           child: Obx(() {
             if (selectedDateTransactions.isEmpty) {
@@ -634,18 +635,7 @@ Future<void> _fetchAutoPayData() async {
           Positioned.fill(
             child: Center(
               child: Container(
-                width: 40,
-                height: double.infinity,
-                child: Center(
-                  child: Text(
-                    selectedDate.value,
-                    style: FontManager().getTextStyle(context,
-                        fontSize: 16,
-                        lWeight: FontWeight.w600,
-                        color: AppColors.backgroundColor),
-                  ),
-                ),
-                decoration: BoxDecoration(
+                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(5),
                   boxShadow: const [
@@ -657,6 +647,18 @@ Future<void> _fetchAutoPayData() async {
                     ),
                   ],
                 ),
+                width: 40,
+                height: double.infinity,
+                child: Center(
+                  child: Text(
+                    selectedDate.value,
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 16,
+                        lWeight: FontWeight.w600,
+                        color: AppColors.backgroundColor),
+                  ),
+                ),
+               
               ),
             ),
           ),
@@ -894,7 +896,7 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 7),
+           SizedBox(height: AppSizes.h7),
           Text(
             dateData['date'].toString().padLeft(2, '0'),
             style: FontManager().getTextStyle(
@@ -904,9 +906,9 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
               color: AppColors.finSpaceColor,
             ),
           ),
-          const SizedBox(height: 2),
+           SizedBox(height: AppSizes.h2),
           Divider(color: Colorcodes.greyLight),
-          const SizedBox(height: 2),
+           SizedBox(height: AppSizes.h2),
 
           (activeCard.isActive == true ||  activeCard.isDaily==true)
               ? 
@@ -920,7 +922,7 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
                         height: 60 * fontScale, // Reduced size to fit calendar item
                         width: 60 * fontScale,
                       ),
-                     SizedBox(width: 2),  // Space between icon and text
+                     SizedBox(width: AppSizes.w2),  // Space between icon and text
                       Flexible(
                         child: Text(
                           activeCard.title.length > 4 ? activeCard.title.substring(0, 4) : activeCard.title,
@@ -948,7 +950,7 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
-          SizedBox(height: 7),
+          SizedBox(height: AppSizes.h7),
         ],
       ),
     ),
@@ -957,7 +959,7 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
 
   Widget _buildCreditDebitSummary(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -970,7 +972,7 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
               
             ],
           ),
-          Container(
+          SizedBox(
             width: MediaQuery.sizeOf(context).width/2,
             child: getContainerCount('Total Transactions', totalTransactionsCount)),
         ],
@@ -999,7 +1001,7 @@ Widget getContainerCount(String title, RxInt count) {
                 color: AppColors.accentColor,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: AppSizes.w12),
             Text(
               count.value.toString(),
               style: FontManager().getTextStyle(
@@ -1044,7 +1046,7 @@ Widget getContainerCount(String title, RxInt count) {
                   color: AppColors.accentColor,
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: AppSizes.w10),
               Obx(() => Text(
                     '₹ ${title == 'Credit' ? totalCredit.value.toStringAsFixed(0) : totalDebit.value.toStringAsFixed(0)}',
                     style: FontManager().getTextStyle(

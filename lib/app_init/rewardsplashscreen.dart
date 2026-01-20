@@ -1,6 +1,7 @@
 import 'package:coupon_uikit/coupon_uikit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/core/app_padding_sizes.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
 import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -63,7 +64,7 @@ class RewardsScreen extends StatelessWidget {
                                     GestureDetector(
                                       onTap: (){
                                         if(RewardScreenStrings().rewardIntroList.length>2 && index<2)
-                                          snackBarAllBottom(context,"Scroll To Bottom");
+                                          snackBarCalled(context,"Scroll To Bottom");
                                       },
                                       child: getRewardCard(context, data, curve)),
                                     getBorderDotted(curve, context),
@@ -72,7 +73,7 @@ class RewardsScreen extends StatelessWidget {
                                 ),
                               );
                             }).toList(),
-                            SizedBox(height: 30,),
+                            SizedBox(height: AppSizes.h30),
                             getDoneButton(context), // Final Done Button
                           ],
                         ),
@@ -117,7 +118,7 @@ class RewardsScreen extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      SizedBox(height: 10.0),
+                                      SizedBox(height: AppSizes.h10),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 5),
                                         child: textStyleImage(
@@ -139,7 +140,7 @@ class RewardsScreen extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      SizedBox(height: 30.0),
+                                      SizedBox(height: AppSizes.h30),
                                       textStyle(
                                         context: context,
                                         text: data['title']!,

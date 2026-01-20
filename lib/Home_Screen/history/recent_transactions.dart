@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 import '../../Constants/colors.dart';
 import 'transaction_history.dart';
@@ -34,9 +35,9 @@ class RecentTransactionsScreen extends StatelessWidget {
   Widget _header(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.newbg,
-        borderRadius: const BorderRadius.vertical(
+        borderRadius:  BorderRadius.vertical(
           bottom: Radius.circular(28),
         ),
       ),
@@ -51,11 +52,11 @@ class RecentTransactionsScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Icon(Icons.arrow_back_ios,
+                  child: const Icon(Icons.arrow_back_ios,
                       size: 18, color: AppColors.accentColor),
                 ),
                 
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.77,
                   
                   child: Center(
@@ -72,7 +73,7 @@ class RecentTransactionsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppSizes.h8),
             Center(
               child: Text(
                 "Fetched on 24-12-2024, 8:00 PM",
@@ -105,7 +106,7 @@ class RecentTransactionsScreen extends StatelessWidget {
               color: AppColors.accentColor,
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: AppSizes.h6),
           Text(
             "₹63,250.00",
             style: FontManager().getTextStyle(
@@ -115,7 +116,7 @@ class RecentTransactionsScreen extends StatelessWidget {
               color: AppColors.primaryColor,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
@@ -127,7 +128,7 @@ class RecentTransactionsScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.arrow_upward,
                     size: 14, color: Colors.green),
-                const SizedBox(width: 6),
+                SizedBox(width: AppSizes.w6),
                 Text(
                   "8.2% below your usual spend",
                   style: FontManager().getTextStyle(
@@ -147,11 +148,11 @@ class RecentTransactionsScreen extends StatelessWidget {
 
   // ---------------- STATS ROW ----------------
   Widget _statsRow(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+    return const Padding(
+      padding:  EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+        children:  [
           _StatItem(title: "Transactions", value: "10"),
           _StatItem(title: "Debit", value: "₹1500"),
           _StatItem(title: "Credit", value: "₹1500"),
@@ -205,7 +206,7 @@ class RecentTransactionsScreen extends StatelessWidget {
                 child: Icon(Icons.north_east,
                     color: AppColors.primaryColor),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: AppSizes.w12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,7 +220,7 @@ class RecentTransactionsScreen extends StatelessWidget {
                         color: AppColors.primaryColor,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppSizes.h4),
                     Text(
                       "25 Oct • Food",
                       style: FontManager().getTextStyle(
@@ -269,7 +270,7 @@ class _StatItem extends StatelessWidget {
             color: AppColors.accentColor,
           ),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: AppSizes.h6),
         Text(
           value,
           style: FontManager().getTextStyle(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../Constants/colors.dart';
+import '../../../../Constants/core/app_padding_sizes.dart';
 import '../../../../Constants/font_manager.dart';
 import '../../../../backed_connections/apis_connect.dart';
 
@@ -46,14 +47,14 @@ class CollectionPeopleSelector extends StatelessWidget {
               lWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 10),
+           SizedBox(height: AppSizes.h10),
 
           /// SEARCH BAR
           _searchBar(context),
 
           /// SEARCH RESULT CARD
           if (search.value.isNotEmpty && filteredUsers.isNotEmpty) ...[
-            const SizedBox(height: 10),
+            SizedBox(height: AppSizes.h10),
             _whiteCard(
               Column(
                 children: filteredUsers.map((user) {
@@ -81,7 +82,7 @@ class CollectionPeopleSelector extends StatelessWidget {
 
           /// ---------------- ADDED PEOPLE ----------------
           if (members.isNotEmpty) ...[
-            const SizedBox(height: 20),
+            SizedBox(height: AppSizes.h20),
             Text(
               "Added people",
               style: FontManager().getTextStyle(
@@ -90,7 +91,7 @@ class CollectionPeopleSelector extends StatelessWidget {
                 lWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: AppSizes.h10),
             _whiteCard(
               Column(
                 children: members.map((member) {
@@ -126,7 +127,7 @@ class CollectionPeopleSelector extends StatelessWidget {
       child: Row(
         children: [
           const Icon(Icons.search, color: Colors.grey),
-          const SizedBox(width: 8),
+          SizedBox(width: AppSizes.w8),
           Expanded(
             child: TextField(
               onChanged: (v) => search.value = v,
@@ -185,7 +186,7 @@ class CollectionPeopleSelector extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 12),
+          SizedBox(width: AppSizes.w12),
 
           /// NAME
           Expanded(

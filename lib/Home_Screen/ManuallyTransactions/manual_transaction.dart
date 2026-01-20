@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
@@ -18,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/app_shadows.dart';
 import '../../components/shared_utils.dart';
 import '../../routes/index_route.dart';
@@ -319,6 +318,10 @@ void _onBackspace() {
   void toggleCategoryField() {
     setState(() {
       isCategoryFieldExpanded = !isCategoryFieldExpanded;
+       if (isCategoryFieldExpanded) {
+      showKeyboard = false;
+    }
+
       _isAmountFieldFocused = false;
       // when opening, ensure the filtered list is correct for tab
       if (isCategoryFieldExpanded) {
@@ -337,9 +340,6 @@ void _onBackspace() {
     });
   }
 
-  
-
-  
 
   void _submitAmount() {
     final value = _amountController.text.trim();
@@ -399,17 +399,42 @@ void _onBackspace() {
                          if ((selectedCategory == null &&
                                  selectedSubCategory == null) ||
                              !widget.isDebit) ...[
-                               GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                                                      onTap: () {
-                                                        setState(() => showKeyboard = true);
-                                                      },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: AmountWidget(),
-                              )),
+                               Column(
+                                 children: [
+                                   GestureDetector(
+                                                                 behavior: HitTestBehavior.translucent,
+                                                          onTap: () {
+                                                            setState(() => showKeyboard = true);
+                                                          },
+                                                                 child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    child: AmountWidget(),
+                                                                 )),
+                                                                 SizedBox(height: AppSizes.h16),
+                                                                  if (_amountController.text.isNotEmpty) ...[
+                          Padding(
+                           padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
+                                                          onTap: () {
+                                                            setState(() => showKeyboard = false);
+                                                          },
+                              child: categoryWidget()),
+
+                          ),
+                           if (isCategoryFieldExpanded) ...[
+                             
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: categoryExpandedWidget(),
+                        ),
+                        // getListOfCustomCategory(),
+                      ],
+                        ],
+                                 ],
+                               ),
                                                       
-                                                          const SizedBox(height: 16),
+                                                          SizedBox(height: AppSizes.h16),
                            (showKeyboard)?
                                                        GestureDetector(
                                                                                behavior: HitTestBehavior.translucent,
@@ -428,6 +453,7 @@ void _onBackspace() {
                                                    },
                                                                                ),
                                                        ):const SizedBox.shrink(),
+                                                       
                           
                          ],
                         
@@ -461,7 +487,7 @@ void _onBackspace() {
                                         child: AmountWidget(),
                                       )),
                                 
-                                    const SizedBox(height: 16),
+                                    SizedBox(height: AppSizes.h16),
                                 
                                     // ✅ Outside tap dismiss only when keyboard open
                                     if (showKeyboard)
@@ -488,15 +514,15 @@ void _onBackspace() {
                                       ),
                                   ],
                                 ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: AppSizes.h16),
                         ],
-                        if (amount != null) ...[
+                        if (_amountController.text.isNotEmpty) ...[
                           Padding(
                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: categoryWidget(),
                           ),
                         ],
-                         const SizedBox(height: 6),
+                         SizedBox(height: AppSizes.h6),
                        
                         if (isCategoryFieldExpanded) ...[
                         Padding(
@@ -555,11 +581,11 @@ void _onBackspace() {
               color: AppColors.accentColor,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
 
           AppDividers.soft,
 
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.h12),
           Row(
             children: [
               Container(
@@ -579,7 +605,7 @@ void _onBackspace() {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+               SizedBox(width: AppSizes.w12),
               IgnorePointer(
                 child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
@@ -676,10 +702,10 @@ void _onBackspace() {
               color: AppColors.accentColor,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           AppDividers.soft,
 
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.h12),
           Row(
             children: [
               Container(
@@ -692,7 +718,7 @@ void _onBackspace() {
                 ),
                 child: const Center(child: Icon(Icons.search, color: AppColors.accentColor)),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: AppSizes.w12),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: TextField(
@@ -959,9 +985,9 @@ void _onBackspace() {
               color: AppColors.accentColor,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           AppDividers.soft,
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.h12),
           Wrap(
             spacing: 10,
             runSpacing: 12,
@@ -996,7 +1022,7 @@ void _onBackspace() {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ProfileImage(url: urlPath),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSizes.w8),
                       Text(
                         toUpperCase(subCategory),
                         style: FontManager().getTextStyle(

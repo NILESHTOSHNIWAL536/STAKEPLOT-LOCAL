@@ -9,6 +9,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribeOne) {
      
     return PopupMenuButton(
@@ -94,7 +96,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
         text=="Hide"?
         Icon(Icons.visibility_off, color: AppColors.accentColor,size: 20,): 
         Icon(text=="Delete" ?Icons.delete: Icons.warning_rounded, color: AppColors.redColor,size: 20,),
-        SizedBox(width: 12,),
+        SizedBox(width: AppSizes.w12,),
         textStyle(
             context: context, text: text, c: text== "Hide"?AppColors.accentColor: AppColors.redColor, fontWeight: FontWeight.bold, fontsize: 14),
       ],
@@ -108,7 +110,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
     return Row(
       children: [
         Icon(Icons.warning_rounded, color: AppColors.redColor,size: 20,),
-        SizedBox(width: 12,),
+        SizedBox(width: AppSizes.w12,),
         textStyle(
             context: context, text: text, c: AppColors.redColor, fontWeight: FontWeight.bold, fontsize: 14),
       ],

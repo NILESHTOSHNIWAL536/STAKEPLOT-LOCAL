@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../components/helper.dart';
 import '../Constants/booleanFlag.dart';
 import '../finance_screen/Budgets/Budget.dart';
@@ -96,7 +97,7 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            SizedBox(height: AppSizes.h5),
             Expanded(
               child: ListView.separated(
                 separatorBuilder: (context, index) => Divider(
@@ -146,7 +147,7 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 14),
+            SizedBox(height: AppSizes.h14),
             Center(
               child: SizedBox(
                 width: w * .45,
@@ -176,7 +177,7 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 40),
+            SizedBox(height: AppSizes.h40),
           ],
         ),
       ),

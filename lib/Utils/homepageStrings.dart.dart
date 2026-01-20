@@ -89,8 +89,12 @@ class HomepageStringsDart {
 
  // New strings from TransactionHistoryScreen
   String historyTitle = "Transactions";
+  String selectTnx = "Select Transaction";
   String myStatement = "My Statement";
   String searchTransactions = "Search transactions";
+  String tnxtodayview = "Today View";
+  String allTnx = "All";
+  String collectionscreate = "Collections";
   String noBankAccountLinked = "No Bank Account Linked Please link your bank account to download the statement.";
 
   // New strings from TransactionHistory
@@ -222,8 +226,12 @@ accountNumberLabel = data['accountNumberLabel'] ?? accountNumberLabel;
 
           // New strings from TransactionHistoryScreen
         historyTitle = data['historyTitle'] ?? historyTitle;
+        selectTnx = data['selectTnx'] ?? selectTnx;
         myStatement = data['myStatement'] ?? myStatement;
         searchTransactions = data['searchTransactions'] ?? searchTransactions;
+        tnxtodayview = data['tnxtodayview'] ?? tnxtodayview;
+        allTnx = data['allTnx'] ?? allTnx;
+        collectionscreate = data['collectionscreate'] ?? collectionscreate;
         noBankAccountLinked = data['noBankAccountLinked'] ?? noBankAccountLinked;
 
         // New strings from TransactionHistory

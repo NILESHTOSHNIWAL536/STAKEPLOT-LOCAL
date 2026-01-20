@@ -25,6 +25,7 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
+import "../Constants/core/app_padding_sizes.dart";
 import "../routes/route_user_login.dart";
 import "../routes/route_post.dart";
 
@@ -273,7 +274,7 @@ Widget profileContainer(data) {
                     height: 13,
                     background: background,
                   ),
-                  const SizedBox(width: 5),
+                   SizedBox(width: AppSizes.w6),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.5,
                     child: Text(
@@ -391,7 +392,7 @@ void showmodalWidget(data){
                   ),
                 
                 ),
-                const SizedBox(height: 20,),
+                SizedBox(height: AppSizes.h20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -401,13 +402,13 @@ void showmodalWidget(data){
                     networkFriends("Posts",getTrendingData.length.toString(),Icons.post_add),
                   ],
                 ),
-                const SizedBox(height: 5,),     
+                SizedBox(height: AppSizes.h5),
                 Text(name.toString(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w600,
                        color: AppColors.bg1)),
                
-                const SizedBox(height:10),
+                SizedBox(height: AppSizes.h10),
 
                  InkWell(
                   onTap: (){
@@ -511,7 +512,7 @@ void showmodalWidget(data){
                 ],
               )  
           ),
-          const SizedBox(height: 5,),
+          SizedBox(height: AppSizes.h5),
           textStyle(context: context,text: network.toString(),fontWeight: FontWeight.w400,fontsize: 12),
         ],
       );

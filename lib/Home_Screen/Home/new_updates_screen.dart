@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 
 class UpdatesScreen extends StatelessWidget {
@@ -141,7 +142,7 @@ class UpdatesScreen extends StatelessWidget {
                      
                     ),
 
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
 
                     _featureCard(
                       context: context,
@@ -228,7 +229,7 @@ class UpdatesScreen extends StatelessWidget {
             ),
             child: Icon(icon, color: AppColors.backgroundColor),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: AppSizes.w12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,7 +266,7 @@ class UpdatesScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: AppSizes.h6),
                 Text(
                   description,
                    style: FontManager().getTextStyle(

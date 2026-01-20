@@ -174,12 +174,11 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:get/get.dart';
 import '../../Constants/app_styles.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/app_shadows.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/shared_utils.dart';
-import '../../finance_screen/Budgets/Budget.dart';
 import '../../image_service/avatarProfile.dart';
-import 'tagandhidebutton.dart';
 
 
 final RxBool excludeCashFlow = false.obs;
@@ -216,20 +215,20 @@ class TransactionDetailsPage extends StatelessWidget {
                     Row(
                       children: [
                         _amountSection(context, isDebit),
-                       const  SizedBox(width: 16),
+                         SizedBox(width: AppSizes.w16),
                          const VerticalDashDivider(),
-                       const  SizedBox(width: 16),
+                       SizedBox(width: AppSizes.w16),
                         _balanceOutSection(context, isDebit),
                       ],
                     ):
                     _amountSection(context, isDebit),
-                    const SizedBox(height: 16),
+                    SizedBox(height: AppSizes.h16),
                     // _locationChips(context),
-                    const SizedBox(height: 16),
+                     SizedBox(height: AppSizes.h16),
                     _receivedCard(context, formattedDate),
-                    const SizedBox(height: 20),
+                    SizedBox(height: AppSizes.h20),
                     _moreDetails(context),
-                    const SizedBox(height: 16),
+                    SizedBox(height: AppSizes.h16),
                     _excludeCashFlow(context),
                   ],
                 ),
@@ -257,7 +256,7 @@ class TransactionDetailsPage extends StatelessWidget {
             onTap: () => Navigator.pop(context),
             child:globalbackArrow(),
           ),
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
             child: Center(
               child: Text(
@@ -303,7 +302,7 @@ class TransactionDetailsPage extends StatelessWidget {
                 : AppColors.primaryColor,
           ),
         ),
-        const SizedBox(height: 12),
+         SizedBox(height: AppSizes.h12),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           decoration: BoxDecoration(
@@ -342,7 +341,7 @@ class TransactionDetailsPage extends StatelessWidget {
                 : AppColors.primaryColor,
           ),
         ) : const SizedBox.shrink(),
-        const SizedBox(height: 16),
+         SizedBox(height: AppSizes.h16),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           decoration: BoxDecoration(
@@ -410,7 +409,7 @@ class TransactionDetailsPage extends StatelessWidget {
         children: [
           _infoRow2(context, "Received In",
               transaction.bankName ?? 'N/A'),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.h12),
           _infoRow2(context, "On Date ", formattedDate),
         ],
       ),
@@ -431,7 +430,7 @@ class TransactionDetailsPage extends StatelessWidget {
             color: AppColors.bg1,
           ),
         ),
-        const SizedBox(height: 10),
+         SizedBox(height: AppSizes.h10),
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -443,11 +442,11 @@ class TransactionDetailsPage extends StatelessWidget {
               _infoRow(context, "Transaction ID",
                   transaction.txnId.toString(),
                   copy: true),
-                  SizedBox(height: 12),
+                 SizedBox(height: AppSizes.h12),
               
               _infoRow(context, "Narration",
                   transaction.narration),
-                  SizedBox(height: 12),
+             SizedBox(height: AppSizes.h12),
               
               _infoRow(context, "Mode", "UPI",
                   trailingIcon: Icons.flash_on),
@@ -469,8 +468,8 @@ class TransactionDetailsPage extends StatelessWidget {
     child: Row(
       children: [
         const Icon(Icons.show_chart, color: AppColors.primaryColor),
-        const SizedBox(width: 12),
-        Container(
+        SizedBox(width: AppSizes.w12),
+        SizedBox(
           width: MediaQuery.of(context).size.width * 0.55,
           child: Text(
             "Exclude from Cash Flow",
@@ -535,7 +534,7 @@ class TransactionDetailsPage extends StatelessWidget {
                   color: AppColors.grey,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: AppSizes.h4),
               Text(
                 value,
                 style: FontManager().getTextStyle(
@@ -577,7 +576,7 @@ class TransactionDetailsPage extends StatelessWidget {
                   color: AppColors.grey,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: AppSizes.h4),
               Text(
                 value,
                 style: FontManager().getTextStyle(

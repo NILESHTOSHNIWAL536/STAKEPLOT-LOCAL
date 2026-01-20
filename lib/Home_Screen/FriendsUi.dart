@@ -25,7 +25,7 @@ class _FriendsUiState extends State<FriendsUi> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16),

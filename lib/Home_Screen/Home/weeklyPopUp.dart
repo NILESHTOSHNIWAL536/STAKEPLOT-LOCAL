@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 // Controller to manage pop-up state
@@ -231,7 +232,7 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
                     color: AppColors.accentColor,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
                 Obx(() {
                   return controller.topThreeTransactions.isEmpty
                       ? Text(
@@ -256,7 +257,7 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
                               .toList(),
                         );
                 }),
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
                 GestureDetector(
                   onTap: () async {
                     await controller.markPopupAsShown(userId);

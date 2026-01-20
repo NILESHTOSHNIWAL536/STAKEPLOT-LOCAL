@@ -22,6 +22,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../routes/index_route.dart';
 import 'componets/chat_index.dart';
 
@@ -218,7 +219,7 @@ class _ChatState extends State<Chat> {
                             shape: BoxShape.circle,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                         SizedBox(width: AppSizes.w6),
 
                         // username text
                         Text(

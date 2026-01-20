@@ -12,6 +12,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/si
 
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class AllCalculatorScreen extends StatefulWidget {
   @override
   State<AllCalculatorScreen> createState() => _AllCalculatorScreenState();
@@ -148,10 +150,10 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
                           //     textAlign: TextAlign.center,
                           //   ),
                           // ),
-                          SizedBox(width: 48.0),
+                          SizedBox(width: AppSizes.w48),
                         ],
                       ),
-                      SizedBox(height: 8.0),
+                      SizedBox(height: AppSizes.h8),
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: responsivePadding / 2),

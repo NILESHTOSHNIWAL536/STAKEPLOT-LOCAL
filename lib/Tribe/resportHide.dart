@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 Widget showModel(BuildContext context, String id, [bool flag = false, int indexElement = -1,isTribeOne=false]) {
   String? selectedOption; // To track the selected report option
 
@@ -40,7 +42,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                   Text(
                     "Report",
                     style: FontManager().getTextStyle(
@@ -153,7 +155,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                               ),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppSizes.h8),
                     TextButton(
                       onPressed: () => Navigator.pop(context),
                       style: TextButton.styleFrom(

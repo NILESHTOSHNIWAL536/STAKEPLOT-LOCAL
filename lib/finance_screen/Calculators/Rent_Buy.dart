@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/gr
 
 import 'package:flutter_application_code_stakeplot/Constants/calculator_utils.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 class RentBuy extends StatefulWidget {
@@ -328,7 +329,7 @@ class _RentBuyState extends State<RentBuy> {
                         borderRadius: BorderRadius.circular(12)),
                     child: graph()),
                 SizedBox(
-                  height: 10,
+                  height: AppSizes.h10,
                 ),
                 CustomExpansionTile(
                   howToUseContent: howToUseContent,

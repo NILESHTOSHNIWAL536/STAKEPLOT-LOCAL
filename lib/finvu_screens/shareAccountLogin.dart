@@ -14,6 +14,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.da
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'dart:async';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 
 String bankImage = "https://static.vecteezy.com/system/resources/thumbnails/023/364/757/small_2x/3d-illustration-of-bank-building-and-money-bag-png.png";
 
@@ -118,7 +120,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                                 size: 20.0,
                                 color: AppColors.primaryColor,
                               ),
-                              SizedBox(width: 8.0),
+                              SizedBox(width: AppSizes.w8),
                               Text(
                                 autoScrollItems[index]['text'],
                                 style: TextStyle(
@@ -149,7 +151,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.bold, fontSize: 22, color: AppColors.bg1),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: AppSizes.h16),
               Text(
                 FinvuStrings().financialSuccessJourney, // Direct access
                 style: FontManager().getTextStyle(context,
@@ -262,7 +264,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w600, fontSize: 12, color: AppColors.bg1),
                         ),
-                        const SizedBox(height: 4.0),
+                        SizedBox(height: AppSizes.h4),
                         Text(
                           FinvuStrings().accountAggregatorsDescription, // Direct access
                           style: FontManager().getTextStyle(context,

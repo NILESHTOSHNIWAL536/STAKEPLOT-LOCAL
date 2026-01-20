@@ -826,6 +826,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'dart:math';
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 import '../../components/shared_utils.dart';
 import 'expanded_finance.dart';
@@ -948,27 +949,27 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                       Text('My Spending',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w500, fontSize: 14, color: AppColors.primaryColor)),
-                      const SizedBox(height: 10),
+                       SizedBox(height: AppSizes.h10),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text('₹ ${formatNumber(selCred)}',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w500, fontSize: 14, color: AppColors.primaryColor)),
-                          const SizedBox(width: 8),
+                          SizedBox(width: AppSizes.w8),
                           Text('Credited',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400, fontSize: 12, color: AppColors.primaryColor)),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.h12),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text('₹ ${formatNumber(selDeb)}',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w500, fontSize: 14, color: AppColors.debitedAmount)),
-                          const SizedBox(width: 8),
+                          SizedBox(width: AppSizes.w8),
                           Text('Debited',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400, fontSize: 12, color: AppColors.debitedAmount)),
@@ -1060,7 +1061,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                                   ),
                                 ),
 
-                                const SizedBox(height: 8),
+                                SizedBox(height: AppSizes.h8),
 
                                 // Label
                                 SizedBox(

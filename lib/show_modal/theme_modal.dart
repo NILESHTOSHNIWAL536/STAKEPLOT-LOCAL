@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../controllers/controllerManagement.dart';
 import '../controllers/theme_controller.dart';
 
@@ -28,7 +29,7 @@ void showThemeSelectorModal(BuildContext context) {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(height: 12),
+               SizedBox(height: AppSizes.h12),
               ListTile(
                 leading: const Icon(Icons.brightness_auto),
                 title: const Text('System Default'),
@@ -62,7 +63,7 @@ void showThemeSelectorModal(BuildContext context) {
                   Navigator.pop(context);
                 },
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: AppSizes.h10),
             ],
           ),
         );

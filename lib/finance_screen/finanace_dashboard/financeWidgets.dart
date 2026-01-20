@@ -10,6 +10,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDe
 import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/cardBuilders.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 // Import CardBuilders for debtCard, budgetCard, etc.
 
 class FinanceWidgets {
@@ -38,7 +40,7 @@ class FinanceWidgets {
                         size: 12,
                         color: AppColors.primaryColor,
                       ),
-                      const SizedBox(width: 8),
+                       SizedBox(width: AppSizes.w8),
                       CardBuilders.globalText(
                         context: context,
                         text: PlotFinanceStaticData().addBudget,
@@ -51,7 +53,7 @@ class FinanceWidgets {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+             SizedBox(width: AppSizes.w12),
             Expanded(
               child: InkWell(
                 onTap: onAddDebt,
@@ -69,7 +71,7 @@ class FinanceWidgets {
                         size: 12,
                         color: AppColors.primaryColor,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSizes.w8),
                       CardBuilders.globalText(
                         context: context,
                         text: PlotFinanceStaticData().addDebt,
@@ -82,7 +84,7 @@ class FinanceWidgets {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+             SizedBox(width: AppSizes.w12),
             Expanded(
               child: InkWell(
                 onTap: () {
@@ -102,7 +104,7 @@ class FinanceWidgets {
                         size: 12,
                         color: AppColors.primaryColor,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSizes.w8),
                       CardBuilders.globalText(
                         context: context,
                         text: PlotFinanceStaticData().foodieFunds,
@@ -117,7 +119,7 @@ class FinanceWidgets {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: AppSizes.h16),
         Row(
           children: [
             Expanded(
@@ -139,7 +141,7 @@ class FinanceWidgets {
                     )),
               ),
             ),
-            const SizedBox(width: 12),
+             SizedBox(width: AppSizes.w12),
             Expanded(
               child: InkWell(
                 onTap: () {

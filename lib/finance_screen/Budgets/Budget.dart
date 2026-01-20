@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/components/textfeild.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import 'BudgetSearch.dart';
 
 RxList categoriesSeleted = [].obs;
@@ -189,7 +190,7 @@ class _BudgetState extends State<Budget> {
                               PlotFinanceStaticData().enterBudgetNameHint,
                           icon: Icons.person,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: AppSizes.h10),
                         TextFeildWidgetCustom(
                           textEditingController: amountController,
                           heading: PlotFinanceStaticData().amountLabelBudget,
@@ -199,7 +200,7 @@ class _BudgetState extends State<Budget> {
                           icon: Icons.currency_rupee_rounded,
                           needAmountFormat: true,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: AppSizes.h10),
                         textStyle(
                           context: context,
                           text: PlotFinanceStaticData().durationLabel,
@@ -207,7 +208,7 @@ class _BudgetState extends State<Budget> {
                           fontWeight: FontWeight.bold,
                           c: AppColors.accentColor,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: AppSizes.h10),
                         // Improved Dropdown for duration selection
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -285,7 +286,7 @@ class _BudgetState extends State<Budget> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
                   InkWell(
                     onTap: () {
                       bedgetCalculator();
@@ -293,7 +294,7 @@ class _BudgetState extends State<Budget> {
                     child: getButton(
                         context, PlotFinanceStaticData().continueButton),
                   ),
-                  SizedBox(height: 20), // Extra padding at bottom for scroll
+                  SizedBox(height: AppSizes.h20), // Extra padding at bottom for scroll
                 ],
               ),
             ),
@@ -446,7 +447,7 @@ Widget textStyle({
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const SizedBox(width: 7),
+       SizedBox(width: AppSizes.w8),
       Text(
         text.toString(),
         style: FontManager().getTextStyle(context,
@@ -493,7 +494,7 @@ Widget textStyleAnimated({
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const SizedBox(width: 7),
+      SizedBox(width: AppSizes.w8),
       Text(
         text.toString(),
         style: FontManager().getTextStyle(context,

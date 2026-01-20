@@ -13,6 +13,8 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class CurrencyConverterScreen extends StatefulWidget {
   const CurrencyConverterScreen({super.key});
 
@@ -345,7 +347,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         color: AppColors.accentColor,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     TextField(
                       controller: baseSearchController,
                       style: FontManager().getTextStyle(
@@ -401,10 +403,10 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         });
                       },
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppSizes.h4),
                     if (isBaseSearchActive && filteredBaseCurrencies.isNotEmpty)
                       Container(
-                        constraints: BoxConstraints(
+                        constraints: const BoxConstraints(
                           maxHeight: 150,
                         ),
                         decoration: BoxDecoration(
@@ -441,7 +443,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           },
                         ),
                       ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     Center(
                       child: GestureDetector(
                         onTap: swapCurrencies,
@@ -455,7 +457,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     Text(
                       "Converted Currency",
                       style: FontManager().getTextStyle(
@@ -465,7 +467,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         color: AppColors.accentColor,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     TextField(
                       controller: targetSearchController,
                       style: FontManager().getTextStyle(
@@ -521,7 +523,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         });
                       },
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: AppSizes.h4),
                     if (isTargetSearchActive &&
                         filteredTargetCurrencies.isNotEmpty)
                       Container(
@@ -562,7 +564,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           },
                         ),
                       ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: AppSizes.h16),
                     Text(
                       "Amount",
                       style: FontManager().getTextStyle(
@@ -572,7 +574,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         color: AppColors.accentColor,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     TextField(
                       controller: amountController,
                       keyboardType: TextInputType.number,
@@ -625,7 +627,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                       ),
                       onChanged: (value) => setState(() {}),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: AppSizes.h30),
                     if (result.isNotEmpty)
                       Center(
                         child: Container(
@@ -659,7 +661,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           ),
                         ),
                       ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: AppSizes.h24),
                     Center(
                       child: ElevatedButton(
                         onPressed: isLoading ||
@@ -693,7 +695,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                               ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: AppSizes.h24),
                     if (recentConversions.isNotEmpty)
                       Container(
                         decoration: BoxDecoration(
@@ -711,7 +713,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                 color: AppColors.primaryColor,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: AppSizes.h8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,

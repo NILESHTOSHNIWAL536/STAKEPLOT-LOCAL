@@ -3,6 +3,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/marks.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class MaskedNameDialogBox {
   static  showMaskedNameDialog(BuildContext context) {
     showDialog(
@@ -47,7 +49,7 @@ class MaskedNameDialogBox {
               color: AppColors.accentColorOpacity,
             ),
           ),
-          const SizedBox(height: 12),
+           SizedBox(height: AppSizes.h12),
           // Description
           const Text(
             'Use a masked name to post, like, comment, and more while keeping your identity private.',
@@ -57,7 +59,7 @@ class MaskedNameDialogBox {
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 20),
+           SizedBox(height: AppSizes.h20),
           // Close button
           Row(
             children: [

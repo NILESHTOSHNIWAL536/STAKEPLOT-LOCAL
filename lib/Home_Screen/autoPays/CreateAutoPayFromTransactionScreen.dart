@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 
 enum AutoPayStep { selectDate, confirm }
@@ -120,7 +121,7 @@ class _CreateAutoPayFromTransactionScreenState
             ],
           ),
 
-          const SizedBox(height: 8),
+           SizedBox(height: AppSizes.h8),
           if (showDetails && selectedDay != null)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,14 +159,14 @@ class _CreateAutoPayFromTransactionScreenState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _transactionCard(),
-        const SizedBox(height: 20),
+        SizedBox(height: AppSizes.h20),
          Text("Select day of the month for payment",  style:  FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w400,
             fontSize: 12,
             color: AppColors.accentColor,
           )),
-        const SizedBox(height: 12),
+         SizedBox(height: AppSizes.h12),
 
         GridView.builder(
           shrinkWrap: true,
@@ -226,7 +227,7 @@ class _CreateAutoPayFromTransactionScreenState
     return Column(
       children: [
         _transactionCard(showDetails: true),
-        const SizedBox(height: 30),
+        SizedBox(height: AppSizes.h30),
 
         _actionButton(
           text: "Confirm Autopay",

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class ListItemModel {
   final String title;
   final String description;
@@ -35,7 +37,7 @@ class CustomExpansionTile extends StatelessWidget {
                 .map((item) => _buildStringListItem(context, item))
                 .toList(),
           ),
-          const SizedBox(height: 10),
+           SizedBox(height: AppSizes.h10),
           _buildExpansionTile(
             context,
             title: "How it works?",
@@ -74,7 +76,7 @@ class CustomExpansionTile extends StatelessWidget {
           title: Row(
             children: [
               Icon(icon, color: AppColors.backgroundColor),
-              const SizedBox(width: 10),
+              SizedBox(width: AppSizes.w10),
               Text(
                 title,
                 style: FontManager().getTextStyle(
@@ -118,7 +120,7 @@ class CustomExpansionTile extends StatelessWidget {
               color: AppColors.backgroundColor,
             ),
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: AppSizes.h5),
           Text(
             item.description,
             style: FontManager().getTextStyle(
@@ -149,7 +151,7 @@ class CustomExpansionTile extends StatelessWidget {
               color: AppColors.backgroundColor,
             ),
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: AppSizes.h5),
           Text(
             item.description,
             style: FontManager().getTextStyle(

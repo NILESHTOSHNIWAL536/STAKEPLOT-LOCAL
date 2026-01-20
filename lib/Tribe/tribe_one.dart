@@ -119,7 +119,7 @@ class _TribeHomeState extends State<TribeUnique> {
 
       postController.postCount[id] = 0;
       snackBarCalled(context, SnackbarData().commentAddedSuccessfully,
-          AppColors.accentColor);
+          );
     } else {
       snackBarCalledfail(
           context, SnackbarData().unableToAddComment, Colors.red);

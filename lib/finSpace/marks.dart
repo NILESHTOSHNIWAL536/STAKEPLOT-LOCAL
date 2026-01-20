@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScr
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 final TextEditingController maskNameController = TextEditingController();
 
 class MaskNameScreen extends StatefulWidget {
@@ -230,7 +232,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                     color: Colors.black87,
                   ),
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: AppSizes.h16),
                 Container(
                   height: MediaQuery.sizeOf(context).height / 3.3,
                   child: GridView.builder(
@@ -345,7 +347,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
             ),
           ),
 
-          SizedBox(height: 6),
+          SizedBox(height: AppSizes.h6),
 
           // Mask name input field
           Center(
@@ -365,7 +367,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                                 lineHeight: 1.4,
                                 color: AppColors.bg1)),
                       )),
-                  SizedBox(width: 10),
+                  SizedBox(width: AppSizes.w8),
                   IconButton(
                     icon: Icon(Icons.auto_fix_high,
                         color: AppColors.finSpaceColor),
@@ -406,7 +408,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
             ),
           ),
 
-          const SizedBox(height: 6),
+          SizedBox(height: AppSizes.h6),
 
           // Description text
           Text(
@@ -417,7 +419,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                   lineHeight: 1.4,
                   color: AppColors.bg1)),
 
-          SizedBox(height: 4),
+          SizedBox(height: AppSizes.h6),
           Text(
               'This name is only visible inside the community section — for discussions, comments, and polls. When you split bills, share posts, or engage in other features outside the community, your masked name isn’t used. Those activities remain linked to your actual Stakeplot profile.',
 

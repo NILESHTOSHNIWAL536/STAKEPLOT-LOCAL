@@ -12,9 +12,10 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+
 import '../../Constants/core/app_component_sizes.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/helper.dart';
 import '../Home/home_AppBar.dart';
 import '../Home/init_Api_Calls.dart';
@@ -64,7 +65,7 @@ Stack(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 60),
+             SizedBox(height: AppSizes.h60),
 
            
             const TopRightIconsWidget(),
@@ -78,7 +79,7 @@ Stack(
               ),
             ),
 
-            const SizedBox(height: 10),
+            SizedBox(height: AppSizes.h10),
           ],
         ),
       ),
@@ -103,16 +104,16 @@ Stack(
                         
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: AppSizes.h20,
                     ),
                     SizedBox(
                       height: AppComponentSizes.h5,
                       child: const SpendingCardTwoPanels(),
                     ),
-                   
-                    const SizedBox(
-                      height: 20,
+                  
+                     SizedBox(
+                      height: AppSizes.h20,
                     ),
                     //  SizedBox(
                     //   height: height * 0.2,

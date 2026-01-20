@@ -5,6 +5,8 @@ class AppComponentSizes {
   static late double screenHeight;
 
   // Heights → screenHeight / X
+  static late double h1_14;
+  static late double h1_1;
   static late double h1_23;
   static late double h2;
   static late double h2_1;
@@ -70,6 +72,8 @@ class AppComponentSizes {
     screenHeight = size.height;
 
     // Heights (integer divisors)
+    h1_14 = screenHeight / 1.14;
+    h1_1 = screenHeight / 1.1;
     h1_23 = screenHeight / 1.23;
     h2 = screenHeight / 2;
     h3 = screenHeight / 3;

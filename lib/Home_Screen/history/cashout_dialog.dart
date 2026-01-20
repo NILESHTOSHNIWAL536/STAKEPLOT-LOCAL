@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class CashOutDialog extends StatelessWidget {
   double maxAmount;
    CashOutDialog({super.key,required this.maxAmount});
@@ -28,7 +30,7 @@ class CashOutDialog extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(width: 24), // Empty box for left space
+                   SizedBox(width: AppSizes.w24), // Empty box for left space
                   const Text(
                     "Cash Out",
                     style: TextStyle(
@@ -43,14 +45,14 @@ class CashOutDialog extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: AppSizes.h24),
 
               // Name Label
               const Text(
                 "Name",
                 style: TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: AppSizes.h6),
               TextFormField(
                 controller: controllerName,
                 decoration: InputDecoration(
@@ -65,14 +67,14 @@ class CashOutDialog extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: AppSizes.h20),
 
               // Amount Label
               const Text(
                 "Amount",
                 style: TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: AppSizes.h6),
               TextFormField(
                 controller: controllerAmount,
                 keyboardType: TextInputType.number,
@@ -88,7 +90,7 @@ class CashOutDialog extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppSizes.h32),
 
               // Cash Out Button
               SizedBox(

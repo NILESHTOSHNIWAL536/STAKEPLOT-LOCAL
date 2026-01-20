@@ -18,6 +18,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class emailUpdation extends StatefulWidget {
   final Map<String, dynamic> data;
 
@@ -103,7 +105,7 @@ class _emailUpdationState extends State<emailUpdation> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 20),
+                     SizedBox(height: AppSizes.h20),
                     topHeader(),
                     textStyleOnly2(
                       context: context,
@@ -112,7 +114,7 @@ class _emailUpdationState extends State<emailUpdation> {
                       fontsize: 14,
                       color: Colorcodes.white,
                     ),
-                    const SizedBox(height: 40),
+                    SizedBox(height: AppSizes.h40),
                     verifyOpt(),
                     acceptButton(),
                     SizedBox(height: Colorcodes.paddingSize * 2),
@@ -196,7 +198,7 @@ class _emailUpdationState extends State<emailUpdation> {
                   ControllerManagement.userController.email.value =
                       widget.data['email'];
                   snackBarCalled(
-                      context, "Email updated successfully", AppColors.accentColor);
+                      context, "Email updated successfully", );
                   Navigator.pop(context); // Return to EditDetails screen
                 } else {
                   snackBarCalledfail(

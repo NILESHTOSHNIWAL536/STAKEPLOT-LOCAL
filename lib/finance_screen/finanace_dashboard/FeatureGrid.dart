@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.d
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../Budgets/Budget.dart'; // for icons
 
 class FeatureGrid extends StatelessWidget {
@@ -57,7 +58,7 @@ Widget _buildFeatureIcon(IconData icon, String text, int index,
               child: AvatarProfileImage(url: urlPath, width: 12, height: 14),
             ),
           ),
-          const SizedBox(height: 4),
+           SizedBox(height: AppSizes.h4),
           textStyleImage(
               text: text,
               context: context,

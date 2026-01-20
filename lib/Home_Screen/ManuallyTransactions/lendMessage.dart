@@ -3,8 +3,9 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:intl/intl.dart'; // For formatting date
+import 'package:intl/intl.dart';
+
+import '../../Constants/core/app_padding_sizes.dart'; // For formatting date
 
 TextEditingController messageController = TextEditingController();
 DateTime? selectedDueDate;
@@ -130,7 +131,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.h16),
                 // Summary Info
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -190,7 +191,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: AppSizes.h20),
                 // Message Field
                 Text(
                   'Message *',
@@ -201,7 +202,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     color: AppColors.bg1,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppSizes.h8),
                 TextField(
                   controller: messageController,
                   decoration: InputDecoration(
@@ -227,7 +228,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                   textInputAction: TextInputAction.done,
                   onSubmitted: (_) => _validateAndConfirm(),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.h16),
                 // Due Date Field
                 Text(
                   'Due Date *',
@@ -238,7 +239,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     color: AppColors.bg1,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppSizes.h8),
                 GestureDetector(
                   onTap: () => _selectDueDate(context),
                   child: Container(
@@ -276,7 +277,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.h24),
                 // Confirm Button
                 Center(
                   child: InkWell(

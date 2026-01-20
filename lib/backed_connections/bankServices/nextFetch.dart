@@ -569,6 +569,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 import '../../components/shared_utils.dart';
 import '../../model/fips_metric_model.dart';
@@ -694,7 +695,8 @@ class _RotatingIconState extends State<Nextfetch>
                               : HomepageStringsDart().nextFetchLabel,
                           fontWeight: FontWeight.w500,
                           c: AppColors.backgroundColor,
-                          fontsize: isFected.value ? 14 : 14,
+                          fontsize:  14,
+                          lineHeight: 18/fontSize
                         ),
                       ),
                       textStyle(
@@ -704,6 +706,7 @@ class _RotatingIconState extends State<Nextfetch>
                         fontWeight: FontWeight.w500,
                         c: AppColors.backgroundColor,
                         fontsize: 14,
+                        lineHeight: 18/fontSize
                       ),
                     ],
                   ),
@@ -780,13 +783,13 @@ class _RotatingIconState extends State<Nextfetch>
     builder: (context) {
       return SafeArea(
         child: Container(
-          padding: EdgeInsets.all(screenWidth * 0.06),
-          decoration: BoxDecoration(
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 30),
+          decoration: const BoxDecoration(
             color: AppColors.backgroundColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            borderRadius:  BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.48, 
+            height: MediaQuery.of(context).size.height /2, 
             child: isFected.value?Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -794,10 +797,10 @@ class _RotatingIconState extends State<Nextfetch>
           Container(
             width: 60,
             height: 60,
-            decoration: BoxDecoration(color: AppColors.border, shape: BoxShape.circle),
-            child: Icon(Icons.sync, size: 26, color: AppColors.primaryColor),
+            decoration: const BoxDecoration(color: AppColors.border, shape: BoxShape.circle),
+            child:const  Icon(Icons.sync, size: 26, color: AppColors.primaryColor),
           ),
-          const SizedBox(height: 20),
+           SizedBox(height: AppSizes.h20),
           Text(
             "Sync in progress",
             textAlign: TextAlign.center,
@@ -810,7 +813,7 @@ class _RotatingIconState extends State<Nextfetch>
                                   ),
            
           ),
-          const SizedBox(height: 10),
+           SizedBox(height: AppSizes.h10),
           Text(
             "Please wait while we retrieve the latest data from your bank. The process may take a moment depending on your bank's server response.",
             textAlign: TextAlign.center,
@@ -825,7 +828,7 @@ class _RotatingIconState extends State<Nextfetch>
            SizedBox(height: MediaQuery.sizeOf(context).height/30),
           SizedBox(
       width: double.infinity,
-      height: 48,
+      height: AppSizes.h48,
       child: ElevatedButton(
         onPressed: () {
         Navigator.pop(context);
@@ -863,17 +866,18 @@ class _RotatingIconState extends State<Nextfetch>
                         context: context,
                         text: "Connected Banks",
                         fontsize: 16,
-                        c: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
+                        c: AppColors.bg1,
+                        fontWeight: FontWeight.w500,
+                        lineHeight: 21/fontSize
                       ),
 
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSizes.h16),
 
                    
 
 connectedBanksRow(context),
 
-const SizedBox(height: 20),
+ SizedBox(height: AppSizes.h20),
 
 
 
@@ -882,28 +886,28 @@ const SizedBox(height: 20),
                         title: "Average latency",
                         value: "${metric.latencyAvgMs + 40}ms",
                       ),
-                      const SizedBox(height: 12),
+                       SizedBox(height: AppSizes.h12),
 
                       _buildInfoCard(
                         context: context,
                         title: HomepageStringsDart().lastFetchLabel,
                         value: formattedLastFetch,
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.h12),
 
                       _buildInfoCard(
                         context: context,
                         title: HomepageStringsDart().nextFetchTitle,
                         value: formattedNextFetch,
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.h12),
 
                       _buildInfoCard(
                         context: context,
                         title: HomepageStringsDart().fetchCountTitle,
                         value: '${!limit ? fetchCount.value : "5"}/5',
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: AppSizes.h20),
 
                       Center(
                         child: GestureDetector(
@@ -1003,14 +1007,15 @@ Widget connectedBanksRow(BuildContext context) {
                     height: 28,
                     errorBuilder: getErrorBankLogo(),
                   ),
-                  const SizedBox(height: 4),
+                   SizedBox(height: AppSizes.h4),
                   Text(
                     bank.bankName,
                     style: FontManager().getTextStyle(
                       context,
-                      fontSize: 11,
+                      fontSize: 14,
                       lWeight: FontWeight.w500,
-                      color: AppColors.bg1,
+                      color: AppColors.accentColor,
+                      lineHeight: 20/fontSize
                     ),
                   ),
                 ],
@@ -1052,9 +1057,9 @@ Widget connectedBanksRow(BuildContext context) {
           textStyle(
             context: context,
             text: text,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w400,
             fontsize: 14,
-            c: AppColors.bg1,
+            c: AppColors.accentColor,
             iswrap: true,
           )
         ],
@@ -1103,16 +1108,16 @@ Widget connectedBanksRow(BuildContext context) {
             text: title,
             fontsize:
                 screenWidth < 400 ? 12 : 14,
-            color: AppColors.bg1.withOpacity(0.8),
-            fontWeight: FontWeight.w500,
+            color: AppColors.accentColor,
+            fontWeight: FontWeight.w400,
           ),
           textStyleOnly2(
             context: context,
             text: value,
             fontsize:
                 screenWidth < 400 ? 10 : 12,
-            color: AppColors.bg1,
-            fontWeight: FontWeight.w500,
+            color: AppColors.grey,
+            fontWeight: FontWeight.w400,
           ),
         ],
       ),

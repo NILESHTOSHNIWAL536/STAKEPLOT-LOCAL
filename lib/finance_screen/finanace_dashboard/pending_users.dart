@@ -14,6 +14,8 @@ import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class UserListScreen extends StatefulWidget {
   final bool isPayable; // true for amounts to pay, false for amounts to receive
 
@@ -150,7 +152,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                 ),
                               ),
 
-                              const SizedBox(height: 12),
+                               SizedBox(height: AppSizes.h12),
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -182,7 +184,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: AppSizes.w8),
                                   //here
                                   InkWell(
                                     onTap: () async {
@@ -298,7 +300,7 @@ class _UserListScreenState extends State<UserListScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSizes.w8),
                       // Action Button and Date
                       Container(
                         child: SizedBox(
@@ -308,7 +310,7 @@ class _UserListScreenState extends State<UserListScreen> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const SizedBox(height: 16),
+                              SizedBox(height: AppSizes.h12),
                               ConstrainedBox(
                                 constraints:
                                     BoxConstraints(maxWidth: maxWidth * 0.2),
@@ -334,7 +336,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                 ),
                               ),
                               if (isLendAmount && data['dueDate'] != null) ...[
-                                const SizedBox(height: 4),
+                                SizedBox(height: AppSizes.h4),
                                 Text(
                                   () {
                                     final dueDate =
@@ -444,23 +446,23 @@ class _UserListScreenState extends State<UserListScreen> {
                       children: [
                         // Header
                         _buildHeader(context, data, animation),
-                        const SizedBox(height: 12),
+                        SizedBox(height: AppSizes.h12),
                         const Divider(
                             color: AppColors.accentColor, thickness: 0.5),
 
                         // Current User
                         _buildSectionHeader(
                             context, 'Your Details', Icons.person, animation),
-                        const SizedBox(height: 8),
+                        SizedBox(height: AppSizes.h8),
                         _buildUserDetails(context, currentUser, animation),
-                        const SizedBox(height: 12),
+                        SizedBox(height: AppSizes.h12),
                         const Divider(
                             color: AppColors.accentColor, thickness: 0.5),
 
                         // Friends
                         _buildSectionHeader(
                             context, 'Friends', Icons.group, animation),
-                        const SizedBox(height: 8),
+                        SizedBox(height: AppSizes.h8),
                         friends.isEmpty
                             ? const Padding(
                                 padding: EdgeInsets.only(left: 8.0),
@@ -495,7 +497,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                   );
                                 },
                               ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: AppSizes.h12),
                       ],
                     ),
                   ),
@@ -519,7 +521,7 @@ class _UserListScreenState extends State<UserListScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20), // Space for the Paid status
+          SizedBox(height: AppSizes.h20), // Space for the Paid status
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -615,7 +617,7 @@ class _UserListScreenState extends State<UserListScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: AppSizes.h6),
           // Priorities
         ],
       ),
@@ -633,7 +635,7 @@ class _UserListScreenState extends State<UserListScreen> {
           ),
           child: Icon(icon, size: 18, color: AppColors.accentColor),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: AppSizes.w8),
         Text(
           title,
           style: FontManager().getTextStyle(
@@ -672,7 +674,7 @@ class _UserListScreenState extends State<UserListScreen> {
                   color: AppColors.backgroundColor,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: AppSizes.w8),
               Text(
                 data['splitName'] ?? 'Foodie Split',
                 style: FontManager().getTextStyle(

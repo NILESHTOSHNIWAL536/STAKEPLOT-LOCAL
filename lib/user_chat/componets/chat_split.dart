@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 import '../../Constants/colorcodes.dart';
 import '../message.dart';
@@ -47,7 +48,7 @@ Widget spliDisplay(msg, bool, url, Message message,BuildContext context)
                       ? AppColors.backgroundColor
                       : AppColors.appIcon,
                   size: 24),
-              SizedBox(width: 10),
+              SizedBox(width: AppSizes.w10),
               Text(
                 message.split['BillName'],
                 style: FontManager().getTextStyle(
@@ -61,7 +62,7 @@ Widget spliDisplay(msg, bool, url, Message message,BuildContext context)
               ),
             ],
           ),
-          const SizedBox(height: 3),
+          SizedBox(height: AppSizes.h3),
           Column(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -75,7 +76,7 @@ Widget spliDisplay(msg, bool, url, Message message,BuildContext context)
                             : AppColors.bg2,
                         fontSize: 16),
                   ),
-                  const SizedBox(width: 5),
+                   SizedBox(width: AppSizes.w5),
                   Text(
                     "Total expense: " +
                         doubleToFixed(message.split['Amount'].toString()),
@@ -94,7 +95,7 @@ Widget spliDisplay(msg, bool, url, Message message,BuildContext context)
                           ? AppColors.backgroundColor
                           : AppColors.appIcon,
                       size: 20),
-                  const SizedBox(width: 5),
+                  SizedBox(width: AppSizes.w5),
                   Text(
                     "Share: " +
                         doubleToFixed(message.split['Share'].toString())
@@ -109,7 +110,7 @@ Widget spliDisplay(msg, bool, url, Message message,BuildContext context)
               ),
             ],
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: AppSizes.h5),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6.0),
             child: Row(
@@ -119,7 +120,7 @@ Widget spliDisplay(msg, bool, url, Message message,BuildContext context)
                   color: message.split['isPaid'] ? Colors.green : Colors.red,
                   size: 20,
                 ),
-                const SizedBox(width: 5),
+                SizedBox(width: AppSizes.w5),
                 Text(
                   message.split['isPaid'] ? "Settled Successfully" : "Pending",
                   style: FontManager().getTextStyle(context,

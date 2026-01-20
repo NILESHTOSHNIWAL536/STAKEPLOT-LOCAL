@@ -84,7 +84,7 @@ void aboutuser(context, String about) async {
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(context, SnackbarData().userInfoUpdated, AppColors.accentColor);
+    snackBarCalled(context, SnackbarData().userInfoUpdated, );
   } else {
     snackBarCalledfail(context, SnackbarData().errorUpdatingUserInfo, Colors.red);
   }
@@ -119,7 +119,7 @@ void editUserDetails(
       return;
     }
     if (response.statusCode == 200 || response.statusCode == 201) {
-      snackBarCalled(context, SnackbarData().userInfoUpdated, AppColors.accentColor);
+      snackBarCalled(context, SnackbarData().userInfoUpdated, );
 
       userController.avatar.value = changeAvater.value;
       userController.userName.value = controller['name']!.text.toString();

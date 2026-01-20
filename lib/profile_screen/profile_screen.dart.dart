@@ -20,6 +20,8 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class ProfileScreenDart extends StatefulWidget {
   const ProfileScreenDart({super.key});
 
@@ -196,7 +198,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                 SizedBox(height: AppSizes.h20),
                 // Options list
                 Padding(
                   padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
@@ -241,7 +243,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: AppSizes.h10),
                     Container(
                       decoration: BoxDecoration(
                           color: AppColors.mt,
@@ -325,7 +327,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
             ),
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: AppSizes.h20),
         Align(
           alignment: Alignment.bottomCenter,
           child: Text(

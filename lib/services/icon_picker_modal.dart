@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/services/app_icon_changer.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 
 class IconPickerModal {
   static void show(BuildContext context) {
@@ -68,7 +70,7 @@ class _IconPickerContentState extends State<_IconPickerContent> {
               height: 70,
               width: 70,
             ),
-            SizedBox(height: 8),
+            SizedBox(height: AppSizes.h8),
             Text(
               label,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
@@ -95,7 +97,7 @@ class _IconPickerContentState extends State<_IconPickerContent> {
             ),
           ),
           Text("Choose App Icon", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          SizedBox(height: 20),
+          SizedBox(height: AppSizes.h20),
           isLoading
               ? Center(child: CircularProgressIndicator())
               : Row(

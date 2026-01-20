@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_c
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter/services.dart';
+import '../../../Constants/core/app_padding_sizes.dart';
 import 'transactions_details.dart';
 
 
@@ -57,7 +58,7 @@ class TransactionContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         
-        SizedBox(height: isExcluded ? 8 : 0),
+        SizedBox(height: isExcluded ? AppSizes.h8 : 0),
         Container(
           padding: EdgeInsets.only(top: isExcluded ? 0 : fontSizes.padding / 6),
           child: Row(

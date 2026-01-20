@@ -15,6 +15,7 @@ import "package:flutter_application_code_stakeplot/controllers/user-controller.d
 
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../routes/index_route.dart';
 
 
@@ -190,7 +191,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                 color: AppColors.accentColor,
               ),
             ),
-            const SizedBox(height: 16),
+             SizedBox(height: AppSizes.h16),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
@@ -203,7 +204,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                           width: 12,
                           height: 12,
                           background: userController.avatarBackGround.value),
-                      const SizedBox(width: 10),
+                       SizedBox(width: AppSizes.w10),
                       Text(
                         widget.userName,
                         style: FontManager().getTextStyle(
@@ -265,7 +266,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                               height: 12,
                               background: friend['avatarBackGround'] ??
                                   defaultBackGround.value),
-                          const SizedBox(width: 10),
+                          SizedBox(width: AppSizes.w10),
                           Text(
                             friend['name'],
                             style: FontManager().getTextStyle(
@@ -316,7 +317,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                     ],
                   ),
                 )),
-            const SizedBox(height: 10),
+            SizedBox(height: AppSizes.h10),
             Text(
               'Current Total: ₹${currentTotal.toStringAsFixed(2)}',
               style: FontManager().getTextStyle(
@@ -325,7 +326,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                 color: AppColors.bg1,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: AppSizes.h10),
             Text(
               'Leftover: ₹${leftoverAmount.toStringAsFixed(2)}',
               style: FontManager().getTextStyle(
@@ -338,7 +339,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                         : Colors.orange,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSizes.h16),
             Text(
               'Click Settle to split leftover amount equally among all',
               style: FontManager().getTextStyle(
@@ -349,7 +350,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: AppSizes.h10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -400,7 +401,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
               ],
             ),
             SizedBox(
-              height: 10,
+              height: AppSizes.h10,
             )
           ],
         ),

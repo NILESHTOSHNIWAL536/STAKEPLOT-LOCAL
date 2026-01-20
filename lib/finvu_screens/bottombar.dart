@@ -7,6 +7,8 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class BottomBar extends StatelessWidget {
   const BottomBar({Key? key}) : super(key: key);
 
@@ -34,7 +36,7 @@ class BottomBar extends StatelessWidget {
                 color: AppColors.bottomBarColor,
               ),
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: AppSizes.w6),
             SizedBox(
               width: 70,
               child: AvatarProfileImage(

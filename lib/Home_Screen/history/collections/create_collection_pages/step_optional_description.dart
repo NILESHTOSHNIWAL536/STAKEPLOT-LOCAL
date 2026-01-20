@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 
 import '../../../../Constants/colors.dart';
+import '../../../../Constants/core/app_padding_sizes.dart';
 import '../../../../Constants/font_manager.dart';
 import '../create_collection_data.dart';
 import 'create_collection_flow.dart';
@@ -75,7 +76,7 @@ class StepOptionalDescription extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 12),
+           SizedBox(height: AppSizes.h12),
 
           /// DESCRIPTION INPUT
           Container(

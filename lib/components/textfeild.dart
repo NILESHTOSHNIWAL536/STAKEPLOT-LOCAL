@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:intl/intl.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../Utils/signUp.dart';
 import '../image_service/profile.dart';
 import 'shared_utils.dart';
@@ -54,8 +55,8 @@ class TextFeildWidget extends StatelessWidget {
                   style: FontManager().getTextStyle(context,
                       fontSize: 16, lWeight: FontWeight.w600)),
             ),
-           (heading=="tagSearch" || heading=="") ? SizedBox.shrink():  const SizedBox(
-              height: 10,
+           (heading=="tagSearch" || heading=="") ? SizedBox.shrink():   SizedBox(
+              height: AppSizes.h10,
             ),
             TextFormField(
               keyboardType: keyBoard,
@@ -170,8 +171,8 @@ class TextFeildWidgetPassword extends StatelessWidget {
                       style: FontManager().getTextStyle(context,
                           fontSize: 16, lWeight: FontWeight.w600)),
                 ),
-                const SizedBox(
-                  height: 10,
+                 SizedBox(
+                  height: AppSizes.h10,
                 ),
                 Center(
                   child: TextFormField(
@@ -267,8 +268,8 @@ class TextFeildWidget2 extends StatelessWidget {
                   style: FontManager().getTextStyle(context,
                       fontSize: 18, lWeight: FontWeight.w600)),
             ),
-            const SizedBox(
-              height: 10,
+             SizedBox(
+              height: AppSizes.h10,
             ),
             TextFormField(
               keyboardType: TextInputType.name,
@@ -342,8 +343,8 @@ class TextFeildCalender extends StatelessWidget {
                     style: FontManager().getTextStyle(context,
                         fontSize: 16, lWeight: FontWeight.w600)),
               ),
-              const SizedBox(
-                height: 10,
+               SizedBox(
+                height: AppSizes.h10,
               ),
               TextFormField(
                 keyboardType: TextInputType.none, // Disable manual entry
@@ -456,8 +457,8 @@ class TextFeildWidgetCustom extends StatelessWidget {
                   style: FontManager().getTextStyle(context,
                       fontSize: 16, lWeight: FontWeight.w500)),
             ),
-            const SizedBox(
-              height: 10,
+             SizedBox(
+              height: AppSizes.h10,
             ),
             TextFormField(
               keyboardType: keyBoard,

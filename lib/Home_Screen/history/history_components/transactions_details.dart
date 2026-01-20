@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 
+import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/core/app_shadows.dart';
 import 'icon_split_hide.dart';
 
@@ -124,7 +125,7 @@ class TransactionDetails extends StatelessWidget {
               ],
             ),
           ),
-          isExcluded ? const SizedBox(height: 10) : const SizedBox.shrink(),
+          isExcluded ?  SizedBox(height: AppSizes.h10) : const SizedBox.shrink(),
           isExcluded
               ? const SizedBox.shrink()
               : Padding(

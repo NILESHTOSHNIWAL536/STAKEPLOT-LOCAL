@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/integration.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
 
 Future<bool?> showSkipModal2(BuildContext context) {
@@ -32,7 +33,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                   color: AppColors.bg1,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: AppSizes.h20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -57,7 +58,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                           ),
                         ),
                       )),
-                  SizedBox(width: 10),
+                  SizedBox(width: AppSizes.w10),
                   GestureDetector(
                       onTap: () {
                         Navigator.of(context).pop(true); // User chose "Yes"

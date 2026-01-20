@@ -10,6 +10,8 @@ import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.d
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 
 
 void showEditBottomSheet({
@@ -81,7 +83,7 @@ void showEditBottomSheet({
               // Title
               
                   
-              const SizedBox(height: 24),
+              SizedBox(height: AppSizes.h24),
                   
               // Text Field with Floating Label
               TextFormField(
@@ -107,7 +109,7 @@ void showEditBottomSheet({
                 ),
               ),
                   
-              const SizedBox(height: 28),
+              SizedBox(height: AppSizes.h28),
                   
               // Buttons
               Row(
@@ -120,7 +122,7 @@ void showEditBottomSheet({
                       style: TextStyle(color: AppColors.primaryColor),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: AppSizes.w10),
                   Obx(() => InkWell(
                         onTap: isButtonDisabled.value
                             ? null
@@ -178,7 +180,7 @@ void showDeleteDialogComment(BuildContext context2, String commentText,String ty
             // Icon(Icons.mark_chat_read_outlined, size: 50, color: Colors.red),
             AvatarProfileImage(url: 'assets/svgs/delete_pop.svg', width: 10, height: 12),
 
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.h12),
 
             // Text
              Text(
@@ -191,7 +193,7 @@ void showDeleteDialogComment(BuildContext context2, String commentText,String ty
                       ),
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: AppSizes.h20),
 
             // Buttons Row
             Row(
@@ -212,7 +214,7 @@ void showDeleteDialogComment(BuildContext context2, String commentText,String ty
                   ),
                 ),
 
-                const SizedBox(width: 16),
+                SizedBox(width: AppSizes.w16),
 
                  ElevatedButton(
                   onPressed: () {

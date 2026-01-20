@@ -20,11 +20,11 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
-import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../backed_connections/bankServices/pdf.dart';
 
 RxBool reloadHistory = false.obs;
@@ -312,7 +312,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: AppSizes.h20),
               getListItemListTile(
                   HomepageStringsDart().thirtyDays, "days", context),
               getListItemListTile(

@@ -170,8 +170,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
-
+import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/shared_utils.dart';
 import '../../finance_screen/Budgets/Budget.dart';
@@ -203,12 +203,12 @@ class _TransactionCreditDebitCardState
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(137, 137, 137,
                                   0.25), // Equivalent to rgba(137, 137, 137, 0.25);
@@ -238,7 +238,7 @@ class _TransactionCreditDebitCardState
             ],
           ),
 
-          const SizedBox(height: 16),
+           SizedBox(height: AppSizes.h16),
 
           /// 🔹 CREDIT / DEBIT ROW
           Row(
@@ -277,7 +277,7 @@ class _TransactionCreditDebitCardState
           _toggleItem('Week', isWeekSelected, () {
             setState(() => isWeekSelected = true);
           }),
-          SizedBox(width: 4,),
+          SizedBox(width: AppSizes.w4),
           _toggleItem('Monthly', !isWeekSelected, () {
             setState(() => isWeekSelected = false);
           }),
@@ -295,11 +295,7 @@ class _TransactionCreditDebitCardState
           color: selected ? AppColors.primaryColor : AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(6),
            boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
+          AppShadows.soft
         ],
         ),
         child: textStyle(
@@ -320,7 +316,7 @@ class _TransactionCreditDebitCardState
     required String value,
     required String label,
   }) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.sizeOf(context).width/2.3,
       child: Row(
         // crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,7 +329,7 @@ class _TransactionCreditDebitCardState
             c: AppColors.primaryColor,
             fontWeight: FontWeight.w500,
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: AppSizes.w6),
           textStyle(
             context: context,
             text: label,
@@ -346,13 +342,5 @@ class _TransactionCreditDebitCardState
     );
   }
 
-  Widget _divider() {
-    return SizedBox(
-      height: 30,
-      child: VerticalDivider(
-        thickness: 1,
-        color: AppColors.greyCard,
-      ),
-    );
-  }
+  
 }

@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/services/icon_picker_modal.da
 import 'package:flutter_application_code_stakeplot/signInOut/emailUpdateOtp.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Utils/credit_card.dart';
 import '../backed_connections/bankServices/share_data.dart';
 import '../image_service/avatarProfile.dart';
@@ -141,7 +142,7 @@ class _EditDetailsState extends State<EditDetails> {
                     )),
               ],
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -168,7 +169,7 @@ class _EditDetailsState extends State<EditDetails> {
                           children: [
                             const Icon(Icons.lock_reset,
                                 color: AppColors.primaryColor, size: 20),
-                            const SizedBox(width: 4),
+                            SizedBox(width: AppSizes.w4),
                             textStyleOnly2(
                               context: context,
                               text: ProfileScreenStrings().resetPinLabel,
@@ -181,7 +182,7 @@ class _EditDetailsState extends State<EditDetails> {
                       )),
               ],
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
             Container(
               decoration: BoxDecoration(
                 color: AppColors.mt,
@@ -222,9 +223,9 @@ class _EditDetailsState extends State<EditDetails> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
             const Divider(),
-            const SizedBox(height: 10),
+             SizedBox(height: AppSizes.h10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -260,13 +261,13 @@ class _EditDetailsState extends State<EditDetails> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
             ElevatedButton(
                     child: Text("Change App Icon"),
                     onPressed: () => IconPickerModal.show(context),
             ),
             getListOfBankConnected(),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
           ],
         ),
       ),
@@ -531,7 +532,7 @@ Widget getListOfBankConnected() {
       'name': name,
     });
     if (getFlagOfResponse(response)) {
-      snackBarCalled(context, SnackbarData().sentOtpToEmail, AppColors.accentColor);
+      snackBarCalled(context, SnackbarData().sentOtpToEmail, );
 
       Navigator.push(
         context,

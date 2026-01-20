@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransacti
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/app_shadows.dart';
 
 class ManualTransactionPage extends StatefulWidget {
@@ -89,11 +90,11 @@ class _ManualTransactionPageState extends State<ManualTransactionPage>
                           ),
                         ),
                         // placeholder space to keep title centered
-                        const SizedBox(width: 44),
+                         SizedBox(width: AppSizes.w44),
                       ],
                     ),
 
-                    const SizedBox(height: 6),
+                    SizedBox(height: AppSizes.h6),
 
                     // TabBar styled as segmented control
                     Material(

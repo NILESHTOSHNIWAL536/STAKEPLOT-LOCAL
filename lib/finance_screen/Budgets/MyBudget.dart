@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math' as math;
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 // New import for the global budget state
@@ -124,9 +125,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildDaysRemaining(),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
               _buildBudgetSummary(),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
               _buildContentSection()
             ],
           ),
@@ -165,9 +166,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildMonthlyBudgetChart(),
-        SizedBox(height: 16),
+        SizedBox(height: AppSizes.h16),
         _buildInsights(),
-        SizedBox(height: 16),
+        SizedBox(height: AppSizes.h16),
         _buildCategoriesChart(),
       ],
     );
@@ -181,7 +182,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     return Row(
       children: [
         Icon(Icons.access_time, color: AppColors.primaryColor),
-        SizedBox(width: 8),
+        SizedBox(width: AppSizes.w8),
         // Text('Days remaining: $daysRemaining days',
         //     style: TextStyle(color: Colors.grey)),
          _buildText(
@@ -218,17 +219,17 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildText(PlotFinanceStaticData().budgetAmountLabel, AppColors.greyColor), // Updated
-          SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           _buildText('₹ ${formatMoneyIndian(widget.data['amount'].toString())}',
               AppColors.primaryColor,
               fontSize: 20, fontWeight: FontWeight.w500),
-          SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
           _buildRow(
             PlotFinanceStaticData().amountSpentLabel, // Updated
             '₹ ${formatMoneyIndian(totalSpent.toString())}',
             AppColors.accentColor,
           ),
-          SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           _buildRow2(
             PlotFinanceStaticData().overSpentLabel, // Updated
             '₹ ${((totalSpent - (widget.data['amount'] as num)).clamp(0, double.infinity)).toStringAsFixed(2)}',
@@ -280,7 +281,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       children: [
          _buildText(PlotFinanceStaticData().budgetSpendingTitle, AppColors.accentColor, // Updated
             fontSize: 18, fontWeight: FontWeight.bold),
-        SizedBox(height: 8),
+        SizedBox(height: AppSizes.h8),
         SizedBox(
           height: MediaQuery.sizeOf(context).height / 3,
           child: LineChartSample(
@@ -319,7 +320,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         children: [
           _buildText(PlotFinanceStaticData().budgetSpendingTitle, AppColors.accentColor, // Updated
             fontSize: 18, fontWeight: FontWeight.bold),
-          SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           insightsList != null && insightsList.isNotEmpty
               ? ListView.builder(
                   shrinkWrap: true, // Allows ListView inside a Column
@@ -373,7 +374,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 8),
+        SizedBox(height: AppSizes.h8),
         graph(),
       ],
     );

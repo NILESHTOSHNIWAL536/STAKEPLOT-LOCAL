@@ -17,6 +17,7 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../routes/index_route.dart';
 import '../routes/route_user_login.dart';
 
@@ -179,7 +180,7 @@ class _TribeHomeState extends State<TribeShare> {
             ),
           ),
         ),
-        SizedBox(height:2),
+        SizedBox(height:AppSizes.h2),
         InkWell(
           onTap:(){
             Navigator.pop(context);

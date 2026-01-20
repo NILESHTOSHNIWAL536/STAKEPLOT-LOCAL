@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 double cardBalance = 300.0;
 double totalInterestPaid = 130.0;
 
@@ -109,7 +111,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(width: 8),
+           SizedBox(width: AppSizes.w8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +126,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
                       text: graphData[
                           'title'], // Title from graphData (PieChartSectionData)
                     ),
-                    const SizedBox(width: 5),
+                    SizedBox(width: AppSizes.w6),
                   ],
                 ),
               ],

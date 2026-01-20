@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../Constants/core/app_padding_sizes.dart';
 import '../create_collection_data.dart';
 import 'create_collection_flow.dart';
 
@@ -15,7 +16,7 @@ class StepCollectionName extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           titleCollection(context, "Collection Name"),
-          const SizedBox(height: 8),
+           SizedBox(height: AppSizes.h8),
           inputCollection("Enter collection name", context),
           const Spacer(),
           PrimaryButton(

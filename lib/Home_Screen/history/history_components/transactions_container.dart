@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/services.dart';
 
+import '../../../Constants/core/app_padding_sizes.dart';
 import '../../autoPays/CreateAutoPayFromTransactionScreen.dart';
 
 class TransactionContainer extends StatelessWidget {
@@ -104,7 +105,7 @@ void _navigateToAutoPayPage(
       child: Container(
         width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(
-            vertical: fontSizes.margin / 2, horizontal: fontSizes.margin),
+            vertical: 6, horizontal: fontSizes.margin),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(10),
@@ -121,7 +122,7 @@ void _navigateToAutoPayPage(
               
               Column(
                 children: [
-                 isReview? SizedBox(height: fontSizes.padding):const SizedBox.shrink(),
+                 isReview? SizedBox(height: fontSizes.padding): const SizedBox(height: 4),
                   TransactionContent(
                     transaction: transaction,
                     isExcluded: isExcluded,
@@ -160,7 +161,7 @@ void _navigateToAutoPayPage(
                   index,
                   transaction.id,
                 ))
-              : const SizedBox(height: 10),
+              :  SizedBox(height: AppSizes.h10),
               if (isExcluded)
                 Positioned(
                   top: 0,
@@ -202,7 +203,7 @@ void _navigateToAutoPayPage(
                     fontsize: 16,
                     fontWeight: FontWeight.w600,
                   ),
-                  const SizedBox(height: 10),
+                   SizedBox(height: AppSizes.h10),
                   textStyle(
                     context: context,
                     text:
@@ -212,7 +213,7 @@ void _navigateToAutoPayPage(
                     fontWeight: FontWeight.w400,
                     iswrap: true,
                   ),
-                  const SizedBox(height: 16),
+                   SizedBox(height: AppSizes.h16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -236,7 +237,7 @@ void _navigateToAutoPayPage(
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: AppSizes.w10),
                       GestureDetector(
                         onTap: () => Navigator.of(context).pop(true),
                         child: Container(

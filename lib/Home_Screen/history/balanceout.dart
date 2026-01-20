@@ -14,6 +14,8 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:math' as math;
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 
 class BalanceOutDialog extends StatelessWidget {
   const BalanceOutDialog({super.key});
@@ -92,7 +94,7 @@ class BalanceOutDialog extends StatelessWidget {
                   )
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: AppSizes.h12),
 
               Text(
                 "You can select multiple transactions that are linked or related. "
@@ -125,7 +127,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
    return Column(
      children: [
             //  dottedDivider(),
-              const SizedBox(height: 12),
+              SizedBox(height: AppSizes.h12),
               // Total
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -149,7 +151,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
 
               // CTA Button
            isValid?  isAlreadyIncluded?Container(
@@ -178,7 +180,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                     color: AppColors.backgroundColor,
                   ),
                 ),
-              ):SizedBox(),
+              ):const SizedBox(),
      ],
    );
 }
@@ -212,7 +214,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
   {
     return   Column(
       children: [
-         const SizedBox(height: 16),
+         SizedBox(height: AppSizes.h16),
         Container(
                       constraints:  BoxConstraints(
                         maxHeight: isValid? 400:200, // set your fixed max height
@@ -231,7 +233,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                             decoration: BoxDecoration(
                              borderRadius: BorderRadius.circular(5),
     color: AppColors.backgroundColor,
-    boxShadow: [
+    boxShadow: const [
       BoxShadow(
         color: Color.fromRGBO(156, 156, 156, 0.25),
         blurRadius: 4,
@@ -244,7 +246,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // Title & Credited from
-                                Container(
+                                SizedBox(
                                  width: MediaQuery.sizeOf(context).width/3.3,
                                   child: Text(
                                     tx.manualTransaction ? tx.subcategory : tx.title,
@@ -257,10 +259,10 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                   ),
                                 ),
                     
-                                const SizedBox(width: 4),
+                                SizedBox(width: AppSizes.w4),
                     
                                 // Logo or Lottie
-                                Container(
+                                SizedBox(
                                  width: MediaQuery.sizeOf(context).width/9,
                                   child: Container(
                                                            child: tx.manualTransaction
@@ -281,10 +283,10 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                         )),
                                 ),
                     
-                                const SizedBox(width: 4),
+                                SizedBox(width: AppSizes.w4),
                     
                                 // Amount
-                                Container(
+                                SizedBox(
                                  width: MediaQuery.sizeOf(context).width/4.3,
                                   child: Text(
                                     
@@ -299,7 +301,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                   ),
                                   
                                 ),
-                                 const SizedBox(width: 8),
+                                 SizedBox(width: AppSizes.w8),
                                 InkWell(
                                   onTap: ()
                                   {
@@ -320,7 +322,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                       },
                     ),
                   ),
-        const SizedBox(height: 12),
+        SizedBox(height: AppSizes.h12),
         getTotalAndAddButton(context, netAmount, isValid, isAlreadyIncluded, id),
       ],
     );

@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.d
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
+import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 import '../transactionHistoryScreen.dart';
 
@@ -115,7 +116,7 @@ Widget _summarySection(BuildContext context) {
           bgColor: AppColors.bg5,
           isSpent: true,
         ),
-        const SizedBox(width: 12),
+         SizedBox(width: AppSizes.w12),
         _summaryCard(
           context,
           title: "Remaining",
@@ -160,7 +161,7 @@ Widget _summaryCard(
                   color: AppColors.backgroundColor,
                 ),
            ),
-            const SizedBox(height: 6),
+            SizedBox(height: AppSizes.h6),
             Text(
             amount,
             style: FontManager().getTextStyle(
@@ -169,7 +170,7 @@ Widget _summaryCard(
               lWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: AppSizes.h6),
           Text(
             title,
             style: FontManager().getTextStyle(
@@ -237,7 +238,7 @@ Widget _transactionsUI(BuildContext context) {
               ],
             ),
       
-            const SizedBox(height: 30),
+            SizedBox(height: AppSizes.h30),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               child: Column(
@@ -253,7 +254,7 @@ Widget _transactionsUI(BuildContext context) {
                     ),
                   ),
                         
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSizes.h8),
                         
                   Text(
                     "Start tracking your spending today and take control of your finances ✨",
@@ -265,7 +266,7 @@ Widget _transactionsUI(BuildContext context) {
                     ),
                   ),
                         
-                  const SizedBox(height: 30),
+                  SizedBox(height: AppSizes.h30),
                         
                   /// ADD TRANSACTION BUTTON
                   SizedBox(
@@ -344,17 +345,15 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
                   ),
                 ),
               ),
-              const SizedBox(width: 40),
+              SizedBox(width: AppSizes.w40),
             ],
           ),
 
-          const SizedBox(height: 12),
-
+          SizedBox(height: AppSizes.h12),
           /// ALERT SECTION
           _alertCard(context),
 
-          const SizedBox(height: 12),
-
+          SizedBox(height: AppSizes.h12),
           _simpleTile(
             context,
             icon: Icons.file_upload_rounded,
@@ -376,7 +375,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             onTap: () {},
           ),
 
-          const SizedBox(height: 6),
+          SizedBox(height: AppSizes.h6),
 
           _dangerTile(
             context,
@@ -431,7 +430,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             ],
           ),
 
-          const SizedBox(height: 6),
+          SizedBox(height: AppSizes.h6),
 
           Text(
             "Notify me when any transaction exceeds ₹[amount] in this collection.",
@@ -443,7 +442,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
           ),
 
           if (alertEnabled) ...[
-            const SizedBox(height: 10),
+             SizedBox(height: AppSizes.h10),
             TextField(
               keyboardType: TextInputType.number,
               decoration: InputDecoration(

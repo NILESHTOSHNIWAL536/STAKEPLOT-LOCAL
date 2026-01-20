@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/finSpace/updateInterestScreen
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../image_service/avatarProfile.dart';
 import '../routes/route_user_login.dart';
 
@@ -128,7 +129,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
 
               },
               child: _buildMenuItem('View Profile', hasArrow: true)),
-            const SizedBox(height: 12),
+             SizedBox(height: AppSizes.h12),
             GestureDetector(
               onTap: (){
                   Navigator.push(
@@ -139,7 +140,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
 
               },
               child: _buildMenuItem('Saved', hasArrow: true)),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.h12),
             GestureDetector(
               onTap: (){
                   Navigator.push(
@@ -150,7 +151,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
 
               },
               child: _buildMenuItem('Update Interest', hasArrow: true)),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.h12),
             _buildMenuItem('Message And Replies', hasToggle: true),
            
           ],

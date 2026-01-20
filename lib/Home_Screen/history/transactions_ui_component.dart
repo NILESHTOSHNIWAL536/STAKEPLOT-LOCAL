@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 import '../../repository/transactions_repository.dart';
 
@@ -173,7 +174,7 @@ Widget reviewTagTransactions(
             ),
         ],
       ),
-      const SizedBox(height: 4,)
+       SizedBox(height: AppSizes.h4)
     ],
   );
 }
@@ -267,7 +268,7 @@ Widget getTagButton(TransactionModel transaction, int index, String category,
           size: 30,
         ),
       ),
-      const SizedBox(width: 10),
+       SizedBox(width: AppSizes.w10),
       InkWell(
         onTap: () {
           addTagToTransactions(context, narration_id, true, index);

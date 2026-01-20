@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import '../../components/helper.dart';
 import '../../repository/transactions_repository.dart';
@@ -21,11 +20,11 @@ class _TransactionsSearchListState extends State<TransactionsSearchList> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.only(left: 10, right: 14),
-      margin: EdgeInsets.symmetric(horizontal: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
+                          boxShadow:const [
                             BoxShadow(
                               color: Color.fromRGBO(137, 137, 137,
                                   0.25), // Equivalent to rgba(137, 137, 137, 0.25);
@@ -41,7 +40,7 @@ class _TransactionsSearchListState extends State<TransactionsSearchList> {
                 ? matchedKeywords.sublist(0, 4)
                 : matchedKeywords)
             .map((data) => getListIsValid(data.toLowerCase())
-                ? SizedBox.shrink()
+                ? const SizedBox.shrink()
                 : InkWell(
                     onTap: () {
                       searchTextController.value = data;
@@ -62,7 +61,7 @@ class _TransactionsSearchListState extends State<TransactionsSearchList> {
                       padding: const EdgeInsets.all(12.0),
                       child: Row(children: [
                         Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 3),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
@@ -78,7 +77,7 @@ class _TransactionsSearchListState extends State<TransactionsSearchList> {
                         const SizedBox(
                           width: 10,
                         ),
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width / 1.4,
                           child: textStyle(
                               context: context,

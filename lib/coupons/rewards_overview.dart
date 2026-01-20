@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/coupons/coupon_card.dart';
 import 'package:flutter_application_code_stakeplot/coupons/envelope_grid.dart';
 import 'package:get/get.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../repository/reward_repository.dart';
 
 late BuildContext dialofBoxContext;
@@ -41,7 +42,7 @@ class CouponPopupUtils {
             mainAxisSize: MainAxisSize.min,
             children: [
               getHeader(sheetContext),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
               Align(
                 alignment: Alignment.center,
                 child: Text(
@@ -54,7 +55,7 @@ class CouponPopupUtils {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
               couponAvalible.value
                   ? gridList(sheetContext, onCategorySelected)
                   : Container(
@@ -69,7 +70,7 @@ class CouponPopupUtils {
                             iswrap: true),
                       ),
                     ),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
             ],
           ),
         );
@@ -130,7 +131,7 @@ class CouponPopupUtils {
                   style: TextStyle(fontSize: 20),
                 ),
               ),
-              SizedBox(width: 12),
+              SizedBox(width: AppSizes.w12),
               Text(
                 'Claim your reward',
                 style: FontManager().getTextStyle(
@@ -181,7 +182,7 @@ class CouponPopupUtils {
                   size: 24,
                 ),
               ),
-              SizedBox(width: 12),
+              SizedBox(width: AppSizes.w12),
               Text(
                 'Select Your Coupon Reward',
                 style: FontManager().getTextStyle(
@@ -232,7 +233,7 @@ class CouponPopupUtils {
               emoji,
               style: TextStyle(fontSize: 20),
             ),
-            SizedBox(height: 4),
+            SizedBox(height: AppSizes.h4),
             Text(
               title,
               textAlign: TextAlign.center,
@@ -313,7 +314,7 @@ if (MediaQuery.maybeOf(context) == null) {
                                             color: AppColors.debitColor,
                                           ),
                                         ),
-                                        SizedBox(height: 10),
+                                        SizedBox(height: AppSizes.h10),
                                         Text(
                                           "Looks like you don't have any coupons right now.",
                                           style: FontManager().getTextStyle(
@@ -324,7 +325,7 @@ if (MediaQuery.maybeOf(context) == null) {
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
-                                        SizedBox(height: 10),
+                                        SizedBox(height: AppSizes.h10),
                                         GestureDetector(
                                           onTap: () {
                                             _showBrandSelectionDialog(
@@ -356,7 +357,7 @@ if (MediaQuery.maybeOf(context) == null) {
                                           ),
                                         ),
                                         SizedBox(
-                                          height: 16,
+                                          height: AppSizes.h16,
                                         ),
                                         GestureDetector(
                                           onTap: () {
@@ -457,7 +458,7 @@ if (MediaQuery.maybeOf(context) == null) {
                         color: AppColors.bg1,
                       ),
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: AppSizes.h16),
                     Expanded(
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -508,7 +509,7 @@ if (MediaQuery.maybeOf(context) == null) {
                                           ? AppColors.primaryColor
                                           : AppColors.accentColor,
                                     ),
-                                    SizedBox(height: 4),
+                                    SizedBox(height: AppSizes.h4),
                                     Text(
                                       'Other',
                                       style: FontManager().getTextStyle(
@@ -586,7 +587,7 @@ if (MediaQuery.maybeOf(context) == null) {
                                               ? AppColors.primaryColor
                                               : AppColors.accentColor,
                                         ),
-                                  SizedBox(height: 4),
+                                  SizedBox(height: AppSizes.h4),
                                   Text(
                                     brand,
                                     style: FontManager().getTextStyle(
@@ -608,7 +609,7 @@ if (MediaQuery.maybeOf(context) == null) {
                         },
                       ),
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: AppSizes.h16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -895,7 +896,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
                 ),
               ),
             ),
-            SizedBox(height: 4),
+            SizedBox(height: AppSizes.h4),
             // ✅ Lower part: Category + Description
             Expanded(
               flex: 2,
@@ -913,7 +914,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
                         color: AppColors.bg1,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: AppSizes.h10),
                     Text(
                       coupon.description,
                       style: FontManager().getTextStyle(

@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.d
 import 'package:flutter_application_code_stakeplot/repository/notification_repository.dart';
 import 'package:get/get.dart';
 import '../Constants/core/app_component_sizes.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Home_Screen/Home/new_updates_screen.dart';
 
 
@@ -47,7 +48,7 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
                     )
                     
                   ),
-                  const SizedBox(width: 10,),
+                   SizedBox(width: AppSizes.w10),
                   InkWell(
                    onTap: (){
                      HapticFeedback.mediumImpact();

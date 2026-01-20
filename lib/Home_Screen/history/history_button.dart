@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/app_shadows.dart';
 
 
@@ -97,7 +98,7 @@ Widget historyButton(BuildContext context) {
                 height: 32,
             ),
         
-            const SizedBox(width: 8),
+             SizedBox(width: AppSizes.w8),
         
             // Text label
             Text(

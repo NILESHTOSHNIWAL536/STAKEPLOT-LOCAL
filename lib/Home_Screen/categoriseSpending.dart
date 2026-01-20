@@ -16,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/repository/finora_repository.
 import 'package:get/get.dart';
 
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../components/shared_utils.dart';
 import '../repository/transactions_repository.dart';
 
@@ -256,7 +257,7 @@ class CategoryCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 2),
+               SizedBox(height: AppSizes.h2),
               Padding(
                 padding: const EdgeInsets.only(left: 6),
                 child: Column(
@@ -274,7 +275,7 @@ class CategoryCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppSizes.h8),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

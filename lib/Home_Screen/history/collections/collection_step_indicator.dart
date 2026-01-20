@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../Constants/colors.dart';
+import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 
 class CollectionStepIndicator extends StatelessWidget {
@@ -36,7 +37,7 @@ class CollectionStepIndicator extends StatelessWidget {
               child: Row(
                 children: [
                   _circle(isCompleted, isActive),
-                  const SizedBox(width: 6),
+                   SizedBox(width: AppSizes.w8),
                   Text(
                     steps[index],
                     style: FontManager().getTextStyle(

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -22,6 +23,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../Constants/app_styles.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../repository/auth_service/login_apis.dart';
 import 'googl_button.dart';
 
@@ -65,47 +67,53 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 50),
+                       SizedBox(height: AppSizes.h100),
                       // Welcome Text
                       _buildWelcomeText(),
 
                       // const SizedBox(height: 360),
-                    Image.asset(
-      'assets/splashScreen/login.gif',
-      width: MediaQuery.sizeOf(context).width,
-      height: 260,
-      fit: BoxFit.contain,
-      gaplessPlayback: true, // prevents flicker
-    ),
+    //                 Image.asset(
+    //   'assets/splashScreen/login.gif',
+    //   width: MediaQuery.sizeOf(context).width,
+    //   height: 260,
+    //   fit: BoxFit.contain,
+    //   gaplessPlayback: true, // prevents flicker
+    // ),
+    Lottie.asset(
+          "assets/splashScreen/loginScreen.json",
+          fit: BoxFit.cover,
+        ),
 
+                       SizedBox(height: AppSizes.h30),
                       // Email Field
+
                       _buildEmailField(),
 
-                      const SizedBox(height: 20),
+                      SizedBox(height: AppSizes.h20),
 
 
-                      const SizedBox(height: 10),
+                      SizedBox(height: AppSizes.h10),
 
                       // Sign In Button
                       _buildSignInButton(),
 
-                      const SizedBox(height: 40),
+                      SizedBox(height: AppSizes.h20),
 
                       // Or login with
                       _buildDivider(),
-                      const SizedBox(height: 20),
+                      SizedBox(height: AppSizes.h20),
                       // Google Sign In
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           containerIconSiginWith(
                               FontAwesomeIcons.google, Colorcodes.white, context),
                           // buildGoogleSignIn(),
-                          const SizedBox(width: 20),
+                          SizedBox(width: AppSizes.w20),
                           !Platform.isAndroid
                               ? Text('')
                               : Container(
-                                width: MediaQuery.sizeOf(context).width / 3,
+                                width: MediaQuery.sizeOf(context).width / 2.5,
                                 height: MediaQuery.sizeOf(context).height/16,
                                       // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                                       decoration: BoxDecoration(
@@ -115,23 +123,20 @@ class _LoginScreenState extends State<LoginScreen> {
     width: 1,
   ),
   boxShadow: [
-    BoxShadow(
-      color: Colors.black.withOpacity(0.05),
-      offset: const Offset(0, 1),
-      blurRadius: 2,
-      spreadRadius: 0,
-    ),
+   AppShadows.soft
   ],
                                       ),
                                 child: SignInWithAppleButton(
+                                  
                                   text: '',
+                                
                                   
                                 
                                   onPressed: () async {
-
+                                
                                     if(Platform.isAndroid){
                                         Navigator.push(context,MaterialPageRoute(builder: (context) =>UserOnboarding()));
-
+                                
                                     }
                                     if (appleSignInBool.value)
                                       return; // Prevent multiple clicks
@@ -156,6 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           false; // Reset loading state
                                     }
                                   },
+                                
                                 ),
                               ),
                         ],
@@ -178,13 +184,14 @@ class _LoginScreenState extends State<LoginScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AvatarProfileImageZero(url: Sign.appSignInimage, width: 14, height: 14),
-        const SizedBox(height: 8),
+        SizedBox(height: AppSizes.h8),
         textStyle(
             context: context,
             text: 'Sign in to continue to your account',
-            fontWeight: FontWeight.w300,
-            fontsize: 18,
-            c: AppColors.accentColor),
+            fontWeight: FontWeight.w400,
+            fontsize: 16,
+            lineHeight: 20/16,
+            c: AppColors.grey),
       ],
     );
   }
@@ -200,11 +207,11 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: InputDecoration(
         // fillColor: Color.fromRGBO(255, 255, 255, 0.23),
          border: UnderlineInputBorder(),
-        hintText: 'Email Address',
+        hintText: 'Enter your email',
         hintStyle: FontManager().getTextStyle(context,
-            lWeight: FontWeight.normal,
+            lWeight: FontWeight.w400,
             fontSize: 14,
-            color: AppColors.bg3),
+            color: AppColors.grey),
        
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20,
@@ -252,8 +259,8 @@ Widget _buildSignInButton() {
                 "Send OTP",
                 style: FontManager().getTextStyle(
                   context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 18,
+                  lWeight: FontWeight.w600,
+                  fontSize: 16,
                   color: AppColors.backgroundColor,
                 ),
               ),
@@ -263,13 +270,10 @@ Widget _buildSignInButton() {
 }
   Widget _buildDivider() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: Container(
-            height: 1,
-            color: AppColors.whiteOpacity03,
-          ),
-        ),
+
+       
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
@@ -280,12 +284,7 @@ Widget _buildSignInButton() {
             ),
           ),
         ),
-        Expanded(
-          child: Container(
-            height: 1,
-            color: AppColors.whiteOpacity03,
-          ),
-        ),
+      
       ],
     );
   }

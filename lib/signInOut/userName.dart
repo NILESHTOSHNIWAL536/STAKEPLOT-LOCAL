@@ -449,10 +449,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../Constants/app_styles.dart';
 import '../Constants/colorcodes.dart';
 import '../Constants/colors.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/font_manager.dart';
 import '../Constants/loader.dart';
 import '../Utils/signUp.dart';
@@ -595,7 +597,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     width: 14,
                     height: 14,
                   ),
-                  const SizedBox(height: 8),
+                   SizedBox(height: AppSizes.h24),
                   textStyle(
                     context: context,
                     text: 'What should we call you?',
@@ -604,7 +606,17 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     c: AppColors.accentColor,
                   ),
 
-                  const SizedBox(height: 30),
+                   SizedBox(height: AppSizes.h100),
+                    Center(
+                      child: Lottie.asset(
+                                "assets/splashScreen/username.json",
+                                // fit: BoxFit.cover,
+                                height: 230,
+                               
+                                
+                              ),
+                    ),
+         SizedBox(height: AppSizes.h75),
 
                   /// USERNAME FIELD
                   TextFeildWidgetUnderline(
@@ -627,7 +639,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         )
                       : const SizedBox.shrink()),
 
-                  const SizedBox(height: 30),
+                  SizedBox(height: AppSizes.h20),
 
                   /// SUBMIT BUTTON
                   Obx(() => Center(
@@ -653,7 +665,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                                       
                                     )
                                   : Text(
-                                      'Submit',
+                                      'Continue',
                                       style: FontManager()
                                           .getTextStyle(
                                         context,

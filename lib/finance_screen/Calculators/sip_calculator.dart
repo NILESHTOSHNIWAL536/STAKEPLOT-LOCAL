@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/ex
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/calculator_utils.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 class SIPCalculator extends StatefulWidget {
@@ -220,7 +221,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                   ),
                   child: graph(),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
                 CustomExpansionTile(
                   howToUseContent: [
                     ListItemModel(

@@ -11,6 +11,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 RxList addedUser = [].obs;
 RxList addedMembers = [].obs;
 
@@ -87,7 +89,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                     color: AppColors.bg1,
                   ),
                 ),
-                const SizedBox(height: 10),
+                 SizedBox(height: AppSizes.h10),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   child: InputDat(HomepageStringsDart().searchLabel,
@@ -102,7 +104,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                     color: AppColors.bg1,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
                 
                 commentedData(),
                 if (widget.showContinueButton)
@@ -169,7 +171,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                       child: getButton(context, "Continue"),
                     ),
                   ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.h16),
               ],
             ),
           ),

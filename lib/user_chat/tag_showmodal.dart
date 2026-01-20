@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:flutter_application_code_stakeplot/user_chat/openShowModal.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/core/app_shadows.dart';
 import '../components/shared_utils.dart';
 
@@ -147,7 +148,7 @@ class _TagShowmodalState extends State<TagShowmodal>
   ),
                 child: Column(
                   children: [
-                   const  SizedBox(height: 16),
+                     SizedBox(height: AppSizes.h16),
                     Obx(() =>
                         LoadTag.value ? getListOfCat(context) : getListOfCat(context)),
                   ],
@@ -200,7 +201,7 @@ class _TagShowmodalState extends State<TagShowmodal>
               c: AppColors.primaryColor,
             ),
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: AppSizes.h5),
           Container(
             height: 50,
             width: MediaQuery.of(context).size.width / 1.1,
@@ -229,7 +230,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                       height: 30,
                       width: 30,
                     ),
-                    const SizedBox(width: 5),
+                    SizedBox(width: AppSizes.w6),
                     Padding(
                       padding: const EdgeInsets.only(top: 16),
                       child: textStyle(
@@ -242,7 +243,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                             : AppColors.primaryColor,
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: AppSizes.w10),
                   ],
                 );
               }).toList(),
@@ -302,7 +303,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                   ),
                 )),
               ),
-              SizedBox(width: 8,),
+              SizedBox(width: AppSizes.w8),
               InkWell(
                 onTap: () {
                   //Adding a loader here
@@ -674,7 +675,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                         )),
                   ),
                 ),
-                const SizedBox(width: 5),
+                SizedBox(width: AppSizes.w5),
                 Expanded(
                   flex: 2,
                   child: RichText(
@@ -717,7 +718,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                   fontWeight: FontWeight.bold,
                   fontsize: 15,
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: AppSizes.h6),
                 textStyle(
                   text: formattedDate,
                   context: context,

@@ -286,7 +286,11 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/email_sync/credit_cards.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/all_calculators.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/currency_convert.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/add_credit_card_bank.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
@@ -295,11 +299,14 @@ import 'package:flutter_application_code_stakeplot/repository/debt_service.dart'
 import 'package:flutter_application_code_stakeplot/repository/payables_repository.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Utils/credit_card.dart';
+import '../../Utils/plotFinanceStringsPage.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/bottomNavigations.dart';
 import '../../controllers/credit_card_controller.dart';
 import '../../image_service/avatarProfile.dart';
+
 import 'slider_addding_finances.dart';
 
 class FinanceDashboard extends StatefulWidget {
@@ -552,7 +559,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
+                          color: AppColors.accentColor.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -560,17 +567,17 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                           children: [
                             const Icon(
                               Icons.keyboard_arrow_down,
-                              color: Colors.white,
+                              color: AppColors.backgroundColor,
                               size: 18,
                             ),
-                            const SizedBox(width: 6),
+                            SizedBox(width: AppSizes.w6),
                             Text(
-                              'Pull down to see overview',
+                              PlotFinanceStaticData().pullDownHint,
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w500,
                                 fontSize: 12,
-                                color: Colors.white,
+                                color: AppColors.backgroundColor,
                               ),
                             ),
                           ],
@@ -597,7 +604,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
+            color: AppColors.bg1.withOpacity(0.12),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -612,7 +619,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Overview',
+                PlotFinanceStaticData().overviewTitle,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w600,
@@ -627,7 +634,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             ],
           ),
           Text(
-            'Focused on Financial Clarity & Growth',
+            PlotFinanceStaticData().overviewSubtitle,
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w400,
@@ -635,7 +642,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
               color: AppColors.grey,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
 
           // Blue underline bar
           Container(
@@ -647,16 +654,16 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
 
           _buildCreditCardsConnectedCard(context),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.h12),
 
           _buildDueCardsRow(context),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.h12),
 
           _buildBudgetCard(context),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.h12),
 
           _buildSavingsRow(context),
         ],
@@ -669,21 +676,17 @@ class _FinanceDashboardState extends State<FinanceDashboard>
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
+         AppShadows.soft
         ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Credit Cards Connected',
+            PlotFinanceStaticData().creditCardsConnected,
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w500,
@@ -717,7 +720,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             bank: 'From ICICI Bank',
             showTodayChip: true,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: AppSizes.w12),
           _buildDueCard(
             context,
             dueText: 'Due Date 15 Dec',
@@ -739,14 +742,10 @@ class _FinanceDashboardState extends State<FinanceDashboard>
       width: 230,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
+         AppShadows.soft
         ],
       ),
       child: Row(
@@ -760,7 +759,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'Due Date ',
+                        text: PlotFinanceStaticData().dueDateLabel,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w400,
@@ -780,7 +779,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                     ],
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.h4),
                 Text(
                   bank,
                   style: FontManager().getTextStyle(
@@ -790,17 +789,17 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                     color: AppColors.primaryColor,
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: AppSizes.h6),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Icon(
+               Icon(
                 Icons.close,
                 size: 16,
-                color: Colors.grey,
+                color: AppColors.grey,
               ),
               const Spacer(),
               if (showTodayChip)
@@ -812,12 +811,12 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
-                    'Today',
+                    PlotFinanceStaticData().todayLabel,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w500,
                       fontSize: 11,
-                      color: Colors.redAccent,
+                      color: AppColors.redColor,
                     ),
                   ),
                 ),
@@ -833,14 +832,10 @@ class _FinanceDashboardState extends State<FinanceDashboard>
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
+          AppShadows.soft
         ],
       ),
       child: SliderAdddingFinances(
@@ -861,7 +856,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             percent: 0.64,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: AppSizes.w12),
         Expanded(
           child: _buildSavingsCard(
             context,
@@ -888,14 +883,10 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
+          AppShadows.soft
         ],
       ),
       child: Row(
@@ -915,7 +906,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                     color: AppColors.primaryColor,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.h4),
                 Text(
                   amountText,
                   style: FontManager().getTextStyle(
@@ -928,7 +919,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: AppSizes.w8),
           _buildCircularPercent(context, percent),
         ],
       ),
@@ -982,7 +973,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
               children: [
                 SizedBox(height: MediaQuery.sizeOf(context).height/34,),
                 Text(
-                  'Money Console',
+                  PlotFinanceStaticData().moneyConsoleTitle,
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w500,
@@ -991,9 +982,9 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                     color: AppColors.accentColor,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.h4),
                 Text(
-                  'Smart tools for your daily needs',
+                  PlotFinanceStaticData().moneyConsoleSubtitle,
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w400,
@@ -1005,7 +996,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
               ],
             ),
           ),
-          const SizedBox(height: 16),
+           SizedBox(height: AppSizes.h16),
 
           // Comics & Community banner
           InkWell(
@@ -1046,20 +1037,36 @@ Widget _buildToolsGrid(BuildContext context) {
          mainAxisAlignment: MainAxisAlignment.start,
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
-            AvatarProfileImageZero(
-              url: PlotFinanceIcons.currencyConverter,
-              height: 7.6,
-              width: 4,
-              
+            GestureDetector(
+              onTap: (){
+                 Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (_) => const CurrencyConverterScreen()),
+               );
+              },
+              child: AvatarProfileImageZero(
+                url: PlotFinanceIcons.currencyConverter,
+                height: 7.6,
+                width: 4,
+                
+              ),
             ),
-       const SizedBox(height: 20,),
-            AvatarProfileImageZero(
-              url: PlotFinanceIcons.budgetPlanner,
-              height: 6,
-              width: 4,
-              
+       SizedBox(height: AppSizes.h20),
+            GestureDetector(
+              onTap: (){
+                 Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (_) => const Budget()),
+               );
+              },
+              child: AvatarProfileImageZero(
+                url: PlotFinanceIcons.budgetPlanner,
+                height: 6,
+                width: 4,
+                
+              ),
             ),
-       const SizedBox(height: 20,),
+       SizedBox(height: AppSizes.h20),
             AvatarProfileImageZero(
               url: PlotFinanceIcons.reserve,
               height: 6,
@@ -1074,84 +1081,92 @@ Widget _buildToolsGrid(BuildContext context) {
          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
            children: [
-            Stack(
-              children: [
-                AvatarProfileImageZero(
-                  url: PlotFinanceIcons.crediCardBg,
-                  height: 5.7,
-                  width: 6,
-                  
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding:const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: const Color.fromRGBO(255, 255, 255, 0.08),
-                              borderRadius: BorderRadius.circular(13)
-                            ),
-                            child: AvatarProfileImageZero(
-                              url: PlotFinanceIcons.creditcardcomponent,
-                              height: 50,
-                              width: 6,
-                              
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                            Text("Credit Card", 
-                                style: FontManager().getTextStyle(context,
-                                color:  AppColors.backgroundColor ,
-                                fontSize: 12,
-                                lWeight: FontWeight.w400
-                      
-                                ),
-                                ),
-                                 const SizedBox(width: 16,),
-                               Container(
-                                padding:const  EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: const Color.fromRGBO(255, 255, 255, 0.08),
-                              borderRadius: BorderRadius.circular(20)
-                            ),
-                                 child: Container(
-                                          padding: const EdgeInsets.all(2),
-                                         decoration:const  BoxDecoration(
-                                           color: AppColors.backgroundColor,
-                                           shape: BoxShape.circle,
-                                         ),
-                                         child: const Icon(
-                                           Icons.add,
-                                           color: Color(0xFF6E6F8F),
-                                           size: 20,
-                                         ),
-                                       ),
-                               ),
-                        ],
-                      ),
-                        Text("Link & Manage", 
-                                style: FontManager().getTextStyle(context,
-                                color:  const Color.fromRGBO(255, 255, 255, 0.05) ,
-                                fontSize: 12,
-                                lWeight: FontWeight.w600
-                      
-                                ),
-                                ),
-                    ],
+            GestureDetector(
+              onTap: (){
+                 Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (_) =>  AddCreditCardBankScreen()),
+               );
+              },
+              child: Stack(
+                children: [
+                  AvatarProfileImageZero(
+                    url: PlotFinanceIcons.crediCardBg,
+                    height: 5.7,
+                    width: 6,
+                    
                   ),
-                ),
-              
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding:const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: AppColors.creditCardComponentColor,
+                                borderRadius: BorderRadius.circular(13)
+                              ),
+                              child: AvatarProfileImageZero(
+                                url: PlotFinanceIcons.creditcardcomponent,
+                                height: 50,
+                                width: 6,
+                                
+                              ),
+                            ),
+                            SizedBox(width: AppSizes.w6),
+                              Text(PlotFinanceStaticData().creditCardContainerTitle, 
+                                  style: FontManager().getTextStyle(context,
+                                  color:  AppColors.backgroundColor ,
+                                  fontSize: 12,
+                                  lWeight: FontWeight.w400
+                        
+                                  ),
+                                  ),
+                                   SizedBox(width: AppSizes.w16),
+                                 Container(
+                                  padding:const  EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(255, 255, 255, 0.08),
+                                borderRadius: BorderRadius.circular(20)
+                              ),
+                                   child: Container(
+                                            padding: const EdgeInsets.all(2),
+                                           decoration:const  BoxDecoration(
+                                             color: AppColors.backgroundColor,
+                                             shape: BoxShape.circle,
+                                           ),
+                                           child: const Icon(
+                                             Icons.add,
+                                             color: AppColors.addCreditCardIcon,
+                                             size: 20,
+                                           ),
+                                         ),
+                                 ),
+                          ],
+                        ),
+                          Text(PlotFinanceStaticData().linkAndManage, 
+                                  style: FontManager().getTextStyle(context,
+                                  color:  AppColors.linkManage ,
+                                  fontSize: 12,
+                                  lWeight: FontWeight.w600
+                        
+                                  ),
+                                  ),
+                      ],
+                    ),
+                  ),
+                
+                ],
+              ),
             ),
                 //     SvgPicture.asset(
                 //   PlotFinanceIcons.crediCardBg,
                 //   fit: BoxFit.contain,
                 // ),
-        const  SizedBox(height: 16,),
+        SizedBox(height: AppSizes.h16),
            _FinanceToolsCard(
                height: 100,   
                onTapC: () => Navigator.push(
@@ -1163,7 +1178,7 @@ Widget _buildToolsGrid(BuildContext context) {
                  MaterialPageRoute(builder: (_) => AllCalculatorScreen()),
                ),
              ),
-            const  SizedBox(height: 24,), 
+            SizedBox(height: AppSizes.h24),
             AvatarProfileImageZero(
                 url: PlotFinanceIcons.goalCreation,
                 height: 6,
@@ -1221,7 +1236,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Finance Fusion", 
+            Text(PlotFinanceStaticData().financeFusionTitle, 
                           style: FontManager().getTextStyle(context,
                           color:  AppColors.primaryColor ,
                           fontSize: 12,
@@ -1229,7 +1244,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
 
                           ),
                           ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.h12),
 
             if (!expanded)
               Row(
@@ -1270,10 +1285,10 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                       child: Row(
                         children: [
                           SvgPicture.asset(PlotFinanceIcons.calculator, height: 24),
-                          const SizedBox(width: 10),
-                          Text("Calculators", 
+                          SizedBox(width: AppSizes.w10),
+                          Text(PlotFinanceStaticData().calculatorsTitle, 
                           style: FontManager().getTextStyle(context,
-                          color:  Color.fromRGBO(6, 29, 61, 0.5) ,
+                          color: AppColors.foodieFundsTitle ,
                           fontSize: 12,
                           lWeight: FontWeight.w500
 
@@ -1283,7 +1298,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSizes.h12),
                   GestureDetector(
                     onTap: widget.onTapC,
                     child: Container(
@@ -1295,10 +1310,10 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                       child: Row(
                         children: [
                           SvgPicture.asset(PlotFinanceIcons.foodie, height: 24),
-                          const SizedBox(width: 10),
-                          Text("Foodie Funds",
+                          SizedBox(width: AppSizes.w10),
+                          Text(PlotFinanceStaticData().foodieFundsTitle,
                            style: FontManager().getTextStyle(context,
-                          color: const   Color.fromRGBO(6, 29, 61, 0.5) ,
+                          color: AppColors.foodieFundsTitle ,
                           lWeight: FontWeight.w500,
                           fontSize: 12)
                           ),

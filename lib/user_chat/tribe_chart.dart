@@ -20,6 +20,7 @@ import "package:flutter_application_code_stakeplot/Constants/loader.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:get/get.dart";
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import "../Constants/core/app_padding_sizes.dart";
 import "../routes/index_route.dart";
 import "../routes/route_user_login.dart";
 
@@ -170,7 +171,7 @@ class _TribeSearchState extends State<TribeChats> {
                     color: AppColors.backgroundColor,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.h4),
                 Obx(() => Text(
                       countOpen.value
                           ? strings.messagesReceived.replaceFirst(
@@ -188,7 +189,7 @@ class _TribeSearchState extends State<TribeChats> {
                     )),
                 Obx(() => ismaskedUsers.value
                     ? SizedBox.shrink()
-                    : SizedBox(height: 8)),
+                    : SizedBox(height: AppSizes.h8)),
                 chatSplitAccount.isNotEmpty && !ismaskedUsers.value
                     ? SizedBox(
                         height: 40,
@@ -223,7 +224,7 @@ class _TribeSearchState extends State<TribeChats> {
                                     color: AppColors.backgroundColor,
                                   ),
                                 ),
-                                const SizedBox(width: 16),
+                                SizedBox(width: AppSizes.w16),
                               ],
                             );
                           },
@@ -424,7 +425,7 @@ class _TribeSearchState extends State<TribeChats> {
                             width: 1,
                             height: 1,
                             background: item['avatar'] ?? ""),
-                    const SizedBox(width: 8),
+                    SizedBox(width: AppSizes.w8),
                     Container(
                       width: width >= 500
                           ? width / 2.2
@@ -444,7 +445,7 @@ class _TribeSearchState extends State<TribeChats> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 2),
+                          SizedBox(height: AppSizes.h2),
                           Text(
                             item['type'] ?? strings.noMessagesYet,
                             style: FontManager().getTextStyle(context,

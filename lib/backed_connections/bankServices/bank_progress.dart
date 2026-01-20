@@ -3,6 +3,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class BankProgress extends StatelessWidget {
   final double percent; // Pass value between 0-100
   
@@ -24,7 +26,7 @@ class BankProgress extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           const SizedBox(height: 10),
+            SizedBox(height: AppSizes.h10),
            textStyle (
                context: context,
                text: "Connected Banks",
@@ -32,7 +34,7 @@ class BankProgress extends StatelessWidget {
               c:AppColors.primaryColor,
               fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 1),
+          SizedBox(height: AppSizes.h1),
           
         ],
       ),
@@ -85,16 +87,16 @@ class _BankProgressDemoState extends State<BankProgressDemo> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            const SizedBox(height: 40),
+             SizedBox(height: AppSizes.h40),
             BankProgress(percent: _currentProgress),
-            const SizedBox(height: 40),
-            
+             SizedBox(height: AppSizes.h40),
+
             // Slider to test different values
             Text(
               'Adjust Progress: ${_currentProgress.toStringAsFixed(0)}%',
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: AppSizes.h20),
             Slider(
               value: _currentProgress,
               min: 0,
@@ -107,7 +109,7 @@ class _BankProgressDemoState extends State<BankProgressDemo> {
               },
             ),
             
-            const SizedBox(height: 40),
+            SizedBox(height: AppSizes.h40),
             
             // Test buttons for specific values
             Wrap(

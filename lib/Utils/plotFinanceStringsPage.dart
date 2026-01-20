@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
 import '../routes/route_constant.dart';
 
@@ -13,6 +12,31 @@ class PlotFinanceStaticData {
 
   // PlotFinance
   String calculatorsTitle = "Calculators";
+// ================= Finance Dashboard =================
+
+// Overview
+String overviewTitle = "Overview";
+String overviewSubtitle = "Focused on Financial Clarity & Growth";
+String pullDownHint = "Pull down to see overview";
+
+// Credit Cards
+String creditCardsConnected = "Credit Cards Connected";
+String dueDateLabel = "Due Date";
+String todayLabel = "Today";
+String fromBankPrefix = "From";
+
+// Dashboard Header
+String moneyConsoleTitle = "Money Console";
+String moneyConsoleSubtitle = "Smart tools for your daily needs";
+
+// Finance Tools
+String financeFusionTitle = "Finance Fusion";
+String linkAndManage = "Link & Manage";
+String creditCardContainerTitle = "Credit Card";
+
+// Savings
+String gadgetSavings = "Gadget Savings";
+String vacationSavings = "Vacation Savings";
 
   // FinanceWidgets
   String addBudget = "Add Budget";
@@ -166,6 +190,25 @@ class PlotFinanceStaticData {
 
         // PlotFinance
         calculatorsTitle = data['calculatorsTitle'] ?? calculatorsTitle;
+// ================= Finance Dashboard =================
+overviewTitle = data['overviewTitle'] ?? overviewTitle;
+overviewSubtitle = data['overviewSubtitle'] ?? overviewSubtitle;
+pullDownHint = data['pullDownHint'] ?? pullDownHint;
+
+creditCardsConnected = data['creditCardsConnected'] ?? creditCardsConnected;
+dueDateLabel = data['dueDateLabel'] ?? dueDateLabel;
+todayLabel = data['todayLabel'] ?? todayLabel;
+fromBankPrefix = data['fromBankPrefix'] ?? fromBankPrefix;
+
+moneyConsoleTitle = data['moneyConsoleTitle'] ?? moneyConsoleTitle;
+moneyConsoleSubtitle = data['moneyConsoleSubtitle'] ?? moneyConsoleSubtitle;
+
+financeFusionTitle = data['financeFusionTitle'] ?? financeFusionTitle;
+linkAndManage = data['linkAndManage'] ?? linkAndManage;
+creditCardContainerTitle = data['creditCardContainerTitle'] ?? creditCardContainerTitle;
+
+gadgetSavings = data['gadgetSavings'] ?? gadgetSavings;
+vacationSavings = data['vacationSavings'] ?? vacationSavings;
 
         // FinanceWidgets
         addBudget = data['addBudget'] ?? addBudget;

@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Constants/colors.dart";
 
+import "../Constants/core/app_padding_sizes.dart";
+
 class Readmore extends StatefulWidget {
   final String str;
   final String tName;
@@ -22,7 +24,7 @@ class _ReadmoreState extends State<Readmore> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 10),
+         SizedBox(height: AppSizes.h10),
         LayoutBuilder(
           builder: (context, constraints) {
             // Create TextSpan for rich text
@@ -100,7 +102,7 @@ class _ReadmoreState extends State<Readmore> {
             );
           },
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: AppSizes.h10),
       ],
     );
   }

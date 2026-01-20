@@ -3,12 +3,13 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manual_transaction.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manually.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/cashTransaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_button.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../repository/bankinfo.dart';
 import '../../repository/clearstack.dart';
 import '../Home/init_Api_Calls.dart';
@@ -48,9 +49,9 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 14),
+             SizedBox(height: AppSizes.h14),
             _buildHeader(screenHeight),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
             _buildBottomNavigation(screenWidth),
           ],
         ),
@@ -70,7 +71,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
           width: 3,
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: AppSizes.h12),
 
         Text(
           'No account Linked',
@@ -82,7 +83,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
           ),
         ),
 
-        const SizedBox(height: 8),
+        SizedBox(height: AppSizes.h8),
 
         Padding(
           padding: const EdgeInsets.all(14.0),

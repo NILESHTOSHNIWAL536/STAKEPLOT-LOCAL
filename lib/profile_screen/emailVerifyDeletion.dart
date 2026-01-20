@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../repository/auth_service/otp_service.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
@@ -131,7 +132,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
+              SizedBox(height: AppSizes.h40),
               // Warning Section
               Container(
                 padding: EdgeInsets.all(16),
@@ -155,7 +156,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         size: 16,
                       ),
                     ),
-                    SizedBox(width: 12),
+                    SizedBox(width: AppSizes.w12),
                     Expanded(
                       child: RichText(
                         text: TextSpan(
@@ -186,7 +187,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: AppSizes.h40),
               // Email Display
               Text(
                 'Email',
@@ -197,7 +198,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           color: AppColors.accentColor,
                         ),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: AppSizes.h12),
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -214,7 +215,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         ),
                 ),
               ),
-              SizedBox(height: 24),
+              SizedBox(height: AppSizes.h24),
               // Get OTP Button
               if (!_isOtpSent)
                 Container(
@@ -259,7 +260,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           color: AppColors.accentColor,
                         ),
                     ),
-                    SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.grey[100],
@@ -293,7 +294,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: AppSizes.h16),
                     // Resend OTP Button
                     Align(
                       alignment: Alignment.centerRight,

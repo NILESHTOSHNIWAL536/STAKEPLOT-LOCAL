@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/emailVerifyDeletion.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../repository/delete_banks_users.dart';
 
 
@@ -52,7 +53,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
+              SizedBox(height: AppSizes.h40),
               
               
               Center(
@@ -68,7 +69,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 ),
               ),
               
-              SizedBox(height: 24),
+              SizedBox(height: AppSizes.h24),
               
               
               Center(
@@ -84,7 +85,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 ),
               ),
               
-              SizedBox(height: 40),
+              SizedBox(height: AppSizes.h40),
               
               
               Center(
@@ -142,7 +143,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 ),
               ),
               
-              SizedBox(height: 40),
+              SizedBox(height: AppSizes.h40),
               
               
               Text(
@@ -155,7 +156,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
         ),
               ),
               
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
               
               
               Expanded(
@@ -195,7 +196,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                                     )
                                   : null,
                             ),
-                            SizedBox(width: 12),
+                            SizedBox(width: AppSizes.w12),
                             Expanded(
                               child: Text(
                                 reasons[index],
@@ -316,7 +317,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
+              SizedBox(height: AppSizes.h40),
               
               
               Container(
@@ -341,7 +342,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                         size: 16,
                       ),
                     ),
-                    SizedBox(width: 12),
+                    SizedBox(width: AppSizes.w12),
                     Expanded(
                       child: RichText(
                         text: TextSpan(
@@ -371,7 +372,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                 ),
               ),
               
-              SizedBox(height: 40),
+              SizedBox(height: AppSizes.h40),
               
               
               Text(
@@ -383,7 +384,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                 ),
               ),
               
-              SizedBox(height: 12),
+              SizedBox(height: AppSizes.h12),
               
               
               Container(
@@ -511,7 +512,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                   fontStyle: FontStyle.italic,
                 ),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: AppSizes.h12),
               Text(
                 'This action is permanent and cannot be undone. All your data will be permanently deleted.',
                 style: TextStyle(
@@ -576,7 +577,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                 size: 40,
                 color: Color(0xFFDC2626),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
               textStyle(
                   context: context,
                   text:  'Deleting account...',
@@ -601,7 +602,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
           content: Row(
             children: [
               Icon(Icons.check_circle, color: AppColors.backgroundColor),
-              SizedBox(width: 8),
+              SizedBox(width: AppSizes.w8),
               Text('Account deleted successfully'),
             ],
           ),

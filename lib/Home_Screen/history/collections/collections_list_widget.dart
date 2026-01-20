@@ -2,6 +2,7 @@
 
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
+import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../image_service/avatarProfile.dart';
 import 'collections_empty_page.dart';
@@ -12,7 +13,7 @@ Widget buildCollectionsBody(BuildContext context) {
   // TEMP flag – replace with API data later
   final bool hasCollections = false;
 
-  return !hasCollections
+  return hasCollections
       ? _buildCollectionsList(context)
       : _buildEmptyCollectionsUI(context);
 }
@@ -172,7 +173,7 @@ Widget _collectionCard({
           ],
         ),
 
-        const SizedBox(height: 6),
+         SizedBox(height: AppSizes.h6),
 
         /// DESCRIPTION
         Text(
@@ -186,7 +187,7 @@ Widget _collectionCard({
 
         /// MEMBERS + AMOUNT
         if (members != null) ...[
-          const SizedBox(height: 10),
+          SizedBox(height: AppSizes.h10),
           Row(
             children: [
               ...members.map(
@@ -240,7 +241,7 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 20),
+          SizedBox(height: AppSizes.h20),
 
           /// Icon
          Center(
@@ -274,8 +275,9 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
   ),
 
 
-        
-          const SizedBox(height: 24),
+
+
+          SizedBox(height: AppSizes.h24),
 
           Text(
             "No collections yet!",
@@ -286,7 +288,7 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
             ),
           ),
 
-          const SizedBox(height: 10),
+          SizedBox(height: AppSizes.h10),
 
           Text(
             "Start organizing your finances by creating your first collection — it can be just for you or shared with someone.",
@@ -299,7 +301,7 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
             ),
           ),
 
-          const SizedBox(height: 30),
+          SizedBox(height: AppSizes.h30),
 
           /// Create Button
           SizedBox(

@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Utils/headup_moneymap_constant.dart';
 import '../Utils/responsiveUi.dart';
 
@@ -315,7 +316,7 @@ class NavItem extends StatelessWidget {
                   size: ResponsiveUtils.getFontSize(context, 22),
                 ),
               ),
-              const SizedBox(height: 8),
+               SizedBox(height: AppSizes.h8),
               Text(
                 title,
                 style: FontManager().getTextStyle(
@@ -393,7 +394,7 @@ class InsightCard extends StatelessWidget {
                         color: AppColors.backgroundColor,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     Text(
                       message,
                       style: FontManager().getTextStyle(

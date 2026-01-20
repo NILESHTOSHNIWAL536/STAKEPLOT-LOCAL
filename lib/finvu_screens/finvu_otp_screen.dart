@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/login.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../backed_connections/apis_connect.dart';
 import '../backed_connections/googlesignin/credentials.dart';
 import '../repository/reward_repository.dart';
@@ -206,7 +207,7 @@ class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
                           ),
                         ],
                       ),
-                SizedBox(height: 20,),
+                SizedBox(height: AppSizes.h20),
                     Obx(
                       () => GestureDetector(
                         onTap: widget.isOtpValid.value
@@ -236,7 +237,7 @@ class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
                       ),
                     ),
                 
-                    const SizedBox(height: 10),
+                    SizedBox(height: AppSizes.h10),
                      Padding(
                         padding: const EdgeInsets.only(left: 30, right: 30),
                         child: Center(

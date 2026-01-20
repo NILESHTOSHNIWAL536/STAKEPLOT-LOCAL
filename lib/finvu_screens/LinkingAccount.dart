@@ -353,7 +353,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     try {
       List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fipId] ?? [];
       if (bankData.isEmpty) {
-        snackBarCalled(context, SnackbarData().accountAdded, Colorcodes.red);
+        snackBarCalled(context, SnackbarData().accountAdded,);
         return;
       }
       linkingReference = await finvuManager.linkAccounts(fipDetails, bankData);

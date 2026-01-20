@@ -9,8 +9,10 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../Constants/app_styles.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../image_service/avatarProfile.dart';
 import '../repository/auth_service/otp_service.dart';
 
@@ -89,13 +91,23 @@ class _TwoFactorEmailVerificationState
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 20),
+                     SizedBox(height: AppSizes.h20),
                     topHeader(),
-                    
-                    const SizedBox(height: 340),
+                  
+                   isOtpWrong2.value || _isOtpValid.value? Lottie.asset(
+          "assets/splashScreen/wrongOTP.json",
+          fit: BoxFit.cover,
+        ): Lottie.asset(
+          "assets/splashScreen/OutboundIntegrations.json",
+          // fit: BoxFit.cover,
+          height: 400,
+         
+          
+        ),
+                    // const SizedBox(height: 340),
                     verifyOpt(),
                     
-                    SizedBox(height: 10),
+                    SizedBox(height: AppSizes.h10),
                     resendOtp(),
                      acceptButton(),
                   ],
@@ -114,7 +126,7 @@ class _TwoFactorEmailVerificationState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AvatarProfileImageZero(url: Sign.appSignInimage, width: 14, height: 14),
-        const SizedBox(height: 8),
+        SizedBox(height: AppSizes.h8),
         textStyle(
             context: context,
             text: 'OTP sent to your email',
@@ -172,16 +184,16 @@ class _TwoFactorEmailVerificationState
             () => GestureDetector(
               onTap: canResendOtp2.value
                   ? () {
-                      // resendOtpToUser(
-                      //   context,
-                      //   widget.data['email'],
-                      //   widget.data['name'],
-                      // );
-                      // startOtpTimer2();
-                      // isOtpWrong2.value = false;
-                      // otpController.clear();
-                      // _otpCode.value = "";
-                      // _isOtpValid.value = false;
+                      resendOtpToUser(
+                        context,
+                        widget.data['email'],
+                        widget.data['name'],
+                      );
+                      startOtpTimer2();
+                      isOtpWrong2.value = false;
+                      otpController.clear();
+                      _otpCode.value = "";
+                      _isOtpValid.value = false;
                     }
                   : null,
               child: Text(

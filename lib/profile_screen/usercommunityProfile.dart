@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart'
 import 'package:get/get.dart';
 import 'dart:io';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../routes/route_post.dart';
 
 class CommunityUserProfile extends StatefulWidget {
@@ -133,7 +134,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
               topUserProfile(widget.data),
               Column(
                 children: [
-                  const SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                   Obx(() => reload.value
                       ? TabBarUser(userPostList: getTrendingData)
                       : TabBarUser(userPostList: getTrendingData)),
@@ -262,8 +263,8 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                     fontWeight: FontWeight.w500,
                     c: AppColors.finSpaceColor,
                     fontsize: 16),
-            const SizedBox(
-              width: 5,
+             SizedBox(
+              width: AppSizes.w6,
             ),
             textStyle(
                 context: context,

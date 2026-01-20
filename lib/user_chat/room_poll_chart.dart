@@ -54,7 +54,7 @@ void upvote(context, String str, String objectId) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "You liked this!", AppColors.accentColor);
+    snackBarCalled(context, "You liked this!",);
   } else {
     snackBarCalledfail(context, "An error occurred while liking!", Colors.red);
   }
@@ -68,7 +68,7 @@ void downvote(context, String str, String objectId) async {
 
   if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "You disliked this!", AppColors.accentColor);
+    snackBarCalled(context, "You disliked this!", );
   } else {
     snackBarCalledfail(
         context, "An error occurred while disliking!", Colors.red);
@@ -94,7 +94,7 @@ void createPollOfCommunityPost(context, String question, List options,
     uploadRefreshCall(data, context);
     // Navigator.pop(context);
   } else {
-    snackBarCalledSignup(
+    snackBarCalledfail(
         context, " 'An error occurred while uploading...!'", Colors.red);
   }
 }

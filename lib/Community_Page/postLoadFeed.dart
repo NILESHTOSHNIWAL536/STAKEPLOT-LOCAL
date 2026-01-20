@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../Constants/colors.dart';
+
 class LazyLoadingList extends StatefulWidget {
   @override
   _LazyLoadingListState createState() => _LazyLoadingListState();
@@ -18,6 +20,7 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Container(
+      color: AppColors.border,
           width: MediaQuery.of(context).size.width,
           child:ListView.builder(
             

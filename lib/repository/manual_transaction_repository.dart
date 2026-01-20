@@ -48,7 +48,7 @@ void addTransaction(String amount, String subCategory, String categories,
         setDonectChat.value = !setDonectChat.value;
         if (!isSplit && snackBar) {
           snackBarCalled(context, SnackbarData().transactionSuccess,
-              AppColors.primaryColor);
+              );
         }
         Navigator.pop(context);
       }
@@ -79,7 +79,7 @@ void addTransaction(String amount, String subCategory, String categories,
     UserController controller = ControllerManagement.userController;
     double? parsedTotalAmount = double.tryParse(totalAmount);
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
-      snackBarCalled(context, SnackbarData().invalidAmountEntered, Colors.red);
+      snackBarCalled(context, SnackbarData().invalidAmountEntered,);
       return;
     }
 
@@ -256,7 +256,7 @@ void addLendUserAmount(context, String amount, List members, String name,
       members.forEach((e) {
         sendNotificationsToDevice(e['id'], context,"${ userController.userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
-      snackBarCalled(context,SnackbarData().lendAmountSuccess, AppColors.accentColor);
+      snackBarCalled(context,SnackbarData().lendAmountSuccess, );
       addTransaction(amount, "Lend Bill (${subCategories})", name, context, 'cash', false,false);
       // getUserLend(context);
       getRemainders(context);

@@ -100,7 +100,7 @@ class _TextScreenState extends State<TextScreen> {
         });
       }
     } catch (e) {
-      snackBarAllFeilds2(context,SnackbarData().pickingError);
+      snackBarCalledfail(context,SnackbarData().pickingError);
     }
   }
 
@@ -240,11 +240,11 @@ class _TextScreenState extends State<TextScreen> {
                         GestureDetector(
                           onTap: () async {
                              if (titleController.text.trim().isEmpty) {
-                    snackBarAllFeilds2(context, "Please add title");
+                    snackBarCalledfail(context, "Please add title");
                     return;
                   }
                   if (contentController.text.trim().isEmpty) {
-                    snackBarAllFeilds2(context, "Please add your thoughts");
+                    snackBarCalledfail(context, "Please add your thoughts");
                     return;
                   }
                             
@@ -302,7 +302,7 @@ class _TextScreenState extends State<TextScreen> {
 
                           if (titleController.text.trim().isEmpty ||
                               contentController.text.trim().isEmpty) {
-                            snackBarAllFeilds(context);
+                            snackBarCalledfail(context,"Enter all fields");
                              postController.posting.value = false;
                             return;
                           }

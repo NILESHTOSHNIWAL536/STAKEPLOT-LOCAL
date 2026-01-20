@@ -18,6 +18,7 @@ import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.d
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 import '../../routes/index_route.dart';
 
@@ -260,7 +261,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         children: [
           // Show the category name as a label (not editable here anymore)
           SizedBox(
-            height: 10,
+            height: AppSizes.h10,
           ),
           TextField(
             controller: controller,
@@ -490,7 +491,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                           height: 18,
                           name: friend['name'] ?? 'Unknown',
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: AppSizes.w8),
                         Text(
                           friend['name'] ?? 'Unknown',
                           style: FontManager().getTextStyle(
@@ -684,7 +685,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                   fontsize: 5,
                                 ),
                               ),
-                              SizedBox(width: 5),
+                              SizedBox(width: AppSizes.w6),
                               Text(
                                 limitedFriends[index]['name']?.toString() ??
                                     'Unknown',
@@ -960,7 +961,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: AppSizes.h16),
                               // Existing categories
                               ...List.generate(categories.length, (index) {
                                 return Padding(
@@ -1073,7 +1074,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
+                                      SizedBox(width: AppSizes.w8),
                                       ElevatedButton(
                                         onPressed: () {
                                           if (newCategoryController
@@ -1136,7 +1137,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                     ],
                                   ),
                                 ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: AppSizes.h16),
                               // Done button
                               Center(
                                 child: ElevatedButton(
@@ -1186,7 +1187,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: AppSizes.h16),
                             ],
                           ),
                         );
@@ -1291,7 +1292,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                       inputDat(PlotFinanceStaticData().searchHint,
                           TextInputType.name, searchController),
                       SizedBox(
-                        height: 12,
+                        height: AppSizes.h12,
                       ),
                       commentedData(),
                       Row(
@@ -1343,7 +1344,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     ],
                   )),
               SizedBox(
-                height: 8,
+                height: AppSizes.h8,
               ),
               // Search bar
 

@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../Home_Screen/history/dotted_Border.dart';
 import '../backed_connections/apis_connect.dart';
 
@@ -129,7 +130,7 @@ class InterestSelectionPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.h16),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 18),
                     child: Text(
@@ -142,7 +143,7 @@ class InterestSelectionPage extends StatelessWidget {
                                   ),
                       ),
                   ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: AppSizes.h10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 18),
                     child: Text(
@@ -155,7 +156,7 @@ class InterestSelectionPage extends StatelessWidget {
                                   ),
                       ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.h16),
             
                     Container(
               height: MediaQuery.sizeOf(context).height/1.6,
@@ -166,7 +167,7 @@ class InterestSelectionPage extends StatelessWidget {
               ),
             ),
                   
-            const SizedBox(height: 16),
+            SizedBox(height: AppSizes.h16),
                   
             /// Continue button
             Obx(
@@ -252,7 +253,7 @@ class PollStepHeader extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                icon: const Icon(Icons.arrow_back, color: AppColors.backgroundColor),
                 onPressed: () => Navigator.pop(context),
               ),
               const Spacer(),
@@ -261,42 +262,43 @@ class PollStepHeader extends StatelessWidget {
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w500,
-                  fontSize: 18,
-                  color: Colors.white,
+                  fontSize: 20,
+                  lineHeight: 28/fontSize,
+                  color: AppColors.backgroundColor,
                 ),
               ),
               const Spacer(flex: 2),
             ],
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.h12),
 
           /// Progress bar + step text
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Container(
+                SizedBox(
                   width: MediaQuery.sizeOf(context).width/1.56,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: LinearProgressIndicator(
                       value: progress,
                       minHeight: 6,
-                      backgroundColor: Colors.white.withOpacity(0.3),
+                      backgroundColor: AppColors.backgroundColor.withOpacity(0.3),
                       valueColor:
                           const AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: AppSizes.w12),
                 Text(
                   "Step $step of $totalSteps",
                   style: FontManager().getTextStyle(
                     context,
                     fontSize: 12,
                     lWeight: FontWeight.w400,
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                   ),
                 ),
               ],
@@ -412,7 +414,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                       fontSize: 14,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSizes.h8),
 
                  SingleChildScrollView(
   scrollDirection: Axis.horizontal,
@@ -446,7 +448,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
 ),
 
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
                   Text(
                     "Your Question",
                     style: FontManager().getTextStyle(
@@ -455,7 +457,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                       fontSize: 14,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSizes.h8),
 
                   _previewCard(
                     context,
@@ -468,7 +470,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
 
                   /// OPTIONS HEADER
                   Row(
@@ -485,7 +487,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                      
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSizes.h8),
 
                   /// OPTIONS LIST (EDIT + REMOVE)
                   ...optionCtrls.asMap().entries.map((entry) {
@@ -519,7 +521,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                 style: const TextStyle(fontSize: 12),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: AppSizes.w12),
 
             Expanded(
               child: TextField(
@@ -553,7 +555,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
 
                   }),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
                    if (optionCtrls.length < 4)
                               GestureDetector
                               

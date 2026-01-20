@@ -15,6 +15,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class DiscoverAccount extends StatefulWidget {
    DiscoverAccount({Key? key}) : super(key: key);
 
@@ -195,7 +197,7 @@ Widget bankGridItem(FinvuFIPInfo bankData) {
               ),
             ),
 
-            const SizedBox(height: 8),
+             SizedBox(height: AppSizes.h8),
 
             /// BANK NAME
             Text(
@@ -240,7 +242,7 @@ Widget bankGridItem(FinvuFIPInfo bankData) {
                     child: Row(
                       children: [
                         Icon(Icons.info_outline),
-                        SizedBox(width: 10,),
+                        SizedBox(width: AppSizes.w10),
                         Text(
                           FinvuStrings().unableToSupport,
                           style: FontManager().getTextStyle(context,
@@ -338,7 +340,7 @@ Widget getBackUi(FinvuFIPInfo bankData) {
               ),
             ),
 
-            const SizedBox(width: 12),
+            SizedBox(width: AppSizes.w12),
 
             /// BANK NAME
             Expanded(

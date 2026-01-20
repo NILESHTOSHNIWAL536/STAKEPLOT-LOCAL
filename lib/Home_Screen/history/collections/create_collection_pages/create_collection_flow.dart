@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../Constants/app_styles.dart';
 import '../../../../Constants/colors.dart';
+import '../../../../Constants/core/app_padding_sizes.dart';
 import '../../../../Constants/font_manager.dart';
 import '../../../../Constants/core/container_border.dart';
 import '../../../../backed_connections/apis_connect.dart';
@@ -162,7 +163,7 @@ class CollectionHeader extends StatelessWidget {
                   color: AppColors.accentColor,
                 ),
             )),
-            const SizedBox(width: 52),
+             SizedBox(width: AppSizes.w52),
             Text(
               "Create Collection",
               style: FontManager().getTextStyle(
@@ -192,7 +193,7 @@ Widget wrapperCollection(BuildContext context, Widget child) {
         child: IntrinsicHeight(
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              SizedBox(height: AppSizes.h20),
               Expanded(child: child),
             ],
           ),

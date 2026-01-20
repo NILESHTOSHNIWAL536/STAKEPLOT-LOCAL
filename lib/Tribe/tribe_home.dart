@@ -24,6 +24,8 @@ import "package:flutter_application_code_stakeplot/Constants/colorcodes.dart";
 import 'package:http/http.dart' as http;
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 
+import '../Constants/core/app_padding_sizes.dart';
+
 List postListIds = [];
 bool findData = true;
 bool findTranding = true;
@@ -115,179 +117,196 @@ Widget popUpBox(id, context) {
 Widget vote(context, PostModel dataObj, data) {
   String idData = dataObj.id;
   return Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 23.0),
+        padding: const EdgeInsets.only(left: 16.0, right: 28.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Container(
-            //   child: Row(
-            //     children: [
-            //       Obx(() {
-            //         String likeKey = "liked" + dataObj.id;
-            //         bool isLiked = userController.likedPosts.contains(likeKey);
+            if (dataObj.postType.name == "poll")
+  Text(
+    '${dataObj.pollData!.options.fold<int>(0, (sum, o) => sum + o.votes.length)} votes',
+    style: FontManager().getTextStyle(
+      context,
+      lWeight: FontWeight.w400,
+      fontSize: 12,
+      color: AppColors.primaryColor,
+      lineHeight: 20/fontSize
+    ),
+  ),
 
-            //         return GestureDetector(
-            //           onTap: () {
-            //             if (userController.maskedName.value.trim().isEmpty) {
-            //               MaskedNameDialogBox.showMaskedNameDialog(context);
-            //             } else {
-            //               if (isLiked) {
-            //                 userController.likedPosts.remove(likeKey);
-            //                 postController.postCount[idData] =
-            //                     postController.postCount[idData]! - 1;
-            //                 if (postController.postCount[idData]! < 0) {
-            //                   postController.postCount[idData] = 0;
-            //                 }
-            //               } else {
-            //                 userController.likedPosts.add(likeKey);
-            //                 postController.postCount[idData] =
-            //                     postController.postCount[idData]! + 1;
-            //               }
-
-            //               // Update the server with new vote status
-            //               upvoteGlobal(context, "Post", dataObj.id, dataObj);
-            //               reRender.value = !reRender.value;
-            //             }
-            //           },
-            //           child: likeIcon(context, isLiked),
-            //         );
-            //       }),
-            //       Padding(
-            //         padding: const EdgeInsets.symmetric(horizontal: 5.0),
-            //         child: Text(
-            //           reRender.value
-            //               ? postController.postCount[dataObj.id]! < 0
-            //                   ? '0'
-            //                   : (postController.postCount[dataObj.id]
-            //                       .toString())
-            //               : (postController.postCount[dataObj.id].toString()),
-            //           style: FontManager().getTextStyle(context,
-            //               lWeight: FontWeight.w400,
-            //               fontSize: 16,
-            //               color: AppColors.bg1),
-            //         ),
-            //       ),
-            //       SizedBox(width: 4),
-            //       InkWell(
-            //         onTap: () {
-            //           if (userController.maskedName.value.trim().isEmpty) {
-            //             MaskedNameDialogBox.showMaskedNameDialog(context);
-            //           } else {
-            //             showModalBottomSheet(
-            //               context: context,
-            //               backgroundColor: AppColors.commentbg,
-            //               isScrollControlled: true,
-            //               builder: (context) {
-            //                 return Container(
-            //                   padding:
-            //                       const EdgeInsets.symmetric(vertical: 16.0),
-            //                   width: MediaQuery.sizeOf(context).width,
-            //                   decoration: BoxDecoration(
-            //                       color: AppColors.commentbg,
-            //                       borderRadius: BorderRadius.only(
-            //                           topLeft: Radius.circular(36),
-            //                           topRight: Radius.circular(36))),
-            //                   child: TribeUnique(
-            //                     id: dataObj.id,
-            //                     dataObj: dataObj,
-            //                     popBox: true.obs,
-            //                   ),
-            //                 );
-            //               },
-            //             );
-            //           }
-            //         },
-            //         child: Container(
-            //           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            //           child: Row(
-            //             children: [
-            //               Container(
-            //                   height: 24,
-            //                   child: SvgPicture.asset(
-            //                     LikeComment.commentPost,
-            //                     height: 24,
-            //                   )),
-            //               const SizedBox(
-            //                 width: 6,
-            //               ),
-            //               Text(
-            //                 postController.postCommentCount[idData]
-            //                             .toString() ==
-            //                         'null'
-            //                     ? dataObj.comments.toString()
-            //                     : postController.postCommentCount[idData]
-            //                         .toString(),
-            //                 style: FontManager().getTextStyle(context,
-            //                     lWeight: FontWeight.w400,
-            //                     fontSize: 16,
-            //                     color: AppColors.likesharecommentCount),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            Row(
+              // mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                
+                // Container(
+                //   child: Row(
+                //     children: [
+                //       Obx(() {
+                //         String likeKey = "liked" + dataObj.id;
+                //         bool isLiked = userController.likedPosts.contains(likeKey);
             
-            Container(
-              // color: Colors.green,
-              width: MediaQuery.sizeOf(context).width / 5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Obx(() {
-                    bool isSaved =
-                        userController.savedPostIds.contains(dataObj.id);
-                    return GestureDetector(
+                //         return GestureDetector(
+                //           onTap: () {
+                //             if (userController.maskedName.value.trim().isEmpty) {
+                //               MaskedNameDialogBox.showMaskedNameDialog(context);
+                //             } else {
+                //               if (isLiked) {
+                //                 userController.likedPosts.remove(likeKey);
+                //                 postController.postCount[idData] =
+                //                     postController.postCount[idData]! - 1;
+                //                 if (postController.postCount[idData]! < 0) {
+                //                   postController.postCount[idData] = 0;
+                //                 }
+                //               } else {
+                //                 userController.likedPosts.add(likeKey);
+                //                 postController.postCount[idData] =
+                //                     postController.postCount[idData]! + 1;
+                //               }
+            
+                //               // Update the server with new vote status
+                //               upvoteGlobal(context, "Post", dataObj.id, dataObj);
+                //               reRender.value = !reRender.value;
+                //             }
+                //           },
+                //           child: likeIcon(context, isLiked),
+                //         );
+                //       }),
+                //       Padding(
+                //         padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                //         child: Text(
+                //           reRender.value
+                //               ? postController.postCount[dataObj.id]! < 0
+                //                   ? '0'
+                //                   : (postController.postCount[dataObj.id]
+                //                       .toString())
+                //               : (postController.postCount[dataObj.id].toString()),
+                //           style: FontManager().getTextStyle(context,
+                //               lWeight: FontWeight.w400,
+                //               fontSize: 16,
+                //               color: AppColors.bg1),
+                //         ),
+                //       ),
+                //       SizedBox(width: 4),
+                //       InkWell(
+                //         onTap: () {
+                //           if (userController.maskedName.value.trim().isEmpty) {
+                //             MaskedNameDialogBox.showMaskedNameDialog(context);
+                //           } else {
+                //             showModalBottomSheet(
+                //               context: context,
+                //               backgroundColor: AppColors.commentbg,
+                //               isScrollControlled: true,
+                //               builder: (context) {
+                //                 return Container(
+                //                   padding:
+                //                       const EdgeInsets.symmetric(vertical: 16.0),
+                //                   width: MediaQuery.sizeOf(context).width,
+                //                   decoration: BoxDecoration(
+                //                       color: AppColors.commentbg,
+                //                       borderRadius: BorderRadius.only(
+                //                           topLeft: Radius.circular(36),
+                //                           topRight: Radius.circular(36))),
+                //                   child: TribeUnique(
+                //                     id: dataObj.id,
+                //                     dataObj: dataObj,
+                //                     popBox: true.obs,
+                //                   ),
+                //                 );
+                //               },
+                //             );
+                //           }
+                //         },
+                //         child: Container(
+                //           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                //           child: Row(
+                //             children: [
+                //               Container(
+                //                   height: 24,
+                //                   child: SvgPicture.asset(
+                //                     LikeComment.commentPost,
+                //                     height: 24,
+                //                   )),
+                //               const SizedBox(
+                //                 width: 6,
+                //               ),
+                //               Text(
+                //                 postController.postCommentCount[idData]
+                //                             .toString() ==
+                //                         'null'
+                //                     ? dataObj.comments.toString()
+                //                     : postController.postCommentCount[idData]
+                //                         .toString(),
+                //                 style: FontManager().getTextStyle(context,
+                //                     lWeight: FontWeight.w400,
+                //                     fontSize: 16,
+                //                     color: AppColors.likesharecommentCount),
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                
+                SizedBox(
+                  // color: Colors.green,
+                  width: MediaQuery.sizeOf(context).width / 6,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                     
+                      InkWell(
                         onTap: () {
                           if (userController.maskedName.value.trim().isEmpty) {
                             MaskedNameDialogBox.showMaskedNameDialog(context);
                           } else {
-                            if (isSaved) {
-                              userController.savedPostIds.remove(dataObj.id);
-                            } else {
-                              userController.savedPostIds.add(dataObj.id);
-                            }
-                            savePostData(context, data);
+                            showModalBottomSheet(
+                              context: context,
+                              backgroundColor: AppColors.unSelectedOption,
+                              builder: (context) {
+                                return TribeShare(data: data, dataObj: dataObj);
+                              },
+                            );
                           }
                         },
-                        child: SvgPicture.asset(
-                          isSaved
-                              ? LikeComment.savedPost
-                              : LikeComment.savePost,
-                          height: 24,
-                        ));
-                  }),
-                  const SizedBox(width: 6),
-                  Container(
-                    child: InkWell(
-                      onTap: () {
-                        if (userController.maskedName.value.trim().isEmpty) {
-                          MaskedNameDialogBox.showMaskedNameDialog(context);
-                        } else {
-                          showModalBottomSheet(
-                            context: context,
-                            backgroundColor: AppColors.unSelectedOption,
-                            builder: (context) {
-                              return TribeShare(data: data, dataObj: dataObj);
-                            },
-                          );
-                        }
-                      },
-                      child: SvgPicture.asset(
-                        LikeComment.sharePost,
-                        height: 24,
+                        child:AvatarProfileImageZero(url: 
+                                  
+                                   LikeComment.sharePost, width: 40, height: 34)
                       ),
-                    ),
+                        SizedBox(width: AppSizes.w12),
+                      Obx(() {
+                        bool isSaved =
+                            userController.savedPostIds.contains(dataObj.id);
+                        return GestureDetector(
+                            onTap: () {
+                              if (userController.maskedName.value.trim().isEmpty) {
+                                MaskedNameDialogBox.showMaskedNameDialog(context);
+                              } else {
+                                if (isSaved) {
+                                  userController.savedPostIds.remove(dataObj.id);
+                                } else {
+                                  userController.savedPostIds.add(dataObj.id);
+                                }
+                                savePostData(context, data);
+                              }
+                            },
+                            child:AvatarProfileImageZero(url: isSaved
+                                  ? LikeComment.savedPost
+                                  : LikeComment.savePost, width: 40, height: 34)
+                           
+                            );
+                      }),
+                      
+                      
+                    ],
                   ),
-                ],
-              ),
-            )
+                )
+              ],
+            
+                  ),
           ],
-        
-      ));
+        ));
 }
 
 // Helper function to get the appropriate SVG based on like status

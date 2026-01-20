@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/helper.dart';
 import '../../components/shared_utils.dart';
@@ -22,10 +21,12 @@ class AmountRangeField extends StatelessWidget {
       child: Center(
         child: Container(
           width: MediaQuery.of(context).size.width / 1.1,
-          height: MediaQuery.sizeOf(context).height / 22,
-          margin: EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+          height: MediaQuery.sizeOf(context).height / 24,
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
           child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Expanded(
+            SizedBox(
+              
+              width: MediaQuery.sizeOf(context).width/2.4,
               child: TextField(
                 controller: minController,
                 inputFormatters: allowDecimalInput(),
@@ -37,25 +38,38 @@ class AmountRangeField extends StatelessWidget {
                 },
                 decoration: InputDecoration(
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                   hintText: 'Enter min amount',
                   filled: true,
                   fillColor: AppColors.newbg,
                   
                  
-                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-    color: AppColors.border, // 👈 your border color
-    width: 1,
+                 enabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(8),
+    borderSide: const BorderSide(
+      color: AppColors.filterBorders,
+      width: 0.8,
+    ),
   ),
-                    
-                  
-                    
-                  ),
+
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(8),
+    borderSide: const BorderSide(
+      color: AppColors.filterBorders,
+      width: 1.2,
+    ),
+  ),
+
+  disabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(8),
+    borderSide: const BorderSide(
+      color: AppColors.filterBorders,
+      width: 0.8,
+    ),
+  ),
                   hintStyle: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.w500,
+                    lWeight: FontWeight.w400,
                     fontSize: 14,
                     color: AppColors.grey,
                   ),
@@ -65,11 +79,13 @@ class AmountRangeField extends StatelessWidget {
             // Spacer or line between fields
             Container(
               width: 24,
-              height: 2,
-              color: Colors.grey[300],
+              height: 4,
+              color: AppColors.filterBorders,
             ),
             // Second TextField
-            Expanded(
+            SizedBox(
+              
+              width: MediaQuery.sizeOf(context).width/2.4,
               child: TextField(
                 controller: maxController,
                 inputFormatters: allowDecimalInput(),
@@ -81,20 +97,36 @@ class AmountRangeField extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                   hintText: 'Enter max amount',
                   filled: true,
                   fillColor: AppColors.newbg,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-    color: AppColors.border, // 👈 your border color
-    width: 1,
+                  enabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(8),
+    borderSide: const BorderSide(
+      color: AppColors.filterBorders,
+      width: 0.8,
+    ),
   ),
-                  ),
+
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(8),
+    borderSide: const BorderSide(
+      color: AppColors.filterBorders,
+      width: 1.2,
+    ),
+  ),
+
+  disabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(8),
+    borderSide: const BorderSide(
+      color: AppColors.filterBorders,
+      width: 0.8,
+    ),
+  ),
                   hintStyle: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.w500,
+                    lWeight: FontWeight.w400,
                     fontSize: 14,
                     color: AppColors.grey,
                   ),

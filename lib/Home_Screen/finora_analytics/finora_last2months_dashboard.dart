@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/repository/finora_repository.
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../routes/route_transactions.dart';
 
 Map<String, dynamic> finoraTransactionData = {};
@@ -57,11 +58,11 @@ class _FinoraLastTwoMonthsDashboardState
                       c: AppColors.accentColor,
                       fontWeight: FontWeight.w600,
                     ),
-                    const SizedBox(height: 14),
+                     SizedBox(height: AppSizes.h14),
 
                     Obx(() =>
                         FinoraLoading.value ? getFindata() : getFindata()),
-                    const SizedBox(height: 10),
+                    SizedBox(height: AppSizes.h10),
                     // Chart Container
                     Container(
                       height: MediaQuery.sizeOf(context).height / 3,
@@ -92,7 +93,7 @@ class _FinoraLastTwoMonthsDashboardState
             AppColors.primaryColor,
           ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: AppSizes.w16),
         Expanded(
           child: _buildSummaryCard(
             context,
@@ -142,7 +143,7 @@ class _FinoraLastTwoMonthsDashboardState
                   shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: AppSizes.w8),
               Text(
                 month,
                 style: FontManager().getTextStyle(
@@ -154,7 +155,7 @@ class _FinoraLastTwoMonthsDashboardState
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           Text(
             'Avg/Day Spending',
             style: FontManager().getTextStyle(
@@ -164,7 +165,7 @@ class _FinoraLastTwoMonthsDashboardState
               color: AppColors.grey,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           Text(
             amount,
             style: FontManager().getTextStyle(

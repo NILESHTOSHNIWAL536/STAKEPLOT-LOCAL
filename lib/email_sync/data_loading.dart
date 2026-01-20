@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../Constants/colors.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../controllers/credit_card_controller.dart';
 import '../finance_screen/Budgets/Budget.dart';
 import '../finance_screen/finanace_dashboard/creditCard_slider.dart';
@@ -37,9 +38,9 @@ class _GettingDataScreenState extends State<GettingDataScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 30),
+              SizedBox(height: AppSizes.h30),
               CustomStepper(activeStep: 2),
-              SizedBox(height: 20),
+              SizedBox(height: AppSizes.h20),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -53,14 +54,14 @@ class _GettingDataScreenState extends State<GettingDataScreen> {
                       },
                     ),
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: AppSizes.h40),
                   textStyle(
                       context: context,
                       text: "We are getting your data",
                       c: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontsize: 20),
-                  SizedBox(height: 40),
+                  SizedBox(height: AppSizes.h40),
                   Obx(() => !loadingBankdetails.value
                       ? Loader()
                       : InkWell(

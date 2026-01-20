@@ -19,6 +19,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 
 RxBool loadConsentId=false.obs;
 RxBool isOtpWrong = false.obs;
@@ -174,7 +176,7 @@ class _MobileNumberState extends State<MobileNumber> {
                       ),
                           
                           SizedBox(
-                              height: 20), // Add spacing between TextField and button
+                              height: AppSizes.h20), // Add spacing between TextField and button
                           // Button for "Get OTP"
                           GestureDetector(
                             onTap: () async {
@@ -218,7 +220,7 @@ class _MobileNumberState extends State<MobileNumber> {
                               //     });
                            }else
                            {
-                             snackBarCalledSignup(context, SnackbarData().errorGeneratingOtp);
+                             snackBarCalledfail(context, SnackbarData().errorGeneratingOtp);
                            }
                              loadConsentId.value=false;
                             },

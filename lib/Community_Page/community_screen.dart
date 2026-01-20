@@ -148,7 +148,7 @@ class CommunityState extends State<Community> {
             ? Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: Container(
-                  //  color: Colors.amber,
+                  
                   height: MediaQuery.sizeOf(context).height / 3,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

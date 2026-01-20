@@ -28,7 +28,7 @@ import 'package:week_of_year/week_of_year.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/core/app_shadows.dart';
 import '../Constants/core/container_border.dart';
-import '../Home_Screen/ManuallyTransactions/manually.dart';
+import '../Home_Screen/ManuallyTransactions/cashTransaction.dart';
 import '../backed_connections/bankServices/pdf.dart';
 import '../Home_Screen/history/amount_range.dart';
 import '../repository/transactions_repository.dart';
@@ -221,7 +221,7 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
                     fontsize: 15,
                     fontWeight: FontWeight.w500,
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: AppSizes.h4),
                   textStyle(
                     context: context,
                     text: "Acc No: ${account.maskedAccNumber}",
@@ -474,7 +474,7 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
                   fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: AppSizes.w6),
               Center(
                 child: textStyleImage(
                   context: context,
@@ -528,7 +528,7 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: AppColors.filterContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: content,
@@ -725,7 +725,7 @@ Widget getCheckBoxwithText2(
         },
         child: isSelected
             ? Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
@@ -733,9 +733,9 @@ Widget getCheckBoxwithText2(
                 child: content,
               )
             :  Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                padding:const  EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: AppColors.filterContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: content,
@@ -757,6 +757,7 @@ Widget filterTransaction(context) {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
+              SizedBox(width: AppSizes.w12),
             getCheckBoxwithText2(context, "Credit", () {
               onChanedAutoTransactionStatus(context);
               // Navigator.pop(context);
@@ -773,7 +774,7 @@ Widget filterTransaction(context) {
                 ? Container(
                   margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
                   child: getBankAccountListForFilter(context, false))
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
 
             Obx(
               () => GestureDetector(
@@ -782,7 +783,7 @@ Widget filterTransaction(context) {
                   child: showAmountFilter.value
                       ? Container(
                         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 4),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor,
@@ -810,7 +811,7 @@ Widget filterTransaction(context) {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: AppColors.border,
+                color: AppColors.filterContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
               child:  Row(
@@ -819,7 +820,7 @@ Widget filterTransaction(context) {
                                 if (showAmountFilter.value)
                                   const Icon(Icons.check,
                                       size: 18, color: Colors.green),
-                                const SizedBox(width: 4),
+                                SizedBox(width: AppSizes.w4),
                                 Text(
                                   "Filter by Amount",
                                   style: FontManager().getTextStyle(
@@ -836,7 +837,7 @@ Widget filterTransaction(context) {
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: AppSizes.w10),
             // --------- Date Button ---------
             Obx(
               () => GestureDetector(
@@ -876,7 +877,7 @@ Widget filterTransaction(context) {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: AppColors.border,
+                color: AppColors.filterContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
               child:  Row(
@@ -902,10 +903,10 @@ Widget filterTransaction(context) {
         ),
       ),
       Obx(() => showAmountFilter.value
-          ? AmountRangeField()
+          ? const AmountRangeField()
           : const SizedBox.shrink()),
       Obx(() =>
-          showDateFilter.value ? DateRangeField() : const SizedBox.shrink()),
+          showDateFilter.value ? const DateRangeField() : const SizedBox.shrink()),
       // AmountRangeField(),
       // DateRangeField()
     ],
@@ -1190,7 +1191,7 @@ Widget manualTransactionButton( BuildContext context) {
               width: 5,
               height: 32,
             ),
-        const SizedBox(width: 8),
+        SizedBox(width: AppSizes.w8),
         
         
             // Text label
@@ -1215,7 +1216,7 @@ Widget globalbackArrow(){
   return  const CustomStyledContainer(
                     radius: 20,
                     child: Padding(
-                      padding:  EdgeInsets.all(AppSizes.p6),
+                      padding:  EdgeInsets.all(AppSizes.p8),
                       child: Icon(
                         Icons.arrow_back,
                         color: AppColors.accentColor,

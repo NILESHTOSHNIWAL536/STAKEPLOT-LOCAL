@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants/booleanFlag.dart';
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 import '../../Home_Screen/Home/init_Api_Calls.dart';
 import '../../OneSignal/deviceConfig.dart';
@@ -31,7 +32,7 @@ class _BankSyncFlowState extends State<BankSyncFlow> {
     _pageController = PageController(initialPage: 0);
 
     
-    _timer = Timer.periodic(const Duration(seconds: 5000), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (currentStep < totalSteps - 1) {
         _goToStep(currentStep + 1);
       } else {
@@ -116,8 +117,8 @@ class _BankSyncFlowState extends State<BankSyncFlow> {
     final isActive = currentStep == step;
 
     return Container(
-      width: 36,
-      height: 36,
+      width: 37,
+      height: 37,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: isCompleted || isActive? AppColors.border :AppColors.primaryColor),
@@ -133,7 +134,7 @@ class _BankSyncFlowState extends State<BankSyncFlow> {
             : step == 1
                 ? Icons.access_time
                 : Icons.check,
-        size: 18,
+        size: 20,
         color: isCompleted || isActive
             ? AppColors.primaryColor
             : AppColors.grey,
@@ -287,12 +288,12 @@ class _StepContent extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 60,
-            height: 60,
+            width: 100,
+            height: 100,
             decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
-            child: Icon(icon, size: 26, color: iconColor),
+            child: Icon(icon, size: 32, color: iconColor),
           ),
-          const SizedBox(height: 20),
+           SizedBox(height: AppSizes.h20),
           Text(
             title,
             textAlign: TextAlign.center,
@@ -302,19 +303,22 @@ class _StepContent extends StatelessWidget {
                                     fontSize: 16,
                                     color:  step == 2
                   ? const Color(0xFF2EAD65)
-                  : Colors.black,
+                  : AppColors.accentColor,
+                  lineHeight: 21/fontSize
                                   ),
            
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: AppSizes.h10),
           Text(
             description,
             textAlign: TextAlign.center,
               style: FontManager().getTextStyle(
                                     context,
-                                    lWeight: FontWeight.w300,
-                                    fontSize: 12,
-                                    color: AppColors.grey
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                    color: AppColors.grey,
+                                    lineHeight: 19/fontSize,
+                                    letterSpacing: -0.5
                                   ),
           
           ),

@@ -78,6 +78,7 @@ class HomePageIcons {
   static String cashTnx = "assets/icons/Home-page/cashTnx.svg";
   static String notMIne = 'assets/icons/Home-page/notMIne.svg';
   static String autoPaydate = 'assets/icons/Home-page/autoPayDate.svg';
+  static String historySearch = 'assets/icons/Home-page/historySearch.svg';
 }
 
 

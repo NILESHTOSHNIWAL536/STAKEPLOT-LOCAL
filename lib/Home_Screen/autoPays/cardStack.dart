@@ -403,6 +403,8 @@ import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:flutter_application_code_stakeplot/repository/autopay_repository.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class CardStackScreen extends StatefulWidget {
   @override
   _CardStackScreenState createState() => _CardStackScreenState();
@@ -470,7 +472,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                     color: AppColors.backgroundColor,
                   ),
                 ),
-                const SizedBox(height: 12),
+                 SizedBox(height: AppSizes.h12),
                 Expanded(
                   child: GridView.builder(
                     itemCount: 31,
@@ -671,7 +673,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 12.0),
+                SizedBox(height: AppSizes.h12),
                 // Horizontal scroll row showing up to 2 cards
                 Container(
                  
@@ -680,7 +682,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: cards.length,
                     separatorBuilder: (context, index) =>
-                        SizedBox(width: 12.0),
+                        SizedBox(width: AppSizes.w12),
                     itemBuilder: (context, index) {
                       final card = cards[index];
                       return SizedBox(

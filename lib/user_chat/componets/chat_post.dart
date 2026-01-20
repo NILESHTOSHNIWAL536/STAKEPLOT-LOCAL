@@ -16,6 +16,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 
@@ -89,7 +90,7 @@ Widget uploadData(String dataObj2, Message message,BuildContext context) {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+             SizedBox(height: AppSizes.h10),
             // Content Preview
             if (isPoll && dataObj.pollData != null && dataObj.pollData!.question!= null)
               Text(

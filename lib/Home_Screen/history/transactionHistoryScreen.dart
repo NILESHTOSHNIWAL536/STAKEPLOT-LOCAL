@@ -403,6 +403,7 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:get/get.dart';
 import 'dart:async';
 
+import '../../Constants/core/app_component_sizes.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/container_border.dart';
 import 'collections/collections_list_widget.dart';
@@ -441,33 +442,72 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   
   bool isSearchActive = false;
 late Animation<double> _searchScaleAnim;
+late Animation<double> _searchOpacityAnim;
 
   @override
   void initState() {
     super.initState();
 
-   _searchAnimController = AnimationController(
+//    _searchAnimController = AnimationController(
+//   vsync: this,
+//   duration: const Duration(milliseconds: 550), // slower = elastic feel
+// );
+
+// _searchSlideAnim = Tween<Offset>(
+//   begin: const Offset(0, -0.25),
+//   end: Offset.zero,
+// ).animate(
+//   CurvedAnimation(
+//     parent: _searchAnimController,
+//     curve: Curves.elasticOut, 
+//   ),
+// );
+
+// _searchScaleAnim = Tween<double>(
+//   begin: 0.95,
+//   end: 1.0,
+// ).animate(
+//   CurvedAnimation(
+//     parent: _searchAnimController,
+//     curve: Curves.elasticOut, // 🔥 bounce
+//   ),
+// );
+_searchAnimController = AnimationController(
   vsync: this,
-  duration: const Duration(milliseconds: 550), // slower = elastic feel
+  duration: const Duration(milliseconds: 320), // smooth & quick
+  reverseDuration: const Duration(milliseconds: 220),
 );
 
 _searchSlideAnim = Tween<Offset>(
-  begin: const Offset(0, -0.25),
+  begin: const Offset(0, -0.12), // very subtle slide
   end: Offset.zero,
 ).animate(
   CurvedAnimation(
     parent: _searchAnimController,
-    curve: Curves.elasticOut, 
+    curve: Curves.easeOutCubic,
+    reverseCurve: Curves.easeInCubic,
   ),
 );
 
 _searchScaleAnim = Tween<double>(
-  begin: 0.95,
+  begin: 0.97,
   end: 1.0,
 ).animate(
   CurvedAnimation(
     parent: _searchAnimController,
-    curve: Curves.elasticOut, // 🔥 bounce
+    curve: Curves.easeOut,
+    reverseCurve: Curves.easeIn,
+  ),
+);
+
+ _searchOpacityAnim = Tween<double>(
+  begin: 0.0,
+  end: 1.0,
+).animate(
+  CurvedAnimation(
+    parent: _searchAnimController,
+    curve: Curves.easeOut,
+    reverseCurve: Curves.easeIn,
   ),
 );
 
@@ -496,21 +536,40 @@ _searchScaleAnim = Tween<double>(
   }
 
  
-  void _openSearch() {
-    if (isSearchActive) return;
-    HapticFeedback.selectionClick();
-    isSearchActive = true;
-    _searchAnimController.forward();
-  }
+  // void _openSearch() {
+  //   if (isSearchActive) return;
+  //   HapticFeedback.selectionClick();
+  //   isSearchActive = true;
+  //   _searchAnimController.forward();
+  // }
 
-  void _closeSearch() {
-    FocusScope.of(context).unfocus();
-    searchController.clear();
-    _searchAnimController.reverse();
-    isSearchActive = false;
+  // void _closeSearch() {
+  //   FocusScope.of(context).unfocus();
+  //   searchController.clear();
+  //   _searchAnimController.reverse();
+  //   isSearchActive = false;
 
-    clearTransactions(context: context, f: true);
-  }
+  //   clearTransactions(context: context, f: true);
+  // }
+void _openSearch() {
+  if (isSearchActive) return;
+  HapticFeedback.selectionClick();
+  setState(() => isSearchActive = true);
+  _searchAnimController.forward();
+}
+
+void _closeSearch() {
+  FocusScope.of(context).unfocus();
+  searchController.clear();
+
+  _searchAnimController.reverse().then((_) {
+    if (mounted) {
+      setState(() => isSearchActive = false);
+    }
+  });
+
+  clearTransactions(context: context, f: true);
+}
 
   void _onScroll() {
     if (scrollController.position.pixels >=
@@ -583,12 +642,31 @@ _searchScaleAnim = Tween<double>(
       ),
     ),
 
+// AnimatedContainer(
+//   duration: const Duration(milliseconds: 260),
+//   curve: Curves.easeOutCubic,
+//   color: AppColors.border,
+//   height: isSearchActive
+//       ? AppComponentSizes.h1_14
+//       : isDateSummaryView.value
+//           ? AppComponentSizes.h1_1
+//           : (showAmountFilter.value && showDateFilter.value)
+//               ? MediaQuery.sizeOf(context).height/1.4
+//               : AppComponentSizes.h1_23,
+//   child: Obx(() {
+//     return selectedTab.value == "All"
+//         ? _buildTransactionBody(context, screenHeight)
+//         : buildCollectionsBody(context);
+//   }),
+// )
+
     Container(
       color: AppColors.border,
       height: isSearchActive?
-      MediaQuery.sizeOf(context).height / 1.12:
-      isDateSummaryView.value?MediaQuery.sizeOf(context).height /1.1:
-       MediaQuery.sizeOf(context).height / 1.28,
+      AppComponentSizes.h1_14:
+      isDateSummaryView.value?AppComponentSizes.h1_1:
+      
+       AppComponentSizes.h1_23,
       child: Obx(() {
         return selectedTab.value == "All"
             ? _buildTransactionBody(context, screenHeight)
@@ -643,8 +721,8 @@ Widget _buildTabChip(String title) {
             style: FontManager().getTextStyle(
               context,
               fontSize: 14,
-              lineHeight: 1.0,
-              lWeight: FontWeight.w600,
+             
+              lWeight: FontWeight.w400,
               color: isSelected
                   ? AppColors.backgroundColor
                   : AppColors.grey,
@@ -679,7 +757,7 @@ Widget _buildTabChip(String title) {
                child: globalbackArrow(),
               ),
               
-              const SizedBox(width: 12),
+               SizedBox(width: AppSizes.w12),
               
               // Title
                        Obx(() {
@@ -695,13 +773,14 @@ Widget _buildTabChip(String title) {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
+                        textAlign: TextAlign.center,
                         !fromAutoPay
                                     ? HomepageStringsDart().historyTitle
-                                    : "Select Transaction",
+                                    : HomepageStringsDart().selectTnx,
                         style: FontManager().getTextStyle(
                                   context,
-                                  lWeight: FontWeight.w600,
-                                  fontSize: 18,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 17,
                                   color: AppColors.accentColor,
                         ),
                         maxLines: 1,
@@ -750,7 +829,7 @@ Widget _buildHeaderRightAction(BuildContext context) {
     },
     child: AutoHintIcon(
       iconUrl: HomePageIcons.recentTransactions,
-      text: "Today View",
+      text: HomepageStringsDart().tnxtodayview,
     ),
   );
 }
@@ -769,6 +848,7 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
             left: 10,
             right: 0,
             bottom: (isSearchActive?16: 3),
+            top: (isSearchActive?16:0)
           ),
           child: 
           Row(
@@ -777,18 +857,18 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
               
                if (isSearchActive) ...[
       _buildBackArrow(),
-      const SizedBox(width: 12,),
+      SizedBox(width: AppSizes.w12),
       SizedBox(
         width: MediaQuery.of(context).size.width / 1.3,
         child: _buildSearchField(context, widget.fromAutoPay),
       ),
     ]
     else ...[
-     _buildTabChip("All"),
-    _buildTabChip("Collections"),
+     _buildTabChip(HomepageStringsDart().allTnx),
+    _buildTabChip(HomepageStringsDart().collectionscreate),
 
     
-               const SizedBox(width: 6),
+               SizedBox(width: AppSizes.w6),
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 400),
                 transitionBuilder: (child, animation) {
@@ -808,11 +888,11 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
                     ? _buildSearchField(context, widget.fromAutoPay)
                     : _buildSearchIcon(),
               ),
-              const SizedBox(width: 2),
+              SizedBox(width: AppSizes.w2),
 
               if (!widget.fromAutoPay && !isSearchActive)
                 _buildToggleDateSummaryBtn(),
-  const SizedBox(width: 10),
+  SizedBox(width: AppSizes.w10),
               if (!widget.fromAutoPay && !isSearchActive)
                 _buildFilterButton(),
     ]
@@ -832,13 +912,17 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
 
 Widget _buildSearchIcon() {
   return IconButton(
-    icon: const CustomStyledContainer(
-      radius: 5.0, // <-- Passing a custom radius
+    icon:   CustomStyledContainer(
+  radius: 5.0, // <-- Passing a custom radius
  width: 36,
-      height: 36, // <-- Passing a custom radius
-   
-    child: Icon(Icons.search, color: AppColors.primaryColor, size: 24 ),
-  ),
+      height: 36,
+  
+        child: AvatarProfileImage(
+          url:  HomePageIcons.historySearch,
+          width: 66,
+          height: 30,
+        ),
+      ),
     
    
     onPressed: () {
@@ -849,51 +933,100 @@ Widget _buildSearchIcon() {
   );
 }
 
- Widget _buildSearchField(BuildContext context, bool fromAutoPay) {
+//  Widget _buildSearchField(BuildContext context, bool fromAutoPay) {
+//   return AnimatedBuilder(
+//     animation: _searchAnimController,
+//     builder: (_, __) {
+//       return SlideTransition(
+//         position: _searchSlideAnim,
+//         child: ScaleTransition(
+//           scale: _searchScaleAnim, // 🔥 elastic bounce
+//           child: SizedBox(
+//             width: 
+//                  MediaQuery.of(context).size.width / 1.1,
+                
+//     height: MediaQuery.of(context).size.width / 10,
+//     child: Container(
+//       decoration: BoxDecoration(
+//         color: AppColors.backgroundColor,
+//         borderRadius: BorderRadius.circular(8),
+//        boxShadow: [
+//      AppShadows.tabs
+//     ],
+//       ),
+//       child: TextField(
+//         controller: searchController,
+//         focusNode: focusNodeSearchFeild,
+//         onChanged: _onSearchChanged,
+//         decoration: InputDecoration(
+//           hintText: HomepageStringsDart().searchTransactions,
+//           prefixIcon: const Icon(Icons.search),
+//           suffixIcon: _buildClearButton(),
+//           filled: true,
+//           fillColor: AppColors.backgroundColor,
+//           border: OutlineInputBorder(
+//             borderRadius: BorderRadius.circular(8),
+//             borderSide: BorderSide.none,
+//           ),
+//           contentPadding:
+//               const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+//         ),
+//         style: const TextStyle(color: AppColors.accentColor),
+//       ),
+//     ),
+//           ),
+//         ),
+//       );
+//     },
+//   );
+// }
+Widget _buildSearchField(BuildContext context, bool fromAutoPay) {
   return AnimatedBuilder(
     animation: _searchAnimController,
     builder: (_, __) {
-      return SlideTransition(
-        position: _searchSlideAnim,
-        child: ScaleTransition(
-          scale: _searchScaleAnim, // 🔥 elastic bounce
-          child: SizedBox(
-            width: 
-                 MediaQuery.of(context).size.width / 1.1,
-                
-    height: MediaQuery.of(context).size.width / 10,
-    child: Container(
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(8),
-       boxShadow: [
-     AppShadows.tabs
-    ],
-      ),
-      child: TextField(
-        controller: searchController,
-        focusNode: focusNodeSearchFeild,
-        onChanged: _onSearchChanged,
-        decoration: InputDecoration(
-          hintText: HomepageStringsDart().searchTransactions,
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: _buildClearButton(),
-          filled: true,
-          fillColor: AppColors.backgroundColor,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
-        ),
-        style: const TextStyle(color: AppColors.accentColor),
-      ),
-    ),
+      return FadeTransition(
+        opacity: _searchOpacityAnim,
+        child: SlideTransition(
+          position: _searchSlideAnim,
+          child: ScaleTransition(
+            scale: _searchScaleAnim,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width / 1.1,
+              height: MediaQuery.of(context).size.width / 10,
+              child: _buildSearchInput(context),
+            ),
           ),
         ),
       );
     },
+  );
+}
+Widget _buildSearchInput(BuildContext context) {
+  return Container(
+    decoration: BoxDecoration(
+      color: AppColors.backgroundColor,
+      borderRadius: BorderRadius.circular(8),
+      boxShadow: [AppShadows.tabs],
+    ),
+    child: TextField(
+      controller: searchController,
+      focusNode: focusNodeSearchFeild,
+      onChanged: _onSearchChanged,
+      decoration: InputDecoration(
+        hintText: HomepageStringsDart().searchTransactions,
+        prefixIcon: const Icon(Icons.search),
+        suffixIcon: _buildClearButton(),
+        filled: true,
+        fillColor: AppColors.backgroundColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+      ),
+      style: const TextStyle(color: AppColors.accentColor),
+    ),
   );
 }
 
@@ -928,7 +1061,7 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
             style: const TextStyle(color: AppColors.accentColor),
           ),
         ),
-          const SizedBox(width: 10),
+          SizedBox(width: AppSizes.w10),
          Container(
           
           child: !isFromCollection
@@ -1054,7 +1187,7 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
                     ? _buildCheckBoxButtons()
                     : getTab(context)),
               )
-            : const SizedBox(height: 10),
+            :  SizedBox(height: AppSizes.h10),
       );
     });
   }

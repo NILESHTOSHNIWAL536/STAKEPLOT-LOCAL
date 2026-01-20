@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:get/get.dart';
@@ -8,6 +10,8 @@ import '../repository/auth_service/login_apis.dart';
 import '../image_service/avatarProfile.dart';
 import '../backed_connections/googlesignin/google.dart';
 import '../Constants/loader.dart';
+import '../signInOut/onboarding_user.dart';
+
 
 Widget containerIconSiginWith(IconData icon, Color color, context) {
     return InkWell(
@@ -30,7 +34,7 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
         }
       },
       child: Container(
-        width: MediaQuery.sizeOf(context).width / 3,
+        width: MediaQuery.sizeOf(context).width / 2.5,
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,

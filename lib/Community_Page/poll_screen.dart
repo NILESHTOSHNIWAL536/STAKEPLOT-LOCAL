@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Border.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
-import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
@@ -143,11 +141,12 @@ createPollOfCommunityPost(
                             "Your Question *",
                             style: FontManager().getTextStyle(
                               context,
-                              fontSize: 14,
-                              lWeight: FontWeight.w600,
+                              fontSize: 15,
+                              lWeight: FontWeight.w700,
+                              color: AppColors.accentColor
                             ),
                           ),
-                          const SizedBox(height: 8),
+                           SizedBox(height: AppSizes.h8),
                           
                           TextField(
                             controller: _questionController,
@@ -187,16 +186,16 @@ createPollOfCommunityPost(
                               ],
                             ),
                           ),
-                          const SizedBox(height: 30),
+                           SizedBox(height: AppSizes.h30),
                            Text(
                             "Answer Options * (2-4 options)",
                             style: FontManager().getTextStyle(
                               context,
-                              fontSize: 14,
-                              lWeight: FontWeight.w600,
+                              fontSize: 15,
+                              lWeight: FontWeight.w700,
                             ),
                           ),
-                           const SizedBox(height: 10),
+                           SizedBox(height: AppSizes.h10),
                 
                           ...List.generate(_optionControllers.length, (index) {
                             return Column(
@@ -215,15 +214,16 @@ createPollOfCommunityPost(
                         style: const TextStyle(fontSize: 15, color: AppColors.primaryColor, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
+                    SizedBox(width: AppSizes.w12),
+                    Container(
+                      width: MediaQuery.sizeOf(context).width/1.38,
                       child: TextField(
                         controller: _optionControllers[index],
                         decoration: InputDecoration(
                           hintText: "Option ${index + 1}",
-                          hintStyle: FontManager().getTextStyle(context, color: AppColors.greyCard, fontSize: 14),
+                          hintStyle: FontManager().getTextStyle(context, color: AppColors.grey, fontSize: 14),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: AppColors.backgroundColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -288,11 +288,11 @@ createPollOfCommunityPost(
                                   // ),
                                
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: AppSizes.h10),
                               ],
                             );
                           }),
-                          SizedBox(height: 12,),
+                          SizedBox(height: AppSizes.h12),
                           if (_optionControllers.length < 4)
                             GestureDetector
                             
@@ -307,7 +307,7 @@ createPollOfCommunityPost(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     const Icon(Icons.add, color: AppColors.primaryColor,size: 26,),
-                                    SizedBox(width: 10,),
+                                    SizedBox(width: AppSizes.w10),
                                     Text(
                                     strings.addOption,
                                     style: FontManager().getTextStyle(
@@ -321,7 +321,7 @@ createPollOfCommunityPost(
                                 ),
                               ),
                             ),
-                             SizedBox(height: 12),
+                             SizedBox(height: AppSizes.h12),
                          
                         ] else ...[
                           Card(
@@ -339,7 +339,7 @@ createPollOfCommunityPost(
                                         fontSize: 18,
                                         color: AppColors.accentColor),
                                   ),
-                                  const SizedBox(height: 10),
+                                  SizedBox(height: AppSizes.h10),
                             for (var option in ( options==null? [] : options!))
                                     GestureDetector(
                                       onTap: () => _vote(option),
@@ -355,7 +355,7 @@ createPollOfCommunityPost(
                                                 fontSize: 18,
                                                 color: AppColors.accentColor),
                                           ),
-                                          const SizedBox(height: 5),
+                                          SizedBox(height: AppSizes.h5),
                                           Stack(
                                             children: [
                                               Container(
@@ -382,13 +382,13 @@ createPollOfCommunityPost(
                                               ),
                                             ],
                                           ),
-                                          const SizedBox(height: 5),
+                                          SizedBox(height: AppSizes.h5),
                                           Text(
                                             '${_getPercentage(option).toStringAsFixed(1)}%',
                                             style: const TextStyle(
                                                 color: Colors.grey),
                                           ),
-                                          const SizedBox(height: 10),
+                                          SizedBox(height: AppSizes.h10),
                                         ],
                                       ),
                                     ),
@@ -454,13 +454,13 @@ createPollOfCommunityPost(
                                   child: Container(
                                     width: MediaQuery.of(context).size.width / 1.1,
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 14),
+                                        horizontal: 10, vertical: 20),
                                     decoration: BoxDecoration(
                                         color: _questionController.text.isNotEmpty &&
                                                 _optionControllers.every(
                                                     (controller) =>
                                                         controller.text.isNotEmpty)
-                                            ? AppColors.finSpaceColor
+                                            ? AppColors.primaryColor
                                             : AppColors.backgroundColor,
                                         borderRadius: BorderRadius.circular(8)),
                                     child: Center(
@@ -473,8 +473,8 @@ createPollOfCommunityPost(
                                                strings.continueButton, 
                                               style: FontManager().getTextStyle(
                                                 context,
-                                                lWeight: FontWeight.bold,
-                                                fontSize: 15,
+                                                lWeight: FontWeight.w500,
+                                                fontSize: 16,
                                                 color: _questionController
                                                             .text.isNotEmpty &&
                                                         _optionControllers.every(

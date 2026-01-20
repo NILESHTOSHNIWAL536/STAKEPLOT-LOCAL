@@ -15,6 +15,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 // Import FinanceWidgets
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class CreateDebtScreen extends StatefulWidget {
   @override
   _CreateDebtScreenState createState() => _CreateDebtScreenState();
@@ -163,7 +165,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: AppSizes.h10,
               ),
               FinanceWidgets.debtsPicture(
                 context,
@@ -177,7 +179,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                   ).then((_) => _fetchDebts()); // Refresh debts after returning
                 },
               ),
-              SizedBox(height: 16.0), // Space between debts and form
+              SizedBox(height: AppSizes.h16), // Space between debts and form
               // Form container
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -244,7 +246,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       lWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  SizedBox(height: 8.0),
+                                  SizedBox(height: AppSizes.h8),
                                   CustomFormField(
                                     hintText:
                                         PlotFinanceStaticData().enterDebtName,
@@ -268,7 +270,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       lWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  SizedBox(height: 8.0),
+                                  SizedBox(height: AppSizes.h8),
                                   CustomFormField(
                                     hintText:
                                         PlotFinanceStaticData().selectLoanType,
@@ -296,7 +298,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       lWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  SizedBox(height: 8.0),
+                                  SizedBox(height: AppSizes.h8),
                                   CustomFormField(
                                     hintText:
                                         PlotFinanceStaticData().enterDebtAmount,
@@ -327,7 +329,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       lWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  SizedBox(height: 8.0),
+                                  SizedBox(height: AppSizes.h8),
                                   CustomFormField(
                                     hintText: PlotFinanceStaticData()
                                         .enterInterestRate,
@@ -357,7 +359,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       lWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  SizedBox(height: 8.0),
+                                  SizedBox(height: AppSizes.h8),
                                   CustomFormField(
                                     hintText:
                                         PlotFinanceStaticData().enterDuration,
@@ -388,7 +390,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       lWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  SizedBox(height: 8.0),
+                                  SizedBox(height: AppSizes.h8),
                                   CustomFormField(
                                     hintText:
                                         PlotFinanceStaticData().selectDate,

@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../components/shared_utils.dart';
 
 class GroupTransactions extends StatefulWidget {
@@ -89,7 +90,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
             size: 70,
             color: AppColors.primaryColor,
           ),
-          const SizedBox(height: 20),
+           SizedBox(height: AppSizes.h20),
           textStyle(
             context: context,
             text: "No Groups Yet!",
@@ -159,7 +160,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                     size: 28,
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: AppSizes.w16),
                 // Text details
                 Container(
                  
@@ -179,7 +180,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                         ),
                       ),
 // ... existing code ...
-                      const SizedBox(height: 6),
+                      SizedBox(height: AppSizes.h6),
                       textStyle(
                         context: context,
                         text: '$count transactions',
@@ -230,7 +231,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(width: 48), // Spacer for alignment
+                   SizedBox(width: AppSizes.w48), // Spacer for alignment
                   textStyle(
                     context: context,
                     text: "Group Transactions",
@@ -248,7 +249,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.h8),
               // Tag button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -292,7 +293,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                           color: AppColors.backgroundColor,
                           size: 20,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: AppSizes.w8),
                         textStyle(
                           context: context,
                           text: "Tag Group",
@@ -305,7 +306,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
               // Transaction list
               Obx(
                 () => lengthOfTransactions.value
@@ -319,7 +320,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                               color: Colors.green,
                               size: 60,
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(height: AppSizes.h16),
                             textStyle(
                               context: context,
                               text: "All Cleared!",
@@ -395,7 +396,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                         size: 24,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: AppSizes.w12),
                     // Details
                     Flexible(
                       child: Column(
@@ -414,7 +415,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                       ),
 // ... existing code ...
                       
-                          const SizedBox(height: 6),
+                          SizedBox(height: AppSizes.h6),
                           textStyle(
                             context: context,
                             text: transactionDetails['txnId'] ?? 'No ID',
@@ -422,7 +423,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                             fontsize: 12,
                           ),
                          
-                          const SizedBox(height: 4),
+                          SizedBox(height: AppSizes.h4),
                           Row(
                             children: [
                               textStyle(
@@ -432,7 +433,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                                 fontsize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
-                                const SizedBox(width: 10),
+                                SizedBox(width: AppSizes.w10),
                                textStyle(
                                 context: context,
                                 text:formatWhatsAppDate(convertStringToDateTime(transactionDetails['transactionTimestamp'])),
@@ -444,7 +445,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: AppSizes.w12),
                     // Delete button
                     GestureDetector(
                       onTap: () {

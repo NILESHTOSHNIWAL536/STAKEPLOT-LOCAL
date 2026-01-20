@@ -9,6 +9,8 @@ import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScr
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class UpdateInterestScreen extends StatefulWidget {
   const UpdateInterestScreen({Key? key}) : super(key: key);
 
@@ -119,7 +121,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                       ),
                     ),
                   ),
-                   SizedBox(height: 16),
+                   SizedBox(height: AppSizes.h16),
                 ],
               ),
             ),
@@ -360,7 +362,7 @@ class UpdateTitleWidget extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 8),
+        SizedBox(height: AppSizes.h8),
         Text(
           'Tap to add new interests or deselect current ones below.',
           style: FontManager2().getTextStyle(
@@ -404,7 +406,7 @@ class PreviouslySelectedInterestsWidget extends StatelessWidget {
               color: AppColors.bg1,
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           Wrap(
            alignment: WrapAlignment.start, // Ensure chips start from the left
                   spacing: screenSize.width * 0.015, // Consistent with FilteredCategoriesListWidget

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 void showEarningScoreDialog(BuildContext context) {
   showDialog(
     context: context,
@@ -31,7 +33,7 @@ void showEarningScoreDialog(BuildContext context) {
                   color: AppColors.primaryColor,
                 ),
               ),
-              const SizedBox(height: 16),
+               SizedBox(height: AppSizes.h16),
 
               // Description
               Text(
@@ -43,23 +45,23 @@ void showEarningScoreDialog(BuildContext context) {
                   color: AppColors.accentColor,
                 ),
               ),
-              const SizedBox(height: 16),
+               SizedBox(height: AppSizes.h16),
 
               // Bullet points
               _buildBulletPoint(
                   'Tagging untagged transactions in your expense history',
                   context),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.h8),
               _buildBulletPoint(
                   'Participating in the community by posting, commenting, or sharing',
                   context),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.h8),
               _buildBulletPoint(
                   'Using the bill split feature and clearing split payments',
                   context),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.h8),
               _buildBulletPoint('Adding a cash Transaction', context),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
 
               // Additional info
               Text(
@@ -71,7 +73,7 @@ void showEarningScoreDialog(BuildContext context) {
                   color: AppColors.accentColor,
                 ),
               ),
-              const SizedBox(height: 20),
+               SizedBox(height: AppSizes.h20),
 
               // Done button
               Center(

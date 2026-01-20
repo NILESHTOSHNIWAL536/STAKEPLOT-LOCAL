@@ -488,6 +488,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardWidg
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import 'add_pay_cycle.dart';
 
 class AllCardsScreen extends StatelessWidget {
@@ -622,7 +623,7 @@ class AllCardsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 10,
+                                  width: AppSizes.w8,
                                 ),
                                 if (hasSimilarCards)
                                   Padding(

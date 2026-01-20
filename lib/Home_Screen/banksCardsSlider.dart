@@ -1374,6 +1374,7 @@ import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
 import '../Constants/core/app_component_sizes.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../backed_connections/bankServices/nextFetch.dart';
 import '../components/shared_utils.dart';
 import '../model/bank_model.dart';
@@ -1465,7 +1466,7 @@ Widget avatarSlider() {
         ),
       ),
   
-     const  SizedBox(height: 6),
+       SizedBox(height: AppSizes.h6),
   
       Obx(() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1591,9 +1592,9 @@ Future.microtask(() {
 )
 
       ),
-  
-      const SizedBox(height: 6),
-  
+
+       SizedBox(height: AppSizes.h6),
+
       Obx(() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
@@ -1640,54 +1641,55 @@ Widget getListViewBankInfo(BankAccountModel data) {
 
           /// 🔤 MAIN CONTENT
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 28), // space for top-right logos
+                SizedBox(height: AppSizes.h40), // space for top-right logos
 
                 /// NEXT FETCH
                 Nextfetch(),
-
-                const SizedBox(height: 8),
-
+                
+                SizedBox(height: AppSizes.h10),
+                
                 /// ACCOUNT NUMBER
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Image.network(
                       data.bankLogo,
-                      width: 33,
-                      height: 33,
+                      width: 28,
+                      height: 28,
                       fit: BoxFit.fitWidth,
                       errorBuilder: getErrorBankLogo(),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: AppSizes.w8),
                     Text(
                       data.maskedAccNumber,
                       style: FontManager().getTextStyle(
                         context,
                         fontSize: 16,
-                        lWeight: FontWeight.w600,
+                        lWeight: FontWeight.w700,
                         color: AppColors.backgroundColor,
                       ),
                     ),
                   ],
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
 
                 /// LABEL
                 Text(
                   "Available balance",
                   style: FontManager().getTextStyle(
                     context,
-                    fontSize: 11,
-                    lWeight: FontWeight.w400,
+                    fontSize: 12,
+                    lWeight: FontWeight.w500,
                     color: AppColors.grey,
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
 
                 /// BALANCE
                 Obx(() {
@@ -1702,13 +1704,14 @@ Widget getListViewBankInfo(BankAccountModel data) {
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
-                      fontSize: showBalance ? 20 : 18,
+                      fontSize: 18,
                       color: AppColors.backgroundColor,
+                      lineHeight: 24/fontSize
                     ),
                   );
                 }),
 
-                const SizedBox(height: 12),
+                SizedBox(height: AppSizes.h14),
 
                 /// QUICK CHECK
                 Row(
@@ -1719,25 +1722,27 @@ Widget getListViewBankInfo(BankAccountModel data) {
                       height: 18,
                       errorBuilder: getErrorBankLogo(),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: AppSizes.w6),
                     Text(
                       "Quick check",
                       style: FontManager()
                           .getTextStyle(
                             context,
                             fontSize: 12,
-                            lWeight: FontWeight.w400,
-                            color: AppColors.backgroundColor,
+                            lWeight: FontWeight.w500,
+                            color: AppColors.grey,
+                            lineHeight: 18/fontSize
                           )
                           .copyWith(
                             decoration: TextDecoration.underline,
                             decorationThickness: 1.2,
                             decorationColor:
-                                AppColors.backgroundColor,
+                                AppColors.grey,
                           ),
                     ),
                   ],
                 ),
+             
               ],
             ),
           ),
@@ -1748,7 +1753,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
               top: 8,
               right: 0,
               child: Container(
-                height: 35,
+                height: 40,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
@@ -1795,7 +1800,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
           /// 🔐 SET PIN BUTTON
           Positioned(
             right: 16,
-            bottom: 16,
+            bottom: 30,
             child: setPinForAccountHide(context),
           ),
         ],
@@ -1877,7 +1882,7 @@ Widget setPinForAccountHide(context) {
   return Obx(() {
     if (userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00" || userController.cupertinoPin.value.isEmpty ||  userController.cupertinoAttemptCount.value) { // Handle empty case too
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: InkWell(
           onTap: () {
 
@@ -1907,9 +1912,10 @@ Widget setPinForAccountHide(context) {
       "Set Pin",
       style: FontManager().getTextStyle(
         context,
-        lWeight: FontWeight.bold,
-        fontSize: 14,           
-        color: AppColors.backgroundColor,   
+        lWeight: FontWeight.w500,
+        fontSize: 16,           
+        color: AppColors.backgroundColor,
+        lineHeight: 24/fontSize   
       ),
       textAlign: TextAlign.center,
     ),
@@ -2098,7 +2104,7 @@ Widget setPinForAccountHide(context) {
                     height: 10,
                     url: bankImage,
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                   Text(
                     "Securely connect your bank account",
                     style: FontManager().getTextStyle(
@@ -2109,7 +2115,7 @@ Widget setPinForAccountHide(context) {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                 ],
               ),
             ),

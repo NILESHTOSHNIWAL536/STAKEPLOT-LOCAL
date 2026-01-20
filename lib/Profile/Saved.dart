@@ -11,6 +11,7 @@ import "package:flutter_application_code_stakeplot/controllers/user-controller.d
 import "package:get/get.dart";
 
 import "../Community_Page/widgets/buildbutton.dart";
+import "../Constants/core/app_padding_sizes.dart";
 
 
 
@@ -97,7 +98,7 @@ Widget feed(UserController userController){
                           }).toList(),
                         ),
                       ),
-                      SizedBox(height: 100,),
+                      SizedBox(height: AppSizes.h100,),
                 ],
         );
   }

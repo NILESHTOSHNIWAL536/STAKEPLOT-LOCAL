@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../controllers/credit_card_controller.dart';
 import '../../email_sync/credit_card_transactions.dart';
 import '../../email_sync/custom_steps.dart';
@@ -116,7 +117,7 @@ Widget NoCreditCardUi(BuildContext context)
                 color: Colors.blue.shade400,
               ),
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
 
             // Title
             Text(
@@ -128,7 +129,7 @@ Widget NoCreditCardUi(BuildContext context)
               textAlign: TextAlign.center,
             ),
 
-            const SizedBox(height: 10),
+            SizedBox(height: AppSizes.h10),
 
             // Subtitle
             Text(
@@ -139,7 +140,7 @@ Widget NoCreditCardUi(BuildContext context)
               textAlign: TextAlign.center,
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: AppSizes.h20),
           ],
         ),
       ),

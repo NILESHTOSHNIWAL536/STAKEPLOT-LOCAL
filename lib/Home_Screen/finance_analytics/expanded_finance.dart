@@ -287,6 +287,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/helper.dart';
 import '../../components/shared_utils.dart';
@@ -557,13 +558,13 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
               // Title and selected day amounts
               Center(
                 child: Column(children: [
-                  const SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                   Text(
                     _monthYearTitle(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w700, fontSize:24, color: AppColors.accentColor),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: AppSizes.h6),
                   // Show header amounts only when a single day is selected (>=0)
                 // Put this where you want the UI to show
 if (_selectedDayIndex >= 0 &&
@@ -602,7 +603,7 @@ if (_selectedDayIndex >= 0 &&
         ),
       ),
 
-      const SizedBox(width: 8),
+      SizedBox(width: AppSizes.w8),
 
       // Debited container
       Container(
@@ -637,7 +638,7 @@ else
                 ]),
               ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
 
               // Chart card (no Y labels)
               Container(
@@ -651,7 +652,7 @@ else
                     : _buildExpandedChartNoYLabels(screenWidth, screenHeight),
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: AppSizes.h12),
 
               // Transaction history (unchanged; will reflect new selectedMonth/selectedYear)
               transactionsHistoryList(),
@@ -855,7 +856,7 @@ AppBar appbarWidget() {
                                     ),
                                   ),
                                   if (isSelected) ...[
-                                    const SizedBox(width: 6),
+                                    SizedBox(width: AppSizes.w6),
                                     Icon(Icons.check_circle,
                                         size: 16, color: AppColors.backgroundColor),
                                   ],
@@ -870,7 +871,7 @@ AppBar appbarWidget() {
                 ),
               ),
 
-              const SizedBox(width: 8),
+              SizedBox(width: AppSizes.w8),
 
               // ---------------- YEAR PICKER BUTTON ----------------
               GestureDetector(
@@ -896,7 +897,7 @@ AppBar appbarWidget() {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: AppSizes.w6),
                       Icon(Icons.keyboard_arrow_down,
                           size: 18, color: AppColors.accentColor),
                     ],
@@ -906,7 +907,7 @@ AppBar appbarWidget() {
             ],
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
         ],
       ),
     ),

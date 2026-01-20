@@ -396,21 +396,16 @@
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/pollDisplay.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/pop-up-menu.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/components/readmore.dart';
-import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
-import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 
 class ChartData {
   ChartData(this.x, this.y, [this.color, this.name]);
@@ -494,7 +489,7 @@ class PostCard extends StatelessWidget {
     children: [
       /// TAGS (SCROLLABLE / FLEXIBLE)
       if (dataObj.tag.isNotEmpty)
-        Container(
+        SizedBox(
           width: MediaQuery.sizeOf(context).width/1.5,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -512,7 +507,7 @@ class PostCard extends StatelessWidget {
                     tag,
                     style: FontManager().getTextStyle(
                       context,
-                      lWeight: FontWeight.w400,
+                      lWeight: FontWeight.w500,
                       fontSize: 12,
                       color: AppColors.primaryColor,
                     ),
@@ -556,9 +551,9 @@ class PostCard extends StatelessWidget {
                             child: Text(
                               dataObj.pollData!.question.toString(),
                               style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w600,
+                                  lWeight: FontWeight.w700,
                                   fontSize: 18,
-                                  color: AppColors.bg1),
+                                  color: AppColors.accentColor),
                             ),
                           )
                         : isWrite

@@ -60,7 +60,7 @@ class ForceLogout {
         }
         LoginService.loginCalledData(response, context);
         await screenDataLocalStorage();
-        snackBarCalled(context, 'Existing session logged out.', Colors.green);
+        snackBarCalled(context, 'Existing session logged out.',);
       } 
       else {
         snackBarCalledfail(context, 'Failed to log out existing session.', Colors.red);
