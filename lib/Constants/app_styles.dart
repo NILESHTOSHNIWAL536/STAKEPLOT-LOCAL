@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-
 class Strides {
   static String stride = "assets/icons/strides/stride.svg";
   }
@@ -19,12 +18,13 @@ class NavBarIcons {
 class PlotFinanceIcons {
   static String budgetPlanner = "assets/icons/plotFinance/budgetPlanner.svg";
   static String comics = "assets/icons/plotFinance/comics.svg";
-  static String crediCardBg = "assets/icons/plotFinance/creditCardBg.svg";
+  static String crediCardBg = "assets/icons/plotFinance/creditCardBg3.svg";
   static String currencyConverter = "assets/icons/plotFinance/currencyConverter.svg";
   static String goalCreation = "assets/icons/plotFinance/goalCreation.svg";
   static String reserve = "assets/icons/plotFinance/reserve.svg";
   static String calculator = "assets/icons/plotFinance/calculator.svg";
   static String foodie = "assets/icons/plotFinance/foodie.svg";
+  static String creditcardcomponent = "assets/icons/plotFinance/creditComponent1.svg";
  
 }
 
@@ -74,6 +74,7 @@ class HomePageIcons {
   static String noTransactionsInCollection2 = "assets/icons/Home-page/noTnx1.svg";
   static String settings = "assets/icons/Home-page/collectionSetting.svg";
   static String appUpdates = "assets/icons/Home-page/appUpdates.svg";
+  static String finoraIcon = "assets/icons/Home-page/finoraIcon.svg";
 }
 
 
@@ -283,6 +284,7 @@ class ProfileIcons {
   static String unclaimedCoupon = "assets/icons/profileScreen/unc1.svg";
   static String unclaimedCoupon2 = "assets/icons/profileScreen/unclaimed2.svg";
   static String unclaimedCoupon3 = "assets/icons/profileScreen/unc2.svg";
+  
 }
 
 class Sign {
@@ -298,6 +300,8 @@ class Sign {
   static String management = "assets/icons/Signup/Management.svg";
   static String finvu = "assets/icons/Signup/finvu.svg";
   static String googleIcon = "assets/icons/Signup/gIcon.svg";
+  static String appSignInimage = "assets/icons/Signup/signInImage.svg";
+  static String userOnboard = "assets/icons/Signup/userOnboard1.svg";
 }
 
 class Finance {
@@ -311,7 +315,7 @@ class Finance {
   static String emi = "assets/icons/financeScreen/emi.svg";
   static String key = "assets/icons/financeScreen/Key.svg";
   static String location = "assets/icons/financeScreen/Location.svg";
-
+ static String coins = "assets/icons/financeScreen/coins.svg";
   static String savings = "assets/icons/financeScreen/savings.svg";
   static String user = "assets/icons/financeScreen/User.svg";
   static String amt = "assets/icons/financeScreen/amt.svg";
@@ -319,6 +323,9 @@ class Finance {
   static String vegNonveg = "assets/icons/financeScreen/vegnonveg.svg";
   static String currency = "assets/icons/financeScreen/currency.svg";
   static String debtIcon = "assets/icons/financeScreen/debtIcon.svg";
+  static String groceries = "assets/icons/financeScreen/groceries.svg";
+  static String transport = "assets/icons/financeScreen/transport.svg";
+  static String entertainment  = "assets/icons/financeScreen/entertainment.svg";
 }
 
 class BudgetCategories {

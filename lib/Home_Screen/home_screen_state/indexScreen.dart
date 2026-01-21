@@ -2,21 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/manually.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStack.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora_last2months_dashboard.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/headsUpAndMoneyMap.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_analytics/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_button.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-
 import '../../components/helper.dart';
 import '../Home/home_AppBar.dart';
 import '../Home/init_Api_Calls.dart';
@@ -55,7 +51,7 @@ Stack(
   children: [
     // BACKGROUND IMAGE for the whole section
     SizedBox(
-      height: MediaQuery.sizeOf(context).height/4,
+      height: MediaQuery.sizeOf(context).height/3.6,
       width: double.infinity,
       child: SvgPicture.asset(
         HomePageIcons.background, // <-- verify this path
@@ -63,9 +59,9 @@ Stack(
       ),
     ),
 
-    // FOREGROUND content (kept transparent)
+    
     Container(
-      height: MediaQuery.sizeOf(context).height/2.33,
+      height: MediaQuery.sizeOf(context).height/2.36,
       // color: Colors.green,
       width: double.infinity,
       child: Padding(
@@ -75,10 +71,9 @@ Stack(
           children: [
             const SizedBox(height: 60),
 
-            // keep TopRightIconsWidget as-is (shouldn't paint an opaque bg)
+           
             TopRightIconsWidget(),
 
-            // number picker area — wrap in transparent material so it doesn't draw white bg
             Container(
               height: height * 0.3,
               // color: Colors.amber,
@@ -98,7 +93,7 @@ Stack(
 
              
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, ),
+                padding: const EdgeInsets.symmetric(horizontal: 30.0, ),
                 child: Column(
                   children: [
                     SizedBox(
@@ -114,19 +109,24 @@ Stack(
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     SizedBox(
-                      height: height * 0.25,
+                      height: height * 0.2,
                       child: SpendingCardTwoPanels(),
                     ),
                    
                     const SizedBox(
-                      height: 14,
+                      height: 20,
                     ),
+                    //  SizedBox(
+                    //   height: height * 0.2,
+                    //   child: SwipeableCardsScreen(),
+                    // ),
+                    
                     Obx(() => isFinoraVisible.value
-                        ? GetFinora(height)
-                        : GetFinora(height)),
+                        ?SwipeableCardsScreen()
+                        : SwipeableCardsScreen()),
                     
                     Obx(() => isAutoPayFected.value
                         ? GetAutopays(height)

@@ -883,7 +883,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
     final sw = mq.size.width;
     final horizontalMargin = 2.0;
 
-    final gapBetween = 12.0;
+    final gapBetween = 8.0;
 
     double rightVisible = MediaQuery.sizeOf(context).width / 2;
     rightVisible = max(rightVisible, 120.0);
@@ -895,7 +895,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
     // Outer white card (single container)
     return Container(
       width: MediaQuery.sizeOf(context).width,
-      margin: EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 2),
+      // margin: EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 2),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor, // #FFFFFF
         borderRadius: BorderRadius.circular(10), // 10px
@@ -906,7 +906,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
         boxShadow: [BoxShadow(color: AppColors.accentColorOpacity, blurRadius: 6, offset: Offset(0, 2))],
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -940,7 +940,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                  
                 },
                 child: Container(
-                  width: MediaQuery.sizeOf(context).width / 3.3,
+                  width: MediaQuery.sizeOf(context).width / 3.6,
                   padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 6),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

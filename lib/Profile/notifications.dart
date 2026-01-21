@@ -56,7 +56,7 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: AppColors.border,
         elevation: 0,
         title: Text(
           "Notifications",
@@ -69,7 +69,7 @@ class _NotificationsState extends State<Notifications> {
         ),
         centerTitle: true,
       ),
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: AppColors.border,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -93,94 +93,244 @@ class _NotificationsState extends State<Notifications> {
       ),
     );
   }
+Map<String, List<Map<String, dynamic>>> groupNotificationsByDate() {
+  Map<String, List<Map<String, dynamic>>> grouped = {};
 
-  Widget _buildNotificationList() {
-    return notificationList.isEmpty && notificationsFlag.value
-        ? Spinner()
-        : (notificationList.isEmpty && autoTransactionList.isEmpty)
-            ? Container(
-                width: MediaQuery.sizeOf(context).width / 1.1,
-                height: MediaQuery.sizeOf(context).height / 1.3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    AvatarProfileImage(
-                      url: HomePageIcons.none,
-                      height: 8,
-                      width: 10,
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                    Text(
-                      "No Notifications",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: AppColors.accentColor,
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                    Text(
-                      "You're all caught up!",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: AppColors.bg3,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : Column(
-                children: [
-                  AutocategroiesTransactions(),
-                  Container(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: notificationList.length,
-                      itemBuilder: (context, index) {
-                        var e = notificationList[index];
-                        var notifyId = e['_id'] as String?;
-                        return Dismissible(
-                          key: Key(notifyId ?? index.toString()),
-                          direction: DismissDirection.endToStart,
-                          onDismissed: (direction) {
-                            _deleteNotification(notifyId);
-                          },
-                          background: Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical:
-                                    MediaQuery.of(context).size.height * 0.008),
-                            decoration: BoxDecoration(
-                              color: Colors.redAccent,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.1),
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            padding: EdgeInsets.all(
-                                MediaQuery.of(context).size.width * 0.03),
-                            alignment: Alignment.centerRight,
-                            child: const Padding(
-                              padding: EdgeInsets.only(right: 20),
-                              child: Icon(Icons.delete, color: AppColors.backgroundColor),
-                            ),
-                          ),
-                          child: _buildNotificationCard(e),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              );
+  for (var n in notificationList) {
+    final createdAt = DateTime.parse(n['createdAt']);
+    final now = DateTime.now();
+
+    String key;
+    if (isSameDay(createdAt, now)) {
+      key = "Today";
+    } else if (isSameDay(createdAt, now.subtract(const Duration(days: 1)))) {
+      key = "Yesterday";
+    } else {
+      key = formatDateHeader(createdAt); // e.g. Nov 16
+    }
+
+    grouped.putIfAbsent(key, () => []);
+    grouped[key]!.add(n);
   }
+
+  return grouped;
+}
+
+bool isSameDay(DateTime a, DateTime b) {
+  return a.year == b.year && a.month == b.month && a.day == b.day;
+}
+
+String formatDateHeader(DateTime date) {
+  return "${monthNames[date.month - 1]} ${date.day}";
+}
+
+final monthNames = [
+  "Jan","Feb","Mar","Apr","May","Jun",
+  "Jul","Aug","Sep","Oct","Nov","Dec"
+];
+
+  // Widget _buildNotificationList() {
+  //   return notificationList.isEmpty && notificationsFlag.value
+  //       ? Spinner()
+  //       : (notificationList.isEmpty && autoTransactionList.isEmpty)
+  //           ? Container(
+  //               width: MediaQuery.sizeOf(context).width / 1.1,
+  //               height: MediaQuery.sizeOf(context).height / 1.3,
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 children: [
+  //                   AvatarProfileImage(
+  //                     url: HomePageIcons.none,
+  //                     height: 8,
+  //                     width: 10,
+  //                   ),
+  //                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+  //                   Text(
+  //                     "No Notifications",
+  //                     style: FontManager().getTextStyle(
+  //                       context,
+  //                       lWeight: FontWeight.bold,
+  //                       fontSize: 18,
+  //                       color: AppColors.accentColor,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+  //                   Text(
+  //                     "You're all caught up!",
+  //                     style: FontManager().getTextStyle(
+  //                       context,
+  //                       lWeight: FontWeight.normal,
+  //                       fontSize: 14,
+  //                       color: AppColors.bg3,
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             )
+  //           : Column(
+  //               children: [
+  //                 AutocategroiesTransactions(),
+  //                 Container(
+  //                   child: ListView.builder(
+  //                     shrinkWrap: true,
+  //                     physics: const NeverScrollableScrollPhysics(),
+  //                     itemCount: notificationList.length,
+  //                     itemBuilder: (context, index) {
+  //                       var e = notificationList[index];
+  //                       var notifyId = e['_id'] as String?;
+  //                       return Dismissible(
+  //                         key: Key(notifyId ?? index.toString()),
+  //                         direction: DismissDirection.endToStart,
+  //                         onDismissed: (direction) {
+  //                           _deleteNotification(notifyId);
+  //                         },
+  //                         background: Container(
+  //                           margin: EdgeInsets.symmetric(
+  //                               vertical:
+  //                                   MediaQuery.of(context).size.height * 0.008),
+  //                           decoration: BoxDecoration(
+  //                             color: Colors.redAccent,
+  //                             borderRadius: BorderRadius.circular(12),
+  //                             boxShadow: [
+  //                               BoxShadow(
+  //                                 color: Colors.grey.withOpacity(0.1),
+  //                                 blurRadius: 6,
+  //                                 offset: const Offset(0, 2),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                           padding: EdgeInsets.all(
+  //                               MediaQuery.of(context).size.width * 0.03),
+  //                           alignment: Alignment.centerRight,
+  //                           child: const Padding(
+  //                             padding: EdgeInsets.only(right: 20),
+  //                             child: Icon(Icons.delete, color: AppColors.backgroundColor),
+  //                           ),
+  //                         ),
+  //                         child: _buildNotificationCard(e),
+  //                       );
+  //                     },
+  //                   ),
+  //                 ),
+  //               ],
+  //             );
+  // }
+Widget _buildNotificationList() {
+  if (notificationList.isEmpty && notificationsFlag.value) {
+    return Spinner();
+  }
+
+  if (notificationList.isEmpty && autoTransactionList.isEmpty) {
+    return SizedBox.shrink();
+  }
+
+  final grouped = groupNotificationsByDate();
+
+  return Column(
+    children: [
+      AutocategroiesTransactions(),
+
+      ...grouped.entries.map((entry) {
+        final dateTitle = entry.key;
+        final items = entry.value;
+
+        return _buildDateSection(dateTitle, items);
+      }).toList(),
+    ],
+  );
+}
+
+
+Widget _buildDateSection(
+  String title,
+  List<Map<String, dynamic>> items,
+) {
+  return Container(
+    margin: const EdgeInsets.only(bottom: 16),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.08),
+          blurRadius: 6,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// HEADER
+        Row(
+          children: [
+            Text(
+              title,
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 14,
+                lWeight: FontWeight.w600,
+                color: AppColors.accentColor,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: AppColors.mt,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Text(
+                items.length.toString(),
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 12,
+                  lWeight: FontWeight.w600,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 8),
+
+        /// NOTIFICATIONS (WITH DISMISSIBLE)
+        ...items.map((e) {
+          final notifyId = e['_id'] as String?;
+
+          return Dismissible(
+            key: Key(notifyId ?? UniqueKey().toString()),
+            direction: DismissDirection.endToStart,
+            onDismissed: (_) {
+              _deleteNotification(notifyId);
+            },
+            background: Container(
+              margin: const EdgeInsets.symmetric(vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.redAccent,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 20),
+              child: const Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: _buildNotificationCard(e),
+            ),
+          );
+        }).toList(),
+      ],
+    ),
+  );
+}
 
   Widget _buildNotificationCard(Map<String, dynamic> e) {
     var notifyId = e['_id'] as String?;
@@ -194,36 +344,36 @@ class _NotificationsState extends State<Notifications> {
         margin: EdgeInsets.symmetric(
             vertical: MediaQuery.of(context).size.height * 0.008),
         decoration: BoxDecoration(
-          color: AppColors.mt,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+    color: const Color(0xFFF9FAFB),
+    borderRadius: BorderRadius.circular(12),
+    border: Border.all(
+      color: const Color(0xFFEAECF0),
+      width: 1,
+    ),
+  ),
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.015,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    bottomLeft: Radius.circular(12),
-                  ),
-                ),
-              ),
+              // Container(
+              //   width: MediaQuery.of(context).size.width * 0.015,
+              //   decoration: BoxDecoration(
+              //     color: AppColors.primaryColor,
+              //     borderRadius: const BorderRadius.only(
+              //       topLeft: Radius.circular(12),
+              //       bottomLeft: Radius.circular(12),
+              //     ),
+              //   ),
+              // ),
               Expanded(
                 child: Padding(
                   padding:
                       EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
-                  child: _getNotificationContent(
-                      type ?? "unknown", data, notifyId, time),
+                  child:
+                   Container(
+                     child: _getNotificationContent(
+                        type ?? "unknown", data, notifyId, time),
+                   ),
                 ),
               ),
             ],
@@ -342,10 +492,10 @@ class _NotificationsState extends State<Notifications> {
     switch (type) {
       case "friendRequest":
         if (e['status'] == 'accepted') {
-          var notificationAvatar = e['isMaskedConnection']
+          var notificationAvatar = e['isMaskedConnection']??false
               ? e['avatarType']
               : e['from_name'] as String?;
-          var msg = e['isMaskedConnection']
+          var msg = e['isMaskedConnection']??false
               ? "connected to you"
               : "accepted your friend request";
           return _buildMessageCard(
@@ -353,7 +503,7 @@ class _NotificationsState extends State<Notifications> {
               e['from_id'] as String? ?? "",
               notificationAvatar ?? '',
               time,
-              e['isMaskedConnection']);
+              e['isMaskedConnection']??false);
         }
         return _buildFriendRequestCard(
             e['from_name'] as String? ?? "Unknown",
@@ -490,7 +640,7 @@ class _NotificationsState extends State<Notifications> {
                 avatar,
                 width: 30,
                 height: 30,
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => const Icon(
                   Icons.account_balance,
                   size: 30,

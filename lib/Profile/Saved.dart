@@ -10,6 +10,8 @@ import "package:flutter_application_code_stakeplot/controllers/controllerManagem
 import "package:flutter_application_code_stakeplot/controllers/user-controller.dart";
 import "package:get/get.dart";
 
+import "../Community_Page/widgets/buildbutton.dart";
+
 
 
 
@@ -34,26 +36,17 @@ class _FriendsState extends State<Saved> {
 
     return Scaffold(
        backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        title: Text(
-          'Saved Posts',
-          style: FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w600,
-            fontSize: 20,
-            color: AppColors.bg1,
-          ),
-        ),
-        backgroundColor: AppColors.mt,
-        elevation: 0,
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: AppColors.bg1),
-            onPressed: () => Navigator.pop(context)),
-      ),
+     
       body:Column(
         children: [
+           ArenaHeaderForSaved(
+      initialTab: 1, // Polls
+      onTabChanged: (index) {
+      
+      },
+    ),
           Container(
-             height: MediaQuery.of(context).size.height/1.165,
+             height: MediaQuery.of(context).size.height/1.3,
              width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
                    color: Colorcodes.white,

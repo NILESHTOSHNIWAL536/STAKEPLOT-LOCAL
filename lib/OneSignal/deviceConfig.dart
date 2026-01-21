@@ -155,7 +155,9 @@ void onPostDataCallWebSocket(data, context) {
   try {
     var element = data['data'];
     uploadRefreshCall(element, context);
-  } catch (e) {}
+  } catch (e) {
+    
+  }
 }
 
 

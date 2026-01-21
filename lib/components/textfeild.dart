@@ -62,7 +62,7 @@ class TextFeildWidget extends StatelessWidget {
               controller: textEditingController,
               onChanged: (c) {
                 acceptReset.value = false;
-                 if(heading=="tagSearch")
+ if(heading=="tagSearch")
                  {
                      LoadTag.value = !LoadTag.value;
                  }
@@ -584,5 +584,126 @@ class TextFeildWidgetCustom2 extends StatelessWidget {
         ),
       ),
     ));
+  }
+}
+
+
+class TextFeildWidgetUnderline extends StatelessWidget {
+  TextEditingController textEditingController;
+  String lableText;
+  String heading;
+  TextInputType keyBoard;
+  bool flag;
+  IconData icon;
+
+  TextFeildWidgetUnderline({
+    Key? key,
+    required this.textEditingController,
+    required this.heading,
+    required this.keyBoard,
+    required this.lableText,
+    this.icon = Icons.email_outlined,
+    this.flag = true,
+  }) : super(key: key);
+
+  RxBool show = false.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        width: MediaQuery.of(context).size.width / 1.1,
+        child: TextFormField(
+          controller: textEditingController,
+          keyboardType: keyBoard,
+          maxLength: heading == "PhoneNo" ? 10 : null,
+          obscureText: flag ? false : show.value,
+          inputFormatters: [
+            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+          ],
+          onChanged: (c) {
+            acceptReset.value = false;
+
+            if (heading == "tagSearch") {
+              LoadTag.value = !LoadTag.value;
+            }
+
+            if (SignupData().usernameLabel == heading) {
+              checkIsUserNameValid(c);
+            }
+          },
+
+          decoration: InputDecoration(
+            hintText: lableText,
+            counterText: "",
+            prefixIcon:
+                heading == "tagSearch" ? const Icon(Icons.search) : null,
+
+            hintStyle: FontManager().getTextStyle(
+              context,
+              fontSize: 14,
+              lWeight: FontWeight.normal,
+              color: AppColors.accentColor,
+            ),
+
+            /// UNDERLINE ONLY
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColors.primaryColor.withOpacity(0.4),
+                width: 1,
+              ),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColors.primaryColor,
+                width: 2,
+              ),
+            ),
+            errorBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
+            ),
+
+            /// SUFFIX ICON LOGIC (UNCHANGED)
+            suffixIcon: SignupData().usernameLabel == heading
+                ? (textEditingController.text.isEmpty
+                    ? null
+                    : isValidUser.value
+                        ?  Icon(
+                            Icons.check,
+                            size: 22,
+                            color: Colorcodes.green,
+                          )
+                        :  SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: Spinner(),
+                          ))
+                : flag
+                    ? null
+                    : Obx(
+                        () => InkWell(
+                          onTap: () {
+                            show.value = !show.value;
+                          },
+                          child: Icon(
+                            show.value
+                                ? Icons.remove_red_eye_outlined
+                                : Icons.do_disturb_off_outlined,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ),
+          ),
+
+          style: FontManager().getTextStyle(
+            context,
+            fontSize: 16,
+            lWeight: FontWeight.w500,
+            color: AppColors.finSpaceColor,
+          ),
+        ),
+      ),
+    );
   }
 }

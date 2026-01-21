@@ -551,6 +551,7 @@
 // }
 
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
@@ -568,6 +569,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Constants/font_manager.dart';
 import '../../components/shared_utils.dart';
 import '../../model/fips_metric_model.dart';
 // <-- make sure this is imported
@@ -653,25 +655,33 @@ class _RotatingIconState extends State<Nextfetch>
                             )
                           : InkWell(
                               onTap: () => showFetchModal(context),
-                              child: RotationTransition(
-                                turns: Tween(
-                                  begin: 0.0,
-                                  end: 1.0,
-                                )
-                                    .animate(
-                                      CurvedAnimation(
-                                        parent: _controller,
-                                        curve: Curves.linear,
-                                      ),
-                                    )
-                                    .drive(Tween(
-                                        begin: 1.0, end: 0.0)),
-                                child: AvatarProfileImageNextFetch(
-                                  url: HomePageIcons.fetch,
-                                  width: 40,
-                                  height: 35,
-                                ),
-                              ),
+                              child:
+                                RotatingStopwatchIcon(
+    size: 22,
+    color: AppColors.backgroundColor,
+  ),
+                              //  RotationTransition(
+                              //   turns: Tween(
+                              //     begin: 0.0,
+                              //     end: 1.0,
+                              //   )
+                              //       .animate(
+                              //         CurvedAnimation(
+                              //           parent: _controller,
+                              //           curve: Curves.linear,
+                              //         ),
+                              //       )
+                              //       .drive(Tween(
+                              //           begin: 1.0, end: 0.0)),
+                              //   child:
+                              
+                              //    AvatarProfileImageNextFetch(
+                              //     url: HomePageIcons.fetch,
+                              //     width: 40,
+                              //     height: 35,
+                              //   ),
+                              // ),
+                           
                             ),
                       Padding(
                         padding:
@@ -683,17 +693,16 @@ class _RotatingIconState extends State<Nextfetch>
                               ? HomepageStringsDart()
                                   .fetchingInProgress
                               : HomepageStringsDart().nextFetchLabel,
-                          fontWeight: FontWeight.w600,
-                        
+                          fontWeight: FontWeight.w500,
                           c: AppColors.backgroundColor,
-                          fontsize: isFected.value ? 10 : 13,
+                          fontsize: isFected.value ? 14 : 14,
                         ),
                       ),
                       textStyle(
                         context: context,
                         text:
                             isFected.value ? "" : formattedNextFetch,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                         c: AppColors.backgroundColor,
                         fontsize: 14,
                       ),
@@ -778,8 +787,71 @@ class _RotatingIconState extends State<Nextfetch>
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.48, // 🔑 modal height
-            child: PageView(
+            height: MediaQuery.of(context).size.height * 0.48, 
+            child: isFected.value?Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(color: AppColors.border, shape: BoxShape.circle),
+            child: Icon(Icons.sync, size: 26, color: AppColors.primaryColor),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            "Sync in progress",
+            textAlign: TextAlign.center,
+             style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: 
+                  Colors.black,
+                                  ),
+           
+          ),
+          const SizedBox(height: 10),
+          Text(
+            "Please wait while we retrieve the latest data from your bank. The process may take a moment depending on your bank's server response.",
+            textAlign: TextAlign.center,
+              style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w300,
+                                    fontSize: 12,
+                                    color: AppColors.grey
+                                  ),
+          
+          ),
+           SizedBox(height: MediaQuery.sizeOf(context).height/30),
+          SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton(
+        onPressed: () {
+        Navigator.pop(context);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primaryColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        ),
+        child: Center(
+          child: Text("Done", 
+           style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color:  AppColors.backgroundColor
+                                  ),)
+         
+        ),
+        
+      ),
+    )
+        ],
+      ):
+            PageView(
               controller: modalPageController,
               physics: const NeverScrollableScrollPhysics(),
               children: [
@@ -798,28 +870,13 @@ class _RotatingIconState extends State<Nextfetch>
 
                       const SizedBox(height: 16),
 
-                      Center(
-                        child: Column(
-                          children: [
-                            Image.network(
-                              BankUrl.value,
-                              width: 30,
-                              height: 30,
-                              errorBuilder: getErrorBankLogo(),
-                            ),
-                            const SizedBox(height: 8),
-                            textStyle(
-                              context: context,
-                              text: BankName.value,
-                              fontsize: 16,
-                              c: AppColors.primaryColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ],
-                        ),
-                      ),
+                   
 
-                      const SizedBox(height: 16),
+connectedBanksRow(context),
+
+const SizedBox(height: 20),
+
+
 
                       _buildInfoCard(
                         context: context,
@@ -893,6 +950,79 @@ class _RotatingIconState extends State<Nextfetch>
   );
 }
 
+Widget connectedBanksRow(BuildContext context) {
+  if (bankAccountLinkedList.isEmpty) return const SizedBox();
+
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+    decoration: BoxDecoration(
+      color: AppColors.backgroundColor,
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(
+        color: AppColors.button,
+        width: 1,
+      ),
+    ),
+    child: SizedBox(
+      height: 60,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: bankAccountLinkedList.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 2),
+        itemBuilder: (context, index) {
+          final bank = bankAccountLinkedList[index];
+          final bool isActive = bank.bankName == BankName.value;
+
+          return GestureDetector(
+            onTap: () {
+              BankName.value = bank.bankName;
+              BankUrl.value = bank.bankLogo;
+              accountId.value = bank.accountId;
+              LastFetchDate.value = bank.lastFetch;
+              nextFecthDate.value = bank.nextFetch;
+              fetchCount.value = bank.fetchCount.toString();
+
+              calledFunctionToFetchData(context);
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(
+                vertical: 6,
+                horizontal: 10,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.network(
+                    bank.bankLogo,
+                    width: 28,
+                    height: 28,
+                    errorBuilder: getErrorBankLogo(),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    bank.bankName,
+                    style: FontManager().getTextStyle(
+                      context,
+                      fontSize: 11,
+                      lWeight: FontWeight.w500,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+  );
+}
 
   double getPersentage() {
     if (BankName.value == "") return 100.0;
@@ -1021,3 +1151,77 @@ class _RotatingIconState extends State<Nextfetch>
 }
 
 
+
+
+class RotatingStopwatchIcon extends StatefulWidget {
+  final double size;
+  final Color color;
+
+  const RotatingStopwatchIcon({
+    Key? key,
+    this.size = 26,
+    this.color = Colors.white,
+  }) : super(key: key);
+
+  @override
+  State<RotatingStopwatchIcon> createState() =>
+      _RotatingStopwatchIconState();
+}
+
+class _RotatingStopwatchIconState extends State<RotatingStopwatchIcon>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2), // speed of rotation
+    )..repeat(); // continuous rotation
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: widget.size,
+      height: widget.size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          /// Stopwatch outline
+          Icon(
+            Icons.timer_outlined,
+            size: widget.size,
+            color: widget.color,
+          ),
+
+          /// Rotating hand
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (_, child) {
+              return Transform.rotate(
+                angle: _controller.value * 2 * pi,
+                child: child,
+              );
+            },
+            child: Container(
+              width: 2,
+              height: widget.size * 0.32,
+              decoration: BoxDecoration(
+                color: widget.color,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

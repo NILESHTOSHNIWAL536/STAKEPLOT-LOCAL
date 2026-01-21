@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/two_factor_email_verification.dart';
 import 'package:get/get.dart';
+import '../Constants/font_manager.dart';
 import '../repository/auth_service/otp_service.dart';
 
 // class UserLoginedAlready extends StatelessWidget {
@@ -117,29 +118,89 @@ class UserLoginedAlready extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 2,
+      height: MediaQuery.of(context).size.height / 1.8,
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
-            height: MediaQuery.of(context).size.height / 4.5,
-            child: AvatarProfileImage(
-              url: "assets/icons/lock.svg",
-              width: 10,
-              height: 10,
+          Container(
+            width: MediaQuery.of(context).size.width / 5,
+            height: MediaQuery.of(context).size.height / 8,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+               color: const Color(0xFFCACCEC),
+  // borderRadius: BorderRadius.circular(9999),
+  border: Border.all(
+    color: const Color(0xFFE5E7EB),
+    width: 0,
+  ),
             ),
+            // child: AvatarProfileImage(
+            //   url: "assets/icons/lock.svg",
+            //   width: 10,
+            //   height: 10,
+            // ),
+            child: Icon(Icons.warning),
           ),
 
-          _item(context, body['message'] ?? "Session already active"),
-          _item(context, "Device Limit Exceeded"),
-          _item(context, loggedDevice['device'] ?? ""),
-          _item(context, loggedDevice['brand'] ?? ""),
+          _item(context, body['message'] ?? "Account already active", 18, AppColors.accentColor),
+          _item(context, "Your email account is currently logged in on another device. For security reasons, you can only be logged in on one device at a time.", 16, AppColors.grey),
+                    Container(
+                      padding: EdgeInsets.all(12),
+            width: MediaQuery.of(context).size.width / 1.2,
+            height: MediaQuery.of(context).size.height / 12,
+            decoration: BoxDecoration(
+             
+             color: const Color(0xFFF9FAFB),
+  borderRadius: BorderRadius.circular(8),
+  border: Border.all(
+    color: const Color(0xFFE5E7EB),
+    width: 0,
+  ),
+            ),
+            // child: AvatarProfileImage(
+            //   url: "assets/icons/lock.svg",
+            //   width: 10,
+            //   height: 10,
+            // ),
+            child: Row(
+              children: [
+                 Container(
+            padding: EdgeInsets.all(12),
+             decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                           color: const Color(0xFFCACCEC),
+              // borderRadius: BorderRadius.circular(9999),
+              border: Border.all(
+                color: const Color(0xFFE5E7EB),
+                width: 0,
+              ),
+                        ),
+                        child: Icon(Icons.phone_android_outlined),
+                        ),
+                        SizedBox(width: 12,),
+                 Text(
+                     loggedDevice['device'] ??"Iphone",
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold, fontSize: 15, color:AppColors.accentColor ),
+                  ),
+                 Text(
+                     loggedDevice['brand'] ??"Iphone",
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold, fontSize: 15, color:AppColors.accentColor ),
+                  )
+                 
+                     
+              ],
+            ),
+          ),
+        
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
 
           InkWell(
             onTap: () {
@@ -167,23 +228,65 @@ class UserLoginedAlready extends StatelessWidget {
             },
             child: Obx(
               () => isLoading.value
-                  ? getspinner(context, 30)
-                  : getButton(context, "Logout User"),
+                  ? getspinner(context, 30):
+                  Container(
+    width: MediaQuery.of(context).size.width / 1.2,
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+    decoration: BoxDecoration(
+        color: AppColors.redColor, borderRadius: BorderRadius.circular(8)),
+    child: Center(
+      child: Text(
+         "Logout Other device",
+        style: FontManager().getTextStyle(context,
+            lWeight: FontWeight.bold, fontSize: 15, color:AppColors.backgroundColor ),
+      ),
+    ),
+  )
             ),
           ),
+        
+         const SizedBox(height: 10),
+          InkWell(
+            onTap: () {
+            
+               Navigator.pop(context);
+            },
+            child: Obx(
+              () => isLoading.value
+                  ? getspinner(context, 30):
+                  Container(
+    width: MediaQuery.of(context).size.width / 1.2,
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+    decoration: BoxDecoration(
+        color: AppColors.border, borderRadius: BorderRadius.circular(8)),
+    child: Center(
+      child: Text(
+         "Cancel",
+        style: FontManager().getTextStyle(context,
+            lWeight: FontWeight.bold, fontSize: 15, color:AppColors.accentColor ),
+      ),
+    ),
+  )
+            ),
+          ),
+        
         ],
       ),
     );
   }
 
-  Widget _item(BuildContext context, String text) {
+  Widget _item(BuildContext context, String text, double size, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       width: MediaQuery.of(context).size.width / 1.1,
-      child: textStyle(
-        context: context,
-        text: text,
-        fontsize: 14,
+      child: Center(
+
+        child: Text(
+         text,
+        style: FontManager().getTextStyle(context,
+             fontSize: size, color:color ),
+      )
+        
       ),
     );
   }

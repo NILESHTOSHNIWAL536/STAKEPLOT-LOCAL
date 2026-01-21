@@ -1352,6 +1352,9 @@
 // }
 // }
 
+
+ 
+ 
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -1371,6 +1374,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
+import 'package:flutter_application_code_stakeplot/Constants/AnnualBalance.dart';
 
 import '../backed_connections/bankServices/nextFetch.dart';
 import '../components/shared_utils.dart';
@@ -1398,17 +1402,42 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   List lock = HomepageStringsDart().lockPatterns;
 
 
+late PageController _pageController;
+int activeIndex = 0;
+bool showFlipSlider = false;
+int flipToIndex = 0;
+
+@override
+void initState() {
+  super.initState();
+
+  activeIndex = scrollBankPage.value;
+
+  _pageController = PageController(
+    initialPage: activeIndex,
+  );
+}
 
   @override
   Widget build(BuildContext context) {
    
     // Check for zero to avoid division by zero
     return Container(
+      
         // Wrap content with SingleChildScrollView
-        child: Obx(() => loadBanks.value ? BankSlider() :loadBalance.value?  avatarSlider(): avatarSlider()));
+        // child: Obx(() => loadBanks.value ? BankSlider() :loadBalance.value?  avatarSlider(): avatarSlider())
+        child: Obx(() {
+  if (loadBanks.value) return BankSlider();
+
+  return showFlipSlider
+      ? avatarSlider2() // 🔥 flip UI
+      : avatarSlider(); // 👈 normal swipe UI
+}),
+
+        );
   }
 
- Widget avatarSlider() {
+Widget avatarSlider() {
   if (bankAccountLinkedList.isEmpty) return connectBankAccount(context);
 
   return Column(
@@ -1437,7 +1466,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
           itemBuilder: (context, index) {
             final account = bankAccountLinkedList[index];
             return Padding(
-              padding: const EdgeInsets.fromLTRB(0, 2, 2, 2),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: getListViewBankInfo(account),
             );
           },
@@ -1471,208 +1500,325 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
 }
 
  
+
+ Widget avatarSlider2() {
+  if (bankAccountLinkedList.isEmpty) return connectBankAccount(context);
+Future.microtask(() {
+  _pageController.jumpToPage(flipToIndex);
+
+  setState(() {
+    activeIndex = flipToIndex;
+    scrollBankPage.value = flipToIndex;
+  });
+
+  final account = bankAccountLinkedList[flipToIndex];
+  accountId.value = account.accountId;
+  LastFetchDate.value = account.lastFetch;
+  nextFecthDate.value = account.nextFetch;
+  fetchCount.value = account.fetchCount.toString();
+  BankName.value = account.bankName;
+  BankUrl.value = account.bankLogo;
+
+  calledFunctionToFetchData(context);
+
+  // 🔁 return to normal slider after flip
+  Future.delayed(const Duration(milliseconds: 750), () {
+    if (mounted) {
+      setState(() {
+        showFlipSlider = false;
+      });
+    }
+  });
+});
+
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+        // color: Colors.red,
+        height: MediaQuery.sizeOf(context).height/4,
+        child:
+       SizedBox(
+  height: MediaQuery.sizeOf(context).height / 4,
+  child: Stack(
+    alignment: Alignment.center,
+    children: [
+      /// 🔥 MAIN CARD (VISIBLE)
+      AnimatedSwitcher(
+        duration: const Duration(milliseconds: 650),
+        transitionBuilder: (child, animation) {
+         final rotate = Tween(begin: pi, end: 0.0).animate(
+  CurvedAnimation(
+    parent: animation,
+    curve: Curves.easeInOutCubic, // 🔥 much smoother
+  ),
+);
+
+
+          return AnimatedBuilder(
+            animation: rotate,
+            child: child,
+            builder: (context, child) {
+              return Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.001)
+                  ..rotateX(-rotate.value),
+                child: child,
+              );
+            },
+          );
+        },
+        child: KeyedSubtree(
+          key: ValueKey(activeIndex),
+          child: getListViewBankInfo(
+            bankAccountLinkedList[activeIndex],
+          ),
+        ),
+      ),
+
+      /// 🧠 HIDDEN PageView (LOGIC ONLY)
+      IgnorePointer(
+        ignoring: true,
+        child: Opacity(
+          opacity: 0,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: bankAccountLinkedList.length,
+            onPageChanged: (index) {
+              setState(() {
+                activeIndex = index;
+                scrollBankPage.value = index;
+              });
+            },
+            itemBuilder: (_, __) => const SizedBox(),
+          ),
+        ),
+      ),
+    ],
+  ),
+)
+
+      ),
+  
+      SizedBox(height: 6),
+  
+      Obx(() => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          bankAccountLinkedList.length,
+          (index) => AnimatedContainer(
+            duration: Duration(milliseconds: 250),
+            margin: EdgeInsets.symmetric(horizontal: 4),
+            height: 8,
+            width: scrollBankPage.value == index ? 8 : 8,  // active dot grows
+            decoration: BoxDecoration(
+              color: scrollBankPage.value == index
+                  ? AppColors.primaryColor
+                  : AppColors.accentColor.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+      )),
+  
+      
+    ],
+  );
+}
+
+ 
 Widget getListViewBankInfo(BankAccountModel data) {
   int randomIndex = Random().nextInt(lock.length);
   if (randomIndex == lock.length) randomIndex = 0;
 
-  // Card paddings / radii (tweak if needed)
-  const double cardRadius = 16.0;
-  final double horizontalPadding = Colorcodes.paddingHorizontal;
-  final double verticalPadding = Colorcodes.paddingHorizontal / 6;
-
   return ClipRRect(
-    borderRadius: BorderRadius.circular(cardRadius),
-    child: Stack(
-      children: [
-        
-
-        SizedBox(
-  height: MediaQuery.sizeOf(context).height/3.8, // 🔑 MATCH FIGMA CARD HEIGHT
-  child: ClipRRect(
     borderRadius: BorderRadius.circular(16),
-    child: Stack(
-      children: [
-
-        /// 🔵 BLUE BACKGROUND (Z image)
-        Positioned.fill(
-          child: AvatarProfileImageZero(
-            url: HomePageIcons.bankContainerBg,
-            width: 1,
-            height: 1,
+    child: SizedBox(
+      height: MediaQuery.sizeOf(context).height / 3.6,
+      child: Stack(
+        children: [
+          /// 🔵 BACKGROUND
+          Positioned.fill(
+            child: AvatarProfileImageZero(
+              url: HomePageIcons.bankContainerBg,
+              width: 1,
+              height: 1,
+            ),
           ),
-        ),
 
-        /// 🔤 CONTENT LAYER
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 6),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max, // 🔑 important
-            children: [
-/// ================= OTHER BANKS ICON STRIP =================
-if (bankAccountLinkedList.length > 1)
-  Positioned(
-    top: 12,      // adjust slightly if needed
-    right: 10,
-    child: Align(
-      alignment: Alignment.topRight,
-      child: Container(
-        
-        height: 35,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.03),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(3),
-            topRight: Radius.circular(16),
-            bottomRight: Radius.circular(3),
-            bottomLeft: Radius.circular(16),
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: bankAccountLinkedList
-              .asMap()
-              .entries
-              .where((entry) => entry.value.accountId != data.accountId)
-              .map((entry) {
-            final index = entry.key;
-            final account = entry.value as BankAccountModel;
-      
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: GestureDetector(
-                onTap: () {
-                  accountId.value = account.accountId;
-                  LastFetchDate.value = account.lastFetch;
-                  nextFecthDate.value = account.nextFetch;
-                  fetchCount.value = account.fetchCount.toString();
-                  BankName.value = account.bankName;
-                  BankUrl.value = account.bankLogo;
-                  scrollBankPage.value = index;
-                  calledFunctionToFetchData(context);
-                },
-                child: Image.network(
-                  account.bankLogo,
-                  height: 22,
-                  width: 22,
-                  fit: BoxFit.contain,
-                  errorBuilder: getErrorBankLogo(),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ),
-    ),
-  ),
+          /// 🔤 MAIN CONTENT
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 28), // space for top-right logos
 
-              /// Next fetch row
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                /// NEXT FETCH
+                Nextfetch(),
+
+                const SizedBox(height: 8),
+
+                /// ACCOUNT NUMBER
+                Row(
                   children: [
-                    Nextfetch(),
-                    
-                    const SizedBox(height: 6),
-                    
-                    /// Account number
-                    Row(
-                      children: [
-                        Image.network( data.bankLogo, width: 33, height: 33, fit: BoxFit.fitWidth, errorBuilder: getErrorBankLogo(), ),
-                        const SizedBox(width: 8),
-                        Text(
-                          data.maskedAccNumber,
-                          style: FontManager().getTextStyle(
-                            context,
-                            fontSize: 16,
-                            lWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                    Image.network(
+                      data.bankLogo,
+                      width: 33,
+                      height: 33,
+                      fit: BoxFit.fitWidth,
+                      errorBuilder: getErrorBankLogo(),
                     ),
-                    
-                    const SizedBox(height: 10),
-                    
+                    const SizedBox(width: 8),
                     Text(
-                      "Available balance",
+                      data.maskedAccNumber,
                       style: FontManager().getTextStyle(
                         context,
-                        fontSize: 11,
-                        lWeight: FontWeight.w400,
-                        color: Colors.white70,
+                        fontSize: 16,
+                        lWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
-                    ),
-                    
-                    const SizedBox(height: 8),
-                    
-                                 Obx(() { 
-                    final String pin = userController.cupertinoPin.value;
-                     final bool hide = hideBackAccountPassword.value; 
-                     final double balance = data.currentBalance; 
-                     final bool showBalance = (pin == "0" || pin == "00" || hide); 
-                     return Padding(
-                       padding: const EdgeInsets.only(bottom:10), 
-                       child: Text( '\u{20B9} ${showBalance ? formatMoneyIndian(balance.toString(), lock[randomIndex]) : lock[randomIndex]}',
-                        style: FontManager().getTextStyle( context,
-                         lWeight: FontWeight.bold,
-                          fontSize:showBalance? 20:18, 
-                          color: AppColors.backgroundColor,
-                           ),
-                            ),
-                             ); 
-                             }
-                             ),
-                    
-                    // ✅ SAFE now (inside fixed height)
-                    
-                    /// Bottom left quick check
-                    Row(
-                      children: [
-                        Image.network(
-                          data.bankLogo,
-                          width: 18,
-                          height: 18,
-                          errorBuilder: getErrorBankLogo(),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          "Quick check",
-                          style: FontManager()
-                              .getTextStyle(
-                                context,
-                                fontSize: 12,
-                                lWeight: FontWeight.w400,
-                                color: Colors.white,
-                              )
-                              .copyWith(
-                                decoration: TextDecoration.underline,
-                              ),
-                        ),
-                      ],
                     ),
                   ],
                 ),
-              ),
-            
-            ],
+
+                const SizedBox(height: 10),
+
+                /// LABEL
+                Text(
+                  "Available balance",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 11,
+                    lWeight: FontWeight.w400,
+                    color: Colors.white70,
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                /// BALANCE
+                Obx(() {
+                  final String pin = userController.cupertinoPin.value;
+                  final bool hide = hideBackAccountPassword.value;
+                  final double balance = data.currentBalance;
+                  final bool showBalance =
+                      (pin == "0" || pin == "00" || hide);
+
+                  return Text(
+                    '\u{20B9} ${showBalance ? formatMoneyIndian(balance.toString(), lock[randomIndex]) : lock[randomIndex]}',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: showBalance ? 20 : 18,
+                      color: AppColors.backgroundColor,
+                    ),
+                  );
+                }),
+
+                const SizedBox(height: 12),
+
+                /// QUICK CHECK
+               InkWell(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const AnnualBalance(),
+      ),
+    );
+  },
+              
+             child:   Row(
+                  children: [
+                    Image.network(
+                      data.bankLogo,
+                      width: 18,
+                      height: 18,
+                      errorBuilder: getErrorBankLogo(),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      "Quick check",
+                      style: FontManager()
+                          .getTextStyle(
+                            context,
+                            fontSize: 12,
+                            lWeight: FontWeight.w400,
+                            color: AppColors.backgroundColor,
+                          )
+                          .copyWith(
+                            decoration: TextDecoration.underline,
+                            decorationThickness: 1.2,
+                            decorationColor:
+                                AppColors.backgroundColor,
+                          ),
+                    ),
+                  ],
+                ),
+               ),]
+            ),
           ),
-        ),
 
-        /// RIGHT SIDE SET PIN (FLOATING)
-        Positioned(
-          right: 16,
-          bottom: 16,
-          child: setPinForAccountHide(context),
-        ),
-      ],
-    ),
-  ),
-)
+          /// 🔁 TOP-RIGHT OTHER BANK LOGOS (CORRECT POSITION)
+          if (bankAccountLinkedList.length > 1)
+            Positioned(
+              top: 8,
+              right: 0,
+              child: Container(
+                height: 35,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.05),
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(16),
+                    bottomRight: Radius.circular(6),
+                    topLeft: Radius.circular(6),
+                    bottomLeft: Radius.circular(6),
+                   ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: bankAccountLinkedList
+                      .asMap()
+                      .entries
+                      .where((e) =>
+                          e.value.accountId != data.accountId)
+                      .map((entry) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            flipToIndex = entry.key;
+                            showFlipSlider = true;
+                          });
+                        },
+                        child: Image.network(
+                          entry.value.bankLogo,
+                          height: 22,
+                          width: 22,
+                          fit: BoxFit.contain,
+                          errorBuilder: getErrorBankLogo(),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
 
-      ],
+          /// 🔐 SET PIN BUTTON
+          Positioned(
+            right: 16,
+            bottom: 16,
+            child: setPinForAccountHide(context),
+          ),
+        ],
+      ),
     ),
   );
 }

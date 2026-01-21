@@ -9,7 +9,7 @@ class AppColors {
   static const Color accentColor = Color(0xFF1E1E1E);
   static const Color accentColorOpacity = Color(0x1A1E1E1E);
   static const Color mt = Color(0xFFF4F4F4); // for app bg
-  static const Color button = Color(0xFFE6EAEB); // for buttons bg and using for
+  static const Color button = Color(0xFFE6EAEB); // for buttons bg and using fo
   static const Color bg1 = Color(0xFF000000);
   static const Color bg2 = Color(0xFF171717);
   static const Color bg3 = Color(0xFF48484A);
@@ -77,5 +77,5 @@ class AppColors {
   static const Color financeChartBorder = Color(0xFFE6E9EB); 
   static const Color fontcolor = Color(0xFF061D3D);
    static const Color boxColor = Color(0xFF979496);
-  
+  static const Color newgrey = Color(0xFFE1E1E1);
 }

@@ -8,17 +8,26 @@ void snackBarCalled(BuildContext context, String text,
       Overlay.of(context),
       Container(
         height: 40,
+        decoration: BoxDecoration(
+    color: const Color(0xFFDBD7D7),
+    borderRadius: BorderRadius.circular(5),
+    border: Border.all(
+      color: AppColors.primaryColor,
+      width: 0.5,
+    ),
+  ),
         child: CustomSnackBar.success(
           message: text,
-          backgroundColor: AppColors.finSpaceColor,
+          backgroundColor: AppColors.primaryColorOpacity,
           textStyle: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,
             fontSize: 12,
-            color: AppColors.backgroundColor,
+            color: AppColors.primaryColor,
           ),
         ),
       ),
+
       displayDuration: const Duration(seconds: 2),
       curve: Curves.easeOutBack,
       reverseCurve: Curves.easeInBack,

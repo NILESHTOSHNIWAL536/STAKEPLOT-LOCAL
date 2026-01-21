@@ -75,67 +75,6 @@ void downvote(context, String str, String objectId) async {
   }
 }
 
-void createPoll(context, String question, List options, roomDetails, members,
-    String type) async {
-  final response = await postDataApiCall(pollRoute.pollAdd, {
-    'question': question,
-    'options': options,
-    'pollType': type, //roomDetails.length!=0?'room':'casual',
-    'roomDetails': roomDetails,
-    'myVote': 'none',
-    'members': members
-  });
-
-  if (getFlagOfResponse(response)) {
-    final body = json.decode(response.body);
-    var snackBar = SnackBar(
-      duration: Durations.long1,
-      content: Text(
-        'Sending polls to friends...!!',
-        style: FontManager().getTextStyle(
-          context,
-          color: AppColors.backgroundColor,
-          fontSize: 15,
-        ),
-      ),
-      backgroundColor: AppColors.accentColor,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-    var obj = jsonDecode(response.body);
-
-    questionRoom.add(obj['data']);
-
-    Navigator.pop(context);
-    Navigator.pop(context);
-
-    //   Navigator.pushReplacement(
-    //   context,
-    //   PageTransition(
-    //     type: PageTransitionType.topToBottom,
-    //      duration: Durations.long1,
-    //     child: Poll(),
-    //     isIos: true,
-    //   ),
-    // );
-  } else {
-    var snackBar = SnackBar(
-      duration: Durations.medium4,
-      content: Text(
-        'An error occurred while uploading!',
-        style: FontManager().getTextStyle(
-          context,
-          color: AppColors.backgroundColor,
-          fontSize: 15,
-        ),
-      ),
-      backgroundColor: Colors.red,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-}
 
 void createPollOfCommunityPost(context, String question, List options,
     roomDetails, members, String type) async {

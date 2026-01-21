@@ -1,5 +1,4 @@
-import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
-import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
+
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
@@ -7,14 +6,11 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/integration.dart';
-import 'package:flutter_application_code_stakeplot/loginservices/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
@@ -36,6 +32,14 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     getData();
     getFetch.value = false;
   }
+  List<FinvuFIPInfo> getPopularBanksList() {
+  if (fipDisOrginal.isEmpty) return [];
+
+  // ✅ Take first 4 banks from backend list
+  return fipDisOrginal.take(4).toList();
+}
+
+
 
   @override
   void dispose() {
@@ -58,7 +62,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: AppColors.newbg,
       bottomNavigationBar: SafeArea(child: BottomBar()),
       extendBody: true,
       appBar: getAppBar(context),
@@ -95,6 +99,124 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   }
 
 
+Widget getPopularBanks() {
+  final popularBanks = getPopularBanksList();
+
+  if (popularBanks.isEmpty) return const SizedBox.shrink();
+
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    padding: const EdgeInsets.symmetric(vertical: 8),
+   
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        /// HEADER
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+          child: Text(
+            "Popular Banks",
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w600,
+              fontSize: 18,
+              color: AppColors.accentColor,
+            ),
+          ),
+        ),
+
+       
+
+        /// BANK LIST
+       GridView.builder(
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  itemCount: popularBanks.length,
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 4, // 4 banks per row
+    mainAxisSpacing: 8,
+    crossAxisSpacing: 8,
+    childAspectRatio: 0.8,
+  ),
+  itemBuilder: (context, index) {
+    return bankGridItem(popularBanks[index]);
+  },
+)
+
+      ],
+    ),
+  );
+}
+
+Widget bankGridItem(FinvuFIPInfo bankData) {
+  return Obx(() {
+    final bool isSelected =
+        isSeletedBankAccout.contains(bankData.fipId);
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () {
+        // toggle select / deselect
+        addBackToList(!isSelected, bankData);
+      },
+      child: Container(
+        
+
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.primaryColor.withOpacity(0.08)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected
+                ? AppColors.primaryColor
+                : AppColors.border,
+            width: isSelected ? 1.5 : 1,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            /// BANK LOGO
+            SizedBox(
+              width: 38,
+              height: 38,
+              child: Image.network(
+                (bankData.productIconUri != null &&
+                        bankData.productIconUri.toString().isNotEmpty)
+                    ? bankData.productIconUri.toString()
+                    : bankImage,
+                fit: BoxFit.contain,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            /// BANK NAME
+            Text(
+              bankData.productName.toString(),
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w500,
+                fontSize: 12,
+                color: AppColors.bg1,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  });
+}
+
   Widget bankAccountAndSearchBar(){
     return Column(
         children: [
@@ -111,7 +233,28 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                     ),
                   ),
                 ),
+                 Padding(
+                  padding:const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Row(
+                      children: [
+                        Icon(Icons.info_outline),
+                        SizedBox(width: 10,),
+                        Text(
+                          FinvuStrings().unableToSupport,
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: AppColors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
                 InputDate(FinvuStrings().searchForBanks, TextInputType.name, search),
+                 Obx(() => getBanks.value ? getPopularBanks() : getPopularBanks()),
                 Obx(() => getBanks.value
                     ? getListOfFinvuBanks()
                     : getListOfFinvuBanks()),
@@ -123,7 +266,13 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
    
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.59,
+      height: MediaQuery.of(context).size.height / 2.5,
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+      decoration: BoxDecoration(
+        // color: Colors.red,
+        border: Border.all(color: AppColors.border)
+      ),
       child: ListView.builder(
         itemCount: fipDis.length,
         itemBuilder: (context, index) {
@@ -151,59 +300,134 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     addCheck.value = !addCheck.value; // Trigger UI update
   }
 
+Widget getBackUi(FinvuFIPInfo bankData) {
+  bankImageAndid[bankData.fipId] =
+      bankData.productIconUri.toString();
 
-  
-  //modified code for checkbox
-  Widget getBackUi(FinvuFIPInfo bankData) {
-     bankImageAndid[bankData.fipId]=bankData.productIconUri.toString();
-     
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 3, horizontal: 7),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-         
-          InkWell(
-            onTap: (){
-               addBackToList(!isSeletedBankAccout.contains(bankData.fipId), bankData);
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Container(
-                width: 50,
-                height: 50,
-                child: Image.network(
-                 (bankData.productIconUri.toString().isNotEmpty && bankData.productIconUri !=null )?   bankData.productIconUri.toString():bankImage,
-                  fit: BoxFit.contain,
+  return Obx(() {
+    final bool isSelected =
+        isSeletedBankAccout.contains(bankData.fipId);
+
+    return InkWell(
+      onTap: () {
+        // ✅ Toggle on full row tap
+        addBackToList(!isSelected, bankData);
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        decoration: BoxDecoration(
+          color: 
+               Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+
+            /// BANK ICON
+            SizedBox(
+              width: 50,
+              height: 50,
+              child: Image.network(
+                (bankData.productIconUri != null &&
+                        bankData.productIconUri.toString().isNotEmpty)
+                    ? bankData.productIconUri.toString()
+                    : bankImage,
+                fit: BoxFit.contain,
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
+            /// BANK NAME
+            Expanded(
+              child: Text(
+                bankData.productName.toString(),
+                overflow: TextOverflow.ellipsis,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: 15,
+                  color: AppColors.bg1,
                 ),
               ),
             ),
-          ),
-          
-          Expanded(
-            child:   InkWell(
-            onTap: (){
-               addBackToList(!isSeletedBankAccout.contains(bankData.fipId), bankData);
-            },
-              child: Text(
-                bankData.productName.toString(),
-                style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 15,
-                          color: AppColors.bg1,
-                          overflow: TextOverflow.ellipsis)
-              ),
-            ),
-          ),
-//getCheck(bankData),
-           Obx(() => addCheck.value?getCheck(bankData):getCheck(bankData)),
 
-        ],
+            /// ✅ TICK (tap again to deselect)
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: isSelected
+                  ? Icon(
+                      Icons.check,
+                      key: ValueKey(bankData.fipId),
+                      color: AppColors.primaryColor,
+                      size: 22,
+                    )
+                  : const SizedBox(
+                      key: ValueKey('empty'),
+                      width: 22,
+                    ),
+            ),
+          ],
+        ),
       ),
     );
-  }
+  });
+}
+
+  
+//   //modified code for checkbox
+//   Widget getBackUi(FinvuFIPInfo bankData) {
+//      bankImageAndid[bankData.fipId]=bankData.productIconUri.toString();
+     
+//     return Container(
+//       width: MediaQuery.of(context).size.width,
+//       padding: EdgeInsets.symmetric(vertical: 3, horizontal: 7),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.start,
+//         crossAxisAlignment: CrossAxisAlignment.center,
+//         children: [
+         
+//           InkWell(
+//             onTap: (){
+//                addBackToList(!isSeletedBankAccout.contains(bankData.fipId), bankData);
+//             },
+//             child: Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 10),
+//               child: Container(
+//                 width: 50,
+//                 height: 50,
+//                 child: Image.network(
+//                  (bankData.productIconUri.toString().isNotEmpty && bankData.productIconUri !=null )?   bankData.productIconUri.toString():bankImage,
+//                   fit: BoxFit.contain,
+//                 ),
+//               ),
+//             ),
+//           ),
+          
+//           Expanded(
+//             child:   InkWell(
+//             onTap: (){
+//                addBackToList(!isSeletedBankAccout.contains(bankData.fipId), bankData);
+//             },
+//               child: Text(
+//                 bankData.productName.toString(),
+//                 style: FontManager().getTextStyle(context,
+//                           lWeight: FontWeight.w400,
+//                           fontSize: 15,
+//                           color: AppColors.bg1,
+//                           overflow: TextOverflow.ellipsis)
+//               ),
+//             ),
+//           ),
+// //getCheck(bankData),
+//            Obx(() => addCheck.value?getCheck(bankData):getCheck(bankData)),
+
+//         ],
+//       ),
+//     );
+//   }
 
 
   Widget getCheck(bankData){
@@ -270,16 +494,16 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                           fontSize: 14,
                           color: AppColors.bg3),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: AppColors.border
                       // color: Color.fromRGBO(249, 246, 238, 1)
                       )
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: AppColors.border)
                 ),
-                fillColor: AppColors.button,
+                fillColor: AppColors.newbg,
                 border: InputBorder.none,
               ),
             ),

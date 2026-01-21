@@ -33,6 +33,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
         else if (value == 1) {
           BuildContext c=context;
           showModalBottomSheet(
+            
             context: context,
             builder: (contextBuild) {
               return showModel(c, id, flag2,index,isTribeOne);
@@ -72,7 +73,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
                 ),
                 PopupMenuItem(
                   value: 1,
-                  child: getTextMenuItem(context: context, text: "Report"),
+                  child: getTextMenuItemForReport(context: context, text: "Report"),
                 ),
                 
               ];
@@ -88,6 +89,28 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
     text,
     Color color = AppColors.bg1,
   }) {
-    return textStyle(
-        context: context, text: text, c: color, fontWeight: FontWeight.bold);
+     return Row(
+      children: [
+        text=="Hide"?
+        Icon(Icons.visibility_off, color: AppColors.accentColor,size: 20,): 
+        Icon(text=="Delete" ?Icons.delete: Icons.warning_rounded, color: AppColors.redColor,size: 20,),
+        SizedBox(width: 12,),
+        textStyle(
+            context: context, text: text, c: text== "Hide"?AppColors.accentColor: AppColors.redColor, fontWeight: FontWeight.bold, fontsize: 14),
+      ],
+    );
+}
+  Widget getTextMenuItemForReport({
+    required BuildContext context,
+    text,
+    Color color = AppColors.bg1,
+  }) {
+    return Row(
+      children: [
+        Icon(Icons.warning_rounded, color: AppColors.redColor,size: 20,),
+        SizedBox(width: 12,),
+        textStyle(
+            context: context, text: text, c: AppColors.redColor, fontWeight: FontWeight.bold, fontsize: 14),
+      ],
+    );
 }

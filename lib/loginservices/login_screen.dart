@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,11 +13,14 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/onboarding_user.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import '../Constants/app_styles.dart';
 import '../repository/auth_service/login_apis.dart';
 import 'googl_button.dart';
 
@@ -45,33 +49,26 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF6568A7),
-                Color(0xFF272841),
-              ],
-            ),
+           color: AppColors.newbg
           ),
           child: Container(
             height: MediaQuery.of(context).size.height,
-            child: Stack(
+            child: Column(
               children: [
                 // Main Content
-                Positioned(
-                    bottom: 20, left: 0, child: buildBottomWaves(context)),
+                
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 50),
                       // Welcome Text
                       _buildWelcomeText(),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 360),
 
                       // Email Field
                       _buildEmailField(),
@@ -90,41 +87,71 @@ class _LoginScreenState extends State<LoginScreen> {
                       _buildDivider(),
                       const SizedBox(height: 20),
                       // Google Sign In
-                      containerIconSiginWith(
-                          FontAwesomeIcons.google, Colorcodes.white, context),
-                      // buildGoogleSignIn(),
-                      const SizedBox(height: 20),
-                      Platform.isAndroid
-                          ? Text('')
-                          : Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: SignInWithAppleButton(
-                                onPressed: () async {
-                                  if (appleSignInBool.value)
-                                    return; // Prevent multiple clicks
-                                  appleSignInBool.value =
-                                      true; // Set loading state
-                                  try {
-                                    final userdataApple = await AuthService()
-                                        .signInWithApple(context);
-                            
-                                    if (userdataApple != null &&
-                                        userdataApple['data']['accessToken'] !=
-                                            null) {
-                                      LoginService.loginCalledData(
-                                          userdataApple, context,
-                                          flag: true);
-                                    } else if (userdataApple != null) {
-                                      Navigator.push(context,MaterialPageRoute(builder: (context) =>UserDetailsPage2(data: userdataApple)),
-                                      );
-                                    } else {}
-                                  } finally {
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          containerIconSiginWith(
+                              FontAwesomeIcons.google, Colorcodes.white, context),
+                          // buildGoogleSignIn(),
+                          const SizedBox(width: 20),
+                          !Platform.isAndroid
+                              ? Text('')
+                              : Container(
+                                width: MediaQuery.sizeOf(context).width / 3,
+                                height: MediaQuery.sizeOf(context).height/16,
+                                      // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+  border: Border.all(
+    color: const Color(0xFFE5E7EB),
+    width: 1,
+  ),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black.withOpacity(0.05),
+      offset: const Offset(0, 1),
+      blurRadius: 2,
+      spreadRadius: 0,
+    ),
+  ],
+                                      ),
+                                child: SignInWithAppleButton(
+                                  text: '',
+                                  
+                                
+                                  onPressed: () async {
+
+                                    if(Platform.isAndroid){
+                                        Navigator.push(context,MaterialPageRoute(builder: (context) =>UserOnboarding()));
+
+                                    }
+                                    if (appleSignInBool.value)
+                                      return; // Prevent multiple clicks
                                     appleSignInBool.value =
-                                        false; // Reset loading state
-                                  }
-                                },
+                                        true; // Set loading state
+                                    try {
+                                      final userdataApple = await AuthService()
+                                          .signInWithApple(context);
+                                                            
+                                      if (userdataApple != null &&
+                                          userdataApple['data']['accessToken'] !=
+                                              null) {
+                                        LoginService.loginCalledData(
+                                            userdataApple, context,
+                                            flag: true);
+                                      } else if (userdataApple != null) {
+                                        Navigator.push(context,MaterialPageRoute(builder: (context) =>UserDetailsPage(data: userdataApple, isAppleUser: true,)),
+                                        );
+                                      } else {}
+                                    } finally {
+                                      appleSignInBool.value =
+                                          false; // Reset loading state
+                                    }
+                                  },
+                                ),
                               ),
-                            ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -140,53 +167,40 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildWelcomeText() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        textStyle(
-            context: context,
-            text: 'Welcome',
-            fontWeight: FontWeight.bold,
-            fontsize: 32,
-            // c: Theme.of(context).appBarTheme.iconTheme?.color ??  Colorcodes.white
-            // c: Theme.of(context).textTheme.bodyMedium?.color ??  Colorcodes.white
-            c: Colorcodes.white
-          ),
+        AvatarProfileImageZero(url: Sign.appSignInimage, width: 14, height: 14),
         const SizedBox(height: 8),
         textStyle(
             context: context,
-            text: 'Glad to see you',
+            text: 'Sign in to continue to your account',
             fontWeight: FontWeight.w300,
             fontsize: 18,
-            c: Colorcodes.white),
+            c: AppColors.accentColor),
       ],
     );
   }
 
   Widget _buildEmailField() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(255, 255, 255, 0.23),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.whiteOpacity03, width: 1),
-      ),
-      child: TextField(
-        controller: emailController,
-        onChanged: (c) {
-          acceptReset.value = false;
-        },
-        cursorColor: AppColors.backgroundColor,
-        style: const TextStyle(color: AppColors.backgroundColor),
-        decoration: InputDecoration(
-          fillColor: Color.fromRGBO(255, 255, 255, 0.23),
-          hintText: 'Email Address',
-          hintStyle: FontManager().getTextStyle(context,
-              lWeight: FontWeight.normal,
-              fontSize: 14,
-              color: AppColors.backgroundColor),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 16,
-          ),
+    return TextField(
+      controller: emailController,
+      onChanged: (c) {
+        acceptReset.value = false;
+      },
+      cursorColor: AppColors.backgroundColor,
+      style: const TextStyle(color: AppColors.accentColor),
+      decoration: InputDecoration(
+        // fillColor: Color.fromRGBO(255, 255, 255, 0.23),
+         border: UnderlineInputBorder(),
+        hintText: 'Email Address',
+        hintStyle: FontManager().getTextStyle(context,
+            lWeight: FontWeight.normal,
+            fontSize: 14,
+            color: AppColors.bg3),
+       
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 0,
         ),
       ),
     );
@@ -196,6 +210,7 @@ Widget _buildSignInButton() {
     return GestureDetector(
       onTap: () async {
         // IMPORTANT: Remove keyboard focus so first tap works
+        
         FocusScope.of(context).unfocus();
 
         if (acceptReset.value) return;
@@ -219,19 +234,19 @@ Widget _buildSignInButton() {
         width: double.infinity,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
+          color: AppColors.primaryColor,
           borderRadius: BorderRadius.circular(12),
         ),
 
         child: acceptReset.value
             ? Spinner(size: 30)
             : Text(
-                "Sign In",
+                "Send OTP",
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
                   fontSize: 18,
-                  color: AppColors.finSpaceColor,
+                  color: AppColors.backgroundColor,
                 ),
               ),
       ),
@@ -252,7 +267,7 @@ Widget _buildSignInButton() {
           child: Text(
             'Or login with',
             style: TextStyle(
-              color: AppColors.whiteOpacity07,
+              color: AppColors.grey,
               fontSize: 14,
             ),
           ),

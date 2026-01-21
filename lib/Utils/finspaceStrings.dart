@@ -34,9 +34,10 @@ class FinspaceStrings
     'Alternative Investments': ['Art', 'Collectibles', 'P2P Lending'],
     'Budgeting': [],
     'Retirement & Pension Planning': [],
+    'Salary Talks': [],
     'Side Hustles & Passive Income': [],
     'Tech Trends in Finance': [],
-    'Salary Talks': [],
+    
     'College & Education Funding': [],
     'Spent Stories': [],
     'Scholarships and Stipends': [],

@@ -42,13 +42,13 @@ class CustomStyledContainer extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white, // background: #FFF; (Fixed to white based on CSS)
         borderRadius: BorderRadius.circular(radius), // radius: passed variable
-        boxShadow: [
-          BoxShadow(
-            color: shadowColor,
-            blurRadius: blurRadius,
-            offset: const Offset(0, 0), // No x, y offset
-          ),
-        ],
+         boxShadow: const [
+      BoxShadow(
+        color: Color.fromRGBO(0, 0, 0, 0.10),
+        offset: Offset(4, 4),
+        blurRadius: 16,
+      ),
+    ],
       ),
       child: child,
     );

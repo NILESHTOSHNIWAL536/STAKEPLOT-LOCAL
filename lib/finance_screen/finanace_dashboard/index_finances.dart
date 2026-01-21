@@ -306,6 +306,7 @@ import '../../backed_connections/apis_connect.dart';
 import '../../components/bottomNavigations.dart';
 import '../../Constants/colorcodes.dart';
 import '../../controllers/credit_card_controller.dart';
+import '../../image_service/avatarProfile.dart';
 import '../Budgets/Budget.dart';
 import 'searchfinance.dart';
 import 'slider_addding_finances.dart';
@@ -502,6 +503,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     return Scaffold(
       backgroundColor: AppColors.newbg,
       bottomNavigationBar: SafeArea(
+
         child: BottomNavigations(
           data: 1,
         ),
@@ -981,17 +983,18 @@ class _FinanceDashboardState extends State<FinanceDashboard>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: MediaQuery.sizeOf(context).height/34,),
                 Text(
-                  'Explore Tools',
+                  'Money Console',
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: 24,
-                    color: AppColors.primaryColor,
+                    color: AppColors.accentColor,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -1040,62 +1043,145 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     );
   }
 Widget _buildToolsGrid(BuildContext context) {
-  return  Row(
-   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-   children: [
-     Column(
-       mainAxisAlignment: MainAxisAlignment.start,
-       children: [
-         SvgPicture.asset(
-       PlotFinanceIcons.currencyConverter,
-       fit: BoxFit.contain,
-      
-     ),
-     SizedBox(height: 10,),
-         SvgPicture.asset(
-       PlotFinanceIcons.budgetPlanner,
-       fit: BoxFit.contain,
-     ),
-     SizedBox(height: 10,),
-         SvgPicture.asset(
-       PlotFinanceIcons.reserve,
-       fit: BoxFit.contain,
-     )
-        
-       ],
-     ),
-     Padding(
-       padding: const EdgeInsets.only(bottom: 60),
-       child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+  return  IntrinsicHeight(
+    child: Row(
+     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+     children: [
+       Column(
+         mainAxisAlignment: MainAxisAlignment.start,
+         crossAxisAlignment: CrossAxisAlignment.start,
          children: [
-           SvgPicture.asset(
-         PlotFinanceIcons.crediCardBg,
-         fit: BoxFit.contain,
-       ),
-       SizedBox(height: 10,),
-         _FinanceToolsCard(
-             height: 100,   
-             onTapC: () => Navigator.push(
-               context,
-               MaterialPageRoute(builder: (_) => const VegNonVegCalculator()),
-             ),
-             onTapD: () => Navigator.push(
-               context,
-               MaterialPageRoute(builder: (_) => AllCalculatorScreen()),
-             ),
-           ),
-           SizedBox(height: 10,), 
-           SvgPicture.asset(
-         PlotFinanceIcons.goalCreation,
-         fit: BoxFit.contain,
-       )
+            AvatarProfileImageZero(
+              url: PlotFinanceIcons.currencyConverter,
+              height: 7.6,
+              width: 4,
+              
+            ),
+       SizedBox(height: 20,),
+            AvatarProfileImageZero(
+              url: PlotFinanceIcons.budgetPlanner,
+              height: 6,
+              width: 4,
+              
+            ),
+       SizedBox(height: 20,),
+            AvatarProfileImageZero(
+              url: PlotFinanceIcons.reserve,
+              height: 6,
+              width: 4,
+              
+            )
           
          ],
        ),
-     ),
-  
-   ],
+       Padding(
+         padding: const EdgeInsets.only(top: 5),
+         child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+           children: [
+            Stack(
+              children: [
+                AvatarProfileImageZero(
+                  url: PlotFinanceIcons.crediCardBg,
+                  height: 5.7,
+                  width: 6,
+                  
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(255, 255, 255, 0.08),
+                              borderRadius: BorderRadius.circular(13)
+                            ),
+                            child: AvatarProfileImageZero(
+                              url: PlotFinanceIcons.creditcardcomponent,
+                              height: 50,
+                              width: 6,
+                              
+                            ),
+                          ),
+                          SizedBox(width: 6),
+                            Text("Credit Card", 
+                                style: FontManager().getTextStyle(context,
+                                color:  AppColors.backgroundColor ,
+                                fontSize: 12,
+                                lWeight: FontWeight.w400
+                      
+                                ),
+                                ),
+                                 SizedBox(width: 16,),
+                               Container(
+                                padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(255, 255, 255, 0.08),
+                              borderRadius: BorderRadius.circular(20)
+                            ),
+                                 child: Container(
+                                          padding: EdgeInsets.all(2),
+                                         decoration: BoxDecoration(
+                                           color: Colors.white,
+                                           shape: BoxShape.circle,
+                                         ),
+                                         child: const Icon(
+                                           Icons.add,
+                                           color: Color(0xFF6E6F8F),
+                                           size: 20,
+                                         ),
+                                       ),
+                               ),
+                        ],
+                      ),
+                        Text("Link & Manage", 
+                                style: FontManager().getTextStyle(context,
+                                color:  const Color.fromRGBO(255, 255, 255, 0.05) ,
+                                fontSize: 12,
+                                lWeight: FontWeight.w600
+                      
+                                ),
+                                ),
+                    ],
+                  ),
+                ),
+              
+              ],
+            ),
+                //     SvgPicture.asset(
+                //   PlotFinanceIcons.crediCardBg,
+                //   fit: BoxFit.contain,
+                // ),
+         SizedBox(height: 16,),
+           _FinanceToolsCard(
+               height: 100,   
+               onTapC: () => Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (_) => const VegNonVegCalculator()),
+               ),
+               onTapD: () => Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (_) => AllCalculatorScreen()),
+               ),
+             ),
+             SizedBox(height: 24,), 
+            AvatarProfileImageZero(
+                url: PlotFinanceIcons.goalCreation,
+                height: 6,
+                width: 4,
+                
+              )
+            
+           ],
+         ),
+       ),
+    
+     ],
+    ),
   );}
 
 }
@@ -1123,11 +1209,12 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
-      height: expanded ? widget.height + 40 : widget.height,
+      height: expanded ? widget.height + 60 : widget.height,
+      width: MediaQuery.sizeOf(context).width/2.4,
       curve: Curves.easeOutCubic,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
@@ -1142,22 +1229,36 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Finance Tools",
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppColors.accentColor,
-              ),
-            ),
-            const SizedBox(height: 10),
+            Text("Finance Fusion", 
+                          style: FontManager().getTextStyle(context,
+                          color:  const Color(0xFF061D3D) ,
+                          fontSize: 12,
+                          lWeight: FontWeight.w400
+
+                          ),
+                          ),
+            const SizedBox(height: 12),
 
             if (!expanded)
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SvgPicture.asset(PlotFinanceIcons.calculator, height: 24),
-                  SvgPicture.asset(PlotFinanceIcons.foodie, height: 24),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.border,
+                    borderRadius: BorderRadius.all(Radius.circular(8))
+                    ),
+                    child: SvgPicture.asset(PlotFinanceIcons.calculator, height: 24)),
+                  Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.border,
+                    borderRadius: BorderRadius.all(Radius.circular(8))
+                    ),
+                    child: SvgPicture.asset(PlotFinanceIcons.foodie, height: 24)),
+                 
+                 
                 ],
               ),
 
@@ -1166,23 +1267,49 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                 children: [
                   GestureDetector(
                     onTap: widget.onTapD,
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(PlotFinanceIcons.calculator, height: 30),
-                        const SizedBox(width: 10),
-                        Text("All Calculators")
-                      ],
+                    child: Container(
+                       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.border,
+                    borderRadius: BorderRadius.all(Radius.circular(8))
+                    ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(PlotFinanceIcons.calculator, height: 24),
+                          const SizedBox(width: 10),
+                          Text("Calculators", 
+                          style: FontManager().getTextStyle(context,
+                          color:  Color.fromRGBO(6, 29, 61, 0.5) ,
+                          fontSize: 12,
+                          lWeight: FontWeight.w500
+
+                          ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
                   GestureDetector(
                     onTap: widget.onTapC,
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(PlotFinanceIcons.foodie, height: 30),
-                        const SizedBox(width: 10),
-                        Text("Foodie Funds"),
-                      ],
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.border,
+                    borderRadius: BorderRadius.all(Radius.circular(8))
+                    ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(PlotFinanceIcons.foodie, height: 24),
+                          const SizedBox(width: 10),
+                          Text("Foodie Funds",
+                           style: FontManager().getTextStyle(context,
+                          color:  Color.fromRGBO(6, 29, 61, 0.5) ,
+                          lWeight: FontWeight.w500,
+                          fontSize: 12)
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

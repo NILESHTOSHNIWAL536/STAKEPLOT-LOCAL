@@ -13,32 +13,69 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double bp = Platform.isIOS ? 14 : 14;
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(bottom: bp ),
-      color: AppColors.button,
-      height: 30,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            FinvuStrings().poweredByRbi,
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w400,
-              fontSize: 9,
-              color: AppColors.bottomBarColor,
+
+    return ClipPath(
+      clipper: BottomCurveClipper(),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 60, // slightly taller for curve
+        padding: EdgeInsets.only(bottom: bp),
+        color: AppColors.button,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              FinvuStrings().poweredByRbi,
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w400,
+                fontSize: 9,
+                color: AppColors.bottomBarColor,
+              ),
             ),
-          ),
-          // const SizedBox(width: 10,),
-          Container(
+            const SizedBox(width: 6),
+            SizedBox(
               width: 70,
-              // height: 50,
-              child:
-                  AvatarProfileImage(url: Sign.finvu, width: 10, height: 10)),
-        ],
+              child: AvatarProfileImage(
+                url: Sign.finvu,
+                width: 10,
+                height: 10,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+}
+
+class BottomCurveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+
+    // start from bottom-left
+    path.lineTo(0, 20);
+
+    // curve
+    path.quadraticBezierTo(
+      size.width / 2,
+      -20, // height of curve (adjust this)
+      size.width,
+      20,
+    );
+
+    // right side down
+    path.lineTo(size.width, size.height);
+
+    // bottom line
+    path.lineTo(0, size.height);
+
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
