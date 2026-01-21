@@ -35,7 +35,7 @@ class AppColors {
   static Color creditColor = Colors.green.shade700;
   static Color grey = const Color(0xFF8A8A8A);
   static Color greyColor = Colors.grey;
-  static Color redColor =  AppColors.redColor;
+  static Color redColor =  const Color(0xFFEF4444);
   static Color transparentColor = Colors.transparent;
   static const Color unSelectedOption = Color(0xFFE4E4E4);
   static const Color greyCard = Color(0xFFC4C4C4);
@@ -80,7 +80,7 @@ class AppColors {
   static const Color filterBorders =    Color(0xFFD6D6D6); 
   static const Color creditCardComponentColor =    Color.fromRGBO(255, 255, 255, 0.08); 
   static const Color filterContainer =     Color.fromRGBO(75, 77, 115, 0.08); 
-  static const Color notificationCardColor =      Color(0xFFF9FAFB); 
-  static const Color notificationCardBorderColor =     const Color.fromRGBO(75, 77, 115, 0.5); 
+  static const Color notificationCardColor =    Color(0xFFF9FAFB); 
+  static const Color notificationCardBorderColor =  Color.fromRGBO(75, 77, 115, 0.5); 
   
 }

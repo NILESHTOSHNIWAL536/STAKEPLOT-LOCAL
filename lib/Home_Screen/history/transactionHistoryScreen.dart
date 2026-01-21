@@ -1185,26 +1185,41 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
       );
     });
   }
-
-  Widget _buildTabsOrCheckbox() {
+Widget _buildTabsOrCheckbox() {
     return Obx(() {
       if (isDateSummaryView.value) return const SizedBox(height: 10);
 
-      final showTabs = groupTransactionList.isNotEmpty || showCheckBox.value;
+      
 
-      return Padding(
-        padding: const EdgeInsets.only(left:AppSizes.p10, right:AppSizes.p2),
-        child: showTabs
-            ? Padding(
-                padding: const EdgeInsets.only(top: 3),
-                child: Obx(() => showCheckBox.value
-                    ? _buildCheckBoxButtons()
-                    : getTab(context)),
-              )
-            :  SizedBox(height: AppSizes.h10),
-      );
+      return  Padding(
+              padding: const EdgeInsets.only(top: 3),
+              child: Obx(() => showCheckBox.value
+                  ? _buildCheckBoxButtons()
+                  : SizedBox(height: AppSizes.h10,)),
+            );
+         
     });
   }
+
+  // Widget _buildTabsOrCheckbox() {
+  //   return Obx(() {
+  //     if (isDateSummaryView.value) return const SizedBox(height: 10);
+
+  //     final showTabs = groupTransactionList.isNotEmpty || showCheckBox.value;
+
+  //     return Padding(
+  //       padding: const EdgeInsets.only(left:AppSizes.p10, right:AppSizes.p2),
+  //       child: showTabs
+  //           ? Padding(
+  //               padding: const EdgeInsets.only(top: 3),
+  //               child: Obx(() => showCheckBox.value
+  //                   ? _buildCheckBoxButtons()
+  //                   : getTab(context)),
+  //             )
+  //           :  SizedBox(height: AppSizes.h10),
+  //     );
+  //   });
+  // }
 
   Widget _buildCheckBoxButtons() {
     return Padding(

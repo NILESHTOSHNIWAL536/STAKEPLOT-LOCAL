@@ -187,7 +187,7 @@ Future<void> fetchYearlyData(int year) async {
 
     var response = await getDataApiCall(endpoint);
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    if (getFlagOfResponse(response)) {
       try {
         var data = jsonDecode(response.body);
 
@@ -280,8 +280,12 @@ Future<void> fetchMonthlyData(int year, int month) async {
   String endDate =
       DateFormat('yyyy-MM-dd').format(DateTime(year, month + 1, 0));
   int daysInMonth = getDaysInMonthExpanded(year, month);
-  List<String> labels = List.generate(daysInMonth,
-      (index) => DateFormat('MMM d').format(DateTime(year, month, index + 1)));
+  // List<String> labels = List.generate(daysInMonth,
+  //     (index) => DateFormat('MMM d').format(DateTime(year, month, index + 1)));
+List<String> labels = List.generate(
+  daysInMonth,
+  (index) => (index + 1).toString().padLeft(2, '0'),
+);
 
   // Try loading from Hive first
   final cachedFinance = await FinanceLocalStorage.loadFinanceFromHive(

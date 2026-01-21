@@ -122,7 +122,9 @@ class _EditDetailsState extends State<EditDetails> {
                   },
                 ),
         ],
+      
       ),
+      
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSizes.p16),
         child: Column(

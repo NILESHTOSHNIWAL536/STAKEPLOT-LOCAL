@@ -313,7 +313,7 @@ class ExpandedChartView extends StatefulWidget {
     required this.selectedButton,
     required this.selectedYear,
     required this.selectedMonth,
-    this.useDummyData = true,
+    this.useDummyData = false,
   }) : super(key: key);
 
   @override
@@ -382,29 +382,43 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
       try {
         await fetchMonthlyData(year, month); // populates currentChartData & currentDays (your existing flow)
 
-        final List? gCred = currentChartData.value['credited'] as List?;
-        final List? gDeb = currentChartData.value['debited'] as List?;
-        final List<String> gLabels = currentDays.map((e) => e.toString()).toList();
+        final List<double> gCred =
+    List<double>.from(currentChartData.value['credited'] ?? []);
+final List<double> gDeb =
+    List<double>.from(currentChartData.value['debited'] ?? []);
 
-        final bool hasApiData = (gCred != null && gCred.isNotEmpty) || (gDeb != null && gDeb.isNotEmpty);
-        if (hasApiData && gLabels.isNotEmpty) {
-          final int daysInMonth = DateTime(year, month + 1, 0).day;
-          _days = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
-          _credited = List.generate(daysInMonth, (i) => (gCred != null && i < gCred.length) ? (gCred[i] ?? 0.0).toDouble() : 0.0);
-          _debited = List.generate(daysInMonth, (i) => (gDeb != null && i < gDeb.length) ? (gDeb[i] ?? 0.0).toDouble() : 0.0);
+final int daysInMonth = DateTime(year, month + 1, 0).day;
 
-          // if API provided custom labels for every day, use them
-          if (gLabels.length == daysInMonth) _days = gLabels;
+/// ✅ FORCE DAY-ONLY LABELS (01–31)
+_days = List.generate(
+  daysInMonth,
+  (i) => (i + 1).toString().padLeft(2, '0'),
+);
 
-          // Reset selection to "all selected" on month load
-          _selectedDayIndex = -1;
+/// Fill values safely
+_credited = List.generate(
+  daysInMonth,
+  (i) => i < gCred.length ? gCred[i] : 0.0,
+);
 
-          setState(() {
-            _loadingChart = false;
-          });
-          WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
-          return;
-        }
+_debited = List.generate(
+  daysInMonth,
+  (i) => i < gDeb.length ? gDeb[i] : 0.0,
+);
+
+/// Reset selection
+_selectedDayIndex = -1;
+
+setState(() {
+  _loadingChart = false;
+});
+
+WidgetsBinding.instance
+    .addPostFrameCallback((_) => _scrollToEnd());
+
+return;
+
+        
       } catch (e) {
         // fallback to dummy if API fails
       }
