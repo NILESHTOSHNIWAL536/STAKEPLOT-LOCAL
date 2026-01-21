@@ -467,7 +467,7 @@ Future<void> _fetchAutoPayData() async {
       children: [
         // Date Navigation with Back Button
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -567,7 +567,7 @@ Future<void> _fetchAutoPayData() async {
   Widget getListOfDateScroll(DateTime now) {
     return Container(
       height: MediaQuery.sizeOf(context).height / 18,
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
       child: Stack(
         children: [
           // Scrollable date list
@@ -777,7 +777,7 @@ Future<void> _fetchAutoPayData() async {
         // Month Header with Navigation
         Container(
           color: AppColors.newbg,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -816,7 +816,7 @@ Future<void> _fetchAutoPayData() async {
           height: MediaQuery.of(context).size.height / 1.4,
           color: AppColors.backgroundColor,
           child: Obx(() => GridView.builder(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSizes.p12),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 5,
                   childAspectRatio: .8,
@@ -959,7 +959,7 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
 
   Widget _buildCreditDebitSummary(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -982,7 +982,7 @@ final isFutureDate = parsedDate.isAfter(DateTime.now()) &&
 Widget getContainerCount(String title, RxInt count) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p6),
     decoration: BoxDecoration(
       color: AppColors.backgroundColor,
       borderRadius: BorderRadius.circular(5),
@@ -1019,7 +1019,7 @@ Widget getContainerCount(String title, RxInt count) {
   Widget getContainerCreditDebit(title, amount) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p6),
       
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,

@@ -158,7 +158,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
               //       ? null
               //       : Border.all(color: const Color(0xFF635D8F), width: 1),
               // ),
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.p16, horizontal: 10),
               margin: const EdgeInsets.all(5),
               child: Column(
                 children: [

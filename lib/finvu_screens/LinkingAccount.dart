@@ -20,6 +20,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.da
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 
 // Reactive variables (unchanged)
 RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded = <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
@@ -112,7 +114,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 6 * textScale),
+                  padding: EdgeInsets.symmetric(vertical: AppSizes.p6 * textScale),
                   child: Text(
                     FinvuStrings().selectAccountsToShare,
                     style: FontManager().getTextStyle(
@@ -157,7 +159,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
         },
         child: Container(
           width: screenWidth * 0.9,
-          padding: EdgeInsets.symmetric(vertical: 14 * textScale),
+          padding: EdgeInsets.symmetric(vertical: AppSizes.p14 * textScale),
           margin: EdgeInsets.only(bottom: 10 * textScale),
           decoration: BoxDecoration(
             color: accountAdded.isNotEmpty ? AppColors.bg3 : AppColors.primaryColor,
@@ -385,7 +387,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10 * textScale),
+              padding: EdgeInsets.symmetric(vertical: AppSizes.p10 * textScale),
               child: Center(
                 child: textStyle(FinvuStrings().securelyAuthorize,  14 * textScale, Colorcodes.black, FontWeight.bold),
               ),
@@ -395,11 +397,11 @@ class _LinkingAccountState extends State<LinkingAccount> {
               child: getBankNameAndImage(info, false),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10 * textScale, horizontal: 20 * textScale),
+              padding: EdgeInsets.symmetric(vertical: AppSizes.p10 * textScale, horizontal: 20 * textScale),
               child: textStyle(FinvuStrings().otpVerification, 20 * textScale, AppColors.bg1, FontWeight.bold),
             ),
            Padding(
-              padding: EdgeInsets.symmetric(vertical: 4 * textScale, horizontal: 20 * textScale),
+              padding: EdgeInsets.symmetric(vertical: AppSizes.p4 * textScale, horizontal: 20 * textScale),
               child: textStyle(
                   "${FinvuStrings().enterOtpSentTo} ${number.value}", 15 * textScale, AppColors.bg1, FontWeight.w400), // Direct access
             ),
@@ -457,7 +459,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                         context,
                         lWeight: FontWeight.w300,
                         fontSize: 13 * textScale,
-                        color: Colors.red,
+                        color:  AppColors.redColor,
                       ),
                     ),
                   )
@@ -519,7 +521,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget getColorVerify() {
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
-      padding: EdgeInsets.symmetric(horizontal: 10 * textScale, vertical: 14 * textScale),
+      padding: EdgeInsets.symmetric(horizontal: 10 * textScale, vertical: AppSizes.p14 * textScale),
       decoration: BoxDecoration(
         color: _isOtpValid.value ? AppColors.primaryColor : Colors.grey,
         borderRadius: BorderRadius.circular(12 * textScale),
@@ -681,7 +683,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget getBankNameAndImage(FinvuFIPInfo bankData, [bool flag = true]) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10 * textScale),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.p10 * textScale),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -745,7 +747,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget getcheckBox(String fipId,FinvuFIPInfo bankInfo) {
     return Padding(
-      padding: EdgeInsets.only(left: 10 * textScale),
+      padding: EdgeInsets.only(left:AppSizes.p10 * textScale),
       child: Container(
         width: 50 * textScale,
         height: 50 * textScale,
@@ -816,7 +818,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget getButton(BuildContext context, String text, double screenWidth) {
     return Container(
       width: screenWidth * 0.9,
-      padding: EdgeInsets.symmetric(vertical: 14 * textScale),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.p14 * textScale),
       decoration: BoxDecoration(
         color: AppColors.primaryColor,
         borderRadius: BorderRadius.circular(12 * textScale),

@@ -24,7 +24,7 @@ class MaskedNameDialogBox {
 
   static Widget _buildDialogContent(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(AppSizes.p20),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(16.0),
@@ -51,11 +51,11 @@ class MaskedNameDialogBox {
           ),
            SizedBox(height: AppSizes.h12),
           // Description
-          const Text(
+           Text(
             'Use a masked name to post, like, comment, and more while keeping your identity private.',
             style: TextStyle(
               fontSize: 16,
-              color: Colors.black54,
+              color: AppColors.grey,
               height: 1.5,
             ),
           ),
@@ -75,18 +75,18 @@ class MaskedNameDialogBox {
                   'Create ',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.blue,
+                    color: AppColors.primaryColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text(
+                child:  Text(
                   'Close',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.blue,
+                    color: AppColors.grey,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

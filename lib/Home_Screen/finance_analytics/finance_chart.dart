@@ -109,10 +109,10 @@
 // //                       final arrowIcon = isPositive
 // //                           ? Icons.arrow_upward
 // //                           : Icons.arrow_downward;
-// //                       final arrowColor = isPositive ? Colors.red : Colors.green;
+// //                       final arrowColor = isPositive ?  AppColors.redColor : Colors.green;
 // //                       final formattedValue =
 // //                           totalDebitValuePercent.toStringAsFixed(1);
-// //                       final textColor = isPositive ? Colors.red : Colors.green;
+// //                       final textColor = isPositive ?  AppColors.redColor : Colors.green;
 
 // //                       return Row(
 // //                         children: [
@@ -432,7 +432,7 @@
 //                   width: screenWidth * 0.09,
 //                   // color: Colorcodes.moneyOrange,
 //                   height: MediaQuery.of(context).size.height / 2.6,
-//                   padding: EdgeInsets.symmetric(vertical: 12),
+//                   padding: EdgeInsets.symmetric(vertical: AppSizes.p12),
 //                   child: _buildYAxisLabels(fontSizeFactor),
 //                 ),
 //               // change in future
@@ -447,15 +447,15 @@
 //           ),
 //           if (!widget.isExpandedView && widget.selectedButton.value == 'Month')
 //             Positioned(
-//               top: 8,
-//               right: 2,
+//               top:AppSizes.p8,
+//               right:AppSizes.p2,
 //               child: GestureDetector(
 //                 behavior: HitTestBehavior.opaque,
 //                 onTap: () {
 //                   navToExpanded();
 //                 },
 //                 child: Container(
-//                   padding: EdgeInsets.all(4),
+//                   padding: EdgeInsets.all(AppSizes.p4),
 //                   decoration: BoxDecoration(
 //                     color: AppColors.button,
 //                     shape: BoxShape.circle,
@@ -543,7 +543,7 @@
 
 //           margin: EdgeInsets.symmetric(horizontal: 0),
 
-//           // backgroundColor: Colors.red,
+//           // backgroundColor:  AppColors.redColor,
 //           primaryXAxis: CategoryAxis(
 //             //  edgeLabelPlacement: EdgeLabelPlacement.shift,
 
@@ -591,7 +591,7 @@
 //               return Padding(
 //                 padding: EdgeInsets.only(left: 15, top: 0, right: 0, bottom: 0),
 //                 child: Container(
-//                   padding: EdgeInsets.all(8),
+//                   padding: EdgeInsets.all(AppSizes.p8),
 //                   decoration: BoxDecoration(
 //                     color: Colors.black54,
 //                     borderRadius: BorderRadius.circular(4),
@@ -636,8 +636,8 @@
 //               final double debitedValue = debitedData[index].y;
 
 //               return Container(
-//                 margin: EdgeInsets.only(top: 10),
-//                 padding: EdgeInsets.all(8),
+//                 margin: EdgeInsets.only(top:AppSizes.p10),
+//                 padding: EdgeInsets.all(AppSizes.p8),
 //                 decoration: BoxDecoration(
 //                   color: AppColors.mt.withOpacity(0.4),
 //                   borderRadius: BorderRadius.circular(4),
@@ -894,7 +894,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
     // Outer white card (single container)
     return Container(
       width: MediaQuery.sizeOf(context).width,
-      // margin: EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 2),
+      // margin: EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: AppSizes.p2),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor, // #FFFFFF
         borderRadius: BorderRadius.circular(10), // 10px
@@ -907,7 +907,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
           ],
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -942,7 +942,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
                 },
                 child: Container(
                   width: MediaQuery.sizeOf(context).width / 3.6,
-                  padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 6),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.p40, horizontal: 6),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -985,7 +985,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
 
             Container(
               width: MediaQuery.sizeOf(context).width / 2,
-              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.p2, horizontal: 2),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -1229,7 +1229,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
 //     final double rightVisible = min(screenWidth * 0.55, 260);
 
 //     return Container(
-//       margin: const EdgeInsets.all(6),
+//       margin: const EdgeInsets.all(AppSizes.p6),
 //       decoration: BoxDecoration(
 //         color: AppColors.backgroundColor,
 //         borderRadius: BorderRadius.circular(10),
@@ -1243,7 +1243,7 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
 //         ],
 //       ),
 //       child: Padding(
-//         padding: const EdgeInsets.all(12),
+//         padding: const EdgeInsets.all(AppSizes.p12),
 //         child: Row(
 //           children: [
 //             /// LEFT PANEL

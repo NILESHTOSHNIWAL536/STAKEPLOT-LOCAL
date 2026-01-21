@@ -145,7 +145,7 @@ class _ImageScreenState extends State<ImageScreen> {
     : MediaQuery.of(context).size.height / 1.3,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(AppSizes.p16),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -156,7 +156,7 @@ class _ImageScreenState extends State<ImageScreen> {
                           height: MediaQuery.of(context).size.height / 2.8,
                           width: MediaQuery.of(context).size.width / 0.5,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: AppColors.grey,
                             // borderRadius: BorderRadius.circular(20),
                           ),
                           child: selectedImage != null
@@ -306,8 +306,8 @@ class _ImageScreenState extends State<ImageScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
+                left:AppSizes.p16,
+                right:AppSizes.p16,
                 bottom: MediaQuery.of(context).viewInsets.bottom > 0 ? 16.0 : 0,
                 top: MediaQuery.of(context).viewInsets.bottom > 0 ? 16.0 : 16.0,
               ),
@@ -326,7 +326,7 @@ class _ImageScreenState extends State<ImageScreen> {
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width / 1.1,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
                   decoration: BoxDecoration(
                     color:
                         selectedImage != null && textController.text.isNotEmpty

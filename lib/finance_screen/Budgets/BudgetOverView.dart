@@ -109,7 +109,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.backgroundColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

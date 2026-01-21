@@ -245,7 +245,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   Widget networkFriends(String network, String count, IconData icon) {
     return Container(
         // width: MediaQuery.sizeOf(context).width / 2.4,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
         decoration: BoxDecoration(
           color:
               count == "" ? AppColors.primaryColor : AppColors.backgroundColor,

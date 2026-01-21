@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class DottedBorderBox extends StatelessWidget {
   final Widget child;
   final double dashWidth;
@@ -16,7 +18,7 @@ class DottedBorderBox extends StatelessWidget {
     this.dashHeight = 2,
     this.space = 3,
     this.color = Colors.black,
-    this.padding = const EdgeInsets.all(12),
+    this.padding = const EdgeInsets.all(AppSizes.p12),
     this.cornerRadius = 12,
   });
 

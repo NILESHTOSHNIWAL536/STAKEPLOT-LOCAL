@@ -104,9 +104,9 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-              left: 16.0,
-              right: 16.0,
-              top: 16.0,
+              left: AppSizes.p16,
+              right: AppSizes.p16,
+              top:AppSizes.p16,
               bottom: MediaQuery.of(context).viewInsets.bottom + 16.0, // Adjust for keyboard
             ),
             child: Column(
@@ -134,7 +134,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                 SizedBox(height: AppSizes.h16),
                 // Summary Info
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(AppSizes.p12),
                   decoration: BoxDecoration(
                     color: AppColors.button.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -221,7 +221,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
-                      vertical: 12,
+                      vertical: AppSizes.p12,
                     ),
                   ),
                   maxLines: 3,
@@ -245,7 +245,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
-                      vertical: 14,
+                      vertical: AppSizes.p14,
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.button.withOpacity(0.5),
@@ -284,7 +284,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     onTap: _validateAndConfirm,
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor,
                         borderRadius: BorderRadius.circular(12),

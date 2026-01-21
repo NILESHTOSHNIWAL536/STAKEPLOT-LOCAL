@@ -33,7 +33,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(AppSizes.p12),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +53,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                       },
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 14),
+                      padding: const EdgeInsets.only(left:AppSizes.p14),
                       child: Text(
                         "Inflation Calculator",
                         style: FontManager().getTextStyle(
@@ -69,7 +69,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                 ),
                 SizedBox(height: AppSizes.h24),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14),
                   child: Text(
                     "Calculate the impact of inflation on your money",
                     style: FontManager().getTextStyle(
@@ -82,7 +82,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                 ),
                 SizedBox(height: AppSizes.h24),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14),
                   child: TextField(
                     controller: amountController,
                     keyboardType: TextInputType.number,
@@ -102,8 +102,8 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 12,
+                        vertical: AppSizes.p16,
+                        horizontal: AppSizes.p12,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -140,7 +140,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                 ),
                 SizedBox(height: AppSizes.h16),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14),
                   child: TextField(
                     controller: yearsController,
                     keyboardType: TextInputType.number,
@@ -160,8 +160,8 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 12,
+                        vertical: AppSizes.p16,
+                        horizontal: AppSizes.p12,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -209,7 +209,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
                       padding: const EdgeInsets.symmetric(
-                        vertical: 14,
+                        vertical: AppSizes.p14,
                         horizontal: 32,
                       ),
                       shape: RoundedRectangleBorder(
@@ -235,7 +235,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                   }
 
                   return Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(AppSizes.p20),
                     decoration: BoxDecoration(
                       color: AppColors.backgroundColor,
                       borderRadius: BorderRadius.circular(16),
@@ -287,7 +287,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                               ...inflationPredictions
                                   .map((prediction) => Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            vertical: 4),
+                                            vertical: AppSizes.p4),
                                         child: Text(
                                           'Year ${prediction['year']}: ₹${prediction['future_value'].toStringAsFixed(2)} (Inflation: ${prediction['predicted_inflation_percent']}%)',
                                           style: FontManager().getTextStyle(

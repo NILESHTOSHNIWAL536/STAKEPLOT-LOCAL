@@ -69,7 +69,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                   Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenSize.width * 0.05,
-                      vertical: 16,
+                      vertical: AppSizes.p16,
                     ),
                     child: UpdateTitleWidget(),
                   ),
@@ -79,7 +79,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                   Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenSize.width * 0.05,
-                      vertical: 8,
+                      vertical: AppSizes.p8,
                     ),
                     child: PreviouslySelectedInterestsWidget(
                       onCategoryToggle: _toggleCategory,
@@ -90,7 +90,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                   Align(
                      alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.all(AppSizes.p12),
                       child: Obx(
                         () => 
                          AnimatedContainer(
@@ -99,7 +99,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                                 alignment: Alignment.topCenter,
                                
                                 child: Padding(
-                                  padding: EdgeInsets.all(12),
+                                  padding: EdgeInsets.all(AppSizes.p12),
                                   child: isListEnabled.value? UpdateButtonWidget(
                                     onPressed: () {
                                       final combinedList = [
@@ -225,7 +225,7 @@ class FilteredCategoriesListWidget extends StatelessWidget {
     final screenSize = MediaQuery.of(context).size;
 if (categoriesInterest.keys.every((category) => selectedCategories.contains(category))) {
       return Padding(
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.p16),
         child: Center(
           child: Text(
             'All interests selected',

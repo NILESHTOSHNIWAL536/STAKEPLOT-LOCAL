@@ -78,7 +78,7 @@
 //               fontWeight: FontWeight.w600),
 //           SizedBox(height: 10),
 //           Padding(
-//             padding: const EdgeInsets.symmetric(vertical: 4),
+//             padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
 //             child: Row(
 //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //               children: [
@@ -202,8 +202,8 @@ class _TransactionCreditDebitCardState
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p12),
+      margin: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p12),
       
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
@@ -290,7 +290,7 @@ class _TransactionCreditDebitCardState
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p6),
         decoration: BoxDecoration(
           color: selected ? AppColors.primaryColor : AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(6),

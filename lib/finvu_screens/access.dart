@@ -370,13 +370,13 @@
 //   Widget accounts(String title, String value, IconData icon) {
 //     return Container(
 //       // width: MediaQuery.of(context).size.width,
-//       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+//       padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 20),
 //       child: Row(
 //         crossAxisAlignment: CrossAxisAlignment.center,
 //         mainAxisAlignment: MainAxisAlignment.start,
 //         children: [
 //           Container(
-//             padding: EdgeInsets.all(4),
+//             padding: EdgeInsets.all(AppSizes.p4),
 //             decoration: BoxDecoration(
 //                 color: Colorcodes.white,
 //                 borderRadius: BorderRadius.circular(10)),
@@ -458,14 +458,14 @@
 //     return Container(
 //       width: MediaQuery.of(context).size.width,
 //       height: MediaQuery.of(context).size.height / 3,
-//       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+//       padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
 //       child: SingleChildScrollView(
 //         child: Column(
 //           mainAxisAlignment: MainAxisAlignment.start,
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
 //             Padding(
-//               padding: const EdgeInsets.all(8.0),
+//               padding: const EdgeInsets.all(AppSizes.p8),
 //               child: Row(
 //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -530,7 +530,7 @@
 
 //   Widget getcheckBox(String fipId) {
 //     return Padding(
-//       padding: const EdgeInsets.only(left: 10.0),
+//       padding: const EdgeInsets.only(left:AppSizes.p10),
 //       child: Container(
 //         width: 50,
 //         height: 50,
@@ -553,7 +553,7 @@
 //       Color c = AppColors.bg1,
 //       FontWeight fontWeight = FontWeight.w500]) {
 //     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 6),
+//       padding: const EdgeInsets.symmetric(vertical: AppSizes.p6),
 //       child: Column(
 //         mainAxisAlignment: MainAxisAlignment.start,
 //         crossAxisAlignment: CrossAxisAlignment.start,
@@ -574,7 +574,7 @@
 
 //   Widget pauseOrCancle() {
 //     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 20),
+//       padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
 //       child: Row(
 //         crossAxisAlignment: CrossAxisAlignment.start,
 //         children: [
@@ -608,7 +608,7 @@
 //             },
 //             child: Container(
 //               width: MediaQuery.of(context).size.width / 1.1,
-//               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+//               padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
 //               decoration: BoxDecoration(
 //                 color: AppColors.accentColor,
 //                 borderRadius: BorderRadius.circular(12),
@@ -632,7 +632,7 @@
 //             },
 //             child: Container(
 //               width: MediaQuery.of(context).size.width / 1.1,
-//               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+//               padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
 //               decoration: BoxDecoration(
 //                 //color: AppColors.accentColor,
 //                 borderRadius: BorderRadius.circular(30),
@@ -675,7 +675,7 @@
 
 //   Widget getcheckBox2(String fipId) {
 //     return Padding(
-//       padding: const EdgeInsets.only(left: 10.0),
+//       padding: const EdgeInsets.only(left:AppSizes.p10),
 //       child: Container(
 //         width: 50,
 //         height: 50,
@@ -705,7 +705,7 @@
 //           child: Container(
 //             width: 300, // Set width
 //             height: 180, // Set height
-//             padding: EdgeInsets.all(16),
+//             padding: EdgeInsets.all(AppSizes.p16),
 //             child: Column(
 //               mainAxisSize: MainAxisSize.min,
 //               mainAxisAlignment: MainAxisAlignment.start,
@@ -797,6 +797,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../Constants/app_styles.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import 'skipFInvuProcess.dart';
 
 class Access extends StatefulWidget {
@@ -1257,7 +1258,7 @@ Widget getInfomationsAboutUserConsnt() {
             },
             child: Container(
               width: MediaQuery.of(context).size.width / 1.1,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(12),
@@ -1511,7 +1512,7 @@ Widget squareIcon(IconData icon) {
   String icon,
 ) {
   return Container(
-    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+    padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1546,7 +1547,7 @@ Widget squareIcon(IconData icon) {
   Widget accounts(String title, String value, String url) {
     return Container(
       // width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -1633,14 +1634,14 @@ Widget squareIcon(IconData icon) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 3,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(AppSizes.p8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1705,7 +1706,7 @@ Widget squareIcon(IconData icon) {
 
   Widget getcheckBox(String fipId) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0),
+      padding: const EdgeInsets.only(left:AppSizes.p10),
       child: Container(
         width: 50,
         height: 50,
@@ -1728,7 +1729,7 @@ Widget squareIcon(IconData icon) {
       Color c = AppColors.bg1,
       FontWeight fontWeight = FontWeight.w500]) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p6),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1749,7 +1750,7 @@ Widget squareIcon(IconData icon) {
 
   Widget pauseOrCancle() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p20, horizontal: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1774,7 +1775,7 @@ Widget squareIcon(IconData icon) {
 
   Widget givePermissionOrDecline() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1785,7 +1786,7 @@ Widget squareIcon(IconData icon) {
               },
               child: Container(
                 width: MediaQuery.of(context).size.width / 1.1,
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(12),
@@ -1809,7 +1810,7 @@ Widget squareIcon(IconData icon) {
               },
               child: Container(
                 width: MediaQuery.of(context).size.width / 1.1,
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
                 decoration: BoxDecoration(
                   //color: AppColors.accentColor,
                   borderRadius: BorderRadius.circular(30),
@@ -1853,7 +1854,7 @@ Widget squareIcon(IconData icon) {
 
   Widget getcheckBox2(String fipId) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0),
+      padding: const EdgeInsets.only(left:AppSizes.p10),
       child: Container(
         width: 50,
         height: 50,
@@ -1883,7 +1884,7 @@ Widget squareIcon(IconData icon) {
           child: Container(
             width: 300, // Set width
             height: 180, // Set height
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(AppSizes.p16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,

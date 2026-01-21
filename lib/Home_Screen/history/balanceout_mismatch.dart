@@ -161,7 +161,7 @@ class BalanceOutMismatchUI extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: AppSizes.p10),
         child:  GetDeis(context),
       ),
     );
@@ -173,7 +173,7 @@ class BalanceOutMismatchUI extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSizes.p12),
                 decoration: BoxDecoration(
 
                    color: const Color(0xFFFEF2F2), // background
@@ -216,7 +216,7 @@ class BalanceOutMismatchUI extends StatelessWidget {
               ),
               SizedBox(height: AppSizes.h20),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSizes.p12),
                 decoration: BoxDecoration(
 
                    color: const Color(0xFFFEF2F2), // background

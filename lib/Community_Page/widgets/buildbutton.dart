@@ -3,69 +3,11 @@
  import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.dart';
-import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Profile/Saved.dart';
-import 'package:flutter_application_code_stakeplot/components/userNavigator.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
-import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
-import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
-
 import '../../Constants/core/app_padding_sizes.dart';
 
-Widget buildOptionButton({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    final double iconSize =
-        MediaQuery.of(context).size.width * 0.07; // Responsive icon size
-    final double fontSize =
-        MediaQuery.of(context).size.width * 0.04; // Responsive font size
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding:
-                EdgeInsets.all(iconSize * 0.3), // Padding scales with icon size
-            decoration: BoxDecoration(
-              color: AppColors.accentColor.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              size: iconSize,
-              color: AppColors.primaryColor,
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-          ConstrainedBox(
-            constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.25),
-            child: Text(
-              label,
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w500,
-                fontSize: fontSize,
-                color: Colors.black87,
-              ),
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
 
 // Widget buildWelcomeRow(context) {
@@ -76,7 +18,7 @@ Widget buildOptionButton({
 //       crossAxisAlignment: CrossAxisAlignment.start,
 //       children: [
 //         Padding(
-//          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+//          padding: const EdgeInsets.only(left:AppSizes.p10, right:AppSizes.p10),
 //           child: Row(
 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //             crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,7 +81,7 @@ Widget buildOptionButton({
 //           height: 6,
 //         ),
 //         Padding(
-//           padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+//           padding: const EdgeInsets.only(left:AppSizes.p10, right:AppSizes.p10),
 //           child: GestureDetector(
 //             onTap: () {
 //               // Navigator.pushNamed(context, '/TribeSearch');
@@ -258,12 +200,12 @@ class _ArenaHeaderState extends State<ArenaHeader> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(30),
       child: Container(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(AppSizes.p6),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2),
+          color: AppColors.backgroundColor.withOpacity(0.2),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: Colors.white, size: 26),
+        child: Icon(icon, color: AppColors.backgroundColor, size: 26),
       ),
     );
   }
@@ -276,9 +218,9 @@ class _ArenaHeaderState extends State<ArenaHeader> {
       children: [
         Container(
           width: MediaQuery.sizeOf(context).width/1.8,
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(AppSizes.p4),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.25),
+            color: AppColors.backgroundColor.withOpacity(0.25),
             borderRadius: BorderRadius.circular(30),
           ),
           child: Row(
@@ -336,10 +278,10 @@ class _ArenaHeaderState extends State<ArenaHeader> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p12),
         
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
+          color: isSelected ? AppColors.backgroundColor : AppColors.transparentColor,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Text(
@@ -349,8 +291,8 @@ class _ArenaHeaderState extends State<ArenaHeader> {
             fontSize: 16,
             lWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             color: isSelected
-                ? const Color(0xFF4B4D73)
-                : Colors.white.withOpacity(0.7),
+                ? AppColors.primaryColor
+                : AppColors.backgroundColor.withOpacity(0.7),
           ),
         ),
       ),
@@ -448,9 +390,9 @@ class _ArenaHeaderForSavedState extends State<ArenaHeaderForSaved> {
       children: [
         Container(
           width: MediaQuery.sizeOf(context).width/1.8,
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(AppSizes.p4),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.25),
+            color: AppColors.backgroundColor.withOpacity(0.25),
             borderRadius: BorderRadius.circular(30),
           ),
           child: Row(
@@ -484,10 +426,10 @@ class _ArenaHeaderForSavedState extends State<ArenaHeaderForSaved> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p12),
         
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
+          color: isSelected ? AppColors.backgroundColor : AppColors.transparentColor,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Text(
@@ -497,8 +439,9 @@ class _ArenaHeaderForSavedState extends State<ArenaHeaderForSaved> {
             fontSize: 16,
             lWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             color: isSelected
-                ? const Color(0xFF4B4D73)
-                : Colors.white.withOpacity(0.7),
+                ? AppColors.primaryColor
+                : AppColors.backgroundColor.withOpacity(0.7),
+              
           ),
         ),
       ),

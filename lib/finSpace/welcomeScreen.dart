@@ -85,7 +85,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.backgroundColor,
                  
-                  padding: EdgeInsets.symmetric(vertical: 12),
+                  padding: EdgeInsets.symmetric(vertical: AppSizes.p12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

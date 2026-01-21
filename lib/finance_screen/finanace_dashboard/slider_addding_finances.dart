@@ -50,7 +50,7 @@ class SliderAdddingFinances extends StatelessWidget {
               },
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 3),
+                    const EdgeInsets.symmetric(vertical: AppSizes.p12, horizontal: 3),
                 child: Container(
                   width: 52,
                   decoration: BoxDecoration(
@@ -154,7 +154,7 @@ class SliderAdddingFinances extends StatelessWidget {
           children: [
             SizedBox(width: AppSizes.w18),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 28, horizontal: 0),
+              padding: EdgeInsets.symmetric(vertical: AppSizes.p28, horizontal: 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

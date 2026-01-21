@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/services/app_icon_changer.dart';
 
+import '../Constants/colors.dart';
 import '../Constants/core/app_padding_sizes.dart';
 
 
@@ -9,7 +10,7 @@ class IconPickerModal {
   static void show(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -41,7 +42,7 @@ class _IconPickerContentState extends State<_IconPickerContent> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(success ? "App icon changed successfully!" : "Failed to change app icon."),
-        backgroundColor: success ? Colors.green : Colors.red,
+        backgroundColor: success ? Colors.green :  AppColors.redColor,
         duration: Duration(seconds: 2),
       ),
     );
@@ -55,7 +56,7 @@ class _IconPickerContentState extends State<_IconPickerContent> {
     return GestureDetector(
       onTap: isLoading ? null : () => _changeIcon(alias),
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(AppSizes.p10),
         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected ? Colors.blue : Colors.transparent,
@@ -88,7 +89,7 @@ class _IconPickerContentState extends State<_IconPickerContent> {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: 10, bottom: 20),
+            margin: EdgeInsets.only(top:AppSizes.p10, bottom: 20),
             height: 5,
             width: 50,
             decoration: BoxDecoration(

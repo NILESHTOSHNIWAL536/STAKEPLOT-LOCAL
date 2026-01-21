@@ -57,7 +57,7 @@ void addTransaction(String amount, String subCategory, String categories,
     });
     getBudget();
   } else {
-    snackBarCalledfail(context, SnackbarData().transactionAddFail, Colors.red);
+    snackBarCalledfail(context, SnackbarData().transactionAddFail,  AppColors.redColor);
   }
 
   cashInAndOut.value = false;
@@ -84,7 +84,7 @@ void addTransaction(String amount, String subCategory, String categories,
     }
 
     if (members.isEmpty) {
-      snackBarCalledfail(context, SnackbarData().noMembersSelected, Colors.red);
+      snackBarCalledfail(context, SnackbarData().noMembersSelected,  AppColors.redColor);
       return;
     }
 
@@ -182,7 +182,7 @@ void addTransaction(String amount, String subCategory, String categories,
      if (!context.mounted) return;
       snackBarCalled(context, SnackbarData().splitAmountSent);
     } else {
-      snackBarCalledfail(context, SnackbarData().splitError, Colors.red);
+      snackBarCalledfail(context, SnackbarData().splitError,  AppColors.redColor);
     }
 
     acceptReset.value = false;
@@ -265,7 +265,7 @@ void addLendUserAmount(context, String amount, List members, String name,
       addedUser.clear();
       selectedDueDate = null;
     } else {
-      snackBarCalledfail(context,SnackbarData().lendAmountError, Colors.red);
+      snackBarCalledfail(context,SnackbarData().lendAmountError,  AppColors.redColor);
     }
     acceptReset.value = false;
     cashInAndOut.value =false;

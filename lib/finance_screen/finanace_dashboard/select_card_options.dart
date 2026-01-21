@@ -81,7 +81,7 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
                   Navigator.pushNamed(context, options);
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.p12),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -99,7 +99,7 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
                         ),
                       ],
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.p16),
                     // margin: const EdgeInsets.only(bottom: 16),
                     child: Column(
                       children: [

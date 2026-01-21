@@ -110,7 +110,7 @@
 //                   children: [
 //                     Container(
 //                       padding: EdgeInsets.symmetric(
-//                           horizontal: 8 * fontScale, vertical: 4 * fontScale),
+//                           horizontal: 8 * fontScale, vertical: AppSizes.p4 * fontScale),
 //                       decoration: BoxDecoration(
 //                         color: AppColors.backgroundColor.withOpacity(0.4),
 //                         borderRadius: BorderRadius.circular(2 * fontScale),
@@ -234,7 +234,7 @@
 //                       },
 //                       child: Container(
 //                         padding: EdgeInsets.symmetric(
-//                             horizontal: 8 * fontScale, vertical: 4 * fontScale),
+//                             horizontal: 8 * fontScale, vertical: AppSizes.p4 * fontScale),
 //                         decoration: BoxDecoration(
 //                           color: AppColors.backgroundColor.withOpacity(0.2),
 //                           borderRadius: BorderRadius.circular(10 * fontScale),
@@ -315,8 +315,8 @@
 //                       },
 //                       child: Container(
 //                         padding: EdgeInsets.symmetric(
-//                             horizontal: 12 * fontScale,
-//                             vertical: 4 * fontScale),
+//                             horizontal: AppSizes.p12 * fontScale,
+//                             vertical: AppSizes.p4 * fontScale),
 //                         decoration: BoxDecoration(
 //                           color: AppColors.backgroundColor.withOpacity(0.2),
 //                           borderRadius: BorderRadius.only(
@@ -397,8 +397,8 @@
 //                       },
 //                       child: Container(
 //                         padding: EdgeInsets.symmetric(
-//                             horizontal: 12.5 * fontScale,
-//                             vertical: 4 * fontScale),
+//                             horizontal: AppSizes.p12.5 * fontScale,
+//                             vertical: AppSizes.p4 * fontScale),
 //                         decoration: BoxDecoration(
 //                           color: AppColors.backgroundColor.withOpacity(0.2),
 //                           borderRadius: BorderRadius.only(
@@ -440,7 +440,7 @@
 //                             Container(
 //                               padding: EdgeInsets.symmetric(
 //                                   horizontal: 8 * fontScale,
-//                                   vertical: 4 * fontScale),
+//                                   vertical: AppSizes.p4 * fontScale),
 //                               decoration: BoxDecoration(
 //                                 color: AppColors.backgroundColor.withOpacity(0.2),
 //                                 borderRadius:
@@ -461,7 +461,7 @@
 //                             .map((date) => Container(
 //                                   padding: EdgeInsets.symmetric(
 //                                       horizontal: 8 * fontScale,
-//                                       vertical: 4 * fontScale),
+//                                       vertical: AppSizes.p4 * fontScale),
 //                                   decoration: BoxDecoration(
 //                                     color: AppColors.backgroundColor.withOpacity(0.2),
 //                                     borderRadius:
@@ -490,7 +490,7 @@
 //                             child: Container(
 //                               padding: EdgeInsets.symmetric(
 //                                   horizontal: 8 * fontScale,
-//                                   vertical: 6 * fontScale),
+//                                   vertical: AppSizes.p6 * fontScale),
 //                               decoration: BoxDecoration(
 //                                 color: AppColors.backgroundColor.withOpacity(0.2),
 //                                 borderRadius:
@@ -531,6 +531,7 @@ import 'package:flutter_application_code_stakeplot/repository/autopay_repository
 
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 // Reusable Card Widget
@@ -566,7 +567,7 @@ class CardWidget extends StatelessWidget {
     return Container(
       height: cardHeight,
        decoration: BoxDecoration(
-    color: Colors.white, // background: #FFF
+    color: AppColors.backgroundColor, // background: #FFF
     borderRadius: BorderRadius.circular(10.0), // border-radius: 10px
     border: Border.all(color: AppColors.mt),
     boxShadow: const [
@@ -632,7 +633,7 @@ class CardWidget extends StatelessWidget {
                   children: [
                     Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 8 * fontScale, vertical: 4 * fontScale),
+                          horizontal: 8 * fontScale, vertical: AppSizes.p4 * fontScale),
                       decoration: BoxDecoration(
                         color: AppColors.backgroundColor.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(2 * fontScale),
@@ -695,7 +696,7 @@ class CardWidget extends StatelessWidget {
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 8 * fontScale,
-                                  vertical: 6 * fontScale),
+                                  vertical: AppSizes.p6 * fontScale),
                               decoration: BoxDecoration(
                                 color: AppColors.backgroundColor.withOpacity(0.2),
                                 borderRadius:
@@ -741,7 +742,7 @@ class CardWidget extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 8 * fontScale,
-                                  vertical: 4 * fontScale),
+                                  vertical: AppSizes.p4 * fontScale),
                               decoration: BoxDecoration(
                                 color: AppColors.backgroundColor.withOpacity(0.2),
                                 borderRadius:
@@ -762,7 +763,7 @@ class CardWidget extends StatelessWidget {
                             .map((date) => Container(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 8 * fontScale,
-                                      vertical: 4 * fontScale),
+                                      vertical: AppSizes.p4 * fontScale),
                                   decoration: BoxDecoration(
                                    color: const Color.fromRGBO(75, 77, 115, 0.20), // rgba(75,77,115,0.20)
     borderRadius: BorderRadius.circular(10),
@@ -852,7 +853,7 @@ class CardWidget extends StatelessWidget {
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 8 * fontScale, vertical: 4 * fontScale),
+                            horizontal: 8 * fontScale, vertical: AppSizes.p4 * fontScale),
                         decoration: BoxDecoration(
                           color: AppColors.backgroundColor.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(10 * fontScale),
@@ -933,8 +934,8 @@ class CardWidget extends StatelessWidget {
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 12 * fontScale,
-                            vertical: 4 * fontScale),
+                            horizontal: AppSizes.p12 ,
+                            vertical: AppSizes.p4 * fontScale),
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
                           borderRadius: BorderRadius.all(Radius.circular(6)),
@@ -1011,8 +1012,8 @@ class CardWidget extends StatelessWidget {
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 12.5 * fontScale,
-                            vertical: 4 * fontScale),
+                            horizontal: AppSizes.p12,
+                            vertical: AppSizes.p4 * fontScale),
                         decoration: BoxDecoration(
                           color: const Color.fromRGBO(75, 77, 115, 0.20),
                           borderRadius: BorderRadius.all(Radius.circular(6)),

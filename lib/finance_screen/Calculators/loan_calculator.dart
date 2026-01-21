@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 
 import 'dart:convert';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../backed_connections/apiAutomations/curd.dart';
 import '../../routes/index_route.dart';
 
@@ -169,7 +170,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p10),
           child: Scrollbar(
             // thumbVisibility: true,
             child: SingleChildScrollView(
@@ -220,8 +221,8 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                     },
                     child: _isInfoVisible
                         ? Container(
-                            margin: EdgeInsets.symmetric(vertical: 4),
-                            padding: EdgeInsets.all(12),
+                            margin: EdgeInsets.symmetric(vertical: AppSizes.p4),
+                            padding: EdgeInsets.all(AppSizes.p12),
                             decoration: BoxDecoration(
                               color: AppColors.primaryColor.withOpacity(0.9),
                               borderRadius: BorderRadius.circular(12),
@@ -260,7 +261,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                         filled: true,
                         fillColor: AppColors.backgroundColor,
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 14),
+                            horizontal: AppSizes.p12, vertical: AppSizes.p14),
                         hintText: '₹ 3000.00',
                         hintStyle: TextStyle(
                           color: AppColors.greyCard,
@@ -284,14 +285,14 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Colors.red,
+                            color: AppColors.redColor,
                             width: 1,
                           ),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Colors.red,
+                            color: AppColors.redColor,
                             width: 1,
                           ),
                         ),
@@ -314,7 +315,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                         filled: true,
                         fillColor: AppColors.backgroundColor,
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 14),
+                            horizontal: AppSizes.p12, vertical: AppSizes.p14),
                         hintText: '₹ 1000.00',
                         hintStyle: TextStyle(
                           color: AppColors.greyCard,
@@ -338,14 +339,14 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Colors.red,
+                            color:  AppColors.redColor,
                             width: 1,
                           ),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Colors.red,
+                            color:  AppColors.redColor,
                             width: 1,
                           ),
                         ),
@@ -570,12 +571,12 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
                       (loanCalcResponse?['bonusInsights'] ?? []).length,
                       (idx) => Padding(
                         padding:
-                            EdgeInsets.only(bottom: height * 0.015, left: 2),
+                            EdgeInsets.only(bottom: height * 0.015, left:AppSizes.p2),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(top: 3, right: 10),
+                              padding: const EdgeInsets.only(top: 3, right:AppSizes.p10),
                               child: Icon(
                                 Icons.radio_button_checked,
                                 color: AppColors.accentColor,
@@ -635,7 +636,7 @@ class _LoanCalculatorScreenState extends State<LoanCalculatorScreen> {
 
   Widget infoBox(String title, String value, BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
       decoration: BoxDecoration(
         color: const Color.fromARGB(59, 255, 255, 255),
         borderRadius: BorderRadius.circular(10),

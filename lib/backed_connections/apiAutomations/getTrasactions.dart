@@ -299,7 +299,7 @@ void pickCustomDateRangeoverall(BuildContext context) async {
           firstDate: DateTime(2020),
           lastDate: DateTime.now(),
           selectableDayPredicate: (day) => true,
-          selectedDayHighlightColor: Colors.blueAccent,
+          selectedDayHighlightColor: AppColors.primaryColor,
           controlsTextStyle: TextStyle(color: AppColors.accentColor),
           dayTextStyle: TextStyle(color: AppColors.accentColor),
           selectedDayTextStyle: TextStyle(color: AppColors.accentColor),

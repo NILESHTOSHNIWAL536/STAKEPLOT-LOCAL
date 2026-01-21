@@ -105,7 +105,7 @@ void _navigateToAutoPayPage(
       child: Container(
         width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(
-            vertical: 6, horizontal: fontSizes.margin),
+            vertical: AppSizes.p6, horizontal: fontSizes.margin),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(10),
@@ -192,7 +192,7 @@ void _navigateToAutoPayPage(
               maxHeight: 220,
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppSizes.p16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -221,7 +221,7 @@ void _navigateToAutoPayPage(
                         onTap: () => Navigator.of(context).pop(false),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 8),
+                              horizontal: 10, vertical: AppSizes.p8),
                           decoration: BoxDecoration(
                             color: AppColors.backgroundColor,
                             borderRadius: BorderRadius.circular(8),
@@ -242,7 +242,7 @@ void _navigateToAutoPayPage(
                         onTap: () => Navigator.of(context).pop(true),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 8),
+                              horizontal: 10, vertical: AppSizes.p8),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(8),

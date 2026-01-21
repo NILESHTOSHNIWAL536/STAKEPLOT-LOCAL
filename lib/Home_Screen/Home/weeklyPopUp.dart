@@ -90,7 +90,7 @@ class TransactionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
        width: MediaQuery.of(context).size.width / 1.3,
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 2),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(8),
@@ -104,7 +104,7 @@ class TransactionCard extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(AppSizes.p12),
         child: Row(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -124,7 +124,7 @@ class TransactionCard extends StatelessWidget {
             ),
             Container(
               width: MediaQuery.of(context).size.width / 11,
-              // color: Colors.red,
+              // color:  AppColors.redColor,
               child: transaction.bankLogo != null && transaction.bankLogo!.isNotEmpty
                   ? Image.network(
                       transaction.bankLogo!,
@@ -213,7 +213,7 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
             minHeight: MediaQuery.of(context).size.height * 0.3, // Minimum height to ensure content fits
           ),
           child: Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(AppSizes.p8),
             decoration: BoxDecoration(
                color: AppColors.backgroundColor,
                borderRadius: BorderRadius.circular(16)

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 
 import '../Constants/colors.dart';
+import '../Constants/core/app_padding_sizes.dart';
 
 class CustomStepper extends StatelessWidget {
   final int activeStep;
@@ -11,7 +12,7 @@ class CustomStepper extends StatelessWidget {
     Color active = Color(0xFF37344F);
     Color inactive = Color(0xFFD4D1D5);
     return Padding(
-      padding: const EdgeInsets.only(top: 20,bottom: 40),
+      padding: const EdgeInsets.only(top:AppSizes.p20,bottom: 40),
       child: Row(
         children: [
           Container(

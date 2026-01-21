@@ -101,7 +101,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                     children: [
                       
                       Positioned(
-                        top: 20,
+                        top:AppSizes.p20,
                         left: 40,
                         child: Container(
                           width: 60,
@@ -113,8 +113,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                         ),
                       ),
                       Positioned(
-                        top: 30,
-                        right: 40,
+                        top:AppSizes.p30,
+                        right:AppSizes.p40,
                         child: Container(
                           width: 60,
                           height: 80,
@@ -240,7 +240,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Error: Unable to fetch user email'),
-                                backgroundColor: Colors.red,
+                                backgroundColor:  AppColors.redColor,
                               ),
                             );
                           }
@@ -250,7 +250,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                     backgroundColor: selectedReason != null
                         ? Color(0xFFDC2626)
                         : Colors.grey[300],
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(vertical: AppSizes.p16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -321,7 +321,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
               
               
               Container(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(AppSizes.p16),
                 decoration: BoxDecoration(
                   color: Colors.orange[50],
                   borderRadius: BorderRadius.circular(12),
@@ -331,7 +331,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(4),
+                      padding: EdgeInsets.all(AppSizes.p4),
                       decoration: BoxDecoration(
                         color: Colors.orange[600],
                         shape: BoxShape.circle,
@@ -407,7 +407,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 16,
-                      vertical: 16,
+                      vertical: AppSizes.p16,
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -446,7 +446,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                     backgroundColor: _passwordController.text.isNotEmpty
                         ? Color(0xFFDC2626)
                         : Colors.grey[300],
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(vertical: AppSizes.p16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -565,7 +565,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
       builder: (context) => Center(
         child: Container(
           width: MediaQuery.of(context).size.width/1.1,
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(AppSizes.p20),
           decoration: BoxDecoration(
             color: AppColors.backgroundColor,
             borderRadius: BorderRadius.circular(12),

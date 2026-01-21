@@ -110,8 +110,8 @@
 //           const SizedBox(height: 4),
 //           Padding(
 //             padding: EdgeInsets.only(
-//               left: 10,
-//               right: 2,
+//               left:AppSizes.p10,
+//               right:AppSizes.p2,
 //               bottom: (groupTransactionList.isEmpty ? 4 : 3),
 //             ),
 //             child: Row(
@@ -206,7 +206,7 @@
 //             borderSide: BorderSide.none,
 //           ),
 //           contentPadding:
-//               const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+//               const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 15),
 //         ),
 //         style: const TextStyle(color: AppColors.accentColor),
 //       ),
@@ -292,7 +292,7 @@
 //       final showTabs = groupTransactionList.isNotEmpty || showCheckBox.value;
 
 //       return Padding(
-//         padding: const EdgeInsets.only(left: 10, right: 2),
+//         padding: const EdgeInsets.only(left:AppSizes.p10, right:AppSizes.p2),
 //         child: showTabs
 //             ? Padding(
 //                 padding: const EdgeInsets.only(top: 3),
@@ -307,7 +307,7 @@
 
 //   Widget _buildCheckBoxButtons() {
 //     return Padding(
-//       padding: const EdgeInsets.only(right: 10),
+//       padding: const EdgeInsets.only(right:AppSizes.p10),
 //       child: Row(
 //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //         children: [
@@ -339,7 +339,7 @@
 
 //   Widget _coloredButton(String text, Color color, {Color? bg}) {
 //     return Container(
-//       margin: const EdgeInsets.symmetric(vertical: 4),
+//       margin: const EdgeInsets.symmetric(vertical: AppSizes.p4),
 //       width: MediaQuery.of(context).size.width / 2.5,
 //       height: MediaQuery.of(context).size.height / 26,
 //       decoration: BoxDecoration(
@@ -361,7 +361,7 @@
 //   Widget _buildTagHideButtons() {
 //     return Obx(() => (redioButton.isNotEmpty && _showTagButtons())
 //         ? Padding(
-//             padding: const EdgeInsets.only(left: 10, right: 2, top: 8),
+//             padding: const EdgeInsets.only(left:AppSizes.p10, right:AppSizes.p2, top:AppSizes.p8),
 //             child: getTagHideButtons(context),
 //           )
 //         : const SizedBox.shrink());
@@ -443,6 +443,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   bool isSearchActive = false;
 late Animation<double> _searchScaleAnim;
 late Animation<double> _searchOpacityAnim;
+bool get isCollectionsTab =>
+    selectedTab.value == HomepageStringsDart().collectionscreate;
+
 
   @override
   void initState() {
@@ -704,8 +707,8 @@ Widget _buildTabChip(String title) {
       },
       child: Container(
         width: MediaQuery.of(context).size.width / 3.8,
-        margin: const EdgeInsets.only(left: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        margin: const EdgeInsets.only(left:AppSizes.p8),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p12),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primaryColor
@@ -767,7 +770,7 @@ Widget _buildTabChip(String title) {
               
                 return SizedBox(
                 
-                  // color: Colors.red,
+                  // color:  AppColors.redColor,
                   width: calculatedWidth,
                   child: Center(
                     child: Align(
@@ -845,7 +848,7 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
        
         Padding(
           padding: EdgeInsets.only(
-            left: 10,
+            left:AppSizes.p10,
             right: 0,
             bottom: (isSearchActive?16: 3),
             top: (isSearchActive?16:0)
@@ -911,6 +914,7 @@ Widget _buildSearchAndTabsSection(BuildContext context) {
 }
 
 Widget _buildSearchIcon() {
+  final disabled = isCollectionsTab;
   return IconButton(
     icon:   CustomStyledContainer(
   radius: 5.0, // <-- Passing a custom radius
@@ -926,6 +930,7 @@ Widget _buildSearchIcon() {
     
    
     onPressed: () {
+       if (disabled) return;
       setState(() => isSearchActive = true);
       _searchAnimController.forward();
       FocusScope.of(context).requestFocus(focusNodeSearchFeild);
@@ -969,7 +974,7 @@ Widget _buildSearchIcon() {
 //             borderSide: BorderSide.none,
 //           ),
 //           contentPadding:
-//               const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+//               const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 15),
 //         ),
 //         style: const TextStyle(color: AppColors.accentColor),
 //       ),
@@ -1023,7 +1028,7 @@ Widget _buildSearchInput(BuildContext context) {
           borderSide: BorderSide.none,
         ),
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+            const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 15),
       ),
       style: const TextStyle(color: AppColors.accentColor),
     ),
@@ -1033,7 +1038,7 @@ Widget _buildSearchInput(BuildContext context) {
 // Change the search field for collection screen
 Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollection) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p8),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -1056,7 +1061,7 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
                 borderSide: BorderSide.none,
               ),
               contentPadding:
-                  const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+                  const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 15),
             ),
             style: const TextStyle(color: AppColors.accentColor),
           ),
@@ -1109,8 +1114,13 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
         : null;
   }
   Widget _buildToggleDateSummaryBtn() {
+    final disabled = isCollectionsTab;
+
     return InkWell(
-      onTap: () => isDateSummaryView.value = !isDateSummaryView.value,
+     onTap: () {
+            if (disabled) return;
+            isDateSummaryView.value = !isDateSummaryView.value;
+          },
       child: Obx(
         () =>   CustomStyledContainer(
  radius: 5.0, // <-- Passing a custom radius
@@ -1131,8 +1141,12 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
   }
 
   Widget _buildFilterButton() {
+    final disabled = isCollectionsTab;
     return InkWell(
-      onTap: () => showFilter.value = !showFilter.value,
+      onTap: () {
+            if (disabled) return;
+            showFilter.value = !showFilter.value;
+          },
       child: Obx(
         () =>  CustomStyledContainer(
   radius: 5.0, // <-- Passing a custom radius
@@ -1179,7 +1193,7 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
       final showTabs = groupTransactionList.isNotEmpty || showCheckBox.value;
 
       return Padding(
-        padding: const EdgeInsets.only(left: 10, right: 2),
+        padding: const EdgeInsets.only(left:AppSizes.p10, right:AppSizes.p2),
         child: showTabs
             ? Padding(
                 padding: const EdgeInsets.only(top: 3),
@@ -1194,7 +1208,7 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
 
   Widget _buildCheckBoxButtons() {
     return Padding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.only(right:AppSizes.p10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -1221,7 +1235,7 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
 
   Widget _coloredButton(String text, Color color, {Color? bg}) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p4),
       width: MediaQuery.of(context).size.width / 2.5,
       height: MediaQuery.of(context).size.height / 26,
       decoration: BoxDecoration(
@@ -1245,7 +1259,7 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
             allOrGroupTransactionsName.value ==
                 StringConstant.allTransactions)
         ? Padding(
-            padding: const EdgeInsets.only(left: 10, right: 2, top: 8),
+            padding: const EdgeInsets.only(left:AppSizes.p10, right:AppSizes.p2, top:AppSizes.p8),
             child: getTagHideButtons(context),
           )
         : const SizedBox.shrink());

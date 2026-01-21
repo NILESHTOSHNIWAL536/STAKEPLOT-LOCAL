@@ -67,7 +67,7 @@
 //           shape: RoundedRectangleBorder(
 //             borderRadius: BorderRadius.circular(16 * fontScale),
 //           ),
-//           insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+//           insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p24),
 //           title: Row(
 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //             children: [
@@ -275,7 +275,7 @@
 //     return Scaffold(
 //       body: SafeArea(
 //         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
+//           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: AppSizes.p8),
 //           child: Obx(() => Column(
 //                 children: [
 //                   if (isLoading.value)
@@ -442,7 +442,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16 * fontScale),
           ),
-          insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p24),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -655,7 +655,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                       onPressed: () => _onViewAll(context),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 12 * fontScale, vertical: 8 * fontScale),
+                            horizontal: AppSizes.p12 * fontScale, vertical: AppSizes.p8 * fontScale),
                         backgroundColor: AppColors.backgroundColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8 * fontScale),
@@ -705,7 +705,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                 // If no cards to preview, show message
                 if (cards.isEmpty)
                   Padding(
-                    padding: EdgeInsets.only(top: 16.0),
+                    padding: EdgeInsets.only(top:AppSizes.p16),
                     child: Text(
                       "No autopay cards available.",
                       style: FontManager().getTextStyle(

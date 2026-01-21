@@ -394,7 +394,7 @@
 //             );
 //           },
 //           child: Container(
-//             padding: const EdgeInsets.all(8.0),
+//             padding: const EdgeInsets.all(AppSizes.p8),
 //             width: 80,
 //             decoration: BoxDecoration(
 //               borderRadius: BorderRadius.circular(10),
@@ -435,12 +435,12 @@
 //         ),
 //         width: MediaQuery.of(context).size.width,
 //         height: height > 0 ? height / 3.8 : 100, // Fallback height
-//         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+//         padding: EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p10),
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
 //             Padding(
-//               padding: const EdgeInsets.only(top: 20),
+//               padding: const EdgeInsets.only(top:AppSizes.p20),
 //               child: textStyle(
 //                   context: context,
 //                   text: HomepageStringsDart().setLockTitle,
@@ -501,7 +501,7 @@
 //                           },
 //                     child:  Container(
 //                       width: MediaQuery.of(context).size.width / 1.1,
-//                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+//                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p20),
 //                       decoration: BoxDecoration(
 //                         color: isInvalidPin
 //                             ? AppColors.bg3
@@ -778,7 +778,7 @@
 //                           final index = entry.key;
 //                           final account = entry.value as BankAccountModel;
 //                           return Padding(
-//                             padding: const EdgeInsets.only(right: 10.0),
+//                             padding: const EdgeInsets.only(right:AppSizes.p10),
 //                             child: GestureDetector(
 //                               onTap: () {
 //                                 accountId.value = account.accountId;
@@ -1180,12 +1180,12 @@
 //         ),
 //         width: MediaQuery.of(context).size.width,
 //         height: height > 0 ? height / 3.8 : 100, // Fallback height
-//         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+//         padding: EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p10),
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
 //             Padding(
-//               padding: const EdgeInsets.only(top: 20),
+//               padding: const EdgeInsets.only(top:AppSizes.p20),
 //               child: textStyle(
 //                   context: context,
 //                   text: HomepageStringsDart().setLockTitle,
@@ -1246,7 +1246,7 @@
 //                           },
 //                     child:  Container(
 //                       width: MediaQuery.of(context).size.width / 1.1,
-//                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+//                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p20),
 //                       decoration: BoxDecoration(
 //                         color: isInvalidPin
 //                             ? AppColors.bg3
@@ -1437,7 +1437,7 @@ Widget avatarSlider() {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       SizedBox(
-        // color: Colors.red,
+        // color:  AppColors.redColor,
         height: AppComponentSizes.h4,
         child: PageView.builder(
           itemCount: bankAccountLinkedList.length,
@@ -1527,7 +1527,7 @@ Future.microtask(() {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       SizedBox(
-        // color: Colors.red,
+        // color:  AppColors.redColor,
         height: MediaQuery.sizeOf(context).height/4,
         child:
        SizedBox(
@@ -1641,7 +1641,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
 
           /// 🔤 MAIN CONTENT
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1750,7 +1750,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
           /// 🔁 TOP-RIGHT OTHER BANK LOGOS (CORRECT POSITION)
           if (bankAccountLinkedList.length > 1)
             Positioned(
-              top: 8,
+              top:AppSizes.p8,
               right: 0,
               child: Container(
                 height: 40,
@@ -1799,7 +1799,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
 
           /// 🔐 SET PIN BUTTON
           Positioned(
-            right: 16,
+            right:AppSizes.p16,
             bottom: 30,
             child: setPinForAccountHide(context),
           ),
@@ -1882,7 +1882,7 @@ Widget setPinForAccountHide(context) {
   return Obx(() {
     if (userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00" || userController.cupertinoPin.value.isEmpty ||  userController.cupertinoAttemptCount.value) { // Handle empty case too
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p12),
         child: InkWell(
           onTap: () {
 
@@ -1957,12 +1957,12 @@ Widget setPinForAccountHide(context) {
         ),
         width: MediaQuery.of(context).size.width,
         height: height > 0 ? height / 3.8 : 100, // Fallback height
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top:AppSizes.p20),
               child: textStyle(
                   context: context,
                   text: HomepageStringsDart().setLockTitle,
@@ -2023,7 +2023,7 @@ Widget setPinForAccountHide(context) {
                           },
                     child:  Container(
                       width: MediaQuery.of(context).size.width / 1.1,
-                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p20),
                       decoration: BoxDecoration(
                         color: isInvalidPin
                             ? AppColors.grey

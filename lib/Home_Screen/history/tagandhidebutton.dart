@@ -31,7 +31,7 @@ Widget getTabsForTransactions(BuildContext context) {
     children: [
       tabItem(StringConstant.allTransactions, context),
       Padding(
-        padding: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.only(right:AppSizes.p10),
         child: tabItem(StringConstant.pollTransactions, context),
       ),
     ],
@@ -132,9 +132,9 @@ Widget getTagHideButtons(BuildContext context) {
               ?const SizedBox.shrink()
               : actionButton(
                   text: 'Delete',
-                  icon:const Icon(
+                  icon: Icon(
                     Icons.delete,
-                    color: Colors.red,
+                    color:  AppColors.redColor,
                     size: 20,
                   ),
                   onTap: () {
@@ -189,7 +189,7 @@ Widget actionButton(
     onTap: onTap,
     splashColor: AppColors.primaryColor.withOpacity(0.2),
     child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p4),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor, // Match modal background for consistency
         borderRadius: BorderRadius.circular(3),
@@ -261,7 +261,7 @@ void showModal(context2) {
           child: textStyleImage(
               context: context,
               text: 'Delete',
-              c: Colors.red,
+              c:  AppColors.redColor,
               fontsize: 16,
               fontWeight: FontWeight.bold),
         ),

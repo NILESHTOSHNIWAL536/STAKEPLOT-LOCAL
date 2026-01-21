@@ -88,7 +88,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.backgroundColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -212,7 +212,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
       elevation: 1, // Adds a slight shadow effect
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: AppColors.backgroundColor,

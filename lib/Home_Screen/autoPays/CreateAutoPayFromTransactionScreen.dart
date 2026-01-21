@@ -64,7 +64,7 @@ class _CreateAutoPayFromTransactionScreenState
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(26),
+        padding: const EdgeInsets.all(AppSizes.p26),
         child: _buildCurrentStep(),
       ),
     );
@@ -83,7 +83,7 @@ class _CreateAutoPayFromTransactionScreenState
   /// ---------------- TRANSACTION CARD ----------------
   Widget _transactionCard({bool showDetails = false}) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSizes.p12),
       decoration: BoxDecoration(
         color:AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(8),

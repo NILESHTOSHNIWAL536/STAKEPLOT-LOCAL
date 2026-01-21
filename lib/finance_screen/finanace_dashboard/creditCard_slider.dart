@@ -31,7 +31,7 @@ class CardDueCarousel extends StatelessWidget {
                     color: AppColors.primaryColor,
                   ),
                 ),
-                backgroundColor: AppColors.white,
+                backgroundColor: AppColors.backgroundColor,
                 leading: leadIcon(context),
               ),
               body: getDataListView(context),
@@ -47,14 +47,14 @@ class CardDueCarousel extends StatelessWidget {
           ? controller.loading.value? Center(child: Spinner()):NoCreditCardUi(context)
           : ListView.builder(
               scrollDirection: Axis.vertical,
-              // padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              // padding: const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: AppSizes.p12),
               itemCount: controller.cardList.length,
               itemBuilder: (context, index) {
                 final card = controller.cardList[index];
                 return Container(
                   width: MediaQuery.of(context).size.width,
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 20),
                   decoration: BoxDecoration(
                     color: AppColors.backgroundColor,
                     borderRadius: BorderRadius.circular(16),
@@ -97,7 +97,7 @@ Widget NoCreditCardUi(BuildContext context)
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: AppSizes.p16),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(

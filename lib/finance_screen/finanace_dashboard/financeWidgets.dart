@@ -183,7 +183,7 @@ class FinanceWidgets {
                   itemBuilder: (context, index) {
                     final debt = debts[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                       child: SizedBox(
                         width: isSingleDebt
                             ? screenWidth * 0.4
@@ -212,7 +212,7 @@ class FinanceWidgets {
                   itemBuilder: (context, index) {
                     final debt = debts[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                       child: SizedBox(
                         width: isSingleDebt
                             ? screenWidth * 0.9
@@ -275,7 +275,7 @@ class FinanceWidgets {
                   itemCount: sortedBudgets.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                       child: SizedBox(
                         width: isSingleBudget
                             ? screenWidth * 0.9
@@ -293,7 +293,7 @@ class FinanceWidgets {
 
   static Widget calculatorList(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      margin: EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
       width: MediaQuery.of(context).size.width,
       child: Wrap(
         spacing: 8,

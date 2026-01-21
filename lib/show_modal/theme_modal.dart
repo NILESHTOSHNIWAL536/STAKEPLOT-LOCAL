@@ -18,7 +18,7 @@ void showThemeSelectorModal(BuildContext context) {
         final current = controller.themeMode.value;
 
         return Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSizes.p16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

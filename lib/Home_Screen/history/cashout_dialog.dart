@@ -16,10 +16,10 @@ class CashOutDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: const EdgeInsets.all(10),
+      insetPadding: const EdgeInsets.all(AppSizes.p10),
        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p24),
         width: double.infinity,
         child: SingleChildScrollView(
           child: Column(
@@ -60,7 +60,7 @@ class CashOutDialog extends StatelessWidget {
                   filled: true,
                   fillColor: Colors.grey.shade200,
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                      const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p14),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
@@ -83,7 +83,7 @@ class CashOutDialog extends StatelessWidget {
                   filled: true,
                   fillColor: Colors.grey.shade200,
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                      const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p14),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
@@ -123,7 +123,7 @@ class CashOutDialog extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4C4C7C),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.p16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

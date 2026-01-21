@@ -98,7 +98,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
     // Get index for color
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,7 +139,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
 
   Widget getSubtext(data) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -166,7 +166,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
 
   Widget getGraph() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: EdgeInsets.only(top:AppSizes.p10),
       width: MediaQuery.of(context).size.width / 1.1,
       height: MediaQuery.of(context).size.height / 4,
       child: PieChart(
@@ -259,7 +259,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
 //         //SizedBox(height: Colorcodes.paddingSize),
 //         getGraph(),
 //          Padding(
-//           padding: EdgeInsets.symmetric(vertical: 8),
+//           padding: EdgeInsets.symmetric(vertical: AppSizes.p8),
 //           child: Row(
 //             mainAxisAlignment: MainAxisAlignment.center,
 //             children: [
@@ -280,7 +280,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
 //   }
 //    Widget getSubtext(data) {
 //     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 4),
+//       padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
 //       child: Row(
 //         mainAxisAlignment: MainAxisAlignment.start,
 //         crossAxisAlignment: CrossAxisAlignment.center,
@@ -335,7 +335,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
 //   /// **Donut Chart**
 //   Widget getGraph() {
 //     return Container(
-//       margin: EdgeInsets.only(top: 10),
+//       margin: EdgeInsets.only(top:AppSizes.p10),
 //       width: MediaQuery.of(context).size.width / 1.1,
 //       height: MediaQuery.of(context).size.height / 2.5,
 //       child: SfCircularChart(

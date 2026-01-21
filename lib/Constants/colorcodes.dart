@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 
+import 'core/app_padding_sizes.dart';
 import 'font_manager.dart';
 
 
@@ -265,7 +266,7 @@ Widget textStyleDesign(String str, color, double size, context) {
           ],
         ),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 15),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 15),
       child: Text(
         str,
         style: FontManager().getTextStyle(context,

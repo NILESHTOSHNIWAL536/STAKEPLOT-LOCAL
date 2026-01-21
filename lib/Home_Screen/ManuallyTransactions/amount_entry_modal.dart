@@ -171,9 +171,9 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         bottom: MediaQuery.of(context)
             .viewInsets
             .bottom, // Adjusts for keyboard height
-        left: 16.0,
-        right: 16.0,
-        top: 16.0,
+        left: AppSizes.p16,
+        right: AppSizes.p16,
+        top:AppSizes.p16,
       ),
       duration: const Duration(milliseconds: 100), // Smooth animation
       curve: Curves.easeInOut,
@@ -193,7 +193,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
             ),
              SizedBox(height: AppSizes.h16),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.p8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -232,7 +232,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                           minHeight: 30,
                         ),
                         contentPadding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 8),
+                            vertical: AppSizes.p10, horizontal: 8),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -254,7 +254,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
               ),
             ),
             ...widget.selectedFriends.map((friend) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.p8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -296,7 +296,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                               minHeight: 30,
                             ),
                             contentPadding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 8),
+                                vertical: AppSizes.p10, horizontal: 8),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -335,7 +335,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                 color: leftoverAmount == 0
                     ? Colors.green
                     : leftoverAmount < 0
-                        ? Colors.red
+                        ?  AppColors.redColor
                         : Colors.orange,
               ),
             ),
@@ -418,7 +418,7 @@ Widget buttonContainer(context, str,
     [color = AppColors.primaryColor, textColor = AppColors.bg5]) {
   return Container(
     width: MediaQuery.of(context).size.width / 2.3,
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
     decoration:
         BoxDecoration(color: color, borderRadius: BorderRadius.circular(24)),
     child: Center(

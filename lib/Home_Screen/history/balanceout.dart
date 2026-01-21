@@ -27,7 +27,7 @@ class BalanceOutDialog extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Dialog(
-      insetPadding: const EdgeInsets.all(10),
+      insetPadding: const EdgeInsets.all(AppSizes.p10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         decoration: BoxDecoration(
@@ -37,7 +37,7 @@ class BalanceOutDialog extends StatelessWidget {
         ),
        
         width:  width/1.1,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSizes.p16),
         child: Obx(() {
           final transactions = balanceOutList.values.toList();
             double creditSum = 0.0;
@@ -227,9 +227,9 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                         final tx = transactions[index];
                         final isPositive = tx.type != "DEBIT";
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
                           child: Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(AppSizes.p12),
                             decoration: BoxDecoration(
                              borderRadius: BorderRadius.circular(5),
     color: AppColors.backgroundColor,

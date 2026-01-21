@@ -39,7 +39,7 @@
 //       ),
 //       body: SafeArea(
 //         child: Padding(
-//           padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.04, vertical: 8.0),
+//           padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.04, vertical: AppSizes.p8),
 //           child: Obx(() {
 //             // Group non-active cards by title (case-insensitive)
 //             final Map<String, List<CardData>> groupedCards = {};
@@ -236,7 +236,7 @@
 //       body: SafeArea(
 //         child: Padding(
 //           padding: EdgeInsets.symmetric(
-//               horizontal: screenSize.width * 0.002, vertical: 8.0),
+//               horizontal: screenSize.width * 0.002, vertical: AppSizes.p8),
 //           child: Obx(() {
 //             // Group non-active cards by title (case-insensitive)
 //             final Map<String, List<CardData>> groupedCards = {};
@@ -306,7 +306,7 @@
 //                               if (hasSimilarCards)
 //                                 Padding(
 //                                   padding:
-//                                       EdgeInsets.only(top: 2.0, right: 8.0),
+//                                       EdgeInsets.only(top: 2.0, right:AppSizes.p8),
 //                                   child: TextButton(
 //                                     onPressed: () {
 //                                       Navigator.push(
@@ -410,7 +410,7 @@
 //       body: SafeArea(
 //         child: Padding(
 //             padding: EdgeInsets.symmetric(
-//                 horizontal: screenSize.width * 0.002, vertical: 8.0),
+//                 horizontal: screenSize.width * 0.002, vertical: AppSizes.p8),
 //             child: Obx(() {
 //               return Column(
 //                 children: [
@@ -543,7 +543,7 @@ class AllCardsScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.05, vertical: 8.0),
+              horizontal: screenSize.width * 0.05, vertical: AppSizes.p8),
           child: Obx(() {
             // Group non-active cards by title (case-insensitive)
             final Map<String, List<CardData>> groupedCards = {};
@@ -743,7 +743,7 @@ class SimilarCardsScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.002, vertical: 8.0),
+              horizontal: screenSize.width * 0.002, vertical: AppSizes.p8),
           child: Obx(() {
             // Filter cards by title (case-insensitive) and exclude active cards
             final filteredCards = allCards
@@ -756,8 +756,8 @@ class SimilarCardsScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    left: 16.0 * fontScale,
-                    right: 16.0 * fontScale,
+                    left:AppSizes.p16 * fontScale,
+                    right:AppSizes.p16 * fontScale,
                   ),
                   child: Text(
                     "We’ve grouped similar payments for you.",

@@ -84,7 +84,7 @@ class SwipeableCardsScreen extends StatelessWidget {
   Widget card,
 ) {
   return Padding(
-    padding: const EdgeInsets.only(right: 12), 
+    padding: const EdgeInsets.only(right:AppSizes.p12), 
     child: Container(
       width: screenSize.width * 0.8, // 👈 KEY CHANGE (peek effect)
       height: screenSize.height * 0.14,
@@ -117,7 +117,7 @@ class TotalSpendingCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
         ),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +126,7 @@ class TotalSpendingCard extends StatelessWidget {
               Row(
                 children: [
                  Container(
-                   padding: EdgeInsets.all(2),
+                   padding: EdgeInsets.all(AppSizes.p2),
                     decoration: BoxDecoration(
                       
                        color: const Color.fromRGBO(75, 77, 115, 0.04),
@@ -234,7 +234,7 @@ class OverspentCategoriesCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
         ),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -369,7 +369,7 @@ class FrequentTransactionCard extends StatelessWidget {
             Row(
               children: [
                   Container(
-                    padding: EdgeInsets.all(2),
+                    padding: EdgeInsets.all(AppSizes.p2),
                     decoration: BoxDecoration(
                       
                        color: const Color.fromRGBO(75, 77, 115, 0.04),

@@ -34,7 +34,7 @@ Widget _buildFeatureIcon(IconData icon, String text, int index,
       Navigator.pushNamed(context, routerName);
     },
     child: Padding(
-      padding: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.only(top:AppSizes.p30),
       child: Column(
         children: [
           Padding(
@@ -42,7 +42,7 @@ Widget _buildFeatureIcon(IconData icon, String text, int index,
             child: Container(
               width: 50,
               height: 50,
-              padding: EdgeInsets.all(4),
+              padding: EdgeInsets.all(AppSizes.p4),
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
                 shape: BoxShape.circle, // Changed to a circle for accuracy

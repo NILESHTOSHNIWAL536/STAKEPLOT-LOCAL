@@ -86,7 +86,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
         SizedBox(height: AppSizes.h8),
 
         Padding(
-          padding: const EdgeInsets.all(14.0),
+          padding: const EdgeInsets.all(AppSizes.p14),
           child: Text(
             'Your money, your view! Connect your bank to see all your expenses in one place. Super easy.',
             style: FontManager().getTextStyle(
@@ -139,7 +139,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
   // ---------------------------------------------------
   Widget _buildBottomNavigation(double screenWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p20),
       child: Container(
         width: MediaQuery.sizeOf(context).width,
         decoration: BoxDecoration(

@@ -57,7 +57,7 @@ Widget noFriend(
       }
     },
     child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
       child: Center(
         child: Column(
           children: [
@@ -117,7 +117,7 @@ Widget popUpBox(id, context) {
 Widget vote(context, PostModel dataObj, data) {
   String idData = dataObj.id;
   return Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 28.0),
+        padding: const EdgeInsets.only(left:AppSizes.p16, right:AppSizes.p28),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -199,7 +199,7 @@ Widget vote(context, PostModel dataObj, data) {
                 //               builder: (context) {
                 //                 return Container(
                 //                   padding:
-                //                       const EdgeInsets.symmetric(vertical: 16.0),
+                //                       const EdgeInsets.symmetric(vertical: AppSizes.p16),
                 //                   width: MediaQuery.sizeOf(context).width,
                 //                   decoration: BoxDecoration(
                 //                       color: AppColors.commentbg,
@@ -217,7 +217,7 @@ Widget vote(context, PostModel dataObj, data) {
                 //           }
                 //         },
                 //         child: Container(
-                //           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                //           padding: EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p6),
                 //           child: Row(
                 //             children: [
                 //               Container(

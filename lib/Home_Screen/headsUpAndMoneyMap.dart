@@ -299,7 +299,7 @@ class NavItem extends StatelessWidget {
         curve: Curves.easeOutCubic,
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4.0),
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
+          padding: const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: 6.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -357,7 +357,7 @@ class InsightCard extends StatelessWidget {
       tag: 'card-$title',
       child: Container(
         width: width,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSizes.p24),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(24),
@@ -365,7 +365,7 @@ class InsightCard extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
-              right: 16,
+              right:AppSizes.p16,
               bottom: 16,
               child: Opacity(
                 opacity: 0.25,

@@ -76,7 +76,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.delete, color: Colors.red),
+            icon: Icon(Icons.delete, color: AppColors.redColor),
             onPressed: () async {
               // Show confirmation dialog before deletion
               bool? confirm = await showDialog(
@@ -89,7 +89,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
                   title: _buildText(PlotFinanceStaticData().deleteBudgetTitle, AppColors.bg1,
                       fontSize: 18, fontWeight: FontWeight.bold),
                   content: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.p8),
                     child: _buildText(
                      PlotFinanceStaticData().deleteBudgetTitle,
                       AppColors.bg1,
@@ -120,7 +120,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(AppSizes.p16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -151,7 +151,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     if (hasNoData) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
           child: _buildText(
             PlotFinanceStaticData().noSpendingData,
             AppColors.accentColor,
@@ -199,7 +199,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         ? budgetChartData.map((e) => e.y).reduce((a, b) => a + b)
         : 0.0;
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.p16),
        decoration: BoxDecoration(
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(16),
@@ -233,7 +233,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           _buildRow2(
             PlotFinanceStaticData().overSpentLabel, // Updated
             '₹ ${((totalSpent - (widget.data['amount'] as num)).clamp(0, double.infinity)).toStringAsFixed(2)}',
-            Colors.red,
+            AppColors.redColor,
           ),
         ],
       ),
@@ -256,9 +256,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildText(title, Colors.red,
+        _buildText(title, AppColors.redColor,
             fontSize: 14, fontWeight: FontWeight.w500),
-        _buildText(value, Colors.red,
+        _buildText(value, AppColors.redColor,
             fontSize: 16, fontWeight: FontWeight.w500),
       ],
     );
@@ -299,7 +299,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     List<dynamic>? insightsList = budgetInsights; // Extract list
    
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.p16),
       // decoration: _buildBackgroundDecoration(),
       decoration: BoxDecoration(
         color: AppColors.mt,
@@ -330,7 +330,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
                   itemBuilder: (context, index) {
                     return Container(
                       margin: EdgeInsets.only(bottom: 8),
-                      padding: EdgeInsets.all(12),
+                      padding: EdgeInsets.all(AppSizes.p12),
                       decoration: BoxDecoration(
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(16),
@@ -496,7 +496,7 @@ class LineChartSample extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         color: AppColors.accentColor,
                       ),
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(AppSizes.p8),
                       child: Text('₹${chartData.y.toStringAsFixed(2)}',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w400,

@@ -36,7 +36,7 @@ class _StepSelectDurationState extends State<StepSelectDuration> {
            SizedBox(height: AppSizes.h12),
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
             child: Column(
               children: [
                 GestureDetector(

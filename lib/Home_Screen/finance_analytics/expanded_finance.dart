@@ -83,11 +83,11 @@
 //             child: Column(
 //               children: [
 //                 Padding(
-//                   padding: const EdgeInsets.all(8.0),
+//                   padding: const EdgeInsets.all(AppSizes.p8),
 //                   child: _buildMonthYearSelector(fontSizeFactor, screenWidth),
 //                 ),
 //                 Padding(
-//                   padding: const EdgeInsets.all(8.0),
+//                   padding: const EdgeInsets.all(AppSizes.p8),
 //                   child: Obx(() => isLoading.value
 //                       ? Center(
 //                           child: Spinner(
@@ -481,7 +481,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         final yearsCount = currentYear - 2020 + 1;
         return Container(
           height: 300.0,
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(AppSizes.p8),
           child: GridView.count(
             crossAxisCount: 3,
             crossAxisSpacing: 4.0,
@@ -551,7 +551,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         body: SingleChildScrollView(
           controller: outerScrollController,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal:4.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal:4.0, vertical: AppSizes.p8),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // Row: months (chart+transaction selector) + year pill
               
@@ -581,8 +581,8 @@ if (_selectedDayIndex >= 0 &&
       // Credited container
       Container(
         padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 14,
+          horizontal: AppSizes.p12,
+          vertical: AppSizes.p14,
         ),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor, // light bg
@@ -608,8 +608,8 @@ if (_selectedDayIndex >= 0 &&
       // Debited container
       Container(
         padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 14,
+          horizontal: AppSizes.p12,
+          vertical: AppSizes.p14,
         ),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor, // light bg
@@ -646,7 +646,7 @@ else
                 width: double.infinity,
                 decoration: BoxDecoration(
                     color: AppColors.backgroundColor, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.financeChartBorder, width: 1)),
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(AppSizes.p14),
                 child: _loadingChart
                     ? SizedBox(height: screenHeight / chartAreaHeightFactor, child: Center(child: Spinner(size: 30)))
                     : _buildExpandedChartNoYLabels(screenWidth, screenHeight),
@@ -766,7 +766,7 @@ else
     color: AppColors.strokeColor.withOpacity(0.9),
     markerSettings: MarkerSettings(
       isVisible: true,
-      color: Colors.white,
+      color: AppColors.backgroundColor,
       borderColor: AppColors.strokeColor,
       borderWidth: 2,
       height: 8,
@@ -827,11 +827,11 @@ AppBar appbarWidget() {
                       final bool isSelected = month == selectedMonth.value;
 
                       return Padding(
-                        padding: const EdgeInsets.only(left: 16),
+                        padding: const EdgeInsets.only(left:AppSizes.p16),
                         child: GestureDetector(
                           onTap: () => _onMonthPillTap(month),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                             height: pillHeight,
                             decoration: BoxDecoration(
                               color: isSelected
@@ -878,7 +878,7 @@ AppBar appbarWidget() {
                 onTap: () =>
                     _showYearPickerAndApply(context, 14, 400),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p8),
                   height: pillHeight,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),

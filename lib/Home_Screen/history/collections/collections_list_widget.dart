@@ -54,7 +54,7 @@ Widget _buildCollectionsList(BuildContext context) {
   ];
 
   return SingleChildScrollView(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p8),
     child: Column(
       children: List.generate(collections.length, (index) {
         final item = collections[index];
@@ -141,7 +141,7 @@ Widget _collectionCard({
     height: MediaQuery.of(context).size.height * 0.16,
     width: MediaQuery.of(context).size.width * 0.8,
     margin: const EdgeInsets.only(bottom: 8),
-    padding: const EdgeInsets.all(14),
+    padding: const EdgeInsets.all(AppSizes.p14),
     decoration: BoxDecoration(
       color: AppColors.backgroundColor,
       borderRadius: BorderRadius.circular(14),
@@ -192,8 +192,8 @@ Widget _collectionCard({
             children: [
               ...members.map(
                 (e) => Container(
-                  margin: const EdgeInsets.only(right: 6),
-                  padding: const EdgeInsets.all(6),
+                  margin: const EdgeInsets.only(right:AppSizes.p6),
+                  padding: const EdgeInsets.all(AppSizes.p6),
                   decoration: const BoxDecoration(
                     color: AppColors.button,
                     shape: BoxShape.circle,
@@ -210,9 +210,9 @@ Widget _collectionCard({
               ),
               if (amount != null)
                 Container(
-                  margin: const EdgeInsets.only(left: 8),
+                  margin: const EdgeInsets.only(left:AppSizes.p8),
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
+                      horizontal: 10, vertical: AppSizes.p4),
                   decoration: BoxDecoration(
                     color: AppColors.bg5,
                     borderRadius: BorderRadius.circular(10),

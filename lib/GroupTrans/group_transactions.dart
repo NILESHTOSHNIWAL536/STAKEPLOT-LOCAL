@@ -67,7 +67,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                       int index = entry.key;
                       var transaction = entry.value;
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p4),
                         child: _buildGroupCard(context, transaction, index),
                       );
                     })
@@ -113,8 +113,8 @@ class _GroupTransactionsState extends State<GroupTransactions>
     return GestureDetector(
       onTap: () => _showTransactionModal(context, transaction, index),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
+        padding: const EdgeInsets.all(AppSizes.p16),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(16),
@@ -223,7 +223,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
       builder: (modalContext) {
         return Container(
           height: MediaQuery.of(modalContext).size.height * 0.7,
-          padding: const EdgeInsets.only(top: 16, bottom: 16),
+          padding: const EdgeInsets.only(top:AppSizes.p16, bottom: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -275,7 +275,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                         },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
+                        horizontal: 16, vertical: AppSizes.p8),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -360,7 +360,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
           : Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Container(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(AppSizes.p14),
                 decoration: BoxDecoration(
                   color: AppColors.backgroundColor,
                   borderRadius: BorderRadius.circular(12),
@@ -457,7 +457,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                                 transaction['transactions'].length;
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(AppSizes.p8),
                         decoration: BoxDecoration(
                           color: Colorcodes.red.withOpacity(0.1),
                           shape: BoxShape.circle,

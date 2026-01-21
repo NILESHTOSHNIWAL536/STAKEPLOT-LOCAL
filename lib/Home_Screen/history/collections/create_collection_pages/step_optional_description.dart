@@ -81,7 +81,7 @@ class StepOptionalDescription extends StatelessWidget {
           /// DESCRIPTION INPUT
           Container(
             height: 140,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSizes.p12),
             decoration: BoxDecoration(
               color: AppColors.backgroundColor,
               borderRadius: BorderRadius.circular(10),

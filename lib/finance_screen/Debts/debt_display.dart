@@ -10,6 +10,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDe
 import 'package:intl/intl.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/repository/debt_service.dart';
+
+import '../../Constants/core/app_padding_sizes.dart';
 class DebtDetailsScreen extends StatefulWidget {
   final Debt debt;
 
@@ -69,8 +71,8 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
         actions: [
           IconButton(
             icon: _isDeleting
-                ? CircularProgressIndicator(color: Colors.red, strokeWidth: 2)
-                : Icon(Icons.delete, color: Colors.red),
+                ? CircularProgressIndicator(color:  AppColors.redColor, strokeWidth: 2)
+                : Icon(Icons.delete, color:  AppColors.redColor),
             onPressed: _isDeleting
                 ? null
                 : () async {
@@ -93,7 +95,7 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
                             },
                            child: Text(
                               PlotFinanceStaticData().deleteButton, // Updated
-                              style: TextStyle(color: Colors.red),
+                              style: TextStyle(color:  AppColors.redColor),
                             ),
                           ),
                         ],
@@ -117,7 +119,7 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(AppSizes.p16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -142,7 +144,7 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
                       ],
                     ),
                     Container(
-                      padding: EdgeInsets.all(12),
+                      padding: EdgeInsets.all(AppSizes.p12),
                       child: Column(
                          children: [
                           rowItem(PlotFinanceStaticData().loanTypeLabel, widget.debt.type, labelWidth, context), // Updated

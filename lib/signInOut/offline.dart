@@ -19,7 +19,7 @@ class Connections extends StatelessWidget {
       // title: 'Dashboard',
       // onBack: () => Navigator.maybePop(context),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSizes.p16),
         children: List.generate(
           6,
           (i) => Card(
@@ -161,7 +161,7 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
         child: showBottomBar
             ? SafeArea(
                 top: false,
-                minimum: const EdgeInsets.symmetric(horizontal: 14),
+                minimum: const EdgeInsets.symmetric(horizontal: AppSizes.p14),
                 child: Row(
                   children: [
                     const Icon(Icons.wifi_off_rounded, color: AppColors.whiteOpacity07),
@@ -325,7 +325,7 @@ class _FilledActionButton extends StatelessWidget {
       icon: Icon(icon),
       label: Text(label),
       style: FilledButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
@@ -352,7 +352,7 @@ class _OutlineActionButton extends StatelessWidget {
       label: Text(label, style: const TextStyle(color: AppColors.backgroundColor)),
       style: OutlinedButton.styleFrom(
         side: const BorderSide(color: Colors.white54, width: 1.2),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );

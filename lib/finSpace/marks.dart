@@ -218,7 +218,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
       builder: (context) {
         return SafeArea(
           child: Container(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(AppSizes.p16),
             height: MediaQuery.sizeOf(context).height /
                 2.5, // Adjust height as needed
             child: Column(
@@ -282,7 +282,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
 
     return Container(
       width: screenSize.width * 0.85,
-      padding: EdgeInsets.all(12),
+      padding: EdgeInsets.all(AppSizes.p12),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(16),
@@ -330,7 +330,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                   bottom: 7,
                   right: 7,
                   child: Container(
-                    padding: EdgeInsets.all(2),
+                    padding: EdgeInsets.all(AppSizes.p2),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border:
@@ -392,9 +392,9 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
               //     enabledBorder: InputBorder.none,
               //     focusedBorder: InputBorder.none,
               //     contentPadding:
-              //         EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+              //         EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 0),
               //     suffixIcon: Padding(
-              //       padding: EdgeInsets.only(right: 4, bottom: 2),
+              //       padding: EdgeInsets.only(right:AppSizes.p4, bottom: 2),
               //       child: IconButton(
               //         icon: Icon(Icons.auto_fix_high,
               //             color: AppColors.finSpaceColor),
@@ -451,7 +451,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4A4E69),
                 foregroundColor: AppColors.backgroundColor,
-                padding: EdgeInsets.symmetric(vertical: 12),
+                padding: EdgeInsets.symmetric(vertical: AppSizes.p12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

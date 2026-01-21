@@ -13,7 +13,9 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
-import 'package:lottie/lottie.dart'; // For haptic feedback
+import 'package:lottie/lottie.dart';
+
+import '../../../Constants/core/app_padding_sizes.dart'; // For haptic feedback
 
 
 
@@ -84,7 +86,7 @@ Widget getPredictedCategoryIcons(
     children: getUniquePredictedCategories(predictions.entries).map((entry) {
       String category=getCategoryForKeyword(entry.category);
       return Padding(
-        padding: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.only(right:AppSizes.p12),
         child: GestureDetector(
           onTap: () async {
             if (_debounce?.isActive ?? false) return;

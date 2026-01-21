@@ -48,8 +48,8 @@ class _SliderPageState extends State<SliderPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 4, right: 4, top: 0, bottom: 15),
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      margin: EdgeInsets.only(left:AppSizes.p4, right:AppSizes.p4, top: 0, bottom: 15),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
@@ -89,7 +89,7 @@ class _SliderPageState extends State<SliderPage> {
 
   Widget sliderContainer(data, int index) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 6),
+      margin: EdgeInsets.symmetric(vertical: AppSizes.p6),
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         children: [
@@ -331,7 +331,7 @@ class _SliderPageState extends State<SliderPage> {
         });
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
             color: AppColors.backgroundColor),

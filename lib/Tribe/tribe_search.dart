@@ -167,7 +167,7 @@ class _TribeSearchState extends State<TribeSearch> {
       body: SafeArea(
         child: Container(
           color: AppColors.backgroundColor,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p30),
           child: ListView(
            
             children: [
@@ -214,7 +214,7 @@ class _TribeSearchState extends State<TribeSearch> {
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.search),
               filled: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
+              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: AppSizes.p14),
               hintText: lableText,
               
               fillColor: AppColors.backgroundColor,
@@ -382,7 +382,7 @@ void showmodalWidget(data){
          child: Column(
            children: [
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
+                  margin: EdgeInsets.symmetric(vertical: AppSizes.p10),
                   width: MediaQuery.of(context).size.width/6,
                   height: 3,
                   decoration: BoxDecoration(
@@ -439,7 +439,7 @@ void showmodalWidget(data){
             }
                   },
                    child: Padding(
-                     padding: const EdgeInsets.symmetric(vertical: 10),
+                     padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
                      child:Obx(()=> getButton(context, buttonValue.value =="Add" ?  widget.isMasked? "Connect":buttonValue.value:buttonValue.value)),
                    ),
                  ),
@@ -497,7 +497,7 @@ void showmodalWidget(data){
       return Column(
         children: [
           Container(
-              padding: EdgeInsets.symmetric(vertical: 5,horizontal: 14),
+              padding: EdgeInsets.symmetric(vertical: 5,horizontal: AppSizes.p14),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(

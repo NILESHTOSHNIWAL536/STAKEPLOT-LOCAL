@@ -31,7 +31,7 @@ class IndexScreen extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
       child: RefreshIndicator(
         color: AppColors.primaryColor,
         backgroundColor: AppColors.backgroundColor,

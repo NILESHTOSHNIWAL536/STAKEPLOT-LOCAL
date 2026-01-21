@@ -174,8 +174,8 @@ class _TagShowmodalState extends State<TagShowmodal>
     if (custom.isEmpty) return SizedBox.shrink();
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 10),
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 7, vertical: AppSizes.p10),
+      margin: EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: 5),
        decoration: BoxDecoration(
                              borderRadius: BorderRadius.circular(5),
     color: AppColors.backgroundColor,
@@ -192,7 +192,7 @@ class _TagShowmodalState extends State<TagShowmodal>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 8),
+            padding: const EdgeInsets.only(left:AppSizes.p8),
             child: textStyle(
               context: context,
               text: "Custom",
@@ -232,7 +232,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                     ),
                     SizedBox(width: AppSizes.w6),
                     Padding(
-                      padding: const EdgeInsets.only(top: 16),
+                      padding: const EdgeInsets.only(top:AppSizes.p16),
                       child: textStyle(
                         context: context,
                         text: e['name'],
@@ -288,7 +288,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                     );
                 },
                 child:Obx(()=> Container(
-                  padding: EdgeInsets.all(2),
+                  padding: EdgeInsets.all(AppSizes.p2),
                  
                    
                             decoration:  BoxDecoration(
@@ -408,7 +408,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                         size: 30,
                       )
                     : Container(
-                       padding: EdgeInsets.all(2),
+                       padding: EdgeInsets.all(AppSizes.p2),
                  
                    
                             decoration:  BoxDecoration(
@@ -478,8 +478,8 @@ class _TagShowmodalState extends State<TagShowmodal>
           var e =
               categoryList[index - 1]; // Adjust index for regular categories
           return Container(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p4),
+            margin: EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p6),
              decoration: BoxDecoration(
                              borderRadius: BorderRadius.circular(5),
     color: AppColors.backgroundColor,
@@ -660,7 +660,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                 Expanded(
                   flex: 1,
                   child: Container(
-                    margin: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(AppSizes.p10),
                      decoration:  BoxDecoration(
                         
                         borderRadius: BorderRadius.circular(5),

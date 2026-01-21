@@ -132,7 +132,7 @@ class _emailUpdationState extends State<emailUpdation> {
 
   Widget topHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
       child: Text(
         "Verify Your Email",
         style: FontManager().getTextStyle(
@@ -149,8 +149,8 @@ class _emailUpdationState extends State<emailUpdation> {
     return Center(
       child: Container(
         width: MediaQuery.of(context).size.width / 1.1,
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
         decoration: BoxDecoration(
           color: Colorcodes.white,
           borderRadius: BorderRadius.circular(Colorcodes.borderRadius10),
@@ -202,20 +202,20 @@ class _emailUpdationState extends State<emailUpdation> {
                   Navigator.pop(context); // Return to EditDetails screen
                 } else {
                   snackBarCalledfail(
-                      context, "Failed to update email", Colors.red);
+                      context, "Failed to update email",  AppColors.redColor);
                   isOtpWrong2.value = true;
                   acceptReset.value = false;
                 }
               } else {
                 Navigator.pop(context); // Close loading dialog
-                snackBarCalledfail(context, "Invalid OTP", Colors.red);
+                snackBarCalledfail(context, "Invalid OTP",  AppColors.redColor);
                 isOtpWrong2.value = true;
                 acceptReset.value = false;
               }
             } catch (e) {
               Navigator.pop(context); // Close loading dialog
               snackBarCalledfail(
-                  context, "An error occurred. Please try again.", Colors.red);
+                  context, "An error occurred. Please try again.",  AppColors.redColor);
               isOtpWrong2.value = true;
               acceptReset.value = false;
             }

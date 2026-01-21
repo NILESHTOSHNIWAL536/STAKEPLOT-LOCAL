@@ -142,8 +142,8 @@ class _TwoFactorEmailVerificationState
     return Center(
       child: Container(
         width: MediaQuery.of(context).size.width / 1.1,
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        margin: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
         decoration: BoxDecoration(
           color: AppColors.primaryColor,
           borderRadius: BorderRadius.circular(Colorcodes.borderRadius10),
@@ -174,7 +174,7 @@ class _TwoFactorEmailVerificationState
 
   Widget resendOtp() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+      padding: EdgeInsets.symmetric(vertical: 0, horizontal: AppSizes.p12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,

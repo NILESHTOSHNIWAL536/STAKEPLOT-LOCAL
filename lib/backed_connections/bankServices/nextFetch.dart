@@ -257,7 +257,7 @@
 //                         SizedBox(width: Colorcodes.borderRadius10),
 //                         Container(
 //                           alignment: Alignment.topLeft,
-//                           padding: const EdgeInsets.symmetric(vertical: 10),
+//                           padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
 //                           child: textStyle(
 //                               context: context,
 //                               text: BankName.value,
@@ -299,7 +299,7 @@
 //                     limit
 //                         ? SizedBox.shrink()
 //                         : Padding(
-//                             padding: EdgeInsets.symmetric(vertical: 10),
+//                             padding: EdgeInsets.symmetric(vertical: AppSizes.p10),
 //                             child: textStyle(
 //                                 context: context,
 //                                 text: HomepageStringsDart()
@@ -432,7 +432,7 @@
 //     final Color textColor = _getColorFromSuccessPercent(metric.successPercent);
 
 //     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+//       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p2),
 //       child: Column(
 //         children: [
 //           textStyle(
@@ -468,7 +468,7 @@
 
 //   Color _getColorFromSuccessPercent(num successPercent) {
 //     if (successPercent < 40) {
-//       return Colors.red;
+//       return  AppColors.redColor;
 //     } else if (successPercent < 70) {
 //       return Colors.orange;
 //     } else {
@@ -783,7 +783,7 @@ class _RotatingIconState extends State<Nextfetch>
     builder: (context) {
       return SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: AppSizes.p30),
           decoration: const BoxDecoration(
             color: AppColors.backgroundColor,
             borderRadius:  BorderRadius.vertical(top: Radius.circular(24)),
@@ -809,7 +809,7 @@ class _RotatingIconState extends State<Nextfetch>
                                     lWeight: FontWeight.w500,
                                     fontSize: 16,
                                     color: 
-                  Colors.black,
+                  AppColors.bg1,
                                   ),
            
           ),
@@ -958,7 +958,7 @@ Widget connectedBanksRow(BuildContext context) {
 
   return Container(
     width: double.infinity,
-    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+    padding: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 6),
     decoration: BoxDecoration(
       color: AppColors.backgroundColor,
       borderRadius: BorderRadius.circular(14),
@@ -991,11 +991,11 @@ Widget connectedBanksRow(BuildContext context) {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(
-                vertical: 6,
+                vertical: AppSizes.p6,
                 horizontal: 10,
               ),
               decoration: BoxDecoration(
-                color: Colors.transparent,
+                color: AppColors.transparentColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -1051,7 +1051,7 @@ Widget connectedBanksRow(BuildContext context) {
 
     return Padding(
       padding:
-          const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+          const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p2),
       child: Column(
         children: [
           textStyle(
@@ -1097,7 +1097,7 @@ Widget connectedBanksRow(BuildContext context) {
       decoration: BoxDecoration(
         color: AppColors.newbg,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey, width: 1),
+        border: Border.all(color: AppColors.grey, width: 1),
       ),
       child: Row(
         mainAxisAlignment:
@@ -1164,7 +1164,7 @@ class RotatingStopwatchIcon extends StatefulWidget {
   const RotatingStopwatchIcon({
     Key? key,
     this.size = 26,
-    this.color = Colors.white,
+    this.color = AppColors.backgroundColor,
   }) : super(key: key);
 
   @override

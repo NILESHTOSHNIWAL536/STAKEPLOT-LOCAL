@@ -46,7 +46,7 @@ class _FinoraLastTwoMonthsDashboardState
         () => isLoading.value
             ? Center(child: Spinner())
             : Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(AppSizes.p8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -118,7 +118,7 @@ class _FinoraLastTwoMonthsDashboardState
   Widget _buildSummaryCard(
       BuildContext context, String month, String amount, Color indicatorColor) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSizes.p16),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(5),
@@ -207,7 +207,7 @@ class _FinoraLastTwoMonthsDashboardState
               ? (finoraTransactionData['month1Name']?.toString() ?? 'Month 1')
               : (finoraTransactionData['month2Name']?.toString() ?? 'Month 2');
           return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p6),
             decoration: BoxDecoration(
               color: AppColors.accentColor,
               borderRadius: BorderRadius.circular(4),

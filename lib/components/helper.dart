@@ -136,7 +136,7 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 10),
+                        horizontal: AppSizes.p14, vertical: AppSizes.p10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -199,7 +199,7 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
               ],
             ),
             margin:
-                const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 6),
             child: ListTile(
               leading: SizedBox(
                 width: 40,
@@ -296,7 +296,7 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
 //                   ),
 //                 ],
 //               ),
-//               margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+//               margin: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 6),
 //               child: ListTile(
 //                 leading: SizedBox(
 //                   width: 40,
@@ -370,7 +370,7 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
 //                 account["accountId"].toString();
 
 //         Widget content = Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+//           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p4),
 //           child: Row(
 //             mainAxisAlignment: MainAxisAlignment.center,
 //             crossAxisAlignment: CrossAxisAlignment.center,
@@ -418,8 +418,8 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
 //           },
 //           child: isSelected
 //               ? Container(
-//                   margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-//                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+//                   margin: EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
+//                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
 //                   decoration: BoxDecoration(
 //                     color: AppColors.primaryColor,
 //                     borderRadius: BorderRadius.circular(8),
@@ -427,14 +427,14 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
 //                   child: content,
 //                 )
 //               : Container(
-//                   margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-//                   padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+//                   margin: EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
+//                   padding: EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
 //                   child: DottedBorderBox(
 //                     dashWidth: 4,
 //                     space: 5,
 //                     dashHeight: 1,
 //                     color: AppColors.grey,
-//                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+//                     padding: EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p2),
 //                     child: content,
 //                   ),
 //                 ),
@@ -459,7 +459,7 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
             : masked;
 
         Widget content = Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -513,9 +513,9 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
           child: isSelected
               ? Container(
                   margin:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(8),
@@ -524,9 +524,9 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
                 )
               :  Container(
                  margin:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
                 decoration: BoxDecoration(
                   color: AppColors.filterContainer,
                   borderRadius: BorderRadius.circular(8),
@@ -541,7 +541,7 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
 
 Widget getHeader(context, text) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p12),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -642,12 +642,12 @@ Widget getListItemListTile(String no, String MorY, context) {
 
 Widget getCheckBoxwithText(BuildContext context, String text) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+    margin: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 7),
     child: Obx(() {
       bool isSelected = accountIdPdf.value == text;
 
       Widget content = Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p4),
         child: textStyleImage(
             context: context,
             text: text,
@@ -670,9 +670,9 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
               )
             : Container(
                  margin:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
                 decoration: BoxDecoration(
                   color: AppColors.border,
                   borderRadius: BorderRadius.circular(8),
@@ -688,7 +688,7 @@ Widget getCheckBoxwithText2(
     BuildContext context, String text, VoidCallback onTap) {
   return Container(
     
-    margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+    margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 4),
     child: Obx(() {
       bool isSelected = accountIdPdf.value == text;
       Widget content = Padding(
@@ -725,7 +725,7 @@ Widget getCheckBoxwithText2(
         },
         child: isSelected
             ? Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p2),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
@@ -733,7 +733,7 @@ Widget getCheckBoxwithText2(
                 child: content,
               )
             :  Container(
-                padding:const  EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                padding:const  EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p2),
                 decoration: BoxDecoration(
                   color: AppColors.filterContainer,
                   borderRadius: BorderRadius.circular(8),
@@ -772,7 +772,7 @@ Widget filterTransaction(context) {
             }),
             bankAccountLinkedList.length >= 2
                 ? Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                  margin: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 2),
                   child: getBankAccountListForFilter(context, false))
                 : const SizedBox.shrink(),
 
@@ -782,9 +782,9 @@ Widget filterTransaction(context) {
                 child: Container(
                   child: showAmountFilter.value
                       ? Container(
-                        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+                        margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 4),
+                              horizontal: AppSizes.p12, vertical: AppSizes.p4),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(8),
@@ -807,9 +807,9 @@ Widget filterTransaction(context) {
                           ),
                         )
                       : Container(
-               margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+               margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
               decoration: BoxDecoration(
                 color: AppColors.filterContainer,
                 borderRadius: BorderRadius.circular(8),
@@ -845,9 +845,9 @@ Widget filterTransaction(context) {
                 child: Container(
                   child: showDateFilter.value
                       ? Container(
-                         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+                         margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(8),
@@ -873,9 +873,9 @@ Widget filterTransaction(context) {
                           ),
                         )
                       : Container(
-               margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+               margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
               decoration: BoxDecoration(
                 color: AppColors.filterContainer,
                 borderRadius: BorderRadius.circular(8),

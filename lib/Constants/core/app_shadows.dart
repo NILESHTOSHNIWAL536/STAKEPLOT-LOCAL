@@ -18,7 +18,7 @@ class AppShadows {
 
   // Strong shadow (dialogs, bottom sheets)
   static BoxShadow strong = BoxShadow(
-    color: Colors.black.withOpacity(0.12),
+    color: AppColors.bg1.withOpacity(0.12),
     blurRadius: 16,
     offset: const Offset(0, 8),
   );
@@ -63,7 +63,7 @@ class AppDividers {
   static Divider light = Divider(
     height: 1,
     thickness: 0.8,
-    color: Colors.black.withOpacity(0.08),
+    color: AppColors.bg1.withOpacity(0.08),
   );
 
   // Medium divider (sections)

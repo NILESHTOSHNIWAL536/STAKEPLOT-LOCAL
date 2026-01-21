@@ -31,7 +31,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.p16, horizontal: 20),
               child: Column(
                 children: [
                   Container(
@@ -58,7 +58,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
             // Report Options
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
                 itemCount: reportOptions.length,
                 itemBuilder: (context2, index) {
                   final option = reportOptions[index];
@@ -72,7 +72,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                       });
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
                       child: Row(
                         children: [
                           option['isDescription'] == true
@@ -124,7 +124,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
             // Report and Cancel Buttons
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSizes.p16),
                 child: Column(
                   children: [
                     TextButton(

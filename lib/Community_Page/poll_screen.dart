@@ -126,7 +126,7 @@ createPollOfCommunityPost(
                 height: MediaQuery.sizeOf(context).height/1.4,
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -262,13 +262,13 @@ createPollOfCommunityPost(
                                   //               Radius.circular(8))),
                                   //       // fillColor: AppColors.button,
                                   //       // filled: true,
-                                  //        contentPadding: const EdgeInsets.all(12),
+                                  //        contentPadding: const EdgeInsets.all(AppSizes.p12),
                                   //   // counterText: '',
                                   //       suffixIcon: _showCross[index]
                                   //           ? IconButton(
                                   //               onPressed: () =>
                                   //                   _removeOption(index),
-                                  //                icon: Icon(Icons.delete, color: Colors.red),
+                                  //                icon: Icon(Icons.delete, color:  AppColors.redColor),
                                   //             )
                                   //           : null,
                                   //     ),
@@ -326,9 +326,9 @@ createPollOfCommunityPost(
                         ] else ...[
                           Card(
                             elevation: 4,
-                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            margin: const EdgeInsets.symmetric(vertical: AppSizes.p10),
                             child: Padding(
-                              padding: const EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.all(AppSizes.p16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -454,7 +454,7 @@ createPollOfCommunityPost(
                                   child: Container(
                                     width: MediaQuery.of(context).size.width / 1.1,
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 20),
+                                        horizontal: 10, vertical: AppSizes.p20),
                                     decoration: BoxDecoration(
                                         color: _questionController.text.isNotEmpty &&
                                                 _optionControllers.every(

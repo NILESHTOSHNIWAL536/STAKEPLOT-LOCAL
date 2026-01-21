@@ -14,7 +14,7 @@ void showEarningScoreDialog(BuildContext context) {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(AppSizes.p24),
           decoration: BoxDecoration(
             color: AppColors.backgroundColor,
             borderRadius: BorderRadius.circular(16),
@@ -87,7 +87,7 @@ void showEarningScoreDialog(BuildContext context) {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4A4A68),
                       foregroundColor: AppColors.backgroundColor,
-                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -118,7 +118,7 @@ Widget _buildBulletPoint(String text, BuildContext context) {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
-        margin: const EdgeInsets.only(top: 6, right: 8),
+        margin: const EdgeInsets.only(top:AppSizes.p6, right:AppSizes.p8),
         width: 4,
         height: 4,
         decoration: BoxDecoration(

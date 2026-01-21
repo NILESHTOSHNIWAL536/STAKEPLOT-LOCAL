@@ -49,7 +49,7 @@ class CouponCardWidget extends StatelessWidget {
           borderRadius: 20,
           firstChild: Container(
             height: height * 0.6,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSizes.p16),
             decoration: const BoxDecoration(
               color: AppColors.backgroundColor,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -77,14 +77,14 @@ class CouponCardWidget extends StatelessWidget {
                                         (context, error, stackTrace) => Icon(
                                       Icons.broken_image,
                                       size: fontSize * 1.5,
-                                      color: Colors.grey.shade400,
+                                      color: AppColors.grey,
                                     ),
                                   ),
                                 )
                               : Icon(
                                   Icons.image,
                                   size: fontSize * 1.5,
-                                  color: Colors.grey.shade400,
+                                  color: AppColors.grey,
                                 ),
                            SizedBox(width: AppSizes.w8),
                           Flexible(
@@ -150,7 +150,7 @@ class CouponCardWidget extends StatelessWidget {
             height: height * 0.4,
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50,
+              color: AppColors.greyCard,
               borderRadius:
                   const BorderRadius.vertical(bottom: Radius.circular(20)),
             ),
@@ -237,9 +237,9 @@ class CouponCardWidget extends StatelessWidget {
                             },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isClaimed
-                            ? Colors.grey.shade300
+                            ? AppColors.grey
                             : AppColors.primaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -278,7 +278,7 @@ class CouponCardWidget extends StatelessWidget {
             height: 1,
             dashWidth: 10,
             dashSpacing: 4,
-            color: Colors.grey.shade400,
+            color: AppColors.greyCard,
           ),
         ),
       ),

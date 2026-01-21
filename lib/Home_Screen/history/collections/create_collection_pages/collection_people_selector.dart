@@ -119,7 +119,7 @@ class CollectionPeopleSelector extends StatelessWidget {
   Widget _searchBar(BuildContext context) {
     return Container(
       height: 48,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
@@ -150,7 +150,7 @@ class CollectionPeopleSelector extends StatelessWidget {
   /// ================= WHITE CARD =================
   Widget _whiteCard(Widget child) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p6),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(14),
@@ -168,7 +168,7 @@ class CollectionPeopleSelector extends StatelessWidget {
     bool isRemove = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p6),
       child: Row(
         children: [
           /// AVATAR

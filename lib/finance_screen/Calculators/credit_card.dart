@@ -128,7 +128,7 @@ class _CreditCardState extends State<CreditCard> {
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(AppSizes.p12),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +147,7 @@ class _CreditCardState extends State<CreditCard> {
                       },
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 14),
+                      padding: const EdgeInsets.only(left:AppSizes.p14),
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -192,8 +192,8 @@ class _CreditCardState extends State<CreditCard> {
                   },
                   child: _isInfoVisible
                       ? Container(
-                          margin: EdgeInsets.symmetric(vertical: 4),
-                          padding: EdgeInsets.all(12),
+                          margin: EdgeInsets.symmetric(vertical: AppSizes.p4),
+                          padding: EdgeInsets.all(AppSizes.p12),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor.withOpacity(0.9),
                             borderRadius: BorderRadius.circular(12),
@@ -226,8 +226,8 @@ class _CreditCardState extends State<CreditCard> {
                       ),
                       Container(
                         margin: EdgeInsets.only(
-                          left: 4,
-                          right: 4,
+                          left:AppSizes.p4,
+                          right:AppSizes.p4,
                           top: 0,
                         ),
                         decoration: BoxDecoration(

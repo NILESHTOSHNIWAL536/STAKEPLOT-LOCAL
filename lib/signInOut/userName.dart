@@ -72,19 +72,19 @@
 //   void submitDetails() async {
 //     String username = usernameController.text;
 //     if (!isValidUser.value) {
-//       snackBarCalledfail(context, SignupData().emptyUsernameValid, Colors.red);
+//       snackBarCalledfail(context, SignupData().emptyUsernameValid,  AppColors.redColor);
 //       return;
 //     }
 //     if (username.isEmpty) {
-//       snackBarCalledfail(context, SignupData().emptyUsername, Colors.red);
+//       snackBarCalledfail(context, SignupData().emptyUsername,  AppColors.redColor);
 //       return;
 //     }
 //     if (!RegExp(r'^[a-zA-Z]').hasMatch(username)) {
-//       snackBarCalledfail(context, SignupData().invalidUsername, Colors.red);
+//       snackBarCalledfail(context, SignupData().invalidUsername,  AppColors.redColor);
 //       return;
 //     }
 //     if (username.length < 3) {
-//       snackBarCalledfail(context, SignupData().shortUsername, Colors.red);
+//       snackBarCalledfail(context, SignupData().shortUsername,  AppColors.redColor);
 //       return;
 //     }
   
@@ -124,7 +124,7 @@
 //       acceptReset.value = false;
 //       if (!boolvar) {
 //         snackBarCalledfail(
-//             context, data2['error']['explanation'], Colors.red);
+//             context, data2['error']['explanation'],  AppColors.redColor);
 //         return;
 //       }
 //       final body = jsonDecode(response.body);
@@ -134,7 +134,7 @@
 //       clearStack(context);
 //       Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
 //     } catch (e) {
-//       snackBarCalledfail(context, SignupData().errorInvalidOtp, Colors.red);
+//       snackBarCalledfail(context, SignupData().errorInvalidOtp,  AppColors.redColor);
 //     }
 //   }
 
@@ -161,11 +161,11 @@
 //                     Obx(()=> isValidUser.value?getTextFeild():getTextFeild()),
 //                       Obx(() => usernameError.value.isNotEmpty
 //                           ? Padding(
-//                               padding: EdgeInsets.only(left: 20, top: 5),
+//                               padding: EdgeInsets.only(left:AppSizes.p20, top: 5),
 //                               child: Text(
 //                                 usernameError.value,
 //                                 style:
-//                                     TextStyle(color: Colors.red, fontSize: 12),
+//                                     TextStyle(color:  AppColors.redColor, fontSize: 12),
 //                               ),
 //                             )
 //                           : SizedBox.shrink()),
@@ -182,8 +182,8 @@
 //                   child: Container(
 //                     width: MediaQuery.of(context).size.width / 1.1,
 //                     margin: const EdgeInsets.symmetric(
-//                         vertical: 10, horizontal: 10),
-//                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+//                         vertical: AppSizes.p10, horizontal: 10),
+//                     padding: EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 30),
 //                     decoration: BoxDecoration(
 //                       color: isValidUser.value? AppColors.primaryColor:AppColors.greyCard,
 //                       borderRadius:
@@ -297,15 +297,15 @@
 
 //     // Validate inputs
 //     if (username.isEmpty) {
-//       snackBarCalledfail(context, SignupData().emptyUsername, Colors.red);
+//       snackBarCalledfail(context, SignupData().emptyUsername,  AppColors.redColor);
 //       return;
 //     }
 //     if (!RegExp(r'^[a-zA-Z]').hasMatch(username)) {
-//       snackBarCalledfail(context, SignupData().invalidUsername, Colors.red);
+//       snackBarCalledfail(context, SignupData().invalidUsername,  AppColors.redColor);
 //       return;
 //     }
 //     if (username.length < 3) {
-//       snackBarCalledfail(context, SignupData().shortUsername, Colors.red);
+//       snackBarCalledfail(context, SignupData().shortUsername,  AppColors.redColor);
 //       return;
 //     }
     
@@ -344,7 +344,7 @@
 
 //       acceptReset.value = false;
 //       if (!boolvar) {
-//         snackBarCalledfail(context, data2['error']['explanation'], Colors.red);
+//         snackBarCalledfail(context, data2['error']['explanation'],  AppColors.redColor);
 //         return;
 //       }
 //       final body = jsonDecode(response.body);
@@ -354,7 +354,7 @@
 //       clearStack(context);
 //       Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
 //     } catch (e) {
-//       snackBarCalledfail(context, SignupData().errorInvalidOtp, Colors.red);
+//       snackBarCalledfail(context, SignupData().errorInvalidOtp,  AppColors.redColor);
 //     }
 //   }
 
@@ -386,11 +386,11 @@
 //                       ),
 //                       Obx(() => usernameError.value.isNotEmpty
 //                           ? Padding(
-//                               padding: EdgeInsets.only(left: 20, top: 5),
+//                               padding: EdgeInsets.only(left:AppSizes.p20, top: 5),
 //                               child: Text(
 //                                 usernameError.value,
 //                                 style:
-//                                     TextStyle(color: Colors.red, fontSize: 12),
+//                                     TextStyle(color:  AppColors.redColor, fontSize: 12),
 //                               ),
 //                             )
 //                           : SizedBox.shrink()),
@@ -407,8 +407,8 @@
 //                   child: Container(
 //                     width: MediaQuery.of(context).size.width / 1.3,
 //                     margin: const EdgeInsets.symmetric(
-//                         vertical: 10, horizontal: 10),
-//                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+//                         vertical: AppSizes.p10, horizontal: 10),
+//                     padding: EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 30),
 //                     decoration: BoxDecoration(
 //                       color: AppColors.primaryColor,
 //                       borderRadius:
@@ -530,7 +530,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     final username = usernameController.text;
 
     if (!isValidUser.value) {
-      snackBarCalledfail(context, SignupData().emptyUsernameValid, Colors.red);
+      snackBarCalledfail(context, SignupData().emptyUsernameValid,  AppColors.redColor);
       return;
     }
 
@@ -561,7 +561,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
       if (!body['success']) {
         snackBarCalledfail(
-            context, body['error']['explanation'], Colors.red);
+            context, body['error']['explanation'],  AppColors.redColor);
         return;
       }
 
@@ -630,11 +630,11 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                   Obx(() => usernameError.value.isNotEmpty
                       ? Padding(
                           padding:
-                              const EdgeInsets.only(left: 10, top: 6),
+                              const EdgeInsets.only(left:AppSizes.p10, top:AppSizes.p6),
                           child: Text(
                             usernameError.value,
-                            style: const TextStyle(
-                                color: Colors.red, fontSize: 12),
+                            style:  TextStyle(
+                                color:  AppColors.redColor, fontSize: 12),
                           ),
                         )
                       : const SizedBox.shrink()),
@@ -647,7 +647,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           width:
                               MediaQuery.of(context).size.width / 1.1,
                           padding: const EdgeInsets.symmetric(
-                              vertical: 12),
+                              vertical: AppSizes.p12),
                           decoration: BoxDecoration(
                             color: isValidUser.value
                                 ? AppColors.primaryColor

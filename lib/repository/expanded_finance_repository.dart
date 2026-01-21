@@ -13,6 +13,8 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 import 'package:intl/intl.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 void filterDataForSelectedMonth() {
   int monthForCalc = selectedMonth.value.clamp(1, 12);
   int daysInMonth = getDaysInMonthExpanded(selectedYear.value, monthForCalc);
@@ -38,7 +40,7 @@ void showYearPicker(
     builder: (BuildContext context) {
       return Container(
         height: 300.0,
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(AppSizes.p8),
         child: GridView.count(
           crossAxisCount: 3,
           crossAxisSpacing: 4.0,
@@ -89,7 +91,7 @@ void showMonthPicker(
     builder: (BuildContext context) {
       return Container(
         height: 220.0,
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(AppSizes.p8),
         child: GridView.count(
           crossAxisCount: 3,
           crossAxisSpacing: 2.0,

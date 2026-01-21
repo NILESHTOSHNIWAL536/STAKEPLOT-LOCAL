@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 
 
 class AvatarProfileImagePng extends StatelessWidget {
@@ -20,7 +22,7 @@ AvatarProfileImagePng({ Key? key,required this.url,required this.width,required 
   Widget build(BuildContext context){
     return  Container(
         margin: EdgeInsets.symmetric(horizontal: 5),
-        padding: EdgeInsetsDirectional.all(4),
+        padding: EdgeInsetsDirectional.all(AppSizes.p4),
         alignment: Alignment.center,
         child:Image.asset(
             url.toString().trim(),
@@ -41,7 +43,7 @@ AvatarProfileImage({ Key? key,required this.url,required this.width,required thi
   Widget build(BuildContext context){
     return  Container(
         margin: EdgeInsets.symmetric(horizontal: 5),
-        padding: EdgeInsetsDirectional.all(4),
+        padding: EdgeInsetsDirectional.all(AppSizes.p4),
         alignment: Alignment.center,
         child: isSvgUrl(url)? SvgPicture.asset(url.toString().trim(),
               width: MediaQuery.of(context).size.width/ width,
@@ -87,7 +89,7 @@ AvatarProfileImageNextFetch({ Key? key,required this.url,required this.width,req
   Widget build(BuildContext context){
     return  Container(
         margin: EdgeInsets.symmetric(horizontal: 0),
-        padding: EdgeInsetsDirectional.all(4),
+        padding: EdgeInsetsDirectional.all(AppSizes.p4),
         alignment: Alignment.center,
         // color: AppColors.primaryColor,
         child: isSvgUrl(url)? SvgPicture.asset(url.toString().trim(),
@@ -184,14 +186,14 @@ class AvatarProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     double size=MediaQuery.of(context).size.width;
     return flag?Container(
-      padding: EdgeInsets.all(2),
+      padding: EdgeInsets.all(AppSizes.p2),
       width: MediaQuery.of(context).size.width/ width,
       height: MediaQuery.of(context).size.height/ height,
       alignment: Alignment.center,
       child: img2(context,width,size)
       ):Container(
-      margin: EdgeInsets.all(4),
-      padding: EdgeInsets.all(2),
+      margin: EdgeInsets.all(AppSizes.p4),
+      padding: EdgeInsets.all(AppSizes.p2),
       alignment: Alignment.center,
       child: img(context,size)
     );
@@ -283,7 +285,7 @@ class AvatarProfile2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return flag? Container(
-          padding: EdgeInsets.all(2),
+          padding: EdgeInsets.all(AppSizes.p2),
           alignment: Alignment.center,
           // color: AppColors.appIcon,
           child: CircleAvatar(
@@ -292,7 +294,7 @@ class AvatarProfile2 extends StatelessWidget {
              backgroundColor: AppColors.transparentColor, // optional: removes default grey bg
           ),
       ):Container(
-          padding: EdgeInsets.all(2),
+          padding: EdgeInsets.all(AppSizes.p2),
           alignment: Alignment.center,
           child: CircleAvatar(
              backgroundImage: AssetImage(url.toString().trim()),

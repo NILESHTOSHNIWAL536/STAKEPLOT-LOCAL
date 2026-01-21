@@ -11,6 +11,8 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class HiddenTransactionsScreen extends StatefulWidget {
   //final List<Map<String, String>> hiddenTransactions;
   const HiddenTransactionsScreen({
@@ -67,7 +69,7 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
 
   Widget hiddenTransactionsWidget() {
     return Padding(
-      padding: const EdgeInsets.all(2.0),
+      padding: const EdgeInsets.all(AppSizes.p2),
       child: ListView.builder(
         itemCount: hiddentrasactionsHistory.length,
         itemBuilder: (context, index) {

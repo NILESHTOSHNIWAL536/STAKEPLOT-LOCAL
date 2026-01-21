@@ -157,7 +157,7 @@ Widget reviewTagTransactions(
         children: [
           if (isReview)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
               decoration: BoxDecoration(
                 color: Colorcodes.red,
                 borderRadius: BorderRadius.only(

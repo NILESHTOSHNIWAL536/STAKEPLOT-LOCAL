@@ -45,7 +45,7 @@ void snackBarCalled(BuildContext context, String text) {
         color: AppColors.transparentColor,
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 36),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p10),
           decoration: BoxDecoration(
             color: AppColors.snackbarcolor,
             borderRadius: BorderRadius.circular(6),
@@ -87,7 +87,7 @@ void snackBarCalledfail(BuildContext context, String text, [Color colors = AppCo
           color: AppColors.transparentColor,
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 36),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p10),
             decoration: BoxDecoration(
               color:  AppColors.redColor,
               borderRadius: BorderRadius.circular(6),
@@ -131,7 +131,7 @@ void snackBarCalledfail2(context, String text, [Color colors = AppColors.accentC
         height: 40,
         child: CustomSnackBar.success(
           message: text,
-          backgroundColor: Colors.red,
+          backgroundColor:  AppColors.redColor,
           textStyle: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,

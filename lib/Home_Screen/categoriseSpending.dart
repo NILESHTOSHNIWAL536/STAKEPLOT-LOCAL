@@ -50,7 +50,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(AppSizes.p8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -226,7 +226,7 @@ class CategoryCard extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(AppSizes.p10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -259,7 +259,7 @@ class CategoryCard extends StatelessWidget {
               ),
                SizedBox(height: AppSizes.h2),
               Padding(
-                padding: const EdgeInsets.only(left: 6),
+                padding: const EdgeInsets.only(left:AppSizes.p6),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -352,7 +352,7 @@ class AllCategoriesPage extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(AppSizes.p8),
         child: Obx(() {
           // Sort chartData by value in descending order
           final sortedData = spendingsOnCategories.toList()

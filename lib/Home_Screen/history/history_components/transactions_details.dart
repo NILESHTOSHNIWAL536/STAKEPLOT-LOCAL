@@ -129,7 +129,7 @@ class TransactionDetails extends StatelessWidget {
           isExcluded
               ? const SizedBox.shrink()
               : Padding(
-                  padding: const EdgeInsets.only(left: 4),
+                  padding: const EdgeInsets.only(left:AppSizes.p4),
                   child: IconsForHideUpdateSplit(
                   iconSize:   fontSizes.iconSize,
                   padding:   fontSizes.padding,

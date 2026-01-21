@@ -381,7 +381,7 @@ void _onBackspace() {
               child: Container(
                 color: AppColors.border,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top:AppSizes.p10),
                   child: 
                    showKeyboard? 
                    GestureDetector(
@@ -567,7 +567,7 @@ void _onBackspace() {
         ],
         border: AppBorders.soft
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -636,7 +636,7 @@ void _onBackspace() {
                       ),
                       decoration: InputDecoration(
                         isDense: true,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
                         hintText: HomepageStringsDart().enterAmount,
                         hintStyle: FontManager().getTextStyle(
                           context,
@@ -688,7 +688,7 @@ void _onBackspace() {
         ],
         border: AppBorders.soft
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -732,7 +732,7 @@ void _onBackspace() {
                   ),
                   decoration: InputDecoration(
                     isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
                     hintText: HomepageStringsDart().selectCategory,
                     hintStyle: FontManager().getTextStyle(
                       context,
@@ -841,7 +841,7 @@ void _onBackspace() {
                   visualDensity: const VisualDensity(vertical: -2),
                   minVerticalPadding: 0,
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p6),
                   leading: SizedBox(
                     height: 36,
                     width: 36,
@@ -907,7 +907,7 @@ void _onBackspace() {
 
   Widget getListOfCustomCategory() {
     return Container(
-      margin: const EdgeInsets.only(top: 8),
+      margin: const EdgeInsets.only(top:AppSizes.p8),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
@@ -963,8 +963,8 @@ void _onBackspace() {
     }
 
     return Container(
-      margin: const EdgeInsets.only(top: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      margin: const EdgeInsets.only(top:AppSizes.p12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p10),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
@@ -1012,7 +1012,7 @@ void _onBackspace() {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p8),
                   decoration: BoxDecoration(
                     color: AppColors.backgroundColor,
                     borderRadius: BorderRadius.circular(12),
@@ -1066,7 +1066,7 @@ void _onBackspace() {
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
             decoration: BoxDecoration(
               color: AppColors.button,
               borderRadius: BorderRadius.circular(24),
@@ -1109,7 +1109,7 @@ void _onBackspace() {
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
             decoration: BoxDecoration(
               color: AppColors.button,
               borderRadius: BorderRadius.circular(24),
@@ -1137,7 +1137,7 @@ void _onBackspace() {
       children: [
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top:AppSizes.p10),
             child: InkWell(
               onTap: () {
                 FocusScope.of(context).unfocus();

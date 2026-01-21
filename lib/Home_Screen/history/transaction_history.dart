@@ -132,7 +132,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     return Column(
       children: [
        searchItemClicked.value? const SizedBox.shrink(): const Padding(
-          padding:  EdgeInsets.only(top: 12, bottom: 8,),
+          padding:  EdgeInsets.only(top:AppSizes.p12, bottom: 8,),
           child: TransactionsSearchList(),
         ),
         lastWeekjson.isNotEmpty && lastmonthjson.isNotEmpty
@@ -203,7 +203,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         if (item is String && item != 'loader') {
           String monthYear = item;
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

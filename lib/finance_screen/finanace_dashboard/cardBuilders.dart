@@ -20,7 +20,7 @@ class CardBuilders {
     return GestureDetector(
       onTap: () => onTap(debt),
       child: Container(
-        // margin: const EdgeInsets.symmetric(vertical: 8.0),
+        // margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
         height: MediaQuery.sizeOf(context).height / 5,
         width: MediaQuery.sizeOf(context).width / 4,
         decoration: BoxDecoration(
@@ -42,7 +42,7 @@ class CardBuilders {
           borderRadius: BorderRadius.circular(20),
           onTap: () => onTap(debt),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSizes.p16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -106,7 +106,7 @@ class CardBuilders {
     Function(Debt) onTap,
   ) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
       constraints: BoxConstraints(
         minHeight: 140,
         maxWidth: MediaQuery.of(context).size.width * 0.85,
@@ -133,7 +133,7 @@ class CardBuilders {
           borderRadius: BorderRadius.circular(20),
           onTap: () => onTap(debt), // Only one tap handler
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSizes.p16),
             child: Row(
               children: [
                 Expanded(
@@ -227,7 +227,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
       );
     },
     child: Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
       constraints: BoxConstraints(
         minHeight: 80,
         maxWidth: MediaQuery.of(context).size.width * 0.85,
@@ -261,7 +261,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSizes.p16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -388,7 +388,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
   //       );
   //     },
   //     child: Container(
-  //       margin: const EdgeInsets.symmetric(vertical: 8.0),
+  //       margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
   //       constraints: BoxConstraints(
   //         minHeight: 140,
   //         maxWidth: MediaQuery.of(context).size.width * 0.85,
@@ -421,7 +421,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
   //             );
   //           },
   //           child: Padding(
-  //             padding: const EdgeInsets.all(16.0),
+  //             padding: const EdgeInsets.all(AppSizes.p16),
   //             child: Row(
   //               crossAxisAlignment: CrossAxisAlignment.center,
   //               children: [
@@ -597,7 +597,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
         );
       },
       child: Container(
-        // margin: const EdgeInsets.symmetric(vertical: 8.0),
+        // margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
         // constraints: BoxConstraints(
         //   minHeight: 140,
         //   maxWidth: MediaQuery.of(context).size.width * 0.85,
@@ -630,7 +630,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
               );
             },
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppSizes.p16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -731,7 +731,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
           AvatarProfileImageZero(
               url: svgIconPath.financepayReceive, width: 1, height: 8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
             decoration: BoxDecoration(
               // color: AppColors.mt,
               borderRadius: BorderRadius.circular(16),
@@ -787,7 +787,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
           border: Border.all(color: AppColors.border),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -801,7 +801,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
               ),
               SizedBox(height: AppSizes.h14),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 
 /// 🎨 COLORS (match your design)
 const Color keyBg = Color(0xFFF2F2F2);
 const Color actionKeyBg = Color(0xFFB6B4D8);
 const Color submitKeyBg = AppColors.primaryColor;
-const Color keyText = Colors.black;
-const Color actionText = Colors.white;
+const Color keyText = AppColors.bg1;
+const Color actionText =AppColors.backgroundColor;
 
 /// 🔘 REUSABLE KEY BUTTON
 Widget keyButton({
@@ -70,7 +70,7 @@ class CustomNumericKeyboard extends StatelessWidget {
         Container(
           color: AppColors.backgroundColor,
           
-          padding: EdgeInsets.only(left: 12,right: 12, bottom: 30),
+          padding: EdgeInsets.only(left:AppSizes.p12,right:AppSizes.p12, bottom: 30),
           child: GridView.count(
             
             childAspectRatio: 5/3,

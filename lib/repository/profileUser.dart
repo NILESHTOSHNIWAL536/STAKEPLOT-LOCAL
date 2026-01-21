@@ -86,7 +86,7 @@ void aboutuser(context, String about) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, SnackbarData().userInfoUpdated, );
   } else {
-    snackBarCalledfail(context, SnackbarData().errorUpdatingUserInfo, Colors.red);
+    snackBarCalledfail(context, SnackbarData().errorUpdatingUserInfo,  AppColors.redColor);
   }
 }
 
@@ -115,7 +115,7 @@ void editUserDetails(
 
     bool boolvar = responce['success'];
     if (!boolvar) {
-      snackBarCalledfail(context, responce['error']['explanation'], Colors.red);
+      snackBarCalledfail(context, responce['error']['explanation'],  AppColors.redColor);
       return;
     }
     if (response.statusCode == 200 || response.statusCode == 201) {

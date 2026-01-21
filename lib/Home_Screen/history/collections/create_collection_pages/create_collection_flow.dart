@@ -153,7 +153,7 @@ class CollectionHeader extends StatelessWidget {
             InkWell(
               onTap: onBack,
               child:CustomStyledContainer(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSizes.p12),
                 radius: 30,
                 // width: 42,
                 // height: 40,
@@ -274,7 +274,7 @@ Widget cardCollection(
 
 Widget chipCollection(String text, BuildContext context, {bool isSelected = false}) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10),
+    padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
     child: Container(
       height: MediaQuery.of(context).size.height / 18,
       width: MediaQuery.of(context).size.width / 1.2,

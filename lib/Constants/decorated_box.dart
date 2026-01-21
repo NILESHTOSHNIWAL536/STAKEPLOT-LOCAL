@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 
+import 'core/app_padding_sizes.dart';
+
 class DecoratedContainer extends StatelessWidget {
   final Widget child;
   final Color backgroundColor;
@@ -16,7 +18,7 @@ class DecoratedContainer extends StatelessWidget {
     required this.child, // The content inside the container
     this.backgroundColor = AppColors.button,
     this.borderRadius = 8.0,
-    this.padding = const EdgeInsets.all(8.0),
+    this.padding = const EdgeInsets.all(AppSizes.p8),
     //this.elevation = 2.0,
     //this.boxShadow,
     this.minWidth = 10.0, // Default minimum width

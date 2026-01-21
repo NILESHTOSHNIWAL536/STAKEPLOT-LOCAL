@@ -19,7 +19,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
     builder: (BuildContext context) {
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(AppSizes.p20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -44,7 +44,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                       child: Container(
                         width: MediaQuery.of(context).size.width / 3,
                         padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
                         decoration: BoxDecoration(
                             color: Colors.grey,
                             borderRadius: BorderRadius.circular(24)),
@@ -71,7 +71,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                       child: Container(
                         width: MediaQuery.of(context).size.width / 3,
                         padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
                         decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(24)),

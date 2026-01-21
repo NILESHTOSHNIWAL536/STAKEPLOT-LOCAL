@@ -17,7 +17,7 @@ import '../../Constants/core/app_padding_sizes.dart';
 //       automaticallyImplyLeading: false,
 //       actions: [
 //         Padding(
-//           padding: const EdgeInsets.only(right: 10, top: 6, left: 10),
+//           padding: const EdgeInsets.only(right:AppSizes.p10, top:AppSizes.p6, left:AppSizes.p10),
 //           child: Row(
 //             mainAxisAlignment: MainAxisAlignment.center,
 //             // crossAxisAlignment: CrossAxisAlignment.center,
@@ -62,7 +62,7 @@ class TopRightIconsWidget extends StatelessWidget {
           },
           child: Container(
             padding: const EdgeInsets.all(1),
-            margin: const EdgeInsets.only(left: 4),
+            margin: const EdgeInsets.only(left:AppSizes.p4),
             decoration: BoxDecoration(
              color: AppColors.border,
              borderRadius: BorderRadius.circular(12)
@@ -116,7 +116,7 @@ class TopRightIconsWidget extends StatelessWidget {
 //     ),
 //     actions:fromAutoPay?null: [
 //       Padding(
-//         padding: const EdgeInsets.only(right: 16.0), // Proper spacing
+//         padding: const EdgeInsets.only(right:AppSizes.p16), // Proper spacing
 //         child: InkWell(
 //           onTap: () {
 //             int len = bankAccountLinkedList.length;

@@ -37,7 +37,7 @@ class RevokeAccessScreen extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor:  AppColors.redColor),
             onPressed: () => Navigator.of(context).pop(true),
             child: Text(
               "Revoke",
@@ -75,7 +75,7 @@ Widget build(BuildContext context) {
       alignment: Alignment.topCenter,
       color: theme.colorScheme.surface.withOpacity(0.025),
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p32, horizontal: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -84,11 +84,11 @@ Widget build(BuildContext context) {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               elevation: 2,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: AppSizes.p22),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.warning_amber_rounded, size: 46, color: Colors.red[400]),
+                    Icon(Icons.warning_amber_rounded, size: 46, color:  AppColors.redColor),
                      SizedBox(width: AppSizes.w16),
                     Expanded(
                       child: Column(
@@ -134,10 +134,10 @@ Widget build(BuildContext context) {
               width: double.infinity,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[700],
+                  backgroundColor:  AppColors.redColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   elevation: 3,
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p16),
                 ),
                 icon: const Icon(Icons.logout),
                 label: Text(

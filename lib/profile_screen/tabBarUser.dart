@@ -54,7 +54,7 @@ class _TabBarUserState extends State<TabBarUser> {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p2),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
@@ -72,7 +72,7 @@ class _TabBarUserState extends State<TabBarUser> {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p2),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),

@@ -20,6 +20,7 @@ import "package:get/get.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 
+import "../Constants/core/app_padding_sizes.dart";
 import "../routes/route_user_login.dart";
 
 RxBool toggle = false.obs;
@@ -78,7 +79,7 @@ class _TribeHomeState extends State<TribeUnique> {
     if (data == "") {
       FocusScope.of(context).requestFocus(_replyFocusNode);
       snackBarCalledfail(
-          context, SnackbarData().emptyCommentNotAllowed, Colors.red);
+          context, SnackbarData().emptyCommentNotAllowed,  AppColors.redColor);
       return;
     }
 
@@ -122,7 +123,7 @@ class _TribeHomeState extends State<TribeUnique> {
           );
     } else {
       snackBarCalledfail(
-          context, SnackbarData().unableToAddComment, Colors.red);
+          context, SnackbarData().unableToAddComment,  AppColors.redColor);
     }
   }
 
@@ -230,7 +231,7 @@ class _TribeHomeState extends State<TribeUnique> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
                   ),
                   Obx(() => PostCard(
                         data: postController.reloadUniquePost.value
@@ -282,7 +283,7 @@ class _TribeHomeState extends State<TribeUnique> {
   Widget uploadData(PostModel dataObj) {
     return Padding(
       padding: widget.popBox.value
-          ? const EdgeInsets.only(bottom: 15, top: 10)
+          ? const EdgeInsets.only(bottom: 15, top:AppSizes.p10)
           : const EdgeInsets.only(bottom: 0, top: 0),
       child: Container(
         child: Column(
@@ -312,7 +313,7 @@ class _TribeHomeState extends State<TribeUnique> {
   Widget commentedData(PostModel dataObj) {
     return Container(
         width: MediaQuery.sizeOf(context).width / 1,
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(AppSizes.p10),
         decoration: BoxDecoration(
 
             // color: const Color.fromRGBO(249, 246, 238, 1),
@@ -369,7 +370,7 @@ class _TribeHomeState extends State<TribeUnique> {
     return Obx(() => Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -493,7 +494,7 @@ class _TribeHomeState extends State<TribeUnique> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(vertical: 6),
+                          margin: EdgeInsets.symmetric(vertical: AppSizes.p6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -729,7 +730,7 @@ class _TribeHomeState extends State<TribeUnique> {
     return Obx(() => Center(
           child: Container(
             padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: 10.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -757,7 +758,7 @@ class _TribeHomeState extends State<TribeUnique> {
                         filled: true,
                         hintText: lableText,
                         contentPadding: EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 10.0),
+                            vertical: AppSizes.p8, horizontal: 10.0),
                         suffixIcon: suffix(
                             Textcontroller.text, commentId, Textcontroller),
                         enabledBorder: OutlineInputBorder(
@@ -866,7 +867,7 @@ class _TribeHomeState extends State<TribeUnique> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
                         child: Text((replayObj.author!.name.toString()),
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w600,
@@ -1003,7 +1004,7 @@ class _TribeHomeState extends State<TribeUnique> {
       if (value == "") {
         FocusScope.of(context).requestFocus(_replyNode);
         snackBarCalledfail(
-            context, SnackbarData().emptyReplyNotAllowed, Colors.red);
+            context, SnackbarData().emptyReplyNotAllowed,  AppColors.redColor);
         return;
       }
 

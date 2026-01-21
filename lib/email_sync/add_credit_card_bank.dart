@@ -84,7 +84,7 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
               },
               decoration: InputDecoration(
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p16),
                 hintText: 'Select bank',
                 hintStyle: TextStyle(
                   color: AppColors.primaryColor,
@@ -171,7 +171,7 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                   child: textStyleImage(
                       context: context,
                       text: "Done",
-                      c: AppColors.white,
+                      c: AppColors.backgroundColor,
                       fontWeight: FontWeight.w500,
                       fontsize: 18),
                 ),

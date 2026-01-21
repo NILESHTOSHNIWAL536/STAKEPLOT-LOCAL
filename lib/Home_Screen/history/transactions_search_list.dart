@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/helper.dart';
 import '../../repository/transactions_repository.dart';
 
@@ -19,8 +20,8 @@ class _TransactionsSearchListState extends State<TransactionsSearchList> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.only(left: 10, right: 14),
-      margin: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.only(left:AppSizes.p10, right:AppSizes.p14),
+      margin: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
          borderRadius: BorderRadius.circular(8),
@@ -58,7 +59,7 @@ class _TransactionsSearchListState extends State<TransactionsSearchList> {
                       onChanedAutoTransactionStatus(context);
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.all(AppSizes.p12),
                       child: Row(children: [
                         Container(
                           padding: const EdgeInsets.symmetric(

@@ -104,7 +104,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               child:
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 5, left: 5, right: 16),
+                  padding: const EdgeInsets.only(top: 5, left: 5, right:AppSizes.p16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -201,7 +201,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                  SizedBox(height: AppSizes.h20),
                 // Options list
                 Padding(
-                  padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
+                  padding: const EdgeInsets.only(top: 5, left:AppSizes.p16, right:AppSizes.p16),
                   child: Column(children: [
                     Container(
                       decoration: BoxDecoration(
@@ -346,7 +346,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
     double w = MediaQuery.sizeOf(context).width;
     return ListTile(
       leading: Container(
-        padding: EdgeInsets.all(12),
+        padding: EdgeInsets.all(AppSizes.p12),
         decoration: BoxDecoration(
             color: AppColors.button,
             borderRadius: BorderRadius.circular(14),

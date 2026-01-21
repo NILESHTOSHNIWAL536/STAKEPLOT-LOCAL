@@ -48,10 +48,10 @@ void showEditBottomSheet({
             ],
           ),
           padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
+            left:AppSizes.p20,
+            right:AppSizes.p20,
             bottom:  20,
-            top: 20,
+            top:AppSizes.p20,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -74,7 +74,7 @@ void showEditBottomSheet({
                     onTap: () => Navigator.of(context).pop(),
                     borderRadius: BorderRadius.circular(20),
                     child: const Padding(
-                      padding: EdgeInsets.all(4),
+                      padding: EdgeInsets.all(AppSizes.p4),
                       child: Icon(Icons.close, size: 22, color: AppColors.primaryColor),
                     ),
                   ),
@@ -98,7 +98,7 @@ void showEditBottomSheet({
                     color: AppColors.primaryColor
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p14),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -137,7 +137,7 @@ void showEditBottomSheet({
                               },
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p12),
                           decoration: BoxDecoration(
                             color: isButtonDisabled.value
                                 ? Colors.grey.shade400
@@ -172,12 +172,12 @@ void showDeleteDialogComment(BuildContext context2, String commentText,String ty
       useRootNavigator: false,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(vertical: AppSizes.p20, horizontal: 16),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // Top Icon
-            // Icon(Icons.mark_chat_read_outlined, size: 50, color: Colors.red),
+            // Icon(Icons.mark_chat_read_outlined, size: 50, color:  AppColors.redColor),
             AvatarProfileImage(url: 'assets/svgs/delete_pop.svg', width: 10, height: 12),
 
             SizedBox(height: AppSizes.h12),
@@ -222,7 +222,7 @@ void showDeleteDialogComment(BuildContext context2, String commentText,String ty
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF3B3F75),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: AppSizes.p12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),

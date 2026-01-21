@@ -19,7 +19,7 @@ Widget spliDisplay(msg, bool, url, Message message,BuildContext context)
 
   Widget spliData(Message message,BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(AppSizes.p10),
       width: MediaQuery.of(context).size.width / 1.8,
       decoration: BoxDecoration(
         color: message.isMe ? AppColors.appIcon : AppColors.mt,
@@ -112,12 +112,12 @@ Widget spliDisplay(msg, bool, url, Message message,BuildContext context)
           ),
           SizedBox(height: AppSizes.h5),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0),
+            padding: const EdgeInsets.symmetric(vertical: AppSizes.p6),
             child: Row(
               children: [
                 Icon(
                   message.split['isPaid'] ? Icons.check_circle : Icons.pending,
-                  color: message.split['isPaid'] ? Colors.green : Colors.red,
+                  color: message.split['isPaid'] ? Colors.green :  AppColors.redColor,
                   size: 20,
                 ),
                 SizedBox(width: AppSizes.w5),
@@ -127,7 +127,7 @@ Widget spliDisplay(msg, bool, url, Message message,BuildContext context)
                       fontSize: 12,
                       lWeight: FontWeight.w400,
                       color:
-                          message.split['isPaid'] ? Colors.green : Colors.red),
+                          message.split['isPaid'] ? Colors.green :  AppColors.redColor),
                 ),
               ],
             ),

@@ -136,7 +136,7 @@ class _OnboardingPage extends StatelessWidget {
         children: [
           /// IMAGE
           Center(child: Padding(
-            padding: const EdgeInsets.only(left: 20),
+            padding: const EdgeInsets.only(left:AppSizes.p20),
             child: AvatarProfileImageZero(url: data.image, width: 1, height: 2.2),
           )),
          

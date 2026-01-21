@@ -59,7 +59,7 @@ class _UserListScreenState extends State<UserListScreen> {
           return Center(
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: AppSizes.p20),
               child: Text(
                 widget.isPayable
                     ? 'No pending payments.'
@@ -76,7 +76,7 @@ class _UserListScreenState extends State<UserListScreen> {
           );
         }
         return ListView.builder(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(AppSizes.p12),
           itemCount: dataList.length,
           itemBuilder: (context, index) => _buildCard(
             context,
@@ -107,7 +107,7 @@ class _UserListScreenState extends State<UserListScreen> {
 
             // margin: const EdgeInsets.only(bottom: 12),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: AppSizes.p8),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final maxWidth = constraints.maxWidth;
@@ -158,7 +158,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 4, vertical: 4),
+                                        horizontal: 4, vertical: AppSizes.p4),
                                     height: MediaQuery.sizeOf(context).height /
                                         28.0,
                                     width:
@@ -241,7 +241,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                     child: Container(
                                       // width: Media,
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 4),
+                                          horizontal: 4, vertical: AppSizes.p4),
                                       height:
                                           MediaQuery.sizeOf(context).height /
                                               28.0,
@@ -401,12 +401,12 @@ class _UserListScreenState extends State<UserListScreen> {
           final animation = ModalRoute.of(context)!.animation!;
           return Container(
             constraints: BoxConstraints(maxHeight: maxHeight),
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(AppSizes.p12),
             child: Obx(() {
               if (foodieFundsDetailsRemainders.isEmpty) {
                 return const Center(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24.0),
+                    padding: EdgeInsets.symmetric(vertical: AppSizes.p24),
                     child: Text(
                       'No details available.',
                       style: TextStyle(
@@ -465,7 +465,7 @@ class _UserListScreenState extends State<UserListScreen> {
                         SizedBox(height: AppSizes.h8),
                         friends.isEmpty
                             ? const Padding(
-                                padding: EdgeInsets.only(left: 8.0),
+                                padding: EdgeInsets.only(left:AppSizes.p8),
                                 child: Text(
                                   'No friends in this split.',
                                   style: TextStyle(
@@ -487,7 +487,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                           context, friend, animation),
                                       if (index < friends.length - 1)
                                         const Padding(
-                                          padding: EdgeInsets.only(top: 8.0),
+                                          padding: EdgeInsets.only(top:AppSizes.p8),
                                           child: Divider(
                                             color: AppColors.accentColor,
                                             thickness: 0.2,
@@ -517,7 +517,7 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget _buildUserDetails(BuildContext context, Map<String, dynamic> user,
       Animation<double> animation) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      padding: const EdgeInsets.only(left:AppSizes.p8, right:AppSizes.p8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -589,7 +589,7 @@ class _UserListScreenState extends State<UserListScreen> {
                 ),
               ],
               // Amount Due
-              Container(
+              SizedBox(
                 width: MediaQuery.sizeOf(context).width / 4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -654,7 +654,7 @@ class _UserListScreenState extends State<UserListScreen> {
       Animation<double> animation) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(AppSizes.p12),
       decoration: BoxDecoration(
         color: AppColors.primaryColor,
         borderRadius: BorderRadius.circular(12),
@@ -699,7 +699,7 @@ class _UserListScreenState extends State<UserListScreen> {
                 ),
               ),
               SizedBox(
-                height: 5,
+                height: AppSizes.h5,
               ),
               Text(
                 'Total Amount: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data['totalAmount'] ?? 0)}',

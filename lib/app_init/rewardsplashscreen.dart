@@ -22,9 +22,9 @@ class RewardsScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-              left: 16,
-              right: 16,
-              top: 20,
+              left:AppSizes.p16,
+              right:AppSizes.p16,
+              top:AppSizes.p20,
               bottom: 16
             ),
             child: Column(
@@ -113,7 +113,7 @@ class RewardsScreen extends StatelessWidget {
                                   ],
                                 ),
                                 secondChild: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(AppSizes.p8),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -135,7 +135,7 @@ class RewardsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 firstChild: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(AppSizes.p8),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -157,15 +157,15 @@ class RewardsScreen extends StatelessWidget {
   Widget getBorderDotted(curve,context){
     return Positioned(
                                 top: curve+10, // Adjusts the SVG to appear above the card
-                                left: 12,
+                                left:AppSizes.p12,
                                 child: Center(
-                                  child: Container(
+                                  child: SizedBox(
                                     width: MediaQuery.of(context).size.width/1.28,
                                     child: DottedDivider(
                                           height: 1,
                                           dashWidth: 12,
                                           dashSpacing: 3,
-                                          color: Colors.grey,
+                                          color: AppColors.grey,
                                         ),
                                   ),
                                 ),

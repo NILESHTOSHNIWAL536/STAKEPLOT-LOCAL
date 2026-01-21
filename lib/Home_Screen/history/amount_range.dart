@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/helper.dart';
 import '../../components/shared_utils.dart';
@@ -22,7 +23,7 @@ class AmountRangeField extends StatelessWidget {
         child: Container(
           width: MediaQuery.of(context).size.width / 1.1,
           height: MediaQuery.sizeOf(context).height / 24,
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+          margin: const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: 0),
           child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
             SizedBox(
               

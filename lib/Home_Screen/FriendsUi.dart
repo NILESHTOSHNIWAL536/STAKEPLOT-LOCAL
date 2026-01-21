@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 RxList addedUser = [].obs;
 RxList addedMembers = [].obs;
 
@@ -34,7 +36,7 @@ class _FriendsUiState extends State<FriendsUi> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 1.9,
       child: Padding(
-        padding: const EdgeInsets.only(top: 24, left: 18, right: 18),
+        padding: const EdgeInsets.only(top:AppSizes.p24, left:AppSizes.p18, right:AppSizes.p18),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +50,7 @@ class _FriendsUiState extends State<FriendsUi> {
                 height: 10,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
                 child: InputDat('Search', TextInputType.name, Textcontroller),
               ),
       
@@ -165,7 +167,7 @@ class _FriendsUiState extends State<FriendsUi> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 0),
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(AppSizes.p10),
         decoration: BoxDecoration(
             // color: const Color.fromRGBO(249, 246, 238, 1),
             //  color: Colorcodes.textFeild,
@@ -175,7 +177,7 @@ class _FriendsUiState extends State<FriendsUi> {
             // InputDat('Search',TextInputType.name,Textcontroller),
 
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+              padding: EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 2),
               child: SizedBox(
                 height: 70,
                 width: MediaQuery.of(context).size.width,

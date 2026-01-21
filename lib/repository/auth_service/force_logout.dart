@@ -63,11 +63,11 @@ class ForceLogout {
         snackBarCalled(context, 'Existing session logged out.',);
       } 
       else {
-        snackBarCalledfail(context, 'Failed to log out existing session.', Colors.red);
+        snackBarCalledfail(context, 'Failed to log out existing session.',  );
       }
     } catch (e)
     {
-      snackBarCalledfail(context, 'Error during forced logout. Please try again.', Colors.red);
+      snackBarCalledfail(context, 'Error during forced logout. Please try again.',  );
     }
   }
 }

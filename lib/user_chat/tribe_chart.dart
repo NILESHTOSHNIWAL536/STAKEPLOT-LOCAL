@@ -157,7 +157,7 @@ class _TribeSearchState extends State<TribeChats> {
             ),
           ),
           title: Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 20.0, bottom: 10.0),
+            padding: const EdgeInsets.only(left:AppSizes.p16, top:AppSizes.p20, bottom: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -247,7 +247,7 @@ class _TribeSearchState extends State<TribeChats> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppSizes.p16),
           child: ListView(
             children: [
               InputDate(strings.searchHint, TextInputType.name, search),
@@ -265,7 +265,7 @@ class _TribeSearchState extends State<TribeChats> {
 
   Widget getTabs(context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
       child: Row(children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -411,7 +411,7 @@ class _TribeSearchState extends State<TribeChats> {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.p2, horizontal: 2),
                 color:
                     canMaskMessage ? Colors.transparent : Colorcodes.greyLight,
                 //width: width / 1,
@@ -461,7 +461,7 @@ class _TribeSearchState extends State<TribeChats> {
                     const Spacer(),
                     if (item['count'] != 0)
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(AppSizes.p10),
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
                           shape: BoxShape.circle,

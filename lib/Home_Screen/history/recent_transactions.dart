@@ -94,7 +94,7 @@ class RecentTransactionsScreen extends StatelessWidget {
   // ---------------- SPENDING SECTION ----------------
   Widget _spendingSection(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
       child: Column(
         children: [
           Text(
@@ -118,7 +118,7 @@ class RecentTransactionsScreen extends StatelessWidget {
           ),
           SizedBox(height: AppSizes.h8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p6),
             decoration: BoxDecoration(
               color: Colors.green.withOpacity(0.12),
               borderRadius: BorderRadius.circular(20),
@@ -188,7 +188,7 @@ class RecentTransactionsScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(AppSizes.p14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppColors.accentColor.withOpacity(0.3)),

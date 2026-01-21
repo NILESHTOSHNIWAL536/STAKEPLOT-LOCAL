@@ -205,7 +205,7 @@
 // //         GestureDetector(
 // //           onTap: onTap,
 // //           child: Container(
-// //             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+// //             padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p8),
 // //             decoration: BoxDecoration(
 // //               color: AppColors.primaryColor,
 // //               borderRadius: BorderRadius.circular(8),
@@ -546,7 +546,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             // 🔥 Hint
             if (_showHint && _panelProgress == 0.0)
               Positioned(
-                top: 8,
+                top:AppSizes.p8,
                 left: 0,
                 right: 0,
                 child: IgnorePointer(
@@ -555,8 +555,8 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                       opacity: _hintOpacity,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
+                          horizontal: AppSizes.p12,
+                          vertical: AppSizes.p6,
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.accentColor.withOpacity(0.5),
@@ -674,7 +674,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   Widget _buildCreditCardsConnectedCard(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p14),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
@@ -740,7 +740,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   }) {
     return Container(
       width: 230,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p10),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
@@ -805,7 +805,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
               if (showTodayChip)
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFE4E4),
                     borderRadius: BorderRadius.circular(999),
@@ -830,7 +830,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   Widget _buildBudgetCard(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p16),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
@@ -881,7 +881,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
         '₹ ${current.toStringAsFixed(0)} / ₹ ${target.toStringAsFixed(0)}';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p12),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
@@ -1097,14 +1097,14 @@ Widget _buildToolsGrid(BuildContext context) {
                     
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 12),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.p12,horizontal: AppSizes.p12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
                             Container(
-                              padding:const EdgeInsets.all(4),
+                              padding:const EdgeInsets.all(AppSizes.p4),
                               decoration: BoxDecoration(
                                 color: AppColors.creditCardComponentColor,
                                 borderRadius: BorderRadius.circular(13)
@@ -1127,13 +1127,13 @@ Widget _buildToolsGrid(BuildContext context) {
                                   ),
                                    SizedBox(width: AppSizes.w16),
                                  Container(
-                                  padding:const  EdgeInsets.all(4),
+                                  padding:const  EdgeInsets.all(AppSizes.p4),
                               decoration: BoxDecoration(
                                 color: const Color.fromRGBO(255, 255, 255, 0.08),
                                 borderRadius: BorderRadius.circular(20)
                               ),
                                    child: Container(
-                                            padding: const EdgeInsets.all(2),
+                                            padding: const EdgeInsets.all(AppSizes.p2),
                                            decoration:const  BoxDecoration(
                                              color: AppColors.backgroundColor,
                                              shape: BoxShape.circle,
@@ -1222,7 +1222,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
       height: expanded ? widget.height + 60 : widget.height,
       width: MediaQuery.sizeOf(context).width/2.4,
       curve: Curves.easeOutCubic,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p16),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(22),
@@ -1251,7 +1251,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p8),
                     decoration:const  BoxDecoration(
                       color: AppColors.border,
                     borderRadius: BorderRadius.all(Radius.circular(8))
@@ -1260,7 +1260,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                     
                     ),
                   Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p8),
                     decoration: const BoxDecoration(
                       color: AppColors.border,
                     borderRadius: BorderRadius.all(Radius.circular(8))
@@ -1277,7 +1277,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                   GestureDetector(
                     onTap: widget.onTapD,
                     child: Container(
-                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                       padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p8),
                     decoration: const BoxDecoration(
                       color: AppColors.border,
                     borderRadius: BorderRadius.all(Radius.circular(8))
@@ -1302,7 +1302,7 @@ class _FinanceToolsCardState extends State<_FinanceToolsCard> {
                   GestureDetector(
                     onTap: widget.onTapC,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p8),
                     decoration: const BoxDecoration(
                       color: AppColors.border,
                     borderRadius: BorderRadius.all(Radius.circular(8))

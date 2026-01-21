@@ -48,7 +48,7 @@
 //           children: [
 //             Container(
              
-//               padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+//               padding: EdgeInsets.symmetric(horizontal: 0, vertical: AppSizes.p10),
 //               width: width <= 500 ? width / 1.2 : width / 1.2,
 //               child: Column(
 //                 mainAxisAlignment: MainAxisAlignment.start,
@@ -75,7 +75,7 @@
 
 //                         return Obx(() => Padding(
 //                               padding:
-//                                   const EdgeInsets.symmetric(vertical: 4.0),
+//                                   const EdgeInsets.symmetric(vertical: AppSizes.p4),
 //                               child: InkWell(
 //                                 onTap:
                       
@@ -189,6 +189,8 @@ import 'package:flutter_application_code_stakeplot/controllers/controllerManagem
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 
 Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
   String id = userController.userId.value;
@@ -228,7 +230,7 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
           children: [
             Container(
              
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: AppSizes.p10),
               width: MediaQuery.sizeOf(context).width/1.5,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -255,7 +257,7 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
 
                         return Obx(() => Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 4.0),
+                                  const EdgeInsets.symmetric(vertical: AppSizes.p4),
                               child: InkWell(
                                 onTap:
                       myvote.value
