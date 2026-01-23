@@ -81,26 +81,42 @@ Future<PostModel?> fetchPostById(String postId, BuildContext context) async {
     }
   }
 
-  void getNotifications(context) async {
+//   void getNotifications(context) async {
   
-  final response = await getDataApiCall(UserRoutes.myNotifications);
+//   final response = await getDataApiCall(UserRoutes.myNotifications);
  
-  if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
-    notificationList.clear();
-    notificationList.addAll(his['data']);
+//   if (getFlagOfResponse(response)) {
+//     var his = jsonDecode(response.body);
+
+//     notificationList.clear();
+//     notificationList.addAll(his['data']);
+//     print("notifications");
+//     print(notificationList);  
     
-    notificationList.forEach((req) {
-      String type = req['notificationMessage']['type'];
-      var e = req['notificationMessage'];
-      if (type == "friendRequest") {
-        friendRequestList.add(e['from_id']);
-      }
-    });
+//     notificationList.forEach((req) {
+//       String type = req['notificationMessage']['type'];
+//       var e = req['notificationMessage'];
+//       if (type == "friendRequest") {
+//         friendRequestList.add(e['from_id']);
+//       }
+//     });
 
-    hasGetNewNotifications.value = false;
-    myNotificationBool.value = !myNotificationBool.value;
+//     hasGetNewNotifications.value = false;
+//     myNotificationBool.value = !myNotificationBool.value;
+//     notificationsFlag.value = false;
+//   } else {}
+// }
+
+void getNotifications(BuildContext context) async {
+  final response = await getDataApiCall(UserRoutes.myNotifications);
+
+  if (getFlagOfResponse(response)) {
+    final decoded = jsonDecode(response.body);
+
+    notificationList.clear();
+    notificationList.addAll(List<Map<String, dynamic>>.from(decoded['data']));
+
     notificationsFlag.value = false;
-  } else {}
+    myNotificationBool.value = !myNotificationBool.value;
+  }
 }
-
