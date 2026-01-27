@@ -257,6 +257,7 @@
 //           ));
 //   }
 // }
+
 // ExpandedChartView (final ready-to-paste)
 // - toggle dummy vs real API with `useDummyData`
 // - dynamic month/year selector
@@ -424,10 +425,7 @@ return;
       }
     }
 
-    // Dummy fallback (deterministic per month-year)
-    _generateDummyMonthData(year, month);
-
-    // Reset selection to "all selected" on month load
+    
     _selectedDayIndex = -1;
 
     setState(() {
@@ -437,23 +435,7 @@ return;
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
   }
 
-  void _generateDummyMonthData(int year, int month) {
-    final int daysInMonth = DateTime(year, month + 1, 0).day;
-    _days = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
-
-    final rnd = Random(year * 100 + month);
-    _credited = List.generate(daysInMonth, (i) {
-      final base = 1800 + (i % 5) * 300;
-      final noise = rnd.nextInt(1500);
-      return (base + noise).toDouble();
-    });
-    _debited = List.generate(daysInMonth, (i) {
-      final base = 650 + (i % 4) * 140;
-      final noise = rnd.nextInt(900);
-      return (base + noise).toDouble();
-    });
-  }
-
+ 
   void _scrollToEnd() {
     // Chart horizontal scroll is automatic because we set chart width to content width.
     // Keep this hook in case you add controllers later.
@@ -468,6 +450,7 @@ return;
 
   /// Month-pill tap: update global selectedMonth/year AND update chart & transactions (Option A)
   Future<void> _onMonthPillTap(int month) async {
+    
     // Update global selection (this will be used by transaction history)
     selectedMonth.value = month;
     isYearView.value = false;
@@ -948,9 +931,4 @@ AppBar appbarWidget() {
   }
 }
 
-class _ExpChartData {
-  _ExpChartData(this.label, this.credit, this.debit);
-  final String label;
-  final double credit;
-  final double debit;
-}
+class _ExpChartData { _ExpChartData(this.label, this.credit, this.debit); final String label; final double credit; final double debit; }
