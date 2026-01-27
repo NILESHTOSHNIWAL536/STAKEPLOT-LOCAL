@@ -11,8 +11,11 @@ import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.da
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:get/get.dart';
+
+import '../../Constants/core/app_component_sizes.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/helper.dart';
 import '../Home/home_AppBar.dart';
 import '../Home/init_Api_Calls.dart';
@@ -24,11 +27,11 @@ class IndexScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppComponentSizes.init(context);
     double height = MediaQuery.of(context).size.height;
-final double sectionHeight = height * 0.54; 
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
       child: RefreshIndicator(
         color: AppColors.primaryColor,
         backgroundColor: AppColors.backgroundColor,
@@ -50,18 +53,11 @@ final double sectionHeight = height * 0.54;
 Stack(
   children: [
     // BACKGROUND IMAGE for the whole section
-    SizedBox(
-      height: MediaQuery.sizeOf(context).height/3.6,
-      width: double.infinity,
-      child: SvgPicture.asset(
-        HomePageIcons.background, // <-- verify this path
-        fit: BoxFit.cover,
-      ),
-    ),
+    AvatarProfileImageZero(url: HomePageIcons.background, width: 1, height: 3.6),
 
     
-    Container(
-      height: MediaQuery.sizeOf(context).height/2.36,
+    SizedBox(
+      height: AppComponentSizes.h2_4,
       // color: Colors.green,
       width: double.infinity,
       child: Padding(
@@ -69,13 +65,13 @@ Stack(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 60),
+             SizedBox(height: AppSizes.h60),
 
            
-            TopRightIconsWidget(),
+            const TopRightIconsWidget(),
 
-            Container(
-              height: height * 0.3,
+            SizedBox(
+              height: AppComponentSizes.h3_4,
               // color: Colors.amber,
               child: Material(
                 type: MaterialType.transparency, // IMPORTANT: makes child transparent
@@ -83,7 +79,7 @@ Stack(
               ),
             ),
 
-            const SizedBox(height: 10),
+            SizedBox(height: AppSizes.h10),
           ],
         ),
       ),
@@ -93,7 +89,7 @@ Stack(
 
              
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0, ),
+                padding: const EdgeInsets.symmetric(horizontal: 30.0 ),
                 child: Column(
                   children: [
                     SizedBox(
@@ -108,16 +104,16 @@ Stack(
                         
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: AppSizes.h20,
                     ),
                     SizedBox(
-                      height: height * 0.2,
-                      child: SpendingCardTwoPanels(),
+                      height: AppComponentSizes.h5,
+                      child: const SpendingCardTwoPanels(),
                     ),
-                   
-                    const SizedBox(
-                      height: 20,
+                  
+                     SizedBox(
+                      height: AppSizes.h20,
                     ),
                     //  SizedBox(
                     //   height: height * 0.2,
@@ -125,8 +121,8 @@ Stack(
                     // ),
                     
                     Obx(() => isFinoraVisible.value
-                        ?SwipeableCardsScreen()
-                        : SwipeableCardsScreen()),
+                        ?const SwipeableCardsScreen()
+                        :const  SwipeableCardsScreen()),
                     
                     Obx(() => isAutoPayFected.value
                         ? GetAutopays(height)
@@ -137,7 +133,7 @@ Stack(
                       height: 14,
                     ),
                     SizedBox(
-                      height: 30,
+                      height: AppComponentSizes.h30,
                       child: Text(HomepageStringsDart().madeWithLove,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w500,
@@ -157,10 +153,10 @@ Stack(
 
   Widget GetAutopays(height) {
     return allAutoPayData.isEmpty
-        ? SizedBox.shrink()
-        : Container(
-          color: Colors.amber,
-          height: height * 0.4, child: CardStackScreen());
+        ? const SizedBox.shrink()
+        :  SizedBox(
+          // color: Colors.amber,
+          height: AppComponentSizes.h3, child: CardStackScreen());
   }
 
   Widget GetFinora(double height) {
@@ -169,7 +165,7 @@ Stack(
         height: height * (totalDebitThisMonth.value <= 0 ? 0.54 : 0.2),
         child: totalDebitThisMonth.value <= 0
             ? FinoraLastTwoMonthsDashboard()
-            : SwipeableCardsScreen(),
+            : const SwipeableCardsScreen(),
       );
     });
   }

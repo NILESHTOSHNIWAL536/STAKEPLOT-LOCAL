@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:get/get.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 final RxString selectedPeriod = 'Month'.obs;
@@ -35,7 +36,7 @@ class SwipeableCardsScreen extends StatelessWidget {
           Row(
             children: [
               AvatarProfileImageZero(url: HomePageIcons.finoraIcon, width: 30, height: 40),
-              SizedBox(width: 10),
+              SizedBox(width: AppSizes.w10),
               Text( HomepageStringsDart().finora,
               style: FontManager().getTextStyle(context, color: AppColors.primaryColor, letterSpacing: 2.2, fontSize: 16, lWeight: FontWeight.w500),
               )
@@ -43,7 +44,7 @@ class SwipeableCardsScreen extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
 
           
           SizedBox(
@@ -83,7 +84,7 @@ class SwipeableCardsScreen extends StatelessWidget {
   Widget card,
 ) {
   return Padding(
-    padding: const EdgeInsets.only(right: 12), 
+    padding: const EdgeInsets.only(right:AppSizes.p12), 
     child: Container(
       width: screenSize.width * 0.8, // 👈 KEY CHANGE (peek effect)
       height: screenSize.height * 0.14,
@@ -116,7 +117,7 @@ class TotalSpendingCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
         ),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,14 +126,14 @@ class TotalSpendingCard extends StatelessWidget {
               Row(
                 children: [
                  Container(
-                   padding: EdgeInsets.all(2),
+                   padding: EdgeInsets.all(AppSizes.p2),
                     decoration: BoxDecoration(
                       
                        color: const Color.fromRGBO(75, 77, 115, 0.04),
     borderRadius: BorderRadius.circular(13),
                     ),
                   child: Icon(Icons.sunny, color: AppColors.primaryColor,size: 24,)),
-                 SizedBox(width: 8),
+                 SizedBox(width: AppSizes.w8),
                   Text(
                     'Monthly Summary',
                     style: FontManager().getTextStyle(
@@ -145,7 +146,7 @@ class TotalSpendingCard extends StatelessWidget {
                 ],
               ),
               SizedBox(
-                height: 20,
+                height: AppSizes.h20,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -165,7 +166,7 @@ class TotalSpendingCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: 7,
+                        height: AppSizes.h8,
                       ),
                       Container(
                         width: MediaQuery.sizeOf(context).width / 2.6,
@@ -196,7 +197,7 @@ class TotalSpendingCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: 7,
+                        height: AppSizes.h8,
                       ),
                       Container(
                         width: MediaQuery.sizeOf(context).width / 2.9,
@@ -233,7 +234,7 @@ class OverspentCategoriesCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
         ),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,7 +254,7 @@ class OverspentCategoriesCard extends StatelessWidget {
                         color: AppColors.primaryColor,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: AppSizes.h4),
                     Text(
                       '(${selectedPeriod.value}ly)',
                       style: FontManager().getTextStyle(
@@ -278,7 +279,7 @@ class OverspentCategoriesCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 5),
+            SizedBox(height: AppSizes.h5),
             _buildCategoryList(screenSize, padding, context),
           ],
         ),
@@ -368,14 +369,14 @@ class FrequentTransactionCard extends StatelessWidget {
             Row(
               children: [
                   Container(
-                    padding: EdgeInsets.all(2),
+                    padding: EdgeInsets.all(AppSizes.p2),
                     decoration: BoxDecoration(
                       
                        color: const Color.fromRGBO(75, 77, 115, 0.04),
     borderRadius: BorderRadius.circular(13),
                     ),
                     child: Icon(Icons.graphic_eq, color: AppColors.primaryColor,size: 24,)),
-                 SizedBox(width: 8),
+                 SizedBox(width: AppSizes.w8),
                   Text(
                     'Most Frequent Payment',
                     style: FontManager().getTextStyle(

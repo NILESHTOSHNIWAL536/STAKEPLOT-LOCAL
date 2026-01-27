@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../Constants/app_styles.dart';
 import '../../../../Constants/colors.dart';
+import '../../../../Constants/core/app_padding_sizes.dart';
 import '../../../../Constants/font_manager.dart';
 import '../../../../Constants/core/container_border.dart';
 import '../../../../backed_connections/apis_connect.dart';
@@ -152,7 +153,7 @@ class CollectionHeader extends StatelessWidget {
             InkWell(
               onTap: onBack,
               child:CustomStyledContainer(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSizes.p12),
                 radius: 30,
                 // width: 42,
                 // height: 40,
@@ -162,7 +163,7 @@ class CollectionHeader extends StatelessWidget {
                   color: AppColors.accentColor,
                 ),
             )),
-            const SizedBox(width: 52),
+             SizedBox(width: AppSizes.w52),
             Text(
               "Create Collection",
               style: FontManager().getTextStyle(
@@ -192,7 +193,7 @@ Widget wrapperCollection(BuildContext context, Widget child) {
         child: IntrinsicHeight(
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              SizedBox(height: AppSizes.h20),
               Expanded(child: child),
             ],
           ),
@@ -273,7 +274,7 @@ Widget cardCollection(
 
 Widget chipCollection(String text, BuildContext context, {bool isSelected = false}) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10),
+    padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
     child: Container(
       height: MediaQuery.of(context).size.height / 18,
       width: MediaQuery.of(context).size.width / 1.2,

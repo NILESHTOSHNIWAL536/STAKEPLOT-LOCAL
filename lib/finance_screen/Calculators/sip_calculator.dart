@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/ex
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/calculator_utils.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 class SIPCalculator extends StatefulWidget {
@@ -127,7 +128,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
 
   ),child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(AppSizes.p12),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +137,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left:10,bottom:10 ),
+                      padding: const EdgeInsets.only(left:AppSizes.p2,bottom:AppSizes.p10 ),
                       child: Container(
                        width: MediaQuery.sizeOf(context).width/8,
                            
@@ -169,7 +170,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                 SizedBox(  width: MediaQuery.of(context).size.width * 0.15)
 ,
                     Padding(
-                      padding: const EdgeInsets.only(left: 14),
+                      padding: const EdgeInsets.only(left:AppSizes.p14),
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -188,7 +189,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                           });
                         },
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom:10),
+                          padding: const EdgeInsets.only(bottom:AppSizes.p10,right:AppSizes.p4),
                           child: Text(
                             "SIP Calculator",
                             style: FontManager().getTextStyle(
@@ -217,8 +218,8 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                   },
                   child: _isInfoVisible
                       ? Container(
-                          margin: EdgeInsets.symmetric(vertical: 4),
-                          padding: EdgeInsets.all(12),
+                          margin: EdgeInsets.symmetric(vertical: AppSizes.m4),
+                          padding: EdgeInsets.all(AppSizes.p12),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor.withOpacity(0.9),
                             borderRadius: BorderRadius.circular(12),
@@ -245,12 +246,14 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                 ),
                 Padding(
             padding: EdgeInsets.all(Colorcodes.paddingSize / 2),
-            child: textStyle(
-                context: context,
-                fontsize: 20,
-                fontWeight: FontWeight.w800,
-                c: AppColors.primaryColor,
-                text: "Breakdown"),
+            child: Text(
+                              "Breakdown",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w800,
+                                fontSize: 20,
+                                // color: AppColors.newtitlecolor,
+                              ),),
           ),
                 Container(
                     decoration: BoxDecoration(

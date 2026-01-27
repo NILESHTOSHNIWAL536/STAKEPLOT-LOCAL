@@ -25,6 +25,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 
 
+import "../Constants/core/app_padding_sizes.dart";
 import "../Constants/font_manager.dart";
 import "shared_utils.dart";
 import "../finance_screen/finanace_dashboard/index_finances.dart";
@@ -72,7 +73,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             widget.data = 1;
           });
           ScreenTimeTracker().switchTab(_tabNames[1]);
-          pushName(FinanceDashboard());
+          pushName(const FinanceDashboard());
         }
       }
 
@@ -84,7 +85,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             widget.data = 1;
           });
           ScreenTimeTracker().switchTab(_tabNames[1]);
-          pushName(FinanceDashboard());
+          pushName(const FinanceDashboard());
         }
       });
     } catch (e) {}
@@ -92,8 +93,6 @@ class _BottomNavigationsState extends State<BottomNavigations> {
 
   @override
   Widget build(BuildContext context) {
-    //int selectedIndex = 0;
-    final userController = ControllerManagement.userController;
 
     return Container(
       height: Colorcodes.paddingSize * 2.5,
@@ -139,7 +138,7 @@ Widget imageurl(String url, int index) {
   bool isAvatar = index == 3 || index == 4;
 
   return Padding(
-    padding: isAvatar?const EdgeInsets.only(bottom: 2):EdgeInsets.all(0),
+    padding: isAvatar?const EdgeInsets.only(bottom: 2):const EdgeInsets.all(0),
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -147,6 +146,7 @@ Widget imageurl(String url, int index) {
         isAvatar
             ? Obx(() => CircleAvatar(
               backgroundColor: AppColors.primaryColor,
+              radius: 17,
             child: Text(
     userController.userName.value.trim().isNotEmpty
         ? userController.userName.value.trim()[0].toUpperCase()
@@ -154,7 +154,7 @@ Widget imageurl(String url, int index) {
         style: FontManager().getTextStyle(context, color: AppColors.backgroundColor, fontSize: 16),
     ),
     
-              radius: 17,
+              
             ))
             // AvatarProfile(
             //       name: userController.userName.value,
@@ -168,7 +168,7 @@ Widget imageurl(String url, int index) {
                 height: MediaQuery.of(context).size.height / 30,
               ),
     
-        const SizedBox(height: 4),
+         SizedBox(height: AppSizes.h4),
     
         /// TEXT LABEL
         Text(
@@ -178,7 +178,7 @@ Widget imageurl(String url, int index) {
             fontSize: 10,
             lWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             color: isSelected
-                ? AppColors.finSpaceColor
+                ? AppColors.primaryColor
                 : AppColors.bg1,
           ),
         ),
@@ -238,8 +238,11 @@ Widget imageurl(String url, int index) {
       //   }
       // },
       onLongPress: () async {
-        if (i == 2 && widget.data != i)
-          pushName(TribeChats(), true);
+        if (i == 2 && widget.data != i){
+           pushName(const TribeChats(), true);
+
+        }
+         
         else if (i == 0) {
           // Handle long press for index 0
         } else if (i == 3 && widget.data != i) {}
@@ -269,17 +272,31 @@ Widget imageurl(String url, int index) {
           ScreenTimeTracker().switchTab(tabName);
           // added
 
-          if (i == 0)
-            pushName(HomePage(),false,true);
+          if (i == 0){
+             pushName(HomePage(),false,true);
+
+          }
+           
           // else if (i == 1) pushName(Connections());
           else if (i == 1)
-            pushName(FinanceDashboard());
+          {
+             pushName(const FinanceDashboard());
+          }
+           
 
           else if (i == 2)
-            pushName(ControllerManagement.userController.interestedTags.isEmpty
-                ? WelcomeScreen()
-                : Community());
-          else if (i == 3) pushName(ProfileScreenDart());
+          {
+             pushName(ControllerManagement.userController.interestedTags.isEmpty
+                ? const WelcomeScreen()
+                : const Community());
+          }
+           
+          else if (i == 3) 
+          {
+             pushName(const ProfileScreenDart());
+
+          }
+         
 
           setState(() {
             widget.data = i; // Update selected index

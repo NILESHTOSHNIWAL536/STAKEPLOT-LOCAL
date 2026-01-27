@@ -20,6 +20,7 @@ import "package:flutter_application_code_stakeplot/Constants/loader.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:get/get.dart";
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import "../Constants/core/app_padding_sizes.dart";
 import "../routes/index_route.dart";
 import "../routes/route_user_login.dart";
 
@@ -156,7 +157,7 @@ class _TribeSearchState extends State<TribeChats> {
             ),
           ),
           title: Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 20.0, bottom: 10.0),
+            padding: const EdgeInsets.only(left:AppSizes.p16, top:AppSizes.p20, bottom: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -170,7 +171,7 @@ class _TribeSearchState extends State<TribeChats> {
                     color: AppColors.backgroundColor,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.h4),
                 Obx(() => Text(
                       countOpen.value
                           ? strings.messagesReceived.replaceFirst(
@@ -188,7 +189,7 @@ class _TribeSearchState extends State<TribeChats> {
                     )),
                 Obx(() => ismaskedUsers.value
                     ? SizedBox.shrink()
-                    : SizedBox(height: 8)),
+                    : SizedBox(height: AppSizes.h8)),
                 chatSplitAccount.isNotEmpty && !ismaskedUsers.value
                     ? SizedBox(
                         height: 40,
@@ -223,7 +224,7 @@ class _TribeSearchState extends State<TribeChats> {
                                     color: AppColors.backgroundColor,
                                   ),
                                 ),
-                                const SizedBox(width: 16),
+                                SizedBox(width: AppSizes.w16),
                               ],
                             );
                           },
@@ -246,7 +247,7 @@ class _TribeSearchState extends State<TribeChats> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppSizes.p16),
           child: ListView(
             children: [
               InputDate(strings.searchHint, TextInputType.name, search),
@@ -264,7 +265,7 @@ class _TribeSearchState extends State<TribeChats> {
 
   Widget getTabs(context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
       child: Row(children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -410,7 +411,7 @@ class _TribeSearchState extends State<TribeChats> {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.p2, horizontal: 2),
                 color:
                     canMaskMessage ? Colors.transparent : Colorcodes.greyLight,
                 //width: width / 1,
@@ -424,7 +425,7 @@ class _TribeSearchState extends State<TribeChats> {
                             width: 1,
                             height: 1,
                             background: item['avatar'] ?? ""),
-                    const SizedBox(width: 8),
+                    SizedBox(width: AppSizes.w8),
                     Container(
                       width: width >= 500
                           ? width / 2.2
@@ -444,7 +445,7 @@ class _TribeSearchState extends State<TribeChats> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 2),
+                          SizedBox(height: AppSizes.h2),
                           Text(
                             item['type'] ?? strings.noMessagesYet,
                             style: FontManager().getTextStyle(context,
@@ -460,7 +461,7 @@ class _TribeSearchState extends State<TribeChats> {
                     const Spacer(),
                     if (item['count'] != 0)
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(AppSizes.p10),
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
                           shape: BoxShape.circle,

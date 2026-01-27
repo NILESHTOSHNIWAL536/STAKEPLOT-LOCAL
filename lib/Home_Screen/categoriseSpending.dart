@@ -16,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/repository/finora_repository.
 import 'package:get/get.dart';
 
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../components/shared_utils.dart';
 import '../repository/transactions_repository.dart';
 
@@ -49,7 +50,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(AppSizes.p8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -225,7 +226,7 @@ class CategoryCard extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(AppSizes.p10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -256,9 +257,9 @@ class CategoryCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 2),
+               SizedBox(height: AppSizes.h2),
               Padding(
-                padding: const EdgeInsets.only(left: 6),
+                padding: const EdgeInsets.only(left:AppSizes.p6),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -274,7 +275,7 @@ class CategoryCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppSizes.h8),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,7 +352,7 @@ class AllCategoriesPage extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(AppSizes.p8),
         child: Obx(() {
           // Sort chartData by value in descending order
           final sortedData = spendingsOnCategories.toList()

@@ -14,6 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 
+import '../../../Constants/core/app_padding_sizes.dart';
+import '../../../Constants/core/app_shadows.dart';
 import 'icon_split_hide.dart';
 
 
@@ -85,14 +87,14 @@ class TransactionDetails extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
+                          SizedBox(
                             width: MediaQuery.sizeOf(context).width / 3.3,
                             child: textStyle(
                               context: context,
                               text: transaction.subcategory==""? nameOfUser :transaction.subcategory,
                               c: AppColors.accentColor,
-                              fontsize: fontSizes.fontSizeMedium,
-                              fontWeight: FontWeight.w600,
+                              fontsize: 13,
+                              fontWeight: FontWeight.w500,
                               lineHeight: 1.5,
                             ),
                           ),
@@ -102,8 +104,8 @@ class TransactionDetails extends StatelessWidget {
                               textStyle(
                                 context: context,
                                 text: formatAmount,
-                                c: amtColor,
-                                fontsize: fontSizes.fontSizeLarge,
+                                c: AppColors.primaryColor,
+                                fontsize: 18,
                                 fontWeight: FontWeight.w500,
                               ),
                             ],
@@ -113,8 +115,8 @@ class TransactionDetails extends StatelessWidget {
                       textStyle(
                         context: context,
                         text: isManual ? formattedDateManual : formattedDate,
-                        c: AppColors.primaryColor.withOpacity(0.7),
-                        fontsize: fontSizes.fontSizeSmall,
+                        c: AppColors.grey,
+                        fontsize: 10,
                         fontWeight: FontWeight.w400,
                       ),
                     ],
@@ -123,11 +125,11 @@ class TransactionDetails extends StatelessWidget {
               ],
             ),
           ),
-          isExcluded ? const SizedBox(height: 10) : const SizedBox.shrink(),
+          isExcluded ?  SizedBox(height: AppSizes.h10) : const SizedBox.shrink(),
           isExcluded
               ? const SizedBox.shrink()
               : Padding(
-                  padding: const EdgeInsets.only(left: 4),
+                  padding: const EdgeInsets.only(left:AppSizes.p4),
                   child: IconsForHideUpdateSplit(
                   iconSize:   fontSizes.iconSize,
                   padding:   fontSizes.padding,
@@ -196,6 +198,7 @@ Widget getIconAvtarForTagShowModal(double avatarSize, String category, double sc
           color: Colorcodes.greyLight,
           width: 0.3,
         ),
+        boxShadow: [AppShadows.soft],
         borderRadius: BorderRadius.circular(6),
       ),
       child: Center(

@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.d
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../Budgets/Budget.dart'; // for icons
 
 class FeatureGrid extends StatelessWidget {
@@ -33,7 +34,7 @@ Widget _buildFeatureIcon(IconData icon, String text, int index,
       Navigator.pushNamed(context, routerName);
     },
     child: Padding(
-      padding: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.only(top:AppSizes.p30),
       child: Column(
         children: [
           Padding(
@@ -41,7 +42,7 @@ Widget _buildFeatureIcon(IconData icon, String text, int index,
             child: Container(
               width: 50,
               height: 50,
-              padding: EdgeInsets.all(4),
+              padding: EdgeInsets.all(AppSizes.p4),
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
                 shape: BoxShape.circle, // Changed to a circle for accuracy
@@ -57,7 +58,7 @@ Widget _buildFeatureIcon(IconData icon, String text, int index,
               child: AvatarProfileImage(url: urlPath, width: 12, height: 14),
             ),
           ),
-          const SizedBox(height: 4),
+           SizedBox(height: AppSizes.h4),
           textStyleImage(
               text: text,
               context: context,

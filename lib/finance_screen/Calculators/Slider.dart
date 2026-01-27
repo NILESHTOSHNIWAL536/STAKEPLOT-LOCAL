@@ -6,6 +6,8 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 String selectedDestination = "Paris";
 String selectedAccommodation = "Hotel";
 String selectedBrand = 'Toyota';
@@ -271,7 +273,7 @@ class _SliderPageState extends State<SliderPage> {
             }); 
           },
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: AppSizes.h10),
         Text(
           "Accommodation Type:",
           style: FontManager().getTextStyle(
@@ -343,7 +345,7 @@ class _SliderPageState extends State<SliderPage> {
         });
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
             color: AppColors.backgroundColor),

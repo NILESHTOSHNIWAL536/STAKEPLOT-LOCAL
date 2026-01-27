@@ -37,7 +37,7 @@ class TransactionCheckbox extends StatelessWidget {
         return ScaleTransition(scale: animation, child: child);
       },
       child:Obx(()=> (showCheckBox.value && !isExcluded && !hide)
-          ? Container(
+          ? SizedBox(
               key: const ValueKey('checkbox'),
               height: 30,
               width: 30,
@@ -64,7 +64,7 @@ class TransactionCheckbox extends StatelessWidget {
                   }
                 },
                 shape: const CircleBorder(),
-                side: BorderSide(color: AppColors.primaryColor),
+                side: const BorderSide(color: AppColors.primaryColor),
                 checkColor: AppColors.backgroundColor,
                 activeColor: AppColors.primaryColor,
                 semanticLabel: 'Select transaction ${transaction.id}',

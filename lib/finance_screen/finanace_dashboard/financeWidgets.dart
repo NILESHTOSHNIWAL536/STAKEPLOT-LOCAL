@@ -10,6 +10,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDe
 import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/cardBuilders.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 // Import CardBuilders for debtCard, budgetCard, etc.
 
 class FinanceWidgets {
@@ -38,7 +40,7 @@ class FinanceWidgets {
                         size: 12,
                         color: AppColors.primaryColor,
                       ),
-                      const SizedBox(width: 8),
+                       SizedBox(width: AppSizes.w8),
                       CardBuilders.globalText(
                         context: context,
                         text: PlotFinanceStaticData().addBudget,
@@ -51,7 +53,7 @@ class FinanceWidgets {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+             SizedBox(width: AppSizes.w12),
             Expanded(
               child: InkWell(
                 onTap: onAddDebt,
@@ -69,7 +71,7 @@ class FinanceWidgets {
                         size: 12,
                         color: AppColors.primaryColor,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSizes.w8),
                       CardBuilders.globalText(
                         context: context,
                         text: PlotFinanceStaticData().addDebt,
@@ -82,7 +84,7 @@ class FinanceWidgets {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+             SizedBox(width: AppSizes.w12),
             Expanded(
               child: InkWell(
                 onTap: () {
@@ -102,7 +104,7 @@ class FinanceWidgets {
                         size: 12,
                         color: AppColors.primaryColor,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSizes.w8),
                       CardBuilders.globalText(
                         context: context,
                         text: PlotFinanceStaticData().foodieFunds,
@@ -117,7 +119,7 @@ class FinanceWidgets {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: AppSizes.h16),
         Row(
           children: [
             Expanded(
@@ -139,7 +141,7 @@ class FinanceWidgets {
                     )),
               ),
             ),
-            const SizedBox(width: 12),
+             SizedBox(width: AppSizes.w12),
             Expanded(
               child: InkWell(
                 onTap: () {
@@ -181,7 +183,7 @@ class FinanceWidgets {
                   itemBuilder: (context, index) {
                     final debt = debts[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                       child: SizedBox(
                         width: isSingleDebt
                             ? screenWidth * 0.4
@@ -210,7 +212,7 @@ class FinanceWidgets {
                   itemBuilder: (context, index) {
                     final debt = debts[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                       child: SizedBox(
                         width: isSingleDebt
                             ? screenWidth * 0.9
@@ -273,7 +275,7 @@ class FinanceWidgets {
                   itemCount: sortedBudgets.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                       child: SizedBox(
                         width: isSingleBudget
                             ? screenWidth * 0.9
@@ -291,7 +293,7 @@ class FinanceWidgets {
 
   static Widget calculatorList(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      margin: EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
       width: MediaQuery.of(context).size.width,
       child: Wrap(
         spacing: 8,

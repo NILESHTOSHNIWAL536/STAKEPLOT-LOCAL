@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.d
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
+import '../../../Constants/core/app_padding_sizes.dart';
 import 'predictions_category_icon.dart';
 
 
@@ -69,11 +70,11 @@ class CategoryAndSplitIcons extends StatelessWidget {
                             );
                           },
                     child: Container(
-                      padding: EdgeInsets.symmetric(
+                      padding:const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 5),
                       decoration: BoxDecoration(
                         
-                        color: const Color(0xFF4B4D73).withOpacity(0.10), 
+                        color:  AppColors.primaryColor.withOpacity(0.10), 
     // Border Radius: 2px
     borderRadius: BorderRadius.circular(2.0),
                       ),
@@ -81,7 +82,7 @@ class CategoryAndSplitIcons extends StatelessWidget {
                         context: context,
                         text: toUpperCase(category),
                         c: AppColors.primaryColor,
-                        fontsize: fontSizeMedium,
+                        fontsize: 13,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -90,7 +91,7 @@ class CategoryAndSplitIcons extends StatelessWidget {
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(width: 10),
+                       SizedBox(width: AppSizes.w10),
                       textStyle(
                         context: context,
                         text: " ( $formatAmountBalance )",
@@ -103,7 +104,7 @@ class CategoryAndSplitIcons extends StatelessWidget {
           ],
         ),
         if (isSplit)
-          Container(
+          SizedBox(
             width: MediaQuery.sizeOf(context).width / 11,
             child: AvatarProfileImage(
               url: HomePageIcons.isSplit,

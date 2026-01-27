@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../../../Constants/core/app_padding_sizes.dart';
 import '../create_collection_data.dart';
 import 'create_collection_flow.dart';
 
@@ -32,10 +33,10 @@ class _StepSelectDurationState extends State<StepSelectDuration> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           titleCollection(context, "Select Duration"),
-          const SizedBox(height: 12),
+           SizedBox(height: AppSizes.h12),
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
             child: Column(
               children: [
                 GestureDetector(

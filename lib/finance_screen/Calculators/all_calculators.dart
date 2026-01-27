@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/core/app_padding_sizes.dart';
 
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Emi.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Rent_Buy.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/in
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/sip_calculator.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../Constants/core/app_padding_sizes.dart';
 
 class AllCalculatorScreen extends StatefulWidget {
   @override
@@ -158,7 +161,7 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
                         children: [
                           
                          Padding(
-                           padding: const EdgeInsets.only(left:6),
+                           padding: const EdgeInsets.only(left:AppSizes.p6),
                            child: Container(
                              
                              width:MediaQuery.sizeOf(context).width*0.12,
@@ -198,8 +201,8 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
                       ),
                       // SizedBox(height: 8.0),
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: responsivePadding / 2),
+                        padding: EdgeInsets.only (right:AppSizes.p20),
+                            
                         child: Text(
                           " Calculators",
                           style: FontManager().getTextStyle(
@@ -343,12 +346,13 @@ class _AllCalculatorScreenState extends State<AllCalculatorScreen>
 
 
 // Grid Content (FULL SCREEN USE)
-Expanded(
+SizedBox(
+  height: MediaQuery.of(context).size.height * 0.6,
   child: FadeTransition(
     opacity: _fadeAnimation,
     child: Padding(
       // padding: EdgeInsets.all(responsivePadding),
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(AppSizes.p20),
       child: GridView.builder(
         physics: NeverScrollableScrollPhysics(),   // No scroll, full screen layout
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -361,7 +365,7 @@ Expanded(
         itemBuilder: (context, index) {
           final calculator = calculators[index];
           Widget? screen = calculator['screen'];
-
+  
           return GestureDetector(
             onTapDown: (_) => setState(() => _tappedIndex = index),
             onTapUp: (_) => setState(() => _tappedIndex = null),
@@ -373,7 +377,7 @@ Expanded(
                 );
               }
             },
-
+  
             /// YOUR CARD DESIGN (icon + text) goes here
             child: AnimatedScale(
               scale: _tappedIndex == index ? 0.92 : 1.0,
@@ -393,7 +397,7 @@ Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
+  
                       // ICON
                       Container(
                          width: MediaQuery.of(context).size.width * 0.15,
@@ -414,9 +418,9 @@ Expanded(
                           ),
                         ),
                       ),
-
-                      SizedBox(height: 12),
-
+  
+                      SizedBox(height: AppSizes.h12),
+  
                       // Label
                       Text(
                         calculator['name'],

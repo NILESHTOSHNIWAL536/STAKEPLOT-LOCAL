@@ -25,6 +25,7 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 
+import "../Constants/core/app_padding_sizes.dart";
 import "../routes/route_user_login.dart";
 import "../routes/route_post.dart";
 
@@ -166,7 +167,7 @@ class _TribeSearchState extends State<TribeSearch> {
       body: SafeArea(
         child: Container(
           color: AppColors.backgroundColor,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p30),
           child: ListView(
            
             children: [
@@ -213,7 +214,7 @@ class _TribeSearchState extends State<TribeSearch> {
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.search),
               filled: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
+              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: AppSizes.p14),
               hintText: lableText,
               
               fillColor: AppColors.backgroundColor,
@@ -273,7 +274,7 @@ Widget profileContainer(data) {
                     height: 13,
                     background: background,
                   ),
-                  const SizedBox(width: 5),
+                   SizedBox(width: AppSizes.w6),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.5,
                     child: Text(
@@ -381,7 +382,7 @@ void showmodalWidget(data){
          child: Column(
            children: [
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
+                  margin: EdgeInsets.symmetric(vertical: AppSizes.p10),
                   width: MediaQuery.of(context).size.width/6,
                   height: 3,
                   decoration: BoxDecoration(
@@ -391,7 +392,7 @@ void showmodalWidget(data){
                   ),
                 
                 ),
-                const SizedBox(height: 20,),
+                SizedBox(height: AppSizes.h20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -401,13 +402,13 @@ void showmodalWidget(data){
                     networkFriends("Posts",getTrendingData.length.toString(),Icons.post_add),
                   ],
                 ),
-                const SizedBox(height: 5,),     
+                SizedBox(height: AppSizes.h5),
                 Text(name.toString(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w600,
                        color: AppColors.bg1)),
                
-                const SizedBox(height:10),
+                SizedBox(height: AppSizes.h10),
 
                  InkWell(
                   onTap: (){
@@ -438,7 +439,7 @@ void showmodalWidget(data){
             }
                   },
                    child: Padding(
-                     padding: const EdgeInsets.symmetric(vertical: 10),
+                     padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
                      child:Obx(()=> getButton(context, buttonValue.value =="Add" ?  widget.isMasked? "Connect":buttonValue.value:buttonValue.value)),
                    ),
                  ),
@@ -496,7 +497,7 @@ void showmodalWidget(data){
       return Column(
         children: [
           Container(
-              padding: EdgeInsets.symmetric(vertical: 5,horizontal: 14),
+              padding: EdgeInsets.symmetric(vertical: 5,horizontal: AppSizes.p14),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
@@ -511,7 +512,7 @@ void showmodalWidget(data){
                 ],
               )  
           ),
-          const SizedBox(height: 5,),
+          SizedBox(height: AppSizes.h5),
           textStyle(context: context,text: network.toString(),fontWeight: FontWeight.w400,fontsize: 12),
         ],
       );

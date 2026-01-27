@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../Home_Screen/history/dotted_Border.dart';
 import '../backed_connections/apis_connect.dart';
 
@@ -30,7 +31,7 @@ void showTagListOfInterestModal({
           height: screenSize.height * 0.7, // 60% of screen height
           padding: EdgeInsets.symmetric(
             horizontal: screenSize.width * 0.05, // Responsive padding
-            vertical: 16,
+            vertical: AppSizes.p16,
           ),
           decoration: BoxDecoration(
             color: AppColors.backgroundColor,
@@ -43,9 +44,9 @@ void showTagListOfInterestModal({
               Container(
                 width: 40,
                 height: 4,
-                margin: EdgeInsets.symmetric(vertical: 8),
+                margin: EdgeInsets.symmetric(vertical: AppSizes.p8),
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: AppColors.grey,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -81,7 +82,7 @@ void showTagListOfInterestModal({
                   onConfirm();// Call the passed function
                   Navigator.pop(context); // Close the modal
                 },
-                child: isListEnabled.value? getButton(context, "Continue"): getButton(context, "Add", Colors.grey.shade400,AppColors.bg1,)),
+                child: isListEnabled.value? getButton(context, "Continue"): getButton(context, "Add", AppColors.grey,AppColors.bg1,)),
               ),
             ],
           ),
@@ -129,7 +130,7 @@ class InterestSelectionPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.h16),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 18),
                     child: Text(
@@ -142,7 +143,7 @@ class InterestSelectionPage extends StatelessWidget {
                                   ),
                       ),
                   ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: AppSizes.h10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 18),
                     child: Text(
@@ -155,7 +156,7 @@ class InterestSelectionPage extends StatelessWidget {
                                   ),
                       ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.h16),
             
                     Container(
               height: MediaQuery.sizeOf(context).height/1.6,
@@ -166,7 +167,7 @@ class InterestSelectionPage extends StatelessWidget {
               ),
             ),
                   
-            const SizedBox(height: 16),
+            SizedBox(height: AppSizes.h16),
                   
             /// Continue button
             Obx(
@@ -199,7 +200,7 @@ if (result != null) {
                     : getButton(
                         context,
                         "Add",
-                        Colors.grey.shade400,
+                        AppColors.grey,
                         AppColors.bg1,
                       ),
               ),
@@ -252,7 +253,7 @@ class PollStepHeader extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                icon: const Icon(Icons.arrow_back, color: AppColors.backgroundColor),
                 onPressed: () => Navigator.pop(context),
               ),
               const Spacer(),
@@ -261,42 +262,43 @@ class PollStepHeader extends StatelessWidget {
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w500,
-                  fontSize: 18,
-                  color: Colors.white,
+                  fontSize: 20,
+                  lineHeight: 28/fontSize,
+                  color: AppColors.backgroundColor,
                 ),
               ),
               const Spacer(flex: 2),
             ],
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.h12),
 
           /// Progress bar + step text
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Container(
+                SizedBox(
                   width: MediaQuery.sizeOf(context).width/1.56,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: LinearProgressIndicator(
                       value: progress,
                       minHeight: 6,
-                      backgroundColor: Colors.white.withOpacity(0.3),
+                      backgroundColor: AppColors.backgroundColor.withOpacity(0.3),
                       valueColor:
                           const AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: AppSizes.w12),
                 Text(
                   "Step $step of $totalSteps",
                   style: FontManager().getTextStyle(
                     context,
                     fontSize: 12,
                     lWeight: FontWeight.w400,
-                    color: Colors.white,
+                    color: AppColors.backgroundColor,
                   ),
                 ),
               ],
@@ -397,7 +399,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
 
           Expanded(
             child: SingleChildScrollView(
-           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -412,14 +414,14 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                       fontSize: 14,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSizes.h8),
 
                  SingleChildScrollView(
   scrollDirection: Axis.horizontal,
   child: Row(
     children: widget.selectedCategories.map((tag) {
       return Padding(
-        padding: const EdgeInsets.only(right: 4), // 👈 tight spacing
+        padding: const EdgeInsets.only(right:AppSizes.p4), // 👈 tight spacing
         child: Chip(
           label:  Text(
                     tag,
@@ -446,7 +448,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
 ),
 
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
                   Text(
                     "Your Question",
                     style: FontManager().getTextStyle(
@@ -455,7 +457,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                       fontSize: 14,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSizes.h8),
 
                   _previewCard(
                     context,
@@ -468,7 +470,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
 
                   /// OPTIONS HEADER
                   Row(
@@ -485,7 +487,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
                      
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSizes.h8),
 
                   /// OPTIONS LIST (EDIT + REMOVE)
                   ...optionCtrls.asMap().entries.map((entry) {
@@ -501,25 +503,25 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
       /// OPTION CONTAINER
       Container(
         width: MediaQuery.sizeOf(context).width/1.3,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Colors.grey.shade300,
+            color: AppColors.border,
           ),
         ),
         child: Row(
           children: [
             CircleAvatar(
               radius: 14,
-              backgroundColor: const Color(0xFFE0E0E0),
+              backgroundColor: AppColors.border,
               child: Text(
                 "${index + 1}",
                 style: const TextStyle(fontSize: 12),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: AppSizes.w12),
 
             Expanded(
               child: TextField(
@@ -541,10 +543,10 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
         InkWell(
           onTap: () => removeOption(index),
           borderRadius: BorderRadius.circular(20),
-          child: const Icon(
+          child:  Icon(
             Icons.close,
             size: 26,
-            color: Colors.red,
+            color: AppColors.redColor,
           ),
         ),
     ],
@@ -553,7 +555,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
 
                   }),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
                    if (optionCtrls.length < 4)
                               GestureDetector
                               
@@ -589,7 +591,7 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
 
           /// POST BUTTON
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSizes.p16),
             child: InkWell(
               onTap: postPoll,
               child: getButton(context, "Post Poll"),
@@ -603,9 +605,9 @@ class _PollPreviewPageState extends State<PollPreviewPage> {
   Widget _previewCard(BuildContext context, Widget child) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(AppSizes.p14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: child,

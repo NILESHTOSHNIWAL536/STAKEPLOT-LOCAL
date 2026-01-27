@@ -14,6 +14,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.da
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'dart:async';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 
 String bankImage = "https://static.vecteezy.com/system/resources/thumbnails/023/364/757/small_2x/3d-illustration-of-bank-building-and-money-bag-png.png";
 
@@ -89,7 +91,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           color: AppColors.backgroundColor,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p20),
           child: Column(
             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,7 +108,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Container(
-                           padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 2),
+                           padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: AppSizes.p2),
                           decoration: BoxDecoration(
                             color: AppColors.mt,
                             borderRadius: BorderRadius.circular(12)),
@@ -118,7 +120,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                                 size: 20.0,
                                 color: AppColors.primaryColor,
                               ),
-                              SizedBox(width: 8.0),
+                              SizedBox(width: AppSizes.w8),
                               Text(
                                 autoScrollItems[index]['text'],
                                 style: TextStyle(
@@ -134,7 +136,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
               ),
               //Asset Image
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.p40),
                 child:
                     AvatarProfileImage(url: Sign.transform, width: 4, height: 4),
               ),
@@ -149,14 +151,14 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.bold, fontSize: 22, color: AppColors.bg1),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: AppSizes.h16),
               Text(
                 FinvuStrings().financialSuccessJourney, // Direct access
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.w200, fontSize: 10, color: AppColors.bg1),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
                 child: InkWell(
                     onTap: () {
                      
@@ -212,7 +214,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 10),
+                            padding: const EdgeInsets.only(left:AppSizes.p10),
                             child: Text(
                               FinvuStrings().connectBankAccounts,
                               style: FontManager().getTextStyle(context,
@@ -253,7 +255,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                 decoration: const BoxDecoration(
                   color: AppColors.rbi1,
                 ),
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(AppSizes.p8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -262,7 +264,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w600, fontSize: 12, color: AppColors.bg1),
                         ),
-                        const SizedBox(height: 4.0),
+                        SizedBox(height: AppSizes.h4),
                         Text(
                           FinvuStrings().accountAggregatorsDescription, // Direct access
                           style: FontManager().getTextStyle(context,
@@ -316,7 +318,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
 Widget getButton(context, str,[color=AppColors.primaryColor,textColor=AppColors.bg5]) {
   return Container(
     width: MediaQuery.of(context).size.width / 1.1,
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
     decoration: BoxDecoration(
         color: color, borderRadius: BorderRadius.circular(8)),
     child: Center(
@@ -333,7 +335,7 @@ Widget getButton(context, str,[color=AppColors.primaryColor,textColor=AppColors.
 Widget getspinner(context, [str="",color=AppColors.primaryColor,textColor=AppColors.bg5]) {
   return Container(
     width: MediaQuery.of(context).size.width / 1.1,
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
     decoration: BoxDecoration(
         color: color, borderRadius: BorderRadius.circular(24)),
     child: Center(

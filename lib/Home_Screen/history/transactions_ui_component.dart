@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 import '../../repository/transactions_repository.dart';
 
@@ -156,7 +157,7 @@ Widget reviewTagTransactions(
         children: [
           if (isReview)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
               decoration: BoxDecoration(
                 color: Colorcodes.red,
                 borderRadius: BorderRadius.only(
@@ -173,7 +174,7 @@ Widget reviewTagTransactions(
             ),
         ],
       ),
-      SizedBox(height: 4,)
+       SizedBox(height: AppSizes.h4)
     ],
   );
 }
@@ -207,7 +208,7 @@ Widget animatedIconTransition(BuildContext context) {
         position: offset,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
-          child: Container(
+          child: SizedBox(
             key: ValueKey(showMt1),
             width: 50,
             height: 50,
@@ -267,7 +268,7 @@ Widget getTagButton(TransactionModel transaction, int index, String category,
           size: 30,
         ),
       ),
-      const SizedBox(width: 10),
+       SizedBox(width: AppSizes.w10),
       InkWell(
         onTap: () {
           addTagToTransactions(context, narration_id, true, index);

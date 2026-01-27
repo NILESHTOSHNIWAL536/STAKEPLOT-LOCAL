@@ -15,13 +15,14 @@ import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:http/http.dart' as http;
+import '../Constants/colors.dart';
 import '../routes/route_post.dart';
 
 Future<http.Response>  addReply(context, String data, String commentId, String postId) async {
   var body = {'comment': commentId, 'reply': data, 'post': postId};
   var response = await postDataApiCall(ReplyRoute.postReply, body);
   if (!getFlagOfResponse(response)) {
-    snackBarCalledfail(context, SnackbarData().unableToAddReply, Colors.red);
+    snackBarCalledfail(context, SnackbarData().unableToAddReply,  );
   }
   return response;
 }
@@ -47,7 +48,7 @@ Future<String> postImageToCloud(imageFile, context) async {
     final response2 = await request.send();
 
     if (response2.statusCode != 200) {
-      snackBarCalledfail(context, SnackbarData().imageUploadFailed, Colors.red);
+      snackBarCalledfail(context, SnackbarData().imageUploadFailed, );
       return 'Image upload failed';
     }
 
@@ -75,7 +76,7 @@ void reportPost(context, String id, String spam, String type, int index) async {
 
     clearPostReportHide(index,context);
   } else {
-    snackBarCalledfail(context, SnackbarData().errorWhileReporting, Colors.red);
+    snackBarCalledfail(context, SnackbarData().errorWhileReporting,  AppColors.redColor);
   }
   // getPost();
 }
@@ -114,7 +115,7 @@ Future<Map<String, dynamic>> createPost(
       };
     } else {
       snackBarCalledfail(
-          context, SnackbarData().errorCreatingPost, Colors.red);
+          context, SnackbarData().errorCreatingPost,  AppColors.redColor);
       return {
         'success': false,
         'error': 'Server error: ${response.statusCode}',
@@ -122,7 +123,7 @@ Future<Map<String, dynamic>> createPost(
     }
   } catch (e) {
     clearInterest();
-    snackBarCalledfail(context, SnackbarData().errorCreatingPost, Colors.red);
+    snackBarCalledfail(context, SnackbarData().errorCreatingPost,  AppColors.redColor);
     return {
       'success': false,
       'error': e.toString(),
@@ -259,7 +260,7 @@ void savePostData(context,PostModel data) async {
     snackBarCalled(context, decodedResponse['data'].toString());
     getSaved();
   } else {
-    snackBarCalledfail(context, SnackbarData().failedToSavePost, Colors.red);
+    snackBarCalledfail(context, SnackbarData().failedToSavePost,  AppColors.redColor);
   }
 }
 

@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../routes/route_transactions.dart';
 
 RxInt startIndex = 0.obs;
@@ -116,7 +117,7 @@ pw.Widget pdfHeader(
   String accountNo,
 ) {
   return pw.Container(
-    padding: const pw.EdgeInsets.only(bottom: 8, top: 6), // top spacing added
+    padding: const pw.EdgeInsets.only(bottom: 8, top:AppSizes.p6), // top spacing added
     decoration: const pw.BoxDecoration(
       border: pw.Border(bottom: pw.BorderSide(color: PdfColors.grey700, width: 0.5)),
     ),
@@ -148,7 +149,7 @@ pw.Widget pdfHeader(
                 // ✅ Bank address only on first page
                 if (ctx.pageNumber == 1)
                 pw.Container(
-                  padding: const pw.EdgeInsets.only(bottom: 8, top: 6), 
+                  padding: const pw.EdgeInsets.only(bottom: 8, top:AppSizes.p6), 
                   width: 200,
                   child: pw.Text(address, style: const pw.TextStyle(fontSize: 10,),textAlign: pw.TextAlign.left,),
                 )
@@ -171,7 +172,7 @@ pw.Widget pdfHeader(
 
               if (profile['holder']['email'] != null)
               pw.Container(
-                  padding: const pw.EdgeInsets.only(bottom: 6, top: 6), 
+                  padding: const pw.EdgeInsets.only(bottom: 6, top:AppSizes.p6), 
                  child: pw.Text(profile['holder']['email'], style: const pw.TextStyle(fontSize: 10),textAlign: pw.TextAlign.right,),
               ),
               // ✅ Address only on first page
@@ -190,7 +191,7 @@ pw.Widget pdfHeader(
 /// ✅ Footer
 pw.Widget pdfFooter(pw.MemoryImage logo, pw.Context ctx) {
   return pw.Container(
-    margin: const pw.EdgeInsets.only(top: 10),
+    margin: const pw.EdgeInsets.only(top:AppSizes.p10),
     decoration: const pw.BoxDecoration(
       border: pw.Border(top: pw.BorderSide(color: PdfColors.grey700, width: 0.5)),
     ),

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/repository/debt_service.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class InflationCalculator extends StatefulWidget {
   InflationCalculator({Key? key}) : super(key: key);
 
@@ -39,7 +41,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
 
    child:SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(AppSizes.p12),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +51,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                       Padding(
-                        padding: const EdgeInsets.only(bottom:10,left:10), 
+                        padding: const EdgeInsets.only(bottom:AppSizes.p10,left:AppSizes.p10), 
                         child: Container(
                            width: MediaQuery.sizeOf(context).width/8,
                            
@@ -83,7 +85,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                     SizedBox(  width: MediaQuery.of(context).size.width * 0.15)
                           ,
                   Padding(
-                      padding: const EdgeInsets.only(left: 10,top:10),
+                      padding: const EdgeInsets.only(right: AppSizes.p10,top:AppSizes.p10),
                       child: Text(
                         "Inflation Calculator",
                         style: FontManager().getTextStyle(
@@ -97,9 +99,9 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                     // const SizedBox(width: 48),
                   ],
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.h24),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14),
                   child: Text(
                     "Calculate the impact of inflation on your money",
                     style: FontManager().getTextStyle(
@@ -110,9 +112,9 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.h24),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14),
                   child: TextField(
                     controller: amountController,
                     keyboardType: TextInputType.number,
@@ -132,8 +134,8 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 12,
+                        vertical: AppSizes.p16,
+                        horizontal: AppSizes.p12,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -168,9 +170,9 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                     },
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.h16),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14),
                   child: TextField(
                     controller: yearsController,
                     keyboardType: TextInputType.number,
@@ -190,8 +192,8 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 12,
+                        vertical: AppSizes.p16,
+                        horizontal: AppSizes.p12,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -226,7 +228,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                     },
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.h24),
                 Center(
                   child: ElevatedButton(
                     onPressed: isLoadingInflation.value
@@ -239,7 +241,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
                       padding: const EdgeInsets.symmetric(
-                        vertical: 14,
+                        vertical: AppSizes.p14,
                         horizontal: 32,
                       ),
                       shape: RoundedRectangleBorder(
@@ -258,14 +260,14 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.h24),
                 Obx(() {
                   if (!showResults.value) {
                     return SizedBox.shrink(); // empty widget when not showing
                   }
 
                   return Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(AppSizes.p20),
                     decoration: BoxDecoration(
                       color: AppColors.backgroundColor,
                       borderRadius: BorderRadius.circular(16),
@@ -289,7 +291,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                             color: AppColors.primaryColor,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: AppSizes.h16),
                         Text(
                           'Future Value: ₹${inflatedFutureValue.value.toStringAsFixed(2)}',
                           style: FontManager().getTextStyle(
@@ -299,7 +301,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                             color: AppColors.accentColor,
                           ),
                         ),
-                        const SizedBox(height: 18),
+                        SizedBox(height: AppSizes.h16),
                         if (inflationPredictions.isNotEmpty)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,11 +315,11 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                                   color: AppColors.primaryColor,
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              SizedBox(height: AppSizes.h12),
                               ...inflationPredictions
                                   .map((prediction) => Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            vertical: 4),
+                                            vertical: AppSizes.p4),
                                         child: Text(
                                           'Year ${prediction['year']}: ₹${prediction['future_value'].toStringAsFixed(2)} (Inflation: ${prediction['predicted_inflation_percent']}%)',
                                           style: FontManager().getTextStyle(
@@ -328,7 +330,7 @@ class _InflationCalculatorState extends State<InflationCalculator> {
                                           ),
                                         ),
                                       )),
-                              const SizedBox(height: 12),
+                              SizedBox(height: AppSizes.h12),
                               Text(
                                 'Disclaimer: These results are based on an assumed inflation rate and may not reflect actual future values.',
                                 style: FontManager().getTextStyle(

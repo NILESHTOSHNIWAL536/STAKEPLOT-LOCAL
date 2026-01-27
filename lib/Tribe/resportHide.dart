@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 Widget showModel(BuildContext context, String id, [bool flag = false, int indexElement = -1,isTribeOne=false]) {
   String? selectedOption; // To track the selected report option
 
@@ -29,7 +31,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.p16, horizontal: 20),
               child: Column(
                 children: [
                   Container(
@@ -40,7 +42,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                   Text(
                     "Report",
                     style: FontManager().getTextStyle(
@@ -56,7 +58,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
             // Report Options
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
                 itemCount: reportOptions.length,
                 itemBuilder: (context2, index) {
                   final option = reportOptions[index];
@@ -70,7 +72,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                       });
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
                       child: Row(
                         children: [
                           option['isDescription'] == true
@@ -122,7 +124,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
             // Report and Cancel Buttons
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSizes.p16),
                 child: Column(
                   children: [
                     TextButton(
@@ -153,7 +155,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
                               ),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppSizes.h8),
                     TextButton(
                       onPressed: () => Navigator.pop(context),
                       style: TextButton.styleFrom(

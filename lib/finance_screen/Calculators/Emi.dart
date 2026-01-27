@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/ex
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/calculator_utils.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 class Emi extends StatefulWidget {
@@ -155,7 +156,7 @@ class _EmiState extends State<Emi> {
           
           child: Padding(
              
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(AppSizes.p12),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +166,7 @@ class _EmiState extends State<Emi> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(bottom:10,left:10), 
+                        padding: const EdgeInsets.only(bottom:AppSizes.p10,left:AppSizes.p4), 
                         child: Container(
                            width: MediaQuery.sizeOf(context).width/8,
                            
@@ -200,7 +201,7 @@ class _EmiState extends State<Emi> {
                       SizedBox(  width: MediaQuery.of(context).size.width * 0.15)
                           ,
                       Padding(
-                        padding: const EdgeInsets.only(left: 14),
+                        padding: const EdgeInsets.only(left: AppSizes.p14),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -221,7 +222,7 @@ class _EmiState extends State<Emi> {
                           },
                          
                           child: Padding(
-                            padding: const EdgeInsets.only(bottom:10),
+                            padding: const EdgeInsets.only(bottom:AppSizes.p10,),
                             child: Text(
                               "EMI Calculator",
                               style: FontManager().getTextStyle(
@@ -250,7 +251,7 @@ class _EmiState extends State<Emi> {
                     },
                     child: _isInfoVisible
                         ? Container(
-                            margin: EdgeInsets.symmetric(vertical: 4),
+                            margin: EdgeInsets.symmetric(vertical: AppSizes.p4),
                             padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: AppColors.primaryColor.withOpacity(0.9),
@@ -278,13 +279,16 @@ class _EmiState extends State<Emi> {
                   ),
                    Padding(
               padding: EdgeInsets.all(Colorcodes.paddingSize / 2),
-              child: textStyle(
-                  context: context,
-                  fontsize: 20,
-                  fontWeight: FontWeight.w800,
-                  c: AppColors.primaryColor,
-                  text: "Breakdown"),
-                          ),
+             
+               child: Text(
+                              "Breakdown",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w800,
+                                fontSize: 20,
+                                // color: AppColors.newtitlecolor,
+                              ),),
+                            ),
                   Container(
                       decoration: BoxDecoration(
                           color: AppColors.newbg,
@@ -395,6 +399,11 @@ PreferredSizeWidget appbarHeader(String title, BuildContext context) {
   return AppBar(
     centerTitle: true,
     title: Text(title,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w500,
+                                fontSize: 16,
+                              
+                              ),),
   );
 }

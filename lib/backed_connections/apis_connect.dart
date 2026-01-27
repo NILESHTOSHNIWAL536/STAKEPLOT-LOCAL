@@ -2,6 +2,7 @@ import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/shakewidget.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/model/user_activity_model.dar
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../controllers/controllerManagement.dart';
 import 'googlesignin/credentials.dart';
 part '../Constants/snackBars.dart';

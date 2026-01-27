@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import '../Constants/app_styles.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Utils/homepageStrings.dart.dart';
 import '../Constants/booleanFlag.dart';
 import '../image_service/avatarProfile.dart';
@@ -80,7 +81,7 @@ class SignInScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 25),
+            SizedBox(height: AppSizes.h24),
 
             textStyle(
                 context: context,
@@ -88,7 +89,7 @@ class SignInScreen extends StatelessWidget {
                 c: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
                 fontsize: 15),
-            SizedBox(height: 9),
+            SizedBox(height: AppSizes.h10),
             textStyleImage(
                 context: context,
                 text: HomepageStringsDart().creditcardSigninData,
@@ -98,13 +99,13 @@ class SignInScreen extends StatelessWidget {
                 iswrap: true),
 
             //  AvatarProfileImage(url: svgIconPath.loading_google2, width: 10, height: 10),
-            SizedBox(height: 13),
+            SizedBox(height: AppSizes.h14),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(Icons.beenhere_rounded,
                     color: Color(0xFF37344F), size: 19),
-                SizedBox(width: 8),
+                SizedBox(width: AppSizes.w8),
                 textStyle(
                     context: context,
                     text: "Your data is safe with us",

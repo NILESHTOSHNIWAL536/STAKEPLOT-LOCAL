@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashb
 import 'package:get/get.dart';
 
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Utils/plotFinanceStringsPage.dart';
 import '../../backed_connections/apis_connect.dart';
 import 'cardBuilders.dart';
@@ -35,7 +36,7 @@ const TopayToreceive({ Key? key }) : super(key: key);
                     )),
               ),
             ),
-            const SizedBox(width: 12),
+             SizedBox(width: AppSizes.w16),
             Expanded(
               child: GestureDetector(
                 onTap: () {

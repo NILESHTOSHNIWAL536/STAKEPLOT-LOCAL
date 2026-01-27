@@ -109,10 +109,10 @@
 // //                       final arrowIcon = isPositive
 // //                           ? Icons.arrow_upward
 // //                           : Icons.arrow_downward;
-// //                       final arrowColor = isPositive ? Colors.red : Colors.green;
+// //                       final arrowColor = isPositive ?  AppColors.redColor : Colors.green;
 // //                       final formattedValue =
 // //                           totalDebitValuePercent.toStringAsFixed(1);
-// //                       final textColor = isPositive ? Colors.red : Colors.green;
+// //                       final textColor = isPositive ?  AppColors.redColor : Colors.green;
 
 // //                       return Row(
 // //                         children: [
@@ -432,7 +432,7 @@
 //                   width: screenWidth * 0.09,
 //                   // color: Colorcodes.moneyOrange,
 //                   height: MediaQuery.of(context).size.height / 2.6,
-//                   padding: EdgeInsets.symmetric(vertical: 12),
+//                   padding: EdgeInsets.symmetric(vertical: AppSizes.p12),
 //                   child: _buildYAxisLabels(fontSizeFactor),
 //                 ),
 //               // change in future
@@ -447,15 +447,15 @@
 //           ),
 //           if (!widget.isExpandedView && widget.selectedButton.value == 'Month')
 //             Positioned(
-//               top: 8,
-//               right: 2,
+//               top:AppSizes.p8,
+//               right:AppSizes.p2,
 //               child: GestureDetector(
 //                 behavior: HitTestBehavior.opaque,
 //                 onTap: () {
 //                   navToExpanded();
 //                 },
 //                 child: Container(
-//                   padding: EdgeInsets.all(4),
+//                   padding: EdgeInsets.all(AppSizes.p4),
 //                   decoration: BoxDecoration(
 //                     color: AppColors.button,
 //                     shape: BoxShape.circle,
@@ -543,7 +543,7 @@
 
 //           margin: EdgeInsets.symmetric(horizontal: 0),
 
-//           // backgroundColor: Colors.red,
+//           // backgroundColor:  AppColors.redColor,
 //           primaryXAxis: CategoryAxis(
 //             //  edgeLabelPlacement: EdgeLabelPlacement.shift,
 
@@ -591,7 +591,7 @@
 //               return Padding(
 //                 padding: EdgeInsets.only(left: 15, top: 0, right: 0, bottom: 0),
 //                 child: Container(
-//                   padding: EdgeInsets.all(8),
+//                   padding: EdgeInsets.all(AppSizes.p8),
 //                   decoration: BoxDecoration(
 //                     color: Colors.black54,
 //                     borderRadius: BorderRadius.circular(4),
@@ -636,8 +636,8 @@
 //               final double debitedValue = debitedData[index].y;
 
 //               return Container(
-//                 margin: EdgeInsets.only(top: 10),
-//                 padding: EdgeInsets.all(8),
+//                 margin: EdgeInsets.only(top:AppSizes.p10),
+//                 padding: EdgeInsets.all(AppSizes.p8),
 //                 decoration: BoxDecoration(
 //                   color: AppColors.mt.withOpacity(0.4),
 //                   borderRadius: BorderRadius.circular(4),
@@ -822,20 +822,26 @@
 // }
 
 
-import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
+import '../../Constants/core/app_shadows.dart';
 import '../../Constants/font_manager.dart';
+import '../../Constants/loader.dart';
+import '../../backed_connections/apis_connect.dart';
 import '../../components/shared_utils.dart';
-import 'expanded_finance.dart';
+import '../../repository/finance_repository.dart';
+import '../finance_analytics/expanded_finance.dart';
 
 class SpendingCardTwoPanels extends StatefulWidget {
   const SpendingCardTwoPanels({super.key});
 
   @override
-  State<SpendingCardTwoPanels> createState() => _SpendingCardTwoPanelsState();
+  State<SpendingCardTwoPanels> createState() =>
+      _SpendingCardTwoPanelsState();
 }
 
 class ChartData {
@@ -845,133 +851,210 @@ class ChartData {
   final double debit;
 }
 
-class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
-  // Dummy data (replace with your real arrays)
-  final List<int> labels = [12, 13, 14, 15, 16, 17, 18];
-  final List<double> credited = [1200, 900, 1400, 2200, 1600, 2000, 1800];
-  final List<double> debited = [800, 600, 400, 300, 700, 400, 600];
+class _SpendingCardTwoPanelsState
+    extends State<SpendingCardTwoPanels> {
+  int selectedIndex = 0;
+  bool _isInitialSelectionSet = false;
 
-  int selectedIndex = 6;
   final double chartMaxHeight = 180.0;
-  final double barWidth = 26.0;
-  final double barSpacing = 18.0;
 
   @override
   void initState() {
     super.initState();
-    selectedIndex = max(0, labels.length - 1);
+
+    getWeeklyGraphAndCustomDateGraph(
+      DateTime.now().toIso8601String(),
+      context,
+      weekORmonth: 'Month',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Build ChartData (use length from your lists)
-    final int n = max(credited.length, debited.length);
-    // Ensure we only use first 7 entries if you want exactly 7 bars:
-    final int count = min(n, 7);
+    return Obx(() {
+      if (!getGraphData.value) {
+        return Spinner();
+      }
+
+      final List<double> credited =
+          List<double>.from(transactionChatGraph['credited'] ?? []);
+      final List<double> debited =
+          List<double>.from(transactionChatGraph['debited'] ?? []);
+      final List<String> dayLabels =
+          labels.map((e) => e.toString()).toList();
+
+      if (credited.isEmpty ||
+          debited.isEmpty ||
+          dayLabels.isEmpty) {
+        return  SizedBox(
+          height: MediaQuery.sizeOf(context).height * 0.25,
+          child: Center(child: Text('No data available')),
+        );
+      }
+
+      /// 🔥 LAST 7 DAYS ENDING AT TODAY
+      final String today =
+          DateTime.now().day.toString().padLeft(2, '0');
+
+      int todayIndex =
+          dayLabels.lastIndexWhere((e) => e == today);
+
+      if (todayIndex == -1) {
+        todayIndex = dayLabels.length - 1;
+      }
+
+      final int startIndex = max(0, todayIndex - 6);
+
+      final List<double> visibleCredited =
+          credited.sublist(startIndex, todayIndex + 1);
+      final List<double> visibleDebited =
+          debited.sublist(startIndex, todayIndex + 1);
+      final List<String> visibleLabels =
+          dayLabels.sublist(startIndex, todayIndex + 1);
+
+      /// ✅ Set default selection ONLY ONCE
+      if (!_isInitialSelectionSet) {
+        selectedIndex = visibleLabels.length - 1;
+        _isInitialSelectionSet = true;
+      }
+
+      return _buildCard(
+        context,
+        visibleCredited,
+        visibleDebited,
+        visibleLabels,
+      );
+    });
+  }
+
+  Widget _buildCard(
+    BuildContext context,
+    List<double> credited,
+    List<double> debited,
+    List<String> labels,
+  ) {
+    final int count = min(7, labels.length);
+
     final List<ChartData> data = List.generate(count, (i) {
-      final c = i < credited.length ? credited[i] : 0.0;
-      final d = i < debited.length ? debited[i] : 0.0;
-      return ChartData((labels.length > i ? labels[i].toString() : (i + 1).toString()), c, d);
+      return ChartData(labels[i], credited[i], debited[i]);
     });
 
-    final List<double> totals = data.map((e) => e.credit + e.debit).toList();
-    final double maxTotal = totals.isEmpty ? 1.0 : totals.reduce(max);
-    final double yMax = (maxTotal * 1.2).ceilToDouble();
+    final List<double> totals =
+        data.map((e) => e.credit + e.debit).toList();
 
-    // Layout calculations (no Expanded)
-    final mq = MediaQuery.of(context);
-    final sw = mq.size.width;
-    final horizontalMargin = 2.0;
+    final double maxTotal =
+        totals.isEmpty ? 1.0 : totals.reduce(max);
 
-    final gapBetween = 8.0;
+    final double yMax =
+        maxTotal == 0 ? 1.0 : (maxTotal * 1.2).ceilToDouble();
 
-    double rightVisible = MediaQuery.sizeOf(context).width / 2;
-    rightVisible = max(rightVisible, 120.0);
-    rightVisible = min(rightVisible, sw * 0.64);
-    // Selected values for left panel
-    final double selCred = selectedIndex < data.length ? data[selectedIndex].credit : 0.0;
-    final double selDeb = selectedIndex < data.length ? data[selectedIndex].debit : 0.0;
+    final double maxBarH = chartMaxHeight - 40;
 
-    // Outer white card (single container)
+    final double screenWidth = MediaQuery.of(context).size.width;
+
+    double rightVisible = screenWidth / 2;
+    rightVisible = max(rightVisible, 120);
+    rightVisible = min(rightVisible, screenWidth * 0.64);
+
+    final double selCred = data[selectedIndex].credit;
+    final double selDeb = data[selectedIndex].debit;
+
     return Container(
-      width: MediaQuery.sizeOf(context).width,
-      // margin: EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 2),
+      width: screenWidth,
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor, // #FFFFFF
-        borderRadius: BorderRadius.circular(10), // 10px
-        border: Border.all(
-          color: AppColors.financeChartBorder, // #E6E9EB
-          width: 1,
-        ),
-        boxShadow: [BoxShadow(color: AppColors.accentColorOpacity, blurRadius: 6, offset: Offset(0, 2))],
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.financeChartBorder),
+        boxShadow: [AppShadows.tabs],
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        padding: const EdgeInsets.symmetric(
+            vertical: AppSizes.p10, horizontal: AppSizes.p8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Left data container (keeps your mediaquery width)
+            /// ---------------- LEFT PANEL ----------------
             Material(
               color: AppColors.transparentColor,
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
                 onTap: () async {
-                 
-                  final Map<String, List<double>> chartMap = {
-                    'credited': List<double>.from(credited),
-                    'debited': List<double>.from(debited),
-                  };
-                  final List<String> dayLabels = labels.map((e) => e.toString()).toList();
-
-                  // selectedButton is an RxString in your app — fallback to 'Month' here
-                  final String selBtn = 'Month';
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ExpandedChartView(
-                        chartData: chartMap,
-                        days: dayLabels,
-                        selectedButton: selBtn,
+                      builder: (_) => ExpandedChartView(
+                        chartData: {
+                          'credited': credited,
+                          'debited': debited,
+                        },
+                        days: labels,
+                        selectedButton: 'Month',
                         selectedYear: DateTime.now().year,
                         selectedMonth: DateTime.now().month,
                       ),
                     ),
                   );
-                 
                 },
                 child: Container(
-                  width: MediaQuery.sizeOf(context).width / 3.6,
-                  padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 6),
+                  width: screenWidth / 3.5,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: AppSizes.p40, horizontal: AppSizes.p4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('My Spending',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w500, fontSize: 14, color: AppColors.primaryColor)),
-                      const SizedBox(height: 10),
+                      Text(
+                        'My Spending',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      SizedBox(height: AppSizes.h10),
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('₹ ${formatNumber(selCred)}',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w500, fontSize: 14, color: AppColors.primaryColor)),
-                          const SizedBox(width: 8),
-                          Text('Credited',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w400, fontSize: 12, color: AppColors.primaryColor)),
+                          Text(
+                            '₹ ${formatNumber(selCred)}',
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                          SizedBox(width: AppSizes.w8),
+                          Text(
+                            'Credited',
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 12,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.h12),
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('₹ ${formatNumber(selDeb)}',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w500, fontSize: 14, color: AppColors.debitedAmount)),
-                          const SizedBox(width: 8),
-                          Text('Debited',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w400, fontSize: 12, color: AppColors.debitedAmount)),
+                          Text(
+                            '₹ ${formatNumber(selDeb)}',
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: AppColors.debitedAmount,
+                            ),
+                          ),
+                          SizedBox(width: AppSizes.w8),
+                          Text(
+                            'Debited',
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 12,
+                              color: AppColors.debitedAmount,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -980,110 +1063,112 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
               ),
             ),
 
-            SizedBox(width: gapBetween),
+            const SizedBox(width: 4),
 
-            Container(
-              width: MediaQuery.sizeOf(context).width / 2,
-              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    height: chartMaxHeight - 40,
-                    width: rightVisible,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(data.length, (i) {
-                        final d = data[i];
+            /// ---------------- RIGHT BAR CHART ----------------
+            SizedBox(
+              height: chartMaxHeight,
+              width: rightVisible,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween,
+                children: List.generate(data.length, (i) {
+                  final d = data[i];
+                  final bool isSel = i == selectedIndex;
 
-                        // Heights for stacked bar
-                        final double maxBarH = chartMaxHeight - 40;
-                        final double debitH = (d.debit / yMax) * maxBarH;
-                        final double creditH = (d.credit / yMax) * maxBarH;
+                  final double creditH =
+                      ((d.credit / yMax) * maxBarH)
+                          .clamp(0.0, maxBarH);
 
-                        final bool isSel = i == selectedIndex;
+                  final double debitH =
+                      ((d.debit / yMax) * maxBarH)
+                          .clamp(0.0, maxBarH);
 
-                        return Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(8),
-                            onTap: () {
-                              debugPrint('Bar $i tapped');
-                              setState(() => selectedIndex = i);
-                            },
+                  return Material(
+                    color: AppColors.transparentColor,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () {
+                        setState(() => selectedIndex = i);
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: rightVisible / 8,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(6),
+                              border: Border.all(
+                                color: AppColors
+                                    .financeChartBarBorder,
+                              ),
+                            ),
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment:
+                                  MainAxisAlignment.end,
                               children: [
-                                // Stacked bar
-                                Container(
-                                  width: (rightVisible / 8), // ensures 7 bars fit comfortably
+                                AnimatedContainer(
+                                  duration: const Duration(
+                                      milliseconds: 220),
+                                  height: creditH,
+                                  width: double.infinity,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(color: const Color(0xFFE8EAF0), width: 1),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      // Credit portion
-                                      AnimatedContainer(
-                                        duration: Duration(milliseconds: 220),
-                                        height: creditH.clamp(0.0, maxBarH),
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: isSel
-                                              ? AppColors.primaryColor
-                                              : AppColors.primaryColor.withOpacity(0.22),
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(6),
-                                            topRight: Radius.circular(6),
-                                          ),
-                                        ),
-                                      ),
-
-                                      // Debit portion
-                                      AnimatedContainer(
-                                        duration: Duration(milliseconds: 220),
-                                        height: debitH.clamp(0.0, maxBarH),
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: isSel
-                                              ? AppColors.debitedAmount
-                                              : AppColors.debitedAmount.withOpacity(0.22),
-                                          borderRadius: const BorderRadius.only(
-                                            bottomLeft: Radius.circular(6),
-                                            bottomRight: Radius.circular(6),
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                                    color: isSel
+                                        ? AppColors.primaryColor
+                                        : AppColors.primaryColor
+                                            .withOpacity(0.22),
+                                    borderRadius:
+                                        const BorderRadius.only(
+                                      topLeft:
+                                          Radius.circular(6),
+                                      topRight:
+                                          Radius.circular(6),
+                                    ),
                                   ),
                                 ),
-
-                                const SizedBox(height: 8),
-
-                                // Label
-                                SizedBox(
-                                  width: (rightVisible / 8),
-                                  child: Text(
-                                    d.label,
-                                    textAlign: TextAlign.center,
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w400,
-                                      fontSize: 11,
-                                      color: AppColors.debitedAmount,
+                                AnimatedContainer(
+                                  duration: const Duration(
+                                      milliseconds: 220),
+                                  height: debitH,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: isSel
+                                        ? AppColors.debitedAmount
+                                        : AppColors.debitedAmount
+                                            .withOpacity(0.22),
+                                    borderRadius:
+                                        const BorderRadius.only(
+                                      bottomLeft:
+                                          Radius.circular(6),
+                                      bottomRight:
+                                          Radius.circular(6),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        );
-                      }),
+                          SizedBox(height: AppSizes.h8),
+                          SizedBox(
+                            width: rightVisible / 8,
+                            child: Text(
+                              d.label,
+                              textAlign: TextAlign.center,
+                              style:
+                                  FontManager().getTextStyle(
+                                context,
+                                fontSize: 11,
+                                color: AppColors.debitedAmount,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  );
+                }),
               ),
             ),
           ],
@@ -1091,326 +1176,4 @@ class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
       ),
     );
   }
-
- 
 }
-
-
-
-
-
-// import 'dart:math';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-
-// import '../../Constants/colors.dart';
-// import '../../Constants/font_manager.dart';
-// import '../../backed_connections/apis_connect.dart';
-// import '../../components/shared_utils.dart';
-// import '../../repository/finance_repository.dart';
-// import '../finance_analytics/expanded_finance.dart';
-// import '../../backed_connections/apiAutomations/getTrasactions.dart';
-
-// class SpendingCardTwoPanels extends StatefulWidget {
-//   const SpendingCardTwoPanels({super.key});
-
-//   @override
-//   State<SpendingCardTwoPanels> createState() =>
-//       _SpendingCardTwoPanelsState();
-// }
-
-// class ChartData {
-//   ChartData(this.label, this.credit, this.debit);
-//   final String label;
-//   final double credit;
-//   final double debit;
-// }
-
-// class _SpendingCardTwoPanelsState
-//     extends State<SpendingCardTwoPanels> {
-//   int selectedIndex = 0;
-//   final double chartMaxHeight = 180;
-
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     /// 🔥 Call REAL API (Month data)
-//     getWeeklyGraphAndCustomDateGraph(
-//       DateTime.now().toIso8601String(),
-//       context,
-//       weekORmonth: 'Month',
-//     );
-//   }
-
-//   /// 🔹 Find index of TODAY in labels (dd format)
-//   int findTodayIndex(List<String> labels) {
-//     final String today =
-//         DateTime.now().day.toString().padLeft(2, '0');
-
-//     return labels.lastIndexWhere((l) => l == today);
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Obx(() {
-//       if (!getGraphData.value) {
-//         return const SizedBox(
-//           height: 220,
-//           child: Center(child: CircularProgressIndicator()),
-//         );
-//       }
-
-//       final List<double> credited =
-//           List<double>.from(transactionChatGraph['credited'] ?? []);
-//       final List<double> debited =
-//           List<double>.from(transactionChatGraph['debited'] ?? []);
-//       final List<String> dayLabels =
-//           labels.map((e) => e.toString()).toList();
-
-//       if (credited.isEmpty ||
-//           debited.isEmpty ||
-//           dayLabels.isEmpty) {
-//         return const SizedBox(
-//           height: 220,
-//           child: Center(child: Text('No data available')),
-//         );
-//       }
-
-//       /// 🔥 TODAY → LAST 7 DAYS LOGIC
-//       final int todayIndex = findTodayIndex(dayLabels);
-
-//       /// If today not found, fallback to last available day
-//       final int endIndex =
-//           todayIndex != -1 ? todayIndex : dayLabels.length - 1;
-
-//       final int startIndex = max(0, endIndex - 6);
-
-//       final List<double> visibleCredited =
-//           credited.sublist(startIndex, endIndex + 1);
-//       final List<double> visibleDebited =
-//           debited.sublist(startIndex, endIndex + 1);
-//       final List<String> visibleLabels =
-//           dayLabels.sublist(startIndex, endIndex + 1);
-
-//       /// Always select TODAY bar
-//       selectedIndex = visibleLabels.length - 1;
-
-//       return _buildCard(
-//         context,
-//         visibleCredited,
-//         visibleDebited,
-//         visibleLabels,
-//       );
-//     });
-//   }
-
-//   Widget _buildCard(
-//     BuildContext context,
-//     List<double> credited,
-//     List<double> debited,
-//     List<String> labels,
-//   ) {
-//     final List<ChartData> data = List.generate(labels.length, (i) {
-//       return ChartData(labels[i], credited[i], debited[i]);
-//     });
-
-//     final double selCred = data[selectedIndex].credit;
-//     final double selDeb = data[selectedIndex].debit;
-
-//     final double maxTotal = data
-//         .map((e) => e.credit + e.debit)
-//         .fold(0, max);
-
-//     final double yMax = maxTotal == 0 ? 1 : maxTotal * 1.2;
-
-//     final double screenWidth = MediaQuery.of(context).size.width;
-//     final double rightVisible = min(screenWidth * 0.55, 260);
-
-//     return Container(
-//       margin: const EdgeInsets.all(6),
-//       decoration: BoxDecoration(
-//         color: AppColors.backgroundColor,
-//         borderRadius: BorderRadius.circular(10),
-//         border: Border.all(color: AppColors.financeChartBorder),
-//         boxShadow: [
-//           BoxShadow(
-//             color: AppColors.accentColorOpacity,
-//             blurRadius: 6,
-//             offset: const Offset(0, 2),
-//           )
-//         ],
-//       ),
-//       child: Padding(
-//         padding: const EdgeInsets.all(12),
-//         child: Row(
-//           children: [
-//             /// LEFT PANEL
-//             InkWell(
-//               onTap: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (_) => ExpandedChartView(
-//                       chartData: {
-//                         'credited': credited,
-//                         'debited': debited,
-//                       },
-//                       days: labels,
-//                       selectedButton: 'Month',
-//                       selectedYear: DateTime.now().year,
-//                       selectedMonth: DateTime.now().month,
-//                     ),
-//                   ),
-//                 );
-//               },
-//               child: SizedBox(
-//                 width: screenWidth / 3.2,
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       'My Spending',
-//                       style: FontManager().getTextStyle(
-//                         context,
-//                         lWeight: FontWeight.w500,
-//                         fontSize: 14,
-//                         color: AppColors.primaryColor,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 16),
-//                     Text(
-//                       '₹ ${formatNumber(selCred)}',
-//                       style: FontManager().getTextStyle(
-//                         context,
-//                         lWeight: FontWeight.w500,
-//                         fontSize: 14,
-//                         color: AppColors.primaryColor,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 6),
-//                     Text(
-//                       'Credited',
-//                       style: FontManager().getTextStyle(
-//                         context,
-//                         fontSize: 12,
-//                         color: AppColors.primaryColor,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 16),
-//                     Text(
-//                       '₹ ${formatNumber(selDeb)}',
-//                       style: FontManager().getTextStyle(
-//                         context,
-//                         lWeight: FontWeight.w500,
-//                         fontSize: 14,
-//                         color: AppColors.debitedAmount,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 6),
-//                     Text(
-//                       'Debited',
-//                       style: FontManager().getTextStyle(
-//                         context,
-//                         fontSize: 12,
-//                         color: AppColors.debitedAmount,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-
-//             const SizedBox(width: 12),
-
-//             /// RIGHT STACKED BAR CHART (TODAY → LAST 7 DAYS)
-//             SizedBox(
-//               width: rightVisible,
-//               height: chartMaxHeight,
-//               child: Row(
-//                 crossAxisAlignment: CrossAxisAlignment.end,
-//                 mainAxisAlignment:
-//                     MainAxisAlignment.spaceBetween,
-//                 children: List.generate(data.length, (i) {
-//                   final d = data[i];
-//                   final bool isSel = i == selectedIndex;
-
-//                   final double creditH =
-//                       (d.credit / yMax) * chartMaxHeight;
-//                   final double debitH =
-//                       (d.debit / yMax) * chartMaxHeight;
-
-//                   return InkWell(
-//                     onTap: () {
-//                       setState(() => selectedIndex = i);
-//                     },
-//                     child: Column(
-//                       mainAxisAlignment: MainAxisAlignment.end,
-//                       children: [
-//                         Container(
-//                           width: rightVisible / 8,
-//                           decoration: BoxDecoration(
-//                             borderRadius:
-//                                 BorderRadius.circular(6),
-//                             border: Border.all(
-//                               color: const Color(0xFFE8EAF0),
-//                             ),
-//                           ),
-//                           child: Column(
-//                             mainAxisAlignment:
-//                                 MainAxisAlignment.end,
-//                             children: [
-//                               AnimatedContainer(
-//                                 duration: const Duration(
-//                                     milliseconds: 200),
-//                                 height: creditH,
-//                                 decoration: BoxDecoration(
-//                                   color: isSel
-//                                       ? AppColors.primaryColor
-//                                       : AppColors.primaryColor
-//                                           .withOpacity(0.3),
-//                                   borderRadius:
-//                                       const BorderRadius.vertical(
-//                                     top: Radius.circular(6),
-//                                   ),
-//                                 ),
-//                               ),
-//                               AnimatedContainer(
-//                                 duration: const Duration(
-//                                     milliseconds: 200),
-//                                 height: debitH,
-//                                 decoration: BoxDecoration(
-//                                   color: isSel
-//                                       ? AppColors.debitedAmount
-//                                       : AppColors.debitedAmount
-//                                           .withOpacity(0.3),
-//                                   borderRadius:
-//                                       const BorderRadius.vertical(
-//                                     bottom: Radius.circular(6),
-//                                   ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         const SizedBox(height: 6),
-//                         Text(
-//                           d.label,
-//                           style: FontManager().getTextStyle(
-//                             context,
-//                             fontSize: 11,
-//                             color: AppColors.debitedAmount,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   );
-//                 }),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

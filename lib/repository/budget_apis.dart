@@ -207,7 +207,7 @@ void addBudget(BuildContext context, String name, String amount,
 
   if (filteredCategories.isEmpty) {
     createBudget.value = false;
-    snackBarCalledfail(context, SnackbarData().budgetAddFailed, Colors.red);
+    snackBarCalledfail(context, SnackbarData().budgetAddFailed, );
     return;
   }
   var body = {
@@ -227,7 +227,7 @@ void addBudget(BuildContext context, String name, String amount,
 
     snackBarCalled(context, SnackbarData().budgetAdded);
   } else {
-    snackBarCalledfail(context, SnackbarData().budgetAddFailed, Colors.red);
+    snackBarCalledfail(context, SnackbarData().budgetAddFailed, );
   }
 
   acceptReset.value = false;
@@ -249,7 +249,7 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     Navigator.pop(context);
     Navigator.pop(context);
   } else {
-    snackBarCalledfail(context, SnackbarData().budgetUpdateFailed, Colors.red);
+    snackBarCalledfail(context, SnackbarData().budgetUpdateFailed, );
   }
 }
 

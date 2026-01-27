@@ -15,6 +15,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/components/textfeild.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class BudgetSearch extends StatefulWidget {
   String amount;
   String name;
@@ -86,7 +88,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.backgroundColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -153,9 +155,9 @@ class _BudgetSearchState extends State<BudgetSearch> {
                     fontsize: 16,
                     fontWeight: FontWeight.w500,
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                   searchList(width, height),
-                  SizedBox(height: 15),
+                  SizedBox(height: AppSizes.h16),
                   Text(
                     PlotFinanceStaticData().curatedCategoriesText,
                     style: FontManager().getTextStyle(context,
@@ -163,7 +165,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
                         fontSize: 14,
                         color: AppColors.bg1),
                   ),
-                  SizedBox(height: 15),
+                  SizedBox(height: AppSizes.h16),
                   Obx(() => getListOfCat()),
                 ],
               ),
@@ -210,7 +212,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
       elevation: 1, // Adds a slight shadow effect
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: AppColors.backgroundColor,
@@ -224,7 +226,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
               fontsize: 14,
               fontWeight: FontWeight.w500,
             ),
-            const SizedBox(width: 8),
+             SizedBox(width: AppSizes.w8),
             AnimatedContainer(
               duration:
                   Duration(milliseconds: 200), // Duration of the animation
@@ -326,9 +328,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
                     BudgetCategories2.listofCategories[categorie],
                 width: 32,
                 height: 34),
-            const SizedBox(
-              width: 2,
-            ),
+            SizedBox(width: AppSizes.w2),
             textStyle(
                 context: context,
                 text: categorie,

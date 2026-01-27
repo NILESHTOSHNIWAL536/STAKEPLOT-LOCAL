@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../loginservices/login.dart';
 
 
@@ -60,7 +61,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
               fetchAccountData.map((bankData) => getBackUi(bankData)).toList(),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(AppSizes.p8),
           child: ElevatedButton(
             onPressed: () {
               approveConsentRequest();
@@ -110,7 +111,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
       onTap: () async {},
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.p20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,

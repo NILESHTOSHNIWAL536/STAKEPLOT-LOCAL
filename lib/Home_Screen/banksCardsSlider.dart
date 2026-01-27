@@ -394,7 +394,7 @@
 //             );
 //           },
 //           child: Container(
-//             padding: const EdgeInsets.all(8.0),
+//             padding: const EdgeInsets.all(AppSizes.p8),
 //             width: 80,
 //             decoration: BoxDecoration(
 //               borderRadius: BorderRadius.circular(10),
@@ -435,12 +435,12 @@
 //         ),
 //         width: MediaQuery.of(context).size.width,
 //         height: height > 0 ? height / 3.8 : 100, // Fallback height
-//         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+//         padding: EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p10),
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
 //             Padding(
-//               padding: const EdgeInsets.only(top: 20),
+//               padding: const EdgeInsets.only(top:AppSizes.p20),
 //               child: textStyle(
 //                   context: context,
 //                   text: HomepageStringsDart().setLockTitle,
@@ -501,7 +501,7 @@
 //                           },
 //                     child:  Container(
 //                       width: MediaQuery.of(context).size.width / 1.1,
-//                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+//                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p20),
 //                       decoration: BoxDecoration(
 //                         color: isInvalidPin
 //                             ? AppColors.bg3
@@ -778,7 +778,7 @@
 //                           final index = entry.key;
 //                           final account = entry.value as BankAccountModel;
 //                           return Padding(
-//                             padding: const EdgeInsets.only(right: 10.0),
+//                             padding: const EdgeInsets.only(right:AppSizes.p10),
 //                             child: GestureDetector(
 //                               onTap: () {
 //                                 accountId.value = account.accountId;
@@ -1180,12 +1180,12 @@
 //         ),
 //         width: MediaQuery.of(context).size.width,
 //         height: height > 0 ? height / 3.8 : 100, // Fallback height
-//         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+//         padding: EdgeInsets.symmetric(horizontal: 30, vertical: AppSizes.p10),
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
 //             Padding(
-//               padding: const EdgeInsets.only(top: 20),
+//               padding: const EdgeInsets.only(top:AppSizes.p20),
 //               child: textStyle(
 //                   context: context,
 //                   text: HomepageStringsDart().setLockTitle,
@@ -1246,7 +1246,7 @@
 //                           },
 //                     child:  Container(
 //                       width: MediaQuery.of(context).size.width / 1.1,
-//                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+//                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p20),
 //                       decoration: BoxDecoration(
 //                         color: isInvalidPin
 //                             ? AppColors.bg3
@@ -1363,6 +1363,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/bankSlider.dart';
+
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -1370,12 +1371,12 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
-import 'package:flutter_application_code_stakeplot/Constants/AnnualBalance.dart';
-
+import '../Constants/AnnualBalance.dart';
+import '../Constants/core/app_component_sizes.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../backed_connections/bankServices/nextFetch.dart';
 import '../components/shared_utils.dart';
 import '../model/bank_model.dart';
@@ -1422,19 +1423,13 @@ void initState() {
   Widget build(BuildContext context) {
    
     // Check for zero to avoid division by zero
-    return Container(
-      
-        // Wrap content with SingleChildScrollView
-        // child: Obx(() => loadBanks.value ? BankSlider() :loadBalance.value?  avatarSlider(): avatarSlider())
-        child: Obx(() {
-  if (loadBanks.value) return BankSlider();
-
-  return showFlipSlider
-      ? avatarSlider2() // 🔥 flip UI
-      : avatarSlider(); // 👈 normal swipe UI
-}),
-
-        );
+    return Obx(() {
+      if (loadBanks.value) return const BankSlider();
+    
+      return showFlipSlider
+          ? avatarSlider2() // 🔥 flip UI
+          : avatarSlider(); // 👈 normal swipe UI
+    });
   }
 
 Widget avatarSlider() {
@@ -1443,9 +1438,9 @@ Widget avatarSlider() {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Container(
-        // color: Colors.red,
-        height: MediaQuery.sizeOf(context).height/4,
+      SizedBox(
+        // color:  AppColors.redColor,
+        height: AppComponentSizes.h4,
         child: PageView.builder(
           itemCount: bankAccountLinkedList.length,
           controller: PageController(
@@ -1466,24 +1461,24 @@ Widget avatarSlider() {
           itemBuilder: (context, index) {
             final account = bankAccountLinkedList[index];
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal:AppSizes.p8),
               child: getListViewBankInfo(account),
             );
           },
         ),
       ),
   
-      SizedBox(height: 6),
+       SizedBox(height: AppSizes.h6),
   
       Obx(() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           bankAccountLinkedList.length,
           (index) => AnimatedContainer(
-            duration: Duration(milliseconds: 250),
-            margin: EdgeInsets.symmetric(horizontal: 4),
+            duration: const Duration(milliseconds: 250),
+            margin: const EdgeInsets.symmetric(horizontal: AppSizes.p4),
             height: 8,
-            width: scrollBankPage.value == index ? 8 : 8,  // active dot grows
+            width:  8,  // active dot grows
             decoration: BoxDecoration(
               color: scrollBankPage.value == index
                   ? AppColors.primaryColor
@@ -1499,7 +1494,6 @@ Widget avatarSlider() {
   );
 }
 
- 
 
  Widget avatarSlider2() {
   if (bankAccountLinkedList.isEmpty) return connectBankAccount(context);
@@ -1534,8 +1528,8 @@ Future.microtask(() {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Container(
-        // color: Colors.red,
+      SizedBox(
+        // color:  AppColors.redColor,
         height: MediaQuery.sizeOf(context).height/4,
         child:
        SizedBox(
@@ -1600,18 +1594,18 @@ Future.microtask(() {
 )
 
       ),
-  
-      SizedBox(height: 6),
-  
+
+       SizedBox(height: AppSizes.h6),
+
       Obx(() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           bankAccountLinkedList.length,
           (index) => AnimatedContainer(
-            duration: Duration(milliseconds: 250),
-            margin: EdgeInsets.symmetric(horizontal: 4),
+            duration:const  Duration(milliseconds: 250),
+            margin:const  EdgeInsets.symmetric(horizontal: 4),
             height: 8,
-            width: scrollBankPage.value == index ? 8 : 8,  // active dot grows
+            width:  8,  // active dot grows
             decoration: BoxDecoration(
               color: scrollBankPage.value == index
                   ? AppColors.primaryColor
@@ -1649,54 +1643,55 @@ Widget getListViewBankInfo(BankAccountModel data) {
 
           /// 🔤 MAIN CONTENT
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20, vertical: AppSizes.p12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 28), // space for top-right logos
+                SizedBox(height: AppSizes.h40), // space for top-right logos
 
                 /// NEXT FETCH
                 Nextfetch(),
-
-                const SizedBox(height: 8),
-
+                
+                SizedBox(height: AppSizes.h10),
+                
                 /// ACCOUNT NUMBER
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Image.network(
                       data.bankLogo,
-                      width: 33,
-                      height: 33,
+                      width: 28,
+                      height: 28,
                       fit: BoxFit.fitWidth,
                       errorBuilder: getErrorBankLogo(),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: AppSizes.w8),
                     Text(
                       data.maskedAccNumber,
                       style: FontManager().getTextStyle(
                         context,
                         fontSize: 16,
-                        lWeight: FontWeight.w600,
-                        color: Colors.white,
+                        lWeight: FontWeight.w700,
+                        color: AppColors.backgroundColor,
                       ),
                     ),
                   ],
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
 
                 /// LABEL
                 Text(
                   "Available balance",
                   style: FontManager().getTextStyle(
                     context,
-                    fontSize: 11,
-                    lWeight: FontWeight.w400,
-                    color: Colors.white70,
+                    fontSize: 12,
+                    lWeight: FontWeight.w500,
+                    color: AppColors.grey,
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
 
                 /// BALANCE
                 Obx(() {
@@ -1711,13 +1706,14 @@ Widget getListViewBankInfo(BankAccountModel data) {
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
-                      fontSize: showBalance ? 20 : 18,
+                      fontSize: 18,
                       color: AppColors.backgroundColor,
+                      lineHeight: 24/fontSize
                     ),
                   );
                 }),
 
-                const SizedBox(height: 12),
+                SizedBox(height: AppSizes.h14),
 
                 /// QUICK CHECK
                InkWell(
@@ -1738,38 +1734,40 @@ Widget getListViewBankInfo(BankAccountModel data) {
                       height: 18,
                       errorBuilder: getErrorBankLogo(),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: AppSizes.w6),
                     Text(
                       "Quick check",
                       style: FontManager()
                           .getTextStyle(
                             context,
                             fontSize: 12,
-                            lWeight: FontWeight.w400,
-                            color: AppColors.backgroundColor,
+                            lWeight: FontWeight.w500,
+                            color: AppColors.grey,
+                            lineHeight: 18/fontSize
                           )
                           .copyWith(
                             decoration: TextDecoration.underline,
                             decorationThickness: 1.2,
                             decorationColor:
-                                AppColors.backgroundColor,
+                                AppColors.grey,
                           ),
                     ),
                   ],
                 ),
-               ),]
+               )
+              ],
             ),
           ),
 
           /// 🔁 TOP-RIGHT OTHER BANK LOGOS (CORRECT POSITION)
           if (bankAccountLinkedList.length > 1)
             Positioned(
-              top: 8,
+              top:AppSizes.p8,
               right: 0,
               child: Container(
-                height: 35,
+                height: 40,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10),
+                    const EdgeInsets.symmetric(horizontal: AppSizes.p10),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.05),
                   borderRadius: const BorderRadius.only(
@@ -1813,8 +1811,8 @@ Widget getListViewBankInfo(BankAccountModel data) {
 
           /// 🔐 SET PIN BUTTON
           Positioned(
-            right: 16,
-            bottom: 16,
+            right:AppSizes.p16,
+            bottom: 30,
             child: setPinForAccountHide(context),
           ),
         ],
@@ -1831,7 +1829,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
         width: 1.2,
         height: 15,
         color: AppColors.backgroundColor,
-        margin: EdgeInsets.symmetric(horizontal: 2),
+        margin: const EdgeInsets.symmetric(horizontal: AppSizes.m4),
       ),
         _buildPicker("secondDigit", context),
       ],
@@ -1848,13 +1846,12 @@ Widget getListViewBankInfo(BankAccountModel data) {
   }
 
   Widget _buildPicker(String controllerValue, BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
 
     return Container(
-      width: 40,
-      height:40,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
+    width: MediaQuery.of(context).size.width * 0.10,   // 10% of screen width (~40px)
+    height: MediaQuery.of(context).size.height * 0.05, // 5% of screen height (~40px)
+      decoration:  BoxDecoration(
+        color: AppColors.transparentColor,
       ),
       
       child: CupertinoPicker(
@@ -1897,7 +1894,7 @@ Widget setPinForAccountHide(context) {
   return Obx(() {
     if (userController.cupertinoPin.value == "0" || userController.cupertinoPin.value == "00" || userController.cupertinoPin.value.isEmpty ||  userController.cupertinoAttemptCount.value) { // Handle empty case too
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p12),
         child: InkWell(
           onTap: () {
 
@@ -1927,9 +1924,10 @@ Widget setPinForAccountHide(context) {
       "Set Pin",
       style: FontManager().getTextStyle(
         context,
-        lWeight: FontWeight.bold,
-        fontSize: 14,           
-        color: Colors.white,   
+        lWeight: FontWeight.w500,
+        fontSize: 16,           
+        color: AppColors.backgroundColor,
+        lineHeight: 24/fontSize   
       ),
       textAlign: TextAlign.center,
     ),
@@ -1964,19 +1962,19 @@ Widget setPinForAccountHide(context) {
     return SafeArea(
       child: Container(
         //  color: AppColors.backgroundColor,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(16), topRight: Radius.circular(16)),
           color: AppColors.backgroundColor,
         ),
         width: MediaQuery.of(context).size.width,
         height: height > 0 ? height / 3.8 : 100, // Fallback height
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top:AppSizes.p20),
               child: textStyle(
                   context: context,
                   text: HomepageStringsDart().setLockTitle,
@@ -2037,10 +2035,10 @@ Widget setPinForAccountHide(context) {
                           },
                     child:  Container(
                       width: MediaQuery.of(context).size.width / 1.1,
-                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p20),
                       decoration: BoxDecoration(
                         color: isInvalidPin
-                            ? AppColors.bg3
+                            ? AppColors.grey
                             : AppColors.primaryColor, // Button color based on validity
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -2051,7 +2049,7 @@ Widget setPinForAccountHide(context) {
                             context,
                             lWeight: FontWeight.bold,
                             fontSize: 18,
-                            color: AppColors.bg5,
+                            color: AppColors.backgroundColor,
                           ),
                         ),
                       ),
@@ -2096,7 +2094,7 @@ Widget setPinForAccountHide(context) {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                               height: 30,
                               width: 30,
                               child: Lottie.asset("assets/splashScreen/fetchLoad.json"),
@@ -2118,18 +2116,18 @@ Widget setPinForAccountHide(context) {
                     height: 10,
                     url: bankImage,
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                   Text(
                     "Securely connect your bank account",
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w500,
                       fontSize: 15,
-                      color: Colorcodes.white,
+                      color: AppColors.backgroundColor,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                 ],
               ),
             ),

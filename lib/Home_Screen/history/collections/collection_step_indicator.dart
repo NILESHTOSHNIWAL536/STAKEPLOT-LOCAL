@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../Constants/colors.dart';
+import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 
 class CollectionStepIndicator extends StatelessWidget {
@@ -23,7 +24,7 @@ class CollectionStepIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p12),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -32,11 +33,11 @@ class CollectionStepIndicator extends StatelessWidget {
             final isActive = index == currentStep;
 
             return Padding(
-              padding: const EdgeInsets.only(right: 16),
+              padding: const EdgeInsets.only(right:AppSizes.p16),
               child: Row(
                 children: [
                   _circle(isCompleted, isActive),
-                  const SizedBox(width: 6),
+                   SizedBox(width: AppSizes.w8),
                   Text(
                     steps[index],
                     style: FontManager().getTextStyle(

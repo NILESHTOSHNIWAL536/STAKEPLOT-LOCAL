@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math' as math;
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 // New import for the global budget state
@@ -75,7 +76,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.delete, color: Colors.red),
+            icon: Icon(Icons.delete, color: AppColors.redColor),
             onPressed: () async {
               // Show confirmation dialog before deletion
               bool? confirm = await showDialog(
@@ -88,7 +89,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
                   title: _buildText(PlotFinanceStaticData().deleteBudgetTitle, AppColors.bg1,
                       fontSize: 18, fontWeight: FontWeight.bold),
                   content: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.p8),
                     child: _buildText(
                      PlotFinanceStaticData().deleteBudgetTitle,
                       AppColors.bg1,
@@ -119,14 +120,14 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(AppSizes.p16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildDaysRemaining(),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
               _buildBudgetSummary(),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
               _buildContentSection()
             ],
           ),
@@ -150,7 +151,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     if (hasNoData) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
           child: _buildText(
             PlotFinanceStaticData().noSpendingData,
             AppColors.accentColor,
@@ -165,9 +166,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildMonthlyBudgetChart(),
-        SizedBox(height: 16),
+        SizedBox(height: AppSizes.h16),
         _buildInsights(),
-        SizedBox(height: 16),
+        SizedBox(height: AppSizes.h16),
         _buildCategoriesChart(),
       ],
     );
@@ -181,7 +182,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     return Row(
       children: [
         Icon(Icons.access_time, color: AppColors.primaryColor),
-        SizedBox(width: 8),
+        SizedBox(width: AppSizes.w8),
         // Text('Days remaining: $daysRemaining days',
         //     style: TextStyle(color: Colors.grey)),
          _buildText(
@@ -198,7 +199,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         ? budgetChartData.map((e) => e.y).reduce((a, b) => a + b)
         : 0.0;
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.p16),
        decoration: BoxDecoration(
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(16),
@@ -218,21 +219,21 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildText(PlotFinanceStaticData().budgetAmountLabel, AppColors.greyColor), // Updated
-          SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           _buildText('₹ ${formatMoneyIndian(widget.data['amount'].toString())}',
               AppColors.primaryColor,
               fontSize: 20, fontWeight: FontWeight.w500),
-          SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
           _buildRow(
             PlotFinanceStaticData().amountSpentLabel, // Updated
             '₹ ${formatMoneyIndian(totalSpent.toString())}',
             AppColors.accentColor,
           ),
-          SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           _buildRow2(
             PlotFinanceStaticData().overSpentLabel, // Updated
             '₹ ${((totalSpent - (widget.data['amount'] as num)).clamp(0, double.infinity)).toStringAsFixed(2)}',
-            Colors.red,
+            AppColors.redColor,
           ),
         ],
       ),
@@ -255,9 +256,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildText(title, Colors.red,
+        _buildText(title, AppColors.redColor,
             fontSize: 14, fontWeight: FontWeight.w500),
-        _buildText(value, Colors.red,
+        _buildText(value, AppColors.redColor,
             fontSize: 16, fontWeight: FontWeight.w500),
       ],
     );
@@ -280,7 +281,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       children: [
          _buildText(PlotFinanceStaticData().budgetSpendingTitle, AppColors.accentColor, // Updated
             fontSize: 18, fontWeight: FontWeight.bold),
-        SizedBox(height: 8),
+        SizedBox(height: AppSizes.h8),
         SizedBox(
           height: MediaQuery.sizeOf(context).height / 3,
           child: LineChartSample(
@@ -298,7 +299,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     List<dynamic>? insightsList = budgetInsights; // Extract list
    
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.p16),
       // decoration: _buildBackgroundDecoration(),
       decoration: BoxDecoration(
         color: AppColors.mt,
@@ -319,7 +320,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         children: [
           _buildText(PlotFinanceStaticData().budgetSpendingTitle, AppColors.accentColor, // Updated
             fontSize: 18, fontWeight: FontWeight.bold),
-          SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           insightsList != null && insightsList.isNotEmpty
               ? ListView.builder(
                   shrinkWrap: true, // Allows ListView inside a Column
@@ -329,7 +330,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
                   itemBuilder: (context, index) {
                     return Container(
                       margin: EdgeInsets.only(bottom: 8),
-                      padding: EdgeInsets.all(12),
+                      padding: EdgeInsets.all(AppSizes.p12),
                       decoration: BoxDecoration(
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(16),
@@ -373,7 +374,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 8),
+        SizedBox(height: AppSizes.h8),
         graph(),
       ],
     );
@@ -495,7 +496,7 @@ class LineChartSample extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         color: AppColors.accentColor,
                       ),
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(AppSizes.p8),
                       child: Text('₹${chartData.y.toStringAsFixed(2)}',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w400,

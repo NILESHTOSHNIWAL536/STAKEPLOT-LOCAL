@@ -3,6 +3,8 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class ListItemModel {
   final String title;
   final String description;
@@ -38,7 +40,7 @@ class CustomExpansionTile extends StatelessWidget {
                 .map((item) => _buildStringListItem(context, item))
                 .toList(),
           ),
-          const SizedBox(height: 10),
+           SizedBox(height: AppSizes.h10),
           _buildExpansionTile(
             context,
             title: "How it works?",
@@ -102,7 +104,7 @@ class CustomExpansionTile extends StatelessWidget {
               EdgeInsets.zero, // Removes the default padding around children
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppSizes.p16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: content,
@@ -131,7 +133,7 @@ class CustomExpansionTile extends StatelessWidget {
               color: AppColors.accentColor,
             ),
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: AppSizes.h5),
           Text(
             item.description,
             style: FontManager().getTextStyle(
@@ -162,7 +164,7 @@ class CustomExpansionTile extends StatelessWidget {
               color: AppColors.accentColor,
             ),
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: AppSizes.h5),
           Text(
             item.description,
             style: FontManager().getTextStyle(

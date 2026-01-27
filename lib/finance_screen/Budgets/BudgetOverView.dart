@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 class BudgetOverView extends StatefulWidget {
@@ -108,7 +109,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.backgroundColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -400,7 +401,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10), // Adds space between rows
+                SizedBox(height: AppSizes.h10), // Adds space between rows
               ],
             );
           }),

@@ -18,6 +18,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class emailUpdation extends StatefulWidget {
   final Map<String, dynamic> data;
 
@@ -103,7 +105,7 @@ class _emailUpdationState extends State<emailUpdation> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 20),
+                     SizedBox(height: AppSizes.h20),
                     topHeader(),
                     textStyleOnly2(
                       context: context,
@@ -112,7 +114,7 @@ class _emailUpdationState extends State<emailUpdation> {
                       fontsize: 14,
                       color: Colorcodes.white,
                     ),
-                    const SizedBox(height: 40),
+                    SizedBox(height: AppSizes.h40),
                     verifyOpt(),
                     acceptButton(),
                     SizedBox(height: Colorcodes.paddingSize * 2),
@@ -130,7 +132,7 @@ class _emailUpdationState extends State<emailUpdation> {
 
   Widget topHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
       child: Text(
         "Verify Your Email",
         style: FontManager().getTextStyle(
@@ -147,8 +149,8 @@ class _emailUpdationState extends State<emailUpdation> {
     return Center(
       child: Container(
         width: MediaQuery.of(context).size.width / 1.1,
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
         decoration: BoxDecoration(
           color: Colorcodes.white,
           borderRadius: BorderRadius.circular(Colorcodes.borderRadius10),
@@ -196,24 +198,24 @@ class _emailUpdationState extends State<emailUpdation> {
                   ControllerManagement.userController.email.value =
                       widget.data['email'];
                   snackBarCalled(
-                      context, "Email updated successfully", AppColors.accentColor);
+                      context, "Email updated successfully", );
                   Navigator.pop(context); // Return to EditDetails screen
                 } else {
                   snackBarCalledfail(
-                      context, "Failed to update email", Colors.red);
+                      context, "Failed to update email",  AppColors.redColor);
                   isOtpWrong2.value = true;
                   acceptReset.value = false;
                 }
               } else {
                 Navigator.pop(context); // Close loading dialog
-                snackBarCalledfail(context, "Invalid OTP", Colors.red);
+                snackBarCalledfail(context, "Invalid OTP",  AppColors.redColor);
                 isOtpWrong2.value = true;
                 acceptReset.value = false;
               }
             } catch (e) {
               Navigator.pop(context); // Close loading dialog
               snackBarCalledfail(
-                  context, "An error occurred. Please try again.", Colors.red);
+                  context, "An error occurred. Please try again.",  AppColors.redColor);
               isOtpWrong2.value = true;
               acceptReset.value = false;
             }

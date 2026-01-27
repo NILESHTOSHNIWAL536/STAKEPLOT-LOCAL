@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../message.dart';
 import 'chat_image.dart';
 import 'chat_polled.dart';
@@ -8,15 +9,15 @@ import 'chat_text.dart';
 
 Widget buildMessage(Message message, BuildContext context) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 2.0),
+    padding: const EdgeInsets.symmetric(vertical: AppSizes.p2),
     child: Row(
       mainAxisAlignment:
           message.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Padding(
           padding: !message.isMe
-              ? EdgeInsets.only(left: 14)
-              : EdgeInsets.only(right: 14),
+              ? EdgeInsets.only(left:AppSizes.p14)
+              : EdgeInsets.only(right:AppSizes.p14),
           child: getDataWidget(message, context),
         ),
       ],

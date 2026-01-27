@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../components/helper.dart';
 
 class CreditCardTransaction {
@@ -49,7 +50,7 @@ class CreditCardTransactionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // For logo, store an asset at assets/axis_logo.png
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
+      margin: EdgeInsets.symmetric(vertical: AppSizes.p8),
       // width: MediaQuery.of(context).size.width,
       // color: Colorcodes.billBody,
       child: Column(
@@ -65,7 +66,7 @@ class CreditCardTransactionCard extends StatelessWidget {
                     width: 32,
                     fit: BoxFit.contain,
                     errorBuilder: getErrorBankLogo()),
-                SizedBox(width: 9),
+                SizedBox(width: AppSizes.w10),
                 Container(
                   width: MediaQuery.of(context).size.width / 1.4,
                   child: Text(
@@ -82,16 +83,16 @@ class CreditCardTransactionCard extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 4),
+          SizedBox(height: AppSizes.h4),
           Divider(
             thickness: 1,
             color: Colorcodes.greyLight.withOpacity(0.8),
             endIndent: 0,
             indent: 0,
           ),
-          SizedBox(height: 4),
+          SizedBox(height: AppSizes.h4),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
             child: Column(
               children: [
                 buildRow("Date", txn.date, context),
@@ -110,7 +111,7 @@ class CreditCardTransactionCard extends StatelessWidget {
 
 Widget buildRow(String title, String value, BuildContext context) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -220,7 +221,7 @@ class CreditCardTransactionCard2 extends StatelessWidget {
     return Container(
       width: containerWidth,
       height: cardHeight,
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
       constraints: BoxConstraints(
         minHeight: 140,
         maxWidth: MediaQuery.of(context).size.width * 0.85,
@@ -260,7 +261,7 @@ class CreditCardTransactionCard2 extends StatelessWidget {
                     size: 32,
                   ),
                 ),
-                SizedBox(width: 12),
+                SizedBox(width: AppSizes.w12),
                 Expanded(
                   child: Text(
                     txn.bank,
@@ -285,7 +286,7 @@ class CreditCardTransactionCard2 extends StatelessWidget {
           ),
           // Compact Transaction Details
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -302,7 +303,7 @@ class CreditCardTransactionCard2 extends StatelessWidget {
 
   Widget buildRow(String title, String value, BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

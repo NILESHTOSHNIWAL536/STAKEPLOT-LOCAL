@@ -88,7 +88,7 @@ class FinvuStrings {
 
   // ✅ Field labels (from Access class)
   String givePermission = "Give Permission";
-  String shareAccountsWithStakeplot = "To share your accounts with Stake for ";
+  String shareAccountsWithStakeplot = "To share your accounts with Stakeplot for ";
   String smartFinanceInsights = "Smart finance management & insights.";
   String accountsSharedTitle = "Accounts Shared";
   String accountsSharedValue = "Account(s) are shared"; // Used with count

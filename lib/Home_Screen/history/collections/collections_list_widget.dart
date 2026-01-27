@@ -2,6 +2,7 @@
 
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
+import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../image_service/avatarProfile.dart';
 import 'collections_empty_page.dart';
@@ -12,7 +13,7 @@ Widget buildCollectionsBody(BuildContext context) {
   // TEMP flag – replace with API data later
   final bool hasCollections = false;
 
-  return !hasCollections
+  return hasCollections
       ? _buildCollectionsList(context)
       : _buildEmptyCollectionsUI(context);
 }
@@ -53,7 +54,7 @@ Widget _buildCollectionsList(BuildContext context) {
   ];
 
   return SingleChildScrollView(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p8),
     child: Column(
       children: List.generate(collections.length, (index) {
         final item = collections[index];
@@ -140,7 +141,7 @@ Widget _collectionCard({
     height: MediaQuery.of(context).size.height * 0.16,
     width: MediaQuery.of(context).size.width * 0.8,
     margin: const EdgeInsets.only(bottom: 8),
-    padding: const EdgeInsets.all(14),
+    padding: const EdgeInsets.all(AppSizes.p14),
     decoration: BoxDecoration(
       color: AppColors.backgroundColor,
       borderRadius: BorderRadius.circular(14),
@@ -172,7 +173,7 @@ Widget _collectionCard({
           ],
         ),
 
-        const SizedBox(height: 6),
+         SizedBox(height: AppSizes.h6),
 
         /// DESCRIPTION
         Text(
@@ -186,13 +187,13 @@ Widget _collectionCard({
 
         /// MEMBERS + AMOUNT
         if (members != null) ...[
-          const SizedBox(height: 10),
+          SizedBox(height: AppSizes.h10),
           Row(
             children: [
               ...members.map(
                 (e) => Container(
-                  margin: const EdgeInsets.only(right: 6),
-                  padding: const EdgeInsets.all(6),
+                  margin: const EdgeInsets.only(right:AppSizes.p6),
+                  padding: const EdgeInsets.all(AppSizes.p6),
                   decoration: const BoxDecoration(
                     color: AppColors.button,
                     shape: BoxShape.circle,
@@ -209,9 +210,9 @@ Widget _collectionCard({
               ),
               if (amount != null)
                 Container(
-                  margin: const EdgeInsets.only(left: 8),
+                  margin: const EdgeInsets.only(left:AppSizes.p8),
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
+                      horizontal: 10, vertical: AppSizes.p4),
                   decoration: BoxDecoration(
                     color: AppColors.bg5,
                     borderRadius: BorderRadius.circular(10),
@@ -240,7 +241,7 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 20),
+          SizedBox(height: AppSizes.h20),
 
           /// Icon
          Center(
@@ -274,8 +275,9 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
   ),
 
 
-        
-          const SizedBox(height: 24),
+
+
+          SizedBox(height: AppSizes.h24),
 
           Text(
             "No collections yet!",
@@ -286,7 +288,7 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
             ),
           ),
 
-          const SizedBox(height: 10),
+          SizedBox(height: AppSizes.h10),
 
           Text(
             "Start organizing your finances by creating your first collection — it can be just for you or shared with someone.",
@@ -299,7 +301,7 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
             ),
           ),
 
-          const SizedBox(height: 30),
+          SizedBox(height: AppSizes.h30),
 
           /// Create Button
           SizedBox(

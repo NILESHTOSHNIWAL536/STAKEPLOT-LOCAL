@@ -1,5 +1,6 @@
   import 'package:flutter/material.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../image_service/avatarProfile.dart';
 import '../../Constants/colorcodes.dart';
 import '../../user_chat/tribe_chart.dart';
@@ -12,7 +13,7 @@ Widget buildSearchBar(BuildContext context) {
       ),
       padding: const EdgeInsets.symmetric(
         horizontal: 5.0,
-        vertical: 8.0,
+        vertical: AppSizes.p8,
       ),
       child:InkWell(
         onTap: () {

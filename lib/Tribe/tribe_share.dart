@@ -17,6 +17,7 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../routes/index_route.dart';
 import '../routes/route_user_login.dart';
 
@@ -179,7 +180,7 @@ class _TribeHomeState extends State<TribeShare> {
             ),
           ),
         ),
-        SizedBox(height:2),
+        SizedBox(height:AppSizes.h2),
         InkWell(
           onTap:(){
             Navigator.pop(context);
@@ -206,7 +207,7 @@ class _TribeHomeState extends State<TribeShare> {
 
   Widget listOfUsers(height) {
   return Padding(
-    padding: const EdgeInsets.all(2.0),
+    padding: const EdgeInsets.all(AppSizes.p2),
     child: SizedBox(
       height: height/1.1,
       child: GridView.builder(
@@ -229,7 +230,7 @@ class _TribeHomeState extends State<TribeShare> {
                 });
               },
               child: Container(
-                margin: EdgeInsets.all(2),
+                margin: EdgeInsets.all(AppSizes.p2),
                 decoration: BoxDecoration(
                   border: addedUser.contains(values)
                       ? Border.all(
@@ -242,7 +243,7 @@ class _TribeHomeState extends State<TribeShare> {
                         ),
                   borderRadius: BorderRadius.circular(8.0), // Optional: for rounded corners
                 ),
-                padding: const EdgeInsets.all(4.0), // Optional: padding inside the border
+                padding: const EdgeInsets.all(AppSizes.p4), // Optional: padding inside the border
                 child: Column(
                   children: [
                     AvatarProfile(
@@ -283,14 +284,14 @@ class _TribeHomeState extends State<TribeShare> {
       snackBarCalled(context, SnackbarData().postSentSuccessfully);
       Navigator.pop(context);
     } else {
-      snackBarCalledfail(context, SnackbarData().cantAdd, Colors.red);
+      snackBarCalledfail(context, SnackbarData().cantAdd,  AppColors.redColor);
     }
   }
 
   Widget InputDate(lableText, keyBoard, Textcontroller) {
     return Center(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 2),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.p2),
         width: MediaQuery.of(context).size.width / 1.1,
          height: MediaQuery.of(context).size.width / 9,
         child: Center(
@@ -313,7 +314,7 @@ class _TribeHomeState extends State<TribeShare> {
                               fontSize: 14,
                               color: AppColors.buttonBorder),
               fillColor: AppColors.backgroundColor,
-              contentPadding: EdgeInsets.symmetric(horizontal: 4,vertical: 6),
+              contentPadding: EdgeInsets.symmetric(horizontal: 4,vertical: AppSizes.p6),
               
               border: OutlineInputBorder(
                 borderRadius:

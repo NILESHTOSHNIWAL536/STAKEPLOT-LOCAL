@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/notification_repository.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-
+import '../Constants/core/app_component_sizes.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Home_Screen/Home/new_updates_screen.dart';
 
 
@@ -34,8 +32,8 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
   @override
   Widget build(BuildContext context){
    return  Container(
-     width: MediaQuery.of(context).size.width/4,
-     padding: EdgeInsets.symmetric(horizontal: 10),
+     width: AppComponentSizes.w4,
+     padding:const EdgeInsets.symmetric(horizontal: 10),
      child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -50,14 +48,14 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
                     )
                     
                   ),
-                  SizedBox(width: 10,),
+                   SizedBox(width: AppSizes.w10),
                   InkWell(
                    onTap: (){
                      HapticFeedback.mediumImpact();
                            Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => UpdatesScreen(),
+            builder: (context) => const UpdatesScreen(),
           ),
         );
                        },

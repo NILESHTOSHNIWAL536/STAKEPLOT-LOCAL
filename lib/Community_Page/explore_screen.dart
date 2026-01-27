@@ -26,6 +26,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../components/shared_utils.dart';
 import '../routes/route_user_login.dart';
 import '../routes/route_post.dart';
@@ -99,7 +100,7 @@ class _ExploreModalState extends State<ExploreModal> {
                   Container(
                     width: dialogWidth,
                     height: dialogHeight,
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(AppSizes.p10),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: CustomImageCrop(
@@ -120,7 +121,7 @@ class _ExploreModalState extends State<ExploreModal> {
                   ),
                    if (showCropSelection)
                       Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                     child:Row(
                       children:[
                         GestureDetector(
@@ -212,7 +213,7 @@ class _ExploreModalState extends State<ExploreModal> {
               // Crop shape selection
 
               actionsPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p8),
               actions: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -222,10 +223,10 @@ class _ExploreModalState extends State<ExploreModal> {
                       onTap: () => Navigator.pop(context),
                       child: Container(
                         width: buttonWidth / 2,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: AppSizes.p12),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                          color: AppColors.grey,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(strings.cancelButton,
@@ -262,12 +263,12 @@ class _ExploreModalState extends State<ExploreModal> {
                             },
                       child: Container(
                         width: buttonWidth / 2,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: AppSizes.p12),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: isLoading
-                              ? Colors.grey[400]
-                              : AppColors.finSpaceColor,
+                              ? AppColors.grey
+                              : AppColors.primaryColor,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: isLoading
@@ -516,25 +517,25 @@ class _ExploreModalState extends State<ExploreModal> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top:AppSizes.p20),
           child: Container(
             color: AppColors.backgroundColor,
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSizes.p16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _buildImageSection(),
-                    const SizedBox(height: 10),
+                     SizedBox(height: AppSizes.h10),
                     _buildPlaceSection(),
-                    const SizedBox(height: 10),
+                     SizedBox(height: AppSizes.h10),
                     _buildBudgetSection(),
                     _buildRatingSection(),
-                    const SizedBox(height: 20),
+                     SizedBox(height: AppSizes.h20),
                     _buildHighlightSection(),
-                    const SizedBox(height: 20),
+                     SizedBox(height: AppSizes.h20),
                     _buildSubmitButton(),
                   ],
                 ),
@@ -550,7 +551,7 @@ class _ExploreModalState extends State<ExploreModal> {
     return Row(
       children: [
         const Icon(Icons.explore_sharp, size: 24, color: AppColors.accentColor),
-        const SizedBox(width: 8),
+         SizedBox(width: AppSizes.w8),
         Text(strings.exploria,
             style: FontManager().getTextStyle(context,
                 lWeight: FontWeight.bold, fontSize: 18, color: AppColors.backgroundColor)),
@@ -572,7 +573,7 @@ class _ExploreModalState extends State<ExploreModal> {
               color: AppColors.backgroundColor,
             ),
           ),
-          const SizedBox(width: 8), // Reduced spacing for better alignment
+           SizedBox(width: AppSizes.w8), // Reduced spacing for better alignment
           RatingStars(
             value: _rating,
             onValueChanged: (value) {
@@ -611,20 +612,20 @@ class _ExploreModalState extends State<ExploreModal> {
             color: AppColors.backgroundColor,
           ),
         ),
-        const SizedBox(height: 8),
+         SizedBox(height: AppSizes.h8),
         Container(
           height: 120,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            color: AppColors.grey,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey[300]!, width: 1),
+            border: Border.all(color: AppColors.grey, width: 1),
           ),
           child: selectedImages.isEmpty
               ? Center(
                   child: Text(
                     strings.noImagesSelected,
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: TextStyle(color: AppColors.grey),
                   ),
                 )
               : ListView.builder(
@@ -634,7 +635,7 @@ class _ExploreModalState extends State<ExploreModal> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 8),
+                          horizontal: 4, vertical: AppSizes.p8),
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
@@ -648,7 +649,7 @@ class _ExploreModalState extends State<ExploreModal> {
                                 borderRadius: BorderRadius.circular(8),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
+                                    color: AppColors.grey.withOpacity(0.2),
                                     spreadRadius: 1,
                                     blurRadius: 4,
                                     offset: const Offset(0, 2),
@@ -670,10 +671,10 @@ class _ExploreModalState extends State<ExploreModal> {
                             child: GestureDetector(
                               onTap: () => _removeImage(index),
                               child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: const BoxDecoration(
+                                padding: const EdgeInsets.all(AppSizes.p2),
+                                decoration:  BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Colors.red,
+                                  color: AppColors.redColor,
                                 ),
                                 child: const Icon(
                                   Icons.close,
@@ -689,10 +690,10 @@ class _ExploreModalState extends State<ExploreModal> {
                   },
                 ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: AppSizes.h8),
         SizedBox(
           width: double.infinity,
-          height: 50,
+          height: AppSizes.h48,
           child: ElevatedButton(
             onPressed:
                 selectedImages.length < maxImages ? _pickAndCropImage : null,
@@ -706,7 +707,7 @@ class _ExploreModalState extends State<ExploreModal> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.add_a_photo, color: AppColors.backgroundColor, size: 20),
-                const SizedBox(width: 8),
+                 SizedBox(width: AppSizes.w8),
                 Text(
                   strings.addPhoto,
                   style: FontManager().getTextStyle(
@@ -731,12 +732,12 @@ class _ExploreModalState extends State<ExploreModal> {
         Text(strings.aboutPlace,
             style: FontManager().getTextStyle(context,
                 lWeight: FontWeight.normal, fontSize: 16, color: AppColors.accentColor)),
-        const SizedBox(height: 10),
+         SizedBox(height: AppSizes.h10),
         TextField(
           controller: locationNameController,
           decoration: _inputDecoration(strings.locationName, Icons.place),
         ),
-        const SizedBox(height: 10),
+         SizedBox(height: AppSizes.h10),
         TextField(
           controller: locationAddressController,
           decoration:
@@ -765,7 +766,7 @@ class _ExploreModalState extends State<ExploreModal> {
         ),
         ...List.generate(_textControllers.length, (index) {
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.symmetric(vertical: AppSizes.p8),
             child: Row(
               children: [
                 Expanded(
@@ -775,7 +776,7 @@ class _ExploreModalState extends State<ExploreModal> {
                         strings.addCategory, Icons.description),
                   ),
                 ),
-                const SizedBox(width: 10),
+                 SizedBox(width: AppSizes.w10),
                 Expanded(
                   child: TextField(
                     controller: _amountControllers[index],
@@ -806,13 +807,13 @@ class _ExploreModalState extends State<ExploreModal> {
             color: AppColors.accentColor,
           ),
         ),
-        const SizedBox(height: 10),
+         SizedBox(height: AppSizes.h10),
         TextField(
           controller: titleController,
            maxLines: null,
           decoration: _inputDecoration(strings.enterTitle, null), // Updated
         ),
-        const SizedBox(height: 10),
+         SizedBox(height: AppSizes.h10),
         TextField(
           controller: contentController,
           decoration: _inputDecoration(strings.addThoughts, null), // Updated
@@ -853,9 +854,9 @@ class _ExploreModalState extends State<ExploreModal> {
           ? Center(child: Spinner())
           : Container(
               width: MediaQuery.of(context).size.width / 1.1,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
               decoration: BoxDecoration(
-                  color: isEnabled ? AppColors.finSpaceColor : Colors.grey,
+                  color: isEnabled ? AppColors.primaryColor : AppColors.grey,
                   borderRadius: BorderRadius.circular(24)),
               child: Center(
                 child: Text(

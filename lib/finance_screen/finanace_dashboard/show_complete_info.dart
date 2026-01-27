@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_dis
 import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/financeWidgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Utils/credit_card.dart';
 import '../../Constants/colorcodes.dart';
 import 'creditCard_slider.dart';
@@ -157,7 +158,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
               //       ? null
               //       : Border.all(color: const Color(0xFF635D8F), width: 1),
               // ),
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.p16, horizontal: 10),
               margin: const EdgeInsets.all(5),
               child: Column(
                 children: [
@@ -169,7 +170,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
                         ? AppColors.backgroundColor
                         : const Color(0xFF635D8F),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: AppSizes.h4),
                   Text(
                     titles[i],
                     style: FontManager().getTextStyle(

@@ -31,11 +31,18 @@ class BankTransactionRoutes {
       "$_urlPath/getTransactions/$page";
 
   // Get searched transactions
-  static String getSearchedTransactions(
+  // static String getSearchedTransactions(
+  //         {required int page,
+  //         required String search,
+  //         required String isBankAccount}) =>
+  //     "$_urlPath/getTransactions/$page/$search/$isBankAccount";
+
+  // this is new api 
+static String getSearchedTransactions(
           {required int page,
           required String search,
           required String isBankAccount}) =>
-      "$_urlPath/getTransactions/$page/$search/$isBankAccount";
+      "$_urlPath/getTransactions/$page";
 
   // All transactions of user
   static String getTransactionsOfUser = "$_urlPath/getTransactionsOfUser";

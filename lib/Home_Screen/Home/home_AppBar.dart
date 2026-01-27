@@ -1,25 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Constants/search.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
-import 'package:flutter_application_code_stakeplot/components/userNavigator.dart';
-import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-
-import 'package:flutter_application_code_stakeplot/app_init/splashScreen.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
-import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
-import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/components/notification_icon.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
-import 'package:get/get.dart';
-
+import 'package:lottie/lottie.dart';
 import '../../Constants/app_styles.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
@@ -39,7 +23,7 @@ import '../../Constants/insights_carousel_screen.dart';
 //       automaticallyImplyLeading: false,
 //       actions: [
 //         Padding(
-//           padding: const EdgeInsets.only(right: 10, top: 6, left: 10),
+//           padding: const EdgeInsets.only(right:AppSizes.p10, top:AppSizes.p6, left:AppSizes.p10),
 //           child: Row(
 //             mainAxisAlignment: MainAxisAlignment.center,
 //             // crossAxisAlignment: CrossAxisAlignment.center,
@@ -80,15 +64,14 @@ class TopRightIconsWidget extends StatelessWidget {
         GestureDetector(
           onTap: () {
             // TODO: Add your navigation or action here
-            Navigator.push(
-              context,
+Navigator.push(context,
               MaterialPageRoute(builder: (context) =>  InsightsCarouselScreen()),
             );
              
-          },
+        },
           child: Container(
-            padding: EdgeInsets.all(1),
-            margin: EdgeInsets.only(left: 4),
+            padding: const EdgeInsets.all(1),
+            margin: const EdgeInsets.only(left:AppSizes.p4),
             decoration: BoxDecoration(
              color: AppColors.border,
              borderRadius: BorderRadius.circular(12)
@@ -101,7 +84,7 @@ class TopRightIconsWidget extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(width: 16),
+         SizedBox(width: AppSizes.w16),
 
         /// NOTIFICATION BUTTON
         NotificationsBudget(
@@ -142,7 +125,7 @@ class TopRightIconsWidget extends StatelessWidget {
 //     ),
 //     actions:fromAutoPay?null: [
 //       Padding(
-//         padding: const EdgeInsets.only(right: 16.0), // Proper spacing
+//         padding: const EdgeInsets.only(right:AppSizes.p16), // Proper spacing
 //         child: InkWell(
 //           onTap: () {
 //             int len = bankAccountLinkedList.length;
@@ -218,50 +201,47 @@ class _AutoHintIconState extends State<AutoHintIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-
-      child: Row(
-        children: [
-          _showText?SizedBox.shrink(): SizedBox(width: MediaQuery.of(context).size.width * 0.17),
-          AnimatedSize(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeIn,
-            child: Container(
-              padding:  EdgeInsets.symmetric(horizontal:_showText ? 8: 2, vertical: 2),
-              decoration: BoxDecoration(
-                color: AppColors.backgroundColor,
-                borderRadius: _showText?BorderRadius.circular(30):BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Icon (always visible)
-                   
-          
-                  // Space + text only when visible
-                  if (_showText) ...[
-                   
-                    Text(
-                      widget.text,
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w400,
-                        fontSize: 11,
-                        color: AppColors.primaryColor,
-                      ),
+    return Row(
+      children: [
+        _showText?SizedBox.shrink(): SizedBox(width: MediaQuery.of(context).size.width * 0.17),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+          child: Container(
+            padding:  EdgeInsets.symmetric(horizontal:_showText ? 8: 2, vertical: _showText?4:2),
+            decoration: BoxDecoration(
+              color: AppColors.backgroundColor,
+              borderRadius: _showText?BorderRadius.circular(30):BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon (always visible)
+                 
+        
+                // Space + text only when visible
+                if (_showText) ...[
+                 
+                  Text(
+                    widget.text,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 11,
+                      color: AppColors.primaryColor,
                     ),
-                  ],
-                  AvatarProfileImage(
-                    url: widget.iconUrl,
-                    width: 36,
-                    height: 36,
                   ),
                 ],
-              ),
+                AvatarProfileImage(
+                  url: widget.iconUrl,
+                  width: 36,
+                  height: 36,
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

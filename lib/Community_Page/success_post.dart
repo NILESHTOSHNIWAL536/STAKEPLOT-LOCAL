@@ -5,6 +5,8 @@ import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart'
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:confetti/confetti.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class SuccessPost extends StatefulWidget {
   final String celebrationText;
 
@@ -68,7 +70,7 @@ class _SuccessPostState extends State<SuccessPost>
       ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.8,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSizes.p20),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -137,7 +139,7 @@ class _SuccessPostState extends State<SuccessPost>
                   Colors.green,
                   Colors.yellow,
                   Colors.blue,
-                  Colors.red,
+                   AppColors.redColor,
                 ],
                 createParticlePath: drawStar,
               ),

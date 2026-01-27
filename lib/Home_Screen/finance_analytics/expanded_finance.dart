@@ -83,11 +83,11 @@
 //             child: Column(
 //               children: [
 //                 Padding(
-//                   padding: const EdgeInsets.all(8.0),
+//                   padding: const EdgeInsets.all(AppSizes.p8),
 //                   child: _buildMonthYearSelector(fontSizeFactor, screenWidth),
 //                 ),
 //                 Padding(
-//                   padding: const EdgeInsets.all(8.0),
+//                   padding: const EdgeInsets.all(AppSizes.p8),
 //                   child: Obx(() => isLoading.value
 //                       ? Center(
 //                           child: Spinner(
@@ -287,6 +287,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/helper.dart';
 import '../../components/shared_utils.dart';
@@ -312,7 +313,7 @@ class ExpandedChartView extends StatefulWidget {
     required this.selectedButton,
     required this.selectedYear,
     required this.selectedMonth,
-    this.useDummyData = true,
+    this.useDummyData = false,
   }) : super(key: key);
 
   @override
@@ -381,29 +382,43 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
       try {
         await fetchMonthlyData(year, month); // populates currentChartData & currentDays (your existing flow)
 
-        final List? gCred = currentChartData.value['credited'] as List?;
-        final List? gDeb = currentChartData.value['debited'] as List?;
-        final List<String> gLabels = currentDays.map((e) => e.toString()).toList();
+        final List<double> gCred =
+    List<double>.from(currentChartData.value['credited'] ?? []);
+final List<double> gDeb =
+    List<double>.from(currentChartData.value['debited'] ?? []);
 
-        final bool hasApiData = (gCred != null && gCred.isNotEmpty) || (gDeb != null && gDeb.isNotEmpty);
-        if (hasApiData && gLabels.isNotEmpty) {
-          final int daysInMonth = DateTime(year, month + 1, 0).day;
-          _days = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
-          _credited = List.generate(daysInMonth, (i) => (gCred != null && i < gCred.length) ? (gCred[i] ?? 0.0).toDouble() : 0.0);
-          _debited = List.generate(daysInMonth, (i) => (gDeb != null && i < gDeb.length) ? (gDeb[i] ?? 0.0).toDouble() : 0.0);
+final int daysInMonth = DateTime(year, month + 1, 0).day;
 
-          // if API provided custom labels for every day, use them
-          if (gLabels.length == daysInMonth) _days = gLabels;
+/// ✅ FORCE DAY-ONLY LABELS (01–31)
+_days = List.generate(
+  daysInMonth,
+  (i) => (i + 1).toString().padLeft(2, '0'),
+);
 
-          // Reset selection to "all selected" on month load
-          _selectedDayIndex = -1;
+/// Fill values safely
+_credited = List.generate(
+  daysInMonth,
+  (i) => i < gCred.length ? gCred[i] : 0.0,
+);
 
-          setState(() {
-            _loadingChart = false;
-          });
-          WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
-          return;
-        }
+_debited = List.generate(
+  daysInMonth,
+  (i) => i < gDeb.length ? gDeb[i] : 0.0,
+);
+
+/// Reset selection
+_selectedDayIndex = -1;
+
+setState(() {
+  _loadingChart = false;
+});
+
+WidgetsBinding.instance
+    .addPostFrameCallback((_) => _scrollToEnd());
+
+return;
+
+        
       } catch (e) {
         // fallback to dummy if API fails
       }
@@ -480,7 +495,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         final yearsCount = currentYear - 2020 + 1;
         return Container(
           height: 300.0,
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(AppSizes.p8),
           child: GridView.count(
             crossAxisCount: 3,
             crossAxisSpacing: 4.0,
@@ -550,20 +565,20 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         body: SingleChildScrollView(
           controller: outerScrollController,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal:4.0, vertical: AppSizes.p8),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // Row: months (chart+transaction selector) + year pill
               
               // Title and selected day amounts
               Center(
                 child: Column(children: [
-                  const SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                   Text(
                     _monthYearTitle(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w700, fontSize:24, color: AppColors.accentColor),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: AppSizes.h6),
                   // Show header amounts only when a single day is selected (>=0)
                 // Put this where you want the UI to show
 if (_selectedDayIndex >= 0 &&
@@ -579,9 +594,9 @@ if (_selectedDayIndex >= 0 &&
     children: [
       // Credited container
       Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 14,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p12,
+          vertical: AppSizes.p14,
         ),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor, // light bg
@@ -594,7 +609,7 @@ if (_selectedDayIndex >= 0 &&
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w500,
-            fontSize: fontSizeFactor * 3.4,
+            fontSize: 14,
             color: AppColors.primaryColor,
           ),
           maxLines: 1,
@@ -602,13 +617,13 @@ if (_selectedDayIndex >= 0 &&
         ),
       ),
 
-      const SizedBox(width: 8),
+      SizedBox(width: AppSizes.w8),
 
       // Debited container
       Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 14,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p12,
+          vertical: AppSizes.p14,
         ),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor, // light bg
@@ -621,7 +636,7 @@ if (_selectedDayIndex >= 0 &&
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w500,
-            fontSize: fontSizeFactor * 3.4,
+            fontSize: 14,
             color: AppColors.primaryColor,
           ),
           maxLines: 1,
@@ -637,7 +652,7 @@ else
                 ]),
               ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
 
               // Chart card (no Y labels)
               Container(
@@ -645,13 +660,13 @@ else
                 width: double.infinity,
                 decoration: BoxDecoration(
                     color: AppColors.backgroundColor, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.financeChartBorder, width: 1)),
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(AppSizes.p14),
                 child: _loadingChart
                     ? SizedBox(height: screenHeight / chartAreaHeightFactor, child: Center(child: Spinner(size: 30)))
                     : _buildExpandedChartNoYLabels(screenWidth, screenHeight),
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: AppSizes.h12),
 
               // Transaction history (unchanged; will reflect new selectedMonth/selectedYear)
               transactionsHistoryList(),
@@ -765,7 +780,7 @@ else
     color: AppColors.strokeColor.withOpacity(0.9),
     markerSettings: MarkerSettings(
       isVisible: true,
-      color: Colors.white,
+      color: AppColors.backgroundColor,
       borderColor: AppColors.strokeColor,
       borderWidth: 2,
       height: 8,
@@ -826,11 +841,11 @@ AppBar appbarWidget() {
                       final bool isSelected = month == selectedMonth.value;
 
                       return Padding(
-                        padding: const EdgeInsets.only(left: 16),
+                        padding: const EdgeInsets.only(left:AppSizes.p16),
                         child: GestureDetector(
                           onTap: () => _onMonthPillTap(month),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                             height: pillHeight,
                             decoration: BoxDecoration(
                               color: isSelected
@@ -855,7 +870,7 @@ AppBar appbarWidget() {
                                     ),
                                   ),
                                   if (isSelected) ...[
-                                    const SizedBox(width: 6),
+                                    SizedBox(width: AppSizes.w6),
                                     Icon(Icons.check_circle,
                                         size: 16, color: AppColors.backgroundColor),
                                   ],
@@ -870,14 +885,14 @@ AppBar appbarWidget() {
                 ),
               ),
 
-              const SizedBox(width: 8),
+              SizedBox(width: AppSizes.w8),
 
               // ---------------- YEAR PICKER BUTTON ----------------
               GestureDetector(
                 onTap: () =>
                     _showYearPickerAndApply(context, 14, 400),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p8),
                   height: pillHeight,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
@@ -896,7 +911,7 @@ AppBar appbarWidget() {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: AppSizes.w6),
                       Icon(Icons.keyboard_arrow_down,
                           size: 18, color: AppColors.accentColor),
                     ],
@@ -906,7 +921,7 @@ AppBar appbarWidget() {
             ],
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
         ],
       ),
     ),

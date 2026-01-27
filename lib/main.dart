@@ -21,6 +21,10 @@ final GlobalKey<NavigatorState> updateNavigatorKey = GlobalKey<NavigatorState>()
 void main() async 
 {
   WidgetsFlutterBinding.ensureInitialized();
+   SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.manual,
+    overlays: SystemUiOverlay.values, // ⬅️ THIS IS KEY
+  );
   main_apis_call_init();
 }
 class MyApp extends StatefulWidget {

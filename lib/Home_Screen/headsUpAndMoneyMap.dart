@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Utils/headup_moneymap_constant.dart';
 import '../Utils/responsiveUi.dart';
 
@@ -298,7 +299,7 @@ class NavItem extends StatelessWidget {
         curve: Curves.easeOutCubic,
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4.0),
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
+          padding: const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: 6.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -315,7 +316,7 @@ class NavItem extends StatelessWidget {
                   size: ResponsiveUtils.getFontSize(context, 22),
                 ),
               ),
-              const SizedBox(height: 8),
+               SizedBox(height: AppSizes.h8),
               Text(
                 title,
                 style: FontManager().getTextStyle(
@@ -356,7 +357,7 @@ class InsightCard extends StatelessWidget {
       tag: 'card-$title',
       child: Container(
         width: width,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSizes.p24),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(24),
@@ -364,7 +365,7 @@ class InsightCard extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
-              right: 16,
+              right:AppSizes.p16,
               bottom: 16,
               child: Opacity(
                 opacity: 0.25,
@@ -393,7 +394,7 @@ class InsightCard extends StatelessWidget {
                         color: AppColors.backgroundColor,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     Text(
                       message,
                       style: FontManager().getTextStyle(

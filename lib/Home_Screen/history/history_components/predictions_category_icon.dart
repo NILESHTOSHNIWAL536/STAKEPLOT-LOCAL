@@ -13,7 +13,9 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
-import 'package:lottie/lottie.dart'; // For haptic feedback
+import 'package:lottie/lottie.dart';
+
+import '../../../Constants/core/app_padding_sizes.dart'; // For haptic feedback
 
 
 
@@ -50,12 +52,7 @@ Widget getRightSidePart(String category, BuildContext context, bool isManual,
         ),
       SizedBox(width: 8 * scaleFactor),
       isManual
-          ? Container(
-              child: Lottie.asset(
-                'assets/splashScreen/manualTransactionIcon.json',
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-              ),
-            )
+          ? AvatarProfileImageZero(url: HomePageIcons.cashTnx, width: 40, height: 40)
           : Image.network(
               logo,
               width: 22,
@@ -89,7 +86,7 @@ Widget getPredictedCategoryIcons(
     children: getUniquePredictedCategories(predictions.entries).map((entry) {
       String category=getCategoryForKeyword(entry.category);
       return Padding(
-        padding: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.only(right:AppSizes.p12),
         child: GestureDetector(
           onTap: () async {
             if (_debounce?.isActive ?? false) return;

@@ -7,6 +7,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 void resetCupertinoPin(BuildContext context) async {
   final LocalAuthentication auth = LocalAuthentication();
   bool isAuthenticated = false;
@@ -67,8 +69,8 @@ void resetCupertinoPin(BuildContext context) async {
         backgroundColor: AppColors.backgroundColor,
         title: Row(
           children: [
-            Icon(Icons.lock_reset, color: AppColors.primaryColor),
-            SizedBox(width: 8),
+           const  Icon(Icons.lock_reset, color: AppColors.primaryColor),
+            SizedBox(width: AppSizes.w8),
             textStyleOnly2(
               context: context,
               text: ProfileScreenStrings().resetPinLabel,
@@ -89,7 +91,7 @@ void resetCupertinoPin(BuildContext context) async {
               color: AppColors.bg3,
               fontWeight: FontWeight.w400,
             ),
-            SizedBox(height: 8),
+            SizedBox(height: AppSizes.h8),
             textStyleOnly2(
               context: context,
               text: ProfileScreenStrings().resetPinInstructionSubLabel,

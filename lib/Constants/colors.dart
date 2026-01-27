@@ -6,7 +6,7 @@ class AppColors {
 ;
   static const Color primaryColorHeader = Color(0xFF404266);
   // static const Color primaryColor =  Color(0xFF004856);
-  static const Color accentColor = Color(0xFF1E1E1E);
+  static const Color accentColor = Color(0xFF2A2A2A);
   static const Color accentColorOpacity = Color(0x1A1E1E1E);
   static const Color mt = Color(0xFFF4F4F4); // for app bg
   static const Color button = Color(0xFFE6EAEB); // for buttons bg and using fo
@@ -33,9 +33,9 @@ class AppColors {
   static const Color likesharecommentCount = Color(0xFF454545);
   static const Color debitColor = Color.fromARGB(255, 207, 118, 113);
   static Color creditColor = Colors.green.shade700;
-  static Color grey = Colors.black54;
+  static Color grey = const Color(0xFF8A8A8A);
   static Color greyColor = Colors.grey;
-  static Color redColor = Colors.red;
+  static Color redColor =  const Color(0xFFEF4444);
   static Color transparentColor = Colors.transparent;
   static const Color unSelectedOption = Color(0xFFE4E4E4);
   static const Color greyCard = Color(0xFFC4C4C4);
@@ -78,4 +78,15 @@ class AppColors {
   static const Color fontcolor = Color(0xFF061D3D);
    static const Color boxColor = Color(0xFF979496);
   static const Color newgrey = Color(0xFFE1E1E1);
+  static const Color financeChartBarBorder = Color(0xFFE8EAF0); 
+  static const Color snackbarcolor = Color(0xFFDBD7D7); 
+  static const Color foodieFundsTitle =   Color.fromRGBO(6, 29, 61, 0.5); 
+  static const Color linkManage =    Color.fromRGBO(255, 255, 255, 0.05); 
+  static const Color addCreditCardIcon =    Color(0xFF6E6F8F); 
+  static const Color filterBorders =    Color(0xFFD6D6D6); 
+  static const Color creditCardComponentColor =    Color.fromRGBO(255, 255, 255, 0.08); 
+  static const Color filterContainer =     Color.fromRGBO(75, 77, 115, 0.08); 
+  static const Color notificationCardColor =    Color(0xFFF9FAFB); 
+  static const Color notificationCardBorderColor =  Color.fromRGBO(75, 77, 115, 0.5); 
+  
 }

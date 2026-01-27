@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 // Controller to manage pop-up state
@@ -89,7 +90,7 @@ class TransactionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
        width: MediaQuery.of(context).size.width / 1.3,
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 2),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(8),
@@ -103,7 +104,7 @@ class TransactionCard extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(AppSizes.p12),
         child: Row(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -123,7 +124,7 @@ class TransactionCard extends StatelessWidget {
             ),
             Container(
               width: MediaQuery.of(context).size.width / 11,
-              // color: Colors.red,
+              // color:  AppColors.redColor,
               child: transaction.bankLogo != null && transaction.bankLogo!.isNotEmpty
                   ? Image.network(
                       transaction.bankLogo!,
@@ -212,7 +213,7 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
             minHeight: MediaQuery.of(context).size.height * 0.3, // Minimum height to ensure content fits
           ),
           child: Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(AppSizes.p8),
             decoration: BoxDecoration(
                color: AppColors.backgroundColor,
                borderRadius: BorderRadius.circular(16)
@@ -231,7 +232,7 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
                     color: AppColors.accentColor,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
                 Obx(() {
                   return controller.topThreeTransactions.isEmpty
                       ? Text(
@@ -256,7 +257,7 @@ Future<void> showWeeklyPopup(BuildContext context, String userId) async {
                               .toList(),
                         );
                 }),
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
                 GestureDetector(
                   onTap: () async {
                     await controller.markPopupAsShown(userId);

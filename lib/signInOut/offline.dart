@@ -5,6 +5,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/components/bottomNavigations.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 /// Example page using the offline-aware scaffold
 class Connections extends StatelessWidget {
   Connections({super.key});
@@ -17,7 +19,7 @@ class Connections extends StatelessWidget {
       // title: 'Dashboard',
       // onBack: () => Navigator.maybePop(context),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSizes.p16),
         children: List.generate(
           6,
           (i) => Card(
@@ -159,11 +161,11 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
         child: showBottomBar
             ? SafeArea(
                 top: false,
-                minimum: const EdgeInsets.symmetric(horizontal: 14),
+                minimum: const EdgeInsets.symmetric(horizontal: AppSizes.p14),
                 child: Row(
                   children: [
                     const Icon(Icons.wifi_off_rounded, color: AppColors.whiteOpacity07),
-                    const SizedBox(width: 10),
+                    SizedBox(width: AppSizes.w10),
                     Expanded(
                       child: Text(
                         'You’re offline. Some features may be unavailable.',
@@ -174,7 +176,7 @@ class _OfflineAwareScaffoldState extends State<OfflineAwareScaffold> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: AppSizes.w10),
                     TextButton(
                       onPressed: _recheckInternet,
                       style: TextButton.styleFrom(
@@ -244,7 +246,7 @@ class _OfflineBeautifulState extends StatelessWidget {
                       size: 64, color: AppColors.backgroundColor),
                 ),
               ),
-              const SizedBox(height: 28),
+              SizedBox(height: AppSizes.h28),
               Text(
                 'No Internet Connection',
                 textAlign: TextAlign.center,
@@ -254,7 +256,7 @@ class _OfflineBeautifulState extends StatelessWidget {
                       letterSpacing: 0.2,
                     ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: AppSizes.h10),
               Text(
                 'Please check your Wi-Fi or mobile data. You can retry or open network settings.',
                 textAlign: TextAlign.center,
@@ -263,7 +265,7 @@ class _OfflineBeautifulState extends StatelessWidget {
                       height: 1.4,
                     ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: AppSizes.h24),
 
               // Actions
               Row(
@@ -281,7 +283,7 @@ class _OfflineBeautifulState extends StatelessWidget {
                       );
                     },
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: AppSizes.w12),
                   _OutlineActionButton(
                     label: 'Settings',
                     icon: Icons.settings_rounded,
@@ -323,7 +325,7 @@ class _FilledActionButton extends StatelessWidget {
       icon: Icon(icon),
       label: Text(label),
       style: FilledButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
@@ -350,7 +352,7 @@ class _OutlineActionButton extends StatelessWidget {
       label: Text(label, style: const TextStyle(color: AppColors.backgroundColor)),
       style: OutlinedButton.styleFrom(
         side: const BorderSide(color: Colors.white54, width: 1.2),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );

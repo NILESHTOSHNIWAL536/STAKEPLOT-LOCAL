@@ -16,6 +16,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 
@@ -27,7 +28,7 @@ Widget uploadData(String dataObj2, Message message,BuildContext context) {
   bool isWrite = dataObj.postType.name == "write";
 
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+    padding: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 8),
     child: GestureDetector(
       onTap: () async{
         getpost(dataObj.id);
@@ -49,7 +50,7 @@ Widget uploadData(String dataObj2, Message message,BuildContext context) {
       },
       child: Container(
         width: MediaQuery.of(context).size.width / 1.4,
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSizes.p12),
         decoration: BoxDecoration(
           color: AppColors.mt,
           borderRadius: BorderRadius.only(
@@ -89,7 +90,7 @@ Widget uploadData(String dataObj2, Message message,BuildContext context) {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+             SizedBox(height: AppSizes.h10),
             // Content Preview
             if (isPoll && dataObj.pollData != null && dataObj.pollData!.question!= null)
               Text(
@@ -160,7 +161,7 @@ Widget uploadData(String dataObj2, Message message,BuildContext context) {
             // Image Thumbnail (if applicable)
             if (isImage &&  dataObj.image != "none" && dataObj.image != "")
               Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top:AppSizes.p10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
@@ -179,7 +180,7 @@ Widget uploadData(String dataObj2, Message message,BuildContext context) {
               ),
             if (isExploria && dataObj.images != null && dataObj.images.isNotEmpty && dataObj.images[0] != "none" && dataObj.images[0] != "")
               Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top:AppSizes.p10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
@@ -199,9 +200,9 @@ Widget uploadData(String dataObj2, Message message,BuildContext context) {
             // Tags (Show only one or hint)
             if (dataObj.tag.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top:AppSizes.p8),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p4),
                   decoration: BoxDecoration(
                     color: AppColors.finSpaceColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8),
@@ -220,7 +221,7 @@ Widget uploadData(String dataObj2, Message message,BuildContext context) {
             // Timestamp
             if (dataObj.createdAt.toString().isNotEmpty)
               Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top:AppSizes.p8),
                 child: Text(
                   formatDateToIST(dataObj.createdAt.toString()),
                   style: FontManager().getTextStyle(

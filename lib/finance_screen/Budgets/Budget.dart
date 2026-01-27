@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/financeWidgets.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/components/textfeild.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import 'BudgetSearch.dart';
 
 RxList categoriesSeleted = [].obs;
@@ -77,7 +80,7 @@ class _BudgetState extends State<Budget> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: AppColors.white,
+          backgroundColor: AppColors.backgroundColor,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -91,7 +94,7 @@ class _BudgetState extends State<Budget> {
             ],
           ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
+            icon: globalbackArrow(),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -136,7 +139,7 @@ class _BudgetState extends State<Budget> {
           height: 10,
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
           child: FinanceWidgets.budgetHorizontalList(context),
         ),
         Container(
@@ -150,23 +153,19 @@ class _BudgetState extends State<Budget> {
               color: Color(0xFFF3F4F6),
               width: 1,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.05),
-                offset: Offset(0, 1),
-                blurRadius: 2,
-              ),
+            boxShadow:  [
+             AppShadows.soft
             ],
           ),
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                        EdgeInsets.symmetric(horizontal: AppSizes.p8, vertical: AppSizes.p12),
                     child: Text(
                       "Add budget",
                       style: FontManager().getTextStyle(
@@ -189,7 +188,7 @@ class _BudgetState extends State<Budget> {
                               PlotFinanceStaticData().enterBudgetNameHint,
                           icon: Icons.person,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: AppSizes.h10),
                         TextFeildWidgetCustom(
                           textEditingController: amountController,
                           heading: PlotFinanceStaticData().amountLabelBudget,
@@ -199,7 +198,7 @@ class _BudgetState extends State<Budget> {
                           icon: Icons.currency_rupee_rounded,
                           needAmountFormat: true,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: AppSizes.h10),
                         textStyle(
                           context: context,
                           text: PlotFinanceStaticData().durationLabel,
@@ -207,7 +206,7 @@ class _BudgetState extends State<Budget> {
                           fontWeight: FontWeight.bold,
                           c: AppColors.accentColor,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: AppSizes.h10),
                         // Improved Dropdown for duration selection
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -223,8 +222,8 @@ class _BudgetState extends State<Budget> {
                                     period.value.isEmpty ? null : period.value,
                                 hint: Center(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 10),
+                                    padding:  EdgeInsets.symmetric(
+                                        horizontal: AppSizes.p16, vertical: AppSizes.p10),
                                     child: textStyle(
                                       context: context,
                                       text: "Select Duration",
@@ -252,7 +251,7 @@ class _BudgetState extends State<Budget> {
                                     value: periodItem,
                                     child: Center(
                                       child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.all(AppSizes.p8),
                                         child: textStyle(
                                           context: context,
                                           text: periodItem,
@@ -285,7 +284,7 @@ class _BudgetState extends State<Budget> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
                   InkWell(
                     onTap: () {
                       bedgetCalculator();
@@ -293,7 +292,7 @@ class _BudgetState extends State<Budget> {
                     child: getButton(
                         context, PlotFinanceStaticData().continueButton),
                   ),
-                  SizedBox(height: 20), // Extra padding at bottom for scroll
+                  SizedBox(height: AppSizes.h20), // Extra padding at bottom for scroll
                 ],
               ),
             ),
@@ -327,7 +326,7 @@ class _BudgetState extends State<Budget> {
             duration: Duration(milliseconds: 300),
             width: buttonWidth.clamp(80, 120), // Min 80, max 120
             padding: const EdgeInsets.symmetric(
-                horizontal: 12, vertical: 10), // Adjusted padding
+                horizontal: AppSizes.p12, vertical: AppSizes.p10), // Adjusted padding
             decoration: BoxDecoration(
               color:
                   period.value == text ? AppColors.accentColor : AppColors.backgroundColor,
@@ -446,7 +445,7 @@ Widget textStyle({
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const SizedBox(width: 7),
+       SizedBox(width: AppSizes.w8),
       Text(
         text.toString(),
         style: FontManager().getTextStyle(context,
@@ -493,7 +492,7 @@ Widget textStyleAnimated({
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const SizedBox(width: 7),
+      SizedBox(width: AppSizes.w8),
       Text(
         text.toString(),
         style: FontManager().getTextStyle(context,

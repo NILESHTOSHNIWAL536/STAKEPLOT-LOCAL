@@ -88,7 +88,7 @@ Future<void> checkForUpdate() async {
           await AppVersionUpdate.showAlertUpdate(
             appVersionResult: result,
             context: context,
-            backgroundColor: AppColors.white,
+            backgroundColor: AppColors.backgroundColor,
             title: 'Update Available',
             content:
                 'A new version (${result.storeVersion ?? "unknown"}) is available. Please update the app.',

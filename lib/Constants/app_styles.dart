@@ -75,6 +75,10 @@ class HomePageIcons {
   static String settings = "assets/icons/Home-page/collectionSetting.svg";
   static String appUpdates = "assets/icons/Home-page/appUpdates.svg";
   static String finoraIcon = "assets/icons/Home-page/finoraIcon.svg";
+  static String cashTnx = "assets/icons/Home-page/cashTnx.svg";
+  static String notMIne = 'assets/icons/Home-page/notMIne.svg';
+  static String autoPaydate = 'assets/icons/Home-page/autoPayDate.svg';
+  static String historySearch = 'assets/icons/Home-page/historySearch.svg';
 }
 
 
@@ -302,6 +306,9 @@ class Sign {
   static String googleIcon = "assets/icons/Signup/gIcon.svg";
   static String appSignInimage = "assets/icons/Signup/signInImage.svg";
   static String userOnboard = "assets/icons/Signup/userOnboard1.svg";
+  static String accsShared = "assets/icons/Signup/accs_shared.svg";
+  static String permissionValidity = "assets/icons/Signup/permission_validity.svg";
+  static String frequencyOfAccess = "assets/icons/Signup/freq_of_access.svg";
 }
 
 class Finance {
@@ -326,6 +333,9 @@ class Finance {
   static String groceries = "assets/icons/financeScreen/groceries.svg";
   static String transport = "assets/icons/financeScreen/transport.svg";
   static String entertainment  = "assets/icons/financeScreen/entertainment.svg";
+  static String credited = "assets/icons/financeScreen/credited.svg";
+  static String debited =  "assets/icons/financeScreen/debited.svg";
+  static String outstanding =  "assets/icons/financeScreen/outstanding.svg";
 }
 
 class BudgetCategories {

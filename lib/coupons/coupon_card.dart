@@ -12,6 +12,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/coupon_model.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class CouponCardWidget extends StatelessWidget {
   final CouponModel coupon;
   final VoidCallback onClaim;
@@ -47,7 +49,7 @@ class CouponCardWidget extends StatelessWidget {
           borderRadius: 20,
           firstChild: Container(
             height: height * 0.6,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSizes.p16),
             decoration: const BoxDecoration(
               color: AppColors.backgroundColor,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -75,16 +77,16 @@ class CouponCardWidget extends StatelessWidget {
                                         (context, error, stackTrace) => Icon(
                                       Icons.broken_image,
                                       size: fontSize * 1.5,
-                                      color: Colors.grey.shade400,
+                                      color: AppColors.grey,
                                     ),
                                   ),
                                 )
                               : Icon(
                                   Icons.image,
                                   size: fontSize * 1.5,
-                                  color: Colors.grey.shade400,
+                                  color: AppColors.grey,
                                 ),
-                          const SizedBox(width: 8),
+                           SizedBox(width: AppSizes.w8),
                           Flexible(
                             child: InkWell(
                               onTap: () {
@@ -115,7 +117,7 @@ class CouponCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                 SizedBox(height: AppSizes.h8),
                 Text(
                   coupon.title,
                   style: FontManager().getTextStyle(
@@ -127,7 +129,7 @@ class CouponCardWidget extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 14),
+                 SizedBox(height: AppSizes.h14),
                 Text(
                   coupon.description,
                   style: FontManager().getTextStyle(
@@ -148,7 +150,7 @@ class CouponCardWidget extends StatelessWidget {
             height: height * 0.4,
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50,
+              color: AppColors.greyCard,
               borderRadius:
                   const BorderRadius.vertical(bottom: Radius.circular(20)),
             ),
@@ -168,7 +170,7 @@ class CouponCardWidget extends StatelessWidget {
                         color: AppColors.bg1,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                     SizedBox(height: AppSizes.h10),
                     Text.rich(
                       TextSpan(
                         text: 'In partnership with ',
@@ -217,7 +219,7 @@ class CouponCardWidget extends StatelessWidget {
                     )
                   ],
                 ),
-                const SizedBox(height: 10),
+                 SizedBox(height: AppSizes.h10),
                 Center(
                   child: SizedBox(
                     width: MediaQuery.sizeOf(context).width / 1.5,
@@ -235,9 +237,9 @@ class CouponCardWidget extends StatelessWidget {
                             },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isClaimed
-                            ? Colors.grey.shade300
+                            ? AppColors.grey
                             : AppColors.primaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -276,7 +278,7 @@ class CouponCardWidget extends StatelessWidget {
             height: 1,
             dashWidth: 10,
             dashSpacing: 4,
-            color: Colors.grey.shade400,
+            color: AppColors.greyCard,
           ),
         ),
       ),

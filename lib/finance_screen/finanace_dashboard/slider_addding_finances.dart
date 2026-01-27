@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/email_sync/credit_card_transa
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/cardBuilders.dart';
 import 'package:get/get.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Utils/credit_card.dart';
 import '../../email_sync/add_credit_card_bank.dart';
 import 'select_card_options.dart';
@@ -49,7 +50,7 @@ class SliderAdddingFinances extends StatelessWidget {
               },
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 3),
+                    const EdgeInsets.symmetric(vertical: AppSizes.p12, horizontal: 3),
                 child: Container(
                   width: 52,
                   decoration: BoxDecoration(
@@ -151,9 +152,9 @@ class SliderAdddingFinances extends StatelessWidget {
         ),
         child: Row(
           children: [
-            SizedBox(width: 18),
+            SizedBox(width: AppSizes.w18),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 28, horizontal: 0),
+              padding: EdgeInsets.symmetric(vertical: AppSizes.p28, horizontal: 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -175,7 +176,7 @@ class SliderAdddingFinances extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 16),
+            SizedBox(width: AppSizes.w16),
             Expanded(
               child: Text(
                 title,

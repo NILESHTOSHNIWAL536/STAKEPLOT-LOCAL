@@ -131,7 +131,7 @@
 //                 children: [
 //                   Padding(
 //                     padding: const EdgeInsets.only(
-//                         left: 10.0, right: 10.0, top: 0, bottom: 0),
+//                         left:AppSizes.p10, right:AppSizes.p10, top: 0, bottom: 0),
 //                     child: Row(
 //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,7 +177,7 @@
 //                                dataObj.pollData!.question != null
 //                           ? Padding(
 //                               padding: const EdgeInsets.only(
-//                                   left: 14.0, right: 12.0),
+//                                   left:AppSizes.p14.0, right:AppSizes.p12),
 //                               child: Text(
 //                                 dataObj.pollData!.question.toString(),
 //                                 style: FontManager().getTextStyle(context,
@@ -189,7 +189,7 @@
 //                           : isWrite
 //                               ? Padding(
 //                                   padding: const EdgeInsets.only(
-//                                       left: 14.0, right: 27.0),
+//                                       left:AppSizes.p14.0, right: 27.0),
 //                                   child: Text(
 //                                     (dataObj.title),
 //                                     style: FontManager().getTextStyle(context,
@@ -253,13 +253,13 @@
 //                   !isExploria
 //                       ? isPoll
 //                           ? Padding(
-//                               padding: EdgeInsets.only(left: 12.0, right: 12.0),
+//                               padding: EdgeInsets.only(left:AppSizes.p12, right:AppSizes.p12),
 //                               child:  getQuestionsAndOptions(dataObj.pollData,context, true, dataObj.id),
 //                             )
 //                           : Container(
 //                               padding: !isImage
 //                                   ? const EdgeInsets.only(
-//                                       left: 14.0, right: 27.0)
+//                                       left:AppSizes.p14.0, right: 27.0)
 //                                   : EdgeInsets.only(left: 0.0, right: 0.0),
 //                               child: isImage
 //                                   ? vote(context, dataObj, dataObj)
@@ -268,7 +268,7 @@
 //                       : SizedBox.shrink(),
 //                   Padding(
 //                     padding: isImage
-//                         ? const EdgeInsets.only(left: 10.0, right: 27.0)
+//                         ? const EdgeInsets.only(left:AppSizes.p10, right: 27.0)
 //                         : EdgeInsets.only(left: 0.0, right: 0.0),
 //                     child: !isImage
 //                         ? vote(context, dataObj, dataObj)
@@ -279,7 +279,7 @@
 //                   if (dataObj.tag.isNotEmpty)
 //                     Padding(
 //                       padding: const EdgeInsets.symmetric(
-//                           horizontal: 12.0, vertical: 2.0),
+//                           horizontal: AppSizes.p12.0, vertical: AppSizes.p2),
 //                       child: SingleChildScrollView(
 //                         scrollDirection: Axis.horizontal,
 //                         child: Row(
@@ -289,7 +289,7 @@
 //                                         right:
 //                                             6.0), // spacing between containers
 //                                     padding: const EdgeInsets.symmetric(
-//                                         horizontal: 8.0, vertical: 4.0),
+//                                         horizontal: 8.0, vertical: AppSizes.p4),
 //                                     decoration: BoxDecoration(
 //                                       color: AppColors.finSpaceColor,
 //                                       borderRadius: BorderRadius.circular(8),
@@ -312,7 +312,7 @@
 //                   if (dataObj.createdAt != null)
 //                     Padding(
 //                       padding: const EdgeInsets.only(
-//                           left: 14.0, right: 27.0, top: 6, bottom: 10),
+//                           left:AppSizes.p14.0, right: 27.0, top:AppSizes.p6, bottom: 10),
 //                       child: Text(
 //                         formatDateToIST(dataObj.createdAt.toString()),
 //                         style: FontManager().getTextStyle(context,
@@ -396,21 +396,18 @@
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/pollDisplay.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/pop-up-menu.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/model/post_model.dart';
 import 'package:flutter_application_code_stakeplot/components/readmore.dart';
-import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
-import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
+
+import '../Constants/core/app_padding_sizes.dart';
 
 class ChartData {
   ChartData(this.x, this.y, [this.color, this.name]);
@@ -455,11 +452,11 @@ class PostCard extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: 30),
       child: Column(
         children: [
           Container(
-             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+             padding: const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: AppSizes.p12),
             decoration: BoxDecoration(
               color: AppColors.backgroundColor,
               borderRadius: BorderRadius.circular(16),
@@ -488,22 +485,22 @@ class PostCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
   child: Row(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
       /// TAGS (SCROLLABLE / FLEXIBLE)
       if (dataObj.tag.isNotEmpty)
-        Container(
+        SizedBox(
           width: MediaQuery.sizeOf(context).width/1.5,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: dataObj.tag.map<Widget>((tag) {
                 return Container(
-                  margin: const EdgeInsets.only(right: 6),
+                  margin: const EdgeInsets.only(right:AppSizes.p6),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p4),
                   decoration: BoxDecoration(
                     color: AppColors.border,
                     borderRadius: BorderRadius.circular(8),
@@ -512,7 +509,7 @@ class PostCard extends StatelessWidget {
                     tag,
                     style: FontManager().getTextStyle(
                       context,
-                      lWeight: FontWeight.w400,
+                      lWeight: FontWeight.w500,
                       fontSize: 12,
                       color: AppColors.primaryColor,
                     ),
@@ -552,19 +549,19 @@ class PostCard extends StatelessWidget {
                              dataObj.pollData!.question != null
                         ? Padding(
                             padding: const EdgeInsets.only(
-                                left: 14.0, right: 12.0),
+                                left:AppSizes.p14, right:AppSizes.p12),
                             child: Text(
                               dataObj.pollData!.question.toString(),
                               style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w600,
+                                  lWeight: FontWeight.w700,
                                   fontSize: 18,
-                                  color: AppColors.bg1),
+                                  color: AppColors.accentColor),
                             ),
                           )
                         : isWrite
                             ? Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 14.0, right: 27.0),
+                                    left:AppSizes.p14, right: 27.0),
                                 child: Text(
                                   (dataObj.title),
                                   style: FontManager().getTextStyle(context,
@@ -628,13 +625,13 @@ class PostCard extends StatelessWidget {
                 !isExploria
                     ? isPoll
                         ? Padding(
-                            padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                            padding: EdgeInsets.only(left:AppSizes.p12, right:AppSizes.p12),
                             child:  getQuestionsAndOptions(dataObj.pollData,context, true, dataObj.id),
                           )
                         : Container(
                             padding: !isImage
                                 ? const EdgeInsets.only(
-                                    left: 14.0, right: 27.0)
+                                    left:AppSizes.p14, right: 27.0)
                                 : EdgeInsets.only(left: 0.0, right: 0.0),
                             child: isImage
                                 ? vote(context, dataObj, dataObj)
@@ -643,7 +640,7 @@ class PostCard extends StatelessWidget {
                     : SizedBox.shrink(),
                 Padding(
                   padding: isImage
-                      ? const EdgeInsets.only(left: 10.0, right: 27.0)
+                      ? const EdgeInsets.only(left:AppSizes.p10, right: 27.0)
                       : EdgeInsets.only(left: 0.0, right: 0.0),
                   child: !isImage
                       ? vote(context, dataObj, dataObj)
@@ -656,7 +653,7 @@ class PostCard extends StatelessWidget {
                 if (dataObj.createdAt != null)
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 14.0, right: 27.0, top: 6, bottom: 10),
+                        left:AppSizes.p14, right: 27.0, top:AppSizes.p6, bottom: 10),
                     child: Text(
                       formatDateToIST(dataObj.createdAt.toString()),
                       style: FontManager().getTextStyle(context,

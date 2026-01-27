@@ -3,8 +3,9 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:intl/intl.dart'; // For formatting date
+import 'package:intl/intl.dart';
+
+import '../../Constants/core/app_padding_sizes.dart'; // For formatting date
 
 TextEditingController messageController = TextEditingController();
 DateTime? selectedDueDate;
@@ -103,9 +104,9 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-              left: 16.0,
-              right: 16.0,
-              top: 16.0,
+              left: AppSizes.p16,
+              right: AppSizes.p16,
+              top:AppSizes.p16,
               bottom: MediaQuery.of(context).viewInsets.bottom + 16.0, // Adjust for keyboard
             ),
             child: Column(
@@ -130,10 +131,10 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.h16),
                 // Summary Info
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(AppSizes.p12),
                   decoration: BoxDecoration(
                     color: AppColors.button.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -190,7 +191,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: AppSizes.h20),
                 // Message Field
                 Text(
                   'Message *',
@@ -201,7 +202,7 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     color: AppColors.bg1,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppSizes.h8),
                 TextField(
                   controller: messageController,
                   decoration: InputDecoration(
@@ -220,14 +221,14 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
-                      vertical: 12,
+                      vertical: AppSizes.p12,
                     ),
                   ),
                   maxLines: 3,
                   textInputAction: TextInputAction.done,
                   onSubmitted: (_) => _validateAndConfirm(),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.h16),
                 // Due Date Field
                 Text(
                   'Due Date *',
@@ -238,13 +239,13 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     color: AppColors.bg1,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppSizes.h8),
                 GestureDetector(
                   onTap: () => _selectDueDate(context),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
-                      vertical: 14,
+                      vertical: AppSizes.p14,
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.button.withOpacity(0.5),
@@ -276,14 +277,14 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.h24),
                 // Confirm Button
                 Center(
                   child: InkWell(
                     onTap: _validateAndConfirm,
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor,
                         borderRadius: BorderRadius.circular(12),

@@ -13,6 +13,8 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class CurrencyConverterScreen extends StatefulWidget {
   const CurrencyConverterScreen({super.key});
 
@@ -260,7 +262,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 16),
+                padding: const EdgeInsets.only(left:AppSizes.p16),
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
@@ -308,8 +310,8 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                     ? Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 4),
-                          padding: EdgeInsets.all(12),
+                          margin: EdgeInsets.symmetric(vertical: AppSizes.p4),
+                          padding: EdgeInsets.all(AppSizes.p12),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor.withOpacity(0.9),
                             borderRadius: BorderRadius.circular(12),
@@ -332,7 +334,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                     : SizedBox.shrink(),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -345,7 +347,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         color: AppColors.accentColor,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     TextField(
                       controller: baseSearchController,
                       style: FontManager().getTextStyle(
@@ -358,7 +360,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         filled: true,
                         fillColor: AppColors.backgroundColor,
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 14),
+                            horizontal: AppSizes.p12, vertical: AppSizes.p14),
                         hintText: 'Search Currency',
                         hintStyle: TextStyle(
                           color: AppColors.greyCard,
@@ -382,14 +384,14 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Colors.red,
+                            color: AppColors.redColor,
                             width: 1,
                           ),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Colors.red,
+                            color: AppColors.redColor,
                             width: 1,
                           ),
                         ),
@@ -401,10 +403,10 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         });
                       },
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppSizes.h4),
                     if (isBaseSearchActive && filteredBaseCurrencies.isNotEmpty)
                       Container(
-                        constraints: BoxConstraints(
+                        constraints: const BoxConstraints(
                           maxHeight: 150,
                         ),
                         decoration: BoxDecoration(
@@ -441,12 +443,12 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           },
                         ),
                       ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     Center(
                       child: GestureDetector(
                         onTap: swapCurrencies,
                         child: Container(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(AppSizes.p10),
                           child: const Icon(
                             Icons.swap_vert,
                             color: AppColors.accentColor,
@@ -455,7 +457,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     Text(
                       "Converted Currency",
                       style: FontManager().getTextStyle(
@@ -465,7 +467,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         color: AppColors.accentColor,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     TextField(
                       controller: targetSearchController,
                       style: FontManager().getTextStyle(
@@ -478,7 +480,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         filled: true,
                         fillColor: AppColors.backgroundColor,
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 14),
+                            horizontal: AppSizes.p12, vertical: AppSizes.p14),
                         hintText: 'Search Currency',
                         hintStyle: TextStyle(
                           color: AppColors.greyCard,
@@ -502,14 +504,14 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Colors.red,
+                            color: AppColors.redColor,
                             width: 1,
                           ),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Colors.red,
+                            color: AppColors.redColor,
                             width: 1,
                           ),
                         ),
@@ -521,7 +523,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         });
                       },
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: AppSizes.h4),
                     if (isTargetSearchActive &&
                         filteredTargetCurrencies.isNotEmpty)
                       Container(
@@ -562,7 +564,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           },
                         ),
                       ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: AppSizes.h16),
                     Text(
                       "Amount",
                       style: FontManager().getTextStyle(
@@ -572,7 +574,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         color: AppColors.accentColor,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     TextField(
                       controller: amountController,
                       keyboardType: TextInputType.number,
@@ -587,7 +589,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         filled: true,
                         fillColor: AppColors.backgroundColor,
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 14),
+                            horizontal: AppSizes.p12, vertical: AppSizes.p14),
                         hintText: 'Enter Amount',
                         hintStyle: TextStyle(
                           color: AppColors.greyCard,
@@ -611,27 +613,27 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Colors.red,
+                            color: AppColors.redColor,
                             width: 1,
                           ),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Colors.red,
+                            color: AppColors.redColor,
                             width: 1,
                           ),
                         ),
                       ),
                       onChanged: (value) => setState(() {}),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: AppSizes.h30),
                     if (result.isNotEmpty)
                       Center(
                         child: Container(
                           width: MediaQuery.sizeOf(context).width / 1.1,
                           padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 8),
+                              vertical: AppSizes.p12, horizontal: 8),
                           decoration: BoxDecoration(
                             color: AppColors.backgroundColor,
                             borderRadius: BorderRadius.circular(8),
@@ -659,7 +661,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                           ),
                         ),
                       ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: AppSizes.h24),
                     Center(
                       child: ElevatedButton(
                         onPressed: isLoading ||
@@ -672,7 +674,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                             : convertCurrency,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 14, horizontal: 12),
+                              vertical: AppSizes.p14, horizontal: AppSizes.p12),
                           backgroundColor: AppColors.primaryColor,
                           foregroundColor: AppColors.backgroundColor,
                           shape: RoundedRectangleBorder(
@@ -693,7 +695,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                               ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: AppSizes.h24),
                     if (recentConversions.isNotEmpty)
                       Container(
                         decoration: BoxDecoration(
@@ -711,7 +713,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                 color: AppColors.primaryColor,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: AppSizes.h8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -724,7 +726,7 @@ class _CurrencyConverterScreenState extends State<CurrencyConverterScreen> {
                                           margin:
                                               const EdgeInsets.only(bottom: 6),
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 8, horizontal: 8),
+                                              vertical: AppSizes.p8, horizontal: 8),
                                           decoration: BoxDecoration(
                                             color: AppColors.backgroundColor,
                                             borderRadius:

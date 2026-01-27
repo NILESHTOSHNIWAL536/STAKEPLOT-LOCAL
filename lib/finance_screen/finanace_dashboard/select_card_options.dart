@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart'
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Utils/credit_card.dart';
 import '../../Constants/colorcodes.dart';
 
@@ -53,7 +54,7 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
               fontWeight: FontWeight.w600,
               fontsize: 20),
           centerTitle: true,
-          actions: [SizedBox(width: 38)], // for symmetry
+          actions: [SizedBox(width: AppSizes.w40)], // for symmetry
         ),
       ),
       body: Padding(
@@ -80,7 +81,7 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
                   Navigator.pushNamed(context, options);
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.p12),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -98,7 +99,7 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
                         ),
                       ],
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.p16),
                     // margin: const EdgeInsets.only(bottom: 16),
                     child: Column(
                       children: [
@@ -108,14 +109,14 @@ class _SelectAnyOptionScreenState extends State<SelectAnyOptionScreen> {
                           height: 32,
                           color: AppColors.primaryColor,
                         ),
-                        SizedBox(height: 12),
+                        SizedBox(height: AppSizes.h12),
                         textStyleImage(
                             context: context,
                             text: titles[i],
                             c: AppColors.primaryColor,
                             fontWeight: FontWeight.w600,
                             fontsize: 18),
-                        SizedBox(height: 12),
+                        SizedBox(height: AppSizes.h12),
                         textStyleImage(
                             context: context,
                             text: subtitles[i],

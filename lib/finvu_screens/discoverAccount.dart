@@ -15,6 +15,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class DiscoverAccount extends StatefulWidget {
    DiscoverAccount({Key? key}) : super(key: key);
 
@@ -106,8 +108,8 @@ Widget getPopularBanks() {
 
   return Container(
     width: MediaQuery.of(context).size.width,
-    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-    padding: const EdgeInsets.symmetric(vertical: 8),
+    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p6),
+    padding: const EdgeInsets.symmetric(vertical: AppSizes.p8),
    
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +117,7 @@ Widget getPopularBanks() {
 
         /// HEADER
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p6),
           child: Text(
             "Popular Banks",
             style: FontManager().getTextStyle(
@@ -164,7 +166,7 @@ Widget bankGridItem(FinvuFIPInfo bankData) {
       child: Container(
         
 
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(AppSizes.p6),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primaryColor.withOpacity(0.08)
@@ -195,7 +197,7 @@ Widget bankGridItem(FinvuFIPInfo bankData) {
               ),
             ),
 
-            const SizedBox(height: 8),
+             SizedBox(height: AppSizes.h8),
 
             /// BANK NAME
             Text(
@@ -240,7 +242,7 @@ Widget bankGridItem(FinvuFIPInfo bankData) {
                     child: Row(
                       children: [
                         Icon(Icons.info_outline),
-                        SizedBox(width: 10,),
+                        SizedBox(width: AppSizes.w10),
                         Text(
                           FinvuStrings().unableToSupport,
                           style: FontManager().getTextStyle(context,
@@ -267,10 +269,10 @@ Widget bankGridItem(FinvuFIPInfo bankData) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 2.5,
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p10),
+      padding: EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p16),
       decoration: BoxDecoration(
-        // color: Colors.red,
+        // color:  AppColors.redColor,
         border: Border.all(color: AppColors.border)
       ),
       child: ListView.builder(
@@ -315,7 +317,7 @@ Widget getBackUi(FinvuFIPInfo bankData) {
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: AppSizes.p12),
         decoration: BoxDecoration(
           color: 
                Colors.transparent,
@@ -338,7 +340,7 @@ Widget getBackUi(FinvuFIPInfo bankData) {
               ),
             ),
 
-            const SizedBox(width: 12),
+            SizedBox(width: AppSizes.w12),
 
             /// BANK NAME
             Expanded(
@@ -487,7 +489,7 @@ Widget getBackUi(FinvuFIPInfo bankData) {
                 prefixIconColor: AppColors.primaryColor,
                 //prefixIconColor: Colorcodes.budgetDarkGreen,
                 filled: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
+                contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: AppSizes.p14),
                 hintText: lableText,
                 hintStyle:  FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,

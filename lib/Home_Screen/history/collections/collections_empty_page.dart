@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.d
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
+import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 import '../transactionHistoryScreen.dart';
 
@@ -37,14 +38,14 @@ class CollectionDetailsPage extends StatelessWidget {
     return Container(
       color: AppColors.newbg,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p12),
         child: Row(
           children: [
             /// BACK
             InkWell(
               onTap: () => Navigator.pop(context),
               child: const CircleAvatar(
-                backgroundColor: Colors.white,
+                backgroundColor: AppColors.backgroundColor,
                 child: Icon(Icons.arrow_back, size: 18, color: AppColors.accentColor),
               ),
             ),
@@ -65,7 +66,7 @@ class CollectionDetailsPage extends StatelessWidget {
       
             /// FILTER
             Container(
-               padding: const EdgeInsets.all(8),
+               padding: const EdgeInsets.all(AppSizes.p8),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(10),
@@ -105,7 +106,7 @@ void showCollectionSettingsModal(BuildContext context) {
 }
 Widget _summarySection(BuildContext context) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p12),
     child: Row(
       children: [
         _summaryCard(
@@ -115,7 +116,7 @@ Widget _summarySection(BuildContext context) {
           bgColor: AppColors.bg5,
           isSpent: true,
         ),
-        const SizedBox(width: 12),
+         SizedBox(width: AppSizes.w12),
         _summaryCard(
           context,
           title: "Remaining",
@@ -137,7 +138,7 @@ Widget _summaryCard(
 }) {
   return Expanded(
     child: Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(AppSizes.p14),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(14),
@@ -160,7 +161,7 @@ Widget _summaryCard(
                   color: AppColors.backgroundColor,
                 ),
            ),
-            const SizedBox(height: 6),
+            SizedBox(height: AppSizes.h6),
             Text(
             amount,
             style: FontManager().getTextStyle(
@@ -169,7 +170,7 @@ Widget _summaryCard(
               lWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: AppSizes.h6),
           Text(
             title,
             style: FontManager().getTextStyle(
@@ -206,7 +207,7 @@ Widget _transactionsUI(BuildContext context) {
 
   Widget _iconButton(String asset) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(AppSizes.p8),
       child: Center(
         child: AvatarProfileImageZero(
           url: asset,
@@ -222,7 +223,7 @@ Widget _transactionsUI(BuildContext context) {
     return Container(
       color: AppColors.border,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -237,9 +238,9 @@ Widget _transactionsUI(BuildContext context) {
               ],
             ),
       
-            const SizedBox(height: 30),
+            SizedBox(height: AppSizes.h30),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p30),
               child: Column(
                 children: [
                   AvatarProfileImage(url: HomePageIcons.noTransactionsInCollection2, width: 2, height: 6),
@@ -253,7 +254,7 @@ Widget _transactionsUI(BuildContext context) {
                     ),
                   ),
                         
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSizes.h8),
                         
                   Text(
                     "Start tracking your spending today and take control of your finances ✨",
@@ -265,7 +266,7 @@ Widget _transactionsUI(BuildContext context) {
                     ),
                   ),
                         
-                  const SizedBox(height: 30),
+                  SizedBox(height: AppSizes.h30),
                         
                   /// ADD TRANSACTION BUTTON
                   SizedBox(
@@ -287,7 +288,7 @@ Widget _transactionsUI(BuildContext context) {
                           context,
                           fontSize: 16,
                           lWeight: FontWeight.w500,
-                          color: Colors.white,
+                          color: AppColors.backgroundColor,
                         ),
                       ),
                     ),
@@ -319,7 +320,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -344,17 +345,15 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
                   ),
                 ),
               ),
-              const SizedBox(width: 40),
+              SizedBox(width: AppSizes.w40),
             ],
           ),
 
-          const SizedBox(height: 12),
-
+          SizedBox(height: AppSizes.h12),
           /// ALERT SECTION
           _alertCard(context),
 
-          const SizedBox(height: 12),
-
+          SizedBox(height: AppSizes.h12),
           _simpleTile(
             context,
             icon: Icons.file_upload_rounded,
@@ -376,7 +375,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             onTap: () {},
           ),
 
-          const SizedBox(height: 6),
+          SizedBox(height: AppSizes.h6),
 
           _dangerTile(
             context,
@@ -399,7 +398,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
   /// ---------------- ALERT CARD ----------------
   Widget _alertCard(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(AppSizes.p14),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.border),
         borderRadius: BorderRadius.circular(14),
@@ -431,7 +430,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             ],
           ),
 
-          const SizedBox(height: 6),
+          SizedBox(height: AppSizes.h6),
 
           Text(
             "Notify me when any transaction exceeds ₹[amount] in this collection.",
@@ -443,7 +442,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
           ),
 
           if (alertEnabled) ...[
-            const SizedBox(height: 10),
+             SizedBox(height: AppSizes.h10),
             TextField(
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
@@ -468,7 +467,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
     required VoidCallback onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p6),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.border),
         borderRadius: BorderRadius.circular(12),
@@ -500,15 +499,15 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
     required VoidCallback onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p6),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.red),
+        border: Border.all(color:  AppColors.redColor),
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: Colors.red.withOpacity(0.1),
-          child: Icon(icon, size: 18, color: Colors.red),
+          backgroundColor:  AppColors.redColor.withOpacity(0.1),
+          child: Icon(icon, size: 18, color:  AppColors.redColor),
         ),
         title: Text(
           title,
@@ -516,7 +515,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             context,
             fontSize: 14,
             lWeight: FontWeight.w500,
-            color: Colors.red,
+            color:  AppColors.redColor,
           ),
         ),
         onTap: onTap,

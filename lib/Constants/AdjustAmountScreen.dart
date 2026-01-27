@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/constants/app_styles.dart';
-
+import 'package:flutter_application_code_stakeplot/Constants/core/app_padding_sizes.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import '../Home_Screen/home_screen_state/home_page.dart';
 import 'font_manager.dart';
@@ -74,14 +74,14 @@ class _AdjustAmountScreenState extends State<AdjustAmountScreen> {
       backgroundColor: AppColors.accentColor,
       body: Center(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 24),
+          margin: const EdgeInsets.symmetric(horizontal:AppSizes.p22),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: AppColors.backgroundColor,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(bottom:15),
+            padding: const EdgeInsets.only(bottom:AppSizes.p14),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -90,7 +90,7 @@ class _AdjustAmountScreenState extends State<AdjustAmountScreen> {
                 /// ICON
                 Column(
                  children: [
-                     AvatarProfileImageZero(url: Finance.coins, width: 4, height: 12)
+                     AvatarProfileImageZero(url: Finance.coins, width: 4, height:12)
 
                 ],
                 
@@ -103,7 +103,7 @@ class _AdjustAmountScreenState extends State<AdjustAmountScreen> {
             
                 /// TEXT
                  Padding(
-                   padding: const EdgeInsets.only(bottom:20),
+                   padding: const EdgeInsets.only(bottom:AppSizes.p20),
                    child: Text(
                     "Please adjust the amount below the spend\namount to reduce the overspending.",
                     textAlign: TextAlign.center,
@@ -130,7 +130,7 @@ class _AdjustAmountScreenState extends State<AdjustAmountScreen> {
                 Container(
                  height: MediaQuery.of(context).size.height / 16.5, // ≈ 48px
 
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.grey),
                     borderRadius: BorderRadius.circular(10),
@@ -198,7 +198,7 @@ class _AdjustAmountScreenState extends State<AdjustAmountScreen> {
 
                 /// KEYPAD
                 Padding(
-                  padding: const EdgeInsets.only(top:20),
+                  padding: const EdgeInsets.only(top:AppSizes.p20),
                   child: Column(
                     children: [
                       for (var row in [
@@ -208,7 +208,7 @@ class _AdjustAmountScreenState extends State<AdjustAmountScreen> {
                         [".", "0", "back"],
                       ])
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.only(bottom: AppSizes.p12),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: row.map((e) {

@@ -11,6 +11,8 @@ import "package:flutter_application_code_stakeplot/controllers/user-controller.d
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class CommunityProfileScreen extends StatefulWidget {
   String id;
   CommunityProfileScreen({super.key, required this.id});
@@ -116,7 +118,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
   Widget networkFriends(String network, String count, IconData icon) {
     return Container(
         // width: MediaQuery.sizeOf(context).width/2.4,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 7),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 7),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: AppColors.primaryColor, width: .5),

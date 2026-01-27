@@ -3,6 +3,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/marks.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class MaskedNameDialogBox {
   static  showMaskedNameDialog(BuildContext context) {
     showDialog(
@@ -22,7 +24,7 @@ class MaskedNameDialogBox {
 
   static Widget _buildDialogContent(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(AppSizes.p20),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(16.0),
@@ -47,17 +49,17 @@ class MaskedNameDialogBox {
               color: AppColors.accentColorOpacity,
             ),
           ),
-          const SizedBox(height: 12),
+           SizedBox(height: AppSizes.h12),
           // Description
-          const Text(
+           Text(
             'Use a masked name to post, like, comment, and more while keeping your identity private.',
             style: TextStyle(
               fontSize: 16,
-              color: Colors.black54,
+              color: AppColors.grey,
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 20),
+           SizedBox(height: AppSizes.h20),
           // Close button
           Row(
             children: [
@@ -73,18 +75,18 @@ class MaskedNameDialogBox {
                   'Create ',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.blue,
+                    color: AppColors.primaryColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text(
+                child:  Text(
                   'Close',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.blue,
+                    color: AppColors.grey,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

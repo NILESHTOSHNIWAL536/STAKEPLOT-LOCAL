@@ -67,7 +67,7 @@
 //           shape: RoundedRectangleBorder(
 //             borderRadius: BorderRadius.circular(16 * fontScale),
 //           ),
-//           insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+//           insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p24),
 //           title: Row(
 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //             children: [
@@ -275,7 +275,7 @@
 //     return Scaffold(
 //       body: SafeArea(
 //         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
+//           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: AppSizes.p8),
 //           child: Obx(() => Column(
 //                 children: [
 //                   if (isLoading.value)
@@ -403,6 +403,8 @@ import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
 import 'package:flutter_application_code_stakeplot/repository/autopay_repository.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class CardStackScreen extends StatefulWidget {
   @override
   _CardStackScreenState createState() => _CardStackScreenState();
@@ -440,7 +442,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16 * fontScale),
           ),
-          insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p24),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -470,7 +472,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                     color: AppColors.backgroundColor,
                   ),
                 ),
-                const SizedBox(height: 12),
+                 SizedBox(height: AppSizes.h12),
                 Expanded(
                   child: GridView.builder(
                     itemCount: 31,
@@ -653,7 +655,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                       onPressed: () => _onViewAll(context),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 12 * fontScale, vertical: 8 * fontScale),
+                            horizontal: AppSizes.p12 * fontScale, vertical: AppSizes.p8 * fontScale),
                         backgroundColor: AppColors.backgroundColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8 * fontScale),
@@ -671,7 +673,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 12.0),
+                SizedBox(height: AppSizes.h12),
                 // Horizontal scroll row showing up to 2 cards
                 Container(
                  
@@ -680,7 +682,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: cards.length,
                     separatorBuilder: (context, index) =>
-                        SizedBox(width: 12.0),
+                        SizedBox(width: AppSizes.w12),
                     itemBuilder: (context, index) {
                       final card = cards[index];
                       return SizedBox(
@@ -703,7 +705,7 @@ class _CardStackScreenState extends State<CardStackScreen> {
                 // If no cards to preview, show message
                 if (cards.isEmpty)
                   Padding(
-                    padding: EdgeInsets.only(top: 16.0),
+                    padding: EdgeInsets.only(top:AppSizes.p16),
                     child: Text(
                       "No autopay cards available.",
                       style: FontManager().getTextStyle(

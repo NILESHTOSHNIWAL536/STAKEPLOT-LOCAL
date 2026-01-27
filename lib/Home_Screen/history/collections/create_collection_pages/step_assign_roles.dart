@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../Constants/colors.dart';
+import '../../../../Constants/core/app_padding_sizes.dart';
 import '../../../../Constants/font_manager.dart';
 import '../create_collection_data.dart';
 
@@ -40,7 +41,7 @@ class _StepAssignRolesState extends State<StepAssignRoles> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
+           SizedBox(height: AppSizes.h20),
 
           Text(
             "Assign roles",
@@ -51,7 +52,7 @@ class _StepAssignRolesState extends State<StepAssignRoles> {
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
 
           Expanded(
             child: ListView.builder(
@@ -66,7 +67,7 @@ class _StepAssignRolesState extends State<StepAssignRoles> {
             ),
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.h12),
 
           SizedBox(
             width: double.infinity,
@@ -105,7 +106,7 @@ class _StepAssignRolesState extends State<StepAssignRoles> {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p10),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
@@ -123,7 +124,7 @@ class _StepAssignRolesState extends State<StepAssignRoles> {
             ))
           ),
 
-          const SizedBox(width: 12),
+          SizedBox(width: AppSizes.w12),
 
           Expanded(
             child: Text(
@@ -170,7 +171,7 @@ class _StepAssignRolesState extends State<StepAssignRoles> {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.25,
         height: MediaQuery.of(context).size.height * 0.04,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p6),
         decoration: BoxDecoration(
           color:
               isSelected ? AppColors.primaryColor : AppColors.border,

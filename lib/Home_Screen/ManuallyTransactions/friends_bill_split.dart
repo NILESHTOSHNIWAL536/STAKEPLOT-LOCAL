@@ -11,6 +11,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 RxList addedUser = [].obs;
 RxList addedMembers = [].obs;
 
@@ -68,9 +70,9 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
         // height: MediaQuery.of(context).size.height / 2,
         child: Padding(
           padding: EdgeInsets.only(
-            top: 24,
-            left: 18,
-            right: 18,
+            top:AppSizes.p24,
+            left:AppSizes.p18,
+            right:AppSizes.p18,
             bottom:
                 MediaQuery.of(context).viewInsets.bottom, // Adjust for keyboard
           ),
@@ -87,9 +89,9 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                     color: AppColors.bg1,
                   ),
                 ),
-                const SizedBox(height: 10),
+                 SizedBox(height: AppSizes.h10),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
                   child: InputDat(HomepageStringsDart().searchLabel,
                       TextInputType.name, textController),
                 ),
@@ -102,7 +104,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                     color: AppColors.bg1,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
                 
                 commentedData(),
                 if (widget.showContinueButton)
@@ -169,7 +171,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                       child: getButton(context, "Continue"),
                     ),
                   ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.h16),
               ],
             ),
           ),
@@ -266,7 +268,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                       });
                     },
                     child: Container(
-                      margin: EdgeInsets.all(2),
+                      margin: EdgeInsets.all(AppSizes.p2),
                       decoration: BoxDecoration(
                         border: addedUser.contains(values)
                             ? Border.all(
@@ -280,7 +282,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                         borderRadius: BorderRadius.circular(
                             8.0), // Optional: for rounded corners
                       ),
-                      padding: const EdgeInsets.all(4.0),
+                      padding: const EdgeInsets.all(AppSizes.p4),
                       child: Column(
                         children: [
                           AvatarProfile(

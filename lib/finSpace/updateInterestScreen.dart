@@ -9,6 +9,8 @@ import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScr
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class UpdateInterestScreen extends StatefulWidget {
   const UpdateInterestScreen({Key? key}) : super(key: key);
 
@@ -67,7 +69,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                   Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenSize.width * 0.05,
-                      vertical: 16,
+                      vertical: AppSizes.p16,
                     ),
                     child: UpdateTitleWidget(),
                   ),
@@ -77,7 +79,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                   Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenSize.width * 0.05,
-                      vertical: 8,
+                      vertical: AppSizes.p8,
                     ),
                     child: PreviouslySelectedInterestsWidget(
                       onCategoryToggle: _toggleCategory,
@@ -88,7 +90,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                   Align(
                      alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.all(AppSizes.p12),
                       child: Obx(
                         () => 
                          AnimatedContainer(
@@ -97,7 +99,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                                 alignment: Alignment.topCenter,
                                
                                 child: Padding(
-                                  padding: EdgeInsets.all(12),
+                                  padding: EdgeInsets.all(AppSizes.p12),
                                   child: isListEnabled.value? UpdateButtonWidget(
                                     onPressed: () {
                                       final combinedList = [
@@ -119,7 +121,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                       ),
                     ),
                   ),
-                   SizedBox(height: 16),
+                   SizedBox(height: AppSizes.h16),
                 ],
               ),
             ),
@@ -223,7 +225,7 @@ class FilteredCategoriesListWidget extends StatelessWidget {
     final screenSize = MediaQuery.of(context).size;
 if (categoriesInterest.keys.every((category) => selectedCategories.contains(category))) {
       return Padding(
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.p16),
         child: Center(
           child: Text(
             'All interests selected',
@@ -360,7 +362,7 @@ class UpdateTitleWidget extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 8),
+        SizedBox(height: AppSizes.h8),
         Text(
           'Tap to add new interests or deselect current ones below.',
           style: FontManager2().getTextStyle(
@@ -404,7 +406,7 @@ class PreviouslySelectedInterestsWidget extends StatelessWidget {
               color: AppColors.bg1,
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
           Wrap(
            alignment: WrapAlignment.start, // Ensure chips start from the left
                   spacing: screenSize.width * 0.015, // Consistent with FilteredCategoriesListWidget

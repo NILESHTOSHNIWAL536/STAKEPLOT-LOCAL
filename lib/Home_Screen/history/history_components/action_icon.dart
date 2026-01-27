@@ -54,7 +54,7 @@ class ActionIcons extends StatelessWidget {
                 ? () => _showHideConfirmationDialog(context, transaction.id, index)
                 : null,
             child: hide
-                ? Icon(
+                ?const  Icon(
                     Icons.visibility_outlined,
                     color: AppColors.primaryColor,
                     size: 18,

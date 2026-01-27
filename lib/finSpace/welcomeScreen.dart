@@ -7,6 +7,8 @@ import 'package:flutter_application_code_stakeplot/components/bottomNavigations.
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/marks.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
@@ -83,7 +85,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.backgroundColor,
                  
-                  padding: EdgeInsets.symmetric(vertical: 12),
+                  padding: EdgeInsets.symmetric(vertical: AppSizes.p12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -135,7 +137,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     letterSpacing: 0,
                     color: AppColors.finSpaceColor),
               ),
-              const SizedBox(height: 20),
+               SizedBox(height: AppSizes.h20),
               AvatarProfileImage(
                 url: FinSpaceIcons.welcome,
                 height: 3,

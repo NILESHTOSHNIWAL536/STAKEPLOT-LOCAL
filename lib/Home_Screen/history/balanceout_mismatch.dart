@@ -5,6 +5,8 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/balanceou
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 class GetMisMatchSlider extends StatefulWidget {
    BuildContext parentContext;
    List<TransactionModel> transactions;
@@ -56,7 +58,7 @@ class _GetMisMatchSliderState extends State<GetMisMatchSlider> {
             ),
           ),
         ),
-        const SizedBox(height: 12),
+         SizedBox(height: AppSizes.h12),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
@@ -100,7 +102,7 @@ class BalanceOutExample extends StatelessWidget {
   Widget getExample(context){
     return ListView(
       children: [
-          const SizedBox(height: 15),
+          SizedBox(height: AppSizes.h15),
               Text(
                 "💡 Example:",
                 style: fontManager.getTextStyle(
@@ -109,7 +111,7 @@ class BalanceOutExample extends StatelessWidget {
                   fontSize: 16,
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: AppSizes.h10),
               ..._buildExampleLines(context),
       ],
     );
@@ -123,7 +125,7 @@ class BalanceOutExample extends StatelessWidget {
       _exampleLine(context, "-₹800 debit"),
       _exampleLine(context, "-₹200 debit"),
       _exampleLine(context, "+₹500 credit"),
-      const SizedBox(height: 15),
+      SizedBox(height: AppSizes.h15),
       _exampleLine(context, "✅ If ₹1000 is the highest, then ₹800 + ₹200 = ₹1000 → Valid, Balanced Amount = 500",
           color: AppColors.creditColor),
       _exampleLine(context, "❌  If value excluded then the highest amount → Doesn't balance",
@@ -157,13 +159,10 @@ class BalanceOutMismatchUI extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
    
 
-    return Container(
-      // color: AppColors.backgroundColor,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-          child:  GetDeis(context),
-        ),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: AppSizes.p10),
+        child:  GetDeis(context),
       ),
     );
   }
@@ -173,33 +172,68 @@ class BalanceOutMismatchUI extends StatelessWidget {
     return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Oops! The shared amounts don't add up correctly.",
-                style: fontManager.getTextStyle(
-                  context,
-                  lWeight: FontWeight.w500,
-                  fontSize: 15,
-                  color: Colorcodes.redDeleteIcon.withOpacity(0.9),
+              Container(
+                padding: const EdgeInsets.all(AppSizes.p12),
+                decoration: BoxDecoration(
+
+                   color: const Color(0xFFFEF2F2), // background
+    borderRadius: BorderRadius.circular(12), // border-radius
+    border: Border.all(
+      color: const Color(0xFFFEE2E2), // border color
+      width: 1,
+    ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.backspace
+                        ),
+                        Text(
+                          "Oops! The shared amounts don't add up correctly.",
+                          style: fontManager.getTextStyle(
+                            context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 15,
+                            color: AppColors.accentColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: AppSizes.h10),
+                    Text(
+                      "In Balance Out, the highest amount selected is considered the main transaction. The rest of the amounts must add up exactly to it.",
+                      style: fontManager.getTextStyle(
+                        context,
+                        lWeight: FontWeight.w400,
+                        fontSize: 15,
+                        color: AppColors.grey,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 10),
-              Text(
-                "In Balance Out, the highest amount selected is considered the main transaction. The rest of the amounts must add up exactly to it.",
-                style: fontManager.getTextStyle(
-                  context,
-                  lWeight: FontWeight.w400,
-                  fontSize: 15,
-                  color: Colors.black87,
+              SizedBox(height: AppSizes.h20),
+              Container(
+                padding: const EdgeInsets.all(AppSizes.p12),
+                decoration: BoxDecoration(
+
+                   color: const Color(0xFFFEF2F2), // background
+    borderRadius: BorderRadius.circular(12), // border-radius
+    border: Border.all(
+      color: const Color(0xFFFEE2E2), // border color
+      width: 1,
+    ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "👉 Please review and enter values that add up correctly.",
-                style: fontManager.getTextStyle(
-                  context,
-                  lWeight: FontWeight.w500,
-                  fontSize: 15,
-                  color: Colors.deepOrange,
+                child: Text(
+                  "Please review and enter values that add up correctly.",
+                  style: fontManager.getTextStyle(
+                    context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 15,
+                    color: AppColors.accentColor,
+                  ),
                 ),
               ),
  

@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/finSpace/updateInterestScreen
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../image_service/avatarProfile.dart';
 import '../routes/route_user_login.dart';
 
@@ -81,7 +82,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p4),
       child: Container(
          height: MediaQuery.sizeOf(context).height/18,
         child: GestureDetector(
@@ -93,7 +94,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                   Navigator.pop(context);
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(AppSizes.p8),
                   child:  Icon(
                     Icons.arrow_back,
                     color: AppColors.grey,
@@ -128,7 +129,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
 
               },
               child: _buildMenuItem('View Profile', hasArrow: true)),
-            const SizedBox(height: 12),
+             SizedBox(height: AppSizes.h12),
             GestureDetector(
               onTap: (){
                   Navigator.push(
@@ -139,7 +140,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
 
               },
               child: _buildMenuItem('Saved', hasArrow: true)),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.h12),
             GestureDetector(
               onTap: (){
                   Navigator.push(
@@ -150,7 +151,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
 
               },
               child: _buildMenuItem('Update Interest', hasArrow: true)),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.h12),
             _buildMenuItem('Message And Replies', hasToggle: true),
            
           ],
@@ -162,7 +163,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   Widget _buildMenuItem(String title, {bool hasArrow = false, bool hasToggle = false}) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p10),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(8),
@@ -213,9 +214,9 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
 
                 },
                 // padding: EdgeInsets.zero,
-                activeColor: const Color(0xFF4A4A68),
-                inactiveThumbColor: Colors.grey,
-                inactiveTrackColor: Colors.grey.withOpacity(0.3),
+                activeColor: AppColors.primaryColor,
+                inactiveThumbColor: AppColors.grey,
+                inactiveTrackColor: AppColors.grey.withOpacity(0.3),
               )),),
             )
         ],

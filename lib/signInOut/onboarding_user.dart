@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/colors.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/font_manager.dart';
 
 class UserOnboarding extends StatefulWidget {
@@ -18,13 +19,13 @@ class _UserOnboardingState extends State<UserOnboarding> {
 
     _OnboardingData(
       image: Sign.userOnboard,
-      title: 'Stakeplot is more than just\ntracking numbers',
-      description: 'It helps you understand your finances deeply and build smart, lasting habits. It turns money management into a mindful way of living.',
+      title: 'Stakeplot is more than just\ntracking numbers,',
+      description: 'it helps you understand your finances deeply and build smart, lasting habits. It turns money management into a mindful way of living.',
     ),
 
     _OnboardingData(
      image: Sign.userOnboard,
-      title: 'Your financial world deserves a\nsafe space',
+      title: 'Your financial world deserves a\nsafe space.',
       description: 'Stakeplot keeps it private and secure while guiding you gently, one step at a time.',
     ),
 
@@ -42,7 +43,8 @@ class _UserOnboardingState extends State<UserOnboarding> {
       body: SafeArea(
         child: Column(
           children: [
-            Expanded(
+            Container(
+              height: MediaQuery.sizeOf(context).height/1.3,
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: pages.length,
@@ -62,19 +64,19 @@ class _UserOnboardingState extends State<UserOnboarding> {
                 (index) => AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: currentIndex == index ? 18 : 6,
+                  width: 6,
                   height: 6,
                   decoration: BoxDecoration(
                     color: currentIndex == index
-                        ? const Color(0xFF6C6E8E)
-                        : const Color(0xFFD6D6D6),
+                        ? AppColors.primaryColor
+                        : AppColors.grey,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
             ),
 
-            const SizedBox(height: 24),
+             SizedBox(height: AppSizes.h24),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -111,7 +113,7 @@ class _UserOnboardingState extends State<UserOnboarding> {
               ),
             ),
 
-            const SizedBox(height: 30),
+            SizedBox(height: AppSizes.h30),
           ],
         ),
       ),
@@ -130,33 +132,47 @@ class _OnboardingPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// IMAGE
-          AvatarProfileImageZero(url: data.image, width: 1, height: 2.2),
+          Center(child: Padding(
+            padding: const EdgeInsets.only(left:AppSizes.p20),
+            child: AvatarProfileImageZero(url: data.image, width: 1, height: 2.2),
+          )),
          
 
-          const SizedBox(height: 40),
+          SizedBox(height: AppSizes.h40),
 
-           Text(data.title, 
-           textAlign: TextAlign.center,
-           style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                    color:  AppColors.accentColor
-                                  ),),
+          RichText(
+  text: TextSpan(
+    children: [
+      /// TITLE PART
+      TextSpan(
+        text: '${data.title} ',
+        style: FontManager().getTextStyle(
+          context,
+          lWeight: FontWeight.w600,
+          fontSize: 22,
+          lineHeight: 34 / 24,
+          color: AppColors.primaryColor,
+        ),
+      ),
 
-          
-          const SizedBox(height: 16),
+      /// DESCRIPTION PART
+      TextSpan(
+        text: data.description,
+        style: FontManager().getTextStyle(
+          context,
+          lWeight: FontWeight.w400,
+          fontSize: 16,
+          lineHeight: 24 / 18,
+          color: AppColors.grey,
+        ),
+      ),
+    ],
+  ),
+)
 
-          Text(data.description, 
-          textAlign: TextAlign.center,
-           style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    color:  AppColors.greyCard
-                                  ),)
         
           //     color: Color(0xFF7A7A7A),
           

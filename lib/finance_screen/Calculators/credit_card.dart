@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/ex
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/calculator_utils.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 class CreditCard extends StatefulWidget {
@@ -135,7 +136,7 @@ class _CreditCardState extends State<CreditCard> {
 
   ),child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(AppSizes.p12),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,7 +146,7 @@ class _CreditCardState extends State<CreditCard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left:10,bottom:10),
+                      padding: const EdgeInsets.only(bottom:AppSizes.p10,right:AppSizes.p2,left:AppSizes.p4),
                       child: Container(
                                width: MediaQuery.sizeOf(context).width/10,
                            
@@ -178,7 +179,7 @@ class _CreditCardState extends State<CreditCard> {
                    SizedBox(  width: MediaQuery.of(context).size.width * 0.15)
 ,
                     Padding(
-                      padding: const EdgeInsets.only(left: 14),
+                      padding: const EdgeInsets.only(left:AppSizes.p14),
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -199,7 +200,7 @@ class _CreditCardState extends State<CreditCard> {
                         },
                        
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom:10),
+                          padding: const EdgeInsets.only(bottom:AppSizes.p10,right:AppSizes.p4,),
                           child: Text(
                             "Credit Card Payoff",
                             style: FontManager().getTextStyle(
@@ -229,8 +230,8 @@ class _CreditCardState extends State<CreditCard> {
                   },
                   child: _isInfoVisible
                       ? Container(
-                          margin: EdgeInsets.symmetric(vertical: 4),
-                          padding: EdgeInsets.all(12),
+                          margin: EdgeInsets.symmetric(vertical: AppSizes.p4),
+                          padding: EdgeInsets.all(AppSizes.p12),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor.withOpacity(0.9),
                             borderRadius: BorderRadius.circular(12),
@@ -270,13 +271,16 @@ class _CreditCardState extends State<CreditCard> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                textStyle(
-                  
-                    context: context,
-                    fontsize: 20,
-                    fontWeight: FontWeight.w800,
-                    c: AppColors.primaryColor,
-                    text: "Breakdown"),
+                 Text(
+                            "Breakdown",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w800,
+                              fontSize: 20,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+               
               ],
             ),
           ),
@@ -286,7 +290,7 @@ class _CreditCardState extends State<CreditCard> {
                         borderRadius: BorderRadius.circular(12)),
                      child: graph()),
                 SizedBox(
-                  height: 10,
+                  height: AppSizes.h10,
                 ),
                       CustomExpansionTile(
                         howToUseContent: [
@@ -368,7 +372,14 @@ PreferredSizeWidget appbarHeader(String title, BuildContext context) {
   return AppBar(
     centerTitle: true,
     title: Text(title,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        
+        style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 16,
+                              
+                            ),)
+        
   );
 }
 

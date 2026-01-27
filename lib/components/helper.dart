@@ -25,7 +25,10 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week_of_year/week_of_year.dart';
 
-import '../Home_Screen/ManuallyTransactions/manually.dart';
+import '../Constants/core/app_padding_sizes.dart';
+import '../Constants/core/app_shadows.dart';
+import '../Constants/core/container_border.dart';
+import '../Home_Screen/ManuallyTransactions/cashTransaction.dart';
 import '../backed_connections/bankServices/pdf.dart';
 import '../Home_Screen/history/amount_range.dart';
 import '../repository/transactions_repository.dart';
@@ -133,7 +136,7 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 10),
+                        horizontal: AppSizes.p14, vertical: AppSizes.p10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -196,7 +199,7 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
               ],
             ),
             margin:
-                const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 6),
             child: ListTile(
               leading: SizedBox(
                 width: 40,
@@ -218,7 +221,7 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
                     fontsize: 15,
                     fontWeight: FontWeight.w500,
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: AppSizes.h4),
                   textStyle(
                     context: context,
                     text: "Acc No: ${account.maskedAccNumber}",
@@ -293,7 +296,7 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
 //                   ),
 //                 ],
 //               ),
-//               margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+//               margin: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 6),
 //               child: ListTile(
 //                 leading: SizedBox(
 //                   width: 40,
@@ -367,7 +370,7 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
 //                 account["accountId"].toString();
 
 //         Widget content = Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+//           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p4),
 //           child: Row(
 //             mainAxisAlignment: MainAxisAlignment.center,
 //             crossAxisAlignment: CrossAxisAlignment.center,
@@ -415,8 +418,8 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
 //           },
 //           child: isSelected
 //               ? Container(
-//                   margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-//                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+//                   margin: EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
+//                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
 //                   decoration: BoxDecoration(
 //                     color: AppColors.primaryColor,
 //                     borderRadius: BorderRadius.circular(8),
@@ -424,14 +427,14 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
 //                   child: content,
 //                 )
 //               : Container(
-//                   margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-//                   padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+//                   margin: EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
+//                   padding: EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
 //                   child: DottedBorderBox(
 //                     dashWidth: 4,
 //                     space: 5,
 //                     dashHeight: 1,
 //                     color: AppColors.grey,
-//                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+//                     padding: EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p2),
 //                     child: content,
 //                   ),
 //                 ),
@@ -456,7 +459,7 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
             : masked;
 
         Widget content = Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -471,7 +474,7 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
                   fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: AppSizes.w6),
               Center(
                 child: textStyleImage(
                   context: context,
@@ -510,9 +513,9 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
           child: isSelected
               ? Container(
                   margin:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(8),
@@ -521,11 +524,11 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
                 )
               :  Container(
                  margin:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
                 decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: AppColors.filterContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: content,
@@ -538,7 +541,7 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
 
 Widget getHeader(context, text) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p12),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -639,12 +642,12 @@ Widget getListItemListTile(String no, String MorY, context) {
 
 Widget getCheckBoxwithText(BuildContext context, String text) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+    margin: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 7),
     child: Obx(() {
       bool isSelected = accountIdPdf.value == text;
 
       Widget content = Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p4),
         child: textStyleImage(
             context: context,
             text: text,
@@ -667,9 +670,9 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
               )
             : Container(
                  margin:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
                 decoration: BoxDecoration(
                   color: AppColors.border,
                   borderRadius: BorderRadius.circular(8),
@@ -685,7 +688,7 @@ Widget getCheckBoxwithText2(
     BuildContext context, String text, VoidCallback onTap) {
   return Container(
     
-    margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+    margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 4),
     child: Obx(() {
       bool isSelected = accountIdPdf.value == text;
       Widget content = Padding(
@@ -722,7 +725,7 @@ Widget getCheckBoxwithText2(
         },
         child: isSelected
             ? Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p2),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
@@ -730,9 +733,9 @@ Widget getCheckBoxwithText2(
                 child: content,
               )
             :  Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                padding:const  EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p2),
                 decoration: BoxDecoration(
-                  color: AppColors.border,
+                  color: AppColors.filterContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: content,
@@ -754,6 +757,7 @@ Widget filterTransaction(context) {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
+              SizedBox(width: AppSizes.w12),
             getCheckBoxwithText2(context, "Credit", () {
               onChanedAutoTransactionStatus(context);
               // Navigator.pop(context);
@@ -768,9 +772,9 @@ Widget filterTransaction(context) {
             }),
             bankAccountLinkedList.length >= 2
                 ? Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                  margin: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 2),
                   child: getBankAccountListForFilter(context, false))
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
 
             Obx(
               () => GestureDetector(
@@ -778,9 +782,9 @@ Widget filterTransaction(context) {
                 child: Container(
                   child: showAmountFilter.value
                       ? Container(
-                        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 4),
+                        margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSizes.p12, vertical: AppSizes.p4),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(8),
@@ -803,11 +807,11 @@ Widget filterTransaction(context) {
                           ),
                         )
                       : Container(
-               margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+               margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
               decoration: BoxDecoration(
-                color: AppColors.border,
+                color: AppColors.filterContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
               child:  Row(
@@ -816,7 +820,7 @@ Widget filterTransaction(context) {
                                 if (showAmountFilter.value)
                                   const Icon(Icons.check,
                                       size: 18, color: Colors.green),
-                                const SizedBox(width: 4),
+                                SizedBox(width: AppSizes.w4),
                                 Text(
                                   "Filter by Amount",
                                   style: FontManager().getTextStyle(
@@ -833,7 +837,7 @@ Widget filterTransaction(context) {
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: AppSizes.w10),
             // --------- Date Button ---------
             Obx(
               () => GestureDetector(
@@ -841,9 +845,9 @@ Widget filterTransaction(context) {
                 child: Container(
                   child: showDateFilter.value
                       ? Container(
-                         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+                         margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(8),
@@ -869,11 +873,11 @@ Widget filterTransaction(context) {
                           ),
                         )
                       : Container(
-               margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+               margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
               decoration: BoxDecoration(
-                color: AppColors.border,
+                color: AppColors.filterContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
               child:  Row(
@@ -899,10 +903,10 @@ Widget filterTransaction(context) {
         ),
       ),
       Obx(() => showAmountFilter.value
-          ? AmountRangeField()
+          ? const AmountRangeField()
           : const SizedBox.shrink()),
       Obx(() =>
-          showDateFilter.value ? DateRangeField() : const SizedBox.shrink()),
+          showDateFilter.value ? const DateRangeField() : const SizedBox.shrink()),
       // AmountRangeField(),
       // DateRangeField()
     ],
@@ -1153,7 +1157,7 @@ Widget manualTransactionButton( BuildContext context) {
     onTap: () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ManualTransactionPage()),
+        MaterialPageRoute(builder: (context) => const ManualTransactionPage()),
       );
     },
     borderRadius: BorderRadius.circular(10),
@@ -1165,14 +1169,7 @@ Widget manualTransactionButton( BuildContext context) {
         // base white fill
         color: AppColors.backgroundColor,
         // semi-opaque white overlay (matches your linear-gradient with same stops)
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColors.backgroundColor.withOpacity(0.80),
-            AppColors.backgroundColor.withOpacity(0.80),
-          ],
-        ),
+        
         borderRadius: BorderRadius.circular(10), // nice rounded corners similar to SVG
         border: Border.all(
           color: AppColors.primaryColor, // stroke color from SVG
@@ -1180,11 +1177,7 @@ Widget manualTransactionButton( BuildContext context) {
         ),
         // subtle elevation feel — optional, remove if you don't want it
         boxShadow: [
-          BoxShadow(
-            color: AppColors.accentColor.withOpacity(0.03),
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
+          AppShadows.soft
         ],
       ),
       child: Center(
@@ -1198,7 +1191,7 @@ Widget manualTransactionButton( BuildContext context) {
               width: 5,
               height: 32,
             ),
-        const SizedBox(width: 8),
+        SizedBox(width: AppSizes.w8),
         
         
             // Text label
@@ -1217,4 +1210,18 @@ Widget manualTransactionButton( BuildContext context) {
       ),
     ),
   );
+}
+
+Widget globalbackArrow(){
+  return  const CustomStyledContainer(
+                    radius: 20,
+                    child: Padding(
+                      padding:  EdgeInsets.all(AppSizes.p8),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: AppColors.accentColor,
+                        size: 24,
+                      ),
+                    ),
+                  );
 }

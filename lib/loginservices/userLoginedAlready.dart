@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/two_factor_email_verification.dart';
 import 'package:get/get.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/font_manager.dart';
 import '../repository/auth_service/otp_service.dart';
 
@@ -26,7 +27,7 @@ import '../repository/auth_service/otp_service.dart';
 //   Widget build(BuildContext context) {
 //     var body = data['explanation'];
 //     return Container(
-//       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+//       padding: EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p10),
 //       width: MediaQuery.of(context).size.width,
 //       height: MediaQuery.of(context).size.height / 2,
 //       decoration: BoxDecoration(
@@ -86,7 +87,7 @@ import '../repository/auth_service/otp_service.dart';
 
 //   Widget getContainer(context, text) {
 //     return Container(
-//         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+//         padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p10),
 //         width: MediaQuery.of(context).size.width / 1.1,
 //         child: textStyle(context: context, text: text, fontsize: 14));
 //   }
@@ -116,12 +117,12 @@ class UserLoginedAlready extends StatelessWidget {
     final user = body['user'] is Map ? body['user'] : {};
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p10),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 1.8,
-      decoration: BoxDecoration(
+      decoration:const  BoxDecoration(
         color: AppColors.backgroundColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius:  BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -147,10 +148,10 @@ class UserLoginedAlready extends StatelessWidget {
             child: Icon(Icons.warning),
           ),
 
-          _item(context, body['message'] ?? "Account already active", 18, AppColors.accentColor),
-          _item(context, "Your email account is currently logged in on another device. For security reasons, you can only be logged in on one device at a time.", 16, AppColors.grey),
+          _item(context, body['message'] ?? "Account already active", 18, AppColors.accentColor, 28),
+          _item(context, "Your email account is currently logged in on another device. For security reasons, you can only be logged in on one device at a time.", 14, AppColors.grey, 23),
                     Container(
-                      padding: EdgeInsets.all(12),
+                      padding: EdgeInsets.all(AppSizes.p12),
             width: MediaQuery.of(context).size.width / 1.2,
             height: MediaQuery.of(context).size.height / 12,
             decoration: BoxDecoration(
@@ -170,7 +171,7 @@ class UserLoginedAlready extends StatelessWidget {
             child: Row(
               children: [
                  Container(
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.all(AppSizes.p12),
              decoration: BoxDecoration(
                           shape: BoxShape.circle,
                            color: const Color(0xFFCACCEC),
@@ -182,16 +183,16 @@ class UserLoginedAlready extends StatelessWidget {
                         ),
                         child: Icon(Icons.phone_android_outlined),
                         ),
-                        SizedBox(width: 12,),
+                        SizedBox(width: AppSizes.w12),
                  Text(
                      loggedDevice['device'] ??"Iphone",
                     style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold, fontSize: 15, color:AppColors.accentColor ),
+                        lWeight: FontWeight.w500, fontSize: 15, color:AppColors.accentColor ),
                   ),
                  Text(
                      loggedDevice['brand'] ??"Iphone",
                     style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold, fontSize: 15, color:AppColors.accentColor ),
+                        lWeight: FontWeight.w500, fontSize: 15, color:AppColors.accentColor ),
                   )
                  
                      
@@ -200,7 +201,7 @@ class UserLoginedAlready extends StatelessWidget {
           ),
         
 
-          const SizedBox(height: 20),
+          SizedBox(height: AppSizes.h20),
 
           InkWell(
             onTap: () {
@@ -231,21 +232,21 @@ class UserLoginedAlready extends StatelessWidget {
                   ? getspinner(context, 30):
                   Container(
     width: MediaQuery.of(context).size.width / 1.2,
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p18),
     decoration: BoxDecoration(
         color: AppColors.redColor, borderRadius: BorderRadius.circular(8)),
     child: Center(
       child: Text(
          "Logout Other device",
         style: FontManager().getTextStyle(context,
-            lWeight: FontWeight.bold, fontSize: 15, color:AppColors.backgroundColor ),
+            lWeight: FontWeight.w500, fontSize: 15, color:AppColors.backgroundColor ),
       ),
     ),
   )
             ),
           ),
         
-         const SizedBox(height: 10),
+         SizedBox(height: AppSizes.h10),
           InkWell(
             onTap: () {
             
@@ -256,14 +257,14 @@ class UserLoginedAlready extends StatelessWidget {
                   ? getspinner(context, 30):
                   Container(
     width: MediaQuery.of(context).size.width / 1.2,
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p18),
     decoration: BoxDecoration(
         color: AppColors.border, borderRadius: BorderRadius.circular(8)),
     child: Center(
       child: Text(
          "Cancel",
         style: FontManager().getTextStyle(context,
-            lWeight: FontWeight.bold, fontSize: 15, color:AppColors.accentColor ),
+            lWeight: FontWeight.w500, fontSize: 15, color:AppColors.accentColor ),
       ),
     ),
   )
@@ -275,16 +276,21 @@ class UserLoginedAlready extends StatelessWidget {
     );
   }
 
-  Widget _item(BuildContext context, String text, double size, Color color) {
+  Widget _item(BuildContext context, String text, double size, Color color, double lineHeight) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p10),
       width: MediaQuery.of(context).size.width / 1.1,
       child: Center(
 
         child: Text(
+          textAlign: TextAlign.center,
          text,
         style: FontManager().getTextStyle(context,
-             fontSize: size, color:color ),
+             fontSize: size, color:color ,
+             lineHeight: lineHeight/size
+             ,
+            
+             ),
       )
         
       ),

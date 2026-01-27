@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class TabBarUser extends StatefulWidget {
   final List<PostModel> userPostList;
   TabBarUser({Key? key, required this.userPostList}) : super(key: key);
@@ -52,7 +54,7 @@ class _TabBarUserState extends State<TabBarUser> {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p2),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
@@ -70,7 +72,7 @@ class _TabBarUserState extends State<TabBarUser> {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p2),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
@@ -245,7 +247,7 @@ class _TabBarUserState extends State<TabBarUser> {
             size: 60,
             color: AppColors.primaryColor,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
           Text(
             title,
             style: FontManager().getTextStyle(
@@ -255,7 +257,7 @@ class _TabBarUserState extends State<TabBarUser> {
               color: AppColors.accentColor,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.h8),
         ],
       ),
     );

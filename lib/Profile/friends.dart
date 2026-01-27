@@ -15,6 +15,8 @@ import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
 import "package:get/get.dart";
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
+
+import "../Constants/core/app_padding_sizes.dart";
 RxList globalFriendsList = [].obs;
 class Friends extends StatefulWidget {
   bool isMasked = false;
@@ -141,7 +143,7 @@ class _FriendsState extends State<Friends> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
                 Obx(() => frdsList.isEmpty
                     ? noFriend(context, "", widget.isMasked)
                     : Column(
@@ -178,7 +180,7 @@ class _FriendsState extends State<Friends> {
               : null;
         },
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 3),
+          padding: EdgeInsets.symmetric(vertical: AppSizes.p2, horizontal: 3),
           decoration: BoxDecoration(
 
               //  color:const Color.fromRGBO(249, 246, 238, 1),
@@ -227,7 +229,7 @@ class _FriendsState extends State<Friends> {
           Navigator.pop(context);
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: AppSizes.p10),
           decoration: BoxDecoration(
               color: color, borderRadius: BorderRadius.circular(5)),
           child: Text(
@@ -244,7 +246,7 @@ class _FriendsState extends State<Friends> {
 
   Widget style(str) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(AppSizes.p8),
       child: Text(
         str,
         style: FontManager().getTextStyle(

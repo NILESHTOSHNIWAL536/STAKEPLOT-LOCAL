@@ -13,6 +13,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class InterestSelectionScreen extends StatefulWidget {
   const InterestSelectionScreen({Key? key}) : super(key: key);
 
@@ -56,7 +58,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
                   Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenSize.width * 0.05,
-                      vertical: 16,
+                      vertical: AppSizes.p16,
                     ),
                     child: TitleWidget(),
                   ),
@@ -71,7 +73,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
                             height: 70,
                             alignment: Alignment.topCenter, // Change alignment
                             child: Padding(
-                              padding: EdgeInsets.all(12),
+                              padding: EdgeInsets.all(AppSizes.p12),
                               child: DoneButtonWidget(
                                 onPressed: () {
                                   final combinedList = [
@@ -200,7 +202,7 @@ class HeaderWidget extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: screenSize.width * 0.05,
-        vertical: 16,
+        vertical: AppSizes.p16,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -446,7 +448,7 @@ class CategoryChip extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: Container(
               padding: const EdgeInsets.symmetric(
-                  horizontal: 10, vertical: 10), // Further reduced padding
+                  horizontal: 10, vertical: AppSizes.p10), // Further reduced padding
               decoration: BoxDecoration(
                 color: isSelected
                     ? AppColors.finSpaceColor

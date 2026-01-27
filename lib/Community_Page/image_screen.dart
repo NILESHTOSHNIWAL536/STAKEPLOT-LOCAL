@@ -21,6 +21,8 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class ImageScreen extends StatefulWidget {
   final Function(Map<String, dynamic>) onPostCreated;
   final Map<String, dynamic> userInfo;
@@ -53,7 +55,7 @@ class _ImageScreenState extends State<ImageScreen> {
         });
       }
     } catch (e) {
-      snackBarAllFeilds2(context, SnackbarData().pickingError);
+      snackBarCalledfail(context, SnackbarData().pickingError);
     }
   }
 
@@ -143,18 +145,18 @@ class _ImageScreenState extends State<ImageScreen> {
     : MediaQuery.of(context).size.height / 1.3,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(AppSizes.p16),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 10),
+                       SizedBox(height: AppSizes.h10),
                       GestureDetector(
                         onTap: _pickImage,
                         child: Container(
                           height: MediaQuery.of(context).size.height / 2.8,
                           width: MediaQuery.of(context).size.width / 0.5,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: AppColors.grey,
                             // borderRadius: BorderRadius.circular(20),
                           ),
                           child: selectedImage != null
@@ -197,7 +199,7 @@ class _ImageScreenState extends State<ImageScreen> {
                       ),
                         // Crop shape selection UI
                       if (selectedImage != null) ...[
-                        const SizedBox(height: 10),
+                        SizedBox(height: AppSizes.h10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -280,7 +282,7 @@ class _ImageScreenState extends State<ImageScreen> {
                         ),
                       
                       ],
-                      const SizedBox(height: 10),
+                      SizedBox(height: AppSizes.h10),
                       TextField(
                         controller: textController,
                         // focusNode: _contentFocusNode,
@@ -296,7 +298,7 @@ class _ImageScreenState extends State<ImageScreen> {
                               color: AppColors.bg1),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: AppSizes.h10),
                     ],
                   ),
                 ),
@@ -304,19 +306,19 @@ class _ImageScreenState extends State<ImageScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
+                left:AppSizes.p16,
+                right:AppSizes.p16,
                 bottom: MediaQuery.of(context).viewInsets.bottom > 0 ? 16.0 : 0,
                 top: MediaQuery.of(context).viewInsets.bottom > 0 ? 16.0 : 16.0,
               ),
               child: GestureDetector(
                 onTap: () async {
                   if (selectedImage == null) {
-                    snackBarAllFeilds2(context, "Please select an image");
+                    snackBarCalledfail(context, "Please select an image");
                     return;
                   }
                   if (textController.text.trim().isEmpty) {
-                    snackBarAllFeilds2(context, "Please add your thoughts");
+                    snackBarCalledfail(context, "Please add your thoughts");
                     return;
                   }
                   showTagListOfInterestModal(
@@ -324,7 +326,7 @@ class _ImageScreenState extends State<ImageScreen> {
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width / 1.1,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
                   decoration: BoxDecoration(
                     color:
                         selectedImage != null && textController.text.isNotEmpty
@@ -359,12 +361,12 @@ class _ImageScreenState extends State<ImageScreen> {
 
   void callBack() async {
     if (selectedImage == null) {
-      snackBarAllFeilds2(context, SnackbarData().uploadError);
+      snackBarCalledfail(context, SnackbarData().uploadError);
       return;
     }
 
     if (textController.text.trim().isEmpty) {
-      snackBarAllFeilds(context);
+      snackBarCalledfail(context,"Enter Text");
       return;
     }
 

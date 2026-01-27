@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../repository/auth_service/otp_service.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
@@ -87,7 +88,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     try {
       String? otpInt = otp.toString();
       if (otpInt == null) {
-        snackBarCalledfail(context, 'Invalid OTP format', Colors.red);
+        snackBarCalledfail(context, 'Invalid OTP format',  AppColors.redColor);
         return;
       }
       await OtpService.verifyDeleteOTP(context, widget.email, otpInt);
@@ -131,10 +132,10 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
+              SizedBox(height: AppSizes.h40),
               // Warning Section
               Container(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(AppSizes.p16),
                 decoration: BoxDecoration(
                   color: Colors.orange[50],
                   borderRadius: BorderRadius.circular(12),
@@ -144,7 +145,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(4),
+                      padding: EdgeInsets.all(AppSizes.p4),
                       decoration: BoxDecoration(
                         color: Colors.orange[600],
                         shape: BoxShape.circle,
@@ -155,7 +156,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         size: 16,
                       ),
                     ),
-                    SizedBox(width: 12),
+                    SizedBox(width: AppSizes.w12),
                     Expanded(
                       child: RichText(
                         text: TextSpan(
@@ -186,7 +187,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: AppSizes.h40),
               // Email Display
               Text(
                 'Email',
@@ -197,9 +198,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           color: AppColors.accentColor,
                         ),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: AppSizes.h12),
               Container(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(AppSizes.p16),
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(8),
@@ -214,7 +215,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         ),
                 ),
               ),
-              SizedBox(height: 24),
+              SizedBox(height: AppSizes.h24),
               // Get OTP Button
               if (!_isOtpSent)
                 Container(
@@ -223,7 +224,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     onPressed: _isLoading ? null : _sendOtp,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFDC2626),
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: AppSizes.p16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -259,7 +260,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           color: AppColors.accentColor,
                         ),
                     ),
-                    SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.grey[100],
@@ -283,7 +284,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 16,
-                            vertical: 16,
+                            vertical: AppSizes.p16,
                           ),
                           counterText: '',
                         ),
@@ -293,7 +294,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: AppSizes.h16),
                     // Resend OTP Button
                     Align(
                       alignment: Alignment.centerRight,
@@ -333,7 +334,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     backgroundColor: _isOtpVerified && !_isLoading
                         ? Color(0xFFDC2626)
                         : Colors.grey[300],
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(vertical: AppSizes.p16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

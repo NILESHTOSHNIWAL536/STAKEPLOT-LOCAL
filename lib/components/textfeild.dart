@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:intl/intl.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../Utils/signUp.dart';
 import '../image_service/profile.dart';
 import 'shared_utils.dart';
@@ -54,8 +55,8 @@ class TextFeildWidget extends StatelessWidget {
                   style: FontManager().getTextStyle(context,
                       fontSize: 16, lWeight: FontWeight.w600)),
             ),
-           (heading=="tagSearch" || heading=="") ? SizedBox.shrink():  const SizedBox(
-              height: 10,
+           (heading=="tagSearch" || heading=="") ? SizedBox.shrink():   SizedBox(
+              height: AppSizes.h10,
             ),
             TextFormField(
               keyboardType: keyBoard,
@@ -94,7 +95,7 @@ class TextFeildWidget extends StatelessWidget {
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(color: AppColors.primaryColor)
+                      borderSide: BorderSide(color: AppColors.grey)
                     ),
                  
                   suffixIcon:SignupData().usernameLabel==heading?  
@@ -170,8 +171,8 @@ class TextFeildWidgetPassword extends StatelessWidget {
                       style: FontManager().getTextStyle(context,
                           fontSize: 16, lWeight: FontWeight.w600)),
                 ),
-                const SizedBox(
-                  height: 10,
+                 SizedBox(
+                  height: AppSizes.h10,
                 ),
                 Center(
                   child: TextFormField(
@@ -267,8 +268,8 @@ class TextFeildWidget2 extends StatelessWidget {
                   style: FontManager().getTextStyle(context,
                       fontSize: 18, lWeight: FontWeight.w600)),
             ),
-            const SizedBox(
-              height: 10,
+             SizedBox(
+              height: AppSizes.h10,
             ),
             TextFormField(
               keyboardType: TextInputType.name,
@@ -342,8 +343,8 @@ class TextFeildCalender extends StatelessWidget {
                     style: FontManager().getTextStyle(context,
                         fontSize: 16, lWeight: FontWeight.w600)),
               ),
-              const SizedBox(
-                height: 10,
+               SizedBox(
+                height: AppSizes.h10,
               ),
               TextFormField(
                 keyboardType: TextInputType.none, // Disable manual entry
@@ -355,7 +356,7 @@ class TextFeildCalender extends StatelessWidget {
                 },
                 decoration: InputDecoration(
                     contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                        EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p12),
                     filled: true,
                     hintText: lableText,
                     hintStyle: getStyle2(context),
@@ -442,7 +443,7 @@ class TextFeildWidgetCustom extends StatelessWidget {
     //  return Text("data");
     return Center(
         child: Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.p8),
       width: MediaQuery.of(context).size.width / 1.1,
       // color: Colorcodes.white,
       child: Center(
@@ -456,8 +457,8 @@ class TextFeildWidgetCustom extends StatelessWidget {
                   style: FontManager().getTextStyle(context,
                       fontSize: 16, lWeight: FontWeight.w500)),
             ),
-            const SizedBox(
-              height: 10,
+             SizedBox(
+              height: AppSizes.h10,
             ),
             TextFormField(
               keyboardType: keyBoard,
@@ -534,7 +535,7 @@ class TextFeildWidgetCustom2 extends StatelessWidget {
     //  return Text("data");
     return Center(
         child: Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.p8),
       width: MediaQuery.of(context).size.width / 1.1,
       // color: Colorcodes.white,
       child: Center(
@@ -588,15 +589,15 @@ class TextFeildWidgetCustom2 extends StatelessWidget {
 }
 
 
-class TextFeildWidgetUnderline extends StatelessWidget {
-  TextEditingController textEditingController;
-  String lableText;
-  String heading;
-  TextInputType keyBoard;
-  bool flag;
-  IconData icon;
+class TextFeildWidgetUnderline extends StatefulWidget {
+  final TextEditingController textEditingController;
+  final String lableText;
+  final String heading;
+  final TextInputType keyBoard;
+  final bool flag;
+  final IconData icon;
 
-  TextFeildWidgetUnderline({
+  const TextFeildWidgetUnderline({
     Key? key,
     required this.textEditingController,
     required this.heading,
@@ -606,39 +607,52 @@ class TextFeildWidgetUnderline extends StatelessWidget {
     this.flag = true,
   }) : super(key: key);
 
-  RxBool show = false.obs;
+  @override
+  State<TextFeildWidgetUnderline> createState() =>
+      _TextFeildWidgetUnderlineState();
+}
+
+class _TextFeildWidgetUnderlineState
+    extends State<TextFeildWidgetUnderline> {
+
+  /// UI-only state → NOT Rx
+  bool showPassword = false;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p6),
         width: MediaQuery.of(context).size.width / 1.1,
         child: TextFormField(
-          controller: textEditingController,
-          keyboardType: keyBoard,
-          maxLength: heading == "PhoneNo" ? 10 : null,
-          obscureText: flag ? false : show.value,
+          controller: widget.textEditingController,
+          keyboardType: widget.keyBoard,
+          maxLength:
+              widget.heading == "PhoneNo" ? 10 : null,
+          obscureText:
+              widget.flag ? false : !showPassword,
+
           inputFormatters: [
-            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+            FilteringTextInputFormatter.deny(
+              RegExp(r'\s'),
+            ),
           ],
+
           onChanged: (c) {
-            acceptReset.value = false;
-
-            if (heading == "tagSearch") {
-              LoadTag.value = !LoadTag.value;
-            }
-
-            if (SignupData().usernameLabel == heading) {
+            if (SignupData().usernameLabel ==
+                widget.heading) {
               checkIsUserNameValid(c);
             }
           },
 
           decoration: InputDecoration(
-            hintText: lableText,
+            hintText: widget.lableText,
             counterText: "",
-            prefixIcon:
-                heading == "tagSearch" ? const Icon(Icons.search) : null,
+
+            /// PREFIX
+            prefixIcon: widget.heading == "tagSearch"
+                ? const Icon(Icons.search)
+                : null,
 
             hintStyle: FontManager().getTextStyle(
               context,
@@ -647,10 +661,11 @@ class TextFeildWidgetUnderline extends StatelessWidget {
               color: AppColors.accentColor,
             ),
 
-            /// UNDERLINE ONLY
+            /// UNDERLINE
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: AppColors.primaryColor.withOpacity(0.4),
+                color:
+                    AppColors.primaryColor.withOpacity(0.4),
                 width: 1,
               ),
             ),
@@ -660,40 +675,54 @@ class TextFeildWidgetUnderline extends StatelessWidget {
                 width: 2,
               ),
             ),
-            errorBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
+            errorBorder:  UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColors.redColor,
+              ),
             ),
 
-            /// SUFFIX ICON LOGIC (UNCHANGED)
-            suffixIcon: SignupData().usernameLabel == heading
-                ? (textEditingController.text.isEmpty
-                    ? null
-                    : isValidUser.value
-                        ?  Icon(
-                            Icons.check,
-                            size: 22,
-                            color: Colorcodes.green,
-                          )
-                        :  SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: Spinner(),
-                          ))
-                : flag
-                    ? null
-                    : Obx(
-                        () => InkWell(
-                          onTap: () {
-                            show.value = !show.value;
-                          },
-                          child: Icon(
-                            show.value
-                                ? Icons.remove_red_eye_outlined
-                                : Icons.do_disturb_off_outlined,
-                            color: AppColors.primaryColor,
+            /// ✅ SUFFIX ICON (ONLY Obx HERE)
+            suffixIcon:
+                SignupData().usernameLabel ==
+                        widget.heading
+                    ? Obx(() {
+                        if (widget.textEditingController.text
+                            .isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return isValidUser.value
+                            ?  Icon(
+                                Icons.check,
+                                size: 22,
+                                color:
+                                    Colorcodes.green,
+                              )
+                            :  SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: Spinner(),
+                              );
+                      })
+                    : widget.flag
+                        ? null
+                        : InkWell(
+                            onTap: () {
+                              setState(() {
+                                showPassword =
+                                    !showPassword;
+                              });
+                            },
+                            child: Icon(
+                              showPassword
+                                  ? Icons
+                                      .remove_red_eye_outlined
+                                  : Icons
+                                      .do_disturb_off_outlined,
+                              color:
+                                  AppColors.primaryColor,
+                            ),
                           ),
-                        ),
-                      ),
           ),
 
           style: FontManager().getTextStyle(

@@ -25,6 +25,8 @@ import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.da
 import 'package:flutter_application_code_stakeplot/Community_Page/image_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class Community extends StatefulWidget {
   const Community({Key? key}) : super(key: key);
 
@@ -124,7 +126,7 @@ class CommunityState extends State<Community> {
     ),
               // Padding(
               //   padding:
-              //       const EdgeInsets.only(left: 12.0, right: 12.0, top: 4),
+              //       const EdgeInsets.only(left:AppSizes.p12, right:AppSizes.p12, top: 4),
               //   child: Obx(() => postController.isTrending.value
               //       ? getTabs(context)
               //       : getTabs(context)),
@@ -148,7 +150,7 @@ class CommunityState extends State<Community> {
             ? Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: Container(
-                  //  color: Colors.amber,
+                  
                   height: MediaQuery.sizeOf(context).height / 3,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -255,7 +257,7 @@ class CommunityState extends State<Community> {
   Widget getPostListview() {
     double width = MediaQuery.of(context).size.width;
     //  double height = MediaQuery.of(context).size.height;
-    return Container(
+    return SizedBox(
         width: width,
         // height:  height,
         child: ListView.builder(
@@ -274,7 +276,7 @@ class CommunityState extends State<Community> {
   }
 
   Widget _buildDottedDivider() {
-    return Container(
+    return SizedBox(
       height: 1,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -304,13 +306,13 @@ class CommunityState extends State<Community> {
 
   Widget getTabs(context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
       child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.only(right:AppSizes.p10),
               child: GestureDetector(
                   onTap: () {
                     postController.isTrending.value = false;
@@ -405,7 +407,7 @@ class CommunityState extends State<Community> {
                             width: MediaQuery.sizeOf(context).width,
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 20),
+                                  horizontal: 8, vertical: AppSizes.p20),
                               child: Text(
                                 strings.textOption,
                                 style: FontManager().getTextStyle(
@@ -438,7 +440,7 @@ class CommunityState extends State<Community> {
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 20),
+                                horizontal: 8, vertical: AppSizes.p20),
                             child: Container(
                               width: MediaQuery.sizeOf(context).width,
                               child: Text(
@@ -475,7 +477,7 @@ class CommunityState extends State<Community> {
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 20),
+                                horizontal: 8, vertical: AppSizes.p20),
                             child: Container(
                               width: MediaQuery.sizeOf(context).width,
                               child: Text(
@@ -510,7 +512,7 @@ class CommunityState extends State<Community> {
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 20),
+                                horizontal: 8, vertical: AppSizes.p20),
                             child: Container(
                               width: MediaQuery.sizeOf(context).width,
                               child: Text(

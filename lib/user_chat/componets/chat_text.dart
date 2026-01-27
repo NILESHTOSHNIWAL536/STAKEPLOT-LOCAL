@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 
 Widget text(msg, isme,BuildContext context) {
@@ -31,7 +32,7 @@ Widget textIsme(String msg, bool isme,BuildContext context) {
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width / 1.4,
       ),
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p10),
       decoration: BoxDecoration(
         color: isme ? AppColors.appIcon : null,
         borderRadius: BorderRadius.only(
@@ -70,7 +71,7 @@ Widget textIsme(String msg, bool isme,BuildContext context) {
             children: [
               TextSelectionToolbarTextButton
               (
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(AppSizes.p8),
                 child: Text('Copy'),
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: msg));

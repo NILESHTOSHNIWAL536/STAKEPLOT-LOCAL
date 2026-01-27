@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/login.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../backed_connections/apis_connect.dart';
 import '../backed_connections/googlesignin/credentials.dart';
 import '../repository/reward_repository.dart';
@@ -49,7 +50,7 @@ class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
       body: SafeArea(
         child: Container(
                       height: MediaQuery.of(context).size.height,
-            padding: EdgeInsets.only(top: 10, left: 12, right: 12, bottom: 5),
+            padding: EdgeInsets.only(top:AppSizes.p10, left:AppSizes.p12, right:AppSizes.p12, bottom: 5),
            
          
           child: Column(
@@ -64,7 +65,7 @@ class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
               
                   /// TITLE
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                     child: Text(
                       FinvuStrings().registerWithFinvu,
                       style: FontManager().getTextStyle(
@@ -78,7 +79,7 @@ class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
               
                
                   Padding(
-                     padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                     padding: const EdgeInsets.symmetric(vertical: AppSizes.p20, horizontal: AppSizes.p12),
                     child: Text(
                       "${FinvuStrings().enterOtpSentTo} ${number.value}",
                       style: FontManager().getTextStyle(
@@ -95,7 +96,7 @@ class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: AppSizes.p12),
                     
                 child: Column(
                   children: [
@@ -149,14 +150,14 @@ class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
                     Obx(
                       () => isOtpWrong.value
                           ? Padding(
-                              padding: const EdgeInsets.only(top: 8),
+                              padding: const EdgeInsets.only(top:AppSizes.p8),
                               child: Text(
                                 FinvuStrings().incorrectOtp,
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w300,
                                   fontSize: 10,
-                                  color: Colors.red,
+                                  color:  AppColors.redColor,
                                 ),
                               ),
                             )
@@ -206,7 +207,7 @@ class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
                           ),
                         ],
                       ),
-                SizedBox(height: 20,),
+                SizedBox(height: AppSizes.h20),
                     Obx(
                       () => GestureDetector(
                         onTap: widget.isOtpValid.value
@@ -214,7 +215,7 @@ class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
                             : null,
                         child: Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(vertical: AppSizes.p16),
                           decoration: BoxDecoration(
                             color: widget.isOtpValid.value
                                 ? AppColors.primaryColor
@@ -236,9 +237,9 @@ class _FinvuVerifyOtpScreenState extends State<FinvuVerifyOtpScreen> {
                       ),
                     ),
                 
-                    const SizedBox(height: 10),
+                    SizedBox(height: AppSizes.h10),
                      Padding(
-                        padding: const EdgeInsets.only(left: 30, right: 30),
+                        padding: const EdgeInsets.only(left:AppSizes.p30, right:AppSizes.p30),
                         child: Center(
                           child: RichText(
                             text: TextSpan(

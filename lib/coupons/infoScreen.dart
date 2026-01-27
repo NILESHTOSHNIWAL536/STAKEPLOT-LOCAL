@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 void showEarningScoreDialog(BuildContext context) {
   showDialog(
     context: context,
@@ -12,7 +14,7 @@ void showEarningScoreDialog(BuildContext context) {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(AppSizes.p24),
           decoration: BoxDecoration(
             color: AppColors.backgroundColor,
             borderRadius: BorderRadius.circular(16),
@@ -31,7 +33,7 @@ void showEarningScoreDialog(BuildContext context) {
                   color: AppColors.primaryColor,
                 ),
               ),
-              const SizedBox(height: 16),
+               SizedBox(height: AppSizes.h16),
 
               // Description
               Text(
@@ -43,23 +45,23 @@ void showEarningScoreDialog(BuildContext context) {
                   color: AppColors.accentColor,
                 ),
               ),
-              const SizedBox(height: 16),
+               SizedBox(height: AppSizes.h16),
 
               // Bullet points
               _buildBulletPoint(
                   'Tagging untagged transactions in your expense history',
                   context),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.h8),
               _buildBulletPoint(
                   'Participating in the community by posting, commenting, or sharing',
                   context),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.h8),
               _buildBulletPoint(
                   'Using the bill split feature and clearing split payments',
                   context),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.h8),
               _buildBulletPoint('Adding a cash Transaction', context),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
 
               // Additional info
               Text(
@@ -71,7 +73,7 @@ void showEarningScoreDialog(BuildContext context) {
                   color: AppColors.accentColor,
                 ),
               ),
-              const SizedBox(height: 20),
+               SizedBox(height: AppSizes.h20),
 
               // Done button
               Center(
@@ -85,7 +87,7 @@ void showEarningScoreDialog(BuildContext context) {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4A4A68),
                       foregroundColor: AppColors.backgroundColor,
-                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -116,7 +118,7 @@ Widget _buildBulletPoint(String text, BuildContext context) {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
-        margin: const EdgeInsets.only(top: 6, right: 8),
+        margin: const EdgeInsets.only(top:AppSizes.p6, right:AppSizes.p8),
         width: 4,
         height: 4,
         decoration: BoxDecoration(

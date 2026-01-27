@@ -7,12 +7,9 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/repository/group_Api.dart";
 import "package:flutter_application_code_stakeplot/repository/notification_repository.dart";
 import "package:flutter_application_code_stakeplot/components/helper.dart";
-import "package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/pending_users.dart";
 import "package:flutter_application_code_stakeplot/Profile/autocategroies.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_one.dart";
-
-import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/image_service/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/repository/friends_apis.dart";
@@ -26,6 +23,7 @@ import "package:flutter_application_code_stakeplot/repository/payables_repositor
 
 import "package:get/get.dart";
 
+import "../Constants/core/app_padding_sizes.dart";
 import "../components/shared_utils.dart";
 
 
@@ -55,19 +53,28 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.border,
-        elevation: 0,
-        title: Text(
-          "Notifications",
-          style: FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w600,
-            fontSize: 20,
-            color: AppColors.accentColor,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(72),
+        child: AppBar(
+          backgroundColor: AppColors.newbg,
+          elevation: 0,
+          leading: IconButton(
+            icon: globalbackArrow(),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
+          title: Text(
+            "Notifications",
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w500,
+              fontSize: 18,
+              color: AppColors.accentColor,
+            ),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
       ),
       backgroundColor: AppColors.border,
       body: SafeArea(
@@ -204,7 +211,7 @@ final monthNames = [
   //                               MediaQuery.of(context).size.width * 0.03),
   //                           alignment: Alignment.centerRight,
   //                           child: const Padding(
-  //                             padding: EdgeInsets.only(right: 20),
+  //                             padding: EdgeInsets.only(right:AppSizes.p20),
   //                             child: Icon(Icons.delete, color: AppColors.backgroundColor),
   //                           ),
   //                         ),
@@ -248,13 +255,13 @@ Widget _buildDateSection(
 ) {
   return Container(
     margin: const EdgeInsets.only(bottom: 16),
-    padding: const EdgeInsets.all(12),
+    padding: const EdgeInsets.all(AppSizes.p12),
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: AppColors.backgroundColor,
       borderRadius: BorderRadius.circular(12),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.08),
+          color: AppColors.grey.withOpacity(0.08),
           blurRadius: 6,
           offset: const Offset(0, 2),
         ),
@@ -278,7 +285,7 @@ Widget _buildDateSection(
             const SizedBox(width: 8),
             Container(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
               decoration: BoxDecoration(
                 color: AppColors.mt,
                 borderRadius: BorderRadius.circular(5),
@@ -308,25 +315,29 @@ Widget _buildDateSection(
             onDismissed: (_) {
               _deleteNotification(notifyId);
             },
-            background: Container(
-              margin: const EdgeInsets.symmetric(vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.redAccent,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.only(right: 20),
-              child: const Icon(
-                Icons.delete,
-                color: Colors.white,
+            background: Padding(
+              padding: const EdgeInsets.only(top:AppSizes.p8),
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: AppSizes.p4),
+                decoration: BoxDecoration(
+                  color: AppColors.redColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right:AppSizes.p20),
+                child: const Icon(
+                  Icons.delete,
+                  color: AppColors.backgroundColor,
+                ),
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top:AppSizes.p8),
               child: _buildNotificationCard(e),
             ),
           );
         }).toList(),
+      
       ],
     ),
   );
@@ -335,6 +346,8 @@ Widget _buildDateSection(
   Widget _buildNotificationCard(Map<String, dynamic> e) {
     var notifyId = e['_id'] as String?;
     var time = e['createdAt'] as String? ?? "";
+  
+
     String? type = e['notificationMessage']?['type'];
     var data = e['notificationMessage'] ?? {};
 
@@ -342,15 +355,16 @@ Widget _buildDateSection(
       onTap: () => _handleNotificationTap(type ?? "unknown", data, e),
       child: Container(
         margin: EdgeInsets.symmetric(
-            vertical: MediaQuery.of(context).size.height * 0.008),
-        decoration: BoxDecoration(
-    color: const Color(0xFFF9FAFB),
+            vertical:AppSizes.p4),
+             decoration: BoxDecoration(
+    color: AppColors.notificationCardColor,
     borderRadius: BorderRadius.circular(12),
     border: Border.all(
-      color: const Color(0xFFEAECF0),
-      width: 1,
+      color: AppColors.notificationCardBorderColor,
+      width: 0.3,
     ),
   ),
+       
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,12 +379,16 @@ Widget _buildDateSection(
               //     ),
               //   ),
               // ),
-              Expanded(
+              SizedBox(
+               
+                width: MediaQuery.of(context).size.width / 1.18,
+
                 child: Padding(
                   padding:
-                      EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                      EdgeInsets.all(AppSizes.p4),
                   child:
                    Container(
+                    
                      child: _getNotificationContent(
                         type ?? "unknown", data, notifyId, time),
                    ),
@@ -629,241 +647,319 @@ Widget _buildDateSection(
       String message, String id, avatar, String time, bool isMasked) {
     bool isFetchedData = message.contains("Data has been successfully fetched");
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (isFetchedData)
-          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-        isFetchedData
-            ? Container(
-                child: Image.network(
-                avatar,
-                width: 30,
-                height: 30,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(
-                  Icons.account_balance,
-                  size: 30,
-                  color: AppColors.primaryColor,
-                ),
-              ))
-            : SizedBox.shrink(),
-        if (!isFetchedData && avatar.isNotEmpty)
-          if (!isMasked)
-            AvatarProfile(name: avatar, width: 20, height: 17, background: "")
-          else
-            AvatarProfile2(url: avatar, width: 20, height: 20)
-        else if (!isFetchedData)
-          SizedBox(width: MediaQuery.of(context).size.width * 0.06),
-        if (!isFetchedData)
-          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-        if (isFetchedData)
-          SizedBox(width: MediaQuery.of(context).size.width * 0.06),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+    return Padding(
+       padding: EdgeInsets.only(
+                    top: AppSizes.p8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // if (isFetchedData)
+            SizedBox(width: AppSizes.w8),
+          isFetchedData
+              ? SizedBox(
+                  child: Image.network(
+                  avatar,
+                  width: 30,
+                  height: 30,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.account_balance_outlined,
+                    size: 30,
+                    color: AppColors.primaryColor,
+                  ),
+                ))
+              : const SizedBox.shrink(),
+          if (!isFetchedData && avatar.isNotEmpty)
+            if (!isMasked)
               Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.width * 0.015),
-                child: Text(
+                padding: const EdgeInsets.only(bottom: AppSizes.p12),
+                child: CircleAvatar(
+                  backgroundColor: AppColors.primaryColor,
+                  radius: 18,
+                  child:Text(avatar[0].toUpperCase(),
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: AppColors.backgroundColor,
+                    ),
+                )),
+              )
+              // AvatarProfile(name: avatar, width: 24, height: 20, background: "")
+            else
+              AvatarProfile2(url: avatar, width: 20, height: 20)
+          else if (!isFetchedData)
+            SizedBox(width:AppSizes.w10),
+          if (!isFetchedData)
+           SizedBox(width:AppSizes.w10),
+          if (isFetchedData)
+           SizedBox(width:AppSizes.w10),
+          SizedBox(
+        width: MediaQuery.of(context).size.width / 1.5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
                   message,
+                  softWrap: true,
+                  maxLines: 4,
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.w600,
+                    lWeight: FontWeight.w400,
                     fontSize: 14,
-                    color: AppColors.bg1,
+                    color: AppColors.grey,
+                    letterSpacing: -0.2,
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              _buildTimeDivider(time),
-            ],
+                const SizedBox(height: AppSizes.h8),
+                _buildTimeDivider(time),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildFriendRequestCard(String name, String id, String avatar,
       Map<String, dynamic> e, String? notifyId, String time) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
-        SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.width * 0.015),
-                child: Text(
+    return Padding(
+      padding: EdgeInsets.only(
+                    top: AppSizes.p8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+             SizedBox(width: AppSizes.w8),
+          Padding(
+                  padding: const EdgeInsets.only(bottom: AppSizes.p12),
+                  child: CircleAvatar(
+                    backgroundColor: AppColors.primaryColor,
+                    radius: 18,
+                    child:Text(avatar[0].toUpperCase(),
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: AppColors.backgroundColor,
+                      ),
+                  )),
+                ),
+          // AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
+          SizedBox(width:AppSizes.w10),
+           SizedBox(
+          width: MediaQuery.of(context).size.width / 1.5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
                   "$name sent you a friend request",
+                  softWrap: true,
+                  maxLines: 4,
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.w600,
+                    lWeight: FontWeight.w400,
                     fontSize: 14,
-                    color: AppColors.bg1,
+                    color: AppColors.grey,
+                    letterSpacing: -0.2,
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              Row(
-                children: [
-                  _buildActionButton(
-                    "Accept",
-                    AppColors.primaryColor,
-                    AppColors.backgroundColor,
-                    () {
-                      addUserAsFrd(id, context);
-                      _deleteNotification(notifyId);
-                    },
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                  _buildActionButton(
-                    "Reject",
-                    AppColors.backgroundColor,
-                    AppColors.bg3,
-                    () {
-                      rejectFrdRequest(e, context);
-                      _deleteNotification(notifyId);
-                    },
-                    border: true,
-                  ),
-                ],
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              _buildTimeDivider(time),
-            ],
+                  SizedBox(height: AppSizes.h8),
+                Row(
+                  children: [
+                    _buildActionButton(
+                      "Accept",
+                      AppColors.primaryColor,
+                      AppColors.backgroundColor,
+                      () {
+                        addUserAsFrd(id, context);
+                        _deleteNotification(notifyId);
+                      },
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+                    _buildActionButton(
+                      "Reject",
+                      AppColors.backgroundColor,
+                      AppColors.bg3,
+                      () {
+                        rejectFrdRequest(e, context);
+                        _deleteNotification(notifyId);
+                      },
+                      border: true,
+                    ),
+                  ],
+                ),
+                  SizedBox(height: AppSizes.h8),
+                _buildTimeDivider(time),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildLendRequestCard(String name, String id, String avatar,
       Map<String, dynamic> e, String itemName, String? notifyId, String time) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
-        SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.width * 0.015),
-                child: Text(
+    return Padding(
+       padding: EdgeInsets.only(
+                    top: AppSizes.p8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
+            SizedBox(width: AppSizes.w8),
+          Padding(
+                  padding: const EdgeInsets.only(bottom: AppSizes.p12),
+                  child: CircleAvatar(
+                    backgroundColor: AppColors.primaryColor,
+                    radius: 18,
+                    child:Text(avatar[0].toUpperCase(),
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: AppColors.backgroundColor,
+                      ),
+                  )),
+                ),
+          
+          SizedBox(width:AppSizes.w10),
+           SizedBox(
+          width: MediaQuery.of(context).size.width / 1.5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
                   "$name has lent you ₹${e['amount'] ?? '500'} for $itemName",
+                   softWrap: true,
+                  maxLines: 4,
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.w600,
+                    lWeight: FontWeight.w400,
                     fontSize: 14,
-                    color: AppColors.bg1,
+                    color: AppColors.grey,
+                    letterSpacing: -0.2,
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              Row(
-                children: [
-                  _buildActionButton(
-                    "Approve",
-                    AppColors.primaryColor,
-                    AppColors.backgroundColor,
-                    () {
-                      approveBill(context, e['bill_id'] as String? ?? "",
-                          "accept", notifyId);
-                      _deleteNotification(notifyId);
-                    },
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                  _buildActionButton(
-                    "Reject",
-                    AppColors.backgroundColor,
-                    AppColors.bg3,
-                    () {
-                      approveBill(context, e['bill_id'] as String? ?? "",
-                          "reject", notifyId);
-                      _deleteNotification(notifyId);
-                    },
-                    border: true,
-                  ),
-                ],
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              _buildTimeDivider(time),
-            ],
+                 SizedBox(height: AppSizes.h8),
+                Row(
+                  children: [
+                    _buildActionButton(
+                      "Approve",
+                      AppColors.primaryColor,
+                      AppColors.backgroundColor,
+                      () {
+                        approveBill(context, e['bill_id'] as String? ?? "",
+                            "accept", notifyId);
+                        _deleteNotification(notifyId);
+                      },
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+                    _buildActionButton(
+                      "Reject",
+                      AppColors.backgroundColor,
+                      AppColors.bg3,
+                      () {
+                        approveBill(context, e['bill_id'] as String? ?? "",
+                            "reject", notifyId);
+                        _deleteNotification(notifyId);
+                      },
+                      border: true,
+                    ),
+                  ],
+                ),
+                SizedBox(height: AppSizes.h8),
+                _buildTimeDivider(time),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildApprovalCard(String message, String id, String avatar,
       String time, String type, String endUser, String notifyId) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        avatar.isNotEmpty
-            ? AvatarProfile(name: avatar, width: 20, height: 17, background: "")
-            : SizedBox(width: MediaQuery.of(context).size.width * 0.06),
-        SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.width * 0.015),
-                child: Text(
+    return Padding(
+        padding: EdgeInsets.only(
+                    top: AppSizes.p8, left: AppSizes.p8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+
+        children: [
+          
+          avatar.isNotEmpty
+              ? 
+               Padding(
+                  padding: const EdgeInsets.only(bottom: AppSizes.p12),
+                  child: CircleAvatar(
+                    backgroundColor: AppColors.primaryColor,
+                    radius: 18,
+                    child:Text(avatar[0].toUpperCase(),
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: AppColors.backgroundColor,
+                      ),
+                  )),
+                )
+              // AvatarProfile(name: avatar, width: 20, height: 17, background: "")
+              : SizedBox(width: MediaQuery.of(context).size.width * 0.06),
+           SizedBox(width:AppSizes.w10),
+           SizedBox(
+          width: MediaQuery.of(context).size.width / 1.5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
                   message,
+                  softWrap: true,
+                  maxLines: 4,
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.w600,
+                    lWeight: FontWeight.w400,
                     fontSize: 14,
-                    color: AppColors.bg1,
+                    color: AppColors.grey,
+                    letterSpacing: -0.2,
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              Row(
-                children: [
-                  _buildActionButton(
-                    "Approve",
-                    AppColors.primaryColor,
-                    AppColors.backgroundColor,
-                    () {
-                      settleAmount(context, id, type, endUser);
-                      _deleteNotification(notifyId);
-                    },
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                  _buildActionButton(
-                    "Reject",
-                    AppColors.backgroundColor,
-                    AppColors.bg3,
-                    () {
-                      declineAmount(context, id, type, endUser);
-                      _deleteNotification(notifyId);
-                    },
-                    border: true,
-                  ),
-                ],
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              _buildTimeDivider(time),
-            ],
+               SizedBox(height: AppSizes.h8),
+                Row(
+                  children: [
+                    _buildActionButton(
+                      "Approve",
+                      AppColors.primaryColor,
+                      AppColors.backgroundColor,
+                      () {
+                        settleAmount(context, id, type, endUser);
+                        _deleteNotification(notifyId);
+                      },
+                    ),
+                    SizedBox(width: AppSizes.w16),
+                    _buildActionButton(
+                      "Reject",
+                      AppColors.backgroundColor,
+                      AppColors.bg1,
+                      () {
+                        declineAmount(context, id, type, endUser);
+                        _deleteNotification(notifyId);
+                      },
+                      border: true,
+                    ),
+                  ],
+                ),
+                 SizedBox(height: AppSizes.h8),
+                _buildTimeDivider(time),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -874,13 +970,13 @@ Widget _buildDateSection(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.04,
-          vertical: MediaQuery.of(context).size.height * 0.01,
+          horizontal: AppSizes.p12,
+          vertical: AppSizes.p6,
         ),
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(8),
-          border: border ? Border.all(color: AppColors.bg3, width: 1) : null,
+          borderRadius: BorderRadius.circular(5),
+          border: border ? Border.all(color: AppColors.notificationCardBorderColor, width: 1) : null,
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2),
@@ -893,7 +989,7 @@ Widget _buildDateSection(
           label,
           style: FontManager().getTextStyle(
             context,
-            lWeight: FontWeight.w500,
+            lWeight: FontWeight.w400,
             fontSize: 14,
             color: textColor,
           ),
@@ -911,9 +1007,10 @@ Widget _buildDateSection(
             : "Unknown time",
         style: FontManager().getTextStyle(
           context,
-          lWeight: FontWeight.w500,
-          fontSize: 12,
-          color: AppColors.accentColor.withOpacity(0.7),
+          lWeight: FontWeight.w400,
+          fontSize: 11,
+          letterSpacing: -0.2,
+          color: AppColors.accentColor
         ),
       ),
     );

@@ -6,7 +6,6 @@ import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.da
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-
 import 'package:flutter_application_code_stakeplot/controllers/controllerManagement.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -19,7 +18,7 @@ import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart'
 import 'package:flutter_application_code_stakeplot/services/icon_picker_modal.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/emailUpdateOtp.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Utils/credit_card.dart';
 import '../backed_connections/bankServices/share_data.dart';
 import '../image_service/avatarProfile.dart';
@@ -101,7 +100,7 @@ class _EditDetailsState extends State<EditDetails> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
+            icon:  Icon(Icons.delete, color:  AppColors.redColor),
             onPressed: () {
               Navigator.push(
                 context,
@@ -113,7 +112,7 @@ class _EditDetailsState extends State<EditDetails> {
               ? SizedBox.shrink()
               : IconButton(
                   icon: Icon(Icons.remember_me_outlined,
-                      color: Colors.red, size: 25),
+                      color:  AppColors.redColor, size: 25),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -123,9 +122,11 @@ class _EditDetailsState extends State<EditDetails> {
                   },
                 ),
         ],
+      
       ),
+      
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSizes.p16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -141,7 +142,7 @@ class _EditDetailsState extends State<EditDetails> {
                     )),
               ],
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -168,7 +169,7 @@ class _EditDetailsState extends State<EditDetails> {
                           children: [
                             const Icon(Icons.lock_reset,
                                 color: AppColors.primaryColor, size: 20),
-                            const SizedBox(width: 4),
+                            SizedBox(width: AppSizes.w4),
                             textStyleOnly2(
                               context: context,
                               text: ProfileScreenStrings().resetPinLabel,
@@ -181,7 +182,7 @@ class _EditDetailsState extends State<EditDetails> {
                       )),
               ],
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
             Container(
               decoration: BoxDecoration(
                 color: AppColors.mt,
@@ -195,6 +196,7 @@ class _EditDetailsState extends State<EditDetails> {
                         userController.email.value,
                       )),
                   const Divider(),
+                 
                   _buildNonEditableField(
                       Icons.person,
                       ProfileScreenStrings().nameLabel,
@@ -222,9 +224,10 @@ class _EditDetailsState extends State<EditDetails> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+           
+             SizedBox(height: AppSizes.h20),
             const Divider(),
-            const SizedBox(height: 10),
+             SizedBox(height: AppSizes.h10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -260,13 +263,13 @@ class _EditDetailsState extends State<EditDetails> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
             ElevatedButton(
                     child: Text("Change App Icon"),
                     onPressed: () => IconPickerModal.show(context),
             ),
             getListOfBankConnected(),
-            const SizedBox(height: 20),
+             SizedBox(height: AppSizes.h20),
           ],
         ),
       ),
@@ -318,9 +321,9 @@ Widget getListOfBankConnected() {
           ..text = value, // Update controller text
         enabled: isEmailField, // Only email field is editable via dialog
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
           prefixIcon: Padding(
-            padding: const EdgeInsets.all(6.0),
+            padding: const EdgeInsets.all(AppSizes.p6),
             child: Container(
               decoration: BoxDecoration(
                 color: AppColors.button,
@@ -521,7 +524,7 @@ Widget getListOfBankConnected() {
     } catch (e) {
       Navigator.pop(context); // Close loading dialog
       snackBarCalledfail(
-          context, "Failed to send OTP. Please try again.", Colors.red);
+          context, "Failed to send OTP. Please try again.",  AppColors.redColor);
     }
   }
 
@@ -531,7 +534,7 @@ Widget getListOfBankConnected() {
       'name': name,
     });
     if (getFlagOfResponse(response)) {
-      snackBarCalled(context, SnackbarData().sentOtpToEmail, AppColors.accentColor);
+      snackBarCalled(context, SnackbarData().sentOtpToEmail, );
 
       Navigator.push(
         context,
@@ -550,7 +553,7 @@ Widget getListOfBankConnected() {
     } else {
       var body = jsonDecode(response.body);
       snackBarCalledfail(
-          showSnackBarContext, body['error'] ?? "error", Colors.red);
+          showSnackBarContext, body['error'] ?? "error",  AppColors.redColor);
     }
   }
 

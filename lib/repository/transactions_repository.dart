@@ -195,6 +195,7 @@ Future<void> getAllTransactionHistory(
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+      print("Transaction Data: $data");
       var obj = data['data'];
       if (obj != null) {
         if (isRefreshing) {
@@ -486,7 +487,7 @@ void postCustomCategory(context,name,urlPath,narr)async
     LoadTag.value=!LoadTag.value;
     custom=getthelist();
     Navigator.pop(context);
-    snackBarCalled(context, SnackbarData().categoryAdded, Colors.green);
+    snackBarCalled(context, SnackbarData().categoryAdded, );
   }
 
 }

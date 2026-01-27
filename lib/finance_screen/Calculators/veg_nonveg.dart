@@ -18,6 +18,7 @@ import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.d
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 import '../../routes/index_route.dart';
 
@@ -260,7 +261,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         children: [
           // Show the category name as a label (not editable here anymore)
           SizedBox(
-            height: 10,
+            height: AppSizes.h10,
           ),
           TextField(
             controller: controller,
@@ -282,7 +283,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               ),
               fillColor: AppColors.backgroundColor,
               contentPadding:
-                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+                  const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 10.0),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
                 borderSide: const BorderSide(
@@ -306,7 +307,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
   Widget calculation() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: AppSizes.p12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -337,7 +338,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.4,
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p14),
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(12),
@@ -418,7 +419,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.4,
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p14),
               decoration: BoxDecoration(
                   color: AppColors.backgroundColor,
                   borderRadius: BorderRadius.circular(12),
@@ -457,7 +458,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           children: [
             Container(
               margin: const EdgeInsets.symmetric(
-                  vertical: 6, horizontal: 12), // Spacing between items
+                  vertical: AppSizes.p6, horizontal: AppSizes.p12), // Spacing between items
               padding:
                   const EdgeInsets.all(0), // Inner padding for each container
               decoration: BoxDecoration(
@@ -490,7 +491,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                           height: 18,
                           name: friend['name'] ?? 'Unknown',
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: AppSizes.w8),
                         Text(
                           friend['name'] ?? 'Unknown',
                           style: FontManager().getTextStyle(
@@ -574,7 +575,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     final limitedFriends = userController.friendsList.take(4).toList();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 7),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.p8, horizontal: 7),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -666,7 +667,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 4, vertical: 2),
+                              horizontal: 4, vertical: AppSizes.p2),
                           child: Row(
                             children: [
                               Padding(
@@ -684,7 +685,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                   fontsize: 5,
                                 ),
                               ),
-                              SizedBox(width: 5),
+                              SizedBox(width: AppSizes.w6),
                               Text(
                                 limitedFriends[index]['name']?.toString() ??
                                     'Unknown',
@@ -927,9 +928,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                         return Padding(
                           padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom,
-                            left: 16,
-                            right: 16,
-                            top: 16,
+                            left:AppSizes.p16,
+                            right:AppSizes.p16,
+                            top:AppSizes.p16,
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -960,12 +961,12 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: AppSizes.h16),
                               // Existing categories
                               ...List.generate(categories.length, (index) {
                                 return Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                      const EdgeInsets.symmetric(vertical: AppSizes.p8),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -983,8 +984,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                                 59, 255, 255, 255),
                                             contentPadding:
                                                 const EdgeInsets.symmetric(
-                                              vertical: 10.0,
-                                              horizontal: 12.0,
+                                              vertical: AppSizes.p10,
+                                              horizontal: AppSizes.p12,
                                             ),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius:
@@ -1007,8 +1008,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                       ),
                                       if (categories[index]['isCustom'])
                                         IconButton(
-                                          icon: const Icon(Icons.delete,
-                                              color: Colors.red),
+                                          icon:  Icon(Icons.delete,
+                                              color:  AppColors.redColor),
                                           onPressed: () {
                                             modalSetState(() {
                                               setState(() {
@@ -1034,7 +1035,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                               if (customCategoryCount < 2)
                                 Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                      const EdgeInsets.symmetric(vertical: AppSizes.p8),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -1051,8 +1052,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                                 59, 255, 255, 255),
                                             contentPadding:
                                                 const EdgeInsets.symmetric(
-                                              vertical: 10.0,
-                                              horizontal: 12.0,
+                                              vertical: AppSizes.p10,
+                                              horizontal: AppSizes.p12,
                                             ),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius:
@@ -1073,7 +1074,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
+                                      SizedBox(width: AppSizes.w8),
                                       ElevatedButton(
                                         onPressed: () {
                                           if (newCategoryController
@@ -1116,7 +1117,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                               AppColors.backgroundColor,
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 16,
-                                            vertical: 12,
+                                            vertical: AppSizes.p12,
                                           ),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -1136,7 +1137,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                     ],
                                   ),
                                 ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: AppSizes.h16),
                               // Done button
                               Center(
                                 child: ElevatedButton(
@@ -1169,7 +1170,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                     backgroundColor: AppColors.backgroundColor,
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 32,
-                                      vertical: 12,
+                                      vertical: AppSizes.p12,
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -1186,7 +1187,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: AppSizes.h16),
                             ],
                           ),
                         );
@@ -1207,7 +1208,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             height: 12,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(left:AppSizes.p16),
             child: GestureDetector(
               onTap: () {
                 setState(() {
@@ -1252,10 +1253,10 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             },
             child: _isInfoVisible
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                     child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 4),
-                      padding: EdgeInsets.all(12),
+                      margin: EdgeInsets.symmetric(vertical: AppSizes.p4),
+                      padding: EdgeInsets.all(AppSizes.p12),
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(12),
@@ -1291,7 +1292,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                       inputDat(PlotFinanceStaticData().searchHint,
                           TextInputType.name, searchController),
                       SizedBox(
-                        height: 12,
+                        height: AppSizes.h12,
                       ),
                       commentedData(),
                       Row(
@@ -1303,7 +1304,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                             return Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 0),
+                                    horizontal: AppSizes.p12, vertical: 0),
                                 child: _buildInputColumn(
                                   category["name"],
                                   category["controller"],
@@ -1329,7 +1330,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                             final category = categories[index + 3];
                             return Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 0),
+                                  horizontal: AppSizes.p12, vertical: 0),
                               child: _buildInputColumn(
                                 category["name"],
                                 category["controller"],
@@ -1343,7 +1344,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     ],
                   )),
               SizedBox(
-                height: 8,
+                height: AppSizes.h8,
               ),
               // Search bar
 

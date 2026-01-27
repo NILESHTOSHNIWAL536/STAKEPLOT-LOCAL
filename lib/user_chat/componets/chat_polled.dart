@@ -3,6 +3,7 @@
  import 'package:flutter/material.dart';
 
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 import '../../Constants/colorcodes.dart';
 
@@ -36,7 +37,7 @@ Widget polled(isme, pollObj,BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 0.0, top: 5),
       child: Container(
-        padding: EdgeInsets.only(right: 5.0, left: 5.0, top: 10, bottom: 3.0),
+        padding: EdgeInsets.only(right: 5.0, left: 5.0, top:AppSizes.p10, bottom: 3.0),
         width: MediaQuery.of(context).size.width / 1.4,
         decoration: BoxDecoration(
           //  color: Colorcodes.appBarColor,
@@ -49,7 +50,7 @@ Widget polled(isme, pollObj,BuildContext context) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(AppSizes.p8),
               child: Text(e['question'] + "?",
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w600,
@@ -62,10 +63,10 @@ Widget polled(isme, pollObj,BuildContext context) {
                 children: options.map((op) {
                   s++;
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
                     child: Container(
                         padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                            EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
                         width: MediaQuery.of(context).size.width / 1.5,
                         decoration: BoxDecoration(
                           color: index == s ? null : AppColors.backgroundColor,
@@ -116,7 +117,7 @@ Widget polled(isme, pollObj,BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 0.0, top: 5),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p10),
         width: MediaQuery.of(context).size.width / 1.4,
         decoration: BoxDecoration(
           //  color: Colorcodes.appBarColor,
@@ -128,7 +129,7 @@ Widget polled(isme, pollObj,BuildContext context) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(AppSizes.p8),
               child: Text("",
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w500,
@@ -140,7 +141,7 @@ Widget polled(isme, pollObj,BuildContext context) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: options.map((op) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
                     child: Container(
                         padding:
                             EdgeInsets.symmetric(vertical: 13, horizontal: 10),

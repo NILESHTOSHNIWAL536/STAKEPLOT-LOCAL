@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../Constants/app_styles.dart';
+import '../../../../Constants/core/app_padding_sizes.dart';
 import '../create_collection_data.dart';
 import 'create_collection_flow.dart';
 
@@ -23,7 +24,7 @@ class _StepCollectionTypeState extends State<StepCollectionType> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           titleCollection(context, "Select Collection Type"),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
           GestureDetector(
             
              onTap: () {
@@ -34,7 +35,7 @@ class _StepCollectionTypeState extends State<StepCollectionType> {
   
   },child: cardCollection(context, HomePageIcons.personal, isSelected: selectedType == "personal",)),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
           GestureDetector(
              onTap: () {
               selectedType = "shared";

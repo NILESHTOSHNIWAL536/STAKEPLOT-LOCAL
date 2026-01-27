@@ -3,9 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/balanceout.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
-import 'package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
@@ -17,6 +15,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../routes/route_transactions.dart';
 import '../insightsController.dart';
 
@@ -32,7 +31,7 @@ Widget getTabsForTransactions(BuildContext context) {
     children: [
       tabItem(StringConstant.allTransactions, context),
       Padding(
-        padding: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.only(right:AppSizes.p10),
         child: tabItem(StringConstant.pollTransactions, context),
       ),
     ],
@@ -79,7 +78,7 @@ Widget tabItem(String text, BuildContext context) {
 Widget getTagHideButtons(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
-    child: Container(
+    child: SizedBox(
       width:MediaQuery.sizeOf(context).width,
       height: 25,
       child: ListView(
@@ -110,15 +109,15 @@ Widget getTagHideButtons(BuildContext context) {
                           index: 0,
                           isTag: true,
                         )
-                      : SizedBox.shrink(child: Text("No group Found"));
+                      : const SizedBox.shrink(child: Text("No group Found"));
                 },
               );
             },
           ),
-          const SizedBox(width: 10), // Spacing between buttons
+           SizedBox(width: AppSizes.w10), // Spacing between buttons
           actionButton(
               text: 'Hide',
-              icon: Icon(
+              icon:const Icon(
                 Icons.visibility_off_rounded,
                 color: AppColors.primaryColor,
                 size: 20,
@@ -128,24 +127,24 @@ Widget getTagHideButtons(BuildContext context) {
                 showCheckBox.value = false;
               },
               context: context),
-          const SizedBox(width: 10), // Spacing between buttons
+          SizedBox(width: AppSizes.w10), // Spacing between buttons
           Obx(() => addManually.isEmpty
-              ? SizedBox.shrink()
+              ?const SizedBox.shrink()
               : actionButton(
                   text: 'Delete',
                   icon: Icon(
                     Icons.delete,
-                    color: Colors.red,
+                    color:  AppColors.redColor,
                     size: 20,
                   ),
                   onTap: () {
                     showModal(context);
                   },
                   context: context)),
-           const SizedBox(width: 10),
+           SizedBox(width: AppSizes.w10),
            actionButton(
               text: 'balance out',
-              icon: Icon(
+              icon: const Icon(
                 Icons.balance,
                color: AppColors.primaryColor,
                 size: 20,
@@ -160,10 +159,10 @@ Widget getTagHideButtons(BuildContext context) {
               },
               context: context),
 
-       const SizedBox(width: 10),
+       SizedBox(width: AppSizes.w10),
           actionButton(
               text: 'Not mine',
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: AppColors.primaryColor,
                 size: 20,
@@ -190,7 +189,7 @@ Widget actionButton(
     onTap: onTap,
     splashColor: AppColors.primaryColor.withOpacity(0.2),
     child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p4),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor, // Match modal background for consistency
         borderRadius: BorderRadius.circular(3),
@@ -216,7 +215,7 @@ Widget actionButton(
                     child: icon as Widget
                   ),
             ],
-              const SizedBox(width: 6),
+              SizedBox(width: AppSizes.w6),
             textStyleImage(
               context: context,
               text: text,
@@ -262,7 +261,7 @@ void showModal(context2) {
           child: textStyleImage(
               context: context,
               text: 'Delete',
-              c: Colors.red,
+              c:  AppColors.redColor,
               fontsize: 16,
               fontWeight: FontWeight.bold),
         ),

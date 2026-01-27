@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDe
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 
 class CardBuilders {
@@ -19,7 +20,7 @@ class CardBuilders {
     return GestureDetector(
       onTap: () => onTap(debt),
       child: Container(
-        // margin: const EdgeInsets.symmetric(vertical: 8.0),
+        // margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
         height: MediaQuery.sizeOf(context).height / 5,
         width: MediaQuery.sizeOf(context).width / 4,
         decoration: BoxDecoration(
@@ -41,7 +42,7 @@ class CardBuilders {
           borderRadius: BorderRadius.circular(20),
           onTap: () => onTap(debt),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSizes.p16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -58,7 +59,7 @@ class CardBuilders {
                   maxLines: 1,
                   color: AppColors.primaryColor,
                 ),
-                const SizedBox(height: 6),
+                 SizedBox(height: AppSizes.h6),
                 // globalText(
                 //   context: context,
                 //   text:  PlotFinanceStaticData().amountLabel,
@@ -90,7 +91,7 @@ class CardBuilders {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.h4),
               ],
             ),
           ),
@@ -105,7 +106,7 @@ class CardBuilders {
     Function(Debt) onTap,
   ) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
       constraints: BoxConstraints(
         minHeight: 140,
         maxWidth: MediaQuery.of(context).size.width * 0.85,
@@ -132,7 +133,7 @@ class CardBuilders {
           borderRadius: BorderRadius.circular(20),
           onTap: () => onTap(debt), // Only one tap handler
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSizes.p16),
             child: Row(
               children: [
                 Expanded(
@@ -151,7 +152,7 @@ class CardBuilders {
                         maxLines: 1,
                         color: AppColors.accentColor,
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: AppSizes.h6),
                       globalText(
                         context: context,
                         text: PlotFinanceStaticData().amountLabel,
@@ -161,7 +162,7 @@ class CardBuilders {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: AppSizes.h10),
                       Row(
                         children: [
                           globalText(
@@ -187,7 +188,7 @@ class CardBuilders {
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: AppSizes.w12),
                 AvatarProfileImageZero(
                   url: Finance.debtIcon,
                   width: 1,
@@ -226,7 +227,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
       );
     },
     child: Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
       constraints: BoxConstraints(
         minHeight: 80,
         maxWidth: MediaQuery.of(context).size.width * 0.85,
@@ -260,7 +261,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSizes.p16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -273,7 +274,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                   fontsize: 14,
                   color: AppColors.accentColor,
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
 
                 // Row with Total Spent and Remaining
                 Row(
@@ -292,7 +293,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                           fontsize: 24,
                           color: AppColors.primaryColor,
                         ),
-                        const SizedBox(height: 2),
+                        SizedBox(height: AppSizes.h2),
                         globalText(
                           context: context,
                           text: 'Total Spent',
@@ -315,7 +316,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                           fontsize: 24,
                           color: AppColors.accentColor,
                         ),
-                        const SizedBox(height: 2),
+                        SizedBox(height: AppSizes.h2),
                         globalText(
                           context: context,
                           text: 'Remaining',
@@ -328,7 +329,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                   ],
                 ),
 
-                const SizedBox(height: 12),
+                SizedBox(height: AppSizes.h12),
 
                 // Horizontal progress bar
                 ClipRRect(
@@ -387,7 +388,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
   //       );
   //     },
   //     child: Container(
-  //       margin: const EdgeInsets.symmetric(vertical: 8.0),
+  //       margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
   //       constraints: BoxConstraints(
   //         minHeight: 140,
   //         maxWidth: MediaQuery.of(context).size.width * 0.85,
@@ -420,7 +421,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
   //             );
   //           },
   //           child: Padding(
-  //             padding: const EdgeInsets.all(16.0),
+  //             padding: const EdgeInsets.all(AppSizes.p16),
   //             child: Row(
   //               crossAxisAlignment: CrossAxisAlignment.center,
   //               children: [
@@ -596,7 +597,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
         );
       },
       child: Container(
-        // margin: const EdgeInsets.symmetric(vertical: 8.0),
+        // margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
         // constraints: BoxConstraints(
         //   minHeight: 140,
         //   maxWidth: MediaQuery.of(context).size.width * 0.85,
@@ -629,13 +630,13 @@ static Widget budgetCard(BuildContext context, dynamic data) {
               );
             },
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppSizes.p16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AvatarProfileImageZero(
                       url: Finance.debtIcon, width: 1, height: 26),
-                  const SizedBox(height: 10),
+                  SizedBox(height: AppSizes.h10),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -656,7 +657,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                               maxLines: 1,
                               color: AppColors.accentColor,
                             ),
-                            const SizedBox(height: 10),
+                            SizedBox(height: AppSizes.h10),
                             Row(
                               children: [
                                 Flexible(
@@ -683,7 +684,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: AppSizes.h4),
                           ],
                         ),
                       ),
@@ -730,7 +731,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
           AvatarProfileImageZero(
               url: svgIconPath.financepayReceive, width: 1, height: 8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
             decoration: BoxDecoration(
               // color: AppColors.mt,
               borderRadius: BorderRadius.circular(16),
@@ -745,7 +746,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                   fontWeight: FontWeight.w600,
                   // color: color,
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: AppSizes.h10),
                 globalText(
                   context: context,
                   text: '₹${formatMoneyIndian(totalAmount.toStringAsFixed(2))}',
@@ -753,7 +754,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                   color: color,
                   fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: AppSizes.h6),
                 globalText(
                   context: context,
                   text: PlotFinanceStaticData().pendingItems.replaceFirst(
@@ -786,7 +787,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
           border: Border.all(color: AppColors.border),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -798,9 +799,9 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                   width: 20,
                 ),
               ),
-              SizedBox(height: 14),
+              SizedBox(height: AppSizes.h14),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

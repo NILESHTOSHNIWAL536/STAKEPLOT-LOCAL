@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
+
 double cardBalance = 300.0;
 double totalInterestPaid = 130.0;
 
@@ -67,7 +69,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
                 //   ),
                 // ),
                 Padding(
-                  padding: const EdgeInsets.only(right:15 ),
+                  padding: const EdgeInsets.only(right:AppSizes.p14 ),
                   child: Row(
                     children: List.generate(
                       widget.graphDisc.length,
@@ -121,9 +123,9 @@ class _PieChartGraphState extends State<PieChartGraph> {
     return Padding(
       padding: const EdgeInsets.only(top:20),
       child: Container(
-         width:60,
-         height:80,
-         padding: const EdgeInsets.symmetric(horizontal: 12),
+        width: MediaQuery.of(context).size.shortestSide * 0.15,
+        height: MediaQuery.of(context).size.shortestSide * 0.20,
+         padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
         //  color:Colors.pink,
          decoration: BoxDecoration(
         color: Colors.white, // ✅ white card
@@ -195,7 +197,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
   return Container(
     height: 80,
     width: 150,
-    padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12,vertical:AppSizes. p8),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(12),
@@ -216,7 +218,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
           text: data['title'], // ✅ from graphDisc
         ),
 
-         const SizedBox(height: 15), // ✅ vertical gap works in Column
+         const SizedBox(height: AppSizes. h15), // ✅ vertical gap works in Column
 
         // AMOUNT
         textStyle(
@@ -239,8 +241,8 @@ Widget getGraph() {
 );
 
   return Container(
-    margin: EdgeInsets.only(top: 10,left:6),
-    padding: const EdgeInsets.only(left:10,top:20),
+    margin: EdgeInsets.only(top: AppSizes. m8,left:AppSizes. m4),
+    padding: const EdgeInsets.only(left:AppSizes. p10,top:AppSizes. p20),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
@@ -272,7 +274,7 @@ Widget getGraph() {
             ),
           ],
         ),
-        SizedBox(height: 20),
+        SizedBox(height:AppSizes. h20),
         // Pie Chart
         SizedBox(
           height: MediaQuery.of(context).size.height / 4,
@@ -297,17 +299,17 @@ Widget getGraph() {
             ),
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: AppSizes. h20),
         // Legend at the bottom
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _buildLegendItem(Color(0xFF9ECAD7), 'Principal'),
-            SizedBox(width: 20),
+            SizedBox(width: AppSizes. w20),
               _buildLegendItem(Color(0xFF4B4D73), 'Interest'),
           ],
         ),
-         SizedBox(height: 20),
+         SizedBox(height: AppSizes. h20),
       ],
     ),
   );
@@ -319,14 +321,14 @@ Widget _buildLegendItem(Color color, String label) {
   return Row(
     children: [
       Container(
-        width: 12,
-        height: 12,   
+        width: MediaQuery.of(context).size.width * 0.04,
+height: MediaQuery.of(context).size.height * 0.017, 
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.zero,
         ),
       ),
-      SizedBox(width: 8),
+      SizedBox(width:AppSizes. w8),
       Text(
         label,
         style: TextStyle(
@@ -512,7 +514,7 @@ PieChartSectionData getPieChartSectionData(
 //         //SizedBox(height: Colorcodes.paddingSize),
 //         getGraph(),
 //          Padding(
-//           padding: EdgeInsets.symmetric(vertical: 8),
+//           padding: EdgeInsets.symmetric(vertical: AppSizes.p8),
 //           child: Row(
 //             mainAxisAlignment: MainAxisAlignment.center,
 //             children: [
@@ -533,7 +535,7 @@ PieChartSectionData getPieChartSectionData(
 //   }
 //    Widget getSubtext(data) {
 //     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 4),
+//       padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
 //       child: Row(
 //         mainAxisAlignment: MainAxisAlignment.start,
 //         crossAxisAlignment: CrossAxisAlignment.center,
@@ -588,7 +590,7 @@ PieChartSectionData getPieChartSectionData(
 //   /// **Donut Chart**
 //   Widget getGraph() {
 //     return Container(
-//       margin: EdgeInsets.only(top: 10),
+//       margin: EdgeInsets.only(top:AppSizes.p10),
 //       width: MediaQuery.of(context).size.width / 1.1,
 //       height: MediaQuery.of(context).size.height / 2.5,
 //       child: SfCircularChart(

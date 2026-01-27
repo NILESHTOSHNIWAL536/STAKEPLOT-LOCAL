@@ -22,6 +22,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../routes/index_route.dart';
 import 'componets/chat_index.dart';
 
@@ -214,11 +215,11 @@ class _ChatState extends State<Chat> {
                           width: 10,
                           height: 10,
                           decoration: BoxDecoration(
-                            color: onlineUser.value ? Colors.green : Colors.red,
+                            color: onlineUser.value ? Colors.green :  AppColors.redColor,
                             shape: BoxShape.circle,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                         SizedBox(width: AppSizes.w6),
 
                         // username text
                         Text(
@@ -364,7 +365,7 @@ class _ChatState extends State<Chat> {
           ),
           counterText: "",
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p12),
           border: InputBorder.none,
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.transparent),
@@ -388,7 +389,7 @@ class _ChatState extends State<Chat> {
           child: Container(
             width: MediaQuery.of(context).size.width / 1.2,
             height: MediaQuery.of(context).size.height / 3.2,
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            padding: EdgeInsets.symmetric(vertical: AppSizes.p20, horizontal: 10),
             decoration: BoxDecoration(
                 color: AppColors.backgroundColor,
                 borderRadius: BorderRadius.circular(12)),
@@ -406,7 +407,7 @@ class _ChatState extends State<Chat> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
                   child: Container(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height / 7,
@@ -459,7 +460,7 @@ class _ChatState extends State<Chat> {
           } catch (e) {}
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: AppSizes.p10),
           decoration: BoxDecoration(
               color: color, borderRadius: BorderRadius.circular(12)),
           child: Text(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../colors.dart';
+
 class CustomStyledContainer extends StatelessWidget {
   /// The child widget to be placed inside the container.
   final Widget child;
@@ -40,7 +42,7 @@ class CustomStyledContainer extends StatelessWidget {
       height: height,
       padding: padding,
       decoration: BoxDecoration(
-        color: Colors.white, // background: #FFF; (Fixed to white based on CSS)
+        color: AppColors.backgroundColor, // background: #FFF; (Fixed to white based on CSS)
         borderRadius: BorderRadius.circular(radius), // radius: passed variable
          boxShadow: const [
       BoxShadow(

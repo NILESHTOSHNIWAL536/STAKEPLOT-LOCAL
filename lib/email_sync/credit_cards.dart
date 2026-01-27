@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 class CreditCardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class CreditCardsScreen extends StatelessWidget {
                     width: w * .86,
                     fit: BoxFit.fitWidth,
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: AppSizes.h16),
                   Image.asset(
                     'assets/axis_privilege_card.png',
                     width: w * .86,

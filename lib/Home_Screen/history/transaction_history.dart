@@ -20,11 +20,11 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
-import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../backed_connections/bankServices/pdf.dart';
 
 RxBool reloadHistory = false.obs;
@@ -94,29 +94,27 @@ class _TransactionHistoryState extends State<TransactionHistory>
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
-        child: Column(
-          children: [
-           
-            Obx(() => getBoolForSearch()
-                ? searchTextControllerBool.value
-                    ? getSearchListAndCreditDebit()
-                    : getSearchListAndCreditDebit()
-                : SizedBox.shrink()),
-            Obx(() {
-              
-              if (widget.showIcon ?? false) {
-                return reloadHistory.value ? getlist() : getlist();
-              } 
-              else {
-                return allOrGroupTransactionsName.value ==
-                        StringConstant.allTransactions
-                    ? (reloadHistory.value ? getlist() : getlist())
-                    : GroupTransactions();
-              }
-            }),
-          ],
-        ),
+      child: Column(
+        children: [
+         
+          Obx(() => getBoolForSearch()
+              ? searchTextControllerBool.value
+                  ? getSearchListAndCreditDebit()
+                  : getSearchListAndCreditDebit()
+              : const SizedBox.shrink()),
+          Obx(() {
+            
+            if (widget.showIcon ?? false) {
+              return reloadHistory.value ? getlist() : getlist();
+            } 
+            else {
+              return allOrGroupTransactionsName.value ==
+                      StringConstant.allTransactions
+                  ? (reloadHistory.value ? getlist() : getlist())
+                  :const  GroupTransactions();
+            }
+          }),
+        ],
       ),
     );
   }
@@ -133,13 +131,13 @@ class _TransactionHistoryState extends State<TransactionHistory>
   Widget getSearchListAndCreditDebit() {
     return Column(
       children: [
-       searchItemClicked.value? SizedBox.shrink(): Padding(
-          padding: const EdgeInsets.only(top: 12, bottom: 8),
+       searchItemClicked.value? const SizedBox.shrink(): const Padding(
+          padding:  EdgeInsets.only(top:AppSizes.p12, bottom: 8,),
           child: TransactionsSearchList(),
         ),
         lastWeekjson.isNotEmpty && lastmonthjson.isNotEmpty
-            ? TransactionCreditDebitScreen()
-            : SizedBox.shrink(),
+            ? const TransactionCreditDebitCard()
+            : const SizedBox.shrink(),
       ],
     );
   }
@@ -154,7 +152,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         try {
           // Parse as UTC and convert to IST
           DateTime utcDate = DateTime.parse(timestamp).toUtc();
-          DateTime istDate = utcDate.subtract(Duration(hours: 5, minutes: 30));
+          DateTime istDate = utcDate.subtract(const Duration(hours: 5, minutes: 30));
           // Use only year and month for grouping to avoid day boundary issues
           String monthYearKey =
               DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
@@ -174,11 +172,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
       DateTime dateA = DateFormat('MMMM yyyy')
           .parse(a, true)
           .toUtc()
-          .subtract(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+          .subtract(const Duration(hours: 5, minutes: 30)); // Convert UTC to IST
       DateTime dateB = DateFormat('MMMM yyyy')
           .parse(b, true)
           .toUtc()
-          .subtract(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+          .subtract(const Duration(hours: 5, minutes: 30)); // Convert UTC to IST
       return dateB.compareTo(dateA); // Most recent first
     });
 
@@ -205,12 +203,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
         if (item is String && item != 'loader') {
           String monthYear = item;
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  displayItems.length > 0 ? monthYear : '',
+                  displayItems.isNotEmpty ? monthYear : '',
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
@@ -228,28 +226,22 @@ class _TransactionHistoryState extends State<TransactionHistory>
           final transaction = item;
           int transactionIndex = transactionsHistory.indexOf(transaction);
 
-          return Container(
-            child: HistoryTransactions(
-                transaction: transaction,
-                date: transaction.transactionTimestamp.toString(),
-                index: transactionIndex,
-                context: context,
-                hideReview: true,
-                isExpanded: widget.expandedPage,
-                fromAutoPay: widget.fromAutoPay
-                ),
-          );
+          return HistoryTransactions(
+              transaction: transaction,
+              date: transaction.transactionTimestamp.toString(),
+              index: transactionIndex,
+              context: context,
+              hideReview: true,
+              isExpanded: widget.expandedPage,
+              fromAutoPay: widget.fromAutoPay
+              );
         }
 
         return Obx(() => !isLoadingMore.value
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : loadingDelay.value
                 ? transactionsHistory.length - 1 <= 0
-                    ? Container(
-                        height: 50,
-                        width: 50,
-                        child: Spinner(),
-                      )
+                    ? Spinner()
                     : Skeletonizer(
                         child: Column(
                           children: [1, 2, 3]
@@ -268,13 +260,13 @@ class _TransactionHistoryState extends State<TransactionHistory>
                         ),
                       )
                 : transactionsHistory.isEmpty
-                    ? Container(
+                    ? SizedBox(
                         height: MediaQuery.of(context).size.height / 1.38,
                         child: Center(
                             child: textStyleImage(
                                 context: context,
                                 text: HomepageStringsDart().noTransactions)))
-                    : SizedBox.shrink()); // Fallback for unexpected items
+                    : const SizedBox.shrink()); // Fallback for unexpected items
       },
     );
   }
@@ -320,7 +312,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: AppSizes.h20),
               getListItemListTile(
                   HomepageStringsDart().thirtyDays, "days", context),
               getListItemListTile(

@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/integration.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../Home_Screen/Home/init_Api_Calls.dart';
 
 Future<bool?> showSkipModal2(BuildContext context) {
@@ -18,7 +19,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
     builder: (BuildContext context) {
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(AppSizes.p20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -32,7 +33,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                   color: AppColors.bg1,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: AppSizes.h20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -43,7 +44,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                       child: Container(
                         width: MediaQuery.of(context).size.width / 3,
                         padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
                         decoration: BoxDecoration(
                             color: Colors.grey,
                             borderRadius: BorderRadius.circular(24)),
@@ -57,7 +58,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                           ),
                         ),
                       )),
-                  SizedBox(width: 10),
+                  SizedBox(width: AppSizes.w10),
                   GestureDetector(
                       onTap: () {
                         Navigator.of(context).pop(true); // User chose "Yes"
@@ -70,7 +71,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                       child: Container(
                         width: MediaQuery.of(context).size.width / 3,
                         padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
                         decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(24)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../Constants/colors.dart';
+import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 
 class UpdatesScreen extends StatelessWidget {
@@ -17,7 +18,7 @@ class UpdatesScreen extends StatelessWidget {
           children: [
             /// -------- HEADER ----------
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p14),
               decoration: const BoxDecoration(
                 color: AppColors.newbg,
                 borderRadius: BorderRadius.vertical(
@@ -47,14 +48,14 @@ class UpdatesScreen extends StatelessWidget {
             /// -------- CONTENT ----------
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSizes.p16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     /// -------- VERSION CARD ----------
                     // Container(
                     //   width: double.infinity,
-                    //   padding: const EdgeInsets.all(16),
+                    //   padding: const EdgeInsets.all(AppSizes.p16),
                     //   decoration: BoxDecoration(
                     //     color: const Color(0xFFF1F3FF),
                     //     borderRadius: BorderRadius.circular(16),
@@ -76,7 +77,7 @@ class UpdatesScreen extends StatelessWidget {
                     //           ),
                     //           Container(
                     //             padding: const EdgeInsets.symmetric(
-                    //                 horizontal: 10, vertical: 4),
+                    //                 horizontal: 10, vertical: AppSizes.p4),
                     //             decoration: BoxDecoration(
                     //               color: Colors.white,
                     //               borderRadius: BorderRadius.circular(20),
@@ -141,7 +142,7 @@ class UpdatesScreen extends StatelessWidget {
                      
                     ),
 
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.h12),
 
                     _featureCard(
                       context: context,
@@ -211,7 +212,7 @@ class UpdatesScreen extends StatelessWidget {
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(AppSizes.p14),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(16),
@@ -228,7 +229,7 @@ class UpdatesScreen extends StatelessWidget {
             ),
             child: Icon(icon, color: AppColors.backgroundColor),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: AppSizes.w12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,7 +266,7 @@ class UpdatesScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: AppSizes.h6),
                 Text(
                   description,
                    style: FontManager().getTextStyle(

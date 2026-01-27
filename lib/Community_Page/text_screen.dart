@@ -17,6 +17,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -100,7 +101,7 @@ class _TextScreenState extends State<TextScreen> {
         });
       }
     } catch (e) {
-      snackBarAllFeilds2(context,SnackbarData().pickingError);
+      snackBarCalledfail(context,SnackbarData().pickingError);
     }
   }
 
@@ -192,7 +193,7 @@ class _TextScreenState extends State<TextScreen> {
               ?SuccessPost(celebrationText: strings.postedSuccess)
               : SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppSizes.p16),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -240,11 +241,11 @@ class _TextScreenState extends State<TextScreen> {
                         GestureDetector(
                           onTap: () async {
                              if (titleController.text.trim().isEmpty) {
-                    snackBarAllFeilds2(context, "Please add title");
+                    snackBarCalledfail(context, "Please add title");
                     return;
                   }
                   if (contentController.text.trim().isEmpty) {
-                    snackBarAllFeilds2(context, "Please add your thoughts");
+                    snackBarCalledfail(context, "Please add your thoughts");
                     return;
                   }
                             
@@ -254,7 +255,7 @@ class _TextScreenState extends State<TextScreen> {
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width / 1.1,
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
                             decoration: BoxDecoration(
                               color: titleController.text.isNotEmpty &&
                                       contentController.text.isNotEmpty
@@ -302,7 +303,7 @@ class _TextScreenState extends State<TextScreen> {
 
                           if (titleController.text.trim().isEmpty ||
                               contentController.text.trim().isEmpty) {
-                            snackBarAllFeilds(context);
+                            snackBarCalledfail(context,"Enter all fields");
                              postController.posting.value = false;
                             return;
                           }

@@ -19,6 +19,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
+
 
 RxBool loadConsentId=false.obs;
 RxBool isOtpWrong = false.obs;
@@ -80,7 +82,7 @@ class _MobileNumberState extends State<MobileNumber> {
         body: SafeArea(
           child: Container(
             height: MediaQuery.of(context).size.height,
-            padding: EdgeInsets.only(top: 10, left: 12, right: 12, bottom: 5),
+            padding: EdgeInsets.only(top:AppSizes.p10, left:AppSizes.p12, right:AppSizes.p12, bottom: 5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -89,7 +91,7 @@ class _MobileNumberState extends State<MobileNumber> {
                   children: [
                   
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                       child: Text(
                         FinvuStrings().otpVerification,
                         style: FontManager().getTextStyle(
@@ -101,7 +103,7 @@ class _MobileNumberState extends State<MobileNumber> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.p20, horizontal: AppSizes.p12),
                       child: Text(
           FinvuStrings().finvuOtpMessage,
                         style: FontManager().getTextStyle(
@@ -117,7 +119,7 @@ class _MobileNumberState extends State<MobileNumber> {
                   ],
                 ),
                 Padding(
-                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                 padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: AppSizes.p12),
                     
                   child: Column(
                     children: [
@@ -141,7 +143,7 @@ class _MobileNumberState extends State<MobileNumber> {
                                     return Container();
                                   },
                               decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 2,vertical: 16),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 2,vertical: AppSizes.p16),
                                 
                                 prefixIcon: const Icon(Icons.phone_android_outlined),
                                 prefixIconColor: AppColors.primaryColor,
@@ -174,7 +176,7 @@ class _MobileNumberState extends State<MobileNumber> {
                       ),
                           
                           SizedBox(
-                              height: 20), // Add spacing between TextField and button
+                              height: AppSizes.h20), // Add spacing between TextField and button
                           // Button for "Get OTP"
                           GestureDetector(
                             onTap: () async {
@@ -218,7 +220,7 @@ class _MobileNumberState extends State<MobileNumber> {
                               //     });
                            }else
                            {
-                             snackBarCalledSignup(context, SnackbarData().errorGeneratingOtp);
+                             snackBarCalledfail(context, SnackbarData().errorGeneratingOtp);
                            }
                              loadConsentId.value=false;
                             },
@@ -304,17 +306,17 @@ class _MobileNumberState extends State<MobileNumber> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 25, left: 20, right: 20),
+              padding: const EdgeInsets.only(top: 25, left:AppSizes.p20, right:AppSizes.p20),
               child: textStyle( FinvuStrings().registerWithFinvu, 16,
                   AppColors.bg1, FontWeight.bold),
             ),
             // Padding(
-            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+            //   padding: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 20),
             //   child: textStyle(
             //       "We recommend using the mobile number linked to the accounts you want to share", 16, AppColors.bg1, FontWeight.bold),
             // ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 20),
               child: textStyle( "${FinvuStrings().enterOtpSentTo} ${number.value}", 15,
                   AppColors.bg1, FontWeight.w400),
             ),
@@ -336,11 +338,11 @@ class _MobileNumberState extends State<MobileNumber> {
                   fieldHeight: MediaQuery.of(context).size.width * 0.12,
                   fieldWidth: MediaQuery.of(context).size.width * 0.12,
                   activeFillColor: AppColors.backgroundColor,
-                  activeColor: isOtpWrong.value ? Colors.red : Colors.blue,
+                  activeColor: isOtpWrong.value ?  AppColors.redColor : Colors.blue,
                   selectedFillColor: AppColors.backgroundColor,
-                  selectedColor: isOtpWrong.value ? Colors.red : Colors.blue,
+                  selectedColor: isOtpWrong.value ?  AppColors.redColor : Colors.blue,
                   inactiveFillColor: Colors.grey[200],
-                  inactiveColor: isOtpWrong.value ? Colors.red : Colors.grey,
+                  inactiveColor: isOtpWrong.value ?  AppColors.redColor : Colors.grey,
                 ),
                 enableActiveFill: true,
                 textStyle: TextStyle(fontSize: 20, color: AppColors.accentColor),
@@ -363,7 +365,7 @@ class _MobileNumberState extends State<MobileNumber> {
                           context,
                           lWeight: FontWeight.w300,
                           fontSize: 10,
-                          color: Colors.red,
+                          color:  AppColors.redColor,
                         ),
                       ),
                     )
@@ -456,7 +458,7 @@ class _MobileNumberState extends State<MobileNumber> {
   Widget getColorVerify() {
     return Container(
       width: MediaQuery.of(context).size.width / 1.1,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p20),
       decoration: BoxDecoration(
         color: _isOtpValid.value
             ? AppColors.primaryColor

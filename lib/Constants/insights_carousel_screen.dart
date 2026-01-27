@@ -4,11 +4,11 @@ import 'package:flutter_application_code_stakeplot/Constants/AdjustAmountScreen.
 import '../Home_Screen/home_screen_state/home_page.dart';
 import 'package:flutter_application_code_stakeplot/constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-
+import 'package:flutter_application_code_stakeplot/Constants/core/app_padding_sizes.dart';
 import 'font_manager.dart';
 
 
-class InsightsCarouselScreen extends StatefulWidget {
+class InsightsCarouselScreen extends StatefulWidget { 
   @override
   _InsightsCarouselScreenState createState() => _InsightsCarouselScreenState();
 }
@@ -86,8 +86,8 @@ class _InsightsCarouselScreenState extends State<InsightsCarouselScreen> {
   return Container(
  height: MediaQuery.of(context).size.height / 2,
 
-    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+    margin: const EdgeInsets.symmetric(horizontal: AppSizes.p20, vertical: AppSizes.p24),
+    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20, vertical: AppSizes.p30),
     decoration: BoxDecoration(
       color: AppColors.backgroundColor,
       borderRadius: BorderRadius.circular(22),
@@ -99,7 +99,7 @@ class _InsightsCarouselScreenState extends State<InsightsCarouselScreen> {
         
         /// TITLE
         Padding(
-          padding: const EdgeInsets.only(top:10),
+          padding: const EdgeInsets.only(top:AppSizes.p10),
           child: Text(
             "Highest spending month",
             style:  FontManager().getTextStyle(context, 
@@ -120,7 +120,7 @@ class _InsightsCarouselScreenState extends State<InsightsCarouselScreen> {
 
         /// MONTH NAME
         Padding(
-          padding: const EdgeInsets.only(top:20),
+          padding: const EdgeInsets.only(top:AppSizes.p20),
           child:  Text(
             "January",
             style:  FontManager().getTextStyle(context, 
@@ -160,7 +160,7 @@ SizedBox(
 
         /// SUBTEXT
          Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18),
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.p18),
           child: Text(
             "You have spent 18% more than your monthly average spending in this month.",
             style: FontManager().getTextStyle(context, 
@@ -181,7 +181,7 @@ SizedBox(
         /// NEXT BUTTON
         ///
         Padding(
-          padding: const EdgeInsets.only(top:18),
+          padding: const EdgeInsets.only(top:AppSizes.p18),
           child: 
           SizedBox(
             width: double.infinity,
@@ -189,13 +189,13 @@ SizedBox(
 
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor:AppColors.primaryColor,
+                backgroundColor:AppColors.primaryColor, 
                 foregroundColor: AppColors.backgroundColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                   
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 15),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
               ),
               onPressed: () {
             if (pageIndex < 2) {
@@ -235,8 +235,8 @@ Widget bar(double height, bool active) {
   Widget topCategoriesCard() {
   return Container(
     height: MediaQuery.of(context).size.height / 2,
-    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+    margin: const EdgeInsets.symmetric(horizontal: AppSizes.m20, vertical: AppSizes.m24),
+    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20, vertical: AppSizes.p24),
     decoration: BoxDecoration(
       color: AppColors.backgroundColor,
       borderRadius: BorderRadius.circular(22),
@@ -247,7 +247,7 @@ Widget bar(double height, bool active) {
     
         /// TITLE
         Padding(
-          padding: const EdgeInsets.only(top:15),
+          padding: const EdgeInsets.only(top:AppSizes.p14),
           child: Text(
             "Top 3 spending categories",
                  style: FontManager().getTextStyle(context, 
@@ -259,7 +259,7 @@ Widget bar(double height, bool active) {
           ),
         ),
     
-        const SizedBox(height: 22),
+        const SizedBox(height: AppSizes.h20),
     
         /// CATEGORY TILES
         categoryRow(
@@ -267,14 +267,14 @@ Widget bar(double height, bool active) {
           title: "Groceries",
           progress: 0.65,
         ),
-        const SizedBox(height: 15),
+        const SizedBox(height: AppSizes.h15),
     
         categoryRow(
           icon : AvatarProfileImageZero(url: Finance.transport, width: 10, height: 20),
           title: "Transport",
           progress: 0.55,
         ),
-        const SizedBox(height: 15),
+        const SizedBox(height: AppSizes.h15),
     
         categoryRow(
           icon : AvatarProfileImageZero(url:Finance.entertainment, width: 10, height: 20),
@@ -283,7 +283,7 @@ Widget bar(double height, bool active) {
         ),
         
     
-        const SizedBox(height: 15),
+        const SizedBox(height: AppSizes.h15),
     
         /// FOOTER TEXT
          Text(
@@ -295,11 +295,11 @@ Widget bar(double height, bool active) {
             ),
         ),
     
-        const SizedBox(height:15),
+        const SizedBox(height:AppSizes.h15),
     
         /// NEXT BUTTON
         Padding(
-          padding: const EdgeInsets.only(top:10),
+          padding: const EdgeInsets.only(top:AppSizes.p10),
           child: SizedBox(
             width: double.infinity,
                          height: MediaQuery.of(context).size.height / 18.5,
@@ -338,7 +338,7 @@ Widget categoryRow({
   required double progress,
 }) {
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p14),
     height: MediaQuery.of(context).size.height / 11.5,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(14),
@@ -389,14 +389,14 @@ Widget categoryRow({
   Widget mostActiveDayCard() {
   return Container(
   height: MediaQuery.of(context).size.height / 2,
-    margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 25),
+    margin: const EdgeInsets.symmetric(horizontal: AppSizes.m16, vertical: AppSizes.m24),
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
     decoration: BoxDecoration(
       color: AppColors.backgroundColor,
       borderRadius: BorderRadius.circular(22),
     ),
     child: Padding(
-      padding: const EdgeInsets.symmetric(vertical:20),
+      padding: const EdgeInsets.symmetric(vertical:AppSizes.p20),
       child: Column(
         children: [
       
@@ -411,7 +411,7 @@ Widget categoryRow({
             textAlign: TextAlign.center,
           ),
       
-          const SizedBox(height: 30),
+          const SizedBox(height: AppSizes.h30),
       
       Container(
        
@@ -423,7 +423,7 @@ Widget categoryRow({
         ),
       ),
       
-      const SizedBox(height: 10),
+      const SizedBox(height: AppSizes.h10),
       
           /// DAY TEXT
            Text(
@@ -435,11 +435,11 @@ Widget categoryRow({
               ),
           ),
       
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSizes.h20),
       
           /// DESCRIPTION
            Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.p8),
             child: Text(
               "This is your peak-spend day.\n"
               "Set a reserve now—and take control\n"
@@ -453,11 +453,11 @@ Widget categoryRow({
             ),
           ),
       
-         const SizedBox(height:20),
+         const SizedBox(height:AppSizes.h20),
       
           /// BUTTONS
           Padding(
-            padding: const EdgeInsets.only(top:10),
+            padding: const EdgeInsets.only(top:AppSizes.p10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -472,7 +472,7 @@ Widget categoryRow({
                 style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primaryColor,
                     side: BorderSide(color: AppColors.primaryColor),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
                     shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
                     ),
@@ -511,7 +511,7 @@ Widget categoryRow({
                         style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
@@ -539,7 +539,7 @@ Widget categoryRow({
             ),
           ),
       
-          const SizedBox(height: 12),
+          const SizedBox(height:AppSizes.h12),
       
           /// FOOTER TEXT
          Text(

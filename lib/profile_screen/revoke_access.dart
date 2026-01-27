@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/font_manager.dart';
 import '../backed_connections/apis_connect.dart';
 import '../repository/email-services.dart';
@@ -36,7 +37,7 @@ class RevokeAccessScreen extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor:  AppColors.redColor),
             onPressed: () => Navigator.of(context).pop(true),
             child: Text(
               "Revoke",
@@ -74,7 +75,7 @@ Widget build(BuildContext context) {
       alignment: Alignment.topCenter,
       color: theme.colorScheme.surface.withOpacity(0.025),
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p32, horizontal: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -83,12 +84,12 @@ Widget build(BuildContext context) {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               elevation: 2,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: AppSizes.p22),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.warning_amber_rounded, size: 46, color: Colors.red[400]),
-                    const SizedBox(width: 16),
+                    Icon(Icons.warning_amber_rounded, size: 46, color:  AppColors.redColor),
+                     SizedBox(width: AppSizes.w16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,19 +98,19 @@ Widget build(BuildContext context) {
                             "Connected Account",
                             style: fm.getTextStyle(context, lWeight: FontWeight.w600, fontSize: 16),
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: AppSizes.h6),
                           Text(
                             userController.email.value,
                             style: fm.getTextStyle(context, lWeight: FontWeight.w500, fontSize: 14, color: Colors.grey),
                           ),
-                          const SizedBox(height: 14),
-                          Divider(height: 1, color: Colors.red[100]),
-                          const SizedBox(height: 12),
+                          SizedBox(height: AppSizes.h14),
+                          Divider(height: 1, color: const Color.fromRGBO(255, 205, 210, 1)),
+                          SizedBox(height: AppSizes.h12),
                           Text(
                             "This app currently has access to:",
                             style: fm.getTextStyle(context, lWeight: FontWeight.w600, fontSize: 15),
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: AppSizes.h6),
                           _accessRow(theme, fm, "Your Google account email",context),
                           _accessRow(theme, fm, "Your basic profile info",context),
                           _accessRow(theme, fm, "Gmail (readonly access)",context),
@@ -120,7 +121,7 @@ Widget build(BuildContext context) {
                 ),
               ),
             ),
-            const SizedBox(height: 28),
+            SizedBox(height: AppSizes.h28),
             Text(
               "Revoking access will disconnect your Google account. "
               "You will no longer be able to use Google login or view Gmail data "
@@ -128,15 +129,15 @@ Widget build(BuildContext context) {
               style: fm.getTextStyle(context, fontSize: 13, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 38),
+            SizedBox(height: AppSizes.h40),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[700],
+                  backgroundColor:  AppColors.redColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   elevation: 3,
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: AppSizes.p16),
                 ),
                 icon: const Icon(Icons.logout),
                 label: Text(
@@ -159,7 +160,7 @@ Widget _accessRow(ThemeData theme, FontManager fm, String text,BuildContext cont
     child: Row(
       children: [
         Icon(Icons.check_circle_rounded, size: 17, color: theme.colorScheme.secondary),
-        const SizedBox(width: 7),
+        SizedBox(width: AppSizes.w8),
         Expanded(child: Text(text, style: fm.getTextStyle(context, fontSize: 13))),
       ],
     ),

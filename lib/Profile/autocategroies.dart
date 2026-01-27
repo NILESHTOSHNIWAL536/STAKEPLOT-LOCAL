@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
 import 'package:get/get.dart';
 
+import '../Constants/core/app_padding_sizes.dart';
 import '../components/shared_utils.dart';
 import '../repository/transactions_repository.dart';
 
@@ -85,7 +86,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
             size: 70,
             color: AppColors.primaryColor,
           ),
-          const SizedBox(height: 20),
+           SizedBox(height: AppSizes.h20),
           textStyle(
             context: context,
             text: "No Groups Yet!",
@@ -108,8 +109,8 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
     final totalAmount = transaction['amount']?.toString() ?? '0';
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.p8),
+      padding: const EdgeInsets.all(AppSizes.p16),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(16),  
@@ -137,7 +138,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
             children: [
                getIconAvtar(48,category, 40),
             
-              const SizedBox(width: 16),
+              SizedBox(width: AppSizes.w16),
               // Text details
               Container(
                 width: MediaQuery.sizeOf(context).width/2.3,
@@ -156,7 +157,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                       ),
                     ),
     // ... existing code ...
-                    const SizedBox(height: 6),
+                    SizedBox(height: AppSizes.h6),
                     textStyle(
                     context: context,
                     text: '${"Milk(${"Dary"})"}',
@@ -171,7 +172,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                     //   c: AppColors.primaryColor.withOpacity(0.8),
                     //   fontsize: 12,
                     // ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: AppSizes.h6),
     
                     textStyle(
                       context: context,
@@ -186,7 +187,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
               ),
             
             
-              const SizedBox(width: 3),
+               SizedBox(width: AppSizes.w4),
     
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -201,7 +202,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                         size: 30,
                       ),
                     ),
-                    const SizedBox(width: 3), 
+                    SizedBox(width: AppSizes.w4),
                     InkWell(
                       onTap: ()
                       {
@@ -247,7 +248,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
       builder: (modalContext) {
         return Container(
           height: MediaQuery.of(modalContext).size.height * 0.7,
-          padding: const EdgeInsets.only(top: 16, bottom: 16),
+          padding: const EdgeInsets.only(top:AppSizes.p16, bottom: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -255,7 +256,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(width: 48), // Spacer for alignment
+                   SizedBox(width: AppSizes.w48), // Spacer for alignment
                   textStyle(
                     context: context,
                     text: "Group Transactions",
@@ -273,7 +274,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.h8),
               // Tag button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -297,7 +298,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                         },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
+                        horizontal: 16, vertical: AppSizes.p8),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -315,7 +316,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                           color: AppColors.backgroundColor,
                           size: 20,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: AppSizes.w8),
                         textStyle(
                           context: context,
                           text: "Tag Group",
@@ -328,7 +329,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
               // Transaction list
               Obx(
                 () => lengthOfTransactions.value
@@ -342,7 +343,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                               color: Colors.green,
                               size: 60,
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(height: AppSizes.h16),
                             textStyle(
                               context: context,
                               text: "All Cleared!",
@@ -382,7 +383,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
           : Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Container(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(AppSizes.p14),
                 decoration: BoxDecoration(
                   color: AppColors.backgroundColor,
                   borderRadius: BorderRadius.circular(12),
@@ -418,7 +419,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                         size: 24,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: AppSizes.w12),
                     // Details
                     Flexible(
                       child: Column(
@@ -437,7 +438,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                       ),
 // ... existing code ...
                       
-                          const SizedBox(height: 6),
+                          SizedBox(height: AppSizes.h6),
                           textStyle(
                             context: context,
                             text: transactionDetails['txnId'] ?? 'No ID',
@@ -445,7 +446,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                             fontsize: 12,
                           ),
                          
-                          const SizedBox(height: 4),
+                          SizedBox(height: AppSizes.h4),
                           Row(
                             children: [
                               textStyle(
@@ -455,7 +456,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                                 fontsize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
-                                const SizedBox(width: 10),
+                                SizedBox(width: AppSizes.w10),
                                textStyle(
                                 context: context,
                                 text:formatWhatsAppDate(convertStringToDateTime(transactionDetails['transactionTimestamp'])),
@@ -467,7 +468,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: AppSizes.w12),
                     // Delete button
                     GestureDetector(
                       onTap: () {
@@ -479,7 +480,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
                                 transaction['transactions'].length;
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(AppSizes.p8),
                         decoration: BoxDecoration(
                           color: Colorcodes.red.withOpacity(0.1),
                           shape: BoxShape.circle,

@@ -33,7 +33,7 @@ class CommunityScreenStrings {
   String newPost = "New post";
   String enterTitle = "Enter title ";
   String addThoughts = "Add description";
-  String continueButton = "Continue";
+  String continueButton = "Next";
   String postedSuccess = "Posted";
   String trending = "Now";
   String feed = "ForYou";

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_components/transactions_content.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/services.dart';
 
+import '../../../Constants/core/app_padding_sizes.dart';
 import '../../autoPays/CreateAutoPayFromTransactionScreen.dart';
 
 class TransactionContainer extends StatelessWidget {
@@ -103,21 +105,14 @@ void _navigateToAutoPayPage(
       child: Container(
         width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(
-            vertical: fontSizes.margin / 2, horizontal: fontSizes.margin),
+            vertical: AppSizes.p6, horizontal: fontSizes.margin),
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(10),
           border: !isReview
-              ? Border.all(color: Colorcodes.greyLight, width: 0.1)
-              : Border.all(color: Colorcodes.red, width: 0.5),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromRGBO(155, 155, 155, 0.25),
-              offset: const Offset(0, 0),
-              blurRadius: 4,
-              spreadRadius: 0,
-            ),
-          ],
+              ? Border.all(color: AppColors.grey, width: 0.1)
+              : Border.all(color: AppColors.redColor, width: 0.5),
+         
         ),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
@@ -127,7 +122,7 @@ void _navigateToAutoPayPage(
               
               Column(
                 children: [
-                 isReview? SizedBox(height: fontSizes.padding):const SizedBox.shrink(),
+                 isReview? SizedBox(height: fontSizes.padding): const SizedBox(height: 4),
                   TransactionContent(
                     transaction: transaction,
                     isExcluded: isExcluded,
@@ -166,16 +161,13 @@ void _navigateToAutoPayPage(
                   index,
                   transaction.id,
                 ))
-              : const SizedBox(height: 10),
+              :  SizedBox(height: AppSizes.h10),
               if (isExcluded)
                 Positioned(
                   top: 0,
                   right: -2,
-                  child: SvgPicture.asset(
-                    'assets/icons/Home-page/notMIne.svg',
-                    height: 20,
-                    width: 60,
-                  ),
+                  child: AvatarProfileImageZero(url: HomePageIcons.notMIne, width: 50, height: 50)
+                  
                 ),
             ],
           ),
@@ -200,28 +192,28 @@ void _navigateToAutoPayPage(
               maxHeight: 220,
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppSizes.p16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   textStyle(
                     context: context,
                     text: "Include transaction?",
-                    c: AppColors.bg1,
+                    c: AppColors.accentColor,
                     fontsize: 16,
                     fontWeight: FontWeight.w600,
                   ),
-                  const SizedBox(height: 10),
+                   SizedBox(height: AppSizes.h10),
                   textStyle(
                     context: context,
                     text:
                         "Are you sure you want to add this transaction? It will be included in your category spending and reflected in your insights.",
                     c: AppColors.grey,
                     fontsize: 14,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w400,
                     iswrap: true,
                   ),
-                  const SizedBox(height: 16),
+                   SizedBox(height: AppSizes.h16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -229,11 +221,11 @@ void _navigateToAutoPayPage(
                         onTap: () => Navigator.of(context).pop(false),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 8),
+                              horizontal: 10, vertical: AppSizes.p8),
                           decoration: BoxDecoration(
                             color: AppColors.backgroundColor,
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: AppColors.bg1),
+                            border: Border.all(color: AppColors.grey),
                           ),
                           child: textStyle(
                             context: context,
@@ -245,12 +237,12 @@ void _navigateToAutoPayPage(
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: AppSizes.w10),
                       GestureDetector(
                         onTap: () => Navigator.of(context).pop(true),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 8),
+                              horizontal: 10, vertical: AppSizes.p8),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(8),

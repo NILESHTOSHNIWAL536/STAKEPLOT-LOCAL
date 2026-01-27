@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/balanceout_mismatch.dart';
@@ -7,10 +8,13 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/tagandhidebutton.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:math' as math;
+
+import '../../Constants/core/app_padding_sizes.dart';
 
 
 class BalanceOutDialog extends StatelessWidget {
@@ -23,7 +27,7 @@ class BalanceOutDialog extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Dialog(
-      insetPadding: const EdgeInsets.all(10),
+      insetPadding: const EdgeInsets.all(AppSizes.p10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         decoration: BoxDecoration(
@@ -33,7 +37,7 @@ class BalanceOutDialog extends StatelessWidget {
         ),
        
         width:  width/1.1,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSizes.p16),
         child: Obx(() {
           final transactions = balanceOutList.values.toList();
             double creditSum = 0.0;
@@ -76,7 +80,7 @@ class BalanceOutDialog extends StatelessWidget {
                       context,
                       fontSize: 18,
                       lWeight: FontWeight.w600,
-                      color: AppColors.finSpaceColor
+                      color: AppColors.accentColor
                     ),
                   ),
                   InkWell(
@@ -86,28 +90,20 @@ class BalanceOutDialog extends StatelessWidget {
                         builder: (context) => CashOutDialog(maxAmount: max,),
                       );
                     },
-                    child: Container(
-                      height: 25,
-                      width: 25,
-                      decoration:  BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(5),
-                        color: Color(0xFFF6F6F6),
-                      ),
-                      child: const Icon(Icons.add, size: 16, color: Color(0xFF403E6A)),
-                    ),
+                    child: const Icon(Icons.add_box_outlined, size: 26, color: AppColors.primaryColor),
                   )
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: AppSizes.h12),
 
               Text(
                 "You can select multiple transactions that are linked or related. "
                 "Balancing them out will help keep your expense summary accurate.",
                 style: FontManager().getTextStyle(
                   context,
-                  fontSize: 12,
-                  color: Colors.grey,
+                  fontSize: 14,
+                  lWeight: FontWeight.w400,
+                  color: AppColors.grey,
                 ),
               ),
 
@@ -130,8 +126,8 @@ class BalanceOutDialog extends StatelessWidget {
 Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
    return Column(
      children: [
-             dottedDivider(),
-              const SizedBox(height: 12),
+            //  dottedDivider(),
+              SizedBox(height: AppSizes.h12),
               // Total
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,12 +146,12 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                       context,
                       fontSize: 20,
                       lWeight: FontWeight.bold,
-                      color: netAmount > 0 ? const Color(0xFF403E6A) : Colors.red,
+                      color: netAmount > 0 ? AppColors.primaryColor : AppColors.debitColor,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.h16),
 
               // CTA Button
            isValid?  isAlreadyIncluded?Container(
@@ -184,7 +180,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                     color: AppColors.backgroundColor,
                   ),
                 ),
-              ):SizedBox(),
+              ):const SizedBox(),
      ],
    );
 }
@@ -218,7 +214,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
   {
     return   Column(
       children: [
-         const SizedBox(height: 16),
+         SizedBox(height: AppSizes.h16),
         Container(
                       constraints:  BoxConstraints(
                         maxHeight: isValid? 400:200, // set your fixed max height
@@ -231,13 +227,13 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                         final tx = transactions[index];
                         final isPositive = tx.type != "DEBIT";
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
                           child: Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(AppSizes.p12),
                             decoration: BoxDecoration(
                              borderRadius: BorderRadius.circular(5),
     color: AppColors.backgroundColor,
-    boxShadow: [
+    boxShadow: const [
       BoxShadow(
         color: Color.fromRGBO(156, 156, 156, 0.25),
         blurRadius: 4,
@@ -250,7 +246,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // Title & Credited from
-                                Container(
+                                SizedBox(
                                  width: MediaQuery.sizeOf(context).width/3.3,
                                   child: Text(
                                     tx.manualTransaction ? tx.subcategory : tx.title,
@@ -258,26 +254,19 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                       context,
                                       fontSize: 11,
                                       lWeight: FontWeight.w500,
-                                      color: AppColors.finSpaceColor,
+                                      color: AppColors.accentColor,
                                     ),
                                   ),
                                 ),
                     
-                                const SizedBox(width: 4),
+                                SizedBox(width: AppSizes.w4),
                     
                                 // Logo or Lottie
-                                Container(
+                                SizedBox(
                                  width: MediaQuery.sizeOf(context).width/9,
                                   child: Container(
                                                            child: tx.manualTransaction
-                                      ? Lottie.asset(
-                                          'assets/splashScreen/manualTransactionIcon.json',
-                                          height: 30,
-                                          width: 30,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return const Icon(Icons.error);
-                                          },
-                                        )
+                                      ? AvatarProfileImageZero(url: HomePageIcons.cashTnx, width: 40, height: 40)
                                       : Image.network(
                                           tx.bankLogo ?? "",
                                           width: 22,
@@ -294,10 +283,10 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                         )),
                                 ),
                     
-                                const SizedBox(width: 4),
+                                SizedBox(width: AppSizes.w4),
                     
                                 // Amount
-                                Container(
+                                SizedBox(
                                  width: MediaQuery.sizeOf(context).width/4.3,
                                   child: Text(
                                     
@@ -312,7 +301,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                                   ),
                                   
                                 ),
-                                 const SizedBox(width: 8),
+                                 SizedBox(width: AppSizes.w8),
                                 InkWell(
                                   onTap: ()
                                   {
@@ -333,7 +322,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
                       },
                     ),
                   ),
-        const SizedBox(height: 12),
+        SizedBox(height: AppSizes.h12),
         getTotalAndAddButton(context, netAmount, isValid, isAlreadyIncluded, id),
       ],
     );
