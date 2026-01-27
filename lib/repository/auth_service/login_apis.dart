@@ -78,6 +78,7 @@ class LoginService {
         'deviceInfo': deviceData,
         "otp": otp.toString(),
       });
+      appLog("response ${response.body}");
       if (getFlagOfResponse(response)) {
         loginCalledData(response, context);
         await screenDataLocalStorage();
@@ -257,7 +258,7 @@ class LoginService {
 void updateDeviceData(RxMap deviceData) {
   deviceData['deviceId'] =
       (deviceData['deviceId']?.toString().trim().isNotEmpty ?? false)
-          ? deviceData['deviceId'].toString()
+          ? "992e8d70-05e5-4ab3-8ecd-3c2baf9fd129"
           : 'UNKNOWN_DEVICE_ID';
 
   deviceData['brand'] =

@@ -47,59 +47,60 @@ class _SliderPageState extends State<SliderPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left:AppSizes.p4, right:AppSizes.p4, top: 0, bottom: 15),
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // textStyle(
-          //     context: context,
-          //     text: "Start Calculation",
-          //     fontWeight: FontWeight.bold,
-          //     fontsize: 22,
-          //     c: AppColors.backgroundColor),
-          // Padding(
-          //   padding: EdgeInsets.only(top: Colorcodes.paddingSize / 4),
-          //   child: Divider(color: Colorcodes.greyLight),
-          // ),
-          widget.title == "Trip" ? tripDropDown() : SizedBox.shrink(),
-          getListOfSliders(widget.slidersList),
-          widget.title == "Cars" ? getBrandsOfCars() : SizedBox.shrink(),
-        ],
-      ),
-    );
-  }
+    return  Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (widget.title == "Trip") tripDropDown(),
+      getListOfSliders(widget.slidersList),
+      if (widget.title == "Cars") getBrandsOfCars(),
+    ],
+  );
+}
+
 
   Widget getListOfSliders(List slidersList) {
-    return Column(
-      children: slidersList
-          .asMap()
-          .entries
-          .map((entry) => sliderContainer(entry.value, entry.key))
-          .toList(),
-    );
-  }
+  return Column(
+    children: slidersList
+        .asMap()
+        .entries
+        .map(
+          (entry) => Padding(
+            padding: const EdgeInsets.only(bottom: 4,top:4,), // ✅ spacing
+            child: sliderContainer(entry.value, entry.key),
+          ),
+        )
+        .toList(),
+  );
+}
+
 
   Widget sliderContainer(data, int index) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: AppSizes.p6),
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Column(
-        children: [
-          topContainer(data, index),
-          SizedBox(height: Colorcodes.paddingSize / 3),
-          buildSlider(data, index),
-        ],
-      ),
-    );
-  }
+  return Container(
+    margin: const EdgeInsets.symmetric(vertical: 2,horizontal: 4),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+
+    decoration: BoxDecoration(
+      color: Colors.white, // ✅ WHITE CARD
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.06),
+          blurRadius: 16,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    ),
+    child:  Column(
+      children: [
+        topContainer(data, index),
+        const SizedBox(height: 10), // ✅ space like image
+        buildSlider(data, index),
+      ],
+    ),
+  );
+}
+
 
   Widget topContainer(data, int index) {
     bool isFloatField = data['name'] == "Loan Interest Rate" ||
@@ -121,13 +122,13 @@ class _SliderPageState extends State<SliderPage> {
           child: textStyle(
               context: context,
               text: data['name'],
-              fontWeight: FontWeight.w300,
-              fontsize: 16,
-              c: AppColors.accentColor),
-        ),
+              fontWeight: FontWeight.w600,
+              fontsize: 14,
+              c:Color(0xFF374151),)
+        ), 
         SizedBox(
-          width: 100,
-          height: 40,
+          width: 90,
+          height: 36,
           child: TextField(
             controller: data['controller'],
             keyboardType:
@@ -140,29 +141,41 @@ class _SliderPageState extends State<SliderPage> {
             style: FontManager().getTextStyle(
               context,
 
-              color: AppColors.backgroundColor, // Change this to your desired color
-              fontSize: 16, // Optional: change font size
-              lWeight: FontWeight.w500, // Optional: make it bolder/lighter
+              color: AppColors.primaryColor, // Change this to your desired color
+              fontSize: 14, // Optional: change font size
+              lWeight: FontWeight.w600, // Optional: make it bolder/lighter
             ),
             textAlign: TextAlign.center,
+            // decoration: InputDecoration(
+            //   prefixText: data['flag'] ? data['symbol'] : null,
+            //   prefixStyle: FontManager().getTextStyle(
+            //     context,
+            //     color: AppColors.backgroundColor,
+            //   ),
+            //   suffixText: data['flag'] ? null : data['symbol'],
+            //   suffixStyle: FontManager().getTextStyle(
+            //     context,
+            //     color: AppColors.backgroundColor,
+            //   ),
+            //   contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            //   border: OutlineInputBorder(
+            //       borderRadius: BorderRadius.circular(8),
+            //       borderSide: BorderSide(color: AppColors.amtCal)),
+            //   filled: true,
+            //   fillColor: AppColors.amtCal,
+            // ),
             decoration: InputDecoration(
-              prefixText: data['flag'] ? data['symbol'] : null,
-              prefixStyle: FontManager().getTextStyle(
-                context,
-                color: AppColors.backgroundColor,
-              ),
-              suffixText: data['flag'] ? null : data['symbol'],
-              suffixStyle: FontManager().getTextStyle(
-                context,
-                color: AppColors.backgroundColor,
-              ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: AppColors.amtCal)),
-              filled: true,
-              fillColor: AppColors.amtCal,
-            ),
+  prefixText: data['flag'] ? data['symbol'] : null,
+  suffixText: data['flag'] ? null : data['symbol'],
+  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(8), // ✅ rounder
+    borderSide: BorderSide.none, // ✅ no border
+  ),
+  filled: true,
+  fillColor: const Color(0xFFE6E6E6), // ✅ grey pill
+),
+
             onSubmitted: (value) {
               double? newValue = double.tryParse(value);
               double min = data['min'];
@@ -205,12 +218,13 @@ class _SliderPageState extends State<SliderPage> {
 
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
+          trackHeight: 8,
         thumbColor: AppColors.primaryColor,
         overlayColor: AppColors.backgroundColor,
         activeTrackColor: AppColors.primaryColor,
         inactiveTrackColor: AppColors.uncoloredPie,
-        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 11),
-        overlayShape: RoundSliderOverlayShape(overlayRadius: 13),
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8),
+        overlayShape: RoundSliderOverlayShape(overlayRadius: 12),
       ),
       child: Slider(
         value: data['value'],
@@ -256,7 +270,7 @@ class _SliderPageState extends State<SliderPage> {
           onChanged: (String? newValue) {
             setState(() {
               selectedDestination = newValue!;
-            });
+            }); 
           },
         ),
         SizedBox(height: AppSizes.h10),

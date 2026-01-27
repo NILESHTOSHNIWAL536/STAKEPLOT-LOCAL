@@ -13,8 +13,9 @@ class HomepageStringsDart {
   HomepageStringsDart._internal();
 
   // Next fetch button labels
+  String fetchTitle = "we are fetching your bank details";
   String fetchingInProgress = "Hang tight! We're fetching the latest info for you.";
-  String nextFetchLabel = "Next fetch on:";
+  String nextFetchLabel = "Next fetch on";
   String noBankLinked = "Please link your bank account to fetch data.";
   String lastFetchLabel = "Last Fetch";
   String nextFetchTitle = "Next Fetch";
@@ -36,6 +37,7 @@ class HomepageStringsDart {
 // Number picker screen
   String accountNumberLabel = "Acc No : ";
   String availableBalanceLabel = "Available balance";
+  String balance ="Balance";
   String setPinButton = "Set Pin";
   String resetCupertinoPin = "Reset Pin";
   String setLockTitle = "Set lock";

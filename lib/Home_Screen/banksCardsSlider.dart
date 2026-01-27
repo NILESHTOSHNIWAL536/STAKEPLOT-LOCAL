@@ -1363,6 +1363,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/bankSlider.dart';
+
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -1373,6 +1374,7 @@ import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart'
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
+import '../Constants/AnnualBalance.dart';
 import '../Constants/core/app_component_sizes.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../backed_connections/bankServices/nextFetch.dart';
@@ -1459,7 +1461,7 @@ Widget avatarSlider() {
           itemBuilder: (context, index) {
             final account = bankAccountLinkedList[index];
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal:AppSizes.p8),
               child: getListViewBankInfo(account),
             );
           },
@@ -1474,7 +1476,7 @@ Widget avatarSlider() {
           bankAccountLinkedList.length,
           (index) => AnimatedContainer(
             duration: const Duration(milliseconds: 250),
-            margin: const EdgeInsets.symmetric(horizontal: 4),
+            margin: const EdgeInsets.symmetric(horizontal: AppSizes.p4),
             height: 8,
             width:  8,  // active dot grows
             decoration: BoxDecoration(
@@ -1641,7 +1643,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
 
           /// 🔤 MAIN CONTENT
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: AppSizes.p12),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20, vertical: AppSizes.p12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1714,7 +1716,17 @@ Widget getListViewBankInfo(BankAccountModel data) {
                 SizedBox(height: AppSizes.h14),
 
                 /// QUICK CHECK
-                Row(
+               InkWell(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const AnnualBalance(),
+      ),
+    );
+  },
+              
+             child:   Row(
                   children: [
                     Image.network(
                       data.bankLogo,
@@ -1742,7 +1754,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
                     ),
                   ],
                 ),
-             
+               )
               ],
             ),
           ),
@@ -1755,7 +1767,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
               child: Container(
                 height: 40,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10),
+                    const EdgeInsets.symmetric(horizontal: AppSizes.p10),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.05),
                   borderRadius: const BorderRadius.only(
@@ -1817,7 +1829,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
         width: 1.2,
         height: 15,
         color: AppColors.backgroundColor,
-        margin: const EdgeInsets.symmetric(horizontal: 2),
+        margin: const EdgeInsets.symmetric(horizontal: AppSizes.m4),
       ),
         _buildPicker("secondDigit", context),
       ],
@@ -1836,8 +1848,8 @@ Widget getListViewBankInfo(BankAccountModel data) {
   Widget _buildPicker(String controllerValue, BuildContext context) {
 
     return Container(
-      width: 40,
-      height:40,
+    width: MediaQuery.of(context).size.width * 0.10,   // 10% of screen width (~40px)
+    height: MediaQuery.of(context).size.height * 0.05, // 5% of screen height (~40px)
       decoration:  BoxDecoration(
         color: AppColors.transparentColor,
       ),

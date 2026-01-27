@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
@@ -117,26 +118,57 @@ class _SIPCalculatorState extends State<SIPCalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      body: SafeArea(
+      backgroundColor: AppColors.newbg,
+      body:Padding(
+    
+  padding: EdgeInsets.only(
+    top: MediaQuery.of(context).size.height * 0.02,
+  
+
+
+  ),child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(AppSizes.p12),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: AppColors.primaryColor,
+                    Padding(
+                      padding: const EdgeInsets.only(left:AppSizes.p2,bottom:AppSizes.p10 ),
+                      child: Container(
+                       width: MediaQuery.sizeOf(context).width/8,
+                           
+                         
+                          height: MediaQuery.sizeOf(context).height/22,
+                        
+                         decoration: BoxDecoration(
+                            color: Colors.white,           // ✅ white background
+                          shape: BoxShape.circle,        // ✅ rounded
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_rounded,
+                            color: Color(0xFF061D3D), // arrow color
+                            size: 22,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
                     ),
+                SizedBox(  width: MediaQuery.of(context).size.width * 0.15)
+,
                     Padding(
                       padding: const EdgeInsets.only(left:AppSizes.p14),
                       child: GestureDetector(
@@ -156,13 +188,16 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                             }
                           });
                         },
-                        child: Text(
-                          "SIP Calculator",
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w800,
-                            fontSize: 40,
-                            color: AppColors.primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom:AppSizes.p10,right:AppSizes.p4),
+                          child: Text(
+                            "SIP Calculator",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w800,
+                              fontSize: 20,
+                              color: AppColors.newtitlecolor,
+                            ),
                           ),
                         ),
                       ),
@@ -183,7 +218,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                   },
                   child: _isInfoVisible
                       ? Container(
-                          margin: EdgeInsets.symmetric(vertical: AppSizes.p4),
+                          margin: EdgeInsets.symmetric(vertical: AppSizes.m4),
                           padding: EdgeInsets.all(AppSizes.p12),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor.withOpacity(0.9),
@@ -196,7 +231,7 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
-                                fontSize: 14,
+                                fontSize: 11,
                                 color: AppColors.backgroundColor,
                               ),
                               textAlign: TextAlign.center,
@@ -209,19 +244,25 @@ class _SIPCalculatorState extends State<SIPCalculator> {
                   slidersList: slidersList,
                   onSliderValueChanged: updateSliderValue,
                 ),
+                Padding(
+            padding: EdgeInsets.all(Colorcodes.paddingSize / 2),
+            child: Text(
+                              "Breakdown",
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w800,
+                                fontSize: 20,
+                                // color: AppColors.newtitlecolor,
+                              ),),
+          ),
                 Container(
-                  margin: EdgeInsets.only(
-                    left:AppSizes.p4,
-                    right:AppSizes.p4,
-                    top: 0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: graph(),
+                    decoration: BoxDecoration(
+                        color: AppColors.newbg,
+                        borderRadius: BorderRadius.circular(12)),
+                     child: graph()),
+                SizedBox(
+                  height: 10,
                 ),
-                SizedBox(height: AppSizes.h10),
                 CustomExpansionTile(
                   howToUseContent: [
                     ListItemModel(
@@ -263,38 +304,58 @@ class _SIPCalculatorState extends State<SIPCalculator> {
           ),
         ),
       ),
-    );
+    ),);
   }
 
   Widget graph() {
-    return PieChartGraph(
-      title: "Investment Breakdown",
-      graphData: [
-        {
-          'title':
-              'Invested: ₹${formatMoneyIndian(totalInvested.toStringAsFixed(0))}',
-          'value': totalInvested,
-        },
-        {
-          'title':
-              'Returns: ₹${formatMoneyIndian(totalReturns.toStringAsFixed(0))}',
-          'value': totalReturns,
-        },
-      ],
-      graphDisc: [
-        {
-          'title': 'Future Value:',
-          'amount': "₹${formatMoneyIndian(futureValue.toStringAsFixed(2))}",
-        },
-        {
-          'title': 'Total Invested:',
-          'amount': "₹${formatMoneyIndian(totalInvested.toStringAsFixed(2))}",
-        },
-        {
-          'title': 'Total Returns:',
-          'amount': "₹${formatMoneyIndian(totalReturns.toStringAsFixed(2))}",
-        },
-      ],
-    );
+  // --- PRINCIPAL & RETURNS ---
+  double principal = totalInvested;
+  double returns = totalReturns;
+
+  // --- TOTAL FOR PIE CALCULATION ---
+  double pieTotal = principal + returns;
+
+  // --- SAFETY CHECK ---
+  if (pieTotal == 0) {
+    pieTotal = 1; // prevents division by zero
   }
+
+  // --- PERCENTAGES (FOR DISPLAY IF NEEDED) ---
+  double principalPercent = (principal / pieTotal) * 100;
+  double returnsPercent = (returns / pieTotal) * 100;
+
+  return PieChartGraph(
+    title: "Investment Breakdown",
+
+    // 🔵 PIE DATA → ONLY PRINCIPAL VS RETURNS
+    graphData: [
+      {
+        'title':
+            'Principal\n${principalPercent.toStringAsFixed(1)}%\n₹${formatMoneyIndian(principal.toStringAsFixed(0))}',
+        'value': principal, // slice size
+      },
+      {
+        'title':
+            'Returns\n${returnsPercent.toStringAsFixed(1)}%\n₹${formatMoneyIndian(returns.toStringAsFixed(0))}',
+        'value': returns, // slice size
+      },
+    ],
+
+    // 📋 BELOW-PIE DETAILS (UNCHANGED)
+    graphDisc: [
+      {
+        'title': 'Future Value:',
+        'amount': "₹${formatMoneyIndian(futureValue.toStringAsFixed(0))}",
+      },
+      {
+        'title': 'Total Invested:',
+        'amount': "₹${formatMoneyIndian(principal.toStringAsFixed(0))}",
+      },
+      {
+        'title': 'Total Returns:',
+        'amount': "₹${formatMoneyIndian(returns.toStringAsFixed(0))}",
+      },
+    ],
+  );
+}
 }

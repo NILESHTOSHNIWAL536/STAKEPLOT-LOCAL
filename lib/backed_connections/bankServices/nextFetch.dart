@@ -686,7 +686,8 @@ class _RotatingIconState extends State<Nextfetch>
                             ),
                       Padding(
                         padding:
-                            const EdgeInsets.symmetric(horizontal: 5),
+                            const EdgeInsets.symmetric(horizontal:2),
+                            // const EdgeInsets.only(right:10,left:6,bottom: 2),
                         child: textStyle(
                           context: context,
                           text: isFected.value

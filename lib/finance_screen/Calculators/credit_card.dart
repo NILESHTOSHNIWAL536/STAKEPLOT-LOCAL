@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
@@ -125,27 +126,58 @@ class _CreditCardState extends State<CreditCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      body: SafeArea(
+      backgroundColor: AppColors.newbg,
+      body:Padding(
+    
+  padding: EdgeInsets.only(
+    top: MediaQuery.of(context).size.height * 0.02,
+  
+
+
+  ),child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(AppSizes.p12),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                 Row(
+               
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: AppColors.primaryColor,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom:AppSizes.p10,right:AppSizes.p2,left:AppSizes.p4),
+                      child: Container(
+                               width: MediaQuery.sizeOf(context).width/10,
+                           
+                         
+                          height: MediaQuery.sizeOf(context).height/22,
+                        
+                         decoration: BoxDecoration(
+                            color: Colors.white,           // ✅ white background
+                          shape: BoxShape.circle,        // ✅ rounded
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_rounded,
+                            color: Color(0xFF061D3D), // arrow color
+                            size: 22,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
                     ),
+                   SizedBox(  width: MediaQuery.of(context).size.width * 0.15)
+,
                     Padding(
                       padding: const EdgeInsets.only(left:AppSizes.p14),
                       child: GestureDetector(
@@ -153,24 +185,30 @@ class _CreditCardState extends State<CreditCard> {
                           setState(() {
                             _isInfoVisible = true;
                             _opacity = 1.0; // Fade in
+                           
                           });
-                          _timer?.cancel();
-
+                          _timer?.cancel(); // Cancel any existing timer
+                          // Start a new timer to fade out after 5 seconds
                           _timer = Timer(Duration(seconds: 2), () {
                             if (mounted) {
                               setState(() {
                                 _opacity = 0.0; // Fade out
+                               
                               });
                             }
                           });
                         },
-                        child: Text(
-                          "Credit Card Payoff Calculator",
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w800,
-                            fontSize: 40,
-                            color: AppColors.primaryColor,
+                       
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom:AppSizes.p10,right:AppSizes.p4,),
+                          child: Text(
+                            "Credit Card Payoff",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w800,
+                              fontSize: 18,
+                              color: AppColors.newtitlecolor,
+                            ),
                           ),
                         ),
                       ),
@@ -205,7 +243,7 @@ class _CreditCardState extends State<CreditCard> {
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
-                                fontSize: 14,
+                                fontSize: 11,
                                 color: AppColors.backgroundColor,
                               ),
                               textAlign: TextAlign.center,
@@ -224,19 +262,36 @@ class _CreditCardState extends State<CreditCard> {
                         slidersList: slidersList,
                         onSliderValueChanged: updateSliderValue,
                       ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          left:AppSizes.p4,
-                          right:AppSizes.p4,
-                          top: 0,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.backgroundColor,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: graph(),
-                      ),
-                      SizedBox(height: AppSizes.h10),
+                      SizedBox(height:10),
+                       Padding(
+                        
+            padding: EdgeInsets.all(Colorcodes.paddingSize/2),
+           
+            
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                 Text(
+                            "Breakdown",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w800,
+                              fontSize: 20,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+               
+              ],
+            ),
+          ),
+                Container(
+                    decoration: BoxDecoration(
+                        color: AppColors.newbg,
+                        borderRadius: BorderRadius.circular(12)),
+                     child: graph()),
+                SizedBox(
+                  height: AppSizes.h10,
+                ),
                       CustomExpansionTile(
                         howToUseContent: [
                           ListItemModel(
@@ -280,13 +335,14 @@ class _CreditCardState extends State<CreditCard> {
             ),
           ),
         ),
-      ),
+      ),),
     );
   }
 
   Widget graph() {
     return PieChartGraph(
-      title: "Breakdown",
+       title: "Breakdown",
+    
       graphData: [
         {
           'title':
@@ -315,9 +371,15 @@ class _CreditCardState extends State<CreditCard> {
 PreferredSizeWidget appbarHeader(String title, BuildContext context) {
   return AppBar(
     centerTitle: true,
-    title: Text(
-      title,
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-    ),
+    title: Text(title,
+        
+        style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 16,
+                              
+                            ),)
+        
   );
 }
+

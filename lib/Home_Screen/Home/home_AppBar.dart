@@ -6,6 +6,12 @@ import 'package:flutter_application_code_stakeplot/components/notification_icon.
 import 'package:lottie/lottie.dart';
 import '../../Constants/app_styles.dart';
 import '../../Constants/core/app_padding_sizes.dart';
+import '../../components/shared_utils.dart';
+import '../history/recent_transactions.dart';
+import '../../Constants/insights_carousel_screen.dart';
+
+
+
 
 // PreferredSizeWidget getAppBar(context) {
 //   final userController = ControllerManagement.userController;
@@ -58,8 +64,11 @@ class TopRightIconsWidget extends StatelessWidget {
         GestureDetector(
           onTap: () {
             // TODO: Add your navigation or action here
-           
-          },
+Navigator.push(context,
+              MaterialPageRoute(builder: (context) =>  InsightsCarouselScreen()),
+            );
+             
+        },
           child: Container(
             padding: const EdgeInsets.all(1),
             margin: const EdgeInsets.only(left:AppSizes.p4),

@@ -288,6 +288,7 @@ class ProfileIcons {
   static String unclaimedCoupon = "assets/icons/profileScreen/unc1.svg";
   static String unclaimedCoupon2 = "assets/icons/profileScreen/unclaimed2.svg";
   static String unclaimedCoupon3 = "assets/icons/profileScreen/unc2.svg";
+  
 }
 
 class Sign {
@@ -321,7 +322,7 @@ class Finance {
   static String emi = "assets/icons/financeScreen/emi.svg";
   static String key = "assets/icons/financeScreen/Key.svg";
   static String location = "assets/icons/financeScreen/Location.svg";
-
+ static String coins = "assets/icons/financeScreen/coins.svg";
   static String savings = "assets/icons/financeScreen/savings.svg";
   static String user = "assets/icons/financeScreen/User.svg";
   static String amt = "assets/icons/financeScreen/amt.svg";
@@ -329,6 +330,12 @@ class Finance {
   static String vegNonveg = "assets/icons/financeScreen/vegnonveg.svg";
   static String currency = "assets/icons/financeScreen/currency.svg";
   static String debtIcon = "assets/icons/financeScreen/debtIcon.svg";
+  static String groceries = "assets/icons/financeScreen/groceries.svg";
+  static String transport = "assets/icons/financeScreen/transport.svg";
+  static String entertainment  = "assets/icons/financeScreen/entertainment.svg";
+  static String credited = "assets/icons/financeScreen/credited.svg";
+  static String debited =  "assets/icons/financeScreen/debited.svg";
+  static String outstanding =  "assets/icons/financeScreen/outstanding.svg";
 }
 
 class BudgetCategories {

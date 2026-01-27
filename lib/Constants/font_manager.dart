@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FontManager {
-  TextStyle getTextStyle(
+  TextStyle getTextStyle( 
     BuildContext context, {
     Color color = Colors.black,
     FontWeight lWeight = FontWeight.normal,

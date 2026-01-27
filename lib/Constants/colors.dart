@@ -9,7 +9,7 @@ class AppColors {
   static const Color accentColor = Color(0xFF2A2A2A);
   static const Color accentColorOpacity = Color(0x1A1E1E1E);
   static const Color mt = Color(0xFFF4F4F4); // for app bg
-  static const Color button = Color(0xFFE6EAEB); // for buttons bg and using for
+  static const Color button = Color(0xFFE6EAEB); // for buttons bg and using fo
   static const Color bg1 = Color(0xFF000000);
   static const Color bg2 = Color(0xFF171717);
   static const Color bg3 = Color(0xFF48484A);
@@ -67,11 +67,17 @@ class AppColors {
   static const Color whiteOpacity092 = Color(0xEBFFFFFF);
   static const Color whiteOpacity08 = Color(0xCCFFFFFF);
   static const Color newbg = Color(0xFFFFF9F0); 
+  static const Color newuncoloredpie = Color(0xFF9ECAD7);
+  static const Color newtitlecolor = Color(0xFF2E2E2E);
   static const Color debitedAmount = Color(0xFF9394B8); 
   static const Color strokeColor = Color(0xFF989CDA); 
+  static const Color newfontcolor =Color(0xFF6B7280);
   static const Color transactionDetails = Color(0xFF4B5563); 
   static const Color transactionCardShadow = Color.fromRGBO(142, 142, 142, 0.25); 
   static const Color financeChartBorder = Color(0xFFE6E9EB); 
+  static const Color fontcolor = Color(0xFF061D3D);
+   static const Color boxColor = Color(0xFF979496);
+  static const Color newgrey = Color(0xFFE1E1E1);
   static const Color financeChartBarBorder = Color(0xFFE8EAF0); 
   static const Color snackbarcolor = Color(0xFFDBD7D7); 
   static const Color foodieFundsTitle =   Color.fromRGBO(6, 29, 61, 0.5); 
