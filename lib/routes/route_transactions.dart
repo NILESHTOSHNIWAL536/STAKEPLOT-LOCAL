@@ -104,6 +104,7 @@ static String getSearchedTransactions(
 
   // Banks linked
   static String getBanksLinkedAndAccounts = "$_urlPath/get-banks-linked";
+  static String getQuickCheck = "$_urlPath/get-banksdebitcredit";
 
   // Monthly history
   static String getMonthlyTransactionsHistory(

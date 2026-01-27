@@ -316,6 +316,7 @@ import '../Hive_localstorage/apisCall/bank_apis.dart';
 import '../Hive_localstorage/apisCall/fipmetric_apis.dart';
 import '../Home_Screen/banksCardsSlider.dart';
 import '../Utils/snackBar.dart';
+import '../controllers/controllerManagement.dart';
 import '../loginservices/login.dart';
 import '../model/bank_model.dart';
 import '../model/fips_metric_model.dart';
@@ -630,6 +631,64 @@ void pinPasswordVerify(
     hideBackAccountPassword.value = false;
   } finally {
     _isVerifyingPin = false;
+  }
+}
+
+Future<void> getQuickCheck({
+  int? month,
+  required int year,
+}) async {
+  try {
+    // 🔹 default to monthly quick check
+    final int selectedMonth = month ?? DateTime.now().month;
+
+    final String url =
+        "${BankTransactionRoutes.getQuickCheck}"
+        "?view=monthly"
+        "&month=$selectedMonth"
+        "&year=$year";
+
+    var response = await getDataApiCall(url);
+
+    if (getFlagOfResponse(response)) {
+      final decodedResponse = jsonDecode(response.body);
+      final data = decodedResponse['data'];
+
+      final combined = data['combined'] ?? {};
+      final percentages = combined['percentages'] ?? {};
+
+      // 🔹 values
+      final double currentBalance =
+          (combined['currentBalance'] ?? 0).toDouble();
+      final double credit =
+          (combined['credit'] ?? 0).toDouble();
+      final double debit =
+          (combined['debit'] ?? 0).toDouble();
+      final double outstanding =
+          (combined['outstanding'] ?? 0).toDouble();
+
+      // 🔹 percentages
+      final double creditPercent =
+          (percentages['creditPercent'] ?? 0).toDouble();
+      final double debitPercent =
+          (percentages['debitPercent'] ?? 0).toDouble();
+      final double outstandingPercent =
+          (percentages['outstandingPercent'] ?? 0).toDouble();
+
+      
+
+    } else {
+      snackBarCalledfail(
+        Get.context!,
+        "Failed to fetch quick check data",
+      );
+    }
+  } catch (e) {
+    debugPrint("❌ getQuickCheck error: $e");
+    snackBarCalledfail(
+      Get.context!,
+      "Something went wrong",
+    );
   }
 }
 

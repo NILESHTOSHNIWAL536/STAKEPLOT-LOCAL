@@ -1722,7 +1722,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
                       height: 18,
                       errorBuilder: getErrorBankLogo(),
                     ),
-                    SizedBox(width: AppSizes.w6),
+                    const SizedBox(width: AppSizes.w6),
                     Text(
                       "Quick check",
                       style: FontManager()
