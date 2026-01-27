@@ -334,7 +334,7 @@ Future<void> getBankAccounts() async {
     var response =
         await getDataApiCall(BankTransactionRoutes.getBanksLinkedAndAccounts);
     if (getFlagOfResponse(response)) {
-      print("banks response: ${response.body}");
+      
       storeDataLocal(response);
     }
     addBankApiCall();
