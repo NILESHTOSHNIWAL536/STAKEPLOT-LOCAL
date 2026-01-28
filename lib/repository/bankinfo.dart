@@ -635,60 +635,51 @@ void pinPasswordVerify(
 }
 
 Future<void> getQuickCheck({
+  required String view,
   int? month,
   required int year,
 }) async {
   try {
-    // 🔹 default to monthly quick check
-    final int selectedMonth = month ?? DateTime.now().month;
+    final String url = view == 'monthly'
+        ? "${BankTransactionRoutes.getQuickCheck}"
+            "?view=monthly&month=${month ?? DateTime.now().month}&year=$year"
+        : "${BankTransactionRoutes.getQuickCheck}"
+            "?view=yearly&year=$year";
+           
+           
 
-    final String url =
-        "${BankTransactionRoutes.getQuickCheck}"
-        "?view=monthly"
-        "&month=$selectedMonth"
-        "&year=$year";
+    final response = await getDataApiCall(url);
+   
 
-    var response = await getDataApiCall(url);
+    if (!getFlagOfResponse(response)) return;
 
-    if (getFlagOfResponse(response)) {
-      final decodedResponse = jsonDecode(response.body);
-      final data = decodedResponse['data'];
+    final decoded = jsonDecode(response.body);
+    final data = decoded['data'];
 
-      final combined = data['combined'] ?? {};
-      final percentages = combined['percentages'] ?? {};
+    // 🔹 BANKS LIST
+    quickCheckBanks.value =
+        (data['banks'] ?? []).map<Map<String, dynamic>>(
+          (b) => Map<String, dynamic>.from(b),
+        ).toList();
 
-      // 🔹 values
-      final double currentBalance =
-          (combined['currentBalance'] ?? 0).toDouble();
-      final double credit =
-          (combined['credit'] ?? 0).toDouble();
-      final double debit =
-          (combined['debit'] ?? 0).toDouble();
-      final double outstanding =
-          (combined['outstanding'] ?? 0).toDouble();
+    // 🔹 COMBINED DATA (USED FOR "All")
+    final combined = data['combined'] ?? {};
+    final percentages = combined['percentages'] ?? {};
+quickCheckCurrentBalance.value =
+        (combined['currentBalance'] ?? 0).toDouble();
+    quickCheckCredit.value = (combined['credit'] ?? 0).toDouble();
+    quickCheckDebit.value = (combined['debit'] ?? 0).toDouble();
+    quickCheckOutstanding.value =
+        (combined['outstanding'] ?? 0).toDouble();
 
-      // 🔹 percentages
-      final double creditPercent =
-          (percentages['creditPercent'] ?? 0).toDouble();
-      final double debitPercent =
-          (percentages['debitPercent'] ?? 0).toDouble();
-      final double outstandingPercent =
-          (percentages['outstandingPercent'] ?? 0).toDouble();
-
-      
-
-    } else {
-      snackBarCalledfail(
-        Get.context!,
-        "Failed to fetch quick check data",
-      );
-    }
+    quickCheckCreditPercent.value =
+        (percentages['creditPercent'] ?? 0).toDouble();
+    quickCheckDebitPercent.value =
+        (percentages['debitPercent'] ?? 0).toDouble();
+    quickCheckOutstandingPercent.value =
+        (percentages['outstandingPercent'] ?? 0).toDouble();
   } catch (e) {
-    debugPrint("❌ getQuickCheck error: $e");
-    snackBarCalledfail(
-      Get.context!,
-      "Something went wrong",
-    );
+    
   }
 }
 

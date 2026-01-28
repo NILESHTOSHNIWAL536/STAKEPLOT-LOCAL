@@ -166,8 +166,8 @@ Future<void> getAllTransactionHistory(
             page: currentPage,
           )
         : BankTransactionRoutes.getSearchedTransactions(
-            page: currentPage,
-            search: text,
+           page: currentPage,
+  search: text,
             isBankAccount: (accountSelected.value.isEmpty ||
                     bankAccountLinkedList.length == 1 ||
                     text.toLowerCase() == "cash")
@@ -195,6 +195,7 @@ Future<void> getAllTransactionHistory(
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+      print("🔹 Transaction History Response: $data");
       
       var obj = data['data'];
       if (obj != null) {

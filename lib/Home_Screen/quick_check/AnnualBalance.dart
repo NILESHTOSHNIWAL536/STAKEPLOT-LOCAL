@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/Constants/core/app_padding_sizes.dart';
 
-import 'font_manager.dart';
+import '../../Constants/font_manager.dart';
 
 /// -------------------- ANNUAL BALANCE --------------------
 class AnnualBalance extends StatelessWidget {
@@ -147,6 +147,7 @@ class AnnualBalance extends StatelessWidget {
                 titleColor: AppColors.bg1,
                 border: true,
               ),
+            
             ],
           ),
         ),

@@ -239,6 +239,18 @@ var showResults = false.obs;
 RxBool isLoadingInflation = false.obs;
 RxString changeAvater = ControllerManagement.userController.avatar.value.obs;
 
+RxDouble quickCheckCurrentBalance = 0.0.obs;
+RxDouble quickCheckCredit = 0.0.obs;
+RxDouble quickCheckDebit = 0.0.obs;
+RxDouble quickCheckOutstanding = 0.0.obs;
+RxDouble quickCheckCreditPercent = 0.0.obs;
+RxDouble quickCheckDebitPercent = 0.0.obs;
+RxDouble quickCheckOutstandingPercent = 0.0.obs;
+RxList<Map<String, dynamic>> quickCheckBanks = <Map<String, dynamic>>[].obs;
+final RxList<Map<String, dynamic>> yearlyMonths = <Map<String, dynamic>>[].obs;
+final RxDouble annualCredited = 0.0.obs;
+final RxDouble annualDebited = 0.0.obs;
+final RxDouble annualOutstanding = 0.0.obs;
 
 
   List<FlSpot> budgetLineSpots = [];

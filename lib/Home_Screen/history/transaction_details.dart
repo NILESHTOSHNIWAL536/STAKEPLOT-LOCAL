@@ -441,7 +441,7 @@ class TransactionDetailsPage extends StatelessWidget {
           child: Column(
             children: [
               _infoRow(context, "Transaction ID",
-                  "transaction.txnId.toString()",
+                  transaction.txnId.toString(),
                   copy: true),
                  SizedBox(height: AppSizes.h12),
               
@@ -532,39 +532,46 @@ class TransactionDetailsPage extends StatelessWidget {
         ),
       ),
  
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SelectableText( // 👈 bonus: user can long-press select also
-                  value,
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 14,
-                    lWeight: FontWeight.w500,
-                    color: AppColors.accentColor,
-                    lineHeight: 20/fontSize
+            Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              
+              child: Wrap(
+
+               crossAxisAlignment: WrapCrossAlignment.end,
+               alignment: WrapAlignment.end,
+                children: [
+                  SelectableText( // 👈 bonus: user can long-press select also
+                    value,
+                    maxLines: null,
+                    style: FontManager().getTextStyle(
+                      context,
+                      fontSize: 14,
+                      lWeight: FontWeight.w500,
+                      color: AppColors.accentColor,
+                      lineHeight: 20/fontSize
+                    ),
                   ),
-                ),
-                  if (copy)
-        GestureDetector(
-          onTap: () {
-            Clipboard.setData(ClipboardData(text: value));
-            HapticFeedback.selectionClick();
-
-           
-          },
-          child: const Padding(
-            padding: EdgeInsets.only(left: AppSizes.p4),
-            child: Icon(Icons.copy_rounded, size: 16, color: AppColors.accentColor,),
-          ),
-        ),
-
-      if (trailingIcon != null)
-        Padding(
-           padding: EdgeInsets.only(left: AppSizes.p4),
-          child: Icon(trailingIcon, size: 16, color: AppColors.primaryColor,),
-        ),
-              ],
+                    if (copy)
+                      GestureDetector(
+                        onTap: () {
+              Clipboard.setData(ClipboardData(text: value));
+              HapticFeedback.selectionClick();
+              
+                         
+                        },
+                        child: const Padding(
+              padding: EdgeInsets.only(left: AppSizes.p4),
+              child: Icon(Icons.copy_rounded, size: 16, color: AppColors.accentColor,),
+                        ),
+                      ),
+              
+                    if (trailingIcon != null)
+                      Padding(
+                         padding: EdgeInsets.only(left: AppSizes.p4),
+                        child: Icon(trailingIcon, size: 16, color: AppColors.primaryColor,),
+                      ),
+                ],
+              ),
             ),
     
     ],

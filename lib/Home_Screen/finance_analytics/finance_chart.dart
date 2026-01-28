@@ -1085,17 +1085,17 @@ class _SpendingCardTwoPanelsState
                       ((d.debit / yMax) * maxBarH)
                           .clamp(0.0, maxBarH);
 
-                  return Material(
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Material(
                     color: AppColors.transparentColor,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(8),
-                      onTap: () {
+                        child: InkWell(
+                           onTap: () {
                         setState(() => selectedIndex = i);
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
+                                            },
+                          child: Container(
                             width: rightVisible / 8,
                             decoration: BoxDecoration(
                               borderRadius:
@@ -1108,6 +1108,7 @@ class _SpendingCardTwoPanelsState
                             child: Column(
                               mainAxisAlignment:
                                   MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
                               children: [
                                 AnimatedContainer(
                                   duration: const Duration(
@@ -1150,23 +1151,23 @@ class _SpendingCardTwoPanelsState
                               ],
                             ),
                           ),
-                          SizedBox(height: AppSizes.h8),
-                          SizedBox(
-                            width: rightVisible / 8,
-                            child: Text(
-                              d.label,
-                              textAlign: TextAlign.center,
-                              style:
-                                  FontManager().getTextStyle(
-                                context,
-                                fontSize: 11,
-                                color: AppColors.debitedAmount,
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      SizedBox(height: AppSizes.h8),
+                      SizedBox(
+                        width: rightVisible / 8,
+                        child: Text(
+                          d.label,
+                          textAlign: TextAlign.center,
+                          style:
+                              FontManager().getTextStyle(
+                            context,
+                            fontSize: 11,
+                            color: AppColors.debitedAmount,
+                          ),
+                        ),
+                      ),
+                    ],
                   );
                 }),
               ),

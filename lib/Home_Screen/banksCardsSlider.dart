@@ -1374,12 +1374,13 @@ import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart'
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
-import '../Constants/AnnualBalance.dart';
+import 'quick_check/AnnualBalance.dart';
 import '../Constants/core/app_component_sizes.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../backed_connections/bankServices/nextFetch.dart';
 import '../components/shared_utils.dart';
 import '../model/bank_model.dart';
+import 'quick_check/monthly_quick_check.dart';
 
 RxInt firstDigit = 0.obs;
 RxInt secondDigit = 0.obs;
@@ -1398,7 +1399,8 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
 
 
 
-  
+  final Map<String, int> _emojiMap = {};
+
 
   List lock = HomepageStringsDart().lockPatterns;
 
@@ -1416,6 +1418,12 @@ void initState() {
 
   _pageController = PageController(
     initialPage: activeIndex,
+  );
+}
+int getEmojiIndex(String accountId) {
+  return _emojiMap.putIfAbsent(
+    accountId,
+    () => Random().nextInt(lock.length),
   );
 }
 
@@ -1623,7 +1631,8 @@ Future.microtask(() {
 
  
 Widget getListViewBankInfo(BankAccountModel data) {
-  int randomIndex = Random().nextInt(lock.length);
+   int randomIndex = getEmojiIndex(data.accountId);
+
   if (randomIndex == lock.length) randomIndex = 0;
 
   return ClipRRect(
@@ -1721,7 +1730,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const AnnualBalance(),
+        builder: (_) =>  BalanceScreen(),
       ),
     );
   },
