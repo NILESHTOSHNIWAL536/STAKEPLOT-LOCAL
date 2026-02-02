@@ -577,7 +577,7 @@ Widget _buildInsightsSection() {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ---------- TOP ROW: Monthly / Annually + dropdown ----------
+        
         Padding(
           padding: const EdgeInsets.only(left: 25,right:15),
            child: Row(
@@ -969,9 +969,7 @@ getQuickCheck(
 );
 
             }
-             print(
-    "DROPDOWN API TIME: ${DateTime.now().difference(start).inMilliseconds} ms",
-  );
+             
           },
         ),
       ),
@@ -980,67 +978,31 @@ getQuickCheck(
 }
 
 Widget _dotGrid() {
-  if (isInsightsLoading.value) {
-  return const SizedBox(
-    height: 120,
-    child: Center(child: CircularProgressIndicator()),
-  );
-}
-
   return Obx(() {
-    const int gridSize = 10;                    // 10 x 10 grid
-    const int totalDots = gridSize * gridSize;  // 100 dots
-    const double dotSize = 14;      
+    const int gridSize = 10;
+    const int totalDots = gridSize * gridSize;
+    const double dotSize = 14;
     const double spacing = 10;
 
-    const double gridWidth =
-        (dotSize * gridSize) + (spacing * (gridSize - 1));
+    final double creditedPct = percentageFor('Credited');
+    final double debitedPct = percentageFor('Debited');
+    final double outstandingPct = percentageFor('Outstanding');
 
-    
-
-    // ------------------ GET PERCENTAGES ------------------
-    final double creditedPct     = percentageFor('Credited');
-    final double debitedPct      = percentageFor('Debited');
-    final double outstandingPct  =percentageFor('Outstanding');
-
-    // ------------------ CONVERT TO DOT COUNTS ------------------
     int creditedDots =
         (totalDots * creditedPct / 100).round().clamp(0, totalDots);
-
     int debitedDots =
         (totalDots * debitedPct / 100).round().clamp(0, totalDots);
-
     int outstandingDots =
         (totalDots * outstandingPct / 100).round().clamp(0, totalDots);
 
-    // always clamp so total = 100
-    int totalAssignedDots =
-        creditedDots + debitedDots + outstandingDots;
-
-    if (totalAssignedDots > totalDots) {
-      final overflow = totalAssignedDots - totalDots;
-      outstandingDots = (outstandingDots - overflow).clamp(0, totalDots);
-    }
-
-    // ------------------ WHICH SEGMENT IS SELECTED ------------------
     final String? selectedLabel = selectedInsightTab.value;
 
     return SizedBox(
-      width: gridWidth,
-      height: gridWidth,
-      child: GridView.builder(
-        padding: EdgeInsets.zero,
-       physics: const NeverScrollableScrollPhysics(),
-shrinkWrap: true,
-
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: gridSize,
-          mainAxisSpacing: spacing,
-          crossAxisSpacing: spacing,
-        ),
-        itemCount: totalDots,
-        itemBuilder: (context, index) {
-          // ------------------ DETERMINE SEGMENT OF EACH DOT ------------------
+      width: (dotSize + spacing) * gridSize,
+      child: Wrap(
+        spacing: spacing,
+        runSpacing: spacing,
+        children: List.generate(totalDots, (index) {
           late String segmentLabel;
 
           if (index < creditedDots) {
@@ -1051,9 +1013,7 @@ shrinkWrap: true,
             segmentLabel = 'Outstanding';
           }
 
-          // ------------------ SEGMENT COLORS ------------------
           Color baseColor;
-
           switch (segmentLabel) {
             case 'Credited':
               baseColor = creditedBaseColor;
@@ -1061,57 +1021,47 @@ shrinkWrap: true,
             case 'Debited':
               baseColor = debitedBaseColor;
               break;
-            case 'Outstanding':
-              baseColor = outstandingBaseColor;
-              break;
             default:
-              baseColor = Colors.grey;
+              baseColor = outstandingBaseColor;
           }
 
-          // ------------------ SELECTED SEGMENT FULL OPACITY ------------------
-          final bool noSelection = selectedLabel == null;
-
-final bool isActiveSegment =
-    noSelection || segmentLabel == selectedLabel;
-
-final Color dotColor = isActiveSegment
-    ? baseColor
-    : baseColor.withOpacity(0.18);
-
+          final bool isActive =
+              selectedLabel == null || selectedLabel == segmentLabel;
 
           return GestureDetector(
-  behavior: HitTestBehavior.opaque,
- onTap: () {
-  if (selectedInsightTab.value == segmentLabel) {
-    // toggle OFF
-    selectedInsightTab.value = null;
-    hasSelectedInsight.value = false;
-  } else {
-    // select segment
-    selectedInsightTab.value = segmentLabel;
-    hasSelectedInsight.value = true;
-  }
-},
-
-  
-  child: AnimatedScale(
-    scale: (selectedInsightTab.value == segmentLabel) ? 1.15 : 1.0,
-    duration: const Duration(milliseconds: 200),
-    curve: Curves.easeOut,
-    child: AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeOutCubic,
-      width: dotSize,
-      height: dotSize,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: dotColor,
-      ),
-    ),
-  ),
-)
-;
-        },
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              if (selectedInsightTab.value == segmentLabel) {
+                selectedInsightTab.value = null;
+                hasSelectedInsight.value = false;
+              } else {
+                selectedInsightTab.value = segmentLabel;
+                hasSelectedInsight.value = true;
+              }
+            },
+            child: SizedBox(
+              width: 28,
+              height: 28,
+              child: Center(
+                child: AnimatedScale(
+                  scale:
+                      selectedLabel == segmentLabel ? 1.15 : 1.0,
+                  duration: const Duration(milliseconds: 180),
+                  child: Container(
+                    width: dotSize,
+                    height: dotSize,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isActive
+                          ? baseColor
+                          : baseColor.withOpacity(0.18),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
       ),
     );
   });

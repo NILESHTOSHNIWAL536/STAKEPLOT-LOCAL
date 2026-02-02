@@ -19,6 +19,7 @@ class AppSizes {
   static const double p32 = 32;
   static const double p40 = 40;
   static const double p48 = 48;
+  static const double p55 = 55;
 
   // Margin
   static const double m4 = 4;

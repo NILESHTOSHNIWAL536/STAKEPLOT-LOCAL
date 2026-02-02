@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postLoadFeed.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
@@ -21,14 +19,10 @@ import 'package:custom_image_crop/custom_image_crop.dart';
 import 'dart:io';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../Constants/core/app_padding_sizes.dart';
 import '../components/shared_utils.dart';
-import '../routes/route_user_login.dart';
 import '../routes/route_post.dart';
 
 class ExploreModal extends StatefulWidget {

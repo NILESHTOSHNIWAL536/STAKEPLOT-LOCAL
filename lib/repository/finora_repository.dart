@@ -43,6 +43,7 @@ void getCategoryData(context) async {
     var res = await getDataApiCall(BankTransactionRoutes.categorizeTransactions);
 
     if (getFlagOfResponse(res)) {
+      print("response finora ${res.body}");
     
       var data = jsonDecode(res.body);
       
@@ -53,6 +54,9 @@ void getCategoryData(context) async {
       categoriesListWeek.clear();
       frequentPaymentsWeek.clear();
       moreDrasticChangeWeek.clear();
+      mostSpentCategoryInMonth.clear();
+      mostSpentDayInMonth.clear();
+      weeklyTrend.clear();
       // spendingsOnCategories.clear();
       // throw Error();
       
@@ -98,6 +102,21 @@ void getCategoryData(context) async {
             .map((e) => e as Map<String, dynamic>)
             .toList(),
       );
+mostSpentCategoryInMonth.addAll(
+  (data["data"]['mostSpentCategory'] as List<dynamic>)
+      .map((e) => e as Map<String, dynamic>)
+      .toList(),
+);
+if (data["data"]['mostSpentDay'] != null) {
+  mostSpentDayInMonth.add(
+    data["data"]['mostSpentDay'] as Map<String, dynamic>,
+  );
+}
+if (data["data"]['weeklyTrend'] != null) {
+  weeklyTrend.add(
+    data["data"]['weeklyTrend'] as Map<String, dynamic>,
+  );
+}
 
       // Refresh reactive lists
       categoriesList.refresh();
@@ -106,6 +125,9 @@ void getCategoryData(context) async {
       categoriesListWeek.refresh();
       frequentPaymentsWeek.refresh();
       moreDrasticChangeWeek.refresh();
+      mostSpentCategoryInMonth.refresh();
+      mostSpentDayInMonth.refresh();
+      weeklyTrend.refresh();
       isFinoraVisible.value = !isFinoraVisible.value;
       setDonectChat.value = !setDonectChat.value;
       processChartData();

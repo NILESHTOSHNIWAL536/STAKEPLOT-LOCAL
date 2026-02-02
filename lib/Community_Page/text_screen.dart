@@ -6,20 +6,16 @@ import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import '../Constants/core/app_padding_sizes.dart';
-import './success_post.dart';
-import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 class TextScreen extends StatefulWidget {
@@ -189,9 +185,7 @@ class _TextScreenState extends State<TextScreen> {
             color: AppColors.backgroundColor,
             // borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
-          child: postSubmitted
-              ?SuccessPost(celebrationText: strings.postedSuccess)
-              : SingleChildScrollView(
+          child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(AppSizes.p16),
                     child: Column(

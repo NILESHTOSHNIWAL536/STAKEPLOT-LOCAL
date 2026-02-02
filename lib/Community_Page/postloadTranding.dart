@@ -20,7 +20,7 @@ class _LazyLoadingListState extends State<LazyLoadingTranding> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
+    return Obx(() => SizedBox(
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
               shrinkWrap: true,

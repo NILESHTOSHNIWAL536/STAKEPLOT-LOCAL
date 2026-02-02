@@ -100,6 +100,11 @@ RxDouble totalDebitThisWeek = 0.0.obs;
 RxList categoriesListWeek = [].obs;
 RxList moreDrasticChangeWeek = [].obs;
 RxList frequentPaymentsWeek = [].obs;
+RxList mostSpentCategoryInMonth = [].obs;
+RxList mostSpentDayInMonth = [].obs;
+RxList weeklyTrend = [].obs;
+
+
 Map<String, dynamic> loginUsersList = Map<String, dynamic>();
 RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;

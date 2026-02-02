@@ -7,9 +7,9 @@ import 'package:flutter_application_code_stakeplot/Utils/rewardscreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+
 import 'package:flutter_application_code_stakeplot/image_service/profile.dart';
-import 'package:flutter_application_code_stakeplot/routes/routes.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -21,7 +21,7 @@ class RewardsScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left:AppSizes.p16,
               right:AppSizes.p16,
               top:AppSizes.p20,
@@ -33,7 +33,7 @@ class RewardsScreen extends StatelessWidget {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width/1.1,
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding:const  EdgeInsets.only(bottom: AppSizes.p10),
                   child: textStyleImage(
                     context: context,
                     text: "What's New ?",
@@ -45,7 +45,7 @@ class RewardsScreen extends StatelessWidget {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width / 1.16,
                       child: SingleChildScrollView(
-                        padding: const EdgeInsets.only(bottom: 20),
+                        padding: const EdgeInsets.only(bottom: AppSizes.p20),
                         child: Column(
                           children: [
                            ...RewardScreenStrings().rewardIntroList
@@ -57,14 +57,17 @@ class RewardsScreen extends StatelessWidget {
                               final curve = MediaQuery.of(context).size.height / 4.2 / 2;
                               
                               return Padding(
-                                padding: const EdgeInsets.only(top: 55,bottom: 10),
+                                padding: const EdgeInsets.only(top: AppSizes.p55,bottom: AppSizes.p10),
                                 child: Stack(
                                   clipBehavior: Clip.none,
                                   children: [
                                     GestureDetector(
                                       onTap: (){
-                                        if(RewardScreenStrings().rewardIntroList.length>2 && index<2)
-                                          snackBarCalled(context,"Scroll To Bottom");
+                                        if(RewardScreenStrings().rewardIntroList.length>2 && index<2){
+                                           snackBarCalled(context,"Scroll To Bottom");
+
+                                        }
+                                         
                                       },
                                       child: getRewardCard(context, data, curve)),
                                     getBorderDotted(curve, context),
@@ -120,7 +123,7 @@ class RewardsScreen extends StatelessWidget {
                                     children: [
                                       SizedBox(height: AppSizes.h10),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p4),
                                         child: textStyleImage(
                                           iswrap: true,
                                           context: context,

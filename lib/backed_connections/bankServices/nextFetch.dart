@@ -576,7 +576,7 @@ import '../../model/fips_metric_model.dart';
 // <-- make sure this is imported
 import '../../repository/bankinfo.dart';
 import '../../widget_services/widget_service.dart';
-import 'bank_progress.dart';
+
 import 'bank_sync_flow.dart';
 
 RxBool isBankLinked = false.obs;
@@ -1158,75 +1158,3 @@ Widget connectedBanksRow(BuildContext context) {
 
 
 
-class RotatingStopwatchIcon extends StatefulWidget {
-  final double size;
-  final Color color;
-
-  const RotatingStopwatchIcon({
-    Key? key,
-    this.size = 26,
-    this.color = AppColors.backgroundColor,
-  }) : super(key: key);
-
-  @override
-  State<RotatingStopwatchIcon> createState() =>
-      _RotatingStopwatchIconState();
-}
-
-class _RotatingStopwatchIconState extends State<RotatingStopwatchIcon>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2), // speed of rotation
-    )..repeat(); // continuous rotation
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          /// Stopwatch outline
-          Icon(
-            Icons.timer_outlined,
-            size: widget.size,
-            color: widget.color,
-          ),
-
-          /// Rotating hand
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (_, child) {
-              return Transform.rotate(
-                angle: _controller.value * 2 * pi,
-                child: child,
-              );
-            },
-            child: Container(
-              width: 2,
-              height: widget.size * 0.32,
-              decoration: BoxDecoration(
-                color: widget.color,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

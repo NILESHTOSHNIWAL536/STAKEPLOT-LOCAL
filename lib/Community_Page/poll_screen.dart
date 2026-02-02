@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
 import '../Constants/core/app_padding_sizes.dart';
-import './success_post.dart';
+
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 class PollScreen extends StatefulWidget {
@@ -113,9 +113,7 @@ createPollOfCommunityPost(
     return Scaffold(
       backgroundColor: AppColors.border,
   resizeToAvoidBottomInset: true,
-      body: pollSubmitted
-          ?SuccessPost(celebrationText: strings.postedSuccess)
-          : Column(
+      body:  Column(
             children: [
              PollStepHeader(
   title: strings.createPoll,

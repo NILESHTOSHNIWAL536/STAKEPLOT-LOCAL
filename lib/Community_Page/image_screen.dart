@@ -16,7 +16,7 @@ import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:flutter_application_code_stakeplot/Community_Page/success_post.dart';
+
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
@@ -392,9 +392,7 @@ class _ImageScreenState extends State<ImageScreen> {
 
       if (mounted) {
         Navigator.pop(context);
-        Get.to(() => const SuccessPost(
-              celebrationText: "Posted",
-            ));
+        
       }
     } catch (e) {
       // Log error instead of showing snackbar

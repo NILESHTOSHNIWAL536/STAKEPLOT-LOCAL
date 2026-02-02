@@ -4,7 +4,6 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:get/get.dart';
 import '../../Constants/core/app_padding_sizes.dart';
@@ -44,7 +43,7 @@ class SwipeableCardsScreen extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: AppSizes.h16),
+       const   SizedBox(height: AppSizes.h16),
 
           
           SizedBox(
@@ -399,7 +398,8 @@ class FrequentTransactionCard extends StatelessWidget {
                       color: AppColors.accentColor,
                     ),
                   )
-                : Text(
+                :
+                 Text(
                     frequentPayments[0]['name'].toString(),
                     style: FontManager().getTextStyle(
                       context,

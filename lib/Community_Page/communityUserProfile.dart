@@ -83,7 +83,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p4),
-      child: Container(
+      child: SizedBox(
          height: MediaQuery.sizeOf(context).height/18,
         child: GestureDetector(
           onTap: () => Navigator.pop(context),
@@ -112,7 +112,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   
 
   Widget _buildMenuItems() {
-    return Container(
+    return SizedBox(
     
       height: MediaQuery.sizeOf(context).height/2,
       child: Padding(
@@ -146,7 +146,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                   Navigator.push(
          context,
          MaterialPageRoute(
-             builder: (context) =>UpdateInterestScreen()),
+             builder: (context) =>const UpdateInterestScreen()),
        );
 
               },
@@ -193,7 +193,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
               color: AppColors.greyColor,
             )
           else if (hasToggle)
-            Container(
+            SizedBox(
               height: 20,
               width: 30,
               child:Obx(()=> Transform.scale(

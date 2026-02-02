@@ -1374,6 +1374,7 @@ import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart'
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:lottie/lottie.dart';
+import '../Community_Page/widgets/payment.dart';
 import 'quick_check/AnnualBalance.dart';
 import '../Constants/core/app_component_sizes.dart';
 import '../Constants/core/app_padding_sizes.dart';
@@ -1727,12 +1728,11 @@ Widget getListViewBankInfo(BankAccountModel data) {
                 /// QUICK CHECK
                InkWell(
   onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) =>  BalanceScreen(),
-      ),
-    );
+   Navigator.push(
+  context,
+  MaterialPageRoute(builder: (_) =>  BalanceScreen()),
+);
+
   },
               
              child:   Row(

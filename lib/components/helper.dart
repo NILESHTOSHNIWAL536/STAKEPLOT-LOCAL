@@ -12,7 +12,6 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/dotted_Bo
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -24,7 +23,6 @@ import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week_of_year/week_of_year.dart';
-
 import '../Constants/core/app_padding_sizes.dart';
 import '../Constants/core/app_shadows.dart';
 import '../Constants/core/container_border.dart';
@@ -1064,13 +1062,7 @@ String getCurrentWeekoverall() {
   return s;
 }
 
-// Function to calculate the week number
-int _getWeekNumber(DateTime date) {
-  final firstDayOfYear = DateTime(date.year, 1, 1);
-  final daysSinceFirstDay = date.difference(firstDayOfYear).inDays;
-  final weekNumber = ((daysSinceFirstDay + firstDayOfYear.weekday) / 7).ceil();
-  return weekNumber;
-}
+
 String getFormattedDateoverall() {
   final now = DateTime.now();
   return "${now.year}-${now.month.toString().padLeft(2, '0')}";
@@ -1224,4 +1216,79 @@ Widget globalbackArrow(){
                       ),
                     ),
                   );
+}
+
+
+
+class RotatingStopwatchIcon extends StatefulWidget {
+  final double size;
+  final Color color;
+
+  const RotatingStopwatchIcon({
+    Key? key,
+    this.size = 26,
+    this.color = AppColors.backgroundColor,
+  }) : super(key: key);
+
+  @override
+  State<RotatingStopwatchIcon> createState() =>
+      _RotatingStopwatchIconState();
+}
+
+class _RotatingStopwatchIconState extends State<RotatingStopwatchIcon>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2), // speed of rotation
+    )..repeat(); // continuous rotation
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: widget.size,
+      height: widget.size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          /// Stopwatch outline
+          Icon(
+            Icons.timer_outlined,
+            size: widget.size,
+            color: widget.color,
+          ),
+
+          /// Rotating hand
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (_, child) {
+              return Transform.rotate(
+                angle: _controller.value * 2 * pi,
+                child: child,
+              );
+            },
+            child: Container(
+              width: 2,
+              height: widget.size * 0.32,
+              decoration: BoxDecoration(
+                color: widget.color,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
