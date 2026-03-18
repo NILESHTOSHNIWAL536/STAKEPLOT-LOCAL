@@ -37,7 +37,7 @@ router.use(protect);
 router.post('/generate-token', EmailController.generateAccessToken);
 
 // read emails from user's gmail account based on the bank id provided
-router.post('/scrape/', EmailController.scrapeEmailsByBankId);
+router.post('/scrape', EmailController.scrapeEmailsByBankId);
 
 // get all the scraped emails from the emailScrape collection
 router.get('/', EmailController.getScrapedEmails);

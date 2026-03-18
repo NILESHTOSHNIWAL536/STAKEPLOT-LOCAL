@@ -31,6 +31,7 @@ export interface IServerConfig {
   MAIN_MONGO_URI: string;
   EMAIL_MONGO_URI: string;
   SERVICE_JWT_SECRET: string;
+  REDIS_HOST: string;
   REDIS_URL: string;
   REDIS_PORT: number;
   REDIS_PASSWORD: string;
@@ -44,6 +45,7 @@ export interface IServerConfig {
   GOOGLE_WEB_CLIENTID: string;
   GOOGLE_APP_CLIENTID: string;
   REVOKE_URI: string;
+  MOBILE_BACKEND_URL: string;
 }
 
 const ServerConfig: IServerConfig = {
@@ -53,6 +55,7 @@ const ServerConfig: IServerConfig = {
   EMAIL_MONGO_URI: process.env.EMAIL_MONGO_URI ?? '',
   SERVICE_JWT_SECRET: process.env.SERVICE_JWT_SECRET ?? '',
   REDIS_URL: process.env.REDIS_URL ?? '',
+  REDIS_HOST: process.env.REDIS_HOST ?? '',
   REDIS_PORT: Number(process.env.REDIS_PORT) || 6379,
   REDIS_PASSWORD: process.env.REDIS_PASSWORD ?? '',
   EMAIL_HOST: process.env.EMAIL_HOST ?? '',
@@ -65,6 +68,7 @@ const ServerConfig: IServerConfig = {
   GOOGLE_WEB_CLIENTID: process.env.GOOGLE_WEB_CLIENTID ?? '',
   GOOGLE_APP_CLIENTID: process.env.GOOGLE_APP_CLIENTID ?? '',
   REVOKE_URI: process.env.REVOKE_URI ?? '',
+  MOBILE_BACKEND_URL: process.env.MOBILE_BACKEND_URL ?? 'http://localhost:5000',
 };
 
 export default ServerConfig;

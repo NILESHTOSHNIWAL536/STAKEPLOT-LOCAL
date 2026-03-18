@@ -18,14 +18,15 @@
 
 
 import { createClient, RedisClientType } from 'redis';
+import ServerConfig from './server-config';
 
 const redisClient: RedisClientType = createClient({
   socket: {
-    host: process.env.REDIS_HOST || '127.0.0.1',
-    port: Number(process.env.REDIS_PORT) || 6379,
+    host: ServerConfig.REDIS_HOST || '127.0.0.1',
+    port: Number(ServerConfig.REDIS_PORT) || 6379,
     reconnectStrategy: (retries) => Math.min(retries * 50, 2000),
   },
-  password: process.env.REDIS_PASSWORD || undefined,
+  password: ServerConfig.REDIS_PASSWORD,
 });
 
 // Handle Redis connection events

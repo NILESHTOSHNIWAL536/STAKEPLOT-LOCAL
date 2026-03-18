@@ -107,6 +107,10 @@
 import mongoose from 'mongoose';
 import { decryptToken } from '../utils/encryption';
 import creditCards from '../utils/credit-cards.json';
+import AppError from '../utils/app-error';
+import { StatusCodes } from 'http-status-codes';
+import { ServerConfig } from '../config';
+import jwt from "jsonwebtoken"
 
 // If you want, you can define a type for creditCards
 type CreditCardConfig = {
@@ -176,16 +180,30 @@ export async function scrapeEmailsByBankId(
       });
 
     const emailDB = (global as any).emailDB;
-    const mainDB = (global as any).mainDB;
 
     await emailDB.model('scrapeResult').insertMany(records);
 
     if (scrapedEmails.bankConfig && scrapedEmails.bankConfig.bankId) {
-      await mainDB.model('User').findByIdAndUpdate(
-        new mongoose.Types.ObjectId(userId),
-        { $addToSet: { CreditCardLinkedBanks: scrapedEmails.bankConfig.bankId } },
-        { new: true }
-      );
+      try {
+        const payload = { bankId: scrapedEmails.bankConfig.bankId };
+        const internalToken = jwt.sign(
+          { sub: userId, aud: 'mobile-backend' },
+          ServerConfig.SERVICE_JWT_SECRET,
+          { expiresIn: '1m' }
+        );
+
+        await require('axios').post(
+          `${ServerConfig.MOBILE_BACKEND_URL || 'http://localhost:5000'}/api/v1/user/internal/update-banks`,
+          payload,
+          {
+            headers: {
+              authorization: `Bearer ${internalToken}`,
+            },
+          }
+        );
+      } catch (err: any) {
+        console.error('Failed to update CreditCardLinkedBanks in gateway:', err.message);
+      }
     }
 
     return records;
@@ -205,25 +223,7 @@ export async function getScrapedEmailsByUserId(userId: string) {
 }
 
 export async function getUnlinkedCreditCards(userId: string) {
-  const mainDB = (global as any).mainDB;
-
-  const user = await mainDB
-    .collection('users')
-    .findOne({ _id: new mongoose.Types.ObjectId(userId) });
-
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  const linkedBankIds: string[] = user.CreditCardLinkedBanks || [];
-
-  const cards = creditCards as CreditCardConfig[];
-
-  const unlinkedCards = cards.filter(
-    (card) => !linkedBankIds.includes(card.bankId)
-  );
-
-  return unlinkedCards;
+  throw new AppError('This endpoint is handled by mobile-backend (gateway).', StatusCodes.BAD_REQUEST);
 }
 
 export async function deleteGoogleTokenByUserId(userId: string) {
@@ -262,3 +262,4 @@ export default {
   scrapeEmailsByBankId,
   getDecryptedRefreshToken,
 };
+

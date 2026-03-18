@@ -21,14 +21,10 @@
 
 
  import { Connection, Model } from 'mongoose';
-import { userSchema, IUser } from './user-model';
-import { sessionSchema, ISession } from './session-model';
 import { googleAuthSchema, IGoogleAuth } from './google-auth';
 import { scrapeResultSchema, IScrapeResult } from './scrape-result';
 
 export interface IModels {
-  User: Model<IUser>;
-  Session: Model<ISession>;
   GoogleAuth: Model<IGoogleAuth>;
   ScrapedEmail: Model<IScrapeResult>;
 }
@@ -44,8 +40,6 @@ export async function getModels(): Promise<IModels> {
 
   return {
     // TS now knows mainDB is a Connection, and we cast result Models
-    User: mainDB.model('User', userSchema) as Model<IUser>,
-    Session: mainDB.model('Session', sessionSchema) as Model<ISession>,
     GoogleAuth: emailDB.model('googleAuth', googleAuthSchema) as Model<IGoogleAuth>,
     ScrapedEmail: emailDB.model('scrapeResult', scrapeResultSchema) as Model<IScrapeResult>,
   };
