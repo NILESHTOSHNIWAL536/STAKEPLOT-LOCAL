@@ -147,7 +147,8 @@ export async function scrapeEmailsByBankId(
 ): Promise<any> {
   const response = await EmailRepository.getGoogleTokenByUserId(userId);
   const encryptedRefreshToken = response.refreshToken;
-
+  console.log('Encrypted Refresh Token:', encryptedRefreshToken); // Debug log for encrypted token
+  console.log('Bank IDs:', response); // Debug log for bank IDs
   const decryptedRefreshToken = await decryptToken(
     encryptedRefreshToken.encryptedData,
     encryptedRefreshToken.iv,

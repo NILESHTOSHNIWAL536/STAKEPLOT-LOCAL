@@ -132,30 +132,9 @@ export async function decryptToken(
   }
 }
 
-// Migration helper (legacy, one-off job)
-export async function migrateTokenById(): Promise<void> {
-  // googleRefreshToken is a legacy field not in the TS interface, so we cast to any
-  const users: any[] = await (GoogleAuth as any).find({
-    googleRefreshToken: { $exists: true, $ne: '' },
-  });
 
-  for (const user of users) {
-    try {
-      const { encryptedData, iv, authTag } = await encryptToken(
-        user.googleRefreshToken
-      );
-
-      user.refreshToken = { encryptedData, iv, authTag };
-      await user.save();
-    } catch (err) {
-      // optional logging if you want
-      // console.error(`Failed to migrate user ${user._id}:`, err);
-    }
-  }
-}
 
 export default {
   encryptToken,
   decryptToken,
-  migrateTokenById,
 };

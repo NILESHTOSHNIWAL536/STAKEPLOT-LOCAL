@@ -141,8 +141,7 @@ export default async function emailScraperHelper(
 ): Promise<{ results: any[]; bankConfig: any[] }> {
   const startTime = performance.now();
   const gmail = gmailClient;
-  const afterDate =
-    mode === 'initial' ? getNinetyDaysAgo(45) : getNHoursAgo(12);
+  const afterDate = mode === 'initial' ? getNinetyDaysAgo(45) : getNHoursAgo(12);
 
   const bankConfig = creditCard;
   const bankFilters: string[] = [];
@@ -190,8 +189,7 @@ export default async function emailScraperHelper(
           const matches2 = bankFilters.some(
             (f) => f && subjectLower.includes(f.toLowerCase())
           );
-
-          // if (!matches && !matches2) return null;
+         // if (!matches && !matches2) return null;
 
           const { body, attachments } = await EmailServiceHelper.extractEmailBody(
             gmail,
@@ -286,6 +284,5 @@ export default async function emailScraperHelper(
     const extracted = await extractWithPython(mail, bankFilters);
     results.push(extracted);
   }
-
   return { results, bankConfig };
 }
