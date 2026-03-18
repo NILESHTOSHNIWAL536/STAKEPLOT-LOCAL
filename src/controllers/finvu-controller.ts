@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { Request, Response } from 'express';
 import apiClient from '../utils/helpers/apiClient';
-import { Finvu, FipsMetric, User, FailedTransaction, ConsentHandleId } from '../models';
+import { Finvu, FipsMetric, FailedTransaction, ConsentHandleId } from '../models';
 import { getDeviceIdsByUserId } from '../utils/helpers/getDeviceIds';
 import { SendNotificationToDeviceSpecific } from '../services/notification-service';
 import generateToken from '../utils/helpers/generate-finvu-token';
@@ -118,15 +118,6 @@ export async function loginAndGetHandleId(req: Request, res: Response) {
 
     const consentHandleId = consentResponse.data.body.ConsentHandle;
     await storeOrUpdateConsentHandle({ custId, handleId: consentHandleId, userId });
-
-    // Update user phone
-    const updateMobile = await User.findOneAndUpdate({ _id: userId }, { $addToSet: { phone: number } }, { new: true });
-
-    if (!updateMobile) {
-      return res.status(400).json({
-        message: 'Failed to update mobile number, already registered',
-      });
-    }
 
     return res.json({ consentHandleId });
   } catch (error: any) {
@@ -435,9 +426,6 @@ export async function getFipsDetails(req: Request, res: Response) {
 // =======================================
 
 async function sendFailedNotification(userId: string | Types.ObjectId) {
-  // Update fetchInProgress to false
-  await User.findByIdAndUpdate(userId, { fetchInProgress: false }, { new: true, runValidators: true });
-
   // WebSocket message to the user
   await publishSocketEvent(userId, 'addUserToSocket', {
     type: 'fetchedApiCall',

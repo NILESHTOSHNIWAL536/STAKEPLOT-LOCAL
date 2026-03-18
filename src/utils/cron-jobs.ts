@@ -17,7 +17,7 @@ import { getDeviceIdsByUserId, getDeviceIdsofCupons } from './helpers/getDeviceI
 
 import fetchNextReminderAt from './helpers/fetchNextReminderTime';
 
-import { User, Account, FailedTransaction, notificationTracker, UserActivity, RecurringPayment, FipsMetric } from '../models';
+import { Account, FailedTransaction, notificationTracker, UserActivity, RecurringPayment, FipsMetric } from '../models';
 
 import { FinvuController } from '@/controllers';
 import { getCouponsCount } from './helpers/increment_score';
@@ -25,6 +25,25 @@ import updateNextFetchForFailedAccounts from '@/utils/helpers/updateNextFetchFor
 import { Types } from 'mongoose';
 
 import pLimit from 'p-limit';
+import axios from 'axios';
+import { ServerConfig } from '@/config';
+import jwt from 'jsonwebtoken';
+
+async function fetchUserFromGateway(id: string): Promise<any> {
+  const internalToken = jwt.sign(
+    { aud: 'mobile-backend' },
+    ServerConfig.SERVICE_JWT_SECRET,
+    { expiresIn: '1m' }
+  );
+  try {
+    const res = await axios.get(`${ServerConfig.MOBILE_BACKEND_URL}/api/v1/internal/users/${id}`, {
+      headers: { authorization: `Bearer ${internalToken}` },
+    });
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+}
 
 // ----------------------------
 //       INTERFACES
@@ -277,7 +296,7 @@ cron.schedule(
 
         const dayPrefix = labels[offset] || 'soon';
 
-        const user = await User.findById(rem.userId);
+        const user = await fetchUserFromGateway(rem.userId.toString());
         if (!user) continue;
 
         const userName = user.name?.charAt(0).toUpperCase() + user.name?.slice(1);

@@ -11,7 +11,7 @@ dotenv.config({ path: `./config/.env.${process.env.NODE_ENV}` });
 const startServer = async (): Promise<void> => {
   try {
     const port = parseInt(ServerConfig.PORT || '5000', 10);
-    const server = app.listen(port, '0.0.0.0', async () => {
+    const server = app.listen(port, ServerConfig.HOST || '127.0.0.1', async () => {
       logger.info(`Server running on port: ${port}`);
     });
 
