@@ -21,16 +21,16 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
 
-
-RxBool loadConsentId=false.obs;
+RxBool loadConsentId = false.obs;
 RxBool isOtpWrong = false.obs;
 RxInt otpCountdown = 30.obs; // Reactive integer for countdown
-  RxBool canResendOtp = false.obs;
-   Timer? otpTimer;
+RxBool canResendOtp = false.obs;
+Timer? otpTimer;
+
 class MobileNumber extends StatefulWidget {
   bool flag;
   bool formEditDetails = false;
-  MobileNumber({super.key, this.flag = false,this.formEditDetails = false});
+  MobileNumber({super.key, this.flag = false, this.formEditDetails = false});
 
   @override
   State<MobileNumber> createState() => _MobileNumberState();
@@ -52,13 +52,12 @@ class _MobileNumberState extends State<MobileNumber> {
   void initState() {
     super.initState();
     initFinvuManager(context);
-    loadConsentId.value=false;
+    loadConsentId.value = false;
     if (widget.flag) {
-      _phoneController.text = number.value.toString()=="0"?"":number.value.toString();
+      _phoneController.text =
+          number.value.toString() == "0" ? "" : number.value.toString();
     }
   }
-
- 
 
   @override
   void dispose() {
@@ -78,20 +77,24 @@ class _MobileNumberState extends State<MobileNumber> {
       child: Scaffold(
         backgroundColor: AppColors.newbg,
         bottomNavigationBar: SafeArea(child: BottomBar()),
-         appBar: getAppBar(context),
+        appBar: getAppBar(context),
         body: SafeArea(
           child: Container(
             height: MediaQuery.of(context).size.height,
-            padding: EdgeInsets.only(top:AppSizes.p10, left:AppSizes.p12, right:AppSizes.p12, bottom: 5),
+            padding: EdgeInsets.only(
+                top: AppSizes.p10,
+                left: AppSizes.p12,
+                right: AppSizes.p12,
+                bottom: 5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: AppSizes.p12),
                       child: Text(
                         FinvuStrings().otpVerification,
                         style: FontManager().getTextStyle(
@@ -103,9 +106,10 @@ class _MobileNumberState extends State<MobileNumber> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: AppSizes.p20, horizontal: AppSizes.p12),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: AppSizes.p20, horizontal: AppSizes.p12),
                       child: Text(
-          FinvuStrings().finvuOtpMessage,
+                        FinvuStrings().finvuOtpMessage,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w400,
@@ -115,163 +119,163 @@ class _MobileNumberState extends State<MobileNumber> {
                       ),
                     ),
                     // TextField for entering phone number
-                   
                   ],
                 ),
                 Padding(
-                 padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: AppSizes.p12),
-                    
+                  padding: const EdgeInsets.symmetric(
+                      vertical: AppSizes.p10, horizontal: AppSizes.p12),
                   child: Column(
                     children: [
                       Container(
-                        width: MediaQuery.sizeOf(context).width/1.2,
+                        width: MediaQuery.sizeOf(context).width / 1.2,
                         child: TextFormField(
-                          
-                              controller: _phoneController,
-                              maxLength: 10,
-                              enableInteractiveSelection: false, 
-                              autocorrect: false,
-                              enableSuggestions: false,
-                              keyboardType: TextInputType.phone,
-                              inputFormatters:  [
-                                FilteringTextInputFormatter.allow(regex),
-                              ],
-                              onChanged: (c){
-                                 loadConsentId.value=false;
-                              },
-                              contextMenuBuilder: (context, editableTextState) {
-                                    return Container();
-                                  },
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 2,vertical: AppSizes.p16),
-                                
-                                prefixIcon: const Icon(Icons.phone_android_outlined),
-                                prefixIconColor: AppColors.primaryColor,
-                                hintText: FinvuStrings().enter10DigitNumber,
-                                hintStyle: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w500,
-                                  fontSize: 12,
-                                  color: AppColors.bg3,
-                                ),
-                                // filled: true,
-                                // fillColor: AppColors.button,
-                               enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AppColors.greyCard,
-                                width: 1,
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AppColors.greyCard,
-                                width: 2,
-                              ),
-                            ),
-                              )
-                                            
-                                //prefixIcon: Icon(Icons.phone),
-                                //hintText: 'Mobile Number',
-                              ),
-                      ),
-                          
-                          SizedBox(
-                              height: AppSizes.h20), // Add spacing between TextField and button
-                          // Button for "Get OTP"
-                          GestureDetector(
-                            onTap: () async {
-                              // Handle OTP logic here
-                              if(loadConsentId.value)return;
-                              if (_phoneController.text.length != 10) {
-                                snackBarCalledfail(context,SnackbarData().enterValidMobile, Colorcodes.red);
-                                return;
-                              }
-                                
-                              // final uuid = Uuid();
-                              // handleId.value = uuid.v4();
-                                
-                              String phoneNumber = _phoneController.text;
-                              number.value = phoneNumber;
-                                
-                             loadConsentId.value=true;
-                            await   getConsentHandleId(context);
-                           String otpRef =   await login(context);
-                           if(otpRef!=""){
-                              otpController = TextEditingController();
-                              startOtpTimer();
-                              isOtpWrong.value = false;
-                              Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => FinvuVerifyOtpScreen(
-                        otpController: otpController,
-                        otpLength: _otpCodeLength,
-                        otpCode: _otpCode,
-                        isOtpValid: _isOtpValid,
-                      ),
-                    ),
-                  );
-                  
-                              // showModalBottomSheet(
-                              //     context: context,
-                              //     isScrollControlled: true,
-                              //     builder: (BuildContext context) {
-                              //       return verifyaotp(context);
-                              //     });
-                           }else
-                           {
-                             snackBarCalledfail(context, SnackbarData().errorGeneratingOtp);
-                           }
-                             loadConsentId.value=false;
-                            },
-                            
-                            child: Obx(()=> loadConsentId.value?  getspinner(context,""):getButton(context, FinvuStrings().continueButton)),
-                          ),
-                     SizedBox(
-                              height: 20), 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Center(
-                        child: RichText(
-                          text: TextSpan(
-                      
-                            text: FinvuStrings().termsAndConditionsAgreement,
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: AppColors.grey,
-                            ),
-                            children: [
-                              TextSpan(
-                                  text:  FinvuStrings().termsAndConditions,
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    ///decoration: UnderlineInputBorder(),
-                                    color: Colors.blue,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      click();
-                                    }
-                                  // Make it clickable
-                                
-                                  ),
-                                 
+                            controller: _phoneController,
+                            maxLength: 10,
+                            enableInteractiveSelection: false,
+                            autocorrect: false,
+                            enableSuggestions: false,
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(regex),
                             ],
+                            onChanged: (c) {
+                              loadConsentId.value = false;
+                            },
+                            contextMenuBuilder: (context, editableTextState) {
+                              return Container();
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 2, vertical: AppSizes.p16),
+
+                              prefixIcon:
+                                  const Icon(Icons.phone_android_outlined),
+                              prefixIconColor: AppColors.primaryColor,
+                              hintText: FinvuStrings().enter10DigitNumber,
+                              hintStyle: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: AppColors.bg3,
+                              ),
+                              // filled: true,
+                              // fillColor: AppColors.button,
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.greyCard,
+                                  width: 1,
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.greyCard,
+                                  width: 2,
+                                ),
+                              ),
+                            )
+
+                            //prefixIcon: Icon(Icons.phone),
+                            //hintText: 'Mobile Number',
+                            ),
+                      ),
+
+                      SizedBox(
+                          height: AppSizes
+                              .h20), // Add spacing between TextField and button
+                      // Button for "Get OTP"
+                      GestureDetector(
+                        onTap: () async {
+                          // Handle OTP logic here
+                          if (loadConsentId.value) return;
+                          if (_phoneController.text.length != 10) {
+                            snackBarCalledfail(
+                                context,
+                                SnackbarData().enterValidMobile,
+                                Colorcodes.red);
+                            return;
+                          }
+
+                          // final uuid = Uuid();
+                          // handleId.value = uuid.v4();
+
+                          String phoneNumber = _phoneController.text;
+                          number.value = phoneNumber;
+
+                          loadConsentId.value = true;
+                          await getConsentHandleId(context);
+                          String otpRef = await login(context);
+                          if (otpRef != "") {
+                            otpController = TextEditingController();
+                            startOtpTimer();
+                            isOtpWrong.value = false;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FinvuVerifyOtpScreen(
+                                  otpController: otpController,
+                                  otpLength: _otpCodeLength,
+                                  otpCode: _otpCode,
+                                  isOtpValid: _isOtpValid,
+                                ),
+                              ),
+                            );
+
+                            // showModalBottomSheet(
+                            //     context: context,
+                            //     isScrollControlled: true,
+                            //     builder: (BuildContext context) {
+                            //       return verifyaotp(context);
+                            //     });
+                          } else {
+                            snackBarCalledfail(
+                                context, SnackbarData().errorGeneratingOtp);
+                          }
+                          loadConsentId.value = false;
+                        },
+                        child: Obx(() => loadConsentId.value
+                            ? getspinner(context, "")
+                            : getButton(
+                                context, FinvuStrings().continueButton)),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Center(
+                          child: RichText(
+                            text: TextSpan(
+                              text: FinvuStrings().termsAndConditionsAgreement,
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: AppColors.grey,
+                              ),
+                              children: [
+                                TextSpan(
+                                    text: FinvuStrings().termsAndConditions,
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.w500,
+                                      fontSize: 14,
+
+                                      ///decoration: UnderlineInputBorder(),
+                                      color: Colors.blue,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        click();
+                                      }
+                                    // Make it clickable
+
+                                    ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                              
-                    
                     ],
                   ),
                 ),
-                  
-               
               ],
             ),
           ),
@@ -280,10 +284,8 @@ class _MobileNumberState extends State<MobileNumber> {
     );
   }
 
-
-
   void click() {
-      redirectToUrl(context, Credentials.FinvuUrl);
+    redirectToUrl(context, Credentials.FinvuUrl);
   }
 
   Widget verifyaotp(context) {
@@ -306,8 +308,9 @@ class _MobileNumberState extends State<MobileNumber> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 25, left:AppSizes.p20, right:AppSizes.p20),
-              child: textStyle( FinvuStrings().registerWithFinvu, 16,
+              padding: const EdgeInsets.only(
+                  top: 25, left: AppSizes.p20, right: AppSizes.p20),
+              child: textStyle(FinvuStrings().registerWithFinvu, 16,
                   AppColors.bg1, FontWeight.bold),
             ),
             // Padding(
@@ -316,9 +319,13 @@ class _MobileNumberState extends State<MobileNumber> {
             //       "We recommend using the mobile number linked to the accounts you want to share", 16, AppColors.bg1, FontWeight.bold),
             // ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 20),
-              child: textStyle( "${FinvuStrings().enterOtpSentTo} ${number.value}", 15,
-                  AppColors.bg1, FontWeight.w400),
+              padding: const EdgeInsets.symmetric(
+                  vertical: AppSizes.p10, horizontal: 20),
+              child: textStyle(
+                  "${FinvuStrings().enterOtpSentTo} ${number.value}",
+                  15,
+                  AppColors.bg1,
+                  FontWeight.w400),
             ),
             const SizedBox(
               height: 10,
@@ -338,14 +345,18 @@ class _MobileNumberState extends State<MobileNumber> {
                   fieldHeight: MediaQuery.of(context).size.width * 0.12,
                   fieldWidth: MediaQuery.of(context).size.width * 0.12,
                   activeFillColor: AppColors.backgroundColor,
-                  activeColor: isOtpWrong.value ?  AppColors.redColor : Colors.blue,
+                  activeColor:
+                      isOtpWrong.value ? AppColors.redColor : Colors.blue,
                   selectedFillColor: AppColors.backgroundColor,
-                  selectedColor: isOtpWrong.value ?  AppColors.redColor : Colors.blue,
+                  selectedColor:
+                      isOtpWrong.value ? AppColors.redColor : Colors.blue,
                   inactiveFillColor: Colors.grey[200],
-                  inactiveColor: isOtpWrong.value ?  AppColors.redColor : Colors.grey,
+                  inactiveColor:
+                      isOtpWrong.value ? AppColors.redColor : Colors.grey,
                 ),
                 enableActiveFill: true,
-                textStyle: TextStyle(fontSize: 20, color: AppColors.accentColor),
+                textStyle:
+                    TextStyle(fontSize: 20, color: AppColors.accentColor),
                 onChanged: (value) {
                   _otpCode.value = value;
                   _isOtpValid.value = value.length == _otpCodeLength;
@@ -360,12 +371,12 @@ class _MobileNumberState extends State<MobileNumber> {
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(40, 0, 0, 5),
                       child: Text(
-                         FinvuStrings().incorrectOtp,
+                        FinvuStrings().incorrectOtp,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w300,
                           fontSize: 10,
-                          color:  AppColors.redColor,
+                          color: AppColors.redColor,
                         ),
                       ),
                     )
@@ -400,8 +411,8 @@ class _MobileNumberState extends State<MobileNumber> {
                           : null,
                       child: Text(
                         canResendOtp.value
-                                ? FinvuStrings().resendOtp:
-                                "${FinvuStrings().resendInSeconds} ${otpCountdown.value} seconds",
+                            ? FinvuStrings().resendOtp
+                            : "${FinvuStrings().resendInSeconds} ${otpCountdown.value} seconds",
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w400,
@@ -458,7 +469,8 @@ class _MobileNumberState extends State<MobileNumber> {
   Widget getColorVerify() {
     return Container(
       width: MediaQuery.of(context).size.width / 1.1,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p20),
+      padding:
+          const EdgeInsets.symmetric(horizontal: 5, vertical: AppSizes.p20),
       decoration: BoxDecoration(
         color: _isOtpValid.value
             ? AppColors.primaryColor
@@ -467,7 +479,7 @@ class _MobileNumberState extends State<MobileNumber> {
       ),
       child: Center(
         child: Text(
-         FinvuStrings().verify,
+          FinvuStrings().verify,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,
@@ -492,25 +504,20 @@ class _MobileNumberState extends State<MobileNumber> {
       snackBarCalled(context, SnackbarData().enterOtpLength);
     }
   }
-
-  
 }
 
-
-
-
- void startOtpTimer() {
-    canResendOtp.value = false;
-    otpCountdown.value = 30; // Reset countdown using .value
-    otpTimer?.cancel(); // Cancel any existing timer
-    otpTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (otpCountdown.value > 0) {
-        otpCountdown.value--; // Decrease countdown reactively
-      } else {
-        canResendOtp.value = true;
-        otpTimer?.cancel();
-      }
-      // setState(
-      //     () {}); // Ensure the UI updates (optional, since Obx should handle it)
-    });
-  }
+void startOtpTimer() {
+  canResendOtp.value = false;
+  otpCountdown.value = 30; // Reset countdown using .value
+  otpTimer?.cancel(); // Cancel any existing timer
+  otpTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    if (otpCountdown.value > 0) {
+      otpCountdown.value--; // Decrease countdown reactively
+    } else {
+      canResendOtp.value = true;
+      otpTimer?.cancel();
+    }
+    // setState(
+    //     () {}); // Ensure the UI updates (optional, since Obx should handle it)
+  });
+}

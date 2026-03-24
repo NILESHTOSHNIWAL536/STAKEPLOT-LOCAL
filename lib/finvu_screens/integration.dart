@@ -11,16 +11,20 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import '../Utils/finspaceStrings.dart';
+import '../controllers/fipmetrics-controller.dart';
 import '../loginservices/login.dart';
 import '../routes/route_finvu.dart';
 import '../backed_connections/googlesignin/credentials.dart';
+import 'package:get/get.dart';
 
 void initFinvuManager(BuildContext context) async {
+  String url = FinspaceStrings().liveIntegration
+      ? Credentials.Live_finvu_api
+      : Credentials.Dev_finvu_api;
+  print(url);
   finvuManager.initialize(
     FinvuConfig(
-      finvuEndpoint:! FinspaceStrings().liveIntegration
-          ? Credentials.Live_finvu_api
-          : Credentials.Dev_finvu_api,
+      finvuEndpoint: url,
       certificatePins: [],
     ),
   );
@@ -49,17 +53,22 @@ Future<String> login(context) async {
 
 Future<void> getConsentHandleId(context) async {
   final String apiUrl = FinvuRoutes.login;
+  final String apiUrlgetFipsMetric = FinvuRoutes.getFipsMetric;
   final String custId = "${number.value}@finvu";
   var body = {"custId": custId, 'number': number.value};
 
   try {
-  
     var response = await postDataApiCall(apiUrl, body);
-   
     if (getFlagOfResponse(response)) {
       final data = jsonDecode(response.body);
       String consentHandleId = data["consentHandleId"];
+      // var response2 = await getDataApiCall(apiUrlgetFipsMetric);
+      // print(response2);
       handleId.value = consentHandleId;
+      if (!Get.isRegistered<FipMetricsController>()) {
+        Get.put(FipMetricsController());
+      }
+      FipMetricsController.to.loadFromResponse(data);
     }
   } catch (error) {
     snackBarCalledfail(context, error.toString());
@@ -71,19 +80,16 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     final String apiUrl = FinvuRoutes.fetchData;
     final String custId = "${number.value}@finvu";
 
-    
     //  flagToFetchData.value=false;
     clearStackShared(context);
     Navigator.pushNamed(context, "/OnboardingScreen");
 
-    final response = await postDataApiCall(apiUrl,
-    {
-        "token": "",
-        "handleId": handleId.value,
-        "custId": custId,
-        // "images": bankImgMap,
-      }
-    );
+    final response = await postDataApiCall(apiUrl, {
+      "token": "",
+      "handleId": handleId.value,
+      "custId": custId,
+      // "images": bankImgMap,
+    });
 
     if (response.statusCode == 200) {
       logoutAndDisconnect();

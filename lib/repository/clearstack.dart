@@ -25,6 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 
 import '../controllers/credit_card_controller.dart';
+import '../controllers/fipmetrics-controller.dart';
 import '../controllers/theme_controller.dart';
 import '../services/secure_storage.dart';
 import '../loginservices/login.dart';
@@ -304,4 +305,8 @@ void initGetControllersIfisRegistered() {
   if (!Get.isRegistered<ThemeController>()) {
     Get.put(ThemeController());
   }
+  if (!Get.isRegistered<FipMetricsController>()) {
+    Get.put(FipMetricsController());
+  }
+
 }

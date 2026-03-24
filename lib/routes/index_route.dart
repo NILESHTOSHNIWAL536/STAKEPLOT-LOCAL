@@ -2,7 +2,7 @@ import '../backed_connections/googlesignin/credentials.dart';
 
 class API {
   static final bool apis_flag = true;
-  static final String urlWithLocallHost = !apis_flag
+  static final String urlWithLocallHost = apis_flag
       ? Credentials.LIVE_API
       : Credentials.LIVE_API_TEST; // main backend api
   static final String urlWithLocallHost2 = apis_flag
@@ -17,6 +17,7 @@ class API {
 
   static final String mainBackendUrl = "${urlWithLocallHost}api/v1";
   static final String EmailUrl = "${urlWithLocallHost}api/v1/email";
+  // static final String BankApiUrl = "${Credentials.LIVE_API}api/v1";
   static final String BankApiUrl = "${urlWithLocallHost}api/v1/bank";
   
 }
