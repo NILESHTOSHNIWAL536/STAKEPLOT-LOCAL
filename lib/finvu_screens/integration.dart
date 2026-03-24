@@ -18,7 +18,7 @@ import '../backed_connections/googlesignin/credentials.dart';
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-      finvuEndpoint:! FinspaceStrings().liveIntegration
+      finvuEndpoint: !FinspaceStrings().liveIntegration
           ? Credentials.Live_finvu_api
           : Credentials.Dev_finvu_api,
       certificatePins: [],
@@ -53,9 +53,11 @@ Future<void> getConsentHandleId(context) async {
   var body = {"custId": custId, 'number': number.value};
 
   try {
-  
+    print("API URL: $apiUrl");
+    print("Request Body: $body");
     var response = await postDataApiCall(apiUrl, body);
-   
+    print("API Response: ${response.statusCode} - ${response.body}");
+
     if (getFlagOfResponse(response)) {
       final data = jsonDecode(response.body);
       String consentHandleId = data["consentHandleId"];
@@ -71,19 +73,16 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     final String apiUrl = FinvuRoutes.fetchData;
     final String custId = "${number.value}@finvu";
 
-    
     //  flagToFetchData.value=false;
     clearStackShared(context);
     Navigator.pushNamed(context, "/OnboardingScreen");
 
-    final response = await postDataApiCall(apiUrl,
-    {
-        "token": "",
-        "handleId": handleId.value,
-        "custId": custId,
-        // "images": bankImgMap,
-      }
-    );
+    final response = await postDataApiCall(apiUrl, {
+      "token": "",
+      "handleId": handleId.value,
+      "custId": custId,
+      // "images": bankImgMap,
+    });
 
     if (response.statusCode == 200) {
       logoutAndDisconnect();

@@ -293,7 +293,7 @@ Widget getQuestionsAndOptions(PollModel? e, context, flag, PostId) {
                                             ? null
                                             : AppColors.backgroundColor,
                                         borderRadius: BorderRadius.circular(
-                                            Colorcodes.borderRadius/2),
+                                            8),
                                         gradient: op.option == s
                                             ? LinearGradient(
                                                 begin: Alignment.centerLeft,

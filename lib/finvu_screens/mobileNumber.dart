@@ -183,7 +183,7 @@ class _MobileNumberState extends State<MobileNumber> {
                               // Handle OTP logic here
                               if(loadConsentId.value)return;
                               if (_phoneController.text.length != 10) {
-                                snackBarCalledfail(context,SnackbarData().enterValidMobile, Colorcodes.red);
+                                snackBarCalledfail(context,SnackbarData().enterValidMobile, AppColors.redColor);
                                 return;
                               }
                                 
@@ -324,7 +324,7 @@ class _MobileNumberState extends State<MobileNumber> {
               height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
               child: PinCodeTextField(
                 appContext: context,
                 length: _otpCodeLength,

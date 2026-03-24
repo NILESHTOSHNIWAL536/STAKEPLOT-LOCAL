@@ -378,7 +378,7 @@
 //           Container(
 //             padding: EdgeInsets.all(AppSizes.p4),
 //             decoration: BoxDecoration(
-//                 color: Colorcodes.white,
+//                 color: AppColors.backgroundColor,
 //                 borderRadius: BorderRadius.circular(10)),
 //             child: Icon(
 //               icon,
@@ -874,14 +874,14 @@ class _AccessState extends State<Access> {
     toolbarHeight: 40,
     actions: [
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
         child: GestureDetector(
           onTap: () {
             showSkipModal2(context);
           },
           child: Icon(
             Icons.login,
-            color: Colorcodes.black,
+            color: AppColors.bg1,
             size: 30,
           ),
         ),
@@ -889,7 +889,7 @@ class _AccessState extends State<Access> {
     ],
     leading: IconButton(
       icon: Icon(Icons.arrow_back_sharp),
-      color: Colorcodes.black,
+      color: AppColors.bg1,
       onPressed: () {
         if(showDetails.value){
            showDetails.value=false;
@@ -1011,7 +1011,7 @@ Widget dateRangeWidget() {
     return Container(
       height: MediaQuery.of(context).size.height / 2,
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(horizontal: 20),
+      margin: EdgeInsets.symmetric(horizontal: AppSizes.p20),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -1138,7 +1138,7 @@ Widget sectionValue(String value) {
 
 Widget getInfomationsAboutUserConsnt() {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20),
+    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
     child: Column(
       children: [
         Container(
@@ -1284,7 +1284,7 @@ Widget getInfomationsAboutUserConsnt() {
   // Widget getInfomationsAboutUserConsnt() {
 
   //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 20),
+  //     padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
   //     child: Container(
   //       width: MediaQuery.of(context).size.width / 1,
   //       decoration: BoxDecoration(

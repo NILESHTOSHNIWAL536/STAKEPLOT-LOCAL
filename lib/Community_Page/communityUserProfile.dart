@@ -35,7 +35,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
+      bottomNavigationBar: BottomNavigations(data: 2),
       backgroundColor: AppColors.backgroundColor,
       
       body: SafeArea(

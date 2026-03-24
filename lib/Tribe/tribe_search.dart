@@ -161,8 +161,8 @@ class _TribeSearchState extends State<TribeSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: SafeArea(child: BottomNavigations(
-        data: widget.isMasked ? 2 : 1)),
+      bottomNavigationBar: BottomNavigations(
+        data: widget.isMasked ? 2 : 1),
       extendBody: true,
       body: SafeArea(
         child: Container(
@@ -329,7 +329,7 @@ Widget profileContainer(data) {
 
   //                 Container(
   //                   width: MediaQuery.of(context).size.width / 1.5,
-  //                   //  color: Colorcodes.black,
+  //                   //  color: AppColors.bg1,
   //                   child: Text(
   //                     (data['name'] ?? "name"),
   //                     style: FontManager().getTextStyle(context,
@@ -372,7 +372,7 @@ void showmodalWidget(data){
          width: MediaQuery.of(context).size.width,
          height: MediaQuery.of(context).size.height/3,
          decoration: const BoxDecoration(
-        //  color: Colorcodes.white,
+        //  color: AppColors.backgroundColor,
          borderRadius: BorderRadius.only(
           topLeft: Radius.circular(70),
           topRight: Radius.circular(70)

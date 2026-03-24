@@ -62,7 +62,7 @@ Widget _buildFeatureIcon(IconData icon, String text, int index,
           textStyleImage(
               text: text,
               context: context,
-              c: Colorcodes.white,
+              c: AppColors.backgroundColor,
               fontsize: 11,
               // lineHeight: 1.2,
               isCenter: true),

@@ -111,7 +111,7 @@ class BalanceOutDialog extends StatelessWidget {
             isValid?  getListOfTransactions(context, transactions, isValid, netAmount, isAlreadyIncluded, id):
             GetMisMatchSlider(id: id,isAlreadyIncluded: isAlreadyIncluded,isValid: isValid,transactions:transactions,netAmount: netAmount,parentContext: context),
 
-              //textStyle(context: context,text: 'invalid balaced transactions',c: Colorcodes.red)
+              //textStyle(context: context,text: 'invalid balaced transactions',c: AppColors.redColor)
             ],
           );
         }),
@@ -156,7 +156,7 @@ Widget getTotalAndAddButton(context,netAmount,isValid,isAlreadyIncluded,id){
               // CTA Button
            isValid?  isAlreadyIncluded?Container(
             // width: MediaQuery.of(context).size.width/1.1,
-            child: textStyleImage(iswrap: true,context: context,text: "Some of these transactions are already balanced out.",c: Colorcodes.red)) :ElevatedButton(
+            child: textStyleImage(iswrap: true,context: context,text: "Some of these transactions are already balanced out.",c: AppColors.redColor)) :ElevatedButton(
                 onPressed: () 
                 {
                   // Trigger balance logic

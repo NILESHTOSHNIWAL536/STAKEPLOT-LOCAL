@@ -589,7 +589,7 @@
 //                       context,
 //                       lWeight: FontWeight.w500,
 //                       fontSize: 15,
-//                       color: Colorcodes.white,
+//                       color: AppColors.backgroundColor,
 //                     ),
 //                     textAlign: TextAlign.center,
 //                   ),
@@ -1334,7 +1334,7 @@
 //                       context,
 //                       lWeight: FontWeight.w500,
 //                       fontSize: 15,
-//                       color: Colorcodes.white,
+//                       color: AppColors.backgroundColor,
 //                     ),
 //                     textAlign: TextAlign.center,
 //                   ),
@@ -1503,132 +1503,270 @@ Widget avatarSlider() {
   );
 }
 
+Widget avatarSlider2() {
+  if (bankAccountLinkedList.isEmpty) {
+    return connectBankAccount(context);
+  }
 
- Widget avatarSlider2() {
-  if (bankAccountLinkedList.isEmpty) return connectBankAccount(context);
-Future.microtask(() {
-  _pageController.jumpToPage(flipToIndex);
+  /// 🔁 Handle initial flip & data sync safely
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!_pageController.hasClients) return;
 
-  setState(() {
-    activeIndex = flipToIndex;
-    scrollBankPage.value = flipToIndex;
+    _pageController.jumpToPage(flipToIndex);
+
+    if (!mounted) return;
+
+    setState(() {
+      activeIndex = flipToIndex;
+      scrollBankPage.value = flipToIndex;
+    });
+
+    final account = bankAccountLinkedList[flipToIndex];
+
+    accountId.value = account.accountId;
+    LastFetchDate.value = account.lastFetch;
+    nextFecthDate.value = account.nextFetch;
+    fetchCount.value = account.fetchCount.toString();
+    BankName.value = account.bankName;
+    BankUrl.value = account.bankLogo;
+
+    calledFunctionToFetchData(context);
+
+    /// 🔁 revert flip slider
+    Future.delayed(const Duration(milliseconds: 750), () {
+      if (mounted) {
+        setState(() {
+          showFlipSlider = false;
+        });
+      }
+    });
   });
 
-  final account = bankAccountLinkedList[flipToIndex];
-  accountId.value = account.accountId;
-  LastFetchDate.value = account.lastFetch;
-  nextFecthDate.value = account.nextFetch;
-  fetchCount.value = account.fetchCount.toString();
-  BankName.value = account.bankName;
-  BankUrl.value = account.bankLogo;
+  return SafeArea(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        /// 🟦 CARD AREA
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.h16),
+          child: AspectRatio(
+            aspectRatio: 16 / 9, // 🔥 responsive on all devices
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                /// 🔥 MAIN CARD (VISIBLE)
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 650),
+                  transitionBuilder: (child, animation) {
+                    final rotate = Tween<double>(
+                      begin: pi,
+                      end: 0,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeInOutCubic,
+                      ),
+                    );
 
-  calledFunctionToFetchData(context);
+                    return AnimatedBuilder(
+                      animation: rotate,
+                      child: child,
+                      builder: (context, child) {
+                        return Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.identity()
+                            ..setEntry(3, 2, 0.001)
+                            ..rotateX(-rotate.value),
+                          child: child,
+                        );
+                      },
+                    );
+                  },
+                  child: KeyedSubtree(
+                    key: ValueKey(activeIndex),
+                    child: getListViewBankInfo(
+                      bankAccountLinkedList[activeIndex],
+                    ),
+                  ),
+                ),
 
-  // 🔁 return to normal slider after flip
-  Future.delayed(const Duration(milliseconds: 750), () {
-    if (mounted) {
-      setState(() {
-        showFlipSlider = false;
-      });
-    }
-  });
-});
-
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      SizedBox(
-        // color:  AppColors.redColor,
-        height: MediaQuery.sizeOf(context).height/4,
-        child:
-       SizedBox(
-  height: MediaQuery.sizeOf(context).height / 4,
-  child: Stack(
-    alignment: Alignment.center,
-    children: [
-      /// 🔥 MAIN CARD (VISIBLE)
-      AnimatedSwitcher(
-        duration: const Duration(milliseconds: 650),
-        transitionBuilder: (child, animation) {
-         final rotate = Tween(begin: pi, end: 0.0).animate(
-  CurvedAnimation(
-    parent: animation,
-    curve: Curves.easeInOutCubic, // 🔥 much smoother
-  ),
-);
-
-
-          return AnimatedBuilder(
-            animation: rotate,
-            child: child,
-            builder: (context, child) {
-              return Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.identity()
-                  ..setEntry(3, 2, 0.001)
-                  ..rotateX(-rotate.value),
-                child: child,
-              );
-            },
-          );
-        },
-        child: KeyedSubtree(
-          key: ValueKey(activeIndex),
-          child: getListViewBankInfo(
-            bankAccountLinkedList[activeIndex],
-          ),
-        ),
-      ),
-
-      /// 🧠 HIDDEN PageView (LOGIC ONLY)
-      IgnorePointer(
-        ignoring: true,
-        child: Opacity(
-          opacity: 0,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: bankAccountLinkedList.length,
-            onPageChanged: (index) {
-              setState(() {
-                activeIndex = index;
-                scrollBankPage.value = index;
-              });
-            },
-            itemBuilder: (_, __) => const SizedBox(),
-          ),
-        ),
-      ),
-    ],
-  ),
-)
-
-      ),
-
-       SizedBox(height: AppSizes.h6),
-
-      Obx(() => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          bankAccountLinkedList.length,
-          (index) => AnimatedContainer(
-            duration:const  Duration(milliseconds: 250),
-            margin:const  EdgeInsets.symmetric(horizontal: 4),
-            height: 8,
-            width:  8,  // active dot grows
-            decoration: BoxDecoration(
-              color: scrollBankPage.value == index
-                  ? AppColors.primaryColor
-                  : AppColors.accentColor.withOpacity(0.4),
-              borderRadius: BorderRadius.circular(12),
+                /// 🧠 HIDDEN PAGEVIEW (LOGIC ONLY)
+                IgnorePointer(
+                  ignoring: true,
+                  child: Opacity(
+                    opacity: 0,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: bankAccountLinkedList.length,
+                      onPageChanged: (index) {
+                        if (!mounted) return;
+                        setState(() {
+                          activeIndex = index;
+                          scrollBankPage.value = index;
+                        });
+                      },
+                      itemBuilder: (_, __) => const SizedBox(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-      )),
-  
-      
-    ],
+
+        const SizedBox(height: AppSizes.h12),
+
+        /// 🔘 INDICATORS
+        Obx(
+          () => Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              bankAccountLinkedList.length,
+              (index) => AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                margin: const EdgeInsets.symmetric(horizontal: AppSizes.p4),
+                height: AppSizes.h8,
+                width: AppSizes.h8,
+                decoration: BoxDecoration(
+                  color: scrollBankPage.value == index
+                      ? AppColors.primaryColor
+                      : AppColors.accentColor.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
+
+//  Widget avatarSlider2() {
+//   if (bankAccountLinkedList.isEmpty) return connectBankAccount(context);
+// Future.microtask(() {
+//   _pageController.jumpToPage(flipToIndex);
+
+//   setState(() {
+//     activeIndex = flipToIndex;
+//     scrollBankPage.value = flipToIndex;
+//   });
+
+//   final account = bankAccountLinkedList[flipToIndex];
+//   accountId.value = account.accountId;
+//   LastFetchDate.value = account.lastFetch;
+//   nextFecthDate.value = account.nextFetch;
+//   fetchCount.value = account.fetchCount.toString();
+//   BankName.value = account.bankName;
+//   BankUrl.value = account.bankLogo;
+
+//   calledFunctionToFetchData(context);
+
+//   // 🔁 return to normal slider after flip
+//   Future.delayed(const Duration(milliseconds: 750), () {
+//     if (mounted) {
+//       setState(() {
+//         showFlipSlider = false;
+//       });
+//     }
+//   });
+// });
+
+//   return Column(
+//     mainAxisAlignment: MainAxisAlignment.center,
+//     children: [
+//       SizedBox(
+//         // color:  AppColors.redColor,
+//         height: MediaQuery.sizeOf(context).height/4,
+//         child:
+//        SizedBox(
+//   height: MediaQuery.sizeOf(context).height / 4,
+//   child: Stack(
+//     alignment: Alignment.center,
+//     children: [
+//       /// 🔥 MAIN CARD (VISIBLE)
+//       AnimatedSwitcher(
+//         duration: const Duration(milliseconds: 650),
+//         transitionBuilder: (child, animation) {
+//          final rotate = Tween(begin: pi, end: 0.0).animate(
+//   CurvedAnimation(
+//     parent: animation,
+//     curve: Curves.easeInOutCubic, // 🔥 much smoother
+//   ),
+// );
+
+
+//           return AnimatedBuilder(
+//             animation: rotate,
+//             child: child,
+//             builder: (context, child) {
+//               return Transform(
+//                 alignment: Alignment.center,
+//                 transform: Matrix4.identity()
+//                   ..setEntry(3, 2, 0.001)
+//                   ..rotateX(-rotate.value),
+//                 child: child,
+//               );
+//             },
+//           );
+//         },
+//         child: KeyedSubtree(
+//           key: ValueKey(activeIndex),
+//           child: getListViewBankInfo(
+//             bankAccountLinkedList[activeIndex],
+//           ),
+//         ),
+//       ),
+
+//       /// 🧠 HIDDEN PageView (LOGIC ONLY)
+//       IgnorePointer(
+//         ignoring: true,
+//         child: Opacity(
+//           opacity: 0,
+//           child: PageView.builder(
+//             controller: _pageController,
+//             itemCount: bankAccountLinkedList.length,
+//             onPageChanged: (index) {
+//               setState(() {
+//                 activeIndex = index;
+//                 scrollBankPage.value = index;
+//               });
+//             },
+//             itemBuilder: (_, __) => const SizedBox(),
+//           ),
+//         ),
+//       ),
+//     ],
+//   ),
+// )
+
+//       ),
+
+//        SizedBox(height: AppSizes.h6),
+
+//       Obx(() => Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: List.generate(
+//           bankAccountLinkedList.length,
+//           (index) => AnimatedContainer(
+//             duration:const  Duration(milliseconds: 250),
+//             margin:const  EdgeInsets.symmetric(horizontal: 4),
+//             height: 8,
+//             width:  8,  // active dot grows
+//             decoration: BoxDecoration(
+//               color: scrollBankPage.value == index
+//                   ? AppColors.primaryColor
+//                   : AppColors.accentColor.withOpacity(0.4),
+//               borderRadius: BorderRadius.circular(12),
+//             ),
+//           ),
+//         ),
+//       )),
+  
+      
+//     ],
+//   );
+// }
 
  
 Widget getListViewBankInfo(BankAccountModel data) {
@@ -1730,7 +1868,7 @@ Widget getListViewBankInfo(BankAccountModel data) {
   onTap: () {
    Navigator.push(
   context,
-  MaterialPageRoute(builder: (_) =>  BalanceScreen()),
+  MaterialPageRoute(builder: (_) =>  PaymentScreen()),
 );
 
   },

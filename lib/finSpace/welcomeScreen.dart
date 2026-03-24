@@ -111,7 +111,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
+      bottomNavigationBar: BottomNavigations(data: 2),
       body: SafeArea(
         child: Center(
           child: Column(

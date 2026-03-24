@@ -223,7 +223,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
       builder: (modalContext) {
         return Container(
           height: MediaQuery.of(modalContext).size.height * 0.7,
-          padding: const EdgeInsets.only(top:AppSizes.p16, bottom: 16),
+          padding: const EdgeInsets.only(top:AppSizes.p16, bottom:AppSizes.p16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -459,12 +459,12 @@ class _GroupTransactionsState extends State<GroupTransactions>
                       child: Container(
                         padding: const EdgeInsets.all(AppSizes.p8),
                         decoration: BoxDecoration(
-                          color: Colorcodes.red.withOpacity(0.1),
+                          color: AppColors.redColor.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.delete_rounded,
-                          color: Colorcodes.red,
+                          color: AppColors.redColor,
                           size: 22,
                         ),
                       ),

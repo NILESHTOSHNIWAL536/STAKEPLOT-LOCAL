@@ -126,7 +126,7 @@ class InterestSelectionPage extends StatelessWidget {
           /// Interest list
           /// 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -275,7 +275,7 @@ class PollStepHeader extends StatelessWidget {
 
           /// Progress bar + step text
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
             child: Row(
               children: [
                 SizedBox(

@@ -359,7 +359,7 @@
 //                                             horizontal: 40),
 //                                         child: Spinner(
 //                                           size: 10,
-//                                           color: Colorcodes.white,
+//                                           color: AppColors.backgroundColor,
 //                                         ),
 //                                       )
 //                                     : textStyleOnly2(

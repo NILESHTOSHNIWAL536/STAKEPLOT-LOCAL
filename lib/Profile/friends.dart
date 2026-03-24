@@ -235,7 +235,7 @@ class _FriendsState extends State<Friends> {
           child: Text(
             str,
             style: FontManager().getTextStyle(context,
-                fontSize: 17, lWeight: FontWeight.w500, color: Colorcodes.white
+                fontSize: 17, lWeight: FontWeight.w500, color: AppColors.backgroundColor
                 //  fontStyle: FontStyle.italic
                 ),
           ),

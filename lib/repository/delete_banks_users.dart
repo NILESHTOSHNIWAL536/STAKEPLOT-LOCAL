@@ -65,7 +65,7 @@ void deleteBankAccount(
     clearSpecificBox(HiveStorage.financeBoxName);
     clearSpecificBox(HiveStorage.autoPayBoxName);
     getBankAccounts();
-    getCategoryData(context);
+    getCategoryData();
     clearGraph();
     getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,isSplashScreen: true);
     

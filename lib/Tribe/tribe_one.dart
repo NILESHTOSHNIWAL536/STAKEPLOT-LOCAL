@@ -444,7 +444,7 @@ class _TribeHomeState extends State<TribeUnique> {
                                             );
                                           }
                                         },
-                                        color: Colorcodes.white,
+                                        color: AppColors.backgroundColor,
                                         itemBuilder: (BuildContext context) {
                                           List<PopupMenuEntry<String>> items =
                                               [];
@@ -910,7 +910,7 @@ class _TribeHomeState extends State<TribeUnique> {
                                     );
                                   }
                                 },
-                                color: Colorcodes.white,
+                                color: AppColors.backgroundColor,
                                 itemBuilder: (BuildContext context) {
                                   List<PopupMenuEntry<String>> items = [];
 

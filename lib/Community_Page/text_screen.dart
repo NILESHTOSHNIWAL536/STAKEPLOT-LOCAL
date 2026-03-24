@@ -260,7 +260,7 @@ class _TextScreenState extends State<TextScreen> {
                             child: Center(
                               child: Obx(
                                 () =>  postController.posting.value
-                                    ? Spinner(size: 30, color: Colorcodes.white)
+                                    ? Spinner(size: 30, color: AppColors.backgroundColor)
                                     : Text(
                                         strings.continueButton,
                                         style: FontManager().getTextStyle(

@@ -23,6 +23,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import "../Constants/core/app_padding_sizes.dart";
 import "../routes/index_route.dart";
 import "../routes/route_user_login.dart";
+import "group_chat.dart";
 
 RxBool load = true.obs;
 RxBool reloadCharts = true.obs;
@@ -53,6 +54,8 @@ class _TribeSearchState extends State<TribeChats> {
   ValueNotifier<bool> getChatSplit = ValueNotifier<bool>(false);
   final CommunityScreenStrings strings = CommunityScreenStrings();
   UserController userController = ControllerManagement.userController;
+   String demoGroupId = "demo_group_flutter";
+
   @override
   void initState() {
     super.initState();
@@ -130,6 +133,20 @@ class _TribeSearchState extends State<TribeChats> {
       });
     } else {}
   }
+  List<Map<String, dynamic>> groupList = [
+  {
+    "groupId": "demo_group_flutter",
+    "name": "Flutter Learners",
+    "members": 5,
+  }
+];
+
+@override
+void dispose() {
+  socket.disconnect();
+  socket.dispose();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +264,7 @@ class _TribeSearchState extends State<TribeChats> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.all(AppSizes.p16),
+          padding: const EdgeInsets.all(AppSizes.p16),
           child: ListView(
             children: [
               InputDate(strings.searchHint, TextInputType.name, search),
@@ -268,7 +285,7 @@ class _TribeSearchState extends State<TribeChats> {
       padding: const EdgeInsets.symmetric(vertical: AppSizes.p20),
       child: Row(children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
           child: InkWell(
               onTap: () {
                 ismaskedUsers.value = false;
@@ -284,7 +301,7 @@ class _TribeSearchState extends State<TribeChats> {
                   c: AppColors.accentColor)),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
           child: InkWell(
               onTap: () {
                 reloadCharts.value = !reloadCharts.value;
@@ -308,40 +325,45 @@ class _TribeSearchState extends State<TribeChats> {
         ? Spinner(
             color: AppColors.primaryColor,
           )
-        : chatList.isEmpty
-            ? Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 1.1,
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AvatarProfileImage(
-                          url: FinSpaceIcons.empty,
-                          height: 4.5,
-                          width: 4.5,
+        : Column(
+          children: [
+              // buildGroupChats(),
+            chatList.isEmpty
+                ? Center(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AvatarProfileImage(
+                              url: FinSpaceIcons.empty,
+                              height: 4.5,
+                              width: 4.5,
+                            ),
+                            Text(strings.noChatsAvailable,
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w400,
+                                    lineHeight: 1.2,
+                                    fontSize: 20,
+                                    color: AppColors.grey)),
+                          ],
                         ),
-                        Text(strings.noChatsAvailable,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w400,
-                                lineHeight: 1.2,
-                                fontSize: 20,
-                                color: AppColors.grey)),
-                      ],
+                      ),
                     ),
+                  )
+                : Column(
+                    children:
+                        chatList.map((item) => profileContainer(item)).toList(),
                   ),
-                ),
-              )
-            : Column(
-                children:
-                    chatList.map((item) => profileContainer(item)).toList(),
-              );
+          ],
+        );
   }
 
   Widget InputDate(lableText, keyBoard, Textcontroller) {
     return Center(
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width / 1.1,
         child: Center(
           child: TextFormField(
@@ -354,7 +376,7 @@ class _TribeSearchState extends State<TribeChats> {
               });
             },
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+              contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.p10, vertical: 0),
               filled: true,
               enabled: true,
               hintText: lableText,
@@ -363,7 +385,7 @@ class _TribeSearchState extends State<TribeChats> {
                   lWeight: FontWeight.normal,
                   fontSize: 14,
                   color: AppColors.accentColor),
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5.0),
               ),
@@ -410,10 +432,11 @@ class _TribeSearchState extends State<TribeChats> {
           color: AppColors.backgroundColor,
           child: Column(
             children: [
+              
               Container(
                 padding: const EdgeInsets.symmetric(vertical: AppSizes.p2, horizontal: 2),
                 color:
-                    canMaskMessage ? Colors.transparent : Colorcodes.greyLight,
+                    canMaskMessage ? AppColors.transparentColor : AppColors.grey,
                 //width: width / 1,
                 child: Row(
                   children: [
@@ -426,7 +449,7 @@ class _TribeSearchState extends State<TribeChats> {
                             height: 1,
                             background: item['avatar'] ?? ""),
                     SizedBox(width: AppSizes.w8),
-                    Container(
+                    SizedBox(
                       width: width >= 500
                           ? width / 2.2
                           : width >= 300
@@ -465,10 +488,7 @@ class _TribeSearchState extends State<TribeChats> {
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 0.3,
-                            color: Colorcodes.budgetDarkGreen,
-                          ),
+                          
                         ),
                         child: Center(
                           child: Text(
@@ -490,4 +510,46 @@ class _TribeSearchState extends State<TribeChats> {
       ),
     );
   }
+  Widget buildGroupChats() {
+  if (groupList.isEmpty) return const SizedBox.shrink();
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 12),
+      Text(
+        "Groups",
+        style: FontManager().getTextStyle(
+          context,
+          fontSize: 16,
+          lWeight: FontWeight.w600,
+          color: AppColors.primaryColor,
+        ),
+      ),
+      const SizedBox(height: 8),
+      ...groupList.map((group) => ListTile(
+            leading: const CircleAvatar(
+              child: Icon(Icons.group),
+            ),
+            title: Text(group['name']),
+            subtitle: Text("${group['members']} members"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => GroupChatScreen(
+                    myId: userController.userId.value,
+                    myName: userController.userName.value,
+                    groupId: group['groupId'],
+                    groupName: group['name'],
+                  ),
+                ),
+              );
+            },
+          )),
+      const Divider(),
+    ],
+  );
+}
+
 }

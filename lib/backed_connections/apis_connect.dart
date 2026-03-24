@@ -33,44 +33,33 @@ PostController get postController => Get.find<PostController>();
 RxMap deviceData = {}.obs;
 RxBool isBankAccountLink = false.obs;
 RxInt scrollBankPage = 0.obs;
-double maxDC = 0;
-double minDC = 0;
+
 RxList notificationList = [].obs;
 RxList<String> listofLinkedAccount = <String>[].obs;
-RxList trasactionsData = [].obs;
+
 // RxList finoraTransactionData = [].obs;
-RxList autoPayData = [].obs;
-RxList listOfRecentTrasactionsData = [].obs;
-RxList trasactionsHideData = [].obs;
-RxList trasactionsHistory = [].obs;
+
+
+RxList trasactionsHideData = [].obs; // hidden tnx
+
 RxBool getHistory = false.obs;
-RxBool getAutopays = false.obs;
+
 RxList lendAmountRemainders = [].obs;
 RxBool getlendUsers = false.obs;
-List<double> trasactionsDataMonthlyCredit = [];
-List<double> trasactionsDataMonthlyDebit = [];
-List<double> trasactionsDataCustomCredit = [];
-List<double> trasactionsDataCustomDebit = [];
-List<String> trasactionsDataCustomLabel = [];
-RxBool flagTrasaction = false.obs;
+
 RxBool isFromEditDeatils = false.obs;
 RxString range = ''.obs;
-RxString filterText = ''.obs;
+
 RxString defaultBackGround = "#68B2A0".obs;
-List<double> trasactionsDataCreditWeekly = [];
-List<double> trasactionsDataDebitWeekly = [];
-RxList trasactionsDataWeekly = [].obs;
+
 RxList friendRequestList = [].obs;
 RxList messages = [].obs;
 RxList messagesTemp = [].obs;
-RxList roomBills = [].obs;
-RxList questionRoom = [].obs;
-RxList productList = [].obs;
 RxList userPostList = [].obs;
 RxList chatList = [].obs;
 RxList chatListOriginal = [].obs;
-RxList chatListMasked = [].obs;
-RxList chatListOriginalMasked = [].obs;
+
+
 RxList customCategoryList = [].obs;
 RxList customCategoryUnUsedList = [].obs;
 RxMap friendsListDetails = {}.obs;
@@ -80,18 +69,17 @@ List<Map<String, dynamic>> custom = [];
 RxBool hideTransactionReload = false.obs;
 RxBool aboutMe = false.obs;
 RxBool myNotificationBool = false.obs;
-RxBool clickedLinkedBackAccount = false.obs;
-RxBool setBankAccountPassword = false.obs;
+
+
 RxBool hideBackAccountPassword = false.obs;
 bool sizeRoom = false;
 double fontSize = 20;
 RxInt budgetLength = 0.obs;
-RxInt billLength = 0.obs;
-RxInt debtLength = 0.obs;
-RxInt paymentLength = 0.obs;
+
+
 RxString splitID = "".obs;
-RxString openTrasactions = "Bills".obs;
-RxString targetString = "".obs;
+
+
 RxList categoriesList = [].obs;
 RxList moreDrasticChange = [].obs;
 RxList frequentPayments = [].obs;
@@ -105,7 +93,7 @@ RxList mostSpentDayInMonth = [].obs;
 RxList weeklyTrend = [].obs;
 
 
-Map<String, dynamic> loginUsersList = Map<String, dynamic>();
+
 RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;
 RxBool canMessageUser = false.obs;
@@ -114,9 +102,9 @@ RxInt selectedMonth = DateTime.now().month.obs;
 RxList inSights = [].obs;
 RxBool getInsights = false.obs;
 RxBool getCreditCardBudgetDebts = false.obs;
-RxBool allOrGroupTransactions = true.obs;
+
 RxString accountId = "".obs;
-RxString searchAccountId = "".obs;
+
 RxString accountIdPdf = "".obs;
 RxString accountSelected = "".obs;
 RxString maskedNameLocal = "".obs;
@@ -134,18 +122,15 @@ bool limitTagbool = false;
 int currentPage = 1;
 RxBool havingMoreData = true.obs;
 RxBool isLoadingMore = false.obs;
-RxBool loadMoreData = false.obs;
+
 bool hasMoreData = true;
 int m = DateTime.now().month;
-List targetsData = [];
+
 List arr = [];
-List scrollAbleList = [].obs;
-List scrollAbleListALl = [].obs;
-RxBool bol = false.obs;
-String tabAmount = "";
-RxInt listIndex = 0.obs;
+
+
 RxBool reRender = false.obs;
-RxBool reGraph = false.obs;
+
 RxBool setDonectChat = false.obs;
 List room = [];
 List<String> account = [];
@@ -153,7 +138,7 @@ RxBool acceptReset = false.obs;
 RxBool LoadTag = false.obs;
 RxList budgetList = [].obs;
 final RxList<Debt> debts = <Debt>[].obs;
-RxList debtsList = [].obs;
+
 RxList historyListData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
 RxBool getGraphData = false.obs;
@@ -161,18 +146,18 @@ RxBool loadBanks = true.obs;
 RxBool loadBalance = true.obs;
 RxBool isSplit = false.obs;
 RxBool isLend = false.obs;
-RxBool stopTonavigate = true.obs;
+
 final GlobalKey targetKey = GlobalKey();
 RxString selectedButton2 = 'Month'.obs;
 RxString selectedButton = 'Month'.obs; // Default view is "Month"
-DateTimeRange? selectedDateRange; // Default view is "Month"
+
 int selectedDay = 1;
 int year = DateTime.now().year; // Current year
 Map<int, List<double>> creditedData = {};
 Map<int, List<double>> debitedData = {};
 double totalSpent = 0.0;
 RxMap<String, List<double>> transactionChatGraph = new RxMap();
-RxBool graphTransaction = false.obs;
+
 List<String> labels = [];
 List<String> labels2 = [];
 RxDouble maxYValue = 0.0.obs;
@@ -189,7 +174,7 @@ RxBool loadChatdataOnChnage = false.obs;
 RxBool loadingDelay = false.obs;
 RxDouble totalDebitValue = 0.0.obs;
 RxDouble totalExpandedValue = 0.0.obs;
-List<double> trasactionsDataDebitWeeklyoverall = [];
+
 RxMap<String, List<double>> transactionChatGraphoverall = new RxMap();
 RxDouble maxYValueoverall = 0.0.obs;
 RxBool getGraphDataoverall = false.obs;
@@ -209,7 +194,7 @@ RxString BankUrl = "".obs;
 RxString transactionsId = "".obs;
 
 RxBool isFected = false.obs;
-RxInt transactionsLength = 0.obs;
+
 RxList chatSplitAccount = [].obs;
 RxBool getChatSplit = false.obs;
 
@@ -217,7 +202,7 @@ DateTime startDateCustom = DateTime.now().subtract(const Duration(days: 7));
 DateTime endDateCustom = DateTime.now();
 List<CardData> allAutoPayData = [];
 RxBool isAutoPayFected = false.obs;
-RxBool isFectedDonetChat = false.obs;
+
 RxBool isFinoraVisible = false.obs;
 UserActivity? userActivity;
 RxMap<String, List<dynamic>> couponRequestMap = <String, List<dynamic>>{}.obs;
@@ -256,15 +241,10 @@ final RxList<Map<String, dynamic>> yearlyMonths = <Map<String, dynamic>>[].obs;
 final RxDouble annualCredited = 0.0.obs;
 final RxDouble annualDebited = 0.0.obs;
 final RxDouble annualOutstanding = 0.0.obs;
-
-
-  List<FlSpot> budgetLineSpots = [];
-   Map<String, double> spendingCategories = {};
-   List categoryGraphObjects = [];
    List<BudgetChartDataPoint> budgetChartData = [];
    String selectedBudgetPeriod = 'monthly';
    List<dynamic> budgetTransactions = []; // Store raw transactions from API
-   Map<String, dynamic>? currentBudgetInfo;
+  
    List<String>? budgetInsights;
    List<Map<String, dynamic>> categorySpendings = [];
    List<Map<String, dynamic>> pieGraphData = [];

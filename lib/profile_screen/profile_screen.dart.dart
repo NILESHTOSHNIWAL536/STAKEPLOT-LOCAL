@@ -15,7 +15,7 @@ import 'package:flutter_application_code_stakeplot/image_service/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/coupons/rewards_overview.dart';
-import 'package:flutter_application_code_stakeplot/Utils/vibration.dart';
+import 'package:flutter_application_code_stakeplot/Constants/vibration.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';

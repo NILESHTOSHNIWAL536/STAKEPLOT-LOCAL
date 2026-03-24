@@ -17,8 +17,10 @@ import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
+import 'package:get/get.dart';
 
 import '../Constants/app_styles.dart';
+import '../controllers/transactions_controller.dart';
 import 'bankinfo.dart';
 
 
@@ -146,6 +148,7 @@ Future<List<Map<String, dynamic>>> getDayWiseTransactionsForDate(
 Future<void> getAllTransactionHistory(
     BuildContext context, bool flag, bool isYearView,
     {bool isRefreshing = false}) async {
+        // final tx = Get.find<TransactionController>();
   if (isLoadingMore.value) return; // Prevent multiple API calls
   loadingDelay.value = true;
   try {
@@ -155,10 +158,14 @@ Future<void> getAllTransactionHistory(
         : selectedYear.value.toString() +
             "-" +
             selectedMonth.value.toString().padLeft(2, '0');
-    searchTextController.value = searchController.text.trim();
-    String text = searchController.text.trim() == ""
+    // searchTextController.value = tx.searchController.text.trim();
+    // String text = tx.searchController.text.trim() == ""
+    //     ? "empty"
+    //     : (tx.searchController.text == "cash" ? "Cash" : tx.searchController.text);
+    searchTextController.value = tnxSearchController.text.trim();
+    String text = tnxSearchController.text.trim() == ""
         ? "empty"
-        : (searchController.text == "cash" ? "Cash" : searchController.text);
+        : (tnxSearchController.text == "cash" ? "Cash" : tnxSearchController.text);
     String urlPath = flag
         ? BankTransactionRoutes.getMonthlyTransactionsHistory(
             accountId: accountId.value,

@@ -97,7 +97,7 @@ class _TagShowmodalState extends State<TagShowmodal>
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 1.1,
       decoration: BoxDecoration(
-          color: Colorcodes.white,
+          color: AppColors.backgroundColor,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -313,7 +313,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                     snackBarCalledfail(
                       context,
                       "Please select a subcategory.",
-                      Colorcodes.red,
+                     
                     );
                     tagBool.value = false;
                     return;
@@ -324,7 +324,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                     snackBarCalledfail(
                       context,
                       SnackbarData().selectCategoryAndSubcategory,
-                      Colorcodes.red,
+                    
                     );
                     tagBool.value = false;
                     return;
@@ -339,7 +339,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                       snackBarCalledfail(
                           context,
                           SnackbarData().selectCategoryAndSubcategory,
-                          Colorcodes.red);
+                          );
                       return;
                     }
                     redioButton.forEach((key, id) {
@@ -389,7 +389,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                       snackBarCalledfail(
                           context,
                           SnackbarData().selectCategoryAndSubcategory,
-                          Colorcodes.red);
+                        );
                       return;
                     }
                     updateTheTagOfTarnsactionsGroup(
@@ -400,7 +400,7 @@ class _TagShowmodalState extends State<TagShowmodal>
                         widget.index);
                   }
 
-                  getCategoryData(context);
+                  getCategoryData();
                   tagBool.value =false;
                 },
                 child: Obx(() => tagBool.value

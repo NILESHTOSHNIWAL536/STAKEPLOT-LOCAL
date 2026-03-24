@@ -56,7 +56,7 @@ Future<void>  callApi(context) async {
   unawaited(getTranding(context));
   await getRemainders(context);
   unawaited(updateWidget());
-  getCategoryData(context);
+  getCategoryData();
   lifecycleHandler = AppLifecycleHandler(userController.userId.value);
   WidgetsBinding.instance.addObserver(lifecycleHandler);
   setUpSocketListenerMainPage(context);

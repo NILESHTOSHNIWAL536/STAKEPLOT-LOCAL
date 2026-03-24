@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           containerIconSiginWith(
-                              FontAwesomeIcons.google, Colorcodes.white, context),
+                              FontAwesomeIcons.google, AppColors.backgroundColor, context),
                           // buildGoogleSignIn(),
                           SizedBox(width: AppSizes.w20),
                           !Platform.isAndroid

@@ -15,7 +15,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
      
     return PopupMenuButton(
       initialValue: 2,
-      color: Colorcodes.white,
+      color: AppColors.backgroundColor,
       child: Center(
           child: Icon(
         Icons.more_vert_outlined,
@@ -64,7 +64,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribe
                   child: getTextMenuItem(
                     context: context,
                     text: "Delete",
-                    color: Colorcodes.red,
+                    color: AppColors.redColor,
                   ),
                 ),
               ]

@@ -159,7 +159,7 @@ Widget reviewTagTransactions(
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
               decoration: BoxDecoration(
-                color: Colorcodes.red,
+                color: AppColors.redColor,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(16 * scaleFactor),
                 ),
@@ -264,7 +264,7 @@ Widget getTagButton(TransactionModel transaction, int index, String category,
         },
         child: Icon(
           Icons.close_rounded,
-          color: Colorcodes.red,
+          color: AppColors.redColor,
           size: 30,
         ),
       ),
@@ -275,7 +275,7 @@ Widget getTagButton(TransactionModel transaction, int index, String category,
         },
         child: Icon(
           Icons.check,
-          color: Colorcodes.green,
+          color: AppColors.green,
           size: 30,
         ),
       ),

@@ -26,6 +26,7 @@ void main() async
     overlays: SystemUiOverlay.values, // ⬅️ THIS IS KEY
   );
   main_apis_call_init();
+  
 }
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

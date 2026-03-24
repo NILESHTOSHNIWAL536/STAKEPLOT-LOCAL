@@ -237,7 +237,7 @@ void showModal(context2) {
       title: textStyleImage(
           context: context,
           text: 'Confirm Deletion',
-          c: Colorcodes.red,
+          c: AppColors.redColor,
           fontWeight: FontWeight.bold,
           fontsize: 18),
       content: Container(
@@ -290,7 +290,7 @@ void deletSelectedTransactions(BuildContext context) async {
   redioButton.clear(); // Optionally clear selection after hiding
   redioButtonIndex.clear(); // Optionally clear selection after hiding
   addManually.clear();
-  getCategoryData(context);
+  getCategoryData();
     final InsightsController _controller = Get.put(InsightsController());
     _controller.getHomePageInsights(context);
   _controller.getHomePageMoneyMapInsights(context);

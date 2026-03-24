@@ -359,7 +359,7 @@ class _BudgetState extends State<Budget> {
         amountController.text.isEmpty ||
         period.value.isEmpty) {
       snackBarCalledfail(
-          context, SnackbarData().fillAllRequiredFields, Colorcodes.red);
+          context, SnackbarData().fillAllRequiredFields);
       return;
     }
 
@@ -416,7 +416,7 @@ class _BudgetState extends State<Budget> {
   //       amountController.text == "" ||
   //       period.value == "") {
   //     snackBarCalledfail(
-  //         context, SnackbarData().fillAllRequiredFields, Colorcodes.red);
+  //         context, SnackbarData().fillAllRequiredFields, AppColors.redColor);
   //     return;
   //   }
   //   Navigator.push(

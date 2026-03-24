@@ -10,7 +10,7 @@ Widget showModel(BuildContext context, String id, [bool flag = false, int indexE
   String? selectedOption; // To track the selected report option
 
   return AnimatedContainer(
-    padding: EdgeInsets.symmetric(horizontal: 20),
+    padding: EdgeInsets.symmetric(horizontal: AppSizes.p20),
     duration: const Duration(milliseconds: 300),
     curve: Curves.easeInOut,
     height: MediaQuery.of(context).size.height * 0.55,

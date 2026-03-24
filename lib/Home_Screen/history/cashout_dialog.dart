@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 
+import '../../Constants/colors.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 
 class CashOutDialog extends StatelessWidget {
@@ -130,7 +131,7 @@ class CashOutDialog extends StatelessWidget {
                   ),
                   child:  Text(
                     "Cash out",
-                    style: TextStyle(fontSize: 16,color: Colorcodes.white),
+                    style: TextStyle(fontSize: 16,color: AppColors.backgroundColor),
                   ),
                 ),
               ),

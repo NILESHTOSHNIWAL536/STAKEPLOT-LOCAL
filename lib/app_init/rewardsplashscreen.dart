@@ -25,7 +25,7 @@ class RewardsScreen extends StatelessWidget {
               left:AppSizes.p16,
               right:AppSizes.p16,
               top:AppSizes.p20,
-              bottom: 16
+              bottom:AppSizes.p16
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -198,7 +198,7 @@ class RewardsScreen extends StatelessWidget {
                       final SharedPreferences pref = await SharedPreferences.getInstance();
                       pref.setBool("ShowReward", false);
                   },
-                  child: textStyle(text: 'Done',context: context,c: Colorcodes.white,fontsize: 16),
+                  child: textStyle(text: 'Done',context: context,c: AppColors.backgroundColor,fontsize: 16),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
                     shape: RoundedRectangleBorder(

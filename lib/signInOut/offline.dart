@@ -14,7 +14,7 @@ class Connections extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 1)),
+      bottomNavigationBar: BottomNavigations(data: 1),
 
       // title: 'Dashboard',
       // onBack: () => Navigator.maybePop(context),

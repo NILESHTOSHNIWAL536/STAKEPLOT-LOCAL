@@ -172,7 +172,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 context,
                 lWeight: FontWeight.bold,
                 fontSize: 18 * textScale,
-                color: Colorcodes.white,
+                color: AppColors.backgroundColor,
               ),
             ),
           ),
@@ -200,7 +200,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                         context,
                         lWeight: FontWeight.bold,
                         fontSize: 14 * textScale,
-                        color: Colorcodes.black,
+                        color: AppColors.bg1,
                       ),
                     ),
                     SizedBox(height: 20 * textScale),
@@ -239,14 +239,14 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 context,
                 lWeight: FontWeight.w600,
                 fontSize: 14 * textScale,
-                color: Colorcodes.red,
+                color: AppColors.redColor,
               ),
               textAlign: TextAlign.center,
             ),
           ),
         ),
         SizedBox(height: 10 * textScale),
-        Icon(Icons.warning_outlined, color: Colorcodes.red, size: 30 * textScale),
+        Icon(Icons.warning_outlined, color: AppColors.redColor, size: 30 * textScale),
         SizedBox(height: 10 * textScale),
         btnText == "check Now"
             ? SizedBox(height: 0)
@@ -389,7 +389,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: AppSizes.p10 * textScale),
               child: Center(
-                child: textStyle(FinvuStrings().securelyAuthorize,  14 * textScale, Colorcodes.black, FontWeight.bold),
+                child: textStyle(FinvuStrings().securelyAuthorize,  14 * textScale, AppColors.bg1, FontWeight.bold),
               ),
             ),
             Padding(
@@ -428,7 +428,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     borderRadius: BorderRadius.circular(12 * textScale),
                     borderSide: BorderSide(
                       color: isOtpWrong.value
-                          ? Colorcodes.redDeleteIcon
+                          ? AppColors.redColor
                           : AppColors.primaryColor,
                     ),
                   ),
@@ -436,7 +436,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     borderRadius: BorderRadius.circular(12 * textScale),
                     borderSide: BorderSide(
                       color: isOtpWrong.value
-                          ? Colorcodes.redDeleteIcon
+                          ? AppColors.redColor
                           : AppColors.primaryColor,
                       width: 2,
                     ),
@@ -717,7 +717,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     ),
                     child: Text(
                       FinvuStrings().linkNow,
-                      style: TextStyle(fontSize: 12 * textScale, color: Colorcodes.white),
+                      style: TextStyle(fontSize: 12 * textScale, color: AppColors.backgroundColor),
                     ),
                   ),
                 )),
@@ -830,7 +830,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
             context,
             lWeight: FontWeight.bold,
             fontSize: 18 * textScale,
-            color: Colorcodes.white,
+            color: AppColors.backgroundColor,
           ),
         ),
       ),

@@ -217,27 +217,7 @@ class svgIconPath {
    static String  check_circle="assets/finance/check.png";
    static String  google2="assets/finance/google.svg";
 
-  // send Tab Screen
-  static String send1 = "assets/img/imgs/budgets.svg";
-  static String send2 = "assets/img/imgs/debts.svg";
-  static String send3 = "assets/img/imgs/bills.svg";
-  static String send4 = "assets/img/imgs/schedulePayments.svg";
-  //  static String  send1="assets/images/Plot-Budget.svg";
-  //  static String  send2="assets/images/Plot-Debts.svg";
-  //  static String  send3="assets/images/Plot-Bills.svg";
-  //  static String  send4="assets/images/Plot-Payments.svg";
-
-  //Home Screens
-  static String comment = "assets/images/comment.svg";
-  static String money = "assets/img/Tokens.svg";
-  static String target = "assets/img/targets.svg";
-  static String splitBill = "assets/img/spiltBills.svg";
-  static String calculator = "assets/img/calculator.svg";
-  static String earnings = "assets/img/Earnings.svg";
-  static String settingUser = "assets/img/ReportFriend.svg";
-  static String share = "assets/images2/share.svg";
-  static String sendMsg = "assets/images2/share.svg";
-
+  
   //bottom navigations
   static String bottom1 = "assets/img/imgs/Home.svg";
   static String bottom2 = "assets/img/imgs/Plot.svg";
@@ -247,34 +227,6 @@ class svgIconPath {
       "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png";
 }
 
-Widget textStyleDesign(String str, color, double size, context) {
-  return Card(
-    elevation: 3,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(Colorcodes.borderRadius - 10),
-    ),
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Colorcodes.borderRadius - 10),
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            Colorcodes.cardShade3,
-            Colorcodes.dropdown,
-            // Colorcodes.cardShade2,
-          ],
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 15),
-      child: Text(
-        str,
-        style: FontManager().getTextStyle(context,
-            fontSize: size, color: Colorcodes.white, lWeight: FontWeight.bold),
-      ),
-    ),
-  );
-}
 
 String doubleToFixed(String s,[int f=0]) {
   try {
@@ -283,15 +235,6 @@ String doubleToFixed(String s,[int f=0]) {
     return s;
   }
 }
-
-int getSteps(max, div) {
-  try {
-    return int.parse(doubleToFixed((max / div).toString()));
-  } catch (e) {
-    return 1;
-  }
-}
-
 
 
 class BankText

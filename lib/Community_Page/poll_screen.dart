@@ -465,7 +465,7 @@ createPollOfCommunityPost(
                                       child: Obx(() => postController.posting.value
                                           ? Spinner(
                                               size: 30,
-                                              color: Colorcodes.white,
+                                              color: AppColors.backgroundColor,
                                             )
                                           : Text(
                                                strings.continueButton, 

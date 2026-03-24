@@ -149,7 +149,7 @@ class RecentTransactionsScreen extends StatelessWidget {
   // ---------------- STATS ROW ----------------
   Widget _statsRow(BuildContext context) {
     return const Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 20),
+      padding:  EdgeInsets.symmetric(horizontal: AppSizes.p20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children:  [

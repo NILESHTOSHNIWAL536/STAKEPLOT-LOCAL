@@ -8,52 +8,55 @@ import 'package:flutter_application_code_stakeplot/routes/routes.dart';
 import 'package:hive/hive.dart';
 import '../../Home_Screen/categoriseSpending.dart';
 import '../../backed_connections/apiAutomations/getTrasactions.dart';
+import '../../controllers/controllerManagement.dart';
+import '../../controllers/finora_controller.dart';
 import 'init_hive.dart';
 
 class CategoryStorage {
+  //  FinoraController finoraController = ControllerManagement.finoraController;
   // finora
-  static Future<void> cacheCardInsightsDataLocally() async {
+  Future<void> cacheCardInsightsDataLocally() async {
     HiveHelper.openBoxIfNot<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
     final box = await HiveStorage.cardInsightsBox;
     await box.clear();
     try {
       final cardInsightsData = CardInsightsModel(
-        totalDebitThisMonth: totalDebitThisMonth.value,
-        totalDebitThisWeek: totalDebitThisWeek.value,
-        moreDrasticChange: moreDrasticChange.cast<Map<String, dynamic>>(),
+        totalDebitThisMonth:   totalDebitThisMonth.value,
+        totalDebitThisWeek:   totalDebitThisWeek.value,
+        moreDrasticChange:   moreDrasticChange.cast<Map<String, dynamic>>(),
         moreDrasticChangeWeek:
-            moreDrasticChangeWeek.cast<Map<String, dynamic>>(),
-        frequentPayments: frequentPayments.cast<Map<String, dynamic>>(),
-        frequentPaymentsWeek: frequentPaymentsWeek.cast<Map<String, dynamic>>(),
-        categoriesList: categoriesList.cast<Map<String, dynamic>>(),
+              moreDrasticChangeWeek.cast<Map<String, dynamic>>(),
+        frequentPayments:   frequentPayments.cast<Map<String, dynamic>>(),
+        frequentPaymentsWeek:   frequentPaymentsWeek.cast<Map<String, dynamic>>(),
+        categoriesList:   categoriesList.cast<Map<String, dynamic>>(),
       );
       await box.add(cardInsightsData);
     } catch (e) {}
   }
 
-  static Future<void> loadCardInsightsDataFromHive() async {
+   Future<void> loadCardInsightsDataFromHive() async {
     HiveHelper.openBoxIfNot<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
     final box = await HiveStorage.cardInsightsBox;
 
     if (box.isNotEmpty) {
       final latestData = box.values.last;
 
-      totalDebitThisMonth.value = latestData.totalDebitThisMonth;
-      totalDebitThisWeek.value = latestData.totalDebitThisWeek;
+        totalDebitThisMonth.value = latestData.totalDebitThisMonth;
+        totalDebitThisWeek.value = latestData.totalDebitThisWeek;
 
-      moreDrasticChange.value =
+        moreDrasticChange.value =
           List<Map<String, dynamic>>.from(latestData.moreDrasticChange);
-      moreDrasticChangeWeek.value =
+        moreDrasticChangeWeek.value =
           List<Map<String, dynamic>>.from(latestData.moreDrasticChangeWeek);
 
-      frequentPayments.value =
+        frequentPayments.value =
           List<Map<String, dynamic>>.from(latestData.frequentPayments);
-      frequentPaymentsWeek.value =
+        frequentPaymentsWeek.value =
           List<Map<String, dynamic>>.from(latestData.frequentPaymentsWeek);
-      categoriesList.value =
+        categoriesList.value =
           List<Map<String, dynamic>>.from(latestData.categoriesList);
 
-      isFinoraVisible.value = totalDebitThisMonth.value > 0;
+        isFinoraVisible.value =   totalDebitThisMonth.value > 0;
       processChartData();
     } else {}
   }
@@ -68,6 +71,7 @@ class CategoryStorage {
 
 
 void processChartData() {
+    // FinoraController finoraController = ControllerManagement.finoraController;
   try {
     // Recompute everything from scratch
     List<ChartData> newData = [];
@@ -77,6 +81,7 @@ void processChartData() {
     Map<String, Color> categoryColors = colorcodes;
 
     for (var item in categoriesList) {
+    // for (var item in   categoriesList) {
       final String category = (item["category"] ?? "Others").toString();
       final String percentage = (item["total_debit_percentage"] ?? "").toString();
 

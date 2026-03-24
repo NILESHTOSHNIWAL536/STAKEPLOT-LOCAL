@@ -100,7 +100,7 @@ class TextFeildWidget extends StatelessWidget {
                  
                   suffixIcon:SignupData().usernameLabel==heading?  
                       textEditingController.text.length==0?null:
-                      isValidUser.value?Icon(Icons.check,size: 30,color: Colorcodes.green,):Container(width: 30,height: 30,child: Spinner())
+                      isValidUser.value?Icon(Icons.check,size: 30,color: AppColors.green,):Container(width: 30,height: 30,child: Spinner())
                   : flag
                       ? null
                       : Obx(() => InkWell(
@@ -197,12 +197,12 @@ class TextFeildWidgetPassword extends StatelessWidget {
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide:
-                                BorderSide(color: Colorcodes.textFeild)),
+                                BorderSide(color: AppColors.button)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide:
-                                BorderSide(color: Colorcodes.textFeild)),
-                        fillColor: Colorcodes.textFeild,
+                                BorderSide(color: AppColors.button)),
+                        fillColor: AppColors.button,
                         border: InputBorder.none,
                         prefixIcon: Icon(
                           icon,
@@ -289,11 +289,11 @@ class TextFeildWidget2 extends StatelessWidget {
                 hintStyle: getStyle(context),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(40),
-                    borderSide: BorderSide(color: Colorcodes.textFeild)),
+                    borderSide: BorderSide(color: AppColors.button)),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(40),
-                    borderSide: BorderSide(color: Colorcodes.textFeild)),
-                fillColor: Colorcodes.textFeild,
+                    borderSide: BorderSide(color: AppColors.button)),
+                fillColor: AppColors.button,
                 border: InputBorder.none,
               ),
             ),
@@ -360,15 +360,15 @@ class TextFeildCalender extends StatelessWidget {
                     filled: true,
                     hintText: lableText,
                     hintStyle: getStyle2(context),
-                    fillColor: Colorcodes.textFeild,
+                    fillColor: AppColors.button,
                      enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide:
-                                BorderSide(color: Colorcodes.textFeild)),
+                                BorderSide(color: AppColors.button)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide:
-                                BorderSide(color: Colorcodes.textFeild)),
+                                BorderSide(color: AppColors.button)),
                     border: InputBorder.none,
                     prefixIcon:  Icon(Icons.calendar_today,color: AppColors.primaryColor),
                     suffixIcon: GestureDetector(
@@ -397,7 +397,7 @@ class TextFeildCalender extends StatelessWidget {
                               ),
                           child: Icon(
                             Icons.arrow_drop_down_sharp,
-                            color: Colorcodes.white,
+                            color: AppColors.backgroundColor,
                           )),
                     )),
               ),
@@ -445,7 +445,7 @@ class TextFeildWidgetCustom extends StatelessWidget {
         child: Container(
       padding: EdgeInsets.symmetric(vertical: AppSizes.p8),
       width: MediaQuery.of(context).size.width / 1.1,
-      // color: Colorcodes.white,
+      // color: AppColors.backgroundColor,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -537,7 +537,7 @@ class TextFeildWidgetCustom2 extends StatelessWidget {
         child: Container(
       padding: EdgeInsets.symmetric(vertical: AppSizes.p8),
       width: MediaQuery.of(context).size.width / 1.1,
-      // color: Colorcodes.white,
+      // color: AppColors.backgroundColor,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -696,7 +696,7 @@ class _TextFeildWidgetUnderlineState
                                 Icons.check,
                                 size: 22,
                                 color:
-                                    Colorcodes.green,
+                                    AppColors.green,
                               )
                             :  SizedBox(
                                 width: 22,

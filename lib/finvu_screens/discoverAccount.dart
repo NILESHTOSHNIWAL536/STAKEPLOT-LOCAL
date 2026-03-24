@@ -517,7 +517,7 @@ Widget getBackUi(FinvuFIPInfo bankData) {
 
   void getBankAccount() {
     if (listOfBankAccount.isEmpty) {
-      snackBarCalledfail(context,SnackbarData().pickOneBank, Colorcodes.red);
+      snackBarCalledfail(context,SnackbarData().pickOneBank, AppColors.redColor);
       return;
     } else {
     

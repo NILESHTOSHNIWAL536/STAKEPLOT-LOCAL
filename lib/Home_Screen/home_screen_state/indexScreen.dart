@@ -17,14 +17,18 @@ import 'package:get/get.dart';
 import '../../Constants/core/app_component_sizes.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/helper.dart';
+import '../../controllers/controllerManagement.dart';
+import '../../controllers/finora_controller.dart';
 import '../Home/home_AppBar.dart';
 import '../Home/init_Api_Calls.dart';
 
 class IndexScreen extends StatelessWidget {
   final ScrollController scrollControllerHome;
-  const IndexScreen({Key? key, required this.scrollControllerHome})
-      : super(key: key);
-
+   IndexScreen({Key? key, required this.scrollControllerHome})
+      : super(key: key){
+       
+      }
+//  FinoraController finoraController = ControllerManagement.finoraController;
   @override
   Widget build(BuildContext context) {
     AppComponentSizes.init(context);
@@ -61,7 +65,7 @@ Stack(
       // color: Colors.green,
       width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -109,7 +113,8 @@ Stack(
                     ),
                     SizedBox(
                       height: AppComponentSizes.h5,
-                      child: const SpendingCardTwoPanels(),
+                      child:
+                       const SpendingCardTwoPanels(),
                     ),
                   
                      SizedBox(
@@ -159,14 +164,14 @@ Stack(
           height: AppComponentSizes.h3, child: CardStackScreen());
   }
 
-  Widget GetFinora(double height) {
-    return Obx(() {
-      return SizedBox(
-        height: height * (totalDebitThisMonth.value <= 0 ? 0.54 : 0.2),
-        child: totalDebitThisMonth.value <= 0
-            ? FinoraLastTwoMonthsDashboard()
-            : const SwipeableCardsScreen(),
-      );
-    });
-  }
+  // Widget GetFinora(double height) {
+  //   return Obx(() {
+  //     return SizedBox(
+  //       height: height * (totalDebitThisMonth.value <= 0 ? 0.54 : 0.2),
+  //       child: totalDebitThisMonth.value <= 0
+  //           ? FinoraLastTwoMonthsDashboard()
+  //           : const SwipeableCardsScreen(),
+  //     );
+  //   });
+  // }
 }

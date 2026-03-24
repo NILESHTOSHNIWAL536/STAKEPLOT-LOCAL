@@ -97,7 +97,7 @@ class CouponCardWidget extends StatelessWidget {
                                 text: coupon.brand,
                                 fontWeight: FontWeight.w800,
                                 fontsize: 20,
-                                c: Colorcodes.red,
+                                c: AppColors.redColor,
                                 iswrap: true,
                               ),
                             ),

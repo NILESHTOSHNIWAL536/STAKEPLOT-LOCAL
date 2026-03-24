@@ -73,7 +73,7 @@ class _TwoFactorEmailVerificationState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colorcodes.white,
+      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -86,7 +86,7 @@ class _TwoFactorEmailVerificationState
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -194,7 +194,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
             : MediaQuery.of(context).size.height / 14, // Collapsed height
       ),
       decoration:  BoxDecoration(
-         color: Colorcodes.white,
+         color: AppColors.backgroundColor,
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -339,7 +339,7 @@ Widget getspinner(context, [str="",color=AppColors.primaryColor,textColor=AppCol
     decoration: BoxDecoration(
         color: color, borderRadius: BorderRadius.circular(24)),
     child: Center(
-      child: Spinner(color: Colorcodes.white,size: 20,)
+      child: Spinner(color: AppColors.backgroundColor,size: 20,)
     ),
   );
 }
