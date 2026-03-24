@@ -213,8 +213,7 @@ class _ImageScreenState extends State<ImageScreen> {
                                                 url: FinSpaceIcons.square,
                                                 width: 20,
                                                 height: 20,
-                                               
-                                              ),
+                                      ),
                             ),
                             GestureDetector(
                               onTap: () {

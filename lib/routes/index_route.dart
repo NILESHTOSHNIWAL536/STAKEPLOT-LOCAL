@@ -10,9 +10,15 @@ class API {
       : Credentials.LIVE_API_TEST2; // email sync api
   static final String urlWithLocallHost3 =
       !apis_flag ? Credentials.FINVU_LIVE : Credentials.FINVU_TEST; // bank api
+
+  // static final String mainBackendUrl = "${urlWithLocallHost}api/v1";
+  // static final String EmailUrl = "${urlWithLocallHost2}api";
+  // static final String BankApiUrl = "${urlWithLocallHost3}api";
+
   static final String mainBackendUrl = "${urlWithLocallHost}api/v1";
-  static final String EmailUrl = "${urlWithLocallHost2}api";
-  static final String BankApiUrl = "${urlWithLocallHost3}api";
+  static final String EmailUrl = "${urlWithLocallHost}api/v1/email";
+  static final String BankApiUrl = "${urlWithLocallHost}api/v1/bank";
+  
 }
 
 class BackendApiEndPoints
