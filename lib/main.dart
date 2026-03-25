@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/routes/routes.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import 'Constants/core/app_component_sizes.dart';
 import 'app_init/AppTheme.dart';
 import 'repository/clearstack.dart';
 import 'controllers/controllerManagement.dart';
@@ -52,6 +53,7 @@ class _MyAppState extends State<MyApp> {
   void loadThemes() async {
     await Get.put(ThemeController());
     themeController.loadTheme();
+     AppComponentSizes.init(context);
   }
 
   @override

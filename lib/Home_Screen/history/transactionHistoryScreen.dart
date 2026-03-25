@@ -410,7 +410,7 @@ import 'collections/collections_list_widget.dart';
 import 'recent_transactions.dart';
 
 final TextEditingController tnxSearchController = TextEditingController();
-FocusNode focusNodeSearchFeild = FocusNode();
+// FocusNode focusNodeSearchFeild = FocusNode();
 final RxBool showFilter = false.obs;
 final RxString selectedTab = "All".obs;
 
@@ -434,6 +434,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   final RxBool isDateSummaryView = false.obs;
   Timer? _debounce;
 
+late FocusNode focusNodeSearchFeild;
   // ---------------------------------------------------------------------------
   // 🔥 NEW: Search animation variables (ONLY ADDITION)
   // ---------------------------------------------------------------------------
@@ -514,11 +515,19 @@ _searchScaleAnim = Tween<double>(
   ),
 );
 
-    focusNodeSearchFeild.addListener(() {
-      if (focusNodeSearchFeild.hasFocus) {
-        _openSearch();
-      }
-    });
+    // focusNodeSearchFeild.addListener(() {
+    //   if (focusNodeSearchFeild.hasFocus) {
+    //     _openSearch();
+    //   }
+    // });
+    focusNodeSearchFeild = FocusNode();
+
+  focusNodeSearchFeild.addListener(() {
+    if (focusNodeSearchFeild.hasFocus) {
+      _openSearch();
+    }
+  });
+
     currentPage = 1;
     showFilter.value = false;
     accountSelected.value = '';

@@ -51,6 +51,7 @@ Future<void> getConsentHandleId(context) async {
   final String apiUrl = FinvuRoutes.login;
   final String custId = "${number.value}@finvu";
   var body = {"custId": custId, 'number': number.value};
+  print("API URL: $apiUrl");
 
   try {
     print("API URL: $apiUrl");
