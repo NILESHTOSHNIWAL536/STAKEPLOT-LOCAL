@@ -23,7 +23,7 @@ class CollectionDetailsPage extends StatelessWidget {
           children: [
             _appBar(context),
             Expanded(
-              child: hasTransactions
+              child: !hasTransactions
                   ? _transactionsUI(context)
                   : _emptyTransactionsUI(context),
             ),

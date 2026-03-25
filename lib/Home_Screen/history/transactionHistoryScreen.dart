@@ -210,7 +210,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
 
   @override
   void dispose() {
-    tnxSearchController.dispose();
+    // tnxSearchController.dispose();
     focusNodeSearchFeild.dispose();
     _searchAnimController.dispose();
     super.dispose();
@@ -544,53 +544,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
     );
   }
 
-//  Widget _buildSearchField(BuildContext context, bool fromAutoPay) {
-//   return AnimatedBuilder(
-//     animation: _searchAnimController,
-//     builder: (_, __) {
-//       return SlideTransition(
-//         position: _searchSlideAnim,
-//         child: ScaleTransition(
-//           scale: _searchScaleAnim, // 🔥 elastic bounce
-//           child: SizedBox(
-//             width:
-//                  MediaQuery.of(context).size.width / 1.1,
 
-//     height: MediaQuery.of(context).size.width / 10,
-//     child: Container(
-//       decoration: BoxDecoration(
-//         color: AppColors.backgroundColor,
-//         borderRadius: BorderRadius.circular(8),
-//        boxShadow: [
-//      AppShadows.tabs
-//     ],
-//       ),
-//       child: TextField(
-//         controller: searchController,
-//         focusNode: focusNodeSearchFeild,
-//         onChanged: _onSearchChanged,
-//         decoration: InputDecoration(
-//           hintText: HomepageStringsDart().searchTransactions,
-//           prefixIcon: const Icon(Icons.search),
-//           suffixIcon: _buildClearButton(),
-//           filled: true,
-//           fillColor: AppColors.backgroundColor,
-//           border: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8),
-//             borderSide: BorderSide.none,
-//           ),
-//           contentPadding:
-//               const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 15),
-//         ),
-//         style: const TextStyle(color: AppColors.accentColor),
-//       ),
-//     ),
-//           ),
-//         ),
-//       );
-//     },
-//   );
-// }
   Widget _buildSearchField(BuildContext context, bool fromAutoPay) {
     return AnimatedBuilder(
       animation: _searchAnimController,
