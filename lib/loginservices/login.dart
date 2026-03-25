@@ -8,6 +8,7 @@ import 'package:get/get.dart';
   String custId="${number.value}@finvu";
   RxString mobileNo="".obs;
   RxString handleId="".obs;
+  RxString fipIdSeleted="".obs;
   RxString consentUserId="".obs;
   RxBool fetchedData=false.obs;
   RxList fetchedTrsacntionList = [].obs;

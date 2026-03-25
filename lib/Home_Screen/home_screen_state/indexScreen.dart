@@ -27,7 +27,7 @@ class IndexScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppComponentSizes.init(context);
+    
     double height = MediaQuery.of(context).size.height;
 
     return Padding(

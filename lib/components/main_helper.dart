@@ -12,6 +12,7 @@ import 'package:in_app_update/in_app_update.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Constants/colors.dart';
+import '../Constants/core/app_component_sizes.dart';
 import '../OneSignal/deviceConfig.dart';
 import '../Profile/friends.dart';
 import '../backed_connections/apis_connect.dart';

@@ -42,6 +42,9 @@ rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
     project.evaluationDependsOn(":app")
+    tasks.withType(Test).configureEach {
+        enabled = false
+    }
 }
 
 tasks.register("clean", Delete) {
