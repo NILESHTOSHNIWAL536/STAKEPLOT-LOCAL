@@ -10,7 +10,11 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 
+import '../controllers/controllerManagement.dart';
+import '../controllers/finora_controller.dart';
+
  void getFinoraPreviousMonthData() async {
+  // FinoraController finoraController = ControllerManagement.finoraController;
     isLoading.value = true;
     FinoraLoading.value = false;
     try {
@@ -32,12 +36,14 @@ import 'package:flutter_application_code_stakeplot/routes/route_transactions.dar
     } catch (e) {
       isLoading.value = false;
       await FinoraLastTwoMonthsStorage.loadFinoraLastTwoMonthsDataFromHive();
-      isFinoraVisible.value = true;
+       isFinoraVisible.value = true;
+      // isFinoraVisible.value = true;
     }
   }
 
 
-void getCategoryData(context) async {
+void getCategoryData() async {
+  //  FinoraController finoraController = ControllerManagement.finoraController;
   try {
     // API call inside try
     var res = await getDataApiCall(BankTransactionRoutes.categorizeTransactions);
@@ -47,21 +53,21 @@ void getCategoryData(context) async {
     
       var data = jsonDecode(res.body);
       
-      categoriesList.clear();
+       categoriesList.clear();
      
-      frequentPayments.clear();
-      moreDrasticChange.clear();
-      categoriesListWeek.clear();
-      frequentPaymentsWeek.clear();
-      moreDrasticChangeWeek.clear();
-      mostSpentCategoryInMonth.clear();
-      mostSpentDayInMonth.clear();
-      weeklyTrend.clear();
+       frequentPayments.clear();
+       moreDrasticChange.clear();
+       categoriesListWeek.clear();
+       frequentPaymentsWeek.clear();
+       moreDrasticChangeWeek.clear();
+       mostSpentCategoryInMonth.clear();
+       mostSpentDayInMonth.clear();
+       weeklyTrend.clear();
       // spendingsOnCategories.clear();
       // throw Error();
       
     
-      categoriesList.addAll(
+       categoriesList.addAll(
         (data["data"]['categorized'] as List<dynamic>)
             .map((e) => e as Map<String, dynamic>)
             .toList(),
@@ -72,70 +78,70 @@ void getCategoryData(context) async {
 
       // frequentPayments.addAll(data["data"]['frequentPayments']);
       // moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
-      frequentPayments.addAll(
+       frequentPayments.addAll(
         (data["data"]['frequentPayments'] as List<dynamic>)
             .map((e) => e as Map<String, dynamic>)
             .toList(),
       );
 
-      moreDrasticChange.addAll(
+       moreDrasticChange.addAll(
         (data["data"]['moreDrasticChange'] as List<dynamic>)
             .map((e) => e as Map<String, dynamic>)
             .toList(),
       );
 
-      totalDebitThisMonth.value = double.parse(
+       totalDebitThisMonth.value = double.parse(
           doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
 
-      categoriesListWeek.addAll(
+       categoriesListWeek.addAll(
         (data["data"]['week']['categorized'] as List<dynamic>)
             .map((e) => e as Map<String, dynamic>)
             .toList(),
       );
-      frequentPaymentsWeek.addAll(
+       frequentPaymentsWeek.addAll(
         (data["data"]['week']['frequentPayments'] as List<dynamic>)
             .map((e) => e as Map<String, dynamic>)
             .toList(),
       );
-      moreDrasticChangeWeek.addAll(
+       moreDrasticChangeWeek.addAll(
         (data["data"]['week']['moreDrasticChange'] as List<dynamic>)
             .map((e) => e as Map<String, dynamic>)
             .toList(),
       );
-mostSpentCategoryInMonth.addAll(
+     mostSpentCategoryInMonth.addAll(
   (data["data"]['mostSpentCategory'] as List<dynamic>)
       .map((e) => e as Map<String, dynamic>)
       .toList(),
 );
 if (data["data"]['mostSpentDay'] != null) {
-  mostSpentDayInMonth.add(
+   mostSpentDayInMonth.add(
     data["data"]['mostSpentDay'] as Map<String, dynamic>,
   );
 }
 if (data["data"]['weeklyTrend'] != null) {
-  weeklyTrend.add(
+   weeklyTrend.add(
     data["data"]['weeklyTrend'] as Map<String, dynamic>,
   );
 }
 
       // Refresh reactive lists
-      categoriesList.refresh();
-      frequentPayments.refresh();
-      moreDrasticChange.refresh();
-      categoriesListWeek.refresh();
-      frequentPaymentsWeek.refresh();
-      moreDrasticChangeWeek.refresh();
-      mostSpentCategoryInMonth.refresh();
-      mostSpentDayInMonth.refresh();
-      weeklyTrend.refresh();
-      isFinoraVisible.value = !isFinoraVisible.value;
-      setDonectChat.value = !setDonectChat.value;
+       categoriesList.refresh();
+       frequentPayments.refresh();
+       moreDrasticChange.refresh();
+       categoriesListWeek.refresh();
+       frequentPaymentsWeek.refresh();
+       moreDrasticChangeWeek.refresh();
+       mostSpentCategoryInMonth.refresh();
+       mostSpentDayInMonth.refresh();
+       weeklyTrend.refresh();
+       isFinoraVisible.value = ! isFinoraVisible.value;
+       setDonectChat.value = ! setDonectChat.value;
       processChartData();
-      unawaited(CategoryStorage.cacheCardInsightsDataLocally());
+      unawaited(CategoryStorage().cacheCardInsightsDataLocally());
     }
   } catch (e)
   {
-    await CategoryStorage.loadCardInsightsDataFromHive();
+    await CategoryStorage().loadCardInsightsDataFromHive();
   }
 }
 

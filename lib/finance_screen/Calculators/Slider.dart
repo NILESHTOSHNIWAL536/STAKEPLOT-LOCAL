@@ -325,7 +325,7 @@ class _SliderPageState extends State<SliderPage> {
             fontWeight: FontWeight.w400,
             fontsize: 17,
             c: AppColors.backgroundColor),
-        SizedBox(height: Colorcodes.paddingSize),
+        SizedBox(height: AppSizes.h20),
         Wrap(
           spacing: 9,
           runSpacing: 9,
@@ -350,7 +350,7 @@ class _SliderPageState extends State<SliderPage> {
             borderRadius: BorderRadius.circular(4),
             color: AppColors.backgroundColor),
         child: textStyle(
-          c: selectedBrand == e ? Colorcodes.black : Colorcodes.greyLight,
+          c: selectedBrand == e ? AppColors.bg1 : Colorcodes.greyLight,
           context: context,
           text: e,
           fontWeight: FontWeight.w500,

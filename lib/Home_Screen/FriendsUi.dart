@@ -170,7 +170,7 @@ class _FriendsUiState extends State<FriendsUi> {
         padding: const EdgeInsets.all(AppSizes.p10),
         decoration: BoxDecoration(
             // color: const Color.fromRGBO(249, 246, 238, 1),
-            //  color: Colorcodes.textFeild,
+            //  color: AppColors.button,
             borderRadius: BorderRadius.circular(4)),
         child: Column(
           children: [

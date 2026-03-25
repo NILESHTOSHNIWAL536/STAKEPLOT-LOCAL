@@ -164,7 +164,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                   itemCount: reasons.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: EdgeInsets.only(bottom: 16),
+                      margin: EdgeInsets.only(bottom:AppSizes.p16),
                       child: InkWell(
                         onTap: () {
                           setState(() {

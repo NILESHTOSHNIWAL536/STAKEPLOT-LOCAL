@@ -97,7 +97,7 @@ Widget getImageContainer(String imagePath) {
           width: 50,
           margin: const EdgeInsets.symmetric(horizontal: 3),
           decoration: BoxDecoration(
-            color: cateName.value == imagePath ? Colorcodes.greyLight : Colorcodes.white,
+            color: cateName.value == imagePath ? Colorcodes.greyLight : AppColors.backgroundColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: AvatarProfileImage(url: imagePath, width: 10, height: 10),

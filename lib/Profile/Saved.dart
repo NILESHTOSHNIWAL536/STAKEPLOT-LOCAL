@@ -50,10 +50,10 @@ class _FriendsState extends State<Saved> {
              height: MediaQuery.of(context).size.height/1.3,
              width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-                   color: Colorcodes.white,
+                   color: AppColors.backgroundColor,
                    borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(Colorcodes.borderCut),
-                    topRight: Radius.circular(Colorcodes.borderCut),
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
                    )
                 
             ),

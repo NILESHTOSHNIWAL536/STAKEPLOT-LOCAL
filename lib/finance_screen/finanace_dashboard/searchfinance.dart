@@ -1,5 +1,6 @@
   import 'package:flutter/material.dart';
 
+import '../../Constants/colors.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../image_service/avatarProfile.dart';
 import '../../Constants/colorcodes.dart';
@@ -8,7 +9,7 @@ import '../../user_chat/tribe_chart.dart';
 Widget buildSearchBar(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colorcodes.white,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(15),
       ),
       padding: const EdgeInsets.symmetric(

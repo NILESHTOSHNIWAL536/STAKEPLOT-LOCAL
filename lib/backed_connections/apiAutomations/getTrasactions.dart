@@ -21,7 +21,7 @@ void updateCatAndMoneyMap(BuildContext context)
   final controller = Get.find<InsightsController>();
   controller.getHomePageInsights(context);
   controller.getHomePageMoneyMapInsights(context);
-  getCategoryData(context);
+  getCategoryData();
 }
 
 void pickCustomDateRange(BuildContext context) async {
@@ -104,7 +104,7 @@ void getAutoMationsTransactionsCustomoverall(date, context,
 
   var response = await getDataApiCall(urlPath);
 
-  trasactionsDataDebitWeeklyoverall.clear();
+  
 
   List<String> labelsLocal = [];
   List<double> debitList = [];

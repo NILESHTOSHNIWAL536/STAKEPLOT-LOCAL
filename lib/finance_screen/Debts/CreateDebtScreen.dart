@@ -260,7 +260,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       return null;
                                     },
                                   ),
-                                  SizedBox(height: Colorcodes.paddingSize),
+                                  SizedBox(height: AppSizes.h20),
                                   Text(
                                     PlotFinanceStaticData().loanTypeLabel,
                                     style: FontManager().getTextStyle(
@@ -287,7 +287,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       return null;
                                     },
                                   ),
-                                  SizedBox(height: Colorcodes.paddingSize),
+                                  SizedBox(height: AppSizes.h20),
                                   Text(
                                     PlotFinanceStaticData()
                                         .debtAmountLabel2, // Use debtAmountLabel2
@@ -318,7 +318,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       return null;
                                     },
                                   ),
-                                  SizedBox(height: Colorcodes.paddingSize),
+                                  SizedBox(height: AppSizes.h20),
                                   Text(
                                     PlotFinanceStaticData()
                                         .interestRateLabel2, // Use interestRateLabel2
@@ -349,7 +349,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       return null;
                                     },
                                   ),
-                                  SizedBox(height: Colorcodes.paddingSize),
+                                  SizedBox(height: AppSizes.h20),
                                   Text(
                                     PlotFinanceStaticData().durationLabel,
                                     style: FontManager().getTextStyle(
@@ -380,7 +380,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                                       return null;
                                     },
                                   ),
-                                  SizedBox(height: Colorcodes.paddingSize),
+                                  SizedBox(height: AppSizes.h20),
                                   Text(
                                     PlotFinanceStaticData().dateLabel,
                                     style: FontManager().getTextStyle(

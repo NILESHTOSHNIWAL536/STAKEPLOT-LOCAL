@@ -113,7 +113,7 @@ Widget getPredictedCategoryIcons(
             } catch (e) {
               transactionsHistory[index] = originalTransaction;
               transactionsHistory.refresh();
-              snackBarCalledfail(context, "Failed to tag transaction", Colorcodes.red);
+              snackBarCalledfail(context, "Failed to tag transaction", );
             } finally {
               tagBool.value = false;
               _debounce?.cancel();

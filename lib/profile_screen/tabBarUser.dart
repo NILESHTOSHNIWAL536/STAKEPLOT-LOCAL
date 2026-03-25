@@ -41,7 +41,7 @@ class _TabBarUserState extends State<TabBarUser> {
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.grey, width: 0.1),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
             child: TabBar(
               indicatorPadding: EdgeInsets.zero,
               labelPadding: EdgeInsets.zero,

@@ -407,13 +407,13 @@ void _onBackspace() {
                                                             setState(() => showKeyboard = true);
                                                           },
                                                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                                     child: AmountWidget(),
                                                                  )),
                                                                  SizedBox(height: AppSizes.h16),
                                                                   if (_amountController.text.isNotEmpty) ...[
                           Padding(
-                           padding: const EdgeInsets.symmetric(horizontal: 20),
+                           padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                             child: GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                                           onTap: () {
@@ -425,7 +425,7 @@ void _onBackspace() {
                            if (isCategoryFieldExpanded) ...[
                              
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                           child: categoryExpandedWidget(),
                         ),
                         // getListOfCustomCategory(),
@@ -483,7 +483,7 @@ void _onBackspace() {
                                   setState(() => showKeyboard = true);
                                 },
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                                         child: AmountWidget(),
                                       )),
                                 
@@ -518,7 +518,7 @@ void _onBackspace() {
                         ],
                         if (_amountController.text.isNotEmpty) ...[
                           Padding(
-                           padding: const EdgeInsets.symmetric(horizontal: 20),
+                           padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                             child: categoryWidget(),
                           ),
                         ],
@@ -526,7 +526,7 @@ void _onBackspace() {
                        
                         if (isCategoryFieldExpanded) ...[
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                           child: categoryExpandedWidget(),
                         ),
                         // getListOfCustomCategory(),
@@ -534,13 +534,13 @@ void _onBackspace() {
                         if (selectedCategory != null &&
                             selectedSubCategory == null) ...[
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                             child: subcategoryWidget(),
                           ),
                         ],
                         if (fin != null) ...[
                           Padding(
-                         padding: const EdgeInsets.symmetric(horizontal: 20),
+                         padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                             child: widget.isDebit ? SplitLendButton() : const SizedBox.shrink(),
                           ),
                           continueButton(),

@@ -24,6 +24,7 @@ import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/image_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
 
@@ -54,17 +55,33 @@ class CommunityState extends State<Community> {
   }
 
   @override
-  void initState() {
-    super.initState();
+  // void initState() {
+  //   super.initState();
+  //   initGetControllersIfisRegistered();
+  //   postController.currentPageTranding.value = 1;
+  //   postController.currentPageFeed.value = 1;
+  //   postController.isPostloading.value = false;
+  //   postController.hasMorePostTranding.value = true;
+  //   postController.hasMorePostFeed.value = true;
+  //   callApisPost();
+    
+  // }
+@override
+void initState() {
+  super.initState();
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
     initGetControllersIfisRegistered();
+
     postController.currentPageTranding.value = 1;
     postController.currentPageFeed.value = 1;
     postController.isPostloading.value = false;
     postController.hasMorePostTranding.value = true;
     postController.hasMorePostFeed.value = true;
-    callApisPost();
-    
-  }
+
+    callApisPost(); // ✅ SAFE NOW
+  });
+}
 
   void callApisPost() async {
     // await wait();
@@ -95,49 +112,121 @@ class CommunityState extends State<Community> {
       curve: Curves.easeInOut,
     );
   }
+@override
+void dispose() {
+  scrollController.dispose();
+  scrollControllerPost.dispose();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       // floatingActionButton: Obx(() =>
       //     postController.isTrending.value ? SizedBox.shrink() : PostImage()),
-      bottomNavigationBar: SafeArea(
-        child: BottomNavigations(
-          data: 2,
-          onCommunityDoubleTap: _scrollToTop, // Pass callback
-        ),
+      bottomNavigationBar: BottomNavigations(
+        data: 2,
+        onCommunityDoubleTap: _scrollToTop, // Pass callback
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height / 1.1,
-        padding:
-            const EdgeInsets.only(left: 0.0, right: 0.0, bottom: 0, top: 0.0),
-        child: SingleChildScrollView(
-          controller: scrollControllerPost,
-          // controller: scrollController, uncomment this if anythimg goes wrong with pagination
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // buildWelcomeRow(context),
-              ArenaHeader(
-      initialTab: 1, // Polls
-      onTabChanged: (index) {
-      
-      },
+//       body:
+//        SingleChildScrollView(
+//         controller: scrollControllerPost,
+//         // controller: scrollController, uncomment this if anythimg goes wrong with pagination
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             // buildWelcomeRow(context),
+//             ArenaHeader(
+//             initialTab: 1, // Polls
+//             onTabChanged: (index) {
+            
+//             },
+//           ),
+//             // Padding(
+//             //   padding:
+//             //       const EdgeInsets.only(left:AppSizes.p12, right:AppSizes.p12, top: 4),
+//             //   child: Obx(() => postController.isTrending.value
+//             //       ? getTabs(context)
+//             //       : getTabs(context)),
+//             // ),
+//            Obx(() {
+
+//   final isTrending = postController.isTrending.value;
+
+//   return isTrending
+//       ? getTrandingWidget()
+//       : getFeed();
+
+// })
+
+//           ],
+//         ),
+//       ),
+
+    body:
+     CustomScrollView(
+  controller: scrollControllerPost,
+  slivers: [
+
+    /// HEADER
+    SliverToBoxAdapter(
+      child: ArenaHeader(
+        initialTab: 1,
+        onTabChanged: (index) {},
+      ),
     ),
-              // Padding(
-              //   padding:
-              //       const EdgeInsets.only(left:AppSizes.p12, right:AppSizes.p12, top: 4),
-              //   child: Obx(() => postController.isTrending.value
-              //       ? getTabs(context)
-              //       : getTabs(context)),
-              // ),
-              Obx(() => postController.isTrending.value
-                  ? getTrandingWidget()
-                  : getFeed()),
-            ],
+
+    /// FEED
+    Obx(() {
+
+      final posts = postController.isTrending.value
+          ? postController.trandingPostList
+          : postController.feedPostList;
+
+      final isLoading = postController.isPostloading.value;
+      final hasMore = postController.isTrending.value
+          ? postController.hasMorePostTranding.value
+          : postController.hasMorePostFeed.value;
+
+      return SliverPadding(
+  padding: EdgeInsets.only(
+    bottom: kBottomNavigationBarHeight + 20,), // ⭐ MAGIC LINE
+  
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+        
+              /// Loader at bottom
+              if (index >= posts.length) {
+        
+                if (!isLoading) return const SizedBox();
+        
+                return Skeletonizer(
+                  enabled: true,
+                  child: PostCard(
+                    data: posts.last,
+                    index: posts.length - 1,
+                  ),
+                );
+              }
+        
+              return PostCard(
+                key: ValueKey(posts[index].id),
+                data: posts[index],
+                index: index,
+              );
+            },
+        
+            childCount: posts.length + (hasMore ? 1 : 0),
           ),
         ),
-      ),
+      
+      );
+    }),
+  ],
+),
+
     );
   }
 
@@ -149,7 +238,7 @@ class CommunityState extends State<Community> {
         : (postController.isPost.value && postController.feedPostList.isEmpty)
             ? Padding(
                 padding: const EdgeInsets.only(top: 40),
-                child: Container(
+                child: SizedBox(
                   
                   height: MediaQuery.sizeOf(context).height / 3,
                   child: Column(
@@ -254,26 +343,7 @@ class CommunityState extends State<Community> {
     );
   }
 
-  Widget getPostListview() {
-    double width = MediaQuery.of(context).size.width;
-    //  double height = MediaQuery.of(context).size.height;
-    return SizedBox(
-        width: width,
-        // height:  height,
-        child: ListView.builder(
-          padding: EdgeInsets.zero,
-          itemCount: postController.feedPostList.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            final dataObj = postController.feedPostList[index];
-            return PostCard(
-              data: dataObj,
-              index: index,
-            );
-          },
-        ));
-  }
+  
 
   Widget _buildDottedDivider() {
     return SizedBox(

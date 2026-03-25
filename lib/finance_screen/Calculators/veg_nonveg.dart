@@ -956,7 +956,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                     child: Icon(
                                       Icons.close,
                                       size: 25,
-                                      color: Colorcodes.white,
+                                      color: AppColors.backgroundColor,
                                     ),
                                   ),
                                 ],

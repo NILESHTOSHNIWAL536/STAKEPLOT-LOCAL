@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/bankServices/nextFetch.dart';
+import 'package:flutter_application_code_stakeplot/controllers/finora_controller.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -128,7 +129,7 @@ Future<void> storeDeviceInfoLocalBackState() async {
 }
 
 void clearTransactions({required BuildContext context, bool f = false}) {
-  searchController.clear();
+  tnxSearchController.clear();
   redioButton.clear();
   redioButtonIndex.clear();
   allOrGroupTransactionsName.value = StringConstant.allTransactions;
@@ -156,9 +157,9 @@ void clearGraph() {
 void clearGetX() {
   messages.clear();
   messagesTemp.clear();
-  roomBills.clear();
-  questionRoom.clear();
-  productList.clear();
+
+  
+ 
   userPostList.clear();
   // friendsList.clear();
   // frdsListOrigin.clear();
@@ -172,16 +173,15 @@ void clearGetX() {
   sizeRoom = false;
   fontSize = 20;
   budgetLength = 0.obs;
-  billLength = 0.obs;
-  debtLength = 0.obs;
-  paymentLength = 0.obs;
+ 
+  
   room = [];
   account = [];
   notificationList.clear();
   hasGetNewNotifications.value = false;
-  targetString = "".obs;
+  
   isBankAccountLink.value = true;
-  trasactionsData.clear();
+  
   addedMembers.clear();
   addedUser.clear();
   isBankAccountLink.value = false;
@@ -190,7 +190,7 @@ void clearGetX() {
   transactionChatGraph.clear();
   labels.clear();
   selectedButton.value = "Month";
-  graphTransaction.value = false;
+ 
   isSplit.value = false;
   isLend.value = false;
   accountName.value = "";
@@ -281,15 +281,19 @@ void clearInterest() {
 void initGetControllers() {
   Get.put(UserController());
   Get.put(PostController());
+  // Get.put(FinoraController());
   Get.put(CardDueController());
   Get.put(ThemeController());
+  
 }
 
 void deleteGetControllers() {
   Get.delete<UserController>();
   Get.delete<PostController>();
+  // Get.delete<FinoraController>();
   Get.delete<CardDueController>();
   Get.delete<ThemeController>();
+  
 }
 
 void initGetControllersIfisRegistered() {
@@ -299,6 +303,9 @@ void initGetControllersIfisRegistered() {
   if (!Get.isRegistered<PostController>()) {
     Get.put(PostController());
   }
+  //  if (!Get.isRegistered<FinoraController>()) {
+  //   Get.put(FinoraController());
+  // }
   if (!Get.isRegistered<CardDueController>()) {
     Get.put(CardDueController());
   }

@@ -13,7 +13,7 @@ Widget buildCollectionsBody(BuildContext context) {
   // TEMP flag – replace with API data later
   final bool hasCollections = false;
 
-  return hasCollections
+  return !hasCollections
       ? _buildCollectionsList(context)
       : _buildEmptyCollectionsUI(context);
 }

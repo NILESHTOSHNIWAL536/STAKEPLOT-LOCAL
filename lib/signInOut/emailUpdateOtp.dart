@@ -79,7 +79,7 @@ class _emailUpdationState extends State<emailUpdation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colorcodes.white,
+      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -100,7 +100,7 @@ class _emailUpdationState extends State<emailUpdation> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,12 +112,12 @@ class _emailUpdationState extends State<emailUpdation> {
                       text: "Enter the 6-digit OTP sent to your email",
                       fontWeight: FontWeight.w300,
                       fontsize: 14,
-                      color: Colorcodes.white,
+                      color: AppColors.backgroundColor,
                     ),
                     SizedBox(height: AppSizes.h40),
                     verifyOpt(),
                     acceptButton(),
-                    SizedBox(height: Colorcodes.paddingSize * 2),
+                    SizedBox(height: AppSizes.h40),
                     resendOtp(),
                   ],
                 ),
@@ -139,7 +139,7 @@ class _emailUpdationState extends State<emailUpdation> {
           context,
           lWeight: FontWeight.bold,
           fontSize: 22,
-          color: Colorcodes.white,
+          color: AppColors.backgroundColor,
         ),
       ),
     );
@@ -152,7 +152,7 @@ class _emailUpdationState extends State<emailUpdation> {
         margin: const EdgeInsets.symmetric(vertical: AppSizes.p10, horizontal: 10),
         padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
         decoration: BoxDecoration(
-          color: Colorcodes.white,
+          color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(Colorcodes.borderRadius10),
         ),
         child: InkWell(
@@ -230,7 +230,7 @@ class _emailUpdationState extends State<emailUpdation> {
                         context,
                         lWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: Colorcodes.black,
+                        color: AppColors.bg1,
                       ),
                     ),
             ),
@@ -243,7 +243,7 @@ class _emailUpdationState extends State<emailUpdation> {
   Widget resendOtp() {
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize / 3),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.p20 / 3),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -254,7 +254,7 @@ class _emailUpdationState extends State<emailUpdation> {
                 context,
                 lWeight: FontWeight.w400,
                 fontSize: 14,
-                color: Colorcodes.white,
+                color: AppColors.backgroundColor,
               ),
             ),
             Obx(

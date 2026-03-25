@@ -692,9 +692,9 @@ class _OnboardingPageState extends State<OnboardingPage>
                 padding: const EdgeInsets.only(top: 17, bottom: 30),
                 child: flagToFetchData.value
                     ? Center(child: getButton(context, skipOrLets.value,
-                        AppColors.primaryColor, Colorcodes.white))
+                        AppColors.primaryColor, AppColors.backgroundColor))
                     : getButton(context, skipOrLets.value, Colorcodes.greyLight,
-                        Colorcodes.black),
+                        AppColors.bg1),
               ),
       ),
     ]);

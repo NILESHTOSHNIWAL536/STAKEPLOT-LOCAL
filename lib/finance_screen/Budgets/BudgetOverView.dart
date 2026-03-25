@@ -183,20 +183,20 @@ class _BudgetOverViewState extends State<BudgetOverView> {
     return Container(
       width: width,
       height: height,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
       decoration: const BoxDecoration(color: AppColors.backgroundColor),
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: Colorcodes.paddingSize),
+            SizedBox(height: AppSizes.h20),
             textStyle(
                 context: context,
                 text: PlotFinanceStaticData().budgetOverviewTitle,
                 fontsize: 18,
                 fontWeight: FontWeight.w500),
-            SizedBox(height: Colorcodes.paddingSize),
+            SizedBox(height: AppSizes.h20),
             Container(
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.all(13),
@@ -234,11 +234,11 @@ class _BudgetOverViewState extends State<BudgetOverView> {
               ),
             ),
             SizedBox(
-              height: Colorcodes.paddingCard,
+              height: AppSizes.h20,
             ),
             Obx(() => categoryList()),
             SizedBox(
-              height: Colorcodes.paddingCard / 2,
+              height: AppSizes.h10,
             ),
             InkWell(
                 onTap: () async {

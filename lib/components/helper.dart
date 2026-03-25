@@ -29,6 +29,7 @@ import '../Constants/core/container_border.dart';
 import '../Home_Screen/ManuallyTransactions/cashTransaction.dart';
 import '../backed_connections/bankServices/pdf.dart';
 import '../Home_Screen/history/amount_range.dart';
+import '../controllers/transactions_controller.dart';
 import '../repository/transactions_repository.dart';
 
 
@@ -704,6 +705,7 @@ Widget getCheckBoxwithText2(
 
       return GestureDetector(
         onTap: () {
+          //  final tx = Get.find<TransactionController>();
           // Toggle selection
           accountIdPdf.value = isSelected ? "-" : text;
 
@@ -712,10 +714,13 @@ Widget getCheckBoxwithText2(
               accountIdPdf.value.toLowerCase() == "debit" ||
               accountIdPdf.value == "Cash") {
             searchTextController.value = accountIdPdf.value.toLowerCase();
-            searchController.text = accountIdPdf.value.toLowerCase();
+            tnxSearchController.text = accountIdPdf.value.toLowerCase();
+           
+            // tx.searchController.text=accountIdPdf.value.toLowerCase();
           } else if (accountIdPdf.value == "-") {
             searchTextController.value = "";
-            searchController.text = "";
+            tnxSearchController.text = "";
+            //  tx.searchController.text="";
           }
 
           // Apply filter and close dialog

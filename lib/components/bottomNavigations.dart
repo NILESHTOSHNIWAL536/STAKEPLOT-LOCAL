@@ -51,6 +51,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   @override
   void initState() {
     super.initState();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       try {
         if (widget.data >= 0 && widget.data < _tabNames.length) {
@@ -94,32 +95,58 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   @override
   Widget build(BuildContext context) {
 
-    return Container(
-      height: Colorcodes.paddingSize * 2.5,
-      color: AppColors.backgroundColor,
-      // padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 2),
+    return 
+    BottomAppBar(
+  color: AppColors.backgroundColor,
+  elevation: 0,
+  child: SafeArea(
+    top: false,
+    child: SizedBox(
+      height: 60,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
+      children: [
           getContainer(NavBarIcons.home, 0),
           getContainer(NavBarIcons.screen2, 1),
-          if (sizeRoom)
-            getContainer(
-              'assets/images/room.svg',
-              2,
-            ),
-          getContainer(
-            NavBarIcons.community,
-            sizeRoom ? 3 : 2,
-          ),
-          getContainer(
-            svgIconPath.bottom4,
-            sizeRoom ? 4 : 3,
-          ),
+          getContainer(NavBarIcons.community, 2),
+          getContainer(svgIconPath.bottom4, 3),
         ],
       ),
-    );
+    ),
+  ),
+);
+
   }
+//   Widget build(BuildContext context) {
+// final bottomSafe = MediaQuery.of(context).padding.bottom;
+// print("bottomSafe $bottomSafe");
+//     return Container(
+//       height: 60+bottomSafe,
+//       color: AppColors.backgroundColor,
+//       // padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 2),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceAround,
+//         children: [
+//           getContainer(NavBarIcons.home, 0),
+//           getContainer(NavBarIcons.screen2, 1),
+//           if (sizeRoom)
+//             getContainer(
+//               'assets/images/room.svg',
+//               2,
+//             ),
+//           getContainer(
+//             NavBarIcons.community,
+//             sizeRoom ? 3 : 2,
+//           ),
+//           getContainer(
+//             svgIconPath.bottom4,
+//             sizeRoom ? 4 : 3,
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
 Widget imageurl(String url, int index) {
   bool isSelected = widget.data == index;
   String iconPath = url;

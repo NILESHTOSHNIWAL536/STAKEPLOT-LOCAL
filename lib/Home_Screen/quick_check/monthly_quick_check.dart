@@ -209,10 +209,6 @@ List<int> get availableYears {
   }[type]!.toDouble();
 }
 
-
-
-
-  
   void updateMonthlyPercentages({
     required double credited,
     required double debited,
@@ -825,7 +821,7 @@ Widget _breakdownTile({
               style: FontManager().getTextStyle(
             context, 
             fontSize: 18, 
-        color: titleColor ?? AppColors.backgroundColor,  // ← Use your AppColors white
+        color: titleColor ?? AppColors.backgroundColor,
             lWeight: FontWeight.w600,
           ),
             ),

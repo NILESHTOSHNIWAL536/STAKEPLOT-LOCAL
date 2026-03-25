@@ -21,7 +21,6 @@ void initFinvuManager(BuildContext context) async {
   String url = FinspaceStrings().liveIntegration
       ? Credentials.Live_finvu_api
       : Credentials.Dev_finvu_api;
-  print(url);
   finvuManager.initialize(
     FinvuConfig(
       finvuEndpoint: url,
@@ -56,6 +55,7 @@ Future<void> getConsentHandleId(context) async {
   final String apiUrlgetFipsMetric = FinvuRoutes.getFipsMetric;
   final String custId = "${number.value}@finvu";
   var body = {"custId": custId, 'number': number.value};
+  print("API URL: $apiUrl");
 
   try {
     var response = await postDataApiCall(apiUrl, body);

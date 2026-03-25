@@ -366,7 +366,7 @@ class InsightCard extends StatelessWidget {
           children: [
             Positioned(
               right:AppSizes.p16,
-              bottom: 16,
+              bottom:AppSizes.p16,
               child: Opacity(
                 opacity: 0.25,
                 child: Icon(

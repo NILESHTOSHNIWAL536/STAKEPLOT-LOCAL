@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/skipFInvuProcess.dart';
 
 import '../Constants/colors.dart';
+import '../Constants/core/app_padding_sizes.dart';
 
 AppBar getAppBar(context) {
   return AppBar(
@@ -10,14 +11,14 @@ AppBar getAppBar(context) {
     toolbarHeight: 40,
     actions: [
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
         child: GestureDetector(
           onTap: () {
             showSkipModal2(context);
           },
           child: Icon(
             Icons.login,
-            color: Colorcodes.black,
+            color: AppColors.bg1,
             size: 30,
           ),
         ),
@@ -25,7 +26,7 @@ AppBar getAppBar(context) {
     ],
     leading: IconButton(
       icon: Icon(Icons.arrow_back_sharp),
-      color: Colorcodes.black,
+      color: AppColors.bg1,
       onPressed: () {
         Navigator.pop(context);
       },

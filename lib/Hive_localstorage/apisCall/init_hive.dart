@@ -114,7 +114,7 @@ Future<void> initCardInsightsData() async {
   await HiveHelper.initHiveBox<CardInsightsModel>(
     adapter: CardInsightsModelAdapter(),
     boxName: HiveStorage.cardInsightsBoxName,
-    onLoaded: () => CategoryStorage.loadCardInsightsDataFromHive(),
+    onLoaded: () => CategoryStorage().loadCardInsightsDataFromHive(),
   );
 }
 

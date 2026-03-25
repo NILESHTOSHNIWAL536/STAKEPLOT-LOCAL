@@ -254,7 +254,7 @@
 //   List<Map<String, dynamic>> items,
 // ) {
 //   return Container(
-//     margin: const EdgeInsets.only(bottom: 16),
+//     margin: const EdgeInsets.only(bottom:AppSizes.p16),
 //     padding: const EdgeInsets.all(AppSizes.p12),
 //     decoration: BoxDecoration(
 //       color: AppColors.backgroundColor,
@@ -1469,7 +1469,7 @@ class _NotificationsState extends State<Notifications> {
   Widget _buildDateSection(
       String title, List<Map<String, dynamic>> items) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom:AppSizes.p16),
       padding: const EdgeInsets.all(AppSizes.p12),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,

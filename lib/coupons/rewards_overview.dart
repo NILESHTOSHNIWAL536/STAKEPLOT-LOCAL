@@ -60,7 +60,7 @@ class CouponPopupUtils {
                   ? gridList(sheetContext, onCategorySelected)
                   : Container(
                       height: MediaQuery.of(sheetContext).size.height / 3,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                       child: Center(
                         child: textStyleImage(
                             context: sheetContext,
@@ -723,7 +723,7 @@ class _RewardsOverviewState extends State<RewardsOverview>
       body: Column(
         children: [
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
+            margin: EdgeInsets.symmetric(horizontal: AppSizes.p20),
             child: TabBar(
               controller: _tabController,
               labelColor: AppColors.accentColor,

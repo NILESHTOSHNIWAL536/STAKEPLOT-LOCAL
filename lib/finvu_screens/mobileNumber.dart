@@ -331,7 +331,7 @@ class _MobileNumberState extends State<MobileNumber> {
               height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
               child: PinCodeTextField(
                 appContext: context,
                 length: _otpCodeLength,

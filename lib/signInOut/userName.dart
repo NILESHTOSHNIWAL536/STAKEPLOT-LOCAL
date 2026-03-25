@@ -147,7 +147,7 @@
 //           child: Container(
 //             width: MediaQuery.of(context).size.width,
 //             height: MediaQuery.of(context).size.height,
-//             padding: EdgeInsets.symmetric(horizontal: 20),
+//             padding: EdgeInsets.symmetric(horizontal: AppSizes.p20),
 //             child: Column(
 //               crossAxisAlignment: CrossAxisAlignment.start,
 //               children: [
@@ -195,7 +195,7 @@
 //                             child: !flag.value && fg.value
 //                                 ? Spinner(
 //                                     size: 20,
-//                                     color: Colorcodes.white,
+//                                     color: AppColors.backgroundColor,
 //                                   )
 //                                 : Text(
 //                                     'Submit',
@@ -203,7 +203,7 @@
 //                                       context,
 //                                       lWeight: FontWeight.bold,
 //                                       fontSize: 20,
-//                                       color: Colorcodes.white,
+//                                       color: AppColors.backgroundColor,
 //                                     ),
 //                                   ),
 //                           )),
@@ -361,13 +361,13 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       backgroundColor: Colorcodes.white,
+//       backgroundColor: AppColors.backgroundColor,
 //       body: SafeArea(
 //         child: SingleChildScrollView(
 //           child: Container(
 //             width: MediaQuery.of(context).size.width,
 //             height: MediaQuery.of(context).size.height,
-//             padding: EdgeInsets.symmetric(horizontal: 20),
+//             padding: EdgeInsets.symmetric(horizontal: AppSizes.p20),
 //             child: Column(
 //               children: [
                
@@ -420,7 +420,7 @@
 //                             child: flag.value
 //                                 ? Spinner(
 //                                     size: 20,
-//                                     color: Colorcodes.white,
+//                                     color: AppColors.backgroundColor,
 //                                   )
 //                                 : Text(
 //                                     'Submit',
@@ -428,7 +428,7 @@
 //                                       context,
 //                                       lWeight: FontWeight.bold,
 //                                       fontSize: 20,
-//                                       color: Colorcodes.white,
+//                                       color: AppColors.backgroundColor,
 //                                     ),
 //                                   ),
 //                           )),
@@ -586,7 +586,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

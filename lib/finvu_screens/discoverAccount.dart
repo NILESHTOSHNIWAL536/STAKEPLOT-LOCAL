@@ -249,7 +249,6 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     );
   }
 
-  // ── Selection ──────────────────────────────────────────────────────────────
 
   void _toggle(bool? value, FinvuFIPInfo bankData) {
     if (value == true) {

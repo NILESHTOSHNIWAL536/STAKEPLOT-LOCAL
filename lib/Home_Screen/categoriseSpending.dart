@@ -18,6 +18,7 @@ import 'package:get/get.dart';
 
 import '../Constants/core/app_padding_sizes.dart';
 import '../components/shared_utils.dart';
+import '../controllers/transactions_controller.dart';
 import '../repository/transactions_repository.dart';
 
 RxInt selectedIndex = (-1).obs;
@@ -39,12 +40,13 @@ class DoughnutChartExample extends StatefulWidget {
 }
 
 class _DoughnutChartExampleState extends State<DoughnutChartExample> {
+  
   @override
   void initState() {
     super.initState();
     selectedIndex.value = -1;
     catWidgetBindUpdate(context);
-    if(spendingsOnCategories.isEmpty)getCategoryData(context);
+    if(spendingsOnCategories.isEmpty)getCategoryData();
   }
 
   @override
@@ -201,7 +203,9 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        searchController.text = category.toLowerCase();
+          // final tx = Get.find<TransactionController>();
+        tnxSearchController.text = category.toLowerCase();
+          // tx.searchController.text = category.toLowerCase();
         onChanedAutoTransactionStatus(context);
         Navigator.push(
           context,
@@ -309,9 +313,9 @@ class CategoryCard extends StatelessWidget {
                               lWeight: FontWeight.normal,
                               fontSize: 10,
                               color: percentage.startsWith("-")
-                                  ? Colorcodes.redDeleteIcon
+                                  ? AppColors.redColor
                                   : percentage.startsWith("+")
-                                      ? Colorcodes.green
+                                      ? AppColors.green
                                       : AppColors.bg3,
                             ),
                           ),

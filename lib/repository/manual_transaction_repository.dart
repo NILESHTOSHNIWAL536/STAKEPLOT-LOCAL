@@ -20,12 +20,15 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/routes/route_post.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
 
+import '../controllers/finora_controller.dart';
+
 
 
 // adding manual transaction api call function
 void addTransaction(String amount, String subCategory, String categories,
     BuildContext context, String dropdownValue,
     [bool isSplit = false, bool snackBar = true]) async {
+      //  FinoraController finoraController = ControllerManagement.finoraController;
   var body = {
     'amount': amount.toString(),
     'category': categories.toString(),
@@ -46,6 +49,7 @@ void addTransaction(String amount, String subCategory, String categories,
       () async {
         reloadHistory.value = !reloadHistory.value;
         setDonectChat.value = !setDonectChat.value;
+        // finoraController.setDonectChat.value = !finoraController.setDonectChat.value;
         if (!isSplit && snackBar) {
           snackBarCalled(context, SnackbarData().transactionSuccess,
               );

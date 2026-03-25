@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 
+import '../../Constants/colors.dart';
+
 class BankSlider extends StatelessWidget {
 const BankSlider({ Key? key }) : super(key: key);
 
@@ -26,7 +28,7 @@ const BankSlider({ Key? key }) : super(key: key);
         width: MediaQuery.of(context).size.width/1.1,
         margin: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
         decoration: BoxDecoration(
-           color: Colorcodes.greyLight,
+           color: AppColors.grey,
            borderRadius: BorderRadius.circular(20),
         ),
      );

@@ -284,7 +284,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
                     width: width,
                     height: height / 3,
                     decoration: BoxDecoration(
-                      color: Colorcodes.white,
+                      color: AppColors.backgroundColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: SingleChildScrollView(

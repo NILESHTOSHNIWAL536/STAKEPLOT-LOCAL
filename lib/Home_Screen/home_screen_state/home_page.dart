@@ -69,11 +69,10 @@ class _HomePageState extends State<HomePage> {
           () => (RewardScreenStrings().isRewardNeedToShow.value)
               ? RewardsScreen()
               : Scaffold(
-                  bottomNavigationBar: SafeArea(
-                      child: BottomNavigations(
-                    data: 0,
-                    onHomeDoubleTap: _scrollToTop,
-                  )),
+                  bottomNavigationBar: BottomNavigations(
+                                      data: 0,
+                                      onHomeDoubleTap: _scrollToTop,
+                                    ),
                   
                   backgroundColor: AppColors.backgroundColor,
                  
