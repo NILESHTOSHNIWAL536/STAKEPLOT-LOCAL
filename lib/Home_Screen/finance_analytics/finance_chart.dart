@@ -821,7 +821,6 @@
 //   final double y;
 // }
 
-
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -840,8 +839,7 @@ class SpendingCardTwoPanels extends StatefulWidget {
   const SpendingCardTwoPanels({super.key});
 
   @override
-  State<SpendingCardTwoPanels> createState() =>
-      _SpendingCardTwoPanelsState();
+  State<SpendingCardTwoPanels> createState() => _SpendingCardTwoPanelsState();
 }
 
 class ChartData {
@@ -851,8 +849,7 @@ class ChartData {
   final double debit;
 }
 
-class _SpendingCardTwoPanelsState
-    extends State<SpendingCardTwoPanels> {
+class _SpendingCardTwoPanelsState extends State<SpendingCardTwoPanels> {
   int selectedIndex = 0;
   bool _isInitialSelectionSet = false;
 
@@ -880,24 +877,19 @@ class _SpendingCardTwoPanelsState
           List<double>.from(transactionChatGraph['credited'] ?? []);
       final List<double> debited =
           List<double>.from(transactionChatGraph['debited'] ?? []);
-      final List<String> dayLabels =
-          labels.map((e) => e.toString()).toList();
+      final List<String> dayLabels = labels.map((e) => e.toString()).toList();
 
-      if (credited.isEmpty ||
-          debited.isEmpty ||
-          dayLabels.isEmpty) {
-        return  SizedBox(
+      if (credited.isEmpty || debited.isEmpty || dayLabels.isEmpty) {
+        return SizedBox(
           height: MediaQuery.sizeOf(context).height * 0.25,
           child: Center(child: Text('No data available')),
         );
       }
 
       /// 🔥 LAST 7 DAYS ENDING AT TODAY
-      final String today =
-          DateTime.now().day.toString().padLeft(2, '0');
+      final String today = DateTime.now().day.toString().padLeft(2, '0');
 
-      int todayIndex =
-          dayLabels.lastIndexWhere((e) => e == today);
+      int todayIndex = dayLabels.lastIndexWhere((e) => e == today);
 
       if (todayIndex == -1) {
         todayIndex = dayLabels.length - 1;
@@ -939,14 +931,11 @@ class _SpendingCardTwoPanelsState
       return ChartData(labels[i], credited[i], debited[i]);
     });
 
-    final List<double> totals =
-        data.map((e) => e.credit + e.debit).toList();
+    final List<double> totals = data.map((e) => e.credit + e.debit).toList();
 
-    final double maxTotal =
-        totals.isEmpty ? 1.0 : totals.reduce(max);
+    final double maxTotal = totals.isEmpty ? 1.0 : totals.reduce(max);
 
-    final double yMax =
-        maxTotal == 0 ? 1.0 : (maxTotal * 1.2).ceilToDouble();
+    final double yMax = maxTotal == 0 ? 1.0 : (maxTotal * 1.2).ceilToDouble();
 
     final double maxBarH = chartMaxHeight - 40;
 
@@ -998,9 +987,10 @@ class _SpendingCardTwoPanelsState
                 child: Container(
                   width: screenWidth / 3.5,
                   padding: const EdgeInsets.symmetric(
-                      vertical: AppSizes.p40, horizontal: AppSizes.p4),
+                      vertical: AppSizes.p20, horizontal: AppSizes.p4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'My Spending',
@@ -1011,7 +1001,6 @@ class _SpendingCardTwoPanelsState
                           color: AppColors.primaryColor,
                         ),
                       ),
-                      SizedBox(height: AppSizes.h10),
                       Row(
                         children: [
                           Text(
@@ -1034,7 +1023,6 @@ class _SpendingCardTwoPanelsState
                           ),
                         ],
                       ),
-                      SizedBox(height: AppSizes.h12),
                       Row(
                         children: [
                           Text(
@@ -1071,48 +1059,41 @@ class _SpendingCardTwoPanelsState
               width: rightVisible,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(data.length, (i) {
                   final d = data[i];
                   final bool isSel = i == selectedIndex;
 
                   final double creditH =
-                      ((d.credit / yMax) * maxBarH)
-                          .clamp(0.0, maxBarH);
+                      ((d.credit / yMax) * maxBarH).clamp(0.0, maxBarH);
 
                   final double debitH =
-                      ((d.debit / yMax) * maxBarH)
-                          .clamp(0.0, maxBarH);
+                      ((d.debit / yMax) * maxBarH).clamp(0.0, maxBarH);
 
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Material(
-                    color: AppColors.transparentColor,
+                        color: AppColors.transparentColor,
                         child: InkWell(
-                           onTap: () {
-                        setState(() => selectedIndex = i);
-                                            },
+                          onTap: () {
+                            setState(() => selectedIndex = i);
+                          },
                           child: Container(
                             width: rightVisible / 8,
                             decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(6),
                               border: Border.all(
-                                color: AppColors
-                                    .financeChartBarBorder,
+                                color: AppColors.financeChartBarBorder,
                               ),
                             ),
                             child: Column(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.end,
-                                  mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 AnimatedContainer(
-                                  duration: const Duration(
-                                      milliseconds: 220),
+                                  duration: const Duration(milliseconds: 220),
                                   height: creditH,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
@@ -1120,18 +1101,14 @@ class _SpendingCardTwoPanelsState
                                         ? AppColors.primaryColor
                                         : AppColors.primaryColor
                                             .withOpacity(0.22),
-                                    borderRadius:
-                                        const BorderRadius.only(
-                                      topLeft:
-                                          Radius.circular(6),
-                                      topRight:
-                                          Radius.circular(6),
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(6),
+                                      topRight: Radius.circular(6),
                                     ),
                                   ),
                                 ),
                                 AnimatedContainer(
-                                  duration: const Duration(
-                                      milliseconds: 220),
+                                  duration: const Duration(milliseconds: 220),
                                   height: debitH,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
@@ -1139,12 +1116,9 @@ class _SpendingCardTwoPanelsState
                                         ? AppColors.debitedAmount
                                         : AppColors.debitedAmount
                                             .withOpacity(0.22),
-                                    borderRadius:
-                                        const BorderRadius.only(
-                                      bottomLeft:
-                                          Radius.circular(6),
-                                      bottomRight:
-                                          Radius.circular(6),
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(6),
+                                      bottomRight: Radius.circular(6),
                                     ),
                                   ),
                                 ),
@@ -1159,8 +1133,7 @@ class _SpendingCardTwoPanelsState
                         child: Text(
                           d.label,
                           textAlign: TextAlign.center,
-                          style:
-                              FontManager().getTextStyle(
+                          style: FontManager().getTextStyle(
                             context,
                             fontSize: 11,
                             color: AppColors.debitedAmount,

@@ -27,124 +27,73 @@ class IndexScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     double height = MediaQuery.of(context).size.height;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
-      child: RefreshIndicator(
-        color: AppColors.primaryColor,
-        backgroundColor: AppColors.backgroundColor,
-        strokeWidth: 2.5,
-        displacement: 40, // spinner position from top
-        edgeOffset: 0, // start right at the top
-        onRefresh: () async {
-          // Keep refresh indicator visible for at least 2 seconds
-          await Future.delayed(const Duration(seconds: 1));
-          callApi(context);
-        },
-        child: SingleChildScrollView(
-          controller: scrollControllerHome,
-          child: Column(
-            children: [
-              // Nextfetch(),'
-              // inside your parent Column / ListView where you had the three widgets
-
-Stack(
-  children: [
-    // BACKGROUND IMAGE for the whole section
-    AvatarProfileImageZero(url: HomePageIcons.background, width: 1, height: 3.6),
-
-    
-    SizedBox(
-      height: AppComponentSizes.h2_4,
-      // color: Colors.green,
-      width: double.infinity,
+    return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-             SizedBox(height: AppSizes.h60),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
+        child: RefreshIndicator(
+          color: AppColors.primaryColor,
+          backgroundColor: AppColors.backgroundColor,
+          strokeWidth: 2.5,
+          displacement: 40, // spinner position from top
+          edgeOffset: 0, // start right at the top
+          onRefresh: () async {
+            // Keep refresh indicator visible for at least 2 seconds
+            await Future.delayed(const Duration(seconds: 1));
+            callApi(context);
+          },
+          child: SingleChildScrollView(
+            controller: scrollControllerHome,
+            child: Column(
+              children: [
+                buildTopSection(context),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 13),
+                  child: Column(
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            manualTransactionButton(context),
+                            historyButton(context)
+                          ]),
 
-           
-            const TopRightIconsWidget(),
-
-            SizedBox(
-              height: AppComponentSizes.h3_4,
-              // color: Colors.amber,
-              child: Material(
-                type: MaterialType.transparency, // IMPORTANT: makes child transparent
-                child: NumberPickerScreen(),
-              ),
-            ),
-
-            SizedBox(height: AppSizes.h10),
-          ],
-        ),
-      ),
-    ),
-  ],
-),
-
-             
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0 ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                     
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        manualTransactionButton(context),
-                        historyButton(context)
-                        ]
-                    
-                        
+                      Padding(
+                        padding:
+                            const EdgeInsets.symmetric(vertical: AppSizes.h10),
+                        child: SizedBox(
+                          height: AppComponentSizes.h5,
+                          child: const SpendingCardTwoPanels(),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: AppSizes.h20,
-                    ),
-                    SizedBox(
-                      height: AppComponentSizes.h5,
-                      child: const SpendingCardTwoPanels(),
-                    ),
-                  
-                     SizedBox(
-                      height: AppSizes.h20,
-                    ),
-                    //  SizedBox(
-                    //   height: height * 0.2,
-                    //   child: SwipeableCardsScreen(),
-                    // ),
-                    
-                    Obx(() => isFinoraVisible.value
-                        ?const SwipeableCardsScreen()
-                        :const  SwipeableCardsScreen()),
-                    
-                    Obx(() => isAutoPayFected.value
-                        ? GetAutopays(height)
-                        : GetAutopays(height)),
-                    // SizedBox(height: height * 0.5, child: InsightsScreen()),
-                    DoughnutChartExample(),
-                    const SizedBox(
-                      height: 14,
-                    ),
-                    SizedBox(
-                      height: AppComponentSizes.h30,
-                      child: Text(HomepageStringsDart().madeWithLove,
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: AppColors.primaryColor)),
-                    ),
-                  ],
-                ),
-              )
-            
-            ],
+
+                      Obx(() => isFinoraVisible.value
+                          ? const SwipeableCardsScreen()
+                          : const SwipeableCardsScreen()),
+
+                      Obx(() => isAutoPayFected.value
+                          ? GetAutopays(height)
+                          : GetAutopays(height)),
+
+                      // SizedBox(height: height * 0.5, child: InsightsScreen()),
+
+                      DoughnutChartExample(),
+                      const SizedBox(
+                        height: 14,
+                      ),
+                      SizedBox(
+                        height: AppComponentSizes.h30,
+                        child: Text(HomepageStringsDart().madeWithLove,
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: AppColors.primaryColor)),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -154,9 +103,7 @@ Stack(
   Widget GetAutopays(height) {
     return allAutoPayData.isEmpty
         ? const SizedBox.shrink()
-        :  SizedBox(
-          // color: Colors.amber,
-          height: AppComponentSizes.h3, child: CardStackScreen());
+        : SizedBox(height: AppComponentSizes.h3, child: CardStackScreen());
   }
 
   Widget GetFinora(double height) {
@@ -169,4 +116,33 @@ Stack(
       );
     });
   }
+}
+
+Widget buildTopSection(BuildContext context) {
+  final height = MediaQuery.of(context).size.height;
+
+  return Stack(
+    children: [
+      Positioned.fill(
+        top: -100,
+        child: AvatarProfileImageZero(
+          url: HomePageIcons.background,
+          width: 1,
+          height: 1.2, // tweak for fit
+        ),
+      ),
+      Container(
+        height: height / 3,
+        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const TopRightIconsWidget(),
+            NumberPickerScreen(),
+          ],
+        ),
+      ),
+    ],
+  );
 }

@@ -10,9 +10,6 @@ import '../../components/shared_utils.dart';
 import '../history/recent_transactions.dart';
 import '../../Constants/insights_carousel_screen.dart';
 
-
-
-
 // PreferredSizeWidget getAppBar(context) {
 //   final userController = ControllerManagement.userController;
 
@@ -30,16 +27,16 @@ import '../../Constants/insights_carousel_screen.dart';
 //             children: [
 //                GestureDetector(
 //                     onTap: () {
-                    
+
 //                     },
 //                     child: AvatarProfileImage(
 //                       url: Strides.stride,
 //                       width: 30,
 //                       height: 30,
-                     
+
 //                     ),
 //                   )
-             
+
 //             ],
 //           ),
 //         ),
@@ -57,44 +54,46 @@ class TopRightIconsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        /// PROFILE ICON
-        GestureDetector(
-          onTap: () {
-            // TODO: Add your navigation or action here
-Navigator.push(context,
-              MaterialPageRoute(builder: (context) =>  InsightsCarouselScreen()),
-            );
-             
-        },
-          child: Container(
-            padding: const EdgeInsets.all(1),
-            margin: const EdgeInsets.only(left:AppSizes.p4),
-            decoration: BoxDecoration(
-             color: AppColors.border,
-             borderRadius: BorderRadius.circular(12)
-            ),
-            child: AvatarProfileImageZero(
-              url: Strides.stride,
-              width: 30,
-              height: 30,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          /// PROFILE ICON
+          GestureDetector(
+            onTap: () {
+              // TODO: Add your navigation or action here
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => InsightsCarouselScreen()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(1),
+              margin: const EdgeInsets.only(left: AppSizes.p4),
+              decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(12)),
+              child: AvatarProfileImageZero(
+                url: Strides.stride,
+                width: 30,
+                height: 30,
+              ),
             ),
           ),
-        ),
 
-         SizedBox(width: AppSizes.w16),
+          SizedBox(width: AppSizes.w16),
 
-        /// NOTIFICATION BUTTON
-        NotificationsBudget(
-          child: const SizedBox(),
-        ),
-      ],
+          /// NOTIFICATION BUTTON
+          NotificationsBudget(
+            child: const SizedBox(),
+          ),
+        ],
+      ),
     );
   }
 }
-
 
 // PreferredSizeWidget historyAppBar(context, fromAutoPay) {
 //   return AppBar(
@@ -132,7 +131,7 @@ Navigator.push(context,
 //             if (len == 0) {
 //               snackBarCalled(context, SnackbarData().noBankForLinking);
 //             }
-            
+
 //           //   else {
 //           //     accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
 //           //     showModalForPdfDownloadBankUiCheckBox(context);
@@ -159,9 +158,6 @@ Navigator.push(context,
 //   );
 // }
 
-
-
-
 class AutoHintIcon extends StatefulWidget {
   final String text;
   final String iconUrl;
@@ -185,7 +181,7 @@ class _AutoHintIconState extends State<AutoHintIcon> {
     _showOnce();
   }
 
-   void _showOnce() async {
+  void _showOnce() async {
     // small delay so layout is ready
     await Future.delayed(const Duration(milliseconds: 400));
     if (!mounted) return;
@@ -203,25 +199,28 @@ class _AutoHintIconState extends State<AutoHintIcon> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _showText?SizedBox.shrink(): SizedBox(width: MediaQuery.of(context).size.width * 0.17),
+        _showText
+            ? SizedBox.shrink()
+            : SizedBox(width: MediaQuery.of(context).size.width * 0.17),
         AnimatedSize(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeIn,
           child: Container(
-            padding:  EdgeInsets.symmetric(horizontal:_showText ? 8: 2, vertical: _showText?4:2),
+            padding: EdgeInsets.symmetric(
+                horizontal: _showText ? 8 : 2, vertical: _showText ? 4 : 2),
             decoration: BoxDecoration(
               color: AppColors.backgroundColor,
-              borderRadius: _showText?BorderRadius.circular(30):BorderRadius.circular(12),
+              borderRadius: _showText
+                  ? BorderRadius.circular(30)
+                  : BorderRadius.circular(12),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Icon (always visible)
-                 
-        
+
                 // Space + text only when visible
                 if (_showText) ...[
-                 
                   Text(
                     widget.text,
                     style: FontManager().getTextStyle(

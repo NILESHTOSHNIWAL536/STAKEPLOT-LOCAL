@@ -1,15 +1,15 @@
 import 'index_route.dart';
 
 class SendNotificationsRoutes {
-  static final String _urlPath =  API.mainBackendUrl +"/notify";
+  static final String _urlPath = API.mainBackendUrl + "/notify";
   static String addDeviceToNotify = "$_urlPath/addDeviceToNotify";
-  static String SendNotificationsToDevice = "${API.mainBackendUrl}/reminders/sendNotifications/ToDevice";
+  static String SendNotificationsToDevice =
+      "${API.mainBackendUrl}/reminders/sendNotifications/ToDevice";
   static String deviceScreenTime = "${API.mainBackendUrl}/deviceScreenTime";
-
 }
 
 class otpRoutes {
-  static final String _urlPath =  API.mainBackendUrl ;
+  static final String _urlPath = API.mainBackendUrl;
   static String sendOtp = "$_urlPath/otp/send";
   static String resendOtp = "$_urlPath/otp/resend-otp";
   static String verifyOtp = "$_urlPath/otp/verify-otp";
@@ -17,7 +17,7 @@ class otpRoutes {
 
 class AuthApiRoutes {
   static final String _urlPath = API.mainBackendUrl + "/auth";
-  static final String _emailPath =API.EmailUrl;
+  static final String _emailPath = API.EmailUrl;
 
   static String login = "$_urlPath/sign-in";
   static String verify = "$_urlPath/verify";
@@ -30,14 +30,14 @@ class AuthApiRoutes {
 
   //generate-token Email part
   static String generateToken = "$_emailPath/generate-token";
-  static String getUnLinkedCards = "$_emailPath/get-unLinked-cards";
+  static String getUnLinkedCards = "$_emailPath/unLinked-cards";
   static String revokeAccessToken = "$_emailPath/remove-access";
   static String scrape = "$_emailPath/scrape";
   static String getCreditCardList = "$_emailPath/";
 }
 
 class UserRoutes {
-  static final String _urlPath =  API.mainBackendUrl  + "/user";
+  static final String _urlPath = API.mainBackendUrl + "/user";
 
   static String update = "$_urlPath/";
   static String deleteUser = "$_urlPath/";

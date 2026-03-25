@@ -71,7 +71,7 @@ Future<void> getBanksListCrediCard() async {
 
     if (getFlagOfResponse(response))
     {
-      var data = jsonDecode(response.body)['data'];
+      var data = jsonDecode(response.body);
       creditCardBankList.clear();
       creditCardBankList.addAll(CreditCardBank.fromJsonList(data));
     } 
