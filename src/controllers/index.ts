@@ -3,5 +3,6 @@ import * as pushNotificationController from './notifications-controller';
 import * as FinvuController from './finvu-controller';
 import * as CustomCategoryController from './transaction-automation/customCategoryController';
 import * as TransactionAutoController from './transaction-automation/transaction-controller';
+import * as WealthscapeController from './wealthscape-controller';
 
-export { TransactionController, pushNotificationController, FinvuController, CustomCategoryController, TransactionAutoController };
+export { TransactionController, pushNotificationController, FinvuController, CustomCategoryController, TransactionAutoController, WealthscapeController };

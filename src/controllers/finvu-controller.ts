@@ -119,7 +119,9 @@ export async function loginAndGetHandleId(req: Request, res: Response) {
     const consentHandleId = consentResponse.data.body.ConsentHandle;
     await storeOrUpdateConsentHandle({ custId, handleId: consentHandleId, userId });
 
-    return res.json({ consentHandleId });
+    const data = await fetchAndStoreFipsMetrics();
+
+    return res.json({ consentHandleId, metric: data });
   } catch (error: any) {
     logger.error(`Error in loginAndGetHandleId: ${error}`);
     res.status(500).json({ error: error.message });
@@ -266,7 +268,15 @@ export async function fetchConsentDetails(token: string, consentId: string) {
 // Initiate FI Request
 // =======================================
 
-export async function initiateFIRequest(token: string, handleId: string, custId: string, consentId: string, from: string, to: string, userId: string | Types.ObjectId): Promise<string | null> {
+export async function initiateFIRequest(
+  token: string,
+  handleId: string,
+  custId: string,
+  consentId: string,
+  from: string,
+  to: string,
+  userId: string | Types.ObjectId
+): Promise<string | null> {
   try {
     const response = await axios.post(
       `${baseUrl}/FIRequest`,

@@ -29,6 +29,10 @@ import UserActivity from "./user-activity";
 import Notification from "./notification-model";
 import notificationTracker from "./notification-tracker";
 
+// Wealthscape & Finsense models
+import WealthscapeSession from "./wealthscape-session";
+import WealthscapeAccountData from "./wealthscape-account-data";
+
 export {
   // Models related to storing user's profile, fipRecords, summaries, transactions
   Account,
@@ -58,5 +62,9 @@ export {
   sendingNotification,
   UserActivity,
   Notification,
-  notificationTracker
+  notificationTracker,
+
+  // Wealthscape & Finsense
+  WealthscapeSession,
+  WealthscapeAccountData,
 };

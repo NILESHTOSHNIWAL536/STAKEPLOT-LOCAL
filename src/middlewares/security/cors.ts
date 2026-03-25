@@ -6,7 +6,7 @@ const corsOptions: CorsOptions = {
     const allowedOrigins: string[] = ['https://stakeplot.com'];
 
     if (process.env.NODE_ENV === 'development') {
-      allowedOrigins.push('http://localhost:3000', 'http://localhost:3001');
+      allowedOrigins.push('http://localhost:3000', 'http://localhost:3001', "http://172.21.151.54:3000");
     }
 
     if (!origin || allowedOrigins.includes(origin)) {
