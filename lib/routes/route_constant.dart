@@ -20,6 +20,4 @@ class ConstantRoutes {
   static String signin = "$_urlPath/signin";
   static String signup = "$_urlPath/signup";
   static String snackbar = "$_urlPath/snackbar";
-
-
 }

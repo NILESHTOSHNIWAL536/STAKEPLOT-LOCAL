@@ -1,4 +1,9 @@
- import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/routes/route_collections.dart';
+import 'package:get/get.dart';
 
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
@@ -9,73 +14,65 @@ import 'collections_empty_page.dart';
 import 'create_collection_data.dart';
 import 'create_collection_pages/create_collection_flow.dart';
 
+RxList collectionsList = [].obs;
+
+void getCollections() async {
+  try {
+    var response = await getDataApiCall(CollectionsRoute.getCollections);
+
+    if (getFlagOfResponse(response)) {
+      var data = json.decode(response.body);
+      collectionsList.clear();
+      collectionsList.addAll(data['data']);
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
 Widget buildCollectionsBody(BuildContext context) {
   // TEMP flag – replace with API data later
-  final bool hasCollections = false;
 
-  return !hasCollections
+  getCollections();
+
+  return Obx(() => collectionsList.isNotEmpty
       ? _buildCollectionsList(context)
-      : _buildEmptyCollectionsUI(context);
+      : _buildEmptyCollectionsUI(context));
 }
-Widget _buildCollectionsList(BuildContext context) {
-  final collections = [
-    {
-      "title": "Kerala Trip",
-      "date": "05 Nov",
-      "description":
-          "Figma ipsum component variant main layer. Flows scrolling.",
-      "members": null,
-      "amount": null,
-    },
-    {
-      "title": "Goa Trip",
-      "date": "05 Nov",
-      "description":
-          "Figma ipsum component variant main layer. Flows scrolling.",
-      "members": ["A", "B", "C", "D", "E"],
-      "amount": "₹320",
-    },
-    {
-      "title": "Kerala Trip",
-      "date": "05 Nov",
-      "description":
-          "Figma ipsum component variant main layer. Flows scrolling.",
-      "members": null,
-      "amount": null,
-    },
-    {
-      "title": "Goa Trip",
-      "date": "05 Nov",
-      "description":
-          "Figma ipsum component variant main layer. Flows scrolling.",
-      "members": ["A", "B", "C", "+2"],
-      "amount": "₹320",
-    },
-  ];
 
+Widget _buildCollectionsList(BuildContext context) {
   return SingleChildScrollView(
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p8),
     child: Column(
-      children: List.generate(collections.length, (index) {
-        final item = collections[index];
-        final isLast = index == collections.length ;
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: CreateCollections(context),
+        ),
+        Column(
+          children: List.generate(collectionsList.length, (index) {
+            final item = collectionsList[index];
+            final isLast = index == collectionsList.length;
 
-        return _timelineItem(
-          context,
-          isLast: isLast,
-          child: _collectionCard(
-            context: context,
-            title: item["title"] as String,
-            date: item["date"] as String,
-            description: item["description"] as String,
-            members: item["members"] as List<String>?,
-            amount: item["amount"] as String?,
-          ),
-        );
-      }),
+            return _timelineItem(
+              context,
+              isLast: isLast,
+              child: _collectionCard(
+                context: context,
+                title: item["name"] as String,
+                date: item["expiryAt"] as String,
+                description: item["description"] as String,
+                members: item["members"] as List<String>?,
+                amount: item["amount"] ?? "1000" as String?,
+              ),
+            );
+          }),
+        ),
+      ],
     ),
   );
 }
+
 Widget _timelineItem(
   BuildContext context, {
   required Widget child,
@@ -173,7 +170,7 @@ Widget _collectionCard({
           ],
         ),
 
-         SizedBox(height: AppSizes.h6),
+        SizedBox(height: AppSizes.h6),
 
         /// DESCRIPTION
         Text(
@@ -192,7 +189,7 @@ Widget _collectionCard({
             children: [
               ...members.map(
                 (e) => Container(
-                  margin: const EdgeInsets.only(right:AppSizes.p6),
+                  margin: const EdgeInsets.only(right: AppSizes.p6),
                   padding: const EdgeInsets.all(AppSizes.p6),
                   decoration: const BoxDecoration(
                     color: AppColors.button,
@@ -200,17 +197,17 @@ Widget _collectionCard({
                   ),
                   child: Text(
                     e,
-                    style:  FontManager().getTextStyle(
-            context,
-            fontSize: 12,
-            color: AppColors.backgroundColor,
-          ),
+                    style: FontManager().getTextStyle(
+                      context,
+                      fontSize: 12,
+                      color: AppColors.backgroundColor,
+                    ),
                   ),
                 ),
               ),
               if (amount != null)
                 Container(
-                  margin: const EdgeInsets.only(left:AppSizes.p8),
+                  margin: const EdgeInsets.only(left: AppSizes.p8),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10, vertical: AppSizes.p4),
                   decoration: BoxDecoration(
@@ -244,38 +241,36 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
           SizedBox(height: AppSizes.h20),
 
           /// Icon
-         Center(
-    child: Stack(
-      alignment: Alignment.center,
-      children: [
-        // OUTER CIRCLE
-        Container(
-          width: MediaQuery.of(context).size.width * 0.4,
-          height: MediaQuery.of(context).size.width * 0.3,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: const Color(0xFFE6E7F0).withOpacity(0.7),
+          Center(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // OUTER CIRCLE
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.width * 0.3,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFFE6E7F0).withOpacity(0.7),
+                  ),
+                ),
+
+                // MIDDLE CIRCLE
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: MediaQuery.of(context).size.width * 0.2,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFFE6E7F0).withOpacity(0.9),
+                  ),
+                ),
+
+                // CENTER CIRCLE
+                AvatarProfileImage(
+                    url: HomePageIcons.noCollection, width: 20, height: 20),
+              ],
+            ),
           ),
-        ),
-
-        // MIDDLE CIRCLE
-        Container(
-          width: MediaQuery.of(context).size.width * 0.2,
-          height: MediaQuery.of(context).size.width * 0.2,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: const Color(0xFFE6E7F0).withOpacity(0.9),
-          ),
-        ),
-
-        // CENTER CIRCLE
-        AvatarProfileImage(url: HomePageIcons.noCollection, width: 20, height: 20),
-      ],
-    ),
-  ),
-
-
-
 
           SizedBox(height: AppSizes.h24),
 
@@ -303,45 +298,49 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
 
           SizedBox(height: AppSizes.h30),
 
-          /// Create Button
-          SizedBox(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.06,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              onPressed: () {
-               
-                collectionDraft.name = null;
-                collectionDraft.type = null;
-                collectionDraft.members = [];
-                collectionDraft.roles = {};
-                collectionDraft.duration = null;
-                collectionDraft.description = null;
+          CreateCollections(context)
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreateCollectionFlow(),
-                  ),
-                );
-              },
-              child:  Text(
-                "+ Create Collection",
-                style:  FontManager().getTextStyle(
-              context,
-              fontSize: 16,
-              lWeight: FontWeight.w500,
-              color: AppColors.backgroundColor,
-            ),
-              ),
-            ),
-          ),
+          /// Create Button
         ],
+      ),
+    ),
+  );
+}
+
+Widget CreateCollections(context) {
+  return SizedBox(
+    width: double.infinity,
+    height: MediaQuery.of(context).size.height * 0.06,
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
+      ),
+      onPressed: () {
+        collectionDraft.name = null;
+        collectionDraft.type = null;
+        collectionDraft.members = [];
+        collectionDraft.roles = {};
+        collectionDraft.duration = null;
+        collectionDraft.description = null;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CreateCollectionFlow(),
+          ),
+        );
+      },
+      child: Text(
+        "+ Create Collection",
+        style: FontManager().getTextStyle(
+          context,
+          fontSize: 16,
+          lWeight: FontWeight.w500,
+          color: AppColors.backgroundColor,
+        ),
       ),
     ),
   );

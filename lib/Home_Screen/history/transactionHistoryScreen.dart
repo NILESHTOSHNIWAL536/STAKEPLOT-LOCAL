@@ -35,7 +35,8 @@ final RxString selectedTab = "All".obs;
 class TransactionHistoryScreen extends StatefulWidget {
   final bool fromAutoPay;
   final bool isFromCollection;
-  const TransactionHistoryScreen({super.key, this.fromAutoPay = false, this.isFromCollection = false});
+  const TransactionHistoryScreen(
+      {super.key, this.fromAutoPay = false, this.isFromCollection = false});
 
   @override
   State<TransactionHistoryScreen> createState() =>
@@ -52,19 +53,18 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
   final RxBool isDateSummaryView = false.obs;
   Timer? _debounce;
 
-late FocusNode focusNodeSearchFeild;
+  late FocusNode focusNodeSearchFeild;
   // ---------------------------------------------------------------------------
   // 🔥 NEW: Search animation variables (ONLY ADDITION)
   // ---------------------------------------------------------------------------
   late AnimationController _searchAnimController;
   late Animation<Offset> _searchSlideAnim;
-  
-  bool isSearchActive = false;
-late Animation<double> _searchScaleAnim;
-late Animation<double> _searchOpacityAnim;
-bool get isCollectionsTab =>
-    selectedTab.value == HomepageStringsDart().collectionscreate;
 
+  bool isSearchActive = false;
+  late Animation<double> _searchScaleAnim;
+  late Animation<double> _searchOpacityAnim;
+  bool get isCollectionsTab =>
+      selectedTab.value == HomepageStringsDart().collectionscreate;
 
   @override
   void initState() {
@@ -81,7 +81,7 @@ bool get isCollectionsTab =>
 // ).animate(
 //   CurvedAnimation(
 //     parent: _searchAnimController,
-//     curve: Curves.elasticOut, 
+//     curve: Curves.elasticOut,
 //   ),
 // );
 
@@ -94,44 +94,44 @@ bool get isCollectionsTab =>
 //     curve: Curves.elasticOut, // 🔥 bounce
 //   ),
 // );
-_searchAnimController = AnimationController(
-  vsync: this,
-  duration: const Duration(milliseconds: 320), // smooth & quick
-  reverseDuration: const Duration(milliseconds: 220),
-);
+    _searchAnimController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 320), // smooth & quick
+      reverseDuration: const Duration(milliseconds: 220),
+    );
 
-_searchSlideAnim = Tween<Offset>(
-  begin: const Offset(0, -0.12), // very subtle slide
-  end: Offset.zero,
-).animate(
-  CurvedAnimation(
-    parent: _searchAnimController,
-    curve: Curves.easeOutCubic,
-    reverseCurve: Curves.easeInCubic,
-  ),
-);
+    _searchSlideAnim = Tween<Offset>(
+      begin: const Offset(0, -0.12), // very subtle slide
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _searchAnimController,
+        curve: Curves.easeOutCubic,
+        reverseCurve: Curves.easeInCubic,
+      ),
+    );
 
-_searchScaleAnim = Tween<double>(
-  begin: 0.97,
-  end: 1.0,
-).animate(
-  CurvedAnimation(
-    parent: _searchAnimController,
-    curve: Curves.easeOut,
-    reverseCurve: Curves.easeIn,
-  ),
-);
+    _searchScaleAnim = Tween<double>(
+      begin: 0.97,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _searchAnimController,
+        curve: Curves.easeOut,
+        reverseCurve: Curves.easeIn,
+      ),
+    );
 
- _searchOpacityAnim = Tween<double>(
-  begin: 0.0,
-  end: 1.0,
-).animate(
-  CurvedAnimation(
-    parent: _searchAnimController,
-    curve: Curves.easeOut,
-    reverseCurve: Curves.easeIn,
-  ),
-);
+    _searchOpacityAnim = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _searchAnimController,
+        curve: Curves.easeOut,
+        reverseCurve: Curves.easeIn,
+      ),
+    );
 
     // focusNodeSearchFeild.addListener(() {
     //   if (focusNodeSearchFeild.hasFocus) {
@@ -140,11 +140,11 @@ _searchScaleAnim = Tween<double>(
     // });
     focusNodeSearchFeild = FocusNode();
 
-  focusNodeSearchFeild.addListener(() {
-    if (focusNodeSearchFeild.hasFocus) {
-      _openSearch();
-    }
-  });
+    focusNodeSearchFeild.addListener(() {
+      if (focusNodeSearchFeild.hasFocus) {
+        _openSearch();
+      }
+    });
 
     currentPage = 1;
     showFilter.value = false;
@@ -163,9 +163,9 @@ _searchScaleAnim = Tween<double>(
     });
 
     scrollController.addListener(_onScroll);
+    getCollections();
   }
 
- 
   // void _openSearch() {
   //   if (isSearchActive) return;
   //   HapticFeedback.selectionClick();
@@ -181,25 +181,25 @@ _searchScaleAnim = Tween<double>(
 
   //   clearTransactions(context: context, f: true);
   // }
-void _openSearch() {
-  if (isSearchActive) return;
-  HapticFeedback.selectionClick();
-  setState(() => isSearchActive = true);
-  _searchAnimController.forward();
-}
+  void _openSearch() {
+    if (isSearchActive) return;
+    HapticFeedback.selectionClick();
+    setState(() => isSearchActive = true);
+    _searchAnimController.forward();
+  }
 
-void _closeSearch() {
-  FocusScope.of(context).unfocus();
-  tnxSearchController.clear();
+  void _closeSearch() {
+    FocusScope.of(context).unfocus();
+    tnxSearchController.clear();
 
-  _searchAnimController.reverse().then((_) {
-    if (mounted) {
-      setState(() => isSearchActive = false);
-    }
-  });
+    _searchAnimController.reverse().then((_) {
+      if (mounted) {
+        setState(() => isSearchActive = false);
+      }
+    });
 
-  clearTransactions(context: context, f: true);
-}
+    clearTransactions(context: context, f: true);
+  }
 
   void _onScroll() {
     if (scrollController.position.pixels >=
@@ -209,7 +209,6 @@ void _closeSearch() {
   }
 
   @override
-  
   void dispose() {
     tnxSearchController.dispose();
     focusNodeSearchFeild.dispose();
@@ -218,62 +217,66 @@ void _closeSearch() {
   }
 
   @override
-  Widget build(BuildContext context, ) {
-    double screenHeight = widget.isFromCollection? MediaQuery.sizeOf(context).height/ 1.5:MediaQuery.sizeOf(context).height;
+  Widget build(
+    BuildContext context,
+  ) {
+    double screenHeight = widget.isFromCollection
+        ? MediaQuery.sizeOf(context).height / 1.5
+        : MediaQuery.sizeOf(context).height;
 
     return GestureDetector(
-      onTap: () { FocusScope.of(context).unfocus(); 
-      isSearchActive = false;
-      
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        isSearchActive = false;
       },
       child: Scaffold(
         backgroundColor: AppColors.newbg,
         // appBar: isSearchActive?null: historyAppBar(context, widget.fromAutoPay),
         body: SafeArea(
           child: Container(
-            
-            color: widget.isFromCollection? AppColors.border: AppColors.border,
-            child: widget.isFromCollection?
-            Column(
-              children: [
+            color:
+                widget.isFromCollection ? AppColors.border : AppColors.border,
+            child: widget.isFromCollection
+                ? Column(
+                    children: [
+                      _buildSearchFieldForCollection(
+                          context, widget.isFromCollection),
+                      Expanded(
+                          child: _buildTransactionBody(context, screenHeight)),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      Container(
+                        color: AppColors.newbg,
+                        child: Column(
+                          children: [
+                            isSearchActive
+                                ? _buildSearchAndTabsSection(context)
+                                : historyHeader(context, widget.fromAutoPay),
+                            Obx(() {
+                              if (isSearchActive) {
+                                return const SizedBox.shrink();
+                              }
+                              if (widget.fromAutoPay) {
+                                return const SizedBox.shrink();
+                              }
 
-                _buildSearchFieldForCollection(context, widget.isFromCollection),
-                Expanded(child: _buildTransactionBody(context, screenHeight)),
-              ],
-            ):
-          Column(
-  children: [
-    Container(
-      color: AppColors.newbg,
-      child: Column(
-        children: [
-          isSearchActive?
-              _buildSearchAndTabsSection(context)
-              : historyHeader(context, widget.fromAutoPay),
-          
-          Obx(() {
-            if (isSearchActive) {
-              return const SizedBox.shrink();
-            }
-            if (widget.fromAutoPay) {
-              return const SizedBox.shrink();
-            }
-          
-            if (showFilter.value || isDateSummaryView.value) {
-              return Column(
-                children: [
-                  _buildTabsOrCheckbox(),
-                  _buildTagHideButtons(),
-                  _buildFilterSection(),
-                ],
-              );
-            }
-          
-            return _buildSearchAndTabsSection(context);
-          }),
-        ],
-      ),
-    ),
+                              if (showFilter.value || isDateSummaryView.value) {
+                                return Column(
+                                  children: [
+                                    _buildTabsOrCheckbox(),
+                                    _buildTagHideButtons(),
+                                    _buildFilterSection(),
+                                  ],
+                                );
+                              }
+
+                              return _buildSearchAndTabsSection(context);
+                            }),
+                          ],
+                        ),
+                      ),
 
 // AnimatedContainer(
 //   duration: const Duration(milliseconds: 260),
@@ -293,279 +296,253 @@ void _closeSearch() {
 //   }),
 // )
 
-    Container(
-      color: AppColors.border,
-      height: isSearchActive?
-      AppComponentSizes.h1_14:
-      isDateSummaryView.value?AppComponentSizes.h1_1:
-       AppComponentSizes.h1_23,
-      child: Obx(() {
-        return selectedTab.value == "All"
-            ? _buildTransactionBody(context, screenHeight)
-            : buildCollectionsBody(context);
-      }),
-    ),
-  ],
-),
-
+                      Container(
+                        color: AppColors.border,
+                        height: isSearchActive
+                            ? AppComponentSizes.h1_14
+                            : isDateSummaryView.value
+                                ? AppComponentSizes.h1_1
+                                : AppComponentSizes.h1_23,
+                        child: Obx(() {
+                          return selectedTab.value == "All"
+                              ? _buildTransactionBody(context, screenHeight)
+                              : buildCollectionsBody(context);
+                        }),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ),
     );
   }
- 
 
-Widget _buildBackArrow() {
-  return  GestureDetector(
-    onTap: _closeSearch,
-    child: globalbackArrow()
-  
-  );
-  
-}
-Widget _buildTabChip(String title) {
-  return Obx(() {
-    final isSelected = selectedTab.value == title;
+  Widget _buildBackArrow() {
+    return GestureDetector(onTap: _closeSearch, child: globalbackArrow());
+  }
 
-    return GestureDetector(
-      onTap: () {
-        selectedTab.value = title;
+  Widget _buildTabChip(String title) {
+    return Obx(() {
+      final isSelected = selectedTab.value == title;
 
-        // OPTIONAL: handle logic
-        // if (title == "Collections") { ... }
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width / 3.8,
-        margin: const EdgeInsets.only(left:AppSizes.p8),
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p12),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primaryColor
-              : AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(10),
-           boxShadow:  [
-    AppShadows.tabs
-    ],
-        ),
-        child: Center(
-          child: Text(
-            title,
-            style: FontManager().getTextStyle(
-              context,
-              fontSize: 14,
-             
-              lWeight: FontWeight.w400,
-              color: isSelected
-                  ? AppColors.backgroundColor
-                  : AppColors.grey,
+      return GestureDetector(
+        onTap: () {
+          selectedTab.value = title;
+
+          // OPTIONAL: handle logic
+          // if (title == "Collections") { ... }
+        },
+        child: Container(
+          // width: MediaQuery.of(context).size.width / 3.8,
+          margin: const EdgeInsets.only(left: AppSizes.p8),
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.p18, vertical: AppSizes.p12),
+          decoration: BoxDecoration(
+            color:
+                isSelected ? AppColors.primaryColor : AppColors.backgroundColor,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [AppShadows.tabs],
+          ),
+          child: Center(
+            child: Text(
+              title,
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 14,
+                lWeight: FontWeight.w400,
+                color: isSelected ? AppColors.backgroundColor : AppColors.grey,
+              ),
             ),
           ),
         ),
-      ),
-    );
-  });
-}
+      );
+    });
+  }
 
- Widget historyHeader(BuildContext context, bool fromAutoPay) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p12),
-    decoration: const BoxDecoration(
-      color: AppColors.newbg,
-      
-    ),
-    child: SafeArea(
-      bottom: false,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Back button
-          Row(
-            children: [
-              InkWell(
-                onTap: () {
-                  clearTransactions(context: context);
-                  Navigator.pop(context);
-                },
-               child: globalbackArrow(),
-              ),
-              
-               SizedBox(width: AppSizes.w12),
-              
-              // Title
-                       Obx(() {
-                final calculatedWidth = showFilter.value || isDateSummaryView.value
-                    ?MediaQuery.sizeOf(context).width - (fromAutoPay ? 200 : 220)
-                    : MediaQuery.sizeOf(context).width - (fromAutoPay ? 200 : 220);
-              
-                return SizedBox(
-                
-                  // color:  AppColors.redColor,
-                  width: calculatedWidth,
-                  child: Center(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        !fromAutoPay
-                                    ? HomepageStringsDart().historyTitle
-                                    : HomepageStringsDart().selectTnx,
-                        style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w500,
-                                  fontSize: 17,
-                                  color: AppColors.accentColor,
+  Widget historyHeader(BuildContext context, bool fromAutoPay) {
+    return Container(
+      padding:
+          const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p12),
+      decoration: const BoxDecoration(
+        color: AppColors.newbg,
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Back button
+            Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    clearTransactions(context: context);
+                    Navigator.pop(context);
+                  },
+                  child: globalbackArrow(),
+                ),
+
+                SizedBox(width: AppSizes.w12),
+
+                // Title
+                Obx(() {
+                  final calculatedWidth =
+                      showFilter.value || isDateSummaryView.value
+                          ? MediaQuery.sizeOf(context).width -
+                              (fromAutoPay ? 200 : 220)
+                          : MediaQuery.sizeOf(context).width -
+                              (fromAutoPay ? 200 : 220);
+
+                  return SizedBox(
+                    // color:  AppColors.redColor,
+                    width: calculatedWidth,
+                    child: Center(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          !fromAutoPay
+                              ? HomepageStringsDart().historyTitle
+                              : HomepageStringsDart().selectTnx,
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 17,
+                            color: AppColors.accentColor,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  ),
-                );
-              }),
-            ],
+                  );
+                }),
+              ],
+            ),
+
+            // Download icon (only when not fromAutoPay)
+            if (!fromAutoPay)
+              Obx(() => _buildHeaderRightAction(context))
+            else
+              _buildSearchIcon(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderRightAction(BuildContext context) {
+    if (showFilter.value) {
+      return _buildFilterButton();
+    }
+
+    if (isDateSummaryView.value) {
+      return _buildToggleDateSummaryBtn();
+    }
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const RecentTransactionsScreen(),
           ),
+        );
+      },
+      child: AutoHintIcon(
+        iconUrl: HomePageIcons.recentTransactions,
+        text: HomepageStringsDart().tnxtodayview,
+      ),
+    );
+  }
 
-          // Download icon (only when not fromAutoPay)
-        if (!fromAutoPay)
-  Obx(() => _buildHeaderRightAction(context))
-else
-    _buildSearchIcon(),
-
-              
-
-
-
-
+  Widget _buildSearchAndTabsSection(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: AppColors.newbg,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+                left: AppSizes.p10,
+                right: 0,
+                bottom: (isSearchActive ? 16 : 3),
+                top: (isSearchActive ? 16 : 0)),
+            child: Row(
+              children: [
+                if (isSearchActive) ...[
+                  _buildBackArrow(),
+                  SizedBox(width: AppSizes.w12),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.3,
+                    child: _buildSearchField(context, widget.fromAutoPay),
+                  ),
+                ] else ...[
+                  _buildTabChip(HomepageStringsDart().allTnx),
+                  _buildTabChip(HomepageStringsDart().collectionscreate),
+                  SizedBox(width: AppSizes.w6),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 400),
+                    transitionBuilder: (child, animation) {
+                      return SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0, -0.2),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: isSearchActive
+                        ? _buildSearchField(context, widget.fromAutoPay)
+                        : _buildSearchIcon(),
+                  ),
+                  SizedBox(width: AppSizes.w2),
+                  if (!widget.fromAutoPay && !isSearchActive)
+                    _buildToggleDateSummaryBtn(),
+                  SizedBox(width: AppSizes.w10),
+                  if (!widget.fromAutoPay && !isSearchActive)
+                    _buildFilterButton(),
+                ]
+              ],
+            ),
+          ),
+          if (!isSearchActive) _buildTabsOrCheckbox(),
+          if (!isSearchActive) _buildTagHideButtons(),
+          if (!isSearchActive) _buildFilterSection(),
         ],
       ),
-    ),
-  );
-}
-Widget _buildHeaderRightAction(BuildContext context) {
-  if (showFilter.value) {
-    return _buildFilterButton();
+    );
   }
 
-  if (isDateSummaryView.value) {
-    return _buildToggleDateSummaryBtn();
-  }
+  Widget _buildSearchIcon() {
+    final disabled = isCollectionsTab;
+    return IconButton(
+      icon: CustomStyledContainer(
+        radius: 5.0, // <-- Passing a custom radius
+        width: 36,
+        height: 36,
 
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const RecentTransactionsScreen(),
-        ),
-      );
-    },
-    child: AutoHintIcon(
-      iconUrl: HomePageIcons.recentTransactions,
-      text: HomepageStringsDart().tnxtodayview,
-    ),
-  );
-}
-
-Widget _buildSearchAndTabsSection(BuildContext context) {
-  return AnimatedContainer(
-    duration: const Duration(milliseconds: 250),
-    width: double.infinity,
-    decoration:  const BoxDecoration(color: AppColors.newbg,),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-       
-        Padding(
-          padding: EdgeInsets.only(
-            left:AppSizes.p10,
-            right: 0,
-            bottom: (isSearchActive?16: 3),
-            top: (isSearchActive?16:0)
-          ),
-          child: 
-          Row(
-            children: [
-              
-              
-               if (isSearchActive) ...[
-      _buildBackArrow(),
-      SizedBox(width: AppSizes.w12),
-      SizedBox(
-        width: MediaQuery.of(context).size.width / 1.3,
-        child: _buildSearchField(context, widget.fromAutoPay),
-      ),
-    ]
-    else ...[
-     _buildTabChip(HomepageStringsDart().allTnx),
-    _buildTabChip(HomepageStringsDart().collectionscreate),
-
-    
-               SizedBox(width: AppSizes.w6),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 400),
-                transitionBuilder: (child, animation) {
-                  return SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, -0.2),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: FadeTransition(
-                      opacity: animation,
-                      child: child,
-                    ),
-                  );
-                },
-              
-                child: isSearchActive
-                    ? _buildSearchField(context, widget.fromAutoPay)
-                    : _buildSearchIcon(),
-              ),
-              SizedBox(width: AppSizes.w2),
-
-              if (!widget.fromAutoPay && !isSearchActive)
-                _buildToggleDateSummaryBtn(),
-  SizedBox(width: AppSizes.w10),
-              if (!widget.fromAutoPay && !isSearchActive)
-                _buildFilterButton(),
-    ]
-            ],
-          ),
-      
-          
-        ),
-
-        if (!isSearchActive) _buildTabsOrCheckbox(),
-        if (!isSearchActive) _buildTagHideButtons(),
-        if (!isSearchActive) _buildFilterSection(),
-      ],
-    ),
-  );
-}
-
-Widget _buildSearchIcon() {
-  final disabled = isCollectionsTab;
-  return IconButton(
-    icon:   CustomStyledContainer(
-  radius: 5.0, // <-- Passing a custom radius
- width: 36,
-      height: 36,
-  
         child: AvatarProfileImage(
-          url:  HomePageIcons.historySearch,
+          url: HomePageIcons.historySearch,
           width: 66,
           height: 30,
         ),
       ),
-    
-   
-    onPressed: () {
-       if (disabled) return;
-      setState(() => isSearchActive = true);
-      _searchAnimController.forward();
-      FocusScope.of(context).requestFocus(focusNodeSearchFeild);
-    },
-  );
-}
+      onPressed: () {
+        if (disabled) return;
+        setState(() => isSearchActive = true);
+        _searchAnimController.forward();
+        FocusScope.of(context).requestFocus(focusNodeSearchFeild);
+      },
+    );
+  }
 
 //  Widget _buildSearchField(BuildContext context, bool fromAutoPay) {
 //   return AnimatedBuilder(
@@ -576,9 +553,9 @@ Widget _buildSearchIcon() {
 //         child: ScaleTransition(
 //           scale: _searchScaleAnim, // 🔥 elastic bounce
 //           child: SizedBox(
-//             width: 
+//             width:
 //                  MediaQuery.of(context).size.width / 1.1,
-                
+
 //     height: MediaQuery.of(context).size.width / 10,
 //     child: Container(
 //       decoration: BoxDecoration(
@@ -614,107 +591,110 @@ Widget _buildSearchIcon() {
 //     },
 //   );
 // }
-Widget _buildSearchField(BuildContext context, bool fromAutoPay) {
-  return AnimatedBuilder(
-    animation: _searchAnimController,
-    builder: (_, __) {
-      return FadeTransition(
-        opacity: _searchOpacityAnim,
-        child: SlideTransition(
-          position: _searchSlideAnim,
-          child: ScaleTransition(
-            scale: _searchScaleAnim,
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width / 1.1,
-              height: MediaQuery.of(context).size.width / 10,
-              child: _buildSearchInput(context),
+  Widget _buildSearchField(BuildContext context, bool fromAutoPay) {
+    return AnimatedBuilder(
+      animation: _searchAnimController,
+      builder: (_, __) {
+        return FadeTransition(
+          opacity: _searchOpacityAnim,
+          child: SlideTransition(
+            position: _searchSlideAnim,
+            child: ScaleTransition(
+              scale: _searchScaleAnim,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width / 1.1,
+                height: MediaQuery.of(context).size.width / 10,
+                child: _buildSearchInput(context),
+              ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
-Widget _buildSearchInput(BuildContext context) {
-  return Container(
-    decoration: BoxDecoration(
-      color: AppColors.backgroundColor,
-      borderRadius: BorderRadius.circular(8),
-      boxShadow: [AppShadows.tabs],
-    ),
-    child: TextField(
-      controller: tnxSearchController,
-      focusNode: focusNodeSearchFeild,
-      onChanged: _onSearchChanged,
-      decoration: InputDecoration(
-        hintText: HomepageStringsDart().searchTransactions,
-        prefixIcon: const Icon(Icons.search),
-        suffixIcon: _buildClearButton(),
-        filled: true,
-        fillColor: AppColors.backgroundColor,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide.none,
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 15),
+        );
+      },
+    );
+  }
+
+  Widget _buildSearchInput(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [AppShadows.tabs],
       ),
-      style: const TextStyle(color: AppColors.accentColor),
-    ),
-  );
-}
+      child: TextField(
+        controller: tnxSearchController,
+        focusNode: focusNodeSearchFeild,
+        onChanged: _onSearchChanged,
+        decoration: InputDecoration(
+          hintText: HomepageStringsDart().searchTransactions,
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: _buildClearButton(),
+          filled: true,
+          fillColor: AppColors.backgroundColor,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 15),
+        ),
+        style: const TextStyle(color: AppColors.accentColor),
+      ),
+    );
+  }
 
 // Change the search field for collection screen
-Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollection) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-       
-        SizedBox(
-          width: MediaQuery.of(context).size.width / 1.25,
-          height: MediaQuery.of(context).size.width / 10,
-          child: TextField(
-            controller: tnxSearchController,
-            focusNode: focusNodeSearchFeild,
-            onChanged: _onSearchChanged,
-            decoration: InputDecoration(
-              hintText: HomepageStringsDart().searchTransactions,
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: _buildClearButton(),
-              filled: true,
-              fillColor: AppColors.backgroundColor,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
+  Widget _buildSearchFieldForCollection(
+      BuildContext context, bool isFromCollection) {
+    return Padding(
+      padding:
+          const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 1.25,
+            height: MediaQuery.of(context).size.width / 10,
+            child: TextField(
+              controller: tnxSearchController,
+              focusNode: focusNodeSearchFeild,
+              onChanged: _onSearchChanged,
+              decoration: InputDecoration(
+                hintText: HomepageStringsDart().searchTransactions,
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _buildClearButton(),
+                filled: true,
+                fillColor: AppColors.backgroundColor,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: AppSizes.p6, horizontal: 15),
               ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 15),
+              style: const TextStyle(color: AppColors.accentColor),
             ),
-            style: const TextStyle(color: AppColors.accentColor),
           ),
-        ),
           SizedBox(width: AppSizes.w10),
-         Container(
-          
-          child: !isFromCollection
-              ? const SizedBox.shrink()
-              : GestureDetector(
-                onTap: () {
-                 
-                },
-                child: const CustomStyledContainer(
-                    radius: 5.0, 
-                    height: 36,
-                    width: 36,
-                    child: Icon(Icons.add, color: AppColors.primaryColor, size: 24, ),
-                     ),
-              )),
-      ],
-    ),
-  );
-}
+          Container(
+              child: !isFromCollection
+                  ? const SizedBox.shrink()
+                  : GestureDetector(
+                      onTap: () {},
+                      child: const CustomStyledContainer(
+                        radius: 5.0,
+                        height: 36,
+                        width: 36,
+                        child: Icon(
+                          Icons.add,
+                          color: AppColors.primaryColor,
+                          size: 24,
+                        ),
+                      ),
+                    )),
+        ],
+      ),
+    );
+  }
 
   void _onSearchChanged(String value) {
     isDateSummaryView.value = false;
@@ -729,10 +709,11 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
     searchTextController.value = value;
     searchTextControllerBool.value = !searchTextControllerBool.value;
   }
+
   _buildClearButton() {
     return tnxSearchController.text.isNotEmpty
         ? IconButton(
-            icon:  const Icon(Icons.clear, color: AppColors.accentColor),
+            icon: const Icon(Icons.clear, color: AppColors.accentColor),
             onPressed: () {
               tnxSearchController.clear();
               searchTextController.value = '';
@@ -742,56 +723,51 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
           )
         : null;
   }
+
   Widget _buildToggleDateSummaryBtn() {
     final disabled = isCollectionsTab;
 
     return InkWell(
-     onTap: () {
-            if (disabled) return;
-            isDateSummaryView.value = !isDateSummaryView.value;
-          },
-      child: Obx(
-        () =>   CustomStyledContainer(
- radius: 5.0, // <-- Passing a custom radius
- width: 36,
-      height: 36,
-  child: 
-        
-        AvatarProfileImage(
-          url: isDateSummaryView.value
-              ? HomePageIcons.dayWiseIcon1
-              : HomePageIcons.dayWiseIcon2,
-          width: 66,
-          height: 30,
-        ),
-        )
-      )
-    );
+        onTap: () {
+          if (disabled) return;
+          isDateSummaryView.value = !isDateSummaryView.value;
+        },
+        child: Obx(() => CustomStyledContainer(
+              radius: 5.0, // <-- Passing a custom radius
+              width: 36,
+              height: 36,
+              child: AvatarProfileImage(
+                url: isDateSummaryView.value
+                    ? HomePageIcons.dayWiseIcon1
+                    : HomePageIcons.dayWiseIcon2,
+                width: 66,
+                height: 30,
+              ),
+            )));
   }
 
   Widget _buildFilterButton() {
     final disabled = isCollectionsTab;
     return InkWell(
-      onTap: () {
-            if (disabled) return;
-            showFilter.value = !showFilter.value;
-          },
-      child: Obx(
-        () =>  CustomStyledContainer(
-  radius: 5.0, // <-- Passing a custom radius
- width: 36,
-      height: 36,
-  
-        child: AvatarProfileImage(
-          url: showFilter.value
-              ? HomePageIcons.filterIcon
-              : HomePageIcons.filterOn,
-          width: 66,
-          height: 30,
-        ),
-      ),
-      )
-    );
+        onTap: () {
+          if (disabled) return;
+          showFilter.value = !showFilter.value;
+        },
+        child: Obx(
+          () => CustomStyledContainer(
+            radius: 5.0, // <-- Passing a custom radius
+            width: 36,
+            height: 36,
+
+            child: AvatarProfileImage(
+              url: showFilter.value
+                  ? HomePageIcons.filterIcon
+                  : HomePageIcons.filterOn,
+              width: 66,
+              height: 30,
+            ),
+          ),
+        ));
   }
 
   Widget _buildTransactionBody(BuildContext context, double screenHeight) {
@@ -814,19 +790,19 @@ Widget _buildSearchFieldForCollection(BuildContext context, bool isFromCollectio
       );
     });
   }
-Widget _buildTabsOrCheckbox() {
+
+  Widget _buildTabsOrCheckbox() {
     return Obx(() {
       if (isDateSummaryView.value) return const SizedBox(height: 10);
 
-      
-
-      return  Padding(
-              padding: const EdgeInsets.only(top: 3),
-              child: Obx(() => showCheckBox.value
-                  ? _buildCheckBoxButtons()
-                  : SizedBox(height: AppSizes.h10,)),
-            );
-         
+      return Padding(
+        padding: const EdgeInsets.only(top: 3),
+        child: Obx(() => showCheckBox.value
+            ? _buildCheckBoxButtons()
+            : SizedBox(
+                height: AppSizes.h10,
+              )),
+      );
     });
   }
 
@@ -852,11 +828,12 @@ Widget _buildTabsOrCheckbox() {
 
   Widget _buildCheckBoxButtons() {
     return Padding(
-      padding: const EdgeInsets.only(right:AppSizes.p10),
+      padding: const EdgeInsets.only(right: AppSizes.p10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _coloredButton("Selected (${redioButton.length})", AppColors.primaryColor),
+          _coloredButton(
+              "Selected (${redioButton.length})", AppColors.primaryColor),
           InkWell(
             onTap: () {
               showCheckBox.value = false;
@@ -900,10 +877,10 @@ Widget _buildTabsOrCheckbox() {
 
   Widget _buildTagHideButtons() {
     return Obx(() => (redioButton.isNotEmpty &&
-            allOrGroupTransactionsName.value ==
-                StringConstant.allTransactions)
+            allOrGroupTransactionsName.value == StringConstant.allTransactions)
         ? Padding(
-            padding: const EdgeInsets.only(left:AppSizes.p10, right:AppSizes.p2, top:AppSizes.p8),
+            padding: const EdgeInsets.only(
+                left: AppSizes.p10, right: AppSizes.p2, top: AppSizes.p8),
             child: getTagHideButtons(context),
           )
         : const SizedBox.shrink());

@@ -26,31 +26,37 @@ class _StepCollectionTypeState extends State<StepCollectionType> {
           titleCollection(context, "Select Collection Type"),
           SizedBox(height: AppSizes.h16),
           GestureDetector(
-            
-             onTap: () {
-              selectedType = "personal";
-               setState(() {
-                 collectionDraft.type = "personal";
-              });
-  
-  },child: cardCollection(context, HomePageIcons.personal, isSelected: selectedType == "personal",)),
-
+              onTap: () {
+                selectedType = "personal";
+                setState(() {
+                  collectionDraft.type = "personal";
+                });
+              },
+              child: cardCollection(
+                context,
+                HomePageIcons.personal,
+                isSelected: selectedType == "personal",
+              )),
           SizedBox(height: AppSizes.h16),
           GestureDetector(
-             onTap: () {
+            onTap: () {
               selectedType = "shared";
               setState(() {
-                 collectionDraft.type = "shared";
+                collectionDraft.type = "shared";
               });
-   
-  },
-            child: cardCollection(context, HomePageIcons.shared, isSelected: selectedType == "shared",),),
+            },
+            child: cardCollection(
+              context,
+              HomePageIcons.shared,
+              isSelected: selectedType == "shared",
+            ),
+          ),
           const Spacer(),
-          PrimaryButton(text: "Proceed", onTap: collectionDraft.type == "shared" ? widget.onNext : null
-),
+          PrimaryButton(
+              text: "Proceed",
+              onTap: collectionDraft.type == "shared" ? widget.onNext : null),
         ],
       ),
     );
   }
 }
-
