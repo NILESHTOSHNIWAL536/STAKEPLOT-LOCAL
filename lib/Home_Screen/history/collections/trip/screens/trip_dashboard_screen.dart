@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
+import '../../collections_empty_page.dart';
 import '../data/dummy_data.dart';
 import '../models/models.dart';
 import '../utils/app_theme.dart';
@@ -146,7 +147,11 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
           ),
 
           !collectionsController.hasTransactions
-              ? SizedBox()
+              ? SliverToBoxAdapter(
+                  child: GestureDetector(
+                  onTap: _openSelectTransactions,
+                  child: emptyTransactionsUI(context),
+                ))
               : Column(
                   children: [
                     // Members & Combined Amount Card

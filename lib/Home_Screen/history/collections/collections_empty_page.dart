@@ -25,7 +25,7 @@ class CollectionDetailsPage extends StatelessWidget {
             Expanded(
               child: hasTransactions
                   ? TripDashboardScreen()
-                  : _emptyTransactionsUI(context),
+                  : emptyTransactionsUI(context),
             ),
           ],
         ),
@@ -223,97 +223,6 @@ class CollectionDetailsPage extends StatelessWidget {
   }
 
   /// ---------------- EMPTY STATE ----------------
-  Widget _emptyTransactionsUI(BuildContext context) {
-    return Container(
-      color: AppColors.border,
-      child: Padding(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            /// SVG ILLUSTRATION
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AvatarProfileImage(
-                    url: HomePageIcons.noTransactionsInCollection,
-                    width: 3,
-                    height: 6.5),
-                AvatarProfileImage(
-                    url: HomePageIcons.noTransactionsInCollection,
-                    width: 3,
-                    height: 6.5)
-              ],
-            ),
-
-            SizedBox(height: AppSizes.h30),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20, vertical: AppSizes.p30),
-              child: Column(
-                children: [
-                  AvatarProfileImage(
-                      url: HomePageIcons.noTransactionsInCollection2,
-                      width: 2,
-                      height: 6),
-
-                  Text(
-                    "No transactions yet!",
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 20,
-                      lWeight: FontWeight.w700,
-                    ),
-                  ),
-
-                  SizedBox(height: AppSizes.h8),
-
-                  Text(
-                    "Start tracking your spending today and take control of your finances ✨",
-                    textAlign: TextAlign.center,
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 14,
-                      color: AppColors.grey,
-                    ),
-                  ),
-
-                  SizedBox(height: AppSizes.h30),
-
-                  /// ADD TRANSACTION BUTTON
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () {
-                        // open add transaction flow
-                      },
-                      child: Text(
-                        "+ Add Transactions",
-                        style: FontManager().getTextStyle(
-                          context,
-                          fontSize: 16,
-                          lWeight: FontWeight.w500,
-                          color: AppColors.backgroundColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class CollectionSettingsModal extends StatefulWidget {
@@ -532,4 +441,98 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
       ),
     );
   }
+}
+
+Widget emptyTransactionsUI(
+  BuildContext context,
+) {
+  return Container(
+    color: AppColors.border,
+    child: Padding(
+      padding:
+          const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          /// SVG ILLUSTRATION
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AvatarProfileImage(
+                  url: HomePageIcons.noTransactionsInCollection,
+                  width: 3,
+                  height: 6.5),
+              AvatarProfileImage(
+                  url: HomePageIcons.noTransactionsInCollection,
+                  width: 3,
+                  height: 6.5)
+            ],
+          ),
+
+          SizedBox(height: AppSizes.h30),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 20, vertical: AppSizes.p30),
+            child: Column(
+              children: [
+                AvatarProfileImage(
+                    url: HomePageIcons.noTransactionsInCollection2,
+                    width: 2,
+                    height: 6),
+
+                Text(
+                  "No transactions yet!",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 20,
+                    lWeight: FontWeight.w700,
+                  ),
+                ),
+
+                SizedBox(height: AppSizes.h8),
+
+                Text(
+                  "Start tracking your spending today and take control of your finances ✨",
+                  textAlign: TextAlign.center,
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 14,
+                    color: AppColors.grey,
+                  ),
+                ),
+
+                SizedBox(height: AppSizes.h30),
+
+                /// ADD TRANSACTION BUTTON
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      // open add transaction flow
+                    },
+                    child: Text(
+                      "+ Add Transactions",
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 16,
+                        lWeight: FontWeight.w500,
+                        color: AppColors.backgroundColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
