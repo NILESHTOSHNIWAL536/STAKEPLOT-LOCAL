@@ -1,5 +1,8 @@
-import { User, sendingNotification, UserActivity } from '@/models';
+import { sendingNotification, UserActivity } from '@/models';
 import { Types } from "mongoose";
+import axios from 'axios';
+import { ServerConfig } from '@/config';
+import jwt from 'jsonwebtoken';
 
 // ---- Interfaces for minimal typing ---- //
 
@@ -22,8 +25,24 @@ interface IUserActivity {
 
 // ---- Functions ---- //
 
+async function fetchUserFromGateway(id: string): Promise<any> {
+  const internalToken = jwt.sign(
+    { aud: 'mobile-backend' },
+    ServerConfig.SERVICE_JWT_SECRET,
+    { expiresIn: '1m' }
+  );
+  try {
+    const res = await axios.get(`${ServerConfig.MOBILE_BACKEND_URL}/api/v1/internal/users/${id}`, {
+      headers: { authorization: `Bearer ${internalToken}` },
+    });
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+}
+
 export async function getFriendsWithUserId(id: string): Promise<string[]> {
-  const user = await User.findOne({ _id: id }).lean();
+  const user = await fetchUserFromGateway(id);
   if (!user || !user.friendsList) return [];
 
   const friendsList = user.friendsList as IFriend[];
@@ -33,7 +52,7 @@ export async function getFriendsWithUserId(id: string): Promise<string[]> {
 }
 
 export async function getDeviceIdsFriends(id: string): Promise<string[]> {
-  const user = await User.findOne({ _id: id }).lean();
+  const user = await fetchUserFromGateway(id);
   if (!user || !user.friendsList) return [];
 
   const friendsList = user.friendsList as IFriend[];

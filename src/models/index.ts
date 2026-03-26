@@ -1,5 +1,3 @@
-import User from "./user-model";
-
 // Models related to storing user's profile, fipRecords, summaries, transactions
 import Account from "./transactions-automation/account";
 import Bank from "./transactions-automation/bank";
@@ -15,9 +13,6 @@ import ConsentHandleId from "./transactions-automation/consent-handle_model";
 import TransactionRule from "./transactions-automation/transactionRule";
 
 import PredictedCategories from "./predicted-categories";
-
-// Session for login/logout
-import Session from "./session-model";
 
 
 import CustomCategory from "./transactions-automation/CustomCategory";
@@ -35,8 +30,6 @@ import Notification from "./notification-model";
 import notificationTracker from "./notification-tracker";
 
 export {
-  User,
-
   // Models related to storing user's profile, fipRecords, summaries, transactions
   Account,
   Bank,
@@ -52,9 +45,6 @@ export {
   TransactionRule,
 
   PredictedCategories,
-
-  // Session for login/logout
-  Session,
 
   CustomCategory,
   FailedTransaction,

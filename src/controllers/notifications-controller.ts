@@ -5,7 +5,6 @@ import { StatusCodes } from 'http-status-codes';
 import { SuccessResponse, ErrorResponse } from '../utils/common';
 import { getDeviceIdsByUserId } from '../utils/helpers/getDeviceIds';
 import { notificationTracker } from '../models';
-import { IUser } from '@/models/user-model';
 /* ---------------------------------------------
    Custom Types for Extended Request Properties
 ----------------------------------------------*/

@@ -1,8 +1,7 @@
-import { IUser } from '@/models/user-model';
-import { Types } from 'mongoose';
-
-export interface AuthUser extends IUser {
-  token: string;
-  _id: Types.ObjectId | string
+export interface AuthUser {
+  _id: string;
+  token?: string;
+  roles?: string[];
+  scopes?: string[];
 }
 
