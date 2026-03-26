@@ -5,6 +5,7 @@ import transactionAuto from './transactionsAuto/transactions';
 import finvuRoutes from './finvu-routes';
 import customCategory from './transactionsAuto/custom-category-routes';
 import wealthscapeRoutes from './wealthscape-routes';
+import collectionRoutes from './collection-routes';
 import webHook from '@/utils/webHook';
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.use('/transactionauto', transactionAuto);
 router.use('/custom', customCategory);
 router.use('/finvu', finvuRoutes);
 router.use('/wealthscape', wealthscapeRoutes);
+router.use('/collections', collectionRoutes);
 
 export default router;
