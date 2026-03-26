@@ -24,6 +24,7 @@ import 'dart:async';
 import '../../Constants/core/app_component_sizes.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/container_border.dart';
+import '../../controllers/collections_controller.dart';
 import 'collections/collections_list_widget.dart';
 import 'recent_transactions.dart';
 
@@ -163,7 +164,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
     });
 
     scrollController.addListener(_onScroll);
-    getCollections();
+    CollectionsController().getCollections();
   }
 
   // void _openSearch() {

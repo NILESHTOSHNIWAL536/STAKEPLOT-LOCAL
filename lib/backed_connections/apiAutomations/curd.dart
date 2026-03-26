@@ -141,7 +141,7 @@ Future<http.Response> getDataApiCall(urlPath) async {
       "Authorization": "$accessToken",
     },
   ).timeout(
-    const Duration(seconds: 30), // ⏳ timeout added here
+    const Duration(seconds: 60), // ⏳ timeout added here
     onTimeout: () {
       throw TimeoutException("Request timed out");
     },

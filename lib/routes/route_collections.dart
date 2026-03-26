@@ -25,4 +25,20 @@ class CollectionsRoute {
 
   // Update Split
   static String updateSplit(String collectionId, String transactionId) => "$_urlPath/$collectionId/transactions/$transactionId/splits";
+
+  // Get Available Transactions (GET with query params)
+  static String getAvailableTransactions(
+    String collectionId, {
+    int page = 1,
+    int limit = 20,
+  }) => "$_urlPath/$collectionId/available-transactions?page=$page&limit=$limit";
+
+  // Get All Splits (GET)
+  static String getSplits(String collectionId) =>
+      "$_urlPath/$collectionId/splits";
+ 
+  // Get Balances (GET)
+  static String getBalances(String collectionId) =>
+      "$_urlPath/$collectionId/balances";
+
 }

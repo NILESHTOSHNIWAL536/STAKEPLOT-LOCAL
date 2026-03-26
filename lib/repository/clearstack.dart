@@ -25,6 +25,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 
+import '../controllers/collections_controller.dart';
 import '../controllers/credit_card_controller.dart';
 import '../controllers/fipmetrics-controller.dart';
 import '../controllers/theme_controller.dart';
@@ -113,7 +114,8 @@ Future<bool> check(context, String flag) async {
 
 Future<void> storeDeviceInfo(context) async {
   var json = await getUserStats();
-  var responce = await postDataApiCall("${SendNotificationsRoutes.deviceScreenTime}", json);
+  var responce = await postDataApiCall(
+      "${SendNotificationsRoutes.deviceScreenTime}", json);
   if (getFlagOfResponse(responce)) {}
   try {
     await postDataApiCall(AuthApiRoutes.logout, {});
@@ -124,7 +126,8 @@ Future<void> storeDeviceInfo(context) async {
 
 Future<void> storeDeviceInfoLocalBackState() async {
   var json = await getUserStats();
-  var responce = await postDataApiCall("${SendNotificationsRoutes.deviceScreenTime}", json);
+  var responce = await postDataApiCall(
+      "${SendNotificationsRoutes.deviceScreenTime}", json);
   if (getFlagOfResponse(responce)) {}
 }
 
@@ -158,8 +161,6 @@ void clearGetX() {
   messages.clear();
   messagesTemp.clear();
 
-  
- 
   userPostList.clear();
   // friendsList.clear();
   // frdsListOrigin.clear();
@@ -173,15 +174,14 @@ void clearGetX() {
   sizeRoom = false;
   fontSize = 20;
   budgetLength = 0.obs;
- 
-  
+
   room = [];
   account = [];
   notificationList.clear();
   hasGetNewNotifications.value = false;
-  
+
   isBankAccountLink.value = true;
-  
+
   addedMembers.clear();
   addedUser.clear();
   isBankAccountLink.value = false;
@@ -190,7 +190,7 @@ void clearGetX() {
   transactionChatGraph.clear();
   labels.clear();
   selectedButton.value = "Month";
- 
+
   isSplit.value = false;
   isLend.value = false;
   accountName.value = "";
@@ -284,7 +284,6 @@ void initGetControllers() {
   // Get.put(FinoraController());
   Get.put(CardDueController());
   Get.put(ThemeController());
-  
 }
 
 void deleteGetControllers() {
@@ -293,7 +292,6 @@ void deleteGetControllers() {
   // Get.delete<FinoraController>();
   Get.delete<CardDueController>();
   Get.delete<ThemeController>();
-  
 }
 
 void initGetControllersIfisRegistered() {
@@ -315,5 +313,7 @@ void initGetControllersIfisRegistered() {
   if (!Get.isRegistered<FipMetricsController>()) {
     Get.put(FipMetricsController());
   }
-
+  if (!Get.isRegistered<CollectionsController>()) {
+    Get.put(CollectionsController());
+  }
 }

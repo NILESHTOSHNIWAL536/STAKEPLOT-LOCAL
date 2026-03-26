@@ -1,41 +1,22 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/routes/route_collections.dart';
 import 'package:get/get.dart';
-
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
+import '../../../backed_connections/apis_connect.dart';
 import '../../../image_service/avatarProfile.dart';
+import '../../../model/collections_model.dart';
 import 'collections_empty_page.dart';
 import 'create_collection_data.dart';
 import 'create_collection_pages/create_collection_flow.dart';
 
-RxList collectionsList = [].obs;
-
-void getCollections() async {
-  try {
-    var response = await getDataApiCall(CollectionsRoute.getCollections);
-
-    if (getFlagOfResponse(response)) {
-      var data = json.decode(response.body);
-      collectionsList.clear();
-      collectionsList.addAll(data['data']);
-    }
-  } catch (e) {
-    print(e);
-  }
-}
-
 Widget buildCollectionsBody(BuildContext context) {
   // TEMP flag – replace with API data later
 
-  getCollections();
+  collectionsController.getCollections();
 
-  return Obx(() => collectionsList.isNotEmpty
+  return Obx(() => collectionsController.collectionsList.isNotEmpty
       ? _buildCollectionsList(context)
       : _buildEmptyCollectionsUI(context));
 }
@@ -50,20 +31,23 @@ Widget _buildCollectionsList(BuildContext context) {
           child: CreateCollections(context),
         ),
         Column(
-          children: List.generate(collectionsList.length, (index) {
-            final item = collectionsList[index];
-            final isLast = index == collectionsList.length;
+          children: List.generate(collectionsController.collectionsList.length,
+              (index) {
+            final item = collectionsController.collectionsList[index];
+            final isLast =
+                index == collectionsController.collectionsList.length;
 
             return _timelineItem(
               context,
+              item,
               isLast: isLast,
               child: _collectionCard(
                 context: context,
-                title: item["name"] as String,
-                date: item["expiryAt"] as String,
-                description: item["description"] as String,
-                members: item["members"] as List<String>?,
-                amount: item["amount"] ?? "1000" as String?,
+                title: item.name,
+                date: item.expiryAt.toString(),
+                description: item.description,
+                members: [],
+                amount: item.totalAmount.toString(),
               ),
             );
           }),
@@ -74,7 +58,8 @@ Widget _buildCollectionsList(BuildContext context) {
 }
 
 Widget _timelineItem(
-  BuildContext context, {
+  BuildContext context,
+  CollectionModel collections, {
   required Widget child,
   bool isLast = false,
 }) {
@@ -109,12 +94,13 @@ Widget _timelineItem(
 
       /// 👇 TAP HANDLER ADDED
       GestureDetector(
-        onTap: () {
+        onTap: () async {
+          await collectionsController.getCollectionById(collections.id);
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => const CollectionDetailsPage(
-                title: "Kerala Trip", // later pass dynamically
+              builder: (_) =>  CollectionDetailsPage(
+                title: collections.name, // later pass dynamically
                 hasTransactions: true,
               ),
             ),

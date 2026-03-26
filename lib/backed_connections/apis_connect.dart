@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/core/app_shadows.da
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Utils/shakewidget.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/controllers/collections_controller.dart';
 import 'package:flutter_application_code_stakeplot/controllers/post-controller.dart';
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
@@ -30,6 +31,7 @@ part '../Constants/snackBars.dart';
 
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();
+CollectionsController get collectionsController => Get.find<CollectionsController>();
 RxMap deviceData = {}.obs;
 RxBool isBankAccountLink = false.obs;
 RxInt scrollBankPage = 0.obs;

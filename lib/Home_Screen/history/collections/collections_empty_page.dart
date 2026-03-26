@@ -14,7 +14,7 @@ import 'trip/screens/trip_dashboard_screen.dart';
 class CollectionDetailsPage extends StatelessWidget {
   final String title;
   final bool hasTransactions;
-  const CollectionDetailsPage(
+  CollectionDetailsPage(
       {super.key, required this.title, required this.hasTransactions});
 
   @override
@@ -26,7 +26,7 @@ class CollectionDetailsPage extends StatelessWidget {
           children: [
             // _appBar(context),
             Expanded(
-              child: hasTransactions
+              child: !hasTransactions
                   ? TripDashboardScreen()
                   : _emptyTransactionsUI(context),
             ),
