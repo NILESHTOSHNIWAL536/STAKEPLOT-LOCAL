@@ -29,7 +29,7 @@ class CollectionsController extends GetxController {
   RxList<CollectionTransactionModel> availableTransactions =
       <CollectionTransactionModel>[].obs;
   RxList<TransactionModel> AllTransactions = <TransactionModel>[].obs;
-  RxList<Transaction> SeletedTransactionsList = <Transaction>[].obs;
+  RxList<TransactionModel> SeletedTransactionsList = <TransactionModel>[].obs;
   RxList<String> selectedTransactions = <String>[].obs;
 
   // ✅ check if data loaded

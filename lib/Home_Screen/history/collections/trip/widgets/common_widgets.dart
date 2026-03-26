@@ -107,9 +107,13 @@ class TransactionCard extends StatelessWidget {
           onTap: () {
             if (collectionsController.selectedTransactions.contains(tx.id)) {
               collectionsController.selectedTransactions.remove(tx.id);
+              collectionsController.SeletedTransactionsList.removeWhere(
+                  (item) => item.id == tx.id);
+
               flag.value = false;
             } else {
               collectionsController.selectedTransactions.add(tx.id);
+              collectionsController.SeletedTransactionsList.add(tx);
               flag.value = true;
             }
           },

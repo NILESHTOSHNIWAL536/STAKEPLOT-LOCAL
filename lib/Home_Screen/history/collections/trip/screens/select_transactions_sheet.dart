@@ -1,6 +1,7 @@
 // ─── screens/select_transactions_sheet.dart ──────────────────────────────────
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:get/get.dart';
 import '../../../../../model/TransactionModel.dart';
 import '../data/dummy_data.dart';
@@ -28,11 +29,24 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
     // Work on fresh copies so selection state is local
   }
 
-
-  double get _selectedTotal => collectionsController.SeletedTransactionsList
-      .fold(0, (sum, t) => sum + t.amount);
+  double get _selectedTotal =>
+      collectionsController.SeletedTransactionsList.fold(
+          0, (sum, t) => sum + t.amount);
 
   void _proceedToMembers() {
+    List<Transaction> selected = [];
+
+    collectionsController.SeletedTransactionsList.forEach((obj) {
+      if (collectionsController.selectedTransactions.contains(obj.id))
+        selected.add(Transaction(
+          id: obj.id,
+          title: obj.narration,
+          date: formatWhatsAppDate(obj.transactionTimestamp),
+          amount: obj.amount,
+          category: obj.category,
+          addedBy: obj.narration,
+        ));
+    });
 
     Navigator.pop(context);
     Navigator.push(
