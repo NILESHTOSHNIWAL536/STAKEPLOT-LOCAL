@@ -1,5 +1,5 @@
-const { KMSClient, DecryptCommand } = require('@aws-sdk/client-kms');
-const logger = require('../../utils/common/logger');
+import { KMSClient, DecryptCommand } from '@aws-sdk/client-kms';
+import logger from '../../utils/common/logger';
 
 const kmsClient = new KMSClient({ region: process.env.AWS_REGION });
 

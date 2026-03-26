@@ -8,7 +8,7 @@ const FinvuSchema = new mongoose.Schema(
     isUpdate: { type: Boolean, required: true },
     handleId: { type: String, required: true },
     data: { type: Object, default: {} },
-    userId: { type: mongoose.Types.ObjectId, ref: 'User' },
+    userId: { type: mongoose.Types.ObjectId, },
     expiresAt: {
       type: Date,
       default: () => new Date(Date.now() + 24 * 60 * 60 * 1000),

@@ -4,7 +4,7 @@ import { IGroupedTransaction } from '@/types/bank';
 const groupedTransactionSchema = new Schema<IGroupedTransaction>({
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
     required: true,
     index: true,
   },

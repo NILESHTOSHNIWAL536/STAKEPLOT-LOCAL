@@ -46,7 +46,7 @@ const bankSchema = new Schema<IBank>({
 
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
     required: true,
   },
 

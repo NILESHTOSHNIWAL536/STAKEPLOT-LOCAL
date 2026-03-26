@@ -10,7 +10,7 @@ const summarySchema = new Schema<ISummary>({
 
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
     required: true,
   },
 

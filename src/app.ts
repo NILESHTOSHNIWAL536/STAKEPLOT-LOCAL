@@ -5,6 +5,7 @@ import { metricsMiddleware } from './middlewares/security/metrics';
 import { notFoundHandler, globalErrorHandler } from './middlewares/security/errorHandlers';
 import webHook from './utils/webHook';
 import apiRoutes from './routes';
+import * as WealthscapeController from './controllers/wealthscape-controller';
 
 const app: Application = express();
 
@@ -26,7 +27,9 @@ app.get('/', (req: Request, res: Response) => {
   res.json({ status: 'healthy', message: 'Server is running' });
 });
 
-app.post('/FI/Notification', webHook);
+// ✅ Wealthscape webhooks
+app.post('/Wealthscape/Notification', WealthscapeController.handleConsentNotification);
+app.post('/Wealthscape/DataReady', WealthscapeController.handleDataReadyNotification);
 
 // ✅ Error handling
 app.use(notFoundHandler);

@@ -46,7 +46,7 @@ const accountSchema = new Schema<IAccount>({
 
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
     required: true,
   },
 
