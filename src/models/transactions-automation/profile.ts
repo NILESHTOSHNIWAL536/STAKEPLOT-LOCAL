@@ -21,7 +21,7 @@ const profileSchema = new Schema<IProfile>({
 
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
     required: true,
   },
 

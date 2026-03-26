@@ -26,7 +26,7 @@ export interface ITransactionRule extends Document {
 const transactionRuleSchema = new Schema<ITransactionRule>({
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
     required: true,
     index: true,
   },

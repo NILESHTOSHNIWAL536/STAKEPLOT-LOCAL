@@ -18,7 +18,7 @@ const collectionMemberSchema = new Schema<ICollectionMember>({
 
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
     required: true,
   },
 

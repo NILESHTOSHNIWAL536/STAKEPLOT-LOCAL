@@ -17,7 +17,7 @@ export interface IWealthscapeAccountData extends Document {
 
 const WealthscapeAccountDataSchema = new Schema<IWealthscapeAccountData>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, required: true },
     uniqueIdentifier: { type: String, required: true, index: true },
     accountId: { type: String, required: true },
     fromDate: { type: String, required: true },

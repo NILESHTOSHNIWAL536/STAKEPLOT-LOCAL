@@ -24,7 +24,7 @@ const collectionTransactionSchema = new Schema<ICollectionTransaction>({
 
   addedBy: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
     required: true,
   },
 

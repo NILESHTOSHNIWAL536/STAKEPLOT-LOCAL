@@ -23,7 +23,7 @@ const collectionSchema = new Schema<ICollection>({
 
   ownerId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
     required: true,
   },
 

@@ -19,7 +19,7 @@ export interface IWealthscapeSession extends Document {
 
 const WealthscapeSessionSchema = new Schema<IWealthscapeSession>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, required: true },
     uniqueIdentifier: { type: String, required: true },
     mobileNumber: { type: String, required: true },
     aaCustId: { type: String, required: true },

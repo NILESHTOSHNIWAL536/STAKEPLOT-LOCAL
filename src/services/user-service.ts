@@ -22,7 +22,7 @@ export async function getUserInfo(): Promise<UserId[]> {
     const response = await axios.get(`${gatewayUrl}/api/v1/internal/users/ids`, {
       headers: { authorization: `Bearer ${internalToken}` },
     });
-    
+
     // mobile-backend will return an array of user IDs
     return response.data;
   } catch (error: any) {
@@ -33,7 +33,7 @@ export async function getUserInfo(): Promise<UserId[]> {
 
 export async function hydrateUsers(userIds: string[]): Promise<any[]> {
   if (!userIds || userIds.length === 0) return [];
-  
+
   const uniqueIds = Array.from(new Set(userIds.filter(id => id && Types.ObjectId.isValid(id))));
   if (uniqueIds.length === 0) return [];
 
@@ -45,7 +45,7 @@ export async function hydrateUsers(userIds: string[]): Promise<any[]> {
     );
 
     const gatewayUrl = ServerConfig.MOBILE_BACKEND_URL || 'http://localhost:5000';
-    const response = await axios.post(`${gatewayUrl}/api/v1/internal/users/batch`, 
+    const response = await axios.post(`${gatewayUrl}/api/v1/user/internal/users/batch`,
       { userIds: uniqueIds },
       { headers: { authorization: `Bearer ${internalToken}` } }
     );

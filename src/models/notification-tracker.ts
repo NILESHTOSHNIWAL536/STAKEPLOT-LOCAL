@@ -9,7 +9,7 @@ export interface INotificationTracker extends Document {
 }
 
 const notificationTrackerSchema = new Schema<INotificationTracker>({
-  userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+  userId: { type: Schema.Types.ObjectId, required: true, },
   billId: { type: Schema.Types.ObjectId, required: true },
   date: { type: String, required: true },
   count: { type: Number, default: 1 },

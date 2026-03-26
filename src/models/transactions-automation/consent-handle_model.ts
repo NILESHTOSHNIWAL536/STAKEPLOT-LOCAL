@@ -14,7 +14,7 @@ const ConsentHandleIdSchema = new Schema<IConsentHandleId>({
 
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
   },
 
   expiresAt: {

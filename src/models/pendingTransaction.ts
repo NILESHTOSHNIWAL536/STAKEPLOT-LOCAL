@@ -36,7 +36,7 @@ const transactionSchema = new Schema<IPendingTransaction>(
 
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User', // Matches your user model name
+      // Matches your user model name
       required: true,
     },
   },

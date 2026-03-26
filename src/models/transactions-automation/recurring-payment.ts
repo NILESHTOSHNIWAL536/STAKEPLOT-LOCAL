@@ -11,7 +11,7 @@ const recurringPaymentSchema = new Schema<IRecurringPayment>(
 
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      
       required: true,
     },
 

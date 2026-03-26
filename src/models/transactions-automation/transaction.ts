@@ -132,7 +132,7 @@ const transactionSchema = new Schema<IBankTransaction>({
 
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    
     required: true,
   },
 
