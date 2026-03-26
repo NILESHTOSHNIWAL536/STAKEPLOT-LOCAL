@@ -1,5 +1,6 @@
 // ─── screens/select_members_screen.dart ──────────────────────────────────────
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import '../data/dummy_data.dart';
 import '../models/models.dart';
 import '../utils/app_theme.dart';
@@ -17,8 +18,7 @@ class SelectMembersScreen extends StatefulWidget {
   });
 
   @override
-  State<SelectMembersScreen> createState() =>
-      _SelectMembersScreenState();
+  State<SelectMembersScreen> createState() => _SelectMembersScreenState();
 }
 
 class _SelectMembersScreenState extends State<SelectMembersScreen> {
@@ -27,8 +27,7 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
   final Set<String> _selectedMemberIds = {};
 
   List<TripMember> get _filtered => DummyData.members
-      .where((m) =>
-          m.name.toLowerCase().contains(_query.toLowerCase()))
+      .where((m) => m.name.toLowerCase().contains(_query.toLowerCase()))
       .toList();
 
   void _toggleMember(String id) {
@@ -106,8 +105,7 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
         children: [
           // Search
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: TextField(
               controller: _searchController,
               onChanged: (v) => setState(() => _query = v),
@@ -122,16 +120,14 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(vertical: 12),
               ),
             ),
           ),
 
           // Total amount display
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
               widget.totalAmount.toStringAsFixed(2),
               style: AppTextStyles.amountLarge,
@@ -141,8 +137,7 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
           // Members list
           Expanded(
             child: Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
                 color: AppColors.surface,
                 borderRadius: BorderRadius.circular(16),
@@ -163,14 +158,12 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
                 ),
                 itemBuilder: (ctx, i) {
                   final member = filtered[i];
-                  final isSelected =
-                      _selectedMemberIds.contains(member.id);
+                  final isSelected = _selectedMemberIds.contains(member.id);
                   return ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 4),
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     leading: MemberAvatar(member: member, size: 40),
-                    title: Text(member.name,
-                        style: AppTextStyles.labelBold),
+                    title: Text(member.name, style: AppTextStyles.labelBold),
                     trailing: GestureDetector(
                       onTap: () => _toggleMember(member.id),
                       child: AnimatedContainer(
@@ -193,8 +186,7 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
                             ? const Icon(Icons.check,
                                 size: 16, color: Colors.white)
                             : const Icon(Icons.add,
-                                size: 16,
-                                color: AppColors.textSecondary),
+                                size: 16, color: AppColors.textSecondary),
                       ),
                     ),
                   );
@@ -209,8 +201,7 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 child: PrimaryButton(
-                  label:
-                      'Split among ${_selectedMemberIds.length} people',
+                  label: 'Split among ${_selectedMemberIds.length} people',
                   onPressed: _proceedToSplit,
                 ),
               ),

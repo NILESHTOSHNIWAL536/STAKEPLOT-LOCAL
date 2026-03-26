@@ -1,5 +1,8 @@
 // ─── screens/select_transactions_sheet.dart ──────────────────────────────────
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:get/get.dart';
+import '../../../../../model/TransactionModel.dart';
 import '../data/dummy_data.dart';
 import '../models/models.dart';
 import '../utils/app_theme.dart';
@@ -14,53 +17,22 @@ class SelectTransactionsSheet extends StatefulWidget {
       _SelectTransactionsSheetState();
 }
 
-class _SelectTransactionsSheetState
-    extends State<SelectTransactionsSheet> {
+class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
   final TextEditingController _searchController = TextEditingController();
   String _query = '';
-  late List<Transaction> _transactions;
+  // late List<Transaction> _transactions;
 
   @override
   void initState() {
     super.initState();
     // Work on fresh copies so selection state is local
-    _transactions = DummyData.transactions
-        .map((t) => Transaction(
-              id: t.id,
-              title: t.title,
-              date: t.date,
-              amount: t.amount,
-              category: t.category,
-              addedBy: t.addedBy,
-              taggedMemberId: t.taggedMemberId,
-              isSelected: false,
-            ))
-        .toList();
   }
 
-  List<Transaction> get _filtered => _transactions
-      .where((t) =>
-          t.title.toLowerCase().contains(_query.toLowerCase()) ||
-          t.category.toLowerCase().contains(_query.toLowerCase()))
-      .toList();
 
-  int get _selectedCount =>
-      _transactions.where((t) => t.isSelected).length;
-
-  double get _selectedTotal => _transactions
-      .where((t) => t.isSelected)
+  double get _selectedTotal => collectionsController.SeletedTransactionsList
       .fold(0, (sum, t) => sum + t.amount);
 
-  void _toggleSelect(Transaction tx) {
-    setState(() {
-      tx.isSelected = !tx.isSelected;
-    });
-  }
-
   void _proceedToMembers() {
-    final selected =
-        _transactions.where((t) => t.isSelected).toList();
-    if (selected.isEmpty) return;
 
     Navigator.pop(context);
     Navigator.push(
@@ -76,8 +48,6 @@ class _SelectTransactionsSheetState
 
   @override
   Widget build(BuildContext context) {
-    final filtered = _filtered;
-    // Group by month (simplified: all under "June 2025")
     return DraggableScrollableSheet(
       initialChildSize: 0.93,
       minChildSize: 0.5,
@@ -101,8 +71,7 @@ class _SelectTransactionsSheetState
             ),
             // Header
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -125,15 +94,18 @@ class _SelectTransactionsSheetState
                     style: AppTextStyles.heading3,
                   ),
                   GestureDetector(
-                    onTap:
-                        _selectedCount > 0 ? _proceedToMembers : null,
+                    onTap: collectionsController.selectedTransactions.length > 0
+                        ? _proceedToMembers
+                        : null,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _selectedCount > 0
-                            ? AppColors.primaryDark
-                            : AppColors.tagBg,
+                        color:
+                            collectionsController.selectedTransactions.length >
+                                    0
+                                ? AppColors.primaryDark
+                                : AppColors.tagBg,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
@@ -141,7 +113,9 @@ class _SelectTransactionsSheetState
                           Icon(
                             Icons.call_split,
                             size: 16,
-                            color: _selectedCount > 0
+                            color: collectionsController
+                                        .selectedTransactions.length >
+                                    0
                                 ? Colors.white
                                 : AppColors.textLight,
                           ),
@@ -151,7 +125,9 @@ class _SelectTransactionsSheetState
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: _selectedCount > 0
+                              color: collectionsController
+                                          .selectedTransactions.length >
+                                      0
                                   ? Colors.white
                                   : AppColors.textLight,
                             ),
@@ -165,8 +141,7 @@ class _SelectTransactionsSheetState
             ),
             // Search bar
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               child: TextField(
                 controller: _searchController,
                 onChanged: (v) => setState(() => _query = v),
@@ -181,8 +156,7 @@ class _SelectTransactionsSheetState
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 12),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
             ),
@@ -190,7 +164,7 @@ class _SelectTransactionsSheetState
             // Selection summary bar
             AnimatedSize(
               duration: const Duration(milliseconds: 250),
-              child: _selectedCount > 0
+              child: collectionsController.selectedTransactions.length > 0
                   ? Container(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 6),
@@ -203,22 +177,21 @@ class _SelectTransactionsSheetState
                             color: AppColors.primaryDark.withOpacity(0.15)),
                       ),
                       child: Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '$_selectedCount Selected',
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.primaryDark,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            'Total: ₹${_selectedTotal.toStringAsFixed(2)}',
-                            style: AppTextStyles.labelBold.copyWith(
-                              color: AppColors.primaryDark,
-                            ),
-                          ),
+                          Obx(() => Text(
+                                '${collectionsController.selectedTransactions.length} Selected',
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppColors.primaryDark,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )),
+                          // Text(
+                          //   'Total: ₹${_selectedTotal.toStringAsFixed(2)}',
+                          //   style: AppTextStyles.labelBold.copyWith(
+                          //     color: AppColors.primaryDark,
+                          //   ),
+                          // ),
                         ],
                       ),
                     )
@@ -227,15 +200,12 @@ class _SelectTransactionsSheetState
 
             // Group header
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('June 2025',
-                      style: AppTextStyles.labelBold),
                   Text(
-                    '$_selectedCount Selected Transactions',
+                    '${collectionsController.selectedTransactions.length} Selected Transactions',
                     style: AppTextStyles.bodySmall,
                   ),
                 ],
@@ -246,37 +216,29 @@ class _SelectTransactionsSheetState
             Expanded(
               child: ListView.builder(
                 controller: scrollCtrl,
-                itemCount: filtered.length,
+                itemCount: collectionsController.AllTransactions.length,
                 padding: const EdgeInsets.only(bottom: 20),
                 itemBuilder: (ctx, i) {
-                  final tx = filtered[i];
-                  TripMember? tagged;
-                  try {
-                    tagged = DummyData.members
-                        .firstWhere((m) => m.id == tx.taggedMemberId);
-                  } catch (_) {}
+                  final tx = collectionsController.AllTransactions[i];
                   return TransactionCard(
                     tx: tx,
-                    taggedMember: tagged,
                     showCheckbox: true,
-                    onTap: () => _toggleSelect(tx),
                   );
                 },
               ),
             ),
 
             // Bottom proceed button
-            if (_selectedCount > 0)
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                  child: PrimaryButton(
-                    label:
-                        'Continue with $_selectedCount transaction${_selectedCount > 1 ? 's' : ''}',
-                    onPressed: _proceedToMembers,
-                  ),
-                ),
-              ),
+            Obx(() => collectionsController.selectedTransactions.length > 0
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                    child: PrimaryButton(
+                      label:
+                          'Continue with ${collectionsController.selectedTransactions.length} transaction${collectionsController.selectedTransactions.length > 1 ? 's' : ''}',
+                      onPressed: _proceedToMembers,
+                    ),
+                  )
+                : const SizedBox())
           ],
         ),
       ),

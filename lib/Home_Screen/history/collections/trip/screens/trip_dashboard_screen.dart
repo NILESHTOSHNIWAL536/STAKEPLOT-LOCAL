@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
+import '../../../transactions_ui_component.dart';
 import '../../collections_empty_page.dart';
 import '../data/dummy_data.dart';
 import '../models/models.dart';
@@ -19,6 +20,12 @@ class TripDashboardScreen extends StatefulWidget {
 class _TripDashboardScreenState extends State<TripDashboardScreen> {
   final TextEditingController _searchController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    collectionsController.getAllCollectionsTransactions();
+  }
+
   void _openSelectTransactions() {
     showModalBottomSheet(
       context: context,
@@ -33,7 +40,6 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
     final members = DummyData.members;
     final balances = DummyData.balances;
     final bills = DummyData.fixedBills;
-    final txns = DummyData.transactions;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -317,15 +323,22 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (ctx, i) {
-                          final tx = txns[i];
+                          final tx = collectionsController.AllTransactions[i];
                           TripMember? tagged;
-                          try {
-                            tagged = DummyData.members
-                                .firstWhere((m) => m.id == tx.taggedMemberId);
-                          } catch (_) {}
-                          return TransactionCard(tx: tx, taggedMember: tagged);
+
+                          return HistoryTransactions(
+                            context: context,
+                            transaction: tx,
+                            index: i,
+                            isExpanded: false,
+                            fromAutoPay: false,
+                            hide: false,
+                            hideReview: false,
+                            date: "",
+                          );
                         },
-                        childCount: txns.length,
+                        childCount:
+                            collectionsController.AllTransactions.length,
                       ),
                     ),
                     const SliverToBoxAdapter(child: SizedBox(height: 32)),

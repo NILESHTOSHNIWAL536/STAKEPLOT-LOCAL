@@ -120,7 +120,7 @@ class SplitConfirmationScreen extends StatelessWidget {
         child: Expanded(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 1.5,
+            height: MediaQuery.of(context).size.height*1.5,
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,5 +1,9 @@
 // ─── widgets/common_widgets.dart ─────────────────────────────────────────────
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
+import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
+import 'package:get/get.dart';
 import '../utils/app_theme.dart';
 import '../models/models.dart';
 
@@ -24,9 +28,7 @@ class MemberAvatar extends StatelessWidget {
       decoration: BoxDecoration(
         color: member.avatarColor,
         shape: BoxShape.circle,
-        border: showBorder
-            ? Border.all(color: Colors.white, width: 2)
-            : null,
+        border: showBorder ? Border.all(color: Colors.white, width: 2) : null,
       ),
       child: Center(
         child: Text(
@@ -88,139 +90,134 @@ class MemberPill extends StatelessWidget {
 
 // ── Transaction Card ──────────────────────────────────────────────────────────
 class TransactionCard extends StatelessWidget {
-  final Transaction tx;
-  final TripMember? taggedMember;
+  final TransactionModel tx;
   final bool showCheckbox;
-  final VoidCallback? onTap;
 
-  const TransactionCard({
+  RxBool flag = false.obs;
+
+  TransactionCard({
     super.key,
     required this.tx,
-    this.taggedMember,
     this.showCheckbox = false,
-    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(14),
-          border: tx.isSelected && showCheckbox
-              ? Border.all(color: AppColors.primaryBlue, width: 1.5)
-              : null,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            if (showCheckbox) ...[
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: 22,
-                height: 22,
-                decoration: BoxDecoration(
-                  color: tx.isSelected
-                      ? AppColors.primaryDark
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: tx.isSelected
-                        ? AppColors.primaryDark
-                        : AppColors.divider,
-                    width: 1.5,
-                  ),
+    return Obx(() => GestureDetector(
+          onTap: () {
+            if (collectionsController.selectedTransactions.contains(tx.id)) {
+              collectionsController.selectedTransactions.remove(tx.id);
+              flag.value = false;
+            } else {
+              collectionsController.selectedTransactions.add(tx.id);
+              flag.value = true;
+            }
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(14),
+              border:
+                  collectionsController.selectedTransactions.contains(tx.id) &&
+                          showCheckbox
+                      ? Border.all(color: AppColors.primaryBlue, width: 1.5)
+                      : null,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
-                child: tx.isSelected
-                    ? const Icon(Icons.check, size: 14, color: Colors.white)
-                    : null,
-              ),
-              const SizedBox(width: 10),
-            ],
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: AppColors.tagBg,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(
-                Icons.north_east,
-                size: 16,
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(tx.title, style: AppTextStyles.labelBold),
-                  const SizedBox(height: 2),
-                  Text(tx.date, style: AppTextStyles.bodySmall),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      CategoryTag(label: tx.category),
-                      const SizedBox(width: 6),
-                      const Icon(
-                        Icons.group,
-                        size: 14,
-                        color: AppColors.textLight,
-                      ),
-                      if (taggedMember != null) ...[
-                        const SizedBox(width: 4),
-                        MemberPill(
-                          name: taggedMember!.name,
-                          color: taggedMember!.avatarColor,
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '-₹${tx.amount.toStringAsFixed(2)}',
-                  style: AppTextStyles.amountMedium.copyWith(
-                    color: AppColors.errorRed,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                if (!showCheckbox)
-                  Text(
-                    '${tx.addedBy} Added',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.successGreen,
-                    ),
-                  ),
-                if (showCheckbox)
-                  const Icon(
-                    Icons.bookmark_border,
-                    size: 18,
-                    color: AppColors.textLight,
-                  ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
+            child: Row(
+              children: [
+                if (showCheckbox) ...[
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      color: flag.value
+                          ? AppColors.primaryDark
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color: flag.value
+                            ? AppColors.primaryDark
+                            : AppColors.divider,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: flag.value
+                        ? const Icon(Icons.check, size: 14, color: Colors.white)
+                        : null,
+                  ),
+                  const SizedBox(width: 10),
+                ],
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: AppColors.tagBg,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.north_east,
+                    size: 16,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(tx.narration, style: AppTextStyles.labelBold),
+                      const SizedBox(height: 2),
+                      Text(formatWhatsAppDate(tx.transactionTimestamp),
+                          style: AppTextStyles.bodySmall),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          CategoryTag(label: tx.category),
+                          const SizedBox(width: 6),
+                          const Icon(
+                            Icons.group,
+                            size: 14,
+                            color: AppColors.textLight,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '-₹${tx.amount.toStringAsFixed(2)}',
+                      style: AppTextStyles.amountMedium.copyWith(
+                        color: AppColors.errorRed,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    if (showCheckbox)
+                      const Icon(
+                        Icons.bookmark_border,
+                        size: 18,
+                        color: AppColors.textLight,
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
 
@@ -299,8 +296,7 @@ class FixedBillCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
-                  color:
-                      isPaid ? AppColors.paidBadge : AppColors.pendingBadge,
+                  color: isPaid ? AppColors.paidBadge : AppColors.pendingBadge,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(

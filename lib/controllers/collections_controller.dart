@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 
+import '../Home_Screen/history/collections/group_collections_page.dart';
 import '../backed_connections/apiAutomations/curd.dart';
+import '../model/TransactionModel.dart';
 import '../model/collections_model.dart';
 import '../routes/route_collections.dart';
 
@@ -19,33 +21,34 @@ class CollectionsController extends GetxController {
   RxList<CollectionModel> collectionsList = <CollectionModel>[].obs;
   Rx<CollectionModel?> selectedCollection = Rx<CollectionModel?>(null);
   Rx<CollectionDetailsModel?> collectionDetails =
-    Rx<CollectionDetailsModel?>(null);
+      Rx<CollectionDetailsModel?>(null);
 
   RxList<SplitModel> splitsList = <SplitModel>[].obs;
   RxList<BalanceModel> balancesList = <BalanceModel>[].obs;
 
   RxList<CollectionTransactionModel> availableTransactions =
       <CollectionTransactionModel>[].obs;
+  RxList<TransactionModel> AllTransactions = <TransactionModel>[].obs;
+  RxList<Transaction> SeletedTransactionsList = <Transaction>[].obs;
+  RxList<String> selectedTransactions = <String>[].obs;
 
   // ✅ check if data loaded
-bool get hasCollectionDetails =>
-    collectionDetails.value != null;
+  bool get hasCollectionDetails => collectionDetails.value != null;
 
 // ✅ check transactions empty
-bool get hasTransactions =>
-    collectionDetails.value != null &&
-    collectionDetails.value!.transactions.isNotEmpty;
+  bool get hasTransactions =>
+      collectionDetails.value != null &&
+      collectionDetails.value!.transactions.isNotEmpty;
 
 // ✅ check members
-bool get hasMembers =>
-    collectionDetails.value != null &&
-    collectionDetails.value!.members.isNotEmpty;
+  bool get hasMembers =>
+      collectionDetails.value != null &&
+      collectionDetails.value!.members.isNotEmpty;
 
 // ✅ check splits
-bool get hasSplits =>
-    collectionDetails.value != null &&
-    collectionDetails.value!.splits.isNotEmpty;
-    
+  bool get hasSplits =>
+      collectionDetails.value != null &&
+      collectionDetails.value!.splits.isNotEmpty;
 
   // =========================
   // GET COLLECTIONS
@@ -95,7 +98,8 @@ bool get hasSplits =>
     try {
       isLoading.value = true;
 
-      var response = await getDataApiCall(CollectionsRoute.getCollectionById(id));
+      var response =
+          await getDataApiCall(CollectionsRoute.getCollectionById(id));
 
       if (getFlagOfResponse(response)) {
         var data = json.decode(response.body);
@@ -150,6 +154,32 @@ bool get hasSplits =>
 
         splitsList.value =
             (data['data'] as List).map((e) => SplitModel.fromJson(e)).toList();
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isSplitLoading.value = false;
+    }
+  }
+
+  Future<void> getAllCollectionsTransactions() async {
+    try {
+      isSplitLoading.value = true;
+
+      var response = await getDataApiCall(
+          CollectionsRoute.getAvailableTransactions(
+              collectionDetails.value!.collection.id));
+
+      if (getFlagOfResponse(response)) {
+        var data = json.decode(response.body);
+        print(data);
+        print(data["data"]["transactions"]);
+
+        // splitsList.value = TransactionModel().listFromJson();
+        List<TransactionModel> modalObj =
+            TransactionModel.listFromJson(data["data"]["transactions"]);
+        AllTransactions.clear();
+        AllTransactions.addAll(modalObj);
       }
     } catch (e) {
       print(e);
