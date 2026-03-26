@@ -125,8 +125,6 @@ class CollectionModel {
   });
 
   factory CollectionModel.fromJson(Map<String, dynamic> json) {
-    print("))))))))))))))))");
-    print(json);
     return CollectionModel(
       id: json['_id'],
       name: json['name'] ?? '',
@@ -134,10 +132,71 @@ class CollectionModel {
       ownerId: json['ownerId'] ?? '',
       description: json['description'] ?? '',
       status: json['status'] ?? '',
-      expiryAt: json['expiryAt'] != null
-          ? DateTime.parse(json['expiryAt'])
-          : null,
+      expiryAt:
+          json['expiryAt'] != null ? DateTime.parse(json['expiryAt']) : null,
       totalAmount: (json['totalAmount'] ?? 0).toDouble(),
+    );
+  }
+}
+
+class MemberModel {
+  String id;
+  String collectionId;
+  String userId;
+  String role;
+  String name;
+
+  MemberModel({
+    required this.id,
+    required this.collectionId,
+    required this.userId,
+    required this.name,
+    required this.role,
+  });
+
+  factory MemberModel.fromJson(Map<String, dynamic> json) {
+    return MemberModel(
+      id: json['_id'].toString(),
+      collectionId: json['collectionId'].toString(),
+      userId: json['userId'].toString(),
+      name: json['name'].toString(),
+      role: json['role'] ?? 'VIEW',
+    );
+  }
+}
+
+class CollectionDetailsModel {
+  CollectionModel collection;
+  List<MemberModel> members;
+  List<CollectionTransactionModel> transactions;
+  List<SplitModel> splits;
+
+  CollectionDetailsModel({
+    required this.collection,
+    required this.members,
+    required this.transactions,
+    required this.splits,
+  });
+
+  factory CollectionDetailsModel.fromJson(Map<String, dynamic> json) {
+    return CollectionDetailsModel(
+      // ✅ COLLECTION
+      collection: CollectionModel.fromJson(json['collection'] ?? {}),
+
+      // ✅ MEMBERS
+      members: (json['members'] as List? ?? [])
+          .map((e) => MemberModel.fromJson(e))
+          .toList(),
+
+      // ✅ TRANSACTIONS
+      transactions: (json['transactions'] as List? ?? [])
+          .map((e) => CollectionTransactionModel.fromJson(e))
+          .toList(),
+
+      // ✅ SPLITS
+      splits: (json['splits'] as List? ?? [])
+          .map((e) => SplitModel.fromJson(e))
+          .toList(),
     );
   }
 }

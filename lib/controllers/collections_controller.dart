@@ -18,12 +18,34 @@ class CollectionsController extends GetxController {
   // =========================
   RxList<CollectionModel> collectionsList = <CollectionModel>[].obs;
   Rx<CollectionModel?> selectedCollection = Rx<CollectionModel?>(null);
+  Rx<CollectionDetailsModel?> collectionDetails =
+    Rx<CollectionDetailsModel?>(null);
 
   RxList<SplitModel> splitsList = <SplitModel>[].obs;
   RxList<BalanceModel> balancesList = <BalanceModel>[].obs;
 
   RxList<CollectionTransactionModel> availableTransactions =
       <CollectionTransactionModel>[].obs;
+
+  // ✅ check if data loaded
+bool get hasCollectionDetails =>
+    collectionDetails.value != null;
+
+// ✅ check transactions empty
+bool get hasTransactions =>
+    collectionDetails.value != null &&
+    collectionDetails.value!.transactions.isNotEmpty;
+
+// ✅ check members
+bool get hasMembers =>
+    collectionDetails.value != null &&
+    collectionDetails.value!.members.isNotEmpty;
+
+// ✅ check splits
+bool get hasSplits =>
+    collectionDetails.value != null &&
+    collectionDetails.value!.splits.isNotEmpty;
+    
 
   // =========================
   // GET COLLECTIONS
@@ -73,12 +95,11 @@ class CollectionsController extends GetxController {
     try {
       isLoading.value = true;
 
-      var response =
-          await getDataApiCall(CollectionsRoute.getCollectionById(id));
+      var response = await getDataApiCall(CollectionsRoute.getCollectionById(id));
 
       if (getFlagOfResponse(response)) {
         var data = json.decode(response.body);
-        selectedCollection.value = CollectionModel.fromJson(data['data']);
+        collectionDetails.value = CollectionDetailsModel.fromJson(data['data']);
       }
     } catch (e) {
       print(e);

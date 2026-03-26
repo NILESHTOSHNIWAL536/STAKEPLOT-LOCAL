@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 import '../transactionHistoryScreen.dart';
-import 'group_collections_page.dart';
 import 'trip/screens/trip_dashboard_screen.dart';
 
 class CollectionDetailsPage extends StatelessWidget {
@@ -26,7 +23,7 @@ class CollectionDetailsPage extends StatelessWidget {
           children: [
             // _appBar(context),
             Expanded(
-              child: !hasTransactions
+              child: hasTransactions
                   ? TripDashboardScreen()
                   : _emptyTransactionsUI(context),
             ),
