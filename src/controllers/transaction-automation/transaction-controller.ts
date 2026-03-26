@@ -4,7 +4,7 @@ import * as Common from '@/utils/common';
 import * as BankService from '../../services/bank-service';
 import monthNames from '@/config/monthNames';
 import { Transaction } from '@/models';
-import { Types as MongooseTypes, ObjectId as MongooseObjectId } from 'mongoose';
+import { Types as MongooseTypes, ObjectId as MongooseObjectId, Types } from 'mongoose';
 import { getDateRange, initializeResults, fillTransactionData } from '../../utils/helpers/dateUtils';
 import { AccountRepository, FipRepository } from '@/repositories';
 import logger from '@/utils/common/logger';
@@ -100,6 +100,47 @@ export const getBanksLinkedAndAccounts = async (req: Request, res: Response): Pr
     return res.status(statusCode).json(ErrorResponse);
   }
 };
+
+export const getBankBalanceAndDebitSummary = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const userId = new Types.ObjectId(req.user!._id);
+
+    const { view = "monthly", month, year } = req.query;
+
+    if (!year) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "year is required",
+      });
+    }
+
+    if (view === "monthly" && !month) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "month is required for monthly view",
+      });
+    }
+
+    const response =
+      await BankService.getBankBalanceAndDebitSummary({
+        userId,
+        view: view as "monthly" | "yearly",
+        month: month ? Number(month) : undefined,
+        year: Number(year),
+      });
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      data: response,
+    });
+  } catch (error: any) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: error?.message || "Internal server error",
+    });
+  }
+};
+
 
 export const getMonthlyTransactionsHistory = async (req: Request, res: Response): Promise<Response> => {
   try {

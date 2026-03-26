@@ -5,7 +5,7 @@ import { ITransactionRule } from '@/models/transactions-automation/transactionRu
 
 import { buildSearchPipeline } from '@/pipelines/search.pipeline';
 import { buildMonthlyCategorizationPipeline } from '@/pipelines/categorize-monthly.pipeline';
-import { buildFrequencyAnalysisPipeline } from '@/pipelines/frequency-analysis.pipeline';
+import { buildFrequencyAnalysisPipeline, buildMostSpentCategoriesPipeline, buildMostSpentDayPipeline, buildWeeklyTotalSpendPipeline, getCurrentWeekRangeUTC, getLastWeekRangeUTC } from '@/pipelines/frequency-analysis.pipeline';
 import { groupSimilarTransactionsPipeline } from '@/pipelines/group-similar.pipeline';
 import { buildBudgetPipeline } from '@/pipelines/budget.pipeline';
 import { buildSpendingPipeline } from '@/pipelines/spending.pipeline';
@@ -241,7 +241,9 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       })
       .sort({ transactionTimestamp: -1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .lean()
+      ;
 
     const banks = await new this.BankRepo().getBank(userId);
     const txWithBank = await enrichTransactionWithBankDetails(transactions, banks);
@@ -368,6 +370,50 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       .map(({ category, debit_diff }: any) => ({ category, debit_diff }));
 
     const frequentPayments = await this.model.aggregate(buildFrequencyAnalysisPipeline(userObjectId, startDate, endDate));
+    // NEW ADDITIONS (THIS IS WHAT YOU WANT)
+    const [mostSpentDay] = await this.model.aggregate(
+      buildMostSpentDayPipeline(userObjectId, startDate, endDate)
+    );
+
+    const mostSpentCategory = await this.model.aggregate(
+      buildMostSpentCategoriesPipeline(userObjectId, startDate, endDate)
+    );
+    //  WEEKLY TREND (NEW)
+    const { weekStart, weekEnd } = getCurrentWeekRangeUTC();
+    const { lastWeekStart, lastWeekEnd } = getLastWeekRangeUTC();
+
+    const [currentWeekData] = await this.model.aggregate(
+      buildWeeklyTotalSpendPipeline(userObjectId, weekStart, weekEnd)
+    );
+
+    const [lastWeekData] = await this.model.aggregate(
+      buildWeeklyTotalSpendPipeline(userObjectId, lastWeekStart, lastWeekEnd)
+    );
+
+    const currentWeekSpend = currentWeekData?.totalSpend || 0;
+    const lastWeekSpend = lastWeekData?.totalSpend || 0;
+
+    const difference = currentWeekSpend - lastWeekSpend;
+
+    const percentage =
+      lastWeekSpend === 0
+        ? 0
+        : Math.abs(((difference / lastWeekSpend) * 100));
+
+    const weeklyTrend = {
+      lastWeekSpend,
+      currentWeekSpend,
+      difference,
+      percentageChange: `${percentage.toFixed(2)}%`,
+      trend:
+        difference > 0
+          ? 'increase'
+          : difference < 0
+            ? 'decrease'
+            : 'no-change',
+
+    };
+
 
     return {
       categorized: result,
@@ -375,6 +421,9 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       frequentPayments,
       totalDebitThisMonth,
       totalCreditThisMonth,
+      mostSpentDay: mostSpentDay || null,
+      mostSpentCategory: mostSpentCategory || null,
+      weeklyTrend
     };
   }
 
@@ -713,3 +762,5 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
     return totals;
   }
 }
+
+
