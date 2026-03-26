@@ -52,18 +52,13 @@ Future<String> login(context) async {
 
 Future<void> getConsentHandleId(context) async {
   final String apiUrl = FinvuRoutes.login;
-  final String apiUrlgetFipsMetric = FinvuRoutes.getFipsMetric;
   final String custId = "${number.value}@finvu";
   var body = {"custId": custId, 'number': number.value};
-  print("API URL: $apiUrl");
-
   try {
     var response = await postDataApiCall(apiUrl, body);
     if (getFlagOfResponse(response)) {
       final data = jsonDecode(response.body);
       String consentHandleId = data["consentHandleId"];
-      // var response2 = await getDataApiCall(apiUrlgetFipsMetric);
-      // print(response2);
       handleId.value = consentHandleId;
       if (!Get.isRegistered<FipMetricsController>()) {
         Get.put(FipMetricsController());
