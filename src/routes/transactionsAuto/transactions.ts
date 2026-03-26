@@ -76,6 +76,9 @@ router.get(
 
 router.get('/user-details', AuthMiddlewares.protect, TransactionAutoController.getUser);
 router.get('/get-banks-linked', AuthMiddlewares.protect, TransactionAutoController.getBanksLinkedAndAccounts);
+
+router.get('/get-banksdebitcredit', AuthMiddlewares.protect, TransactionAutoController.getBankBalanceAndDebitSummary);
+
 router.get(
   '/get-monthly-transactions-history/:accountId/:type/:page',
   AuthMiddlewares.protect,
