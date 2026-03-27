@@ -32,13 +32,13 @@ export const createCollection = async (userId: string, data: any) => {
     });
     await member.save({ session });
 
-    await session.commitTransaction();
-    session.endSession();
-
     // Hydrate ownerId before returning
     const userData = await UserService.hydrateUsers([userId]);
     const hydratedCollection = collection.toObject();
     (hydratedCollection as any).owner = userData[0] || { _id: userId };
+
+    await session.commitTransaction();
+    session.endSession();
 
     return hydratedCollection;
   } catch (error) {
@@ -155,19 +155,21 @@ export const addMembers = async (collectionId: string, authorId: string, friends
       addedMembers.push(newMember);
     }
 
-    await session.commitTransaction();
-    session.endSession();
-    
     // Hydrate before returning
     const userIds = addedMembers.map(m => m.userId.toString());
     const userData = await UserService.hydrateUsers(userIds);
     const userMap = new Map();
     userData.forEach(u => userMap.set(u._id.toString(), u));
 
-    return addedMembers.map(m => ({
+    const result = addedMembers.map(m => ({
       ...m.toObject(),
       user: userMap.get(m.userId.toString()) || { _id: m.userId }
     }));
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return result;
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
@@ -262,26 +264,29 @@ export const addTransactions = async (
 
     await splitDoc.save({ session });
 
-    await session.commitTransaction();
-    session.endSession();
-
     // Hydrate users in splits before returning
     const userIdsToHydrate = new Set<string>();
     userIdsToHydrate.add(splitDoc.paidBy.toString());
-    splitDoc.splits.forEach(s => userIdsToHydrate.add(s.userId.toString()));
+    splitDoc.splits.forEach(s => {
+      if (s.userId) userIdsToHydrate.add(s.userId.toString());
+    });
 
     const userData = await UserService.hydrateUsers(Array.from(userIdsToHydrate));
     const userMap = new Map();
     userData.forEach(u => userMap.set(u._id.toString(), u));
 
+    const plainSplitDoc = splitDoc.toObject();
     const hydratedSplit = {
-      ...splitDoc.toObject(),
-      paidByUser: userMap.get(splitDoc.paidBy.toString()) || { _id: splitDoc.paidBy },
-      splits: splitDoc.splits.map(s => ({
+      ...plainSplitDoc,
+      paidByUser: userMap.get(plainSplitDoc.paidBy.toString()) || { _id: plainSplitDoc.paidBy },
+      splits: plainSplitDoc.splits.map((s: any) => ({
         ...s,
-        user: userMap.get(s.userId.toString()) || { _id: s.userId }
+        user: s.userId ? userMap.get(s.userId.toString()) || { _id: s.userId } : null
       }))
     };
+
+    await session.commitTransaction();
+    session.endSession();
 
     return { colTxs, splitDoc: hydratedSplit };
   } catch (error) {
@@ -324,18 +329,21 @@ export const updateSplit = async (
   // Hydrate before returning
   const userIdsToHydrate = new Set<string>();
   userIdsToHydrate.add(splitDoc.paidBy.toString());
-  splitDoc.splits.forEach(s => userIdsToHydrate.add(s.userId.toString()));
+  splitDoc.splits.forEach(s => {
+    if (s.userId) userIdsToHydrate.add(s.userId.toString());
+  });
 
   const userData = await UserService.hydrateUsers(Array.from(userIdsToHydrate));
   const userMap = new Map();
   userData.forEach(u => userMap.set(u._id.toString(), u));
 
+  const plainSplitDoc = splitDoc.toObject();
   return {
-    ...splitDoc.toObject(),
-    paidByUser: userMap.get(splitDoc.paidBy.toString()) || { _id: splitDoc.paidBy },
-    splits: splitDoc.splits.map(s => ({
+    ...plainSplitDoc,
+    paidByUser: userMap.get(plainSplitDoc.paidBy.toString()) || { _id: plainSplitDoc.paidBy },
+    splits: plainSplitDoc.splits.map((s: any) => ({
       ...s,
-      user: userMap.get(s.userId.toString()) || { _id: s.userId }
+      user: s.userId ? userMap.get(s.userId.toString()) || { _id: s.userId } : null
     }))
   };
 };
@@ -390,7 +398,6 @@ export const getCollectionSplits = async (collectionId: string, userId: string) 
     userIdsSet.add(s.paidBy.toString());
     s.splits.forEach(si => userIdsSet.add(si.userId.toString()));
   });
-
   const userData = await UserService.hydrateUsers(Array.from(userIdsSet));
   const userMap = new Map();
   userData.forEach(u => userMap.set(u._id.toString(), u));
