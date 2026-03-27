@@ -28,13 +28,13 @@ void main() async {
     SystemUiMode.manual,
     overlays: SystemUiOverlay.values, // ⬅️ THIS IS KEY
   );
-  // main_apis_call_init();
-  runZonedGuarded(() {
-    runApp(const MyApp());
-  }, (Object error, StackTrace stack) {
-    // Handle uncaught async errors here
-    handleError(error, stack);
-  });
+  main_apis_call_init();
+  // runZonedGuarded(() {
+  //   runApp(const MyApp());
+  // }, (Object error, StackTrace stack) {
+  //   // Handle uncaught async errors here
+  //   handleError(error, stack);
+  // });
 
 }
 

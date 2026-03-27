@@ -1,3 +1,5 @@
+import 'TransactionModel.dart';
+
 class BalanceModel {
   String userId;
   double balance;
@@ -20,17 +22,20 @@ class BalanceModel {
 
 class SplitItemModel {
   String userId;
+  String name;
   double amount;
 
   SplitItemModel({
     required this.userId,
     required this.amount,
+    required this.name,
   });
 
   factory SplitItemModel.fromJson(Map<String, dynamic> json) {
     return SplitItemModel(
       userId: json['userId'],
       amount: (json['amount'] ?? 0).toDouble(),
+      name: (json['name'] ?? "user").toDouble(),
     );
   }
 }
@@ -40,7 +45,7 @@ class SplitModel {
   String collectionId;
   String paidBy;
   String splitType;
-  List<String> transactionIds;
+  List<TransactionModel> transactionIds;
   List<SplitItemModel> splits;
 
   SplitModel({
@@ -53,12 +58,14 @@ class SplitModel {
   });
 
   factory SplitModel.fromJson(Map<String, dynamic> json) {
+    List<TransactionModel> modalObj = TransactionModel.listFromJson(json["transactions"]);
+    
     return SplitModel(
       id: json['_id'],
       collectionId: json['collectionId'],
       paidBy: json['paidBy'],
       splitType: json['splitType'],
-      transactionIds: List<String>.from(json['transactionIds'] ?? []),
+      transactionIds: modalObj,
       splits: (json['splits'] as List? ?? [])
           .map((e) => SplitItemModel.fromJson(e))
           .toList(),
@@ -159,7 +166,7 @@ class MemberModel {
       id: json['_id'].toString(),
       collectionId: json['collectionId'].toString(),
       userId: json['userId'].toString(),
-      name: json['name'].toString(),
+      name: json["user"]['name'].toString(),
       role: json['role'] ?? 'VIEW',
     );
   }

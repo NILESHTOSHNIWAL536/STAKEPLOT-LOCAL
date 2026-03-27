@@ -26,7 +26,7 @@ class CollectionsRoute {
   // Update Split
   static String updateSplit(String collectionId, String transactionId) => "$_urlPath/$collectionId/transactions/$transactionId/splits";
 
-  // Get Available Transactions (GET with query params)
+  // Get All Available Transactions (GET with query params)
   static String getAvailableTransactions(
     String collectionId, {
     int page = 1,

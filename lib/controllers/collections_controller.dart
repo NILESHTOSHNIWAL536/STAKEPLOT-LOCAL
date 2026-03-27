@@ -28,6 +28,7 @@ class CollectionsController extends GetxController {
 
   RxList<CollectionTransactionModel> availableTransactions =
       <CollectionTransactionModel>[].obs;
+
   RxList<TransactionModel> AllTransactions = <TransactionModel>[].obs;
   RxList<TransactionModel> SeletedTransactionsList = <TransactionModel>[].obs;
   RxList<String> selectedTransactions = <String>[].obs;
@@ -80,6 +81,7 @@ class CollectionsController extends GetxController {
           }
 
           print("FINAL LIST: ${collectionsList.length}");
+          
         } else {
           print("Data is not List ❌: ${decoded['data']}");
         }
@@ -104,6 +106,7 @@ class CollectionsController extends GetxController {
       if (getFlagOfResponse(response)) {
         var data = json.decode(response.body);
         collectionDetails.value = CollectionDetailsModel.fromJson(data['data']);
+        getBalances(id);
       }
     } catch (e) {
       print(e);
@@ -172,8 +175,6 @@ class CollectionsController extends GetxController {
 
       if (getFlagOfResponse(response)) {
         var data = json.decode(response.body);
-        print(data);
-        print(data["data"]["transactions"]);
 
         // splitsList.value = TransactionModel().listFromJson();
         List<TransactionModel> modalObj =
@@ -206,9 +207,12 @@ class CollectionsController extends GetxController {
       body["customSplits"] = customSplits ?? [];
     }
 
-    await postDataApiCall(CollectionsRoute.addTransaction(collectionId), body);
+    var response = await postDataApiCall(
+        CollectionsRoute.addTransaction(collectionId), body);
 
-    await getSplits(collectionId);
+    if (getFlagOfResponse(response)) {
+      await getSplits(collectionId);
+    }
   }
 
   // =========================

@@ -23,7 +23,6 @@ void main_apis_call_init()async{
   securityCheck();
   checkFirebaseAndValidUser();
   loadEnvs();
-
   // Store full API URL (with /api/v1) in SharedPreferences for background access (after loadEnvs)
   final prefs = await SharedPreferences.getInstance();
   // Full URL is already built as "${urlWithLocallHost}api/v1" in apis_connect.dart after loadEnvs
@@ -35,17 +34,16 @@ void main_apis_call_init()async{
   if (accountId != null && accountId.isNotEmpty) {
     await prefs.setString('accountId', accountId);
   }
-
   initializeGlobalErrorHandling();
 
   // Initialize widget service (handles WorkManager and widgets only)
   initializeWidgetService();
-  // runZonedGuarded(() {
-  //   runApp(const MyApp());
-  // }, (Object error, StackTrace stack) {
-  //   // Handle uncaught async errors here
-  //   handleError(error, stack);
-  // });
+  runZonedGuarded(() {
+    runApp(const MyApp());
+  }, (Object error, StackTrace stack) {
+    // Handle uncaught async errors here
+    handleError(error, stack);
+  });
 
 }
 

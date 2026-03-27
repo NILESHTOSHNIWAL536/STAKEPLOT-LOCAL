@@ -1,5 +1,7 @@
 // ─── screens/split_confirmation_screen.dart ──────────────────────────────────
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
+import '../../../../../backed_connections/apis_connect.dart';
 import '../models/models.dart';
 import '../utils/app_theme.dart';
 import '../widgets/common_widgets.dart';
@@ -22,75 +24,88 @@ class SplitConfirmationScreen extends StatelessWidget {
     debugPrint(
         'Transactions: ${selectedTransactions.map((t) => t.id).join(', ')}');
     debugPrint('Total Amount: $totalAmount');
+    List members = [];
     for (final entry in splitEntries) {
-      debugPrint(
-          '  ${entry.member.name} => ₹${entry.amount.toStringAsFixed(2)}');
+      members.add({
+        "userId": entry.member.userId,
+        "amount": entry.amount,
+      });
+      debugPrint('${entry.member.name} => ₹${entry.amount.toStringAsFixed(2)}');
     }
     debugPrint('===================');
+    print(members);
 
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: const [
-            Icon(Icons.check_circle_outline,
-                color: AppColors.successGreen, size: 28),
-            SizedBox(width: 10),
-            Text('Split Confirmed!', style: AppTextStyles.heading3),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Split of ₹${totalAmount.toStringAsFixed(2)} confirmed among ${splitEntries.length} members.',
-              style: AppTextStyles.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            ...splitEntries.map(
-              (e) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    MemberAvatar(member: e.member, size: 30),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child:
-                          Text(e.member.name, style: AppTextStyles.labelBold),
-                    ),
-                    Text(
-                      '₹${e.amount.toStringAsFixed(2)}',
-                      style: AppTextStyles.amountMedium.copyWith(
-                        fontSize: 15,
-                        color: AppColors.primaryBlue,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              Navigator.popUntil(context, (route) => route.isFirst);
-            },
-            child: const Text(
-              'Done',
-              style: TextStyle(
-                color: AppColors.primaryDark,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    collectionsController.addTransaction(
+        collectionId:
+            collectionsController.collectionDetails.value!.collection.id,
+        splitType: "CUSTOM",
+        transactionIds: collectionsController.selectedTransactions,
+        customSplits: members);
+
+    // showDialog(
+    //   context: context,
+    //   builder: (ctx) => AlertDialog(
+    //     backgroundColor: AppColors.surface,
+    //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    //     title: Row(
+    //       children: const [
+    //         Icon(Icons.check_circle_outline,
+    //             color: AppColors.successGreen, size: 28),
+    //         SizedBox(width: 10),
+    //         Text('Split Confirmed!', style: AppTextStyles.heading3),
+    //       ],
+    //     ),
+    //     content: Column(
+    //       mainAxisSize: MainAxisSize.min,
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         Text(
+    //           'Split of ₹${totalAmount.toStringAsFixed(2)} confirmed among ${splitEntries.length} members.',
+    //           style: AppTextStyles.bodyMedium,
+    //         ),
+    //         const SizedBox(height: 16),
+    //         ...splitEntries.map(
+    //           (e) => Padding(
+    //             padding: const EdgeInsets.symmetric(vertical: 4),
+    //             child: Row(
+    //               children: [
+    //                 MemberAvatar(member: e.member, size: 30),
+    //                 const SizedBox(width: 10),
+    //                 Expanded(
+    //                   child:
+    //                       Text(e.member.name, style: AppTextStyles.labelBold),
+    //                 ),
+    //                 Text(
+    //                   '₹${e.amount.toStringAsFixed(2)}',
+    //                   style: AppTextStyles.amountMedium.copyWith(
+    //                     fontSize: 15,
+    //                     color: AppColors.primaryBlue,
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //     actions: [
+    //       TextButton(
+    //         onPressed: () {
+    //           // Navigator.pop(ctx);
+    //           // Navigator.popUntil(context, (route) => route.isFirst);
+
+    //         },
+    //         child: const Text(
+    //           'Done',
+    //           style: TextStyle(
+    //             color: AppColors.primaryDark,
+    //             fontWeight: FontWeight.w700,
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
   @override
@@ -120,7 +135,7 @@ class SplitConfirmationScreen extends StatelessWidget {
         child: Expanded(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height*1.5,
+            height: MediaQuery.of(context).size.height * 1.5,
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
