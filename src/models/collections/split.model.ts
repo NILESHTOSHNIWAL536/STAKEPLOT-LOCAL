@@ -32,7 +32,7 @@ const splitSchema = new Schema<ISplit>({
 
   paidBy: {
     type: Schema.Types.ObjectId,
-    
+
     required: true,
   },
 
@@ -40,9 +40,10 @@ const splitSchema = new Schema<ISplit>({
     {
       userId: {
         type: Schema.Types.ObjectId,
-        
+
       },
       amount: Number,
+      _id: false
     },
   ],
 
