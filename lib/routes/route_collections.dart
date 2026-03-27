@@ -23,8 +23,9 @@ class CollectionsRoute {
 
   static String addTransaction(String collectionId) => "$_urlPath/$collectionId/transactions";
 
-  // Update Split
-  static String updateSplit(String collectionId, String transactionId) => "$_urlPath/$collectionId/transactions/$transactionId/splits";
+  // Update Split — PUT /collections/:id/splits/:splitId
+  static String updateSplit(String collectionId, String splitId) =>
+      "$_urlPath/$collectionId/splits/$splitId";
 
   // Get All Available Transactions (GET with query params)
   static String getAvailableTransactions(

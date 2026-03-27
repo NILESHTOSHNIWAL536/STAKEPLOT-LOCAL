@@ -13,9 +13,10 @@ class BalanceModel {
 
   factory BalanceModel.fromJson(Map<String, dynamic> json) {
     return BalanceModel(
-      userId: json['userId'],
+      userId: json['userId'] ?? '',
       balance: (json['balance'] ?? 0).toDouble(),
-      type: json['type'],
+      // Backend returns: 'toPay', 'toReceive', 'settled'
+      type: json['type'] ?? 'settled',
     );
   }
 // }
