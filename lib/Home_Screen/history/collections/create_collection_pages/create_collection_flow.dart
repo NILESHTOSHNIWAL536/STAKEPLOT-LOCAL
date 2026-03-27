@@ -19,7 +19,6 @@ import 'step_collection_type.dart';
 import 'step_optional_description.dart';
 import 'step_select_duration.dart';
 
-
 /// ---------------- CREATE FLOW ----------------
 class CreateCollectionFlow extends StatefulWidget {
   const CreateCollectionFlow({super.key});
@@ -38,8 +37,21 @@ class _CreateCollectionFlowState extends State<CreateCollectionFlow> {
   final RxSet<String> selectedUserIds = <String>{}.obs;
 
   void next() {
-    if (step < 5) {
-      setState(() => step++);
+    // if (step >= 5) return;
+
+    bool isPersonalSkip = collectionDraft.type == "personal" && step == 1;
+
+    setState(() {
+      step = isPersonalSkip ? step + 4 : step + 1;
+    });
+
+    if (isPersonalSkip) {
+      _controller.animateToPage(
+        4,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    } else {
       _controller.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
@@ -68,8 +80,8 @@ class _CreateCollectionFlowState extends State<CreateCollectionFlow> {
           children: [
             CollectionHeader(onBack: back),
             Container(
-              color: AppColors.border,
-              child: CollectionStepIndicator(currentStep: step)),
+                color: AppColors.border,
+                child: CollectionStepIndicator(currentStep: step)),
             Container(
               height: MediaQuery.of(context).size.height - 150,
               color: AppColors.border,
@@ -102,7 +114,6 @@ class _CreateCollectionFlowState extends State<CreateCollectionFlow> {
     );
   }
 }
-
 
 class PrimaryButton extends StatelessWidget {
   final String text;
@@ -151,19 +162,19 @@ class CollectionHeader extends StatelessWidget {
         child: Row(
           children: [
             InkWell(
-              onTap: onBack,
-              child:CustomStyledContainer(
-                padding: const EdgeInsets.all(AppSizes.p12),
-                radius: 30,
-                // width: 42,
-                // height: 40,
-                child: const Icon(
-                  Icons.arrow_back_ios,
-                  size: 20,
-                  color: AppColors.accentColor,
-                ),
-            )),
-             SizedBox(width: AppSizes.w52),
+                onTap: onBack,
+                child: CustomStyledContainer(
+                  padding: const EdgeInsets.all(AppSizes.p12),
+                  radius: 30,
+                  // width: 42,
+                  // height: 40,
+                  child: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 20,
+                    color: AppColors.accentColor,
+                  ),
+                )),
+            SizedBox(width: AppSizes.w52),
             Text(
               "Create Collection",
               style: FontManager().getTextStyle(
@@ -203,7 +214,6 @@ Widget wrapperCollection(BuildContext context, Widget child) {
   );
 }
 
-
 Widget titleCollection(BuildContext context, String text) {
   return Text(
     text,
@@ -223,23 +233,22 @@ Widget inputCollection(String hint, BuildContext context) {
       lWeight: FontWeight.w500,
       color: AppColors.accentColor,
     ),
-  onChanged: (v) {
-    collectionDraft.name = v.trim();
-  },
-  decoration: InputDecoration(
-    hintText: "Enter collection name",
-    hintStyle: FontManager().getTextStyle(
-      context,
-      fontSize: 16,
-      color: AppColors.border,
-      lWeight: FontWeight.w500,
+    onChanged: (v) {
+      collectionDraft.name = v.trim();
+    },
+    decoration: InputDecoration(
+      hintText: "Enter collection name",
+      hintStyle: FontManager().getTextStyle(
+        context,
+        fontSize: 16,
+        color: AppColors.border,
+        lWeight: FontWeight.w500,
+      ),
+      filled: true,
+      fillColor: AppColors.backgroundColor,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
     ),
-    
-    filled: true,
-    fillColor: AppColors.backgroundColor,
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-  ),
-);
+  );
 }
 
 Widget cardCollection(
@@ -255,9 +264,7 @@ Widget cardCollection(
 
       /// ✅ BORDER ADDED
       border: Border.all(
-        color: isSelected
-            ? AppColors.primaryColor
-            : Colors.transparent,
+        color: isSelected ? AppColors.primaryColor : Colors.transparent,
         width: 2,
       ),
     ),
@@ -269,24 +276,18 @@ Widget cardCollection(
   );
 }
 
-
-
-
-Widget chipCollection(String text, BuildContext context, {bool isSelected = false}) {
+Widget chipCollection(String text, BuildContext context,
+    {bool isSelected = false}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: AppSizes.p10),
     child: Container(
       height: MediaQuery.of(context).size.height / 18,
       width: MediaQuery.of(context).size.width / 1.2,
       decoration: BoxDecoration(
-        color: isSelected
-            ? AppColors.primaryColor
-            : AppColors.backgroundColor,
+        color: isSelected ? AppColors.primaryColor : AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: isSelected
-              ? AppColors.primaryColor
-              : AppColors.border,
+          color: isSelected ? AppColors.primaryColor : AppColors.border,
         ),
       ),
       child: Center(
@@ -295,13 +296,11 @@ Widget chipCollection(String text, BuildContext context, {bool isSelected = fals
           style: FontManager().getTextStyle(
             context,
             fontSize: 14,
-            color: isSelected
-                ? AppColors.backgroundColor
-                : AppColors.accentColor,
+            color:
+                isSelected ? AppColors.backgroundColor : AppColors.accentColor,
           ),
         ),
       ),
     ),
   );
 }
-

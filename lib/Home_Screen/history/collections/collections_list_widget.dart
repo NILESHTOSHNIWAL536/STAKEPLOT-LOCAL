@@ -44,6 +44,7 @@ Widget _buildCollectionsList(BuildContext context) {
               child: _collectionCard(
                 context: context,
                 title: item.name,
+                type: item.type,
                 date: item.expiryAt.toString(),
                 description: item.description,
                 members: [],
@@ -95,16 +96,7 @@ Widget _timelineItem(
       /// 👇 TAP HANDLER ADDED
       GestureDetector(
         onTap: () async {
-          await collectionsController.getCollectionById(collections.id);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) =>  CollectionDetailsPage(
-                title: collections.name, // later pass dynamically
-                hasTransactions: true,
-              ),
-            ),
-          );
+          await collectionsController.getCollectionById(collections.id,context);
         },
         child: child,
       ),
@@ -115,6 +107,7 @@ Widget _timelineItem(
 Widget _collectionCard({
   required BuildContext context,
   required String title,
+  required String type,
   required String date,
   required String description,
   List<String>? members,
@@ -161,6 +154,14 @@ Widget _collectionCard({
         /// DESCRIPTION
         Text(
           description,
+          style: FontManager().getTextStyle(
+            context,
+            fontSize: 12,
+            color: AppColors.accentColor,
+          ),
+        ),
+        Text(
+          type,
           style: FontManager().getTextStyle(
             context,
             fontSize: 12,

@@ -69,7 +69,7 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
           ),
           onPressed: () {},
         ),
-        title: const Text('Goa Trip', style: AppTextStyles.heading3),
+        title: Text("Hwllo qm wkqnwk", style: AppTextStyles.heading3),
         actions: [
           IconButton(
             icon: const Icon(Icons.tune_outlined, color: AppColors.textPrimary),
@@ -152,80 +152,125 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
             ),
           ),
 
-          !collectionsController.hasTransactions
+          collectionsController.splitsList.isEmpty
               ? SliverToBoxAdapter(
                   child: GestureDetector(
                   onTap: _openSelectTransactions,
                   child: emptyTransactionsUI(context),
                 ))
-              : Column(
-                  children: [
-                    // Members & Combined Amount Card
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        child: Column(
-                          children: [
-                            // Subtitle row
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: AppColors.surface.withOpacity(0.6),
-                                borderRadius: BorderRadius.circular(20),
+              : SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      // Members & Combined Amount Card
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          child: Column(
+                            children: [
+                              // Subtitle row
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface.withOpacity(0.6),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  '4 Members | Active since May 2024',
+                                  style: AppTextStyles.bodySmall,
+                                ),
                               ),
-                              child: const Text(
-                                '4 Members | Active since May 2024',
-                                style: AppTextStyles.bodySmall,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            // Combined amount card
-                            Container(
-                              padding: const EdgeInsets.all(18),
-                              decoration: BoxDecoration(
-                                color: AppColors.surface,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.06),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '₹${DummyData.combinedAmount.toStringAsFixed(0)}',
-                                    style: AppTextStyles.amountLarge,
-                                  ),
-                                  const Text(
-                                    'Combined Amount',
-                                    style: AppTextStyles.bodyMedium,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  // Horizontal member scroll
-                                  SizedBox(
-                                    height: 80,
-                                    child: ListView.separated(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: collectionsController
-                                          .collectionDetails
-                                          .value!
-                                          .members
-                                          .length,
-                                      separatorBuilder: (_, __) =>
-                                          const SizedBox(width: 10),
-                                      itemBuilder: (ctx, i) {
-                                        final m = collectionsController
+                              const SizedBox(height: 12),
+                              // Combined amount card
+                              Container(
+                                padding: const EdgeInsets.all(18),
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.06),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '₹${DummyData.combinedAmount.toStringAsFixed(0)}',
+                                      style: AppTextStyles.amountLarge,
+                                    ),
+                                    const Text(
+                                      'Combined Amount',
+                                      style: AppTextStyles.bodyMedium,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    // Horizontal member scroll
+                                    SizedBox(
+                                      height: 80,
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: collectionsController
                                             .collectionDetails
                                             .value!
-                                            .members[i];
-                                        return _MemberSpendCard(member: m);
-                                      },
+                                            .members
+                                            .length,
+                                        separatorBuilder: (_, __) =>
+                                            const SizedBox(width: 10),
+                                        itemBuilder: (ctx, i) {
+                                          final m = collectionsController
+                                              .collectionDetails
+                                              .value!
+                                              .members[i];
+                                          return _MemberSpendCard(member: m);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // Balance Status
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SectionHeader(title: 'Balance Status'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: _BalanceStatusCard(
+                                      title: 'To Pay',
+                                      icon: Icons.arrow_circle_down_outlined,
+                                      iconColor: AppColors.errorRed,
+                                      bgColor: const Color(0xFFFFF0F0),
+                                      entries: balances
+                                          .where((b) =>
+                                              b.type == BalanceType.toPay)
+                                          .toList(),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: _BalanceStatusCard(
+                                      title: 'To Receive',
+                                      icon: Icons.arrow_circle_up_outlined,
+                                      iconColor: AppColors.primaryBlue,
+                                      bgColor: const Color(0xFFF0F4FF),
+                                      entries: balances
+                                          .where((b) =>
+                                              b.type == BalanceType.toReceive)
+                                          .toList(),
                                     ),
                                   ),
                                 ],
@@ -234,122 +279,80 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
                           ],
                         ),
                       ),
-                    ),
 
-                    // Balance Status
-                    SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SectionHeader(title: 'Balance Status'),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: _BalanceStatusCard(
-                                    title: 'To Pay',
-                                    icon: Icons.arrow_circle_down_outlined,
-                                    iconColor: AppColors.errorRed,
-                                    bgColor: const Color(0xFFFFF0F0),
-                                    entries: balances
-                                        .where(
-                                            (b) => b.type == BalanceType.toPay)
-                                        .toList(),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: _BalanceStatusCard(
-                                    title: 'To Receive',
-                                    icon: Icons.arrow_circle_up_outlined,
-                                    iconColor: AppColors.primaryBlue,
-                                    bgColor: const Color(0xFFF0F4FF),
-                                    entries: balances
-                                        .where((b) =>
-                                            b.type == BalanceType.toReceive)
-                                        .toList(),
-                                  ),
-                                ),
-                              ],
+                      // Fixed Bills
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 8),
+                            SectionHeader(
+                              title: 'Fixed Bills',
+                              actionLabel: 'View All',
+                              onAction: () {},
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Fixed Bills
-                    SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 8),
-                          SectionHeader(
-                            title: 'Fixed Bills',
-                            actionLabel: 'View All',
-                            onAction: () {},
-                          ),
-                          ...bills
-                              .take(3)
-                              .map((b) => FixedBillCard(bill: b))
-                              .toList(),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            child: OutlinedButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(Icons.add, size: 18),
-                              label: const Text('Add Bill'),
-                              style: OutlinedButton.styleFrom(
-                                minimumSize: const Size(double.infinity, 48),
-                                side:
-                                    const BorderSide(color: AppColors.divider),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14)),
-                                foregroundColor: AppColors.textPrimary,
+                            ...bills
+                                .take(3)
+                                .map((b) => FixedBillCard(bill: b))
+                                .toList(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: OutlinedButton.icon(
+                                onPressed: () {},
+                                icon: const Icon(Icons.add, size: 18),
+                                label: const Text('Add Bill'),
+                                style: OutlinedButton.styleFrom(
+                                  minimumSize: const Size(double.infinity, 48),
+                                  side: const BorderSide(
+                                      color: AppColors.divider),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(14)),
+                                  foregroundColor: AppColors.textPrimary,
+                                ),
                               ),
                             ),
-                          ),
-                         const Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16, right: 16, bottom: 6),
-                            child: Text(
-                              'Bills are automatically split between members.',
-                              style: AppTextStyles.bodySmall,
-                              textAlign: TextAlign.center,
+                            const Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16, right: 16, bottom: 6),
+                              child: Text(
+                                'Bills are automatically split between members.',
+                                style: AppTextStyles.bodySmall,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
 
-                    // Transactions
-                    SliverToBoxAdapter(
-                      child: const SectionHeader(title: 'Transactions'),
-                    ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (ctx, i) {
-                          final tx = collectionsController.AllTransactions[i];
-                          MemberModel? tagged;
-
-                          return HistoryTransactions(
-                            context: context,
-                            transaction: tx,
-                            index: i,
-                            isExpanded: false,
-                            fromAutoPay: false,
-                            hide: false,
-                            hideReview: false,
-                            date: "",
-                          );
-                        },
-                        childCount:
-                            collectionsController.AllTransactions.length,
+                      // Transactions
+                      SliverToBoxAdapter(
+                        child: const SectionHeader(title: 'Transactions'),
                       ),
-                    ),
-                    const SliverToBoxAdapter(child: SizedBox(height: 32)),
-                  ],
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (ctx, i) {
+                            final tx = collectionsController.AllTransactions[i];
+                            MemberModel? tagged;
+
+                            return HistoryTransactions(
+                              context: context,
+                              transaction: tx,
+                              index: i,
+                              isExpanded: false,
+                              fromAutoPay: false,
+                              hide: false,
+                              hideReview: false,
+                              date: "",
+                            );
+                          },
+                          childCount:
+                              collectionsController.AllTransactions.length,
+                        ),
+                      ),
+                      const SliverToBoxAdapter(child: SizedBox(height: 32)),
+                    ],
+                  ),
                 )
         ],
       ),

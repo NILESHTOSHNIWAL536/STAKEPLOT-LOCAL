@@ -54,7 +54,7 @@ class _StepCollectionTypeState extends State<StepCollectionType> {
           const Spacer(),
           PrimaryButton(
               text: "Proceed",
-              onTap: collectionDraft.type == "shared" ? widget.onNext : null),
+              onTap:( collectionDraft.type == "shared" || collectionDraft.type == "personal") ? widget.onNext : null),
         ],
       ),
     );

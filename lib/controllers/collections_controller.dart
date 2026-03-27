@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../Home_Screen/history/collections/collections_empty_page.dart';
 import '../Home_Screen/history/collections/group_collections_page.dart';
 import '../backed_connections/apiAutomations/curd.dart';
 import '../model/TransactionModel.dart';
@@ -37,9 +39,7 @@ class CollectionsController extends GetxController {
   bool get hasCollectionDetails => collectionDetails.value != null;
 
 // ✅ check transactions empty
-  bool get hasTransactions =>
-      collectionDetails.value != null &&
-      collectionDetails.value!.transactions.isNotEmpty;
+  bool get hasTransactions => splitsList.isNotEmpty;
 
 // ✅ check members
   bool get hasMembers =>
@@ -47,9 +47,7 @@ class CollectionsController extends GetxController {
       collectionDetails.value!.members.isNotEmpty;
 
 // ✅ check splits
-  bool get hasSplits =>
-      collectionDetails.value != null &&
-      collectionDetails.value!.splits.isNotEmpty;
+
 
   // =========================
   // GET COLLECTIONS
@@ -81,7 +79,6 @@ class CollectionsController extends GetxController {
           }
 
           print("FINAL LIST: ${collectionsList.length}");
-          
         } else {
           print("Data is not List ❌: ${decoded['data']}");
         }
@@ -96,17 +93,24 @@ class CollectionsController extends GetxController {
   // =========================
   // GET COLLECTION BY ID
   // =========================
-  Future<void> getCollectionById(String id) async {
+  Future<void> getCollectionById(String id, context) async {
     try {
       isLoading.value = true;
-
       var response =
           await getDataApiCall(CollectionsRoute.getCollectionById(id));
-
       if (getFlagOfResponse(response)) {
         var data = json.decode(response.body);
         collectionDetails.value = CollectionDetailsModel.fromJson(data['data']);
-        getBalances(id);
+        await getSplits(id);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => CollectionDetailsPage(
+              title: collectionDetails.value!.collection.name,
+              hasTransactions: true,
+            ),
+          ),
+        );
       }
     } catch (e) {
       print(e);
@@ -181,6 +185,7 @@ class CollectionsController extends GetxController {
             TransactionModel.listFromJson(data["data"]["transactions"]);
         AllTransactions.clear();
         AllTransactions.addAll(modalObj);
+        getSplits(collectionDetails.value!.collection.id);
       }
     } catch (e) {
       print(e);

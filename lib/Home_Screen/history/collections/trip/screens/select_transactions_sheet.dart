@@ -27,6 +27,9 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
   void initState() {
     super.initState();
     // Work on fresh copies so selection state is local
+    collectionsController.SeletedTransactionsList.clear();
+    collectionsController.selectedTransactions.clear();
+    collectionsController.getAllCollectionsTransactions();
   }
 
   double get _selectedTotal =>
