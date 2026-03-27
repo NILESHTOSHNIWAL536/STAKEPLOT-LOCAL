@@ -1,15 +1,17 @@
 // ─── widgets/common_widgets.dart ─────────────────────────────────────────────
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
+import 'package:flutter_application_code_stakeplot/model/collections_model.dart';
 import 'package:get/get.dart';
 import '../utils/app_theme.dart';
 import '../models/models.dart';
 
 // ── Avatar ────────────────────────────────────────────────────────────────────
 class MemberAvatar extends StatelessWidget {
-  final TripMember member;
+  final MemberModel member;
   final double size;
   final bool showBorder;
 
@@ -26,13 +28,13 @@ class MemberAvatar extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: member.avatarColor,
+        color: Colorcodes.greyLight,
         shape: BoxShape.circle,
         border: showBorder ? Border.all(color: Colors.white, width: 2) : null,
       ),
       child: Center(
         child: Text(
-          member.avatarInitial,
+          member.name.substring(0,2),
           style: TextStyle(
             color: Colors.white,
             fontSize: size * 0.38,

@@ -1,7 +1,8 @@
 // ─── screens/trip_dashboard_screen.dart ──────────────────────────────────────
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:get/get.dart';
+import 'package:flutter_application_code_stakeplot/model/collections_model.dart';
 import '../../../transactions_ui_component.dart';
 import '../../collections_empty_page.dart';
 import '../data/dummy_data.dart';
@@ -37,9 +38,8 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final members = DummyData.members;
-    final balances = DummyData.balances;
     final bills = DummyData.fixedBills;
+    List<BalanceEntry> balances = [];
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -212,11 +212,18 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
                                     height: 80,
                                     child: ListView.separated(
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: members.length,
+                                      itemCount: collectionsController
+                                          .collectionDetails
+                                          .value!
+                                          .members
+                                          .length,
                                       separatorBuilder: (_, __) =>
                                           const SizedBox(width: 10),
                                       itemBuilder: (ctx, i) {
-                                        final m = members[i];
+                                        final m = collectionsController
+                                            .collectionDetails
+                                            .value!
+                                            .members[i];
                                         return _MemberSpendCard(member: m);
                                       },
                                     ),
@@ -303,7 +310,7 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
                               ),
                             ),
                           ),
-                          Padding(
+                         const Padding(
                             padding: const EdgeInsets.only(
                                 left: 16, right: 16, bottom: 6),
                             child: Text(
@@ -324,7 +331,7 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
                       delegate: SliverChildBuilderDelegate(
                         (ctx, i) {
                           final tx = collectionsController.AllTransactions[i];
-                          TripMember? tagged;
+                          MemberModel? tagged;
 
                           return HistoryTransactions(
                             context: context,
@@ -353,12 +360,12 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
 // ── Private Sub-widgets ───────────────────────────────────────────────────────
 
 class _MemberSpendCard extends StatelessWidget {
-  final TripMember member;
+  final MemberModel member;
   const _MemberSpendCard({required this.member});
 
   @override
   Widget build(BuildContext context) {
-    final pct = member.spent / member.budget;
+    final pct = 5500 / 200;
     return SizedBox(
       width: 110,
       child: Column(
@@ -384,7 +391,7 @@ class _MemberSpendCard extends StatelessWidget {
               style: AppTextStyles.bodySmall,
               children: [
                 TextSpan(
-                  text: '${member.spent.toStringAsFixed(0)}',
+                  text: '${500}',
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     color: AppColors.textPrimary,
@@ -392,7 +399,8 @@ class _MemberSpendCard extends StatelessWidget {
                   ),
                 ),
                 TextSpan(
-                  text: '/${member.budget.toStringAsFixed(0)}',
+                  text:
+                      '/${collectionsController.selectedCollection.value?.totalAmount.toStringAsFixed(0)}',
                   style: AppTextStyles.bodySmall,
                 ),
               ],
@@ -405,7 +413,7 @@ class _MemberSpendCard extends StatelessWidget {
               value: pct.clamp(0, 1),
               minHeight: 5,
               backgroundColor: AppColors.tagBg,
-              valueColor: AlwaysStoppedAnimation(member.avatarColor),
+              valueColor: AlwaysStoppedAnimation(Colorcodes.greyLight),
             ),
           ),
         ],

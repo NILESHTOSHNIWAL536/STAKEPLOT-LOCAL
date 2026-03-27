@@ -1,6 +1,8 @@
 // ─── screens/select_members_screen.dart ──────────────────────────────────────
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
+import '../../../../../model/collections_model.dart';
 import '../data/dummy_data.dart';
 import '../models/models.dart';
 import '../utils/app_theme.dart';
@@ -26,7 +28,7 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
   String _query = '';
   final Set<String> _selectedMemberIds = {};
 
-  List<TripMember> get _filtered => DummyData.members
+  List<MemberModel> get _filtered => collectionsController.collectionDetails.value!.members
       .where((m) => m.name.toLowerCase().contains(_query.toLowerCase()))
       .toList();
 
@@ -41,10 +43,11 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
   }
 
   void _proceedToSplit() {
-    final selectedMembers = DummyData.members
-        .where((m) => _selectedMemberIds.contains(m.id))
-        .toList();
-    if (selectedMembers.isEmpty) return;
+    List<MemberModel> selectedMembers = [];
+    
+    collectionsController.collectionDetails.value?.members.forEach((e)=>
+             selectedMembers.add(MemberModel(collectionId:e.collectionId,id: e.id,name: e.name,role: e.role,userId: e.userId )
+    ));
 
     Navigator.push(
       context,

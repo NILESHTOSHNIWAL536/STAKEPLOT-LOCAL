@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,18 +19,25 @@ import 'widget_services/widget_service.dart';
 FinvuManager finvuManager = FinvuManager();
 late IO.Socket mainPageWebSocket;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> updateNavigatorKey = GlobalKey<NavigatorState>(); 
+final GlobalKey<NavigatorState> updateNavigatorKey =
+    GlobalKey<NavigatorState>();
 
-void main() async 
-{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   SystemChrome.setEnabledSystemUIMode(
+  SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: SystemUiOverlay.values, // ⬅️ THIS IS KEY
   );
-  main_apis_call_init();
-  
+  // main_apis_call_init();
+  runZonedGuarded(() {
+    runApp(const MyApp());
+  }, (Object error, StackTrace stack) {
+    // Handle uncaught async errors here
+    handleError(error, stack);
+  });
+
 }
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -53,7 +62,7 @@ class _MyAppState extends State<MyApp> {
   void loadThemes() async {
     await Get.put(ThemeController());
     themeController.loadTheme();
-     AppComponentSizes.init(context);
+    AppComponentSizes.init(context);
   }
 
   @override

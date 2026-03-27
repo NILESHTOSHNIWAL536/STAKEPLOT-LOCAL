@@ -40,12 +40,12 @@ void main_apis_call_init()async{
 
   // Initialize widget service (handles WorkManager and widgets only)
   initializeWidgetService();
-  runZonedGuarded(() {
-    runApp(const MyApp());
-  }, (Object error, StackTrace stack) {
-    // Handle uncaught async errors here
-    handleError(error, stack);
-  });
+  // runZonedGuarded(() {
+  //   runApp(const MyApp());
+  // }, (Object error, StackTrace stack) {
+  //   // Handle uncaught async errors here
+  //   handleError(error, stack);
+  // });
 
 }
 

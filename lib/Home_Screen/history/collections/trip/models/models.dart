@@ -1,26 +1,27 @@
 // ─── models/models.dart ───────────────────────────────────────────────────────
 import 'package:flutter/material.dart' show Color;
+import 'package:flutter_application_code_stakeplot/model/collections_model.dart';
 
-class TripMember {
-  final String id;
-  final String name;
-  final String avatarInitial;
-  final Color avatarColor;
-  final double spent;
-  final double budget;
+// class TripMember {
+//   final String id;
+//   final String name;
+//   final String avatarInitial;
+//   final Color avatarColor;
+//   final double spent;
+//   final double budget;
 
-  const TripMember({
-    required this.id,
-    required this.name,
-    required this.avatarInitial,
-    required this.avatarColor,
-    required this.spent,
-    required this.budget,
-  });
-}
+//   const TripMember({
+//     required this.id,
+//     required this.name,
+//     required this.avatarInitial,
+//     required this.avatarColor,
+//     required this.spent,
+//     required this.budget,
+//   });
+// }
 
 class BalanceEntry {
-  final TripMember member;
+  final MemberModel member;
   final double amount;
   final BalanceType type;
 
@@ -78,7 +79,7 @@ class Transaction {
 }
 
 class SplitEntry {
-  final TripMember member;
+  final MemberModel member;
   double amount;
   bool isManuallyEdited;
 

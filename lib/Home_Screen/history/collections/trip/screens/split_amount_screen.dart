@@ -1,6 +1,7 @@
 // ─── screens/split_amount_screen.dart ────────────────────────────────────────
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../../../model/collections_model.dart';
 import '../models/models.dart';
 import '../utils/app_theme.dart';
 import '../widgets/common_widgets.dart';
@@ -8,7 +9,7 @@ import 'split_confirmation_screen.dart';
 
 class SplitAmountScreen extends StatefulWidget {
   final List<Transaction> selectedTransactions;
-  final List<TripMember> selectedMembers;
+  final List<MemberModel> selectedMembers;
   final double totalAmount;
 
   const SplitAmountScreen({

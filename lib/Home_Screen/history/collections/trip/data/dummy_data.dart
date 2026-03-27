@@ -4,96 +4,96 @@ import '../models/models.dart';
 
 class DummyData {
   // ── Members ──────────────────────────────────────────────────────────────
-  static final List<TripMember> members = [
-    const TripMember(
-      id: 'm1',
-      name: 'Meena',
-      avatarInitial: 'M',
-      avatarColor: Color(0xFF3D4F7C),
-      spent: 385,
-      budget: 400,
-    ),
-    const TripMember(
-      id: 'm2',
-      name: 'Reena',
-      avatarInitial: 'R',
-      avatarColor: Color(0xFF7B4F9E),
-      spent: 385,
-      budget: 400,
-    ),
-    const TripMember(
-      id: 'm3',
-      name: 'Riya',
-      avatarInitial: 'R',
-      avatarColor: Color(0xFF2E7D32),
-      spent: 320,
-      budget: 400,
-    ),
-    const TripMember(
-      id: 'm4',
-      name: 'Arjun',
-      avatarInitial: 'A',
-      avatarColor: Color(0xFF00838F),
-      spent: 280,
-      budget: 400,
-    ),
-    const TripMember(
-      id: 'm5',
-      name: 'Karan',
-      avatarInitial: 'K',
-      avatarColor: Color(0xFF6D4C41),
-      spent: 240,
-      budget: 400,
-    ),
-    const TripMember(
-      id: 'm6',
-      name: 'Priya',
-      avatarInitial: 'P',
-      avatarColor: Color(0xFF455A64),
-      spent: 190,
-      budget: 400,
-    ),
-    const TripMember(
-      id: 'm7',
-      name: 'Anu',
-      avatarInitial: 'A',
-      avatarColor: Color(0xFF3D4F7C),
-      spent: 150,
-      budget: 400,
-    ),
-    const TripMember(
-      id: 'm8',
-      name: 'Anusri',
-      avatarInitial: 'A',
-      avatarColor: Color(0xFF7B4F9E),
-      spent: 100,
-      budget: 400,
-    ),
-  ];
+  // static final List<TripMember> members = [
+  //   const TripMember(
+  //     id: 'm1',
+  //     name: 'Meena',
+  //     avatarInitial: 'M',
+  //     avatarColor: Color(0xFF3D4F7C),
+  //     spent: 385,
+  //     budget: 400,
+  //   ),
+  //   const TripMember(
+  //     id: 'm2',
+  //     name: 'Reena',
+  //     avatarInitial: 'R',
+  //     avatarColor: Color(0xFF7B4F9E),
+  //     spent: 385,
+  //     budget: 400,
+  //   ),
+  //   const TripMember(
+  //     id: 'm3',
+  //     name: 'Riya',
+  //     avatarInitial: 'R',
+  //     avatarColor: Color(0xFF2E7D32),
+  //     spent: 320,
+  //     budget: 400,
+  //   ),
+  //   const TripMember(
+  //     id: 'm4',
+  //     name: 'Arjun',
+  //     avatarInitial: 'A',
+  //     avatarColor: Color(0xFF00838F),
+  //     spent: 280,
+  //     budget: 400,
+  //   ),
+  //   const TripMember(
+  //     id: 'm5',
+  //     name: 'Karan',
+  //     avatarInitial: 'K',
+  //     avatarColor: Color(0xFF6D4C41),
+  //     spent: 240,
+  //     budget: 400,
+  //   ),
+  //   const TripMember(
+  //     id: 'm6',
+  //     name: 'Priya',
+  //     avatarInitial: 'P',
+  //     avatarColor: Color(0xFF455A64),
+  //     spent: 190,
+  //     budget: 400,
+  //   ),
+  //   const TripMember(
+  //     id: 'm7',
+  //     name: 'Anu',
+  //     avatarInitial: 'A',
+  //     avatarColor: Color(0xFF3D4F7C),
+  //     spent: 150,
+  //     budget: 400,
+  //   ),
+  //   const TripMember(
+  //     id: 'm8',
+  //     name: 'Anusri',
+  //     avatarInitial: 'A',
+  //     avatarColor: Color(0xFF7B4F9E),
+  //     spent: 100,
+  //     budget: 400,
+  //   ),
+  // ];
 
   // ── Balance entries ───────────────────────────────────────────────────────
-  static List<BalanceEntry> get balances => [
-        BalanceEntry(
-          member: members[2],
-          amount: 600,
-          type: BalanceType.toPay,
-        ),
-        BalanceEntry(
-          member: members[3],
-          amount: 450,
-          type: BalanceType.toPay,
-        ),
-        BalanceEntry(
-          member: members[0],
-          amount: 800,
-          type: BalanceType.toReceive,
-        ),
-        BalanceEntry(
-          member: members[4],
-          amount: 350,
-          type: BalanceType.toReceive,
-        ),
-      ];
+  // static List<BalanceEntry> get balances => [
+  //       BalanceEntry(
+  //         member: members[2],
+  //         amount: 600,
+  //         type: BalanceType.toPay,
+  //       ),
+  //       BalanceEntry(
+  //         member: members[3],
+  //         amount: 450,
+  //         type: BalanceType.toPay,
+  //       ),
+  //       BalanceEntry(
+  //         member: members[0],
+  //         amount: 800,
+  //         type: BalanceType.toReceive,
+  //       ),
+  //       BalanceEntry(
+  //         member: members[4],
+  //         amount: 350,
+  //         type: BalanceType.toReceive,
+  //       ),
+  //     ];
 
   // ── Fixed Bills ───────────────────────────────────────────────────────────
   static final List<FixedBill> fixedBills = [
