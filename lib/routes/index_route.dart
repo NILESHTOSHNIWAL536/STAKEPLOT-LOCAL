@@ -17,7 +17,6 @@ class API {
 
   static final String mainBackendUrl = "${urlWithLocallHost}api/v1";
   static final String EmailUrl = "${urlWithLocallHost}api/v1/email";
-  // static final String BankApiUrl = "${Credentials.LIVE_API}api/v1";
   static final String BankApiUrl = "${urlWithLocallHost}api/v1/bank";
 }
 

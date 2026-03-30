@@ -21,7 +21,6 @@ class BalanceModel {
       user: json['user'] != null ? UserModel.fromJson(json['user']) : null,
     );
   }
-
 }
 
 class CollectionTransactionModel {
@@ -88,7 +87,7 @@ class CollectionModel {
     this.outStandingAmount = 0,
   });
 
-  factory CollectionModel.fromJson(Map<String, dynamic> json) {
+  factory CollectionModel.fromJson(Map<String, dynamic> json, objjson) {
     return CollectionModel(
       id: json['_id'],
       name: json['name'] ?? '',
@@ -99,9 +98,9 @@ class CollectionModel {
       expiryAt:
           json['expiryAt'] != null ? DateTime.parse(json['expiryAt']) : null,
       totalAmount: (json['totalAmount'] ?? 0).toDouble(),
-      totalCredit: (json['totalCredit'] ?? 0).toDouble(),
-      totalDebit: (json['totalDebit'] ?? 0).toDouble(),
-      outStandingAmount: (json['outStandingAmount'] ?? 0).toDouble(),
+      totalCredit: (objjson['totalCredit'] ?? 0).toDouble(),
+      totalDebit: (objjson['totalDebit'] ?? 0).toDouble(),
+      outStandingAmount: (objjson['outStandingAmount'] ?? 0).toDouble(),
     );
   }
 }
@@ -135,20 +134,20 @@ class MemberModel {
 class CollectionDetailsModel {
   CollectionModel collection;
   List<MemberModel> members;
-  // List<CollectionTransactionModel> transactions;
+  List<TransactionModel> transactions;
   // List<SplitModel> splits;
 
   CollectionDetailsModel({
     required this.collection,
     required this.members,
-    // required this.transactions,
+    required this.transactions,
     // required this.splits,
   });
 
   factory CollectionDetailsModel.fromJson(Map<String, dynamic> json) {
     return CollectionDetailsModel(
       // ✅ COLLECTION
-      collection: CollectionModel.fromJson(json['collection'] ?? {}),
+      collection: CollectionModel.fromJson(json['collection'] ?? {}, json),
 
       // ✅ MEMBERS
       members: (json['members'] as List? ?? [])
@@ -156,9 +155,9 @@ class CollectionDetailsModel {
           .toList(),
 
       // ✅ TRANSACTIONS
-      // transactions: (json['transactions'] as List? ?? [])
-      //     .map((e) => CollectionTransactionModel.fromJson(e))
-      //     .toList(),
+      transactions: (json['transactions'] as List? ?? [])
+          .map((e) => TransactionModel.fromJson(e["transactionId"] ?? {}))
+          .toList(),
 
       // // ✅ SPLITS
       // splits: (json['splits'] as List? ?? [])
@@ -263,4 +262,3 @@ class UserModel {
     );
   }
 }
-

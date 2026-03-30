@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import '../../../Constants/app_styles.dart';
@@ -8,10 +9,11 @@ import '../../../Constants/font_manager.dart';
 import '../transactionHistoryScreen.dart';
 import 'collection_setting.dart';
 import 'group_collections_page.dart';
+import 'personal-collections.dart';
 import 'trip/screens/select_transactions_sheet.dart';
 import 'trip/screens/trip_dashboard_screen.dart';
 
-void _openSelectTransactions(context, type) {
+void openSelectTransactions(context, type) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -32,6 +34,11 @@ class CollectionDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    if (hasTransactions && type == "PERSONAL") {
+      return const CollectionSummarySection();
+    }
+
     return Scaffold(
       backgroundColor: AppColors.border,
       body: SafeArea(
@@ -137,70 +144,154 @@ class CollectionDetailsPage extends StatelessWidget {
         children: [
           _summaryCard(
             context,
-            title: "Total Spent",
-            amount: "₹12,450",
-            bgColor: AppColors.bg5,
-            isSpent: true,
           ),
           SizedBox(width: AppSizes.w12),
           _summaryCard(
             context,
-            title: "Remaining",
-            amount: "₹5,550",
-            bgColor: AppColors.backgroundColor,
-            isSpent: false,
           ),
         ],
       ),
     );
   }
 
-  Widget _summaryCard(
+  Widget _topItem(
     BuildContext context, {
-    required bool isSpent,
     required String title,
-    required String amount,
-    required Color bgColor,
+    required String subtitle,
+    required double amount,
+    required bool isCredit,
   }) {
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(AppSizes.p14),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: const Color(0xFFE5E7EB),
-            width: 0,
-          ),
-        ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              backgroundColor: AppColors.primaryColor,
-              radius: 14,
-              child: Icon(
-                isSpent ? Icons.arrow_downward : Icons.arrow_upward,
-                size: 18,
-                color: AppColors.backgroundColor,
-              ),
+            /// ICON + TITLE
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 16,
+                  backgroundColor: Colors.grey.shade200,
+                  child: Icon(
+                    isCredit ? Icons.arrow_downward : Icons.arrow_upward,
+                    size: 18,
+                    color: const Color(0xFF4B4E78),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 13,
+                    lWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: AppSizes.h6),
+
+            const SizedBox(height: 4),
+
+            /// SUBTEXT
             Text(
-              amount,
+              subtitle,
               style: FontManager().getTextStyle(
                 context,
-                fontSize: 24,
+                fontSize: 11,
+                color: Colors.grey,
+              ),
+            ),
+
+            const SizedBox(height: 6),
+
+            /// AMOUNT
+            Text(
+              "₹${amount.toStringAsFixed(0)}",
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 20,
                 lWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(height: AppSizes.h6),
-            Text(
-              title,
-              style: FontManager().getTextStyle(
-                context,
-                fontSize: 13,
-                color: isSpent ? AppColors.creditColor : AppColors.debitColor,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _summaryCard(BuildContext context) {
+    final data = collectionsController.collectionDetails.value;
+
+    final totalCredit = data?.collection.totalCredit ?? 0;
+
+    final totalDebit = data?.collection.totalDebit ?? 0;
+
+    final outstanding = data?.collection.outStandingAmount ?? 0;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            /// 🔥 TOP (RECEIVED + SPENT)
+            Row(
+              children: [
+                _topItem(
+                  context,
+                  title: "Received",
+                  subtitle: "10 credits",
+                  amount: totalCredit,
+                  isCredit: true,
+                ),
+
+                /// Divider
+                Container(
+                  height: 70,
+                  width: 1,
+                  color: Colors.grey.shade300,
+                ),
+
+                _topItem(
+                  context,
+                  title: "Spent",
+                  subtitle: "10 debits",
+                  amount: totalDebit,
+                  isCredit: false,
+                ),
+              ],
+            ),
+
+            /// Bottom divider
+            Divider(color: Colors.grey.shade300, height: 1),
+
+            /// 🔥 OUTSTANDING
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Outstanding Amount",
+                    style: FontManager().getTextStyle(
+                      context,
+                      fontSize: 13,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Text(
+                    "₹ ${outstanding.toStringAsFixed(2)}",
+                    style: FontManager().getTextStyle(
+                      context,
+                      fontSize: 14,
+                      lWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -215,14 +306,7 @@ class CollectionDetailsPage extends StatelessWidget {
       child: Column(
         children: [
           _appBar(context),
-          _summarySection(context),
-          Container(
-            height: MediaQuery.sizeOf(context).height / 1.43,
-            color: AppColors.border,
-            child: TransactionHistoryScreen(
-              isFromCollection: true,
-            ),
-          )
+          CollectionSummarySection(),
         ],
       ),
     );
@@ -318,7 +402,7 @@ Widget emptyTransactionsUI(
                     ),
                     onPressed: () {
                       // open add transaction flow
-                      _openSelectTransactions(context, splitType);
+                      openSelectTransactions(context, splitType);
                     },
                     child: Text(
                       "+ Add Transactions",

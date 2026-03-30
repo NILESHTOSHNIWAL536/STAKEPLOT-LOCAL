@@ -51,11 +51,11 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
     });
 
     if (widget.splitType != "SHARED") {
-      collectionsController.addTransactionToPersonal(
-          collectionId:
-              collectionsController.collectionDetails.value?.collection.id ??
-                  '',
-          transactionIds: collectionsController.selectedTransactions);
+      collectionsController.addTransaction(
+          collectionId:collectionsController.collectionDetails.value?.collection.id ??'',
+          transactionIds: collectionsController.selectedTransactions,
+          splitType: ""
+        );
       return;
     }
 
@@ -73,7 +73,6 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.splitType);
     return DraggableScrollableSheet(
       initialChildSize: 0.93,
       minChildSize: 0.5,

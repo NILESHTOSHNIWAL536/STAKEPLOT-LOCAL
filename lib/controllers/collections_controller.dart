@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../Home_Screen/history/collections/collections_empty_page.dart';
+import '../Home_Screen/history/collections/collections_HomePage.dart';
 import '../Home_Screen/history/collections/trip/screens/trip_dashboard_screen.dart';
 import '../backed_connections/apiAutomations/curd.dart';
 import '../model/TransactionModel.dart';
@@ -61,7 +61,7 @@ class CollectionsController extends GetxController {
 
           for (var item in list) {
             try {
-              collectionsList.add(CollectionModel.fromJson(item));
+              collectionsList.add(CollectionModel.fromJson(item, {}));
             } catch (e) {
               debugPrint("CollectionModel parse error: $e — item: $item");
             }
@@ -105,7 +105,10 @@ class CollectionsController extends GetxController {
             builder: (_) => CollectionDetailsPage(
               title: collectionDetails.value!.collection.name,
               type: collectionDetails.value!.collection.type,
-              hasTransactions: splitsList.isNotEmpty,
+              hasTransactions: collectionDetails.value!.collection.type ==
+                      "SHARED"
+                  ? splitsList.isNotEmpty
+                  : collectionDetails.value?.transactions.isNotEmpty ?? false,
             ),
           ),
         );
