@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:get/get.dart';
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
@@ -7,57 +8,94 @@ import '../../../Constants/font_manager.dart';
 import '../../../backed_connections/apis_connect.dart';
 import '../../../image_service/avatarProfile.dart';
 import '../../../model/collections_model.dart';
-import 'collections_empty_page.dart';
 import 'create_collection_data.dart';
 import 'create_collection_pages/create_collection_flow.dart';
 
+/// ------------------------------
+/// MAIN
+/// ------------------------------
 Widget buildCollectionsBody(BuildContext context) {
-  // TEMP flag – replace with API data later
-
   collectionsController.getCollections();
 
-  return Obx(() => collectionsController.collectionsList.isNotEmpty
-      ? _buildCollectionsList(context)
-      : _buildEmptyCollectionsUI(context));
+  return Obx(() {
+    if (collectionsController.collectionsList.isEmpty) {
+      return _buildEmptyCollectionsUI(context);
+    }
+
+    final allCollections = collectionsController.collectionsList
+        .where((e) => e.status.toLowerCase() != "closed")
+        .toList();
+
+    final closedCollections = collectionsController.collectionsList
+        .where((e) => e.status.toLowerCase() == "closed")
+        .toList();
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CreateCollections(context),
+
+          const SizedBox(height: 16),
+
+          /// 🔵 ALL COLLECTIONS
+          if (allCollections.isNotEmpty) ...[
+            _sectionTitle("All Collections"),
+            _timelineList(context, allCollections),
+          ],
+
+          const SizedBox(height: 20),
+
+          /// ⚫ CLOSED COLLECTIONS
+          if (closedCollections.isNotEmpty) ...[
+            _sectionTitle("Closed Collections"),
+            _timelineList(context, closedCollections),
+          ],
+        ],
+      ),
+    );
+  });
 }
 
-Widget _buildCollectionsList(BuildContext context) {
-  return SingleChildScrollView(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p8),
-    child: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: CreateCollections(context),
-        ),
-        Column(
-          children: List.generate(collectionsController.collectionsList.length,
-              (index) {
-            final item = collectionsController.collectionsList[index];
-            final isLast =
-                index == collectionsController.collectionsList.length;
-
-            return _timelineItem(
-              context,
-              item,
-              isLast: isLast,
-              child: _collectionCard(
-                context: context,
-                title: item.name,
-                type: item.type,
-                date: item.expiryAt.toString(),
-                description: item.description,
-                members: [],
-                amount: item.totalAmount.toString(),
-              ),
-            );
-          }),
-        ),
-      ],
+/// ------------------------------
+/// SECTION TITLE
+/// ------------------------------
+Widget _sectionTitle(String title) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: Text(
+      title,
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
+        color: AppColors.primaryColor,
+      ),
     ),
   );
 }
 
+/// ------------------------------
+/// TIMELINE LIST
+/// ------------------------------
+Widget _timelineList(BuildContext context, List<CollectionModel> list) {
+  return Column(
+    children: List.generate(list.length, (index) {
+      final item = list[index];
+
+      return _timelineItem(
+        context,
+        item,
+        isLast: index == list.length - 1,
+        child: _collectionCard(context, item),
+      );
+    }),
+  );
+}
+
+/// ------------------------------
+/// TIMELINE ITEM
+/// ------------------------------
 Widget _timelineItem(
   BuildContext context,
   CollectionModel collections, {
@@ -67,61 +105,55 @@ Widget _timelineItem(
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      SizedBox(
-        width: 32,
-        child: Column(
-          children: [
-            Container(
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                color: AppColors.border,
-                border: Border.all(
-                  color: AppColors.primaryColor,
-                  width: 2,
-                ),
-                shape: BoxShape.circle,
-              ),
-            ),
-            if (!isLast)
-              Container(
-                width: 1.5,
-                height: 120,
+      Column(
+        children: [
+          Container(
+            width: 14,
+            height: 14,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
                 color: AppColors.primaryColor,
+                width: 2,
               ),
-          ],
-        ),
+              shape: BoxShape.circle,
+            ),
+          ),
+          if (!isLast)
+            Container(
+              width: 2,
+              height: 90,
+              color: AppColors.primaryColor.withOpacity(0.5),
+            ),
+        ],
       ),
 
-      /// 👇 TAP HANDLER ADDED
-      GestureDetector(
-        onTap: () async {
-          await collectionsController.getCollectionById(
-              collections.id, context);
-        },
-        child: child,
+      const SizedBox(width: 12),
+
+      /// TAP
+      Expanded(
+        child: GestureDetector(
+          onTap: () async {
+            await collectionsController.getCollectionById(
+                collections.id, context);
+          },
+          child: child,
+        ),
       ),
     ],
   );
 }
 
-Widget _collectionCard({
-  required BuildContext context,
-  required String title,
-  required String type,
-  required String date,
-  required String description,
-  List<String>? members,
-  String? amount,
-}) {
+/// ------------------------------
+/// COLLECTION CARD (RESPONSIVE)
+/// ------------------------------
+Widget _collectionCard(BuildContext context, CollectionModel item) {
   return Container(
-    height: MediaQuery.of(context).size.height * 0.16,
-    width: MediaQuery.of(context).size.width * 0.8,
-    margin: const EdgeInsets.only(bottom: 8),
-    padding: const EdgeInsets.all(AppSizes.p14),
+    margin: const EdgeInsets.only(bottom: 14),
+    padding: const EdgeInsets.all(14),
     decoration: BoxDecoration(
       color: AppColors.backgroundColor,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(16),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,7 +163,7 @@ Widget _collectionCard({
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              title,
+              item.name,
               style: FontManager().getTextStyle(
                 context,
                 fontSize: 15,
@@ -140,7 +172,7 @@ Widget _collectionCard({
               ),
             ),
             Text(
-              date,
+              item.expiryAt != null ? formatWhatsAppDate(item.expiryAt!) : "",
               style: FontManager().getTextStyle(
                 context,
                 fontSize: 12,
@@ -150,71 +182,118 @@ Widget _collectionCard({
           ],
         ),
 
-        SizedBox(height: AppSizes.h6),
+        const SizedBox(height: 6),
 
         /// DESCRIPTION
         Text(
-          description,
+          item.description,
           style: FontManager().getTextStyle(
             context,
             fontSize: 12,
-            color: AppColors.accentColor,
-          ),
-        ),
-        Text(
-          type,
-          style: FontManager().getTextStyle(
-            context,
-            fontSize: 12,
-            color: AppColors.accentColor,
+            color: AppColors.grey,
           ),
         ),
 
-        /// MEMBERS + AMOUNT
-        if (members != null) ...[
-          SizedBox(height: AppSizes.h10),
-          Row(
-            children: [
-              ...members.map(
-                (e) => Container(
-                  margin: const EdgeInsets.only(right: AppSizes.p6),
-                  padding: const EdgeInsets.all(AppSizes.p6),
-                  decoration: const BoxDecoration(
-                    color: AppColors.button,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    e,
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 12,
-                      color: AppColors.backgroundColor,
+        const SizedBox(height: 10),
+
+        /// MEMBERS + AMOUNT (dummy for now)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                _memberCircle("A"),
+                _memberCircle("B"),
+                _memberCircle("C"),
+                _memberCircle("+2"),
+                const SizedBox(width: 8),
+                if (item.totalAmount > 0)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      "₹${item.totalAmount}",
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 11,
+                        color: AppColors.white,
+                      ),
                     ),
                   ),
-                ),
+              ],
+            ),
+            Text(
+              item.type,
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 12,
+                color: AppColors.accentColor,
               ),
-              if (amount != null)
-                Container(
-                  margin: const EdgeInsets.only(left: AppSizes.p8),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: AppSizes.p4),
-                  decoration: BoxDecoration(
-                    color: AppColors.bg5,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    "Contributed: $amount",
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 11,
-                      color: AppColors.accentColor,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ],
+    ),
+  );
+}
+
+/// ------------------------------
+/// MEMBER CHIP
+/// ------------------------------
+Widget _memberCircle(String text) {
+  return Container(
+    margin: const EdgeInsets.only(right: 6),
+    padding: const EdgeInsets.all(8),
+    decoration: const BoxDecoration(
+      color: AppColors.primaryColor,
+      shape: BoxShape.circle,
+    ),
+    child: Text(
+      text,
+      style: const TextStyle(color: Colors.white, fontSize: 12),
+    ),
+  );
+}
+
+Widget CreateCollections(context) {
+  return SizedBox(
+    width: double.infinity,
+    height: MediaQuery.of(context).size.height * 0.06,
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
+      ),
+      onPressed: () {
+        collectionDraft.name = null;
+        collectionDraft.type = null;
+        collectionDraft.members = [];
+        collectionDraft.roles = {};
+        collectionDraft.duration = null;
+        collectionDraft.description = null;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CreateCollectionFlow(),
+          ),
+        );
+      },
+      child: Text(
+        "+ Create Collection",
+        style: FontManager().getTextStyle(
+          context,
+          fontSize: 16,
+          lWeight: FontWeight.w500,
+          color: AppColors.backgroundColor,
+        ),
+      ),
     ),
   );
 }
@@ -290,45 +369,6 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
 
           /// Create Button
         ],
-      ),
-    ),
-  );
-}
-
-Widget CreateCollections(context) {
-  return SizedBox(
-    width: double.infinity,
-    height: MediaQuery.of(context).size.height * 0.06,
-    child: ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primaryColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
-      ),
-      onPressed: () {
-        collectionDraft.name = null;
-        collectionDraft.type = null;
-        collectionDraft.members = [];
-        collectionDraft.roles = {};
-        collectionDraft.duration = null;
-        collectionDraft.description = null;
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const CreateCollectionFlow(),
-          ),
-        );
-      },
-      child: Text(
-        "+ Create Collection",
-        style: FontManager().getTextStyle(
-          context,
-          fontSize: 16,
-          lWeight: FontWeight.w500,
-          color: AppColors.backgroundColor,
-        ),
       ),
     ),
   );

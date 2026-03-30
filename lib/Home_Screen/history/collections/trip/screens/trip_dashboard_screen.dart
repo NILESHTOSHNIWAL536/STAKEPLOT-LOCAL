@@ -39,7 +39,7 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const SelectTransactionsSheet(),
+      builder: (_) => SelectTransactionsSheet(),
     );
   }
 
@@ -295,30 +295,58 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
                         const SectionHeader(title: 'Balance Status'),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: _BalanceStatusCard(
-                                  title: 'To Pay',
-                                  icon: Icons.arrow_circle_down_outlined,
-                                  iconColor: AppColors.errorRed,
-                                  bgColor: const Color(0xFFFFF0F0),
-                                  balances: toPayEntries,
-                                  members: members,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: _BalanceStatusCard(
-                                  title: 'To Receive',
-                                  icon: Icons.arrow_circle_up_outlined,
-                                  iconColor: AppColors.primaryBlue,
-                                  bgColor: const Color(0xFFF0F4FF),
-                                  balances: toReceiveEntries,
-                                  members: members,
-                                ),
-                              ),
-                            ],
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              final isMobile = constraints.maxWidth < 400;
+
+                              return isMobile
+                                  ? Column(
+                                      children: [
+                                        _ModernBalanceCard(
+                                          title: "To Pay",
+                                          icon: Icons.arrow_downward,
+                                          iconColor: AppColors.errorRed,
+                                          bgColor: const Color(0xFFFFF3F3),
+                                          balances: toPayEntries,
+                                          members: members,
+                                        ),
+                                        const SizedBox(height: 12),
+                                        _ModernBalanceCard(
+                                          title: "To Receive",
+                                          icon: Icons.arrow_upward,
+                                          iconColor: AppColors.paidBadge,
+                                          bgColor: const Color(0xFFF3F5FF),
+                                          balances: toReceiveEntries,
+                                          members: members,
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        Expanded(
+                                          child: _ModernBalanceCard(
+                                            title: "To Pay",
+                                            icon: Icons.arrow_downward,
+                                            iconColor: AppColors.errorRed,
+                                            bgColor: const Color(0xFFFFF3F3),
+                                            balances: toPayEntries,
+                                            members: members,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: _ModernBalanceCard(
+                                            title: "To Receive",
+                                            icon: Icons.arrow_upward,
+                                            iconColor: AppColors.paidBadge,
+                                            bgColor: const Color(0xFFF3F5FF),
+                                            balances: toReceiveEntries,
+                                            members: members,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                            },
                           ),
                         ),
                       ],
@@ -684,6 +712,117 @@ class _BalanceStatusCard extends StatelessWidget {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ModernBalanceCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color iconColor;
+  final Color bgColor;
+  final List<BalanceModel> balances;
+  final List<MemberModel> members;
+
+  const _ModernBalanceCard({
+    required this.title,
+    required this.icon,
+    required this.iconColor,
+    required this.bgColor,
+    required this.balances,
+    required this.members,
+  });
+
+  String _getName(String userId) {
+    final m = members.where((m) => m.userId == userId).toList();
+    return m.isNotEmpty ? m.first.name : userId;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.textSecondary,
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// HEADER
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 12,
+                backgroundColor: iconColor.withOpacity(0.15),
+                child: Icon(icon, size: 14, color: iconColor),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                title,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          /// USERS
+          ...balances.map((b) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundColor: AppColors.primaryDark.withOpacity(0.15),
+                      child: Text(
+                        _getName(b.userId)[0].toUpperCase(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryDark,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        _getName(b.userId),
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "₹${b.balance.toStringAsFixed(0)}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: iconColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
         ],
       ),
     );

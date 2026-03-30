@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:get/get.dart';
-import '../../../../../model/TransactionModel.dart';
-import '../data/dummy_data.dart';
 import '../models/models.dart';
 import '../utils/app_theme.dart';
 import '../widgets/common_widgets.dart';
 import 'select_members_screen.dart';
 
 class SelectTransactionsSheet extends StatefulWidget {
-  const SelectTransactionsSheet({super.key});
+  String splitType = "SHARED";
+  SelectTransactionsSheet({super.key, this.splitType = "SHARED"});
 
   @override
   State<SelectTransactionsSheet> createState() =>
@@ -51,6 +50,15 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
         ));
     });
 
+    if (widget.splitType != "SHARED") {
+      collectionsController.addTransactionToPersonal(
+          collectionId:
+              collectionsController.collectionDetails.value?.collection.id ??
+                  '',
+          transactionIds: collectionsController.selectedTransactions);
+      return;
+    }
+
     Navigator.pop(context);
     Navigator.push(
       context,
@@ -65,6 +73,7 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.splitType);
     return DraggableScrollableSheet(
       initialChildSize: 0.93,
       minChildSize: 0.5,
@@ -110,49 +119,53 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
                     'Select Transactions',
                     style: AppTextStyles.heading3,
                   ),
-                  GestureDetector(
-                    onTap: collectionsController.selectedTransactions.length > 0
-                        ? _proceedToMembers
-                        : null,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color:
-                            collectionsController.selectedTransactions.length >
-                                    0
-                                ? AppColors.primaryDark
-                                : AppColors.tagBg,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.call_split,
-                            size: 16,
-                            color: collectionsController
-                                        .selectedTransactions.length >
-                                    0
-                                ? Colors.white
-                                : AppColors.textLight,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Split',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
+                  widget.splitType == "SHARED"
+                      ? GestureDetector(
+                          onTap: collectionsController
+                                      .selectedTransactions.length >
+                                  0
+                              ? _proceedToMembers
+                              : null,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
                               color: collectionsController
                                           .selectedTransactions.length >
                                       0
-                                  ? Colors.white
-                                  : AppColors.textLight,
+                                  ? AppColors.primaryDark
+                                  : AppColors.tagBg,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.call_split,
+                                  size: 16,
+                                  color: collectionsController
+                                              .selectedTransactions.length >
+                                          0
+                                      ? Colors.white
+                                      : AppColors.textLight,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Split',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: collectionsController
+                                                .selectedTransactions.length >
+                                            0
+                                        ? Colors.white
+                                        : AppColors.textLight,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        )
+                      : SizedBox.shrink(),
                 ],
               ),
             ),

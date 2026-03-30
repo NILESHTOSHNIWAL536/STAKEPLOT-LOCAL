@@ -89,8 +89,7 @@ class CollectionsController extends GetxController {
           await getDataApiCall(CollectionsRoute.getCollectionById(id));
       if (getFlagOfResponse(response)) {
         var data = json.decode(response.body);
-        collectionDetails.value =
-            CollectionDetailsModel.fromJson(data['data']);
+        collectionDetails.value = CollectionDetailsModel.fromJson(data['data']);
         selectedCollection.value = collectionDetails.value?.collection;
 
         // Load splits and balances in parallel
@@ -105,6 +104,7 @@ class CollectionsController extends GetxController {
           MaterialPageRoute(
             builder: (_) => CollectionDetailsPage(
               title: collectionDetails.value!.collection.name,
+              type: collectionDetails.value!.collection.type,
               hasTransactions: splitsList.isNotEmpty,
             ),
           ),
@@ -124,15 +124,15 @@ class CollectionsController extends GetxController {
   Future<void> refreshCollectionData(String collectionId) async {
     try {
       isLoading.value = true;
-      final response =
-          await getDataApiCall(CollectionsRoute.getCollectionById(collectionId));
+      final response = await getDataApiCall(
+          CollectionsRoute.getCollectionById(collectionId));
       if (getFlagOfResponse(response)) {
         final data = json.decode(response.body);
         collectionDetails.value = CollectionDetailsModel.fromJson(data['data']);
         selectedCollection.value = collectionDetails.value?.collection;
+        await getSplits(collectionId);
+        await getBalances(collectionId);
       }
-      await getSplits(collectionId);
-      await getBalances(collectionId);
     } catch (e) {
       print("refreshCollectionData error: $e");
     } finally {
@@ -180,13 +180,13 @@ class CollectionsController extends GetxController {
       isMemberLoading.value = true;
 
       var body = {"friends": friends};
-      var response = await postDataApiCall(
-          CollectionsRoute.addMember(collectionId), body);
+      var response =
+          await postDataApiCall(CollectionsRoute.addMember(collectionId), body);
 
       if (getFlagOfResponse(response)) {
         // Refresh collection details to get updated members list
-        var detailsResponse =
-            await getDataApiCall(CollectionsRoute.getCollectionById(collectionId));
+        var detailsResponse = await getDataApiCall(
+            CollectionsRoute.getCollectionById(collectionId));
         if (getFlagOfResponse(detailsResponse)) {
           var data = json.decode(detailsResponse.body);
           collectionDetails.value =
@@ -308,7 +308,8 @@ class CollectionsController extends GetxController {
   // =========================
   // GET AVAILABLE TRANSACTIONS
   // =========================
-  Future<void> getAllCollectionsTransactions({int page = 1, int limit = 20}) async {
+  Future<void> getAllCollectionsTransactions(
+      {int page = 1, int limit = 20}) async {
     try {
       isSplitLoading.value = true;
 
@@ -337,6 +338,36 @@ class CollectionsController extends GetxController {
   // =========================
   // ADD TRANSACTION + SPLIT
   // =========================
+  Future<bool> addTransactionToPersonal({
+    required String collectionId,
+    required List<String> transactionIds,
+    BuildContext? context,
+  }) async {
+    var response = await postDataApiCall(
+        CollectionsRoute.addTransaction(collectionId),
+        {"transactionIds": transactionIds, "splitType": "PERSONAL"});
+
+    if (getFlagOfResponse(response)) {
+      // Reset selection state
+      selectedTransactions.clear();
+      SeletedTransactionsList.clear();
+      // Refresh all collection data
+      await refreshCollectionData(collectionId);
+      // Pop all split screens back to dashboard
+      if (context != null && context.mounted) {
+        Navigator.popUntil(context, (route) => route.isFirst);
+      }
+    } else {
+      print("❌ addTransaction failed: ${response.body}");
+      Get.snackbar(
+        "Error",
+        "Failed to add transaction. Please try again.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+    return false;
+  }
+
   Future<bool> addTransaction({
     required String collectionId,
     required List<String> transactionIds,
@@ -435,5 +466,44 @@ class CollectionsController extends GetxController {
       getBalances(collectionId),
       getAllCollectionsTransactions(),
     ]);
+  }
+
+  Future<bool> updateCollection({
+    required String id,
+    String? name,
+    String? duration,
+  }) async {
+    try {
+      var body = {
+        if (name != null) "name": name,
+        if (duration != null) "duration": duration,
+      };
+
+      var response =
+          await updateDataApiCall2(CollectionsRoute.updateCollection(id), body);
+
+      if (getFlagOfResponse(response)) {
+        await getCollections();
+        return true;
+      }
+    } catch (e) {
+      debugPrint("updateCollection error: $e");
+    }
+    return false;
+  }
+
+  Future<bool> closeCollection(String id) async {
+    try {
+      var response =
+          await updateDataApiCall(CollectionsRoute.closeCollection(id));
+
+      if (getFlagOfResponse(response)) {
+        await getCollections();
+        return true;
+      }
+    } catch (e) {
+      debugPrint("closeCollection error: $e");
+    }
+    return false;
   }
 }

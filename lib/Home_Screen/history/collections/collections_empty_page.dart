@@ -6,13 +6,29 @@ import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 import '../transactionHistoryScreen.dart';
+import 'collection_setting.dart';
+import 'group_collections_page.dart';
+import 'trip/screens/select_transactions_sheet.dart';
 import 'trip/screens/trip_dashboard_screen.dart';
+
+void _openSelectTransactions(context, type) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => SelectTransactionsSheet(splitType: type),
+  );
+}
 
 class CollectionDetailsPage extends StatelessWidget {
   final String title;
   final bool hasTransactions;
+  final String type;
   CollectionDetailsPage(
-      {super.key, required this.title, required this.hasTransactions});
+      {super.key,
+      required this.title,
+      required this.hasTransactions,
+      required this.type});
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +40,11 @@ class CollectionDetailsPage extends StatelessWidget {
             // _appBar(context),
             Expanded(
               child: hasTransactions
-                  ? TripDashboardScreen()
-                  : emptyTransactionsUI(context),
-            ),
+                  ? (type == "SHARED"
+                      ? TripDashboardScreen()
+                      : _transactionsUI(context))
+                  : emptyTransactionsUI(context, type),
+            )
           ],
         ),
       ),
@@ -196,6 +214,7 @@ class CollectionDetailsPage extends StatelessWidget {
       color: AppColors.border,
       child: Column(
         children: [
+          _appBar(context),
           _summarySection(context),
           Container(
             height: MediaQuery.sizeOf(context).height / 1.43,
@@ -225,226 +244,9 @@ class CollectionDetailsPage extends StatelessWidget {
   /// ---------------- EMPTY STATE ----------------
 }
 
-class CollectionSettingsModal extends StatefulWidget {
-  const CollectionSettingsModal({super.key});
-
-  @override
-  State<CollectionSettingsModal> createState() =>
-      _CollectionSettingsModalState();
-}
-
-class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
-  bool alertEnabled = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-      decoration: const BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          /// DRAG / CLOSE
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.keyboard_arrow_down),
-                onPressed: () => Navigator.pop(context),
-              ),
-              Expanded(
-                child: Text(
-                  "Collection Settings",
-                  textAlign: TextAlign.center,
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 16,
-                    lWeight: FontWeight.w700,
-                    color: AppColors.accentColor,
-                  ),
-                ),
-              ),
-              SizedBox(width: AppSizes.w40),
-            ],
-          ),
-
-          SizedBox(height: AppSizes.h12),
-
-          /// ALERT SECTION
-          _alertCard(context),
-
-          SizedBox(height: AppSizes.h12),
-          _simpleTile(
-            context,
-            icon: Icons.file_upload_rounded,
-            title: "Export Transactions",
-            onTap: () {},
-          ),
-
-          _simpleTile(
-            context,
-            icon: Icons.edit,
-            title: "Rename Collection",
-            onTap: () {},
-          ),
-
-          _simpleTile(
-            context,
-            icon: Icons.access_time_filled,
-            title: "Edit Duration Range",
-            onTap: () {},
-          ),
-
-          SizedBox(height: AppSizes.h6),
-
-          _dangerTile(
-            context,
-            icon: Icons.close,
-            title: "Close Collection",
-            onTap: () {},
-          ),
-
-          _dangerTile(
-            context,
-            icon: Icons.delete_rounded,
-            title: "Delete Collection",
-            onTap: () {},
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// ---------------- ALERT CARD ----------------
-  Widget _alertCard(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSizes.p14),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.border),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  "Alert for Certain Amount",
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 14,
-                    lWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              Switch(
-                value: alertEnabled,
-                inactiveThumbColor: AppColors.backgroundColor,
-                inactiveTrackColor: AppColors.border,
-                activeColor: AppColors.primaryColor,
-                onChanged: (v) {
-                  setState(() => alertEnabled = v);
-                },
-              ),
-            ],
-          ),
-          SizedBox(height: AppSizes.h6),
-          Text(
-            "Notify me when any transaction exceeds ₹[amount] in this collection.",
-            style: FontManager().getTextStyle(
-              context,
-              fontSize: 12,
-              color: AppColors.grey,
-            ),
-          ),
-          if (alertEnabled) ...[
-            SizedBox(height: AppSizes.h10),
-            TextField(
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.currency_rupee, size: 18),
-                hintText: "Enter amount threshold",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  /// ---------------- NORMAL TILE ----------------
-  Widget _simpleTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: AppSizes.p6),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.border),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: AppColors.border,
-          child: Icon(icon, size: 18, color: AppColors.primaryColor),
-        ),
-        title: Text(
-          title,
-          style: FontManager().getTextStyle(
-            context,
-            fontSize: 14,
-            lWeight: FontWeight.w500,
-            color: AppColors.accentColor,
-          ),
-        ),
-        onTap: onTap,
-      ),
-    );
-  }
-
-  /// ---------------- DANGER TILE ----------------
-  Widget _dangerTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: AppSizes.p6),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.redColor),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: AppColors.redColor.withOpacity(0.1),
-          child: Icon(icon, size: 18, color: AppColors.redColor),
-        ),
-        title: Text(
-          title,
-          style: FontManager().getTextStyle(
-            context,
-            fontSize: 14,
-            lWeight: FontWeight.w500,
-            color: AppColors.redColor,
-          ),
-        ),
-        onTap: onTap,
-      ),
-    );
-  }
-}
-
 Widget emptyTransactionsUI(
   BuildContext context,
+  String splitType,
 ) {
   return Container(
     color: AppColors.border,
@@ -516,6 +318,7 @@ Widget emptyTransactionsUI(
                     ),
                     onPressed: () {
                       // open add transaction flow
+                      _openSelectTransactions(context, splitType);
                     },
                     child: Text(
                       "+ Add Transactions",
