@@ -4,18 +4,21 @@ class BalanceModel {
   String userId;
   double balance;
   String type;
+  UserModel? user;
 
   BalanceModel({
     required this.userId,
     required this.balance,
     required this.type,
+    this.user,
   });
 
   factory BalanceModel.fromJson(Map<String, dynamic> json) {
     return BalanceModel(
-      userId: json['userId'],
+      userId: json['userId'] ?? '',
       balance: (json['balance'] ?? 0).toDouble(),
-      type: json['type'],
+      type: json['type'] ?? '',
+      user: json['user'] != null ? UserModel.fromJson(json['user']) : null,
     );
   }
 // }

@@ -96,7 +96,8 @@ Widget _timelineItem(
       /// 👇 TAP HANDLER ADDED
       GestureDetector(
         onTap: () async {
-          await collectionsController.getCollectionById(collections.id,context);
+          await collectionsController.getCollectionById(
+              collections.id, context);
         },
         child: child,
       ),

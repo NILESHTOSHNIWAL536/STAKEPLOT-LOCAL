@@ -19,26 +19,24 @@ class API {
   static final String EmailUrl = "${urlWithLocallHost}api/v1/email";
   // static final String BankApiUrl = "${Credentials.LIVE_API}api/v1";
   static final String BankApiUrl = "${urlWithLocallHost}api/v1/bank";
-  
 }
 
-class BackendApiEndPoints
-{
-      static final String chat = "${API.mainBackendUrl}/chat";
-      static final String constant = "${API.mainBackendUrl}/constant";
-      static final String budget = "${API.mainBackendUrl}/budget";
-      static final String finvu = "${API.BankApiUrl}/finvu";
-      static final String post = "${API.mainBackendUrl}/post";
-      static final String comment = "${API.mainBackendUrl}/comment";
-      static final String reply = "${API.mainBackendUrl}/reply";
-      static final String split = "${API.mainBackendUrl}/split";
-      static final String poll = "${API.mainBackendUrl}/poll";
-      static final String upvote = "${API.mainBackendUrl}/upvote";
-      static final String downvote = "${API.mainBackendUrl}/downvote";
-      static final String transactionauto = "${API.BankApiUrl}/transactionauto";
-      static final String transaction = API.BankApiUrl + "/transaction";
-      static final String notify = API.mainBackendUrl + "/notify";
-      static final String auth = API.mainBackendUrl + "/auth";
-      static final String user = API.mainBackendUrl + "/user";
-      static final String reward = "${API.mainBackendUrl}/reward";
+class BackendApiEndPoints {
+  static final String chat = "${API.mainBackendUrl}/chat";
+  static final String constant = "${API.mainBackendUrl}/constant";
+  static final String budget = "${API.mainBackendUrl}/budget";
+  static final String finvu = "${API.BankApiUrl}/finvu";
+  static final String post = "${API.mainBackendUrl}/post";
+  static final String comment = "${API.mainBackendUrl}/comment";
+  static final String reply = "${API.mainBackendUrl}/reply";
+  static final String split = "${API.mainBackendUrl}/split";
+  static final String poll = "${API.mainBackendUrl}/poll";
+  static final String upvote = "${API.mainBackendUrl}/upvote";
+  static final String downvote = "${API.mainBackendUrl}/downvote";
+  static final String transactionauto = "${API.BankApiUrl}/transactionauto";
+  static final String transaction = API.BankApiUrl + "/transaction";
+  static final String notify = API.mainBackendUrl + "/notify";
+  static final String auth = API.mainBackendUrl + "/auth";
+  static final String user = API.mainBackendUrl + "/user";
+  static final String reward = "${API.mainBackendUrl}/reward";
 }

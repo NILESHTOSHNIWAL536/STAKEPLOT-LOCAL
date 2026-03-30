@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/search.dart';
@@ -18,8 +20,11 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/app_shadows.dart';
+import '../../backed_connections/apiAutomations/curd.dart';
 import '../../components/shared_utils.dart';
+import '../../controllers/collections_controller.dart';
 import '../../routes/index_route.dart';
+import '../../routes/route_collections.dart';
 import 'custom_keyboard.dart';
 
 bool isDebit = true;
@@ -34,7 +39,7 @@ class ModalContent extends StatefulWidget {
 }
 
 class _ModalContentState extends State<ModalContent>
-   with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<ModalContent>{
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<ModalContent> {
   String? selectedCategory;
   String? selectedSubCategory;
   final TextEditingController _amountController = TextEditingController();
@@ -46,18 +51,24 @@ class _ModalContentState extends State<ModalContent>
   List<Map<String, dynamic>> filteredCategories = [];
   late ConfettiController _confettiController;
   late AnimationController _iconAnimationController;
- 
+
   String? selectedCategory2;
   String? selectedSubCategory2;
   bool _isAmountFieldFocused = true;
   final FocusNode _amountFocusNode = FocusNode();
   late IO.Socket socket;
-  
 
   // scroll control and key to compute offset
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _categoryKey = GlobalKey();
-
+  String? selectedCollection;
+  bool isCollectionExpanded = false;
+  final CollectionsController collectionsController =
+      Get.put(CollectionsController());
+  String? selectedCollectionId;
+  List<dynamic> collectionMembers = [];
+  bool isCollectionLoading = false;
+  Map<String, double> memberAmounts = {};
   @override
   void initState() {
     super.initState();
@@ -76,6 +87,7 @@ class _ModalContentState extends State<ModalContent>
     socket = IO.io(API.urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
+    collectionsController.getCollections();
   }
 
   void _populateInitialFilteredCategories() {
@@ -215,45 +227,42 @@ class _ModalContentState extends State<ModalContent>
       _populateInitialFilteredCategories();
     });
   }
-void _onKeyTap(String value) {
-  final text = _amountController.text;
 
-  // Allow digits
-  if (RegExp(r'^\d$').hasMatch(value)) {
-    _append(value);
-    return;
-  }
+  void _onKeyTap(String value) {
+    final text = _amountController.text;
 
-  // Allow only ONE decimal point
-  if (value == '.') {
-    if (!text.contains('.')) {
+    // Allow digits
+    if (RegExp(r'^\d$').hasMatch(value)) {
       _append(value);
+      return;
     }
-    return;
+
+    // Allow only ONE decimal point
+    if (value == '.') {
+      if (!text.contains('.')) {
+        _append(value);
+      }
+      return;
+    }
   }
 
-  
+  void _append(String value) {
+    setState(() {
+      _amountController.text += value;
+      _amountController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _amountController.text.length),
+      );
+    });
+  }
 
-}
+  void _onBackspace() {
+    if (_amountController.text.isEmpty) return;
 
-void _append(String value) {
-  setState(() {
-    _amountController.text += value;
-    _amountController.selection = TextSelection.fromPosition(
-      TextPosition(offset: _amountController.text.length),
-    );
-  });
-}
-
-
-void _onBackspace() {
-  if (_amountController.text.isEmpty) return;
-
-  setState(() {
-    _amountController.text = _amountController.text
-        .substring(0, _amountController.text.length - 1);
-  });
-}
+    setState(() {
+      _amountController.text = _amountController.text
+          .substring(0, _amountController.text.length - 1);
+    });
+  }
 
   // Helper to scroll the category widget to the top of the visible scroll area (with padding)
   Future<void> _scrollCategoryToTop({double topPadding = 6.0}) async {
@@ -318,9 +327,9 @@ void _onBackspace() {
   void toggleCategoryField() {
     setState(() {
       isCategoryFieldExpanded = !isCategoryFieldExpanded;
-       if (isCategoryFieldExpanded) {
-      showKeyboard = false;
-    }
+      if (isCategoryFieldExpanded) {
+        showKeyboard = false;
+      }
 
       _isAmountFieldFocused = false;
       // when opening, ensure the filtered list is correct for tab
@@ -340,14 +349,13 @@ void _onBackspace() {
     });
   }
 
-
   void _submitAmount() {
     final value = _amountController.text.trim();
 
     if (value.isEmpty || value.contains(".") || value.contains("-")) {
-    snackBarCalledfail(context, "Enter a valid amount");
-    return;
-  }
+      snackBarCalledfail(context, "Enter a valid amount");
+      return;
+    }
 
     setState(() {
       amount = double.tryParse(value);
@@ -364,7 +372,42 @@ void _onBackspace() {
     FocusScope.of(context).unfocus();
   }
 
-   @override
+  Future<void> fetchCollectionMembers(String collectionId) async {
+    try {
+      setState(() => isCollectionLoading = true);
+
+      var response = await getDataApiCall(
+        CollectionsRoute.getCollectionById(collectionId),
+      );
+
+      if (getFlagOfResponse(response)) {
+        var data = json.decode(response.body);
+
+        setState(() {
+          collectionMembers = data['data']['members'] ?? [];
+
+          // ✅ ADD THIS
+          memberAmounts.clear();
+
+double total = double.tryParse(_amountController.text) ?? 0;
+
+if (collectionMembers.isNotEmpty && total > 0) {
+  double split = total / collectionMembers.length;
+
+  for (var m in collectionMembers) {
+    memberAmounts[m['user']['id']] = split;
+  }
+}
+        });
+      }
+    } catch (e) {
+      debugPrint("fetchCollectionMembers error: $e");
+    } finally {
+      setState(() => isCollectionLoading = false);
+    }
+  }
+
+  @override
   bool get wantKeepAlive => true;
 
   @override
@@ -375,96 +418,89 @@ void _onBackspace() {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: AnimatedPadding(
-              padding: MediaQuery.of(context).viewInsets,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeOut,
-              child: Container(
-                color: AppColors.border,
-                child: Padding(
-                  padding: const EdgeInsets.only(top:AppSizes.p10),
-                  child: 
-                   showKeyboard? 
-                   GestureDetector(
-                     behavior: HitTestBehavior.opaque,
-  onTap: showKeyboard
-      ? () {
-          setState(() => showKeyboard = false);
-        }
-      : null,
-                     child: Column(
+        padding: MediaQuery.of(context).viewInsets,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: Container(
+          color: AppColors.border,
+          child: Padding(
+            padding: const EdgeInsets.only(top: AppSizes.p10),
+            child: showKeyboard
+                ? GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: showKeyboard
+                        ? () {
+                            setState(() => showKeyboard = false);
+                          }
+                        : null,
+                    child: Column(
                       //  mainAxisSize: MainAxisSize.min,
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: [
-                         if ((selectedCategory == null &&
-                                 selectedSubCategory == null) ||
-                             !widget.isDebit) ...[
-                               Column(
-                                 children: [
-                                   GestureDetector(
-                                                                 behavior: HitTestBehavior.translucent,
-                                                          onTap: () {
-                                                            setState(() => showKeyboard = true);
-                                                          },
-                                                                 child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if ((selectedCategory == null &&
+                                selectedSubCategory == null) ||
+                            !widget.isDebit) ...[
+                          Column(
+                            children: [
+                              GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    setState(() => showKeyboard = true);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: AppSizes.p20),
                                     child: AmountWidget(),
-                                                                 )),
-                                                                 SizedBox(height: AppSizes.h16),
-                                                                  if (_amountController.text.isNotEmpty) ...[
-                          Padding(
-                           padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
-                            child: GestureDetector(
+                                  )),
+                              SizedBox(height: AppSizes.h16),
+                              if (_amountController.text.isNotEmpty) ...[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: AppSizes.p20),
+                                  child: GestureDetector(
                                       behavior: HitTestBehavior.translucent,
-                                                          onTap: () {
-                                                            setState(() => showKeyboard = false);
-                                                          },
-                              child: categoryWidget()),
-
+                                      onTap: () {
+                                        setState(() => showKeyboard = false);
+                                      },
+                                      child: categoryWidget()),
+                                ),
+                                if (isCategoryFieldExpanded) ...[
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: AppSizes.p20),
+                                    child: categoryExpandedWidget(),
+                                  ),
+                                  // getListOfCustomCategory(),
+                                ],
+                              ],
+                            ],
                           ),
-                           if (isCategoryFieldExpanded) ...[
-                             
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
-                          child: categoryExpandedWidget(),
-                        ),
-                        // getListOfCustomCategory(),
-                      ],
+                          SizedBox(height: AppSizes.h16),
+                          (showKeyboard)
+                              ? GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    setState(() => showKeyboard = false);
+                                  },
+                                  child: CustomNumericKeyboard(
+                                    onKeyTap: _onKeyTap,
+                                    onBackspace: _onBackspace,
+                                    onSubmit: () {
+                                      _submitAmount();
+                                      setState(() => showKeyboard = false);
+                                    },
+                                    onDismiss: () {
+                                      setState(() => showKeyboard = false);
+                                    },
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
                         ],
-                                 ],
-                               ),
-                                                      
-                                                          SizedBox(height: AppSizes.h16),
-                           (showKeyboard)?
-                                                       GestureDetector(
-                                                                               behavior: HitTestBehavior.translucent,
-                                                                               onTap: () {
-                                                                                 setState(() => showKeyboard = false);
-                                                                               },
-                                                                               child: CustomNumericKeyboard(
-                                                   onKeyTap: _onKeyTap,
-                                                   onBackspace: _onBackspace,
-                                                   onSubmit: () {
-                                                     _submitAmount();
-                                                     setState(() => showKeyboard = false);
-                                                   },
-                                                   onDismiss: () {
-                                                     setState(() => showKeyboard = false);
-                                                   },
-                                                                               ),
-                                                       ):const SizedBox.shrink(),
-                                                       
-                          
-                         ],
-                        
-                        
-                         ],
-                      
-                       
-                     ),
-                   ):
-                
-                  SingleChildScrollView(
+                      ],
+                    ),
+                  )
+                : SingleChildScrollView(
                     controller: _scrollController,
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Column(
@@ -475,99 +511,177 @@ void _onBackspace() {
                                 selectedSubCategory == null) ||
                             !widget.isDebit) ...[
                           Column(
-                                  children: [
-                                    // ✅ Amount widget NOT wrapped
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                onTap: () {
-                                  setState(() => showKeyboard = true);
-                                },
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
-                                        child: AmountWidget(),
-                                      )),
-                                
-                                    SizedBox(height: AppSizes.h16),
-                                
-                                    // ✅ Outside tap dismiss only when keyboard open
-                                    if (showKeyboard)
-                                      GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () {
-                                  setState(() => showKeyboard = false);
-                                },
-                                child: Column(
-                                  children: [
-                                    CustomNumericKeyboard(
-                                      onKeyTap: _onKeyTap,
-                                      onBackspace: _onBackspace,
-                                      onSubmit: () {
-                                        _submitAmount();
-                                        setState(() => showKeyboard = false);
-                                      },
-                                      onDismiss: () {
-                                        setState(() => showKeyboard = false);
-                                      },
-                                    ),
-                                  ],
-                                ),
+                            children: [
+                              // ✅ Amount widget NOT wrapped
+                              GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    setState(() => showKeyboard = true);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: AppSizes.p20),
+                                    child: AmountWidget(),
+                                  )),
+
+                              SizedBox(height: AppSizes.h16),
+
+                              // ✅ Outside tap dismiss only when keyboard open
+                              if (showKeyboard)
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    setState(() => showKeyboard = false);
+                                  },
+                                  child: Column(
+                                    children: [
+                                      CustomNumericKeyboard(
+                                        onKeyTap: _onKeyTap,
+                                        onBackspace: _onBackspace,
+                                        onSubmit: () {
+                                          _submitAmount();
+                                          setState(() => showKeyboard = false);
+                                        },
+                                        onDismiss: () {
+                                          setState(() => showKeyboard = false);
+                                        },
                                       ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
+                            ],
+                          ),
                           SizedBox(height: AppSizes.h16),
                         ],
                         if (_amountController.text.isNotEmpty) ...[
                           Padding(
-                           padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSizes.p20),
                             child: categoryWidget(),
                           ),
                         ],
-                         SizedBox(height: AppSizes.h6),
-                       
+                        SizedBox(height: AppSizes.h6),
                         if (isCategoryFieldExpanded) ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
-                          child: categoryExpandedWidget(),
-                        ),
-                        // getListOfCustomCategory(),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSizes.p20),
+                            child: categoryExpandedWidget(),
+                          ),
+                          // getListOfCustomCategory(),
+                        ],
                         if (selectedCategory != null &&
                             selectedSubCategory == null) ...[
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSizes.p20),
                             child: subcategoryWidget(),
                           ),
                         ],
-                        if (fin != null) ...[
+                        // if (selectedCategory != null) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSizes.p20),
+                          child: collectionWidget(),
+                        ),
+                        // ],
+                        if (selectedCollectionId != null) ...[
                           Padding(
-                         padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
-                            child: widget.isDebit ? SplitLendButton() : const SizedBox.shrink(),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSizes.p20),
+                            child: collectionMembersWidget(),
                           ),
+                        ],
+                        if (fin != null) ...[
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(
+                          //       horizontal: AppSizes.p20),
+                          //   child: widget.isDebit
+                          //       ? SplitLendButton()
+                          //       : const SizedBox.shrink(),
+                          // ),
                           continueButton(),
                         ],
-                     
                       ],
                     ),
                   ),
-                
-                ),
-              ),
-            ),
+          ),
+        ),
+      ),
     );
   }
 
- 
+  Widget collectionWidget() {
+    return Obx(() {
+      if (collectionsController.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      return Container(
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          border: AppBorders.soft,
+          boxShadow: [AppShadows.soft],
+        ),
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Add Collection",
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: AppColors.accentColor,
+                )),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 10,
+              children: collectionsController.collectionsList.map((collection) {
+                return GestureDetector(
+                  onTap: () async {
+                    await fetchCollectionMembers(collection.id); // ✅ NEW
+
+                    setState(() {
+                      selectedCollectionId = collection.id;
+                    });
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: selectedCollectionId == collection.id
+                          ? AppColors.button
+                          : AppColors.backgroundColor,
+                      borderRadius: BorderRadius.circular(10),
+                      border: AppBorders.soft,
+                    ),
+                    child: Text(collection.name,
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: AppColors.accentColor,
+                        )),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
   Widget AmountWidget() {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-        AppShadows.soft
-        ],
-        border: AppBorders.soft
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p10),
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [AppShadows.soft],
+          border: AppBorders.soft),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p12, vertical: AppSizes.p10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -582,9 +696,7 @@ void _onBackspace() {
             ),
           ),
           SizedBox(height: AppSizes.h8),
-
           AppDividers.soft,
-
           SizedBox(height: AppSizes.h12),
           Row(
             children: [
@@ -592,11 +704,9 @@ void _onBackspace() {
                 height: 44,
                 width: 44,
                 decoration: BoxDecoration(
-                  color: AppColors.button,
-                  borderRadius: BorderRadius.circular(10),
-                  border:
-                      AppBorders.soft
-                ),
+                    color: AppColors.button,
+                    borderRadius: BorderRadius.circular(10),
+                    border: AppBorders.soft),
                 child: Center(
                   child: AvatarProfileImage(
                     url: HomePageIcons.addAmount,
@@ -605,13 +715,13 @@ void _onBackspace() {
                   ),
                 ),
               ),
-               SizedBox(width: AppSizes.w12),
+              SizedBox(width: AppSizes.w12),
               IgnorePointer(
                 child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                   onTap: () {
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
                     setState(() {
-                       showKeyboard = true;
+                      showKeyboard = true;
                     });
                   },
                   child: SizedBox(
@@ -620,11 +730,8 @@ void _onBackspace() {
                       controller: _amountController,
                       // keyboardType: TextInputType.number,
                       readOnly: true, // 👈 IMPORTANT
-                  showCursor: true,
-                  
-                  
+                      showCursor: true,
 
-                  
                       textInputAction: TextInputAction.done,
                       autofocus: _isAmountFieldFocused,
                       inputFormatters: allowDecimalInput(),
@@ -636,7 +743,8 @@ void _onBackspace() {
                       ),
                       decoration: InputDecoration(
                         isDense: true,
-                        contentPadding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: AppSizes.p14),
                         hintText: HomepageStringsDart().enterAmount,
                         hintStyle: FontManager().getTextStyle(
                           context,
@@ -649,6 +757,15 @@ void _onBackspace() {
                       onChanged: (value) {
                         setState(() {
                           amount = double.tryParse(value);
+                          double total = double.tryParse(value) ?? 0;
+
+if (collectionMembers.isNotEmpty && total > 0) {
+  double split = total / collectionMembers.length;
+
+  for (var m in collectionMembers) {
+    memberAmounts[m['user']['id']] = split;
+  }
+}
                           if (!widget.isDebit) {
                             selectedCategory = "Income";
                             categoryFieldController.text = "Income";
@@ -657,6 +774,7 @@ void _onBackspace() {
                           _isAmountFieldFocused = false;
                         });
                       },
+                      
                       onEditingComplete: () {
                         fin = '$selectedCategory ($selectedSubCategory)';
                         FocusScope.of(context).unfocus();
@@ -668,7 +786,6 @@ void _onBackspace() {
                   ),
                 ),
               ),
-            
             ],
           ),
         ],
@@ -681,20 +798,18 @@ void _onBackspace() {
     return Container(
       key: _categoryKey,
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-         AppShadows.soft
-        ],
-        border: AppBorders.soft
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p10),
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [AppShadows.soft],
+          border: AppBorders.soft),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p12, vertical: AppSizes.p10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            HomepageStringsDart().selectCategory ,
+            HomepageStringsDart().selectCategory,
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.bold,
@@ -704,7 +819,6 @@ void _onBackspace() {
           ),
           SizedBox(height: AppSizes.h8),
           AppDividers.soft,
-
           SizedBox(height: AppSizes.h12),
           Row(
             children: [
@@ -712,11 +826,11 @@ void _onBackspace() {
                 height: MediaQuery.of(context).size.height * 0.048,
                 width: MediaQuery.of(context).size.height * 0.048,
                 decoration: BoxDecoration(
-                  color: AppColors.button,
-                  borderRadius: BorderRadius.circular(10),
-                  border: AppBorders.soft
-                ),
-                child: const Center(child: Icon(Icons.search, color: AppColors.accentColor)),
+                    color: AppColors.button,
+                    borderRadius: BorderRadius.circular(10),
+                    border: AppBorders.soft),
+                child: const Center(
+                    child: Icon(Icons.search, color: AppColors.accentColor)),
               ),
               SizedBox(width: AppSizes.w12),
               SizedBox(
@@ -732,7 +846,8 @@ void _onBackspace() {
                   ),
                   decoration: InputDecoration(
                     isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(vertical: AppSizes.p14),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: AppSizes.p14),
                     hintText: HomepageStringsDart().selectCategory,
                     hintStyle: FontManager().getTextStyle(
                       context,
@@ -753,7 +868,8 @@ void _onBackspace() {
                           categoryFieldController.text = "Income";
                         });
                         WidgetsBinding.instance.addPostFrameCallback((_) async {
-                          final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+                          final bottomInset =
+                              MediaQuery.of(context).viewInsets.bottom;
                           if (bottomInset > 0) {
                             await _scrollCategoryToTop(topPadding: 6.0);
                           } else {
@@ -763,7 +879,8 @@ void _onBackspace() {
                       }
                     } else {
                       WidgetsBinding.instance.addPostFrameCallback((_) async {
-                        final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+                        final bottomInset =
+                            MediaQuery.of(context).viewInsets.bottom;
                         if (bottomInset > 0) {
                           await _scrollCategoryToTop(topPadding: 6.0);
                         } else {
@@ -790,10 +907,8 @@ void _onBackspace() {
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          AppShadows.soft
-        ],
-        border:  AppBorders.soft,
+        boxShadow: [AppShadows.soft],
+        border: AppBorders.soft,
       ),
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.6,
@@ -826,13 +941,14 @@ void _onBackspace() {
                   urlPath = item['imageUrl'] ?? '';
                 } else if (isCategory) {
                   try {
-                    urlPath =
-                        Categories.link + BudgetCategories.listofCategories[category]!;
+                    urlPath = Categories.link +
+                        BudgetCategories.listofCategories[category]!;
                   } catch (e) {
                     urlPath = '';
                   }
                 } else {
-                  urlPath = BudgetSubCategories.listofSubCategories[item['subcategory']] ??
+                  urlPath = BudgetSubCategories
+                          .listofSubCategories[item['subcategory']] ??
                       "assets/icons/subCategoryIcons/default.svg";
                 }
 
@@ -840,8 +956,8 @@ void _onBackspace() {
                   dense: true,
                   visualDensity: const VisualDensity(vertical: -2),
                   minVerticalPadding: 0,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p6),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.p12, vertical: AppSizes.p6),
                   leading: SizedBox(
                     height: 36,
                     width: 36,
@@ -852,7 +968,9 @@ void _onBackspace() {
                     ),
                   ),
                   title: Text(
-                    isCategory ? category : '${item['subcategory']} ($category)',
+                    isCategory
+                        ? category
+                        : '${item['subcategory']} ($category)',
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w400,
@@ -907,12 +1025,11 @@ void _onBackspace() {
 
   Widget getListOfCustomCategory() {
     return Container(
-      margin: const EdgeInsets.only(top:AppSizes.p8),
+      margin: const EdgeInsets.only(top: AppSizes.p8),
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(12),
-        border:  AppBorders.soft
-      ),
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          border: AppBorders.soft),
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.35),
       child: ListView.builder(
@@ -957,21 +1074,110 @@ void _onBackspace() {
     );
   }
 
+  Widget collectionMembersWidget() {
+    if (isCollectionLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (collectionMembers.isEmpty) {
+      return const SizedBox();
+    }
+
+    final members = collectionMembers;
+
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        border: AppBorders.soft,
+        boxShadow: [AppShadows.soft],
+      ),
+      child: Column(
+        children: members.map((member) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  member['user']['name'] ?? '',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: AppColors.accentColor,
+                  ),
+                ),
+                SizedBox(
+                  width: 100,
+                  child: TextField(
+                    controller: TextEditingController(
+  text: memberAmounts[member['user']['id']]?.toStringAsFixed(0) ?? '',
+),
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: AppColors.accentColor,
+                    ),
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      prefixText: "₹ ",
+                      border: OutlineInputBorder(),
+                    ),
+                  onChanged: (value) {
+  double entered = double.tryParse(value) ?? 0;
+  String currentId = member['user']['id'];
+
+  memberAmounts[currentId] = entered;
+
+  double total = double.tryParse(_amountController.text) ?? 0;
+
+  double used = memberAmounts.values.fold(0, (a, b) => a + b);
+
+  double remaining = total - used;
+
+  // get other members
+  var otherMembers = collectionMembers
+      .where((m) => m['user']['id'] != currentId)
+      .toList();
+
+  if (otherMembers.isNotEmpty && remaining >= 0) {
+    double split = remaining / otherMembers.length;
+
+    for (var m in otherMembers) {
+      memberAmounts[m['user']['id']] = split;
+    }
+  }
+
+  setState(() {});
+},
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   Widget subcategoryWidget() {
     if (selectedCategory == null || !categories.containsKey(selectedCategory)) {
       return const SizedBox.shrink();
     }
 
     return Container(
-      margin: const EdgeInsets.only(top:AppSizes.p12),
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p10),
+      margin: const EdgeInsets.only(top: AppSizes.p12),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p12, vertical: AppSizes.p10),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          AppShadows.soft
-        ],
-        border:  AppBorders.soft,
+        boxShadow: [AppShadows.soft],
+        border: AppBorders.soft,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -992,8 +1198,9 @@ void _onBackspace() {
             spacing: 10,
             runSpacing: 12,
             children: categories[selectedCategory]!.map((subCategory) {
-              final urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??
-                  "assets/icons/subCategoryIcons/default.svg";
+              final urlPath =
+                  BudgetSubCategories.listofSubCategories[subCategory] ??
+                      "assets/icons/subCategoryIcons/default.svg";
 
               return GestureDetector(
                 onTap: () {
@@ -1012,12 +1219,12 @@ void _onBackspace() {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p8),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.p12, vertical: AppSizes.p8),
                   decoration: BoxDecoration(
-                    color: AppColors.backgroundColor,
-                    borderRadius: BorderRadius.circular(12),
-                    border:  AppBorders.soft
-                  ),
+                      color: AppColors.backgroundColor,
+                      borderRadius: BorderRadius.circular(12),
+                      border: AppBorders.soft),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -1058,7 +1265,8 @@ void _onBackspace() {
             isSplit.value = true;
             isLend.value = false;
 
-            final result = await showCustomFriendsModal(context, amount ?? 0.0, false);
+            final result =
+                await showCustomFriendsModal(context, amount ?? 0.0, false);
 
             setState(() {
               _isAmountFieldFocused = false;
@@ -1066,7 +1274,8 @@ void _onBackspace() {
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 10, vertical: AppSizes.p14),
             decoration: BoxDecoration(
               color: AppColors.button,
               borderRadius: BorderRadius.circular(24),
@@ -1109,7 +1318,8 @@ void _onBackspace() {
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p14),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 10, vertical: AppSizes.p14),
             decoration: BoxDecoration(
               color: AppColors.button,
               borderRadius: BorderRadius.circular(24),
@@ -1137,7 +1347,7 @@ void _onBackspace() {
       children: [
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top:AppSizes.p10),
+            padding: const EdgeInsets.only(top: AppSizes.p10),
             child: InkWell(
               onTap: () {
                 FocusScope.of(context).unfocus();
