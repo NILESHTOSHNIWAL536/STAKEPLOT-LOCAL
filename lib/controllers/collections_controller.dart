@@ -484,7 +484,8 @@ class CollectionsController extends GetxController {
         final list = (data['data'] as List)
             .map((e) => BalanceModel.fromJson(e))
             .toList();
-        balancesList.assignAll(list);
+        balancesList.clear();
+        balancesList.addAll(list);
       }
     } catch (e) {
       debugPrint("getBalances error: $e");

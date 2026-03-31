@@ -35,7 +35,6 @@ class CollectionDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     if (hasTransactions && type == "PERSONAL") {
       return const CollectionSummarySection();
     }
@@ -45,14 +44,14 @@ class CollectionDetailsPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // _appBar(context),
-           Obx(()=> Expanded(
-              child: collectionsController.splitsList.length > 0
-                  ? (type == "SHARED"
-                      ? TripDashboardScreen()
-                      : _transactionsUI(context))
-                  : emptyTransactionsUI(context, type),
-            ))
+            _appBar(context),
+            Obx(() => Expanded(
+                  child: collectionsController.splitsList.length > 0
+                      ? (type == "SHARED"
+                          ? TripDashboardScreen()
+                          : _transactionsUI(context))
+                      : emptyTransactionsUI(context, type),
+                ))
           ],
         ),
       ),
@@ -319,8 +318,8 @@ class CollectionDetailsPage extends StatelessWidget {
       child: Center(
         child: AvatarProfileImageZero(
           url: asset,
-          width: 60,
-          height: 60,
+          width: 40,
+          height: 45,
         ),
       ),
     );
