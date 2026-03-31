@@ -133,7 +133,7 @@ Future<http.Response> updateDataApiCall3(String urlPath,
 
 Future<http.Response> getDataApiCall(urlPath) async {
   var accessToken = await SecureStorageService().read("accessToken");
-  
+
   final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{
@@ -146,6 +146,7 @@ Future<http.Response> getDataApiCall(urlPath) async {
       throw TimeoutException("Request timed out");
     },
   );
+  
   // printData(response);
   return response;
 }

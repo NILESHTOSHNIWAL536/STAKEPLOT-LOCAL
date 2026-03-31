@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../Home_Screen/history/collections/collections_HomePage.dart';
-import '../Home_Screen/history/collections/trip/screens/trip_dashboard_screen.dart';
 import '../backed_connections/apiAutomations/curd.dart';
 import '../model/TransactionModel.dart';
 import '../model/collections_model.dart';
@@ -51,7 +49,7 @@ class CollectionsController extends GetxController {
       isLoading.value = true;
 
       var response = await getDataApiCall(CollectionsRoute.getCollections);
-
+      print("response.body ${response.body}");
       if (getFlagOfResponse(response)) {
         var decoded = json.decode(response.body);
 

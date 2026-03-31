@@ -24,6 +24,8 @@ import '../../backed_connections/apis_connect.dart';
 import '../../components/bottomNavigations.dart';
 import '../../controllers/credit_card_controller.dart';
 import '../../image_service/avatarProfile.dart';
+import 'reserve.dart';
+import 'reserve_flow.dart';
 import 'slider_addding_finances.dart';
 
 class FinanceDashboard extends StatefulWidget {
@@ -773,10 +775,18 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                 ),
               ),
               SizedBox(height: AppSizes.h20),
-              AvatarProfileImageZero(
-                url: PlotFinanceIcons.reserve,
-                height: 6,
-                width: 4,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ReserveFlow()),
+                  );
+                },
+                child: AvatarProfileImageZero(
+                  url: PlotFinanceIcons.reserve,
+                  height: 6,
+                  width: 4,
+                ),
               )
             ],
           ),
