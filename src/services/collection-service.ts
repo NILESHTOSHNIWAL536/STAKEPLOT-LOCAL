@@ -464,35 +464,43 @@ export const getBalances = async (collectionId: string, userId: string) => {
 
   const splits = await Split.find({ collectionId });
 
-  // Per-friend net from logged-in user's perspective:
-  //   positive => friend owes the logged-in user (toReceive)
-  //   negative => logged-in user owes the friend (toPay)
-  const friendBalances: Record<string, number> = {};
+  // Per-user net from logged-in user's perspective:
+  //   positive => other user owes the logged-in user (toReceive)
+  //   negative => logged-in user owes the other user (toPay)
+  const userBalances: Record<string, number> = {};
 
   splits.forEach(split => {
     const paidBy = split.paidBy.toString();
+    
+    // Calculate how much each person in the split owes/is owed
+    split.splits.forEach(splitItem => {
+      if (!splitItem.userId) return;
+      const splitUserId = splitItem.userId.toString();
+      const amount = splitItem.amount;
 
-    if (paidBy === userId) {
-      // The logged-in user paid. Every OTHER member in the split owes them.
-      // We deliberately skip the paidBy's own split entry.
-      split.splits.forEach(s => {
-        if (!s.userId) return;
-        const owingUser = s.userId.toString();
-        if (owingUser === userId) return; // own share → personal expense, ignore
-        friendBalances[owingUser] = (friendBalances[owingUser] || 0) + s.amount;
-      });
-    } else {
-      // Someone else paid. Check if the logged-in user is in the split group.
-      const mySplitItem = split.splits.find(s => s.userId?.toString() === userId);
-      if (mySplitItem) {
-        // The logged-in user owes the payer their share.
-        friendBalances[paidBy] = (friendBalances[paidBy] || 0) - mySplitItem.amount;
+      if (splitUserId === userId) {
+        // The logged-in user's share in this split
+        if (paidBy === userId) {
+          // Logged-in user paid: they advanced money for their own share
+          // Net effect: no debt (they paid for themselves)
+        } else {
+          // Someone else paid for the logged-in user's share
+          // Logged-in user owes the payer their share amount
+          userBalances[paidBy] = (userBalances[paidBy] || 0) - amount;
+        }
+      } else {
+        // Another user's share in this split
+        if (paidBy === userId) {
+          // Logged-in user paid: other users owe them their share amounts
+          userBalances[splitUserId] = (userBalances[splitUserId] || 0) + amount;
+        }
+        // If someone else paid, we don't track balances with this other person from this split
       }
-    }
+    });
   });
 
   // Hydrate involved user IDs
-  const friendIds = Object.keys(friendBalances);
+  const friendIds = Object.keys(userBalances);
   const userData = await UserService.hydrateUsers([userId, ...friendIds]);
   const userMap = new Map();
   userData.forEach(u => userMap.set(u._id.toString(), u));
@@ -501,7 +509,7 @@ export const getBalances = async (collectionId: string, userId: string) => {
   const toReceive: Array<{ friend: any; amount: number }> = [];
 
   for (const friendId of friendIds) {
-    const net = friendBalances[friendId];
+    const net = userBalances[friendId];
     if (net === 0) continue; // settled, skip
 
     const entry = {
