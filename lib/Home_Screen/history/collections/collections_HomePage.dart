@@ -35,6 +35,7 @@ class CollectionDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     if (hasTransactions && type == "PERSONAL") {
       return const CollectionSummarySection();
     }
@@ -45,13 +46,13 @@ class CollectionDetailsPage extends StatelessWidget {
         child: Column(
           children: [
             // _appBar(context),
-            Obx(() => Expanded(
-                  child: collectionsController.splitsList.length > 0
-                      ? (type == "SHARED"
-                          ? TripDashboardScreen()
-                          : _transactionsUI(context))
-                      : emptyTransactionsUI(context, type),
-                ))
+           Obx(()=> Expanded(
+              child: collectionsController.splitsList.length > 0
+                  ? (type == "SHARED"
+                      ? TripDashboardScreen()
+                      : _transactionsUI(context))
+                  : emptyTransactionsUI(context, type),
+            ))
           ],
         ),
       ),

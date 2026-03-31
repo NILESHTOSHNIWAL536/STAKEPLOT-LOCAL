@@ -111,6 +111,7 @@ class CollectionsController extends GetxController {
       final details = CollectionDetailsModel.fromJson(data['data']);
       collectionDetails.value = details;
       selectedCollection.value = details.collection;
+      splitsList.clear();
       await getSplits(id);
 
       Navigator.push(
@@ -126,7 +127,6 @@ class CollectionsController extends GetxController {
         ),
       );
 
-      splitsList.clear();
       balancesList.clear();
       AllTransactions.clear();
 
