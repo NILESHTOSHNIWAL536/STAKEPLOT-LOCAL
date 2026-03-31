@@ -11,7 +11,14 @@ router.get('/', CollectionController.getUserCollections);
 router.get('/:id', CollectionController.getCollectionById);
 router.delete('/:id', CollectionController.deleteCollection);
 
+// Send invitations to add members (replaces direct add)
 router.post('/:id/members', CollectionController.addMembers);
+
+// Get invitations for a collection
+router.get('/:id/invitations', CollectionController.getCollectionInvitations);
+
+// Cancel specific invitation
+router.delete('/:id/invitations/:invitationId', CollectionController.cancelInvitation);
 
 router.get('/:id/available-transactions', CollectionController.getAvailableTransactions);
 router.get('/:id/splits', CollectionController.getCollectionSplits);
@@ -21,8 +28,21 @@ router.put('/:id/splits/:splitId', CollectionController.updateSplit);
 
 router.get('/:id/balances', CollectionController.getBalances);
 
-router.put('/:id/updateCollections', CollectionController.updateCollection);
-router.put('/:id/closeCollection', CollectionController.closeCollection);
+router.patch('/:id/updateCollections', CollectionController.updateCollection);
+router.patch('/:id/closeCollection', CollectionController.closeCollection);
 router.get('/:id/all-transactions', CollectionController.getAllTransactions);
+
+// ====================================
+// INVITATION ENDPOINTS (User routes)
+// ====================================
+
+// Get pending invitations for current user
+router.get('/invitations/pending', CollectionController.getPendingInvitations);
+
+// Accept invitation
+router.post('/invitations/:invitationId/accept', CollectionController.acceptInvitation);
+
+// Reject invitation
+router.post('/invitations/:invitationId/reject', CollectionController.rejectInvitation);
 
 export default router;

@@ -8,7 +8,7 @@ import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
 import UserService from './user-service';
 
-const MAX_COLLECTIONS_PER_USER = 2;
+const MAX_COLLECTIONS_PER_USER = 5;
 
 export const createCollection = async (userId: string, data: any) => {
   const memberCount = await CollectionMember.countDocuments({ userId });
@@ -393,7 +393,10 @@ export const getAvailableTransactions = async (
   limit: number = 20
 ) => {
   const collectionTransactions = await CollectionTransaction.find({ collectionId }).select('transactionId -_id');
-  const usedTransactionIds = collectionTransactions.map(t => t.transactionId);
+
+  const usedTransactionIds = collectionTransactions.map(t =>
+    new mongoose.Types.ObjectId(t.transactionId)
+  );
 
   const query = {
     userId,
@@ -402,7 +405,7 @@ export const getAvailableTransactions = async (
 
   const total = await BankTransaction.countDocuments(query);
   const transactions = await BankTransaction.find(query)
-    .sort({ createdAt: -1 })
+    .sort({ transactionTimestamp: -1 })
     .skip((page - 1) * limit)
     .limit(limit)
     .lean();

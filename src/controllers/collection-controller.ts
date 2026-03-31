@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { SuccessResponse } from '../utils/common';
 import CollectionService from '../services/collection-service';
+import CollectionInvitationService from '../services/collection-invitation-service';
 
 export const createCollection = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -52,10 +53,11 @@ export const addMembers = async (req: Request, res: Response, next: NextFunction
       return res.status(StatusCodes.BAD_REQUEST).json(SuccessResponse);
     }
 
-    const members = await CollectionService.addMembers(id, authorId, friends);
-    SuccessResponse.data = members;
-    SuccessResponse.message = 'Members added successfully';
-    res.status(StatusCodes.OK).json(SuccessResponse);
+    // Send invitations instead of directly adding members
+    const invitations = await CollectionInvitationService.sendInvitations(id, authorId, friends);
+    SuccessResponse.data = invitations;
+    SuccessResponse.message = 'Invitations sent successfully';
+    res.status(StatusCodes.CREATED).json(SuccessResponse);
   } catch (error) {
     next(error);
   }
@@ -190,6 +192,91 @@ export const getAllTransactions = async (req: Request, res: Response, next: Next
   }
 };
 
+// ============================================
+// COLLECTION INVITATION ENDPOINTS
+// ============================================
+
+export const getPendingInvitations = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { page, limit } = req.query;
+    const pageNum = parseInt(page as string) || 1;
+    const limitNum = parseInt(limit as string) || 20;
+
+    const result = await CollectionInvitationService.getPendingInvitations(userId, pageNum, limitNum);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Pending invitations fetched successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const acceptInvitation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { invitationId } = req.params;
+
+    const result = await CollectionInvitationService.acceptInvitation(invitationId, userId);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Invitation accepted successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const rejectInvitation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { invitationId } = req.params;
+
+    const result = await CollectionInvitationService.rejectInvitation(invitationId, userId);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Invitation rejected successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const cancelInvitation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId, invitationId } = req.params;
+
+    await CollectionInvitationService.cancelInvitation(invitationId, userId);
+    SuccessResponse.data = {};
+    SuccessResponse.message = 'Invitation cancelled successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCollectionInvitations = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+    const { status } = req.query;
+
+    const invitations = await CollectionInvitationService.getCollectionInvitations(
+      collectionId,
+      userId,
+      status as 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED' | undefined
+    );
+    SuccessResponse.data = invitations;
+    SuccessResponse.message = 'Collection invitations fetched successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createCollection,
   getUserCollections,
@@ -204,4 +291,9 @@ export default {
   updateCollection,
   closeCollection,
   getAllTransactions,
+  getPendingInvitations,
+  acceptInvitation,
+  rejectInvitation,
+  cancelInvitation,
+  getCollectionInvitations,
 };
