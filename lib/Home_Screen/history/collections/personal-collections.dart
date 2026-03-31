@@ -104,16 +104,19 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
                         itemCount: filtered.length,
                         itemBuilder: (context, index) {
                           final tx = filtered[index];
-                          return _TransactionCard(
-                            child: HistoryTransactions(
-                              context: context,
-                              transaction: tx,
-                              index: index,
-                              isExpanded: false,
-                              hide: false,
-                              hideReview: false,
-                              fromAutoPay: false,
-                              date: tx.transactionTimestamp.toString(),
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: _TransactionCard(
+                              child: HistoryTransactions(
+                                context: context,
+                                transaction: tx,
+                                index: index,
+                                isExpanded: false,
+                                hide: false,
+                                hideReview: false,
+                                fromAutoPay: false,
+                                date: tx.transactionTimestamp.toString(),
+                              ),
                             ),
                           );
                         },
@@ -154,14 +157,16 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
                 const Spacer(),
 
                 /// 🏷 TITLE
-                Text(
-                  "title",
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 18,
-                    lWeight: FontWeight.w600,
-                  ),
-                ),
+                Obx(() => Text(
+                      collectionsController
+                              .collectionDetails.value?.collection.name ??
+                          "Collection",
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 18,
+                        lWeight: FontWeight.w600,
+                      ),
+                    )),
 
                 const Spacer(),
 
@@ -180,7 +185,7 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
                         color: AppColors.border,
                         dashGap: 0,
                       ),
-                      GestureDetector(
+                      InkWell(
                         onTap: () {
                           showCollectionSettingsModal(context);
                         },

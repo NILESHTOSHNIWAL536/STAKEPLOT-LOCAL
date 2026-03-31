@@ -95,8 +95,7 @@ class CollectionModel {
       ownerId: json['ownerId'] ?? '',
       description: json['description'] ?? '',
       status: json['status'] ?? '',
-      expiryAt:
-          json['expiryAt'] != null ? DateTime.parse(json['expiryAt']) : null,
+      expiryAt: json['expiryAt'] != null ? DateTime.parse(json['expiryAt']) : null,
       totalAmount: (json['totalAmount'] ?? 0).toDouble(),
       totalCredit: (objjson['totalCredit'] ?? 0).toDouble(),
       totalDebit: (objjson['totalDebit'] ?? 0).toDouble(),
