@@ -138,8 +138,52 @@ export const getBalances = async (req: Request, res: Response, next: NextFunctio
     const userId = req.user._id;
     const { id: collectionId } = req.params;
     const balances = await CollectionService.getBalances(collectionId, userId);
+    console.log("balances for collection: ", balances);
     SuccessResponse.data = balances;
     SuccessResponse.message = 'Balances calculated successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateCollection = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+    const { name, description, expiryAt } = req.body;
+    const collection = await CollectionService.updateCollection(collectionId, userId, { name, description, expiryAt });
+    SuccessResponse.data = collection;
+    SuccessResponse.message = 'Collection updated successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const closeCollection = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+    const collection = await CollectionService.closeCollection(collectionId, userId);
+    SuccessResponse.data = collection;
+    SuccessResponse.message = 'Collection closed successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllTransactions = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+    const { page, limit } = req.query;
+    const pageNum = parseInt(page as string) || 1;
+    const limitNum = parseInt(limit as string) || 20;
+    const result = await CollectionService.getAllTransactions(collectionId, userId, pageNum, limitNum);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Transactions fetched successfully';
     res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
     next(error);
@@ -157,4 +201,7 @@ export default {
   getAvailableTransactions,
   getCollectionSplits,
   getBalances,
+  updateCollection,
+  closeCollection,
+  getAllTransactions,
 };

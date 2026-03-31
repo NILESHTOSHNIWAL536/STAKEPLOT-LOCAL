@@ -21,4 +21,8 @@ router.put('/:id/splits/:splitId', CollectionController.updateSplit);
 
 router.get('/:id/balances', CollectionController.getBalances);
 
+router.put('/:id/updateCollections', CollectionController.updateCollection);
+router.put('/:id/closeCollection', CollectionController.closeCollection);
+router.get('/:id/all-transactions', CollectionController.getAllTransactions);
+
 export default router;
