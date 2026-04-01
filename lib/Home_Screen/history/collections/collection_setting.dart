@@ -545,7 +545,9 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
   void _exportTransactions(BuildContext context) async {
     await exportCollectionPdf(
       context,
-      collectionsController.selectedCollection.value!.id,
+      collectionsController.collectionDetails.value!,
+      collectionsController.splitsList,
+      collectionsController.balancesList,
     );
   }
 }
