@@ -110,6 +110,8 @@ class MemberModel {
   String userId;
   String role;
   String name;
+  String setAmount;
+  String amountSpend;
 
   MemberModel({
     required this.id,
@@ -117,6 +119,8 @@ class MemberModel {
     required this.userId,
     required this.name,
     required this.role,
+    required this.setAmount,
+    required this.amountSpend,
   });
 
   factory MemberModel.fromJson(Map<String, dynamic> json) {
@@ -126,6 +130,8 @@ class MemberModel {
       userId: json['userId'].toString(),
       name: json["user"]['name'].toString(),
       role: json['role'] ?? 'VIEW',
+      setAmount: (json['setAmount'] ?? '500.0').toString(),
+      amountSpend: (json['amountSpend'] ?? '200.0').toString(),
     );
   }
 

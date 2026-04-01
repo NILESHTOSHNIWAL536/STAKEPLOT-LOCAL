@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:get/get.dart';
 
 import '../Home_Screen/history/collections/collections_HomePage.dart';
-import '../Home_Screen/history/collections/trip/screens/trip_dashboard_screen.dart';
+import '../Home_Screen/history/collections/trip/screens/shared_dashboard_screen.dart';
 import '../Home_Screen/history/transactionHistoryScreen.dart';
 import '../Utils/durations_range.dart';
 import '../backed_connections/apiAutomations/curd.dart';
