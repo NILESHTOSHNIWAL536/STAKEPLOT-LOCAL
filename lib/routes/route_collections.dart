@@ -54,5 +54,31 @@ class CollectionsRoute {
       "$_urlPath/$collectionId/updateCollections";
   static String closeCollection(String collectionId) =>
       "$_urlPath/$collectionId/closeCollection";
+
+
+  // ===============================
+// INVITATION ROUTES (NEW)
+// ===============================
+
+// Get pending invitations for current user
+static String getPendingInvitations() =>
+    "$_urlPath/invitations/pending";
+
+// Accept invitation
+static String acceptInvitation(String invitationId) =>
+    "$_urlPath/invitations/$invitationId/accept";
+
+// Reject invitation
+static String rejectInvitation(String invitationId) =>
+    "$_urlPath/invitations/$invitationId/reject";
+
+// Get invitations for a collection
+static String getCollectionInvitations(String collectionId) =>
+    "$_urlPath/$collectionId/invitations";
+
+// Cancel specific invitation
+static String cancelInvitation(String collectionId, String invitationId) =>
+    "$_urlPath/$collectionId/invitations/$invitationId";
+    
       
 }

@@ -71,7 +71,7 @@ class CollectionDetailsPage extends StatelessWidget {
             InkWell(
               onTap: () => Navigator.pop(context),
               child: const CircleAvatar(
-                backgroundColor: AppColors.backgroundColor,
+                backgroundColor: AppColors.white,
                 child: Icon(Icons.arrow_back,
                     size: 18, color: AppColors.accentColor),
               ),
@@ -80,12 +80,16 @@ class CollectionDetailsPage extends StatelessWidget {
             const Spacer(),
 
             /// TITLE
-            Text(
-              title,
-              style: FontManager().getTextStyle(
-                context,
-                fontSize: 18,
-                lWeight: FontWeight.w600,
+            Container(
+              // color: AppColors.bg1,
+              width: MediaQuery.of(context).size.width / 1.9,
+              child: Text(
+                title,
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 16,
+                  lWeight: FontWeight.w600,
+                ),
               ),
             ),
 

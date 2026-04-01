@@ -10,13 +10,135 @@ import '../../../image_service/avatarProfile.dart';
 import '../../../model/collections_model.dart';
 import 'create_collection_data.dart';
 import 'create_collection_pages/create_collection_flow.dart';
+import 'invitations_list.dart';
 
 /// ------------------------------
 /// MAIN
 /// ------------------------------
+
 Widget buildCollectionsBody(BuildContext context) {
-  /// Call once — controller skips if data already loaded
   collectionsController.getCollections();
+  collectionsController.getPendingInvitations();
+
+  return Obx(() {
+    final hasInvitations = collectionsController.invitationsList.isNotEmpty;
+
+    final invitationCount = collectionsController.invitationsList.length;
+
+    return DefaultTabController(
+      length: hasInvitations ? 2 : 1,
+      child: Column(
+        children: [
+          /// 🔥 CUSTOM TAB DESIGN
+          if (hasInvitations)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x14000000),
+                        blurRadius: 6,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey,
+                  dividerColor: Colors.transparent,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  tabs: [
+                    /// COLLECTIONS TAB
+                    Tab(
+                      child: Text(
+                        "Collections",
+                        style: FontManager().getTextStyle(
+                          context,
+                          fontSize: 13,
+                          lWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+
+                    /// INVITATIONS TAB WITH BADGE
+                    Tab(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Invitations",
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 13,
+                              lWeight: FontWeight.w600,
+                            ),
+                          ),
+
+                          const SizedBox(width: 6),
+
+                          /// 🔴 BADGE
+                          if (invitationCount > 0)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                invitationCount.toString(),
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  fontSize: 10,
+                                  color: Colors.white,
+                                  lWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+          /// 🔥 CONTENT
+          Expanded(
+            child: TabBarView(
+              physics: const BouncingScrollPhysics(),
+              children: [
+                /// COLLECTIONS TAB
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: CollectionsBody(context),
+                ),
+
+                /// INVITATIONS TAB
+                if (hasInvitations)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: InvitationsList(),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  });
+}
+
+Widget CollectionsBody(BuildContext context) {
+  /// Call once — controller skips if data already loaded
 
   return Obx(() {
     if (collectionsController.isLoading.value &&
