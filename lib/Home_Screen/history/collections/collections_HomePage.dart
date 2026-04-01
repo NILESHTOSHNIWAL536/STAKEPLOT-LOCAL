@@ -13,7 +13,7 @@ import 'collection_setting.dart';
 import 'group_collections_page.dart';
 import 'personal-collections.dart';
 import 'trip/screens/select_transactions_sheet.dart';
-import 'trip/screens/trip_dashboard_screen.dart';
+import 'trip/screens/shared_dashboard_screen.dart';
 
 void openSelectTransactions(context, type) {
   showModalBottomSheet(

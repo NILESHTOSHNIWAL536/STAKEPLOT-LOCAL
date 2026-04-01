@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 import '../Home_Screen/history/collections/collections_HomePage.dart';
-import '../Home_Screen/history/collections/trip/screens/trip_dashboard_screen.dart';
+import '../Home_Screen/history/collections/trip/screens/shared_dashboard_screen.dart';
 import '../Home_Screen/history/transactionHistoryScreen.dart';
 import '../Utils/durations_range.dart';
 import '../backed_connections/apiAutomations/curd.dart';
@@ -696,4 +696,32 @@ class CollectionsController extends GetxController {
       debugPrint("rejectInvitation error: $e");
     }
   }
+
+
+
+  // =========================
+// UPDATE MEMBER ROLE
+// =========================
+Future<void> updateMemberRole({
+  required String collectionId,
+  required String userId,
+  required dynamic body,
+}) async {
+  try {
+    final response = await updateDataApiCall2(
+      CollectionsRoute.updateMemberRole(collectionId, userId),
+      body,
+    );
+
+    if (getFlagOfResponse(response))
+    {
+      await refreshCollectionData(collectionId);
+    }
+
+  } catch (e) {
+    debugPrint("updateMemberRole error: $e");
+  }
+}
+
+
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/clearstack.dart';
@@ -30,7 +31,6 @@ class ProfileScreenDart extends StatefulWidget {
 }
 
 class _ProfileScreenDartState extends State<ProfileScreenDart> {
- 
   @override
   void initState() {
     super.initState();
@@ -93,213 +93,225 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
     BuildContext context,
   ) {
     UserController userController = ControllerManagement.userController;
-    return  Scaffold(
-        bottomNavigationBar: SafeArea(child: BottomNavigations(data: 3)),
-        backgroundColor: AppColors.backgroundColor,
-        body: SafeArea(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: SingleChildScrollView(
-              child:
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 5, left: 5, right:AppSizes.p16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AvatarProfile(
-                        name: userController.userName.value,
-                        width: 8,
-                        height: 10,
-                        background: userController.avatarBackGround.value,
-                        flag: false,
-                      ),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(userController.userName.value,
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w600,
-                                    color: AppColors.primaryColor)),
-                            Obx(() => Container(
-                                  width: MediaQuery.of(context).size.width / 2.1,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  child: Text(
-                                    "Score : " +
-                                        userController.score.value.toString(),
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: 15,
-                                      color: AppColors.bg1,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
+    return Scaffold(
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 3)),
+      backgroundColor: AppColors.backgroundColor,
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: SingleChildScrollView(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 5, left: 5, right: AppSizes.p16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AvatarProfile(
+                      name: userController.userName.value,
+                      width: 8,
+                      height: 10,
+                      background: userController.avatarBackGround.value,
+                      flag: false,
+                    ),
+                    const SizedBox(
+                      width: 3,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(userController.userName.value,
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w600,
+                                  color: AppColors.primaryColor)),
+                          Obx(() => Container(
+                                width: MediaQuery.of(context).size.width / 2.1,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: Text(
+                                  "Score : " +
+                                      userController.score.value.toString(),
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                    color: AppColors.bg1,
                                   ),
-                                )),
-                            // userController.phone.value == "0"
-                            //     ? SizedBox.shrink()
-                            //     : Text(userController.phone.value,
-                            //         style: FontManager().getTextStyle(context,
-                            //             lWeight: FontWeight.w400,
-                            //             fontSize: 10,
-                            //             color: AppColors.bg1)),
-                          ],
-                        ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )),
+                          // userController.phone.value == "0"
+                          //     ? SizedBox.shrink()
+                          //     : Text(userController.phone.value,
+                          //         style: FontManager().getTextStyle(context,
+                          //             lWeight: FontWeight.w400,
+                          //             fontSize: 10,
+                          //             color: AppColors.bg1)),
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditDetails()),
-                          );
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width *
-                              0.2, // Adjust the multiplier as needed
-                          decoration: BoxDecoration(
-                              color: AppColors.mt,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.edit_outlined,
-                                  color: AppColors.primaryColor,
-                                  size: 24,
-                                ),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                // AvatarProfileImage(
-                                //   url: ProfileIcons.edit,
-                                //   height: 40,
-                                //   width: 40,
-                                // ),
-                                Text(ProfileScreenStrings().editProfileLabel,
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w600,
-                                        //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                        fontSize: 16,
-                                        color: AppColors.accentColor))
-                              ],
-                            ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditDetails()),
+                        );
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width *
+                            0.2, // Adjust the multiplier as needed
+                        decoration: BoxDecoration(
+                            color: AppColors.mt,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.edit_outlined,
+                                color: AppColors.primaryColor,
+                                size: 24,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              // AvatarProfileImage(
+                              //   url: ProfileIcons.edit,
+                              //   height: 40,
+                              //   width: 40,
+                              // ),
+                              Text(ProfileScreenStrings().editProfileLabel,
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.w600,
+                                      //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                      fontSize: 16,
+                                      color: AppColors.accentColor))
+                            ],
                           ),
                         ),
                       ),
-                    
-                    ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: AppSizes.h20),
+              // Options list
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 5, left: AppSizes.p16, right: AppSizes.p16),
+                child: Column(children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: AppColors.mt,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.border)),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
+                      child: Column(
+                        children: [
+                          _buildOption(
+                            ProfileImage(url: ProfileIcons.friends),
+                            ProfileScreenStrings()
+                                .friendsListLabel, // Direct access
+                            ProfileScreenStrings()
+                                .friendsListSubLabel, // Direct access
+                            onTap: () {
+                              Navigator.pushNamed(context, '/Friends');
+                            },
+                          ),
+                          Divider(),
+                          _buildOption(
+                            ProfileImage(url: ProfileIcons.rewards),
+                            ProfileScreenStrings()
+                                .searchFriendLabel, // Direct access
+                            ProfileScreenStrings()
+                                .friendsListSubLabel, // Direct access
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TribeSearch(),
+                                ),
+                              );
+                            },
+                          ),
+                          _buildOption(
+                            ProfileImage(url: ProfileIcons.rewards),
+                            ProfileScreenStrings().rewards, // Direct access
+                            ProfileScreenStrings()
+                                .friendsListSubLabel, // Direct access
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RewardsOverview(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                 SizedBox(height: AppSizes.h20),
-                // Options list
-                Padding(
-                  padding: const EdgeInsets.only(top: 5, left:AppSizes.p16, right:AppSizes.p16),
-                  child: Column(children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: AppColors.mt,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: AppColors.border)),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
-                        child: Column(
-                          children: [
-                            _buildOption(
-                              ProfileImage(url: ProfileIcons.friends),
+                  SizedBox(height: AppSizes.h10),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: AppColors.mt,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.border)),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              authenticateUser(context);
+                            },
+                            child: _buildOption(
+                              ProfileImage(url: ProfileIcons.support),
                               ProfileScreenStrings()
-                                  .friendsListLabel, // Direct access
+                                  .historyArchivesLabel, // Direct access
                               ProfileScreenStrings()
-                                  .friendsListSubLabel, // Direct access
-                              onTap: () {
-                                Navigator.pushNamed(context, '/Friends');
-                              },
+                                  .historyArchivesSubLabel, // Direct access
                             ),
-                            Divider(),
-                            _buildOption(
-                              ProfileImage(url: ProfileIcons.rewards),
-                              ProfileScreenStrings().rewards, // Direct access
+                          ),
+                          Divider(),
+                          InkWell(
+                            onTap: () {
+                              redirectToUrl(context,
+                                  "https://stakeplot.com/Privacypolicy");
+                            },
+                            child: _buildOption(
+                              ProfileImage(url: ProfileIcons.terms),
                               ProfileScreenStrings()
-                                  .friendsListSubLabel, // Direct access
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => RewardsOverview(),
-                                  ),
-                                );
-                              },
+                                  .termsConditionsLabel, // Direct access
+                              ProfileScreenStrings()
+                                  .termsConditionsSubLabel, // Direct access
                             ),
-                           
-                          
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: AppSizes.h10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: AppColors.mt,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: AppColors.border)),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
-                        child: Column(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                authenticateUser(context);
-                              },
-                              child: _buildOption(
-                                ProfileImage(url: ProfileIcons.support),
-                                ProfileScreenStrings()
-                                    .historyArchivesLabel, // Direct access
-                                ProfileScreenStrings()
-                                    .historyArchivesSubLabel, // Direct access
-                              ),
-                            ),
-                            Divider(),
-                            InkWell(
-                              onTap: () {
-                               
-                                redirectToUrl(context,  "https://stakeplot.com/Privacypolicy");
-                      
-                              },
-                              child: _buildOption(
-                                ProfileImage(url: ProfileIcons.terms),
-                                ProfileScreenStrings()
-                                    .termsConditionsLabel, // Direct access
-                                ProfileScreenStrings()
-                                    .termsConditionsSubLabel, // Direct access
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-      
-                    // Third Container for Log ou
-                    // t
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    logoutWidget(),
-                  ]),
-                ),
-                // Spacer(),
-                // logoutWidget(),
-              ]),
-            ),
+                  ),
+
+                  // Third Container for Log ou
+                  // t
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  logoutWidget(),
+                ]),
+              ),
+              // Spacer(),
+              // logoutWidget(),
+            ]),
           ),
         ),
-      
+      ),
     );
   }
 

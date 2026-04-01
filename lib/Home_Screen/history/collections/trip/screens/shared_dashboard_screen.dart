@@ -6,6 +6,7 @@ import '../../../../../controllers/SplitDetailsScreen.dart';
 import '../utils/app_theme.dart';
 import '../widgets/common_widgets.dart';
 import 'member_card_view.dart';
+import 'member_spend_amount.dart';
 import 'select_transactions_sheet.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +14,8 @@ class SharedCollectionDashboard extends StatefulWidget {
   const SharedCollectionDashboard({super.key});
 
   @override
-  State<SharedCollectionDashboard> createState() => _SharedCollectionDashboardState();
+  State<SharedCollectionDashboard> createState() =>
+      _SharedCollectionDashboardState();
 }
 
 class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
@@ -184,50 +186,7 @@ class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
                               ),
                             ],
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              /// 💰 Amount
-                              Text(
-                                '₹${totalAmount.toStringAsFixed(0)}',
-                                style: AppTextStyles.amountLarge.copyWith(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-
-                              const SizedBox(height: 4),
-
-                              Text(
-                                'Combined Amount',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.textLight,
-                                ),
-                              ),
-
-                              const SizedBox(height: 16),
-
-                              /// 👥 Members List
-                              // if (members.isNotEmpty)
-                              //   SizedBox(
-                              //     height: 100,
-                              //     child: ListView.separated(
-                              //       scrollDirection: Axis.horizontal,
-                              //       itemCount: members.length,
-                              //       separatorBuilder: (_, __) =>
-                              //           const SizedBox(width: 12),
-                              //       itemBuilder: (ctx, i) {
-                              //         final m = members[i];
-                              //         return MemberSpendCardNew(
-                              //           member: m,
-                              //           totalAmount: totalAmount,
-                              //           balances: balances,
-                              //         );
-                              //       },
-                              //     ),
-                              //   ),
-                            ],
-                          ),
+                          child: MembersSpendSection(),
                         ),
                       ],
                     ),

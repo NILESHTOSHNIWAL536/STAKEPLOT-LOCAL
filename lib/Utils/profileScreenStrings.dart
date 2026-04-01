@@ -20,6 +20,7 @@ class ProfileScreenStrings {
   String communityProfileLabel = "Community profile";
   String friendsListLabel = "Friends list";
   String rewards = "Rewards";
+  String searchFriendLabel = "Search Friend";
   String friendsListLabelMasked = "Masked list";
   String historyArchivesLabel = "History archives";
   String termsConditionsLabel = "Terms & conditions";

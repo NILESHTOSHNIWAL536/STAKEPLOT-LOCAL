@@ -27,9 +27,10 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
   String _query = '';
   final Set<String> _selectedMemberIds = {};
 
-  List<MemberModel> get _filtered => collectionsController.collectionDetails.value!.members
-      .where((m) => m.name.toLowerCase().contains(_query.toLowerCase()))
-      .toList();
+  List<MemberModel> get _filtered =>
+      collectionsController.collectionDetails.value!.members
+          .where((m) => m.name.toLowerCase().contains(_query.toLowerCase()))
+          .toList();
 
   void _toggleMember(String id) {
     setState(() {
@@ -43,10 +44,16 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
 
   void _proceedToSplit() {
     List<MemberModel> selectedMembers = [];
-    
-    collectionsController.collectionDetails.value?.members.forEach((e)=>
-             selectedMembers.add(MemberModel(collectionId:e.collectionId,id: e.id,name: e.name,role: e.role,userId: e.userId )
-    ));
+
+    collectionsController.collectionDetails.value?.members.forEach((e) =>
+        selectedMembers.add(MemberModel(
+            collectionId: e.collectionId,
+            id: e.id,
+            name: e.name,
+            role: e.role,
+            userId: e.userId,
+            setAmount: e.setAmount,
+            amountSpend: e.amountSpend)));
 
     Navigator.push(
       context,

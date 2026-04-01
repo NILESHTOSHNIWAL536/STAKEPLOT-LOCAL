@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history/collections/trip/screens/trip_dashboard_screen.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/collections/trip/screens/shared_dashboard_screen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 

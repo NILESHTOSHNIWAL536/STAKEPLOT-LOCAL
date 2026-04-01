@@ -80,5 +80,15 @@ static String getCollectionInvitations(String collectionId) =>
 static String cancelInvitation(String collectionId, String invitationId) =>
     "$_urlPath/$collectionId/invitations/$invitationId";
     
+
+
+/// Update member role
+static String updateMemberRole(String collectionId, String userId) =>
+    "$_urlPath/$collectionId/members/$userId";
+
+/// Invite members (bulk)
+static String inviteMember(String collectionId) =>
+    "$_urlPath/$collectionId/invitations";
+
       
 }
