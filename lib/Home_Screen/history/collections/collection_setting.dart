@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/controllers/access-permissions.dart';
 import 'package:get/get.dart';
 import '../../../Constants/colors.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../Home_Screen/history/collections/create_collection_data.dart';
 import '../../../Home_Screen/history/collections/create_collection_pages/step_select_duration.dart';
 import '../../../backed_connections/bankServices/collection_pdf_export.dart';
+import '../../../controllers/Invite-members-screen.dart';
 import '../../../controllers/collections_controller.dart';
 
 class CollectionSettingsModal extends StatefulWidget {
@@ -98,8 +100,6 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             onTap: () => _exportTransactions(context),
           ),
 
-          const SizedBox(height: 10),
-
           /// ── RENAME ──
           _settingsTile(
             context,
@@ -107,8 +107,6 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             title: "Rename Collection",
             onTap: () => _showRenameDialog(context),
           ),
-
-          const SizedBox(height: 10),
 
           /// ── DURATION ──
           _settingsTile(
@@ -118,8 +116,6 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             onTap: () => _showDurationPopup(context),
           ),
 
-          const SizedBox(height: 14),
-
           /// ── CLOSE COLLECTION ──
           _dangerTile(
             context,
@@ -128,8 +124,6 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             onTap: () => _confirmClose(context),
           ),
 
-          const SizedBox(height: 10),
-
           /// ── DELETE COLLECTION ──
           _dangerTile(
             context,
@@ -137,6 +131,13 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             title: "Delete Collection",
             onTap: () => _confirmDelete(context),
           ),
+
+          AccessPermissionsWidget(),
+
+          InviteMembersScreen(
+              collectionId: collectionsController
+                      .collectionDetails.value?.collection.id ??
+                  ''),
         ],
       ),
     );
@@ -261,41 +262,45 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
     required String title,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade200),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: const Color(0xFF2D2B5B).withOpacity(0.08),
-                borderRadius: BorderRadius.circular(10),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2D2B5B).withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:
+                    Icon(iconAsset, size: 19, color: const Color(0xFF2D2B5B)),
               ),
-              child: Icon(iconAsset, size: 19, color: const Color(0xFF2D2B5B)),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                title,
-                style: FontManager().getTextStyle(
-                  context,
-                  fontSize: 14,
-                  lWeight: FontWeight.w500,
-                  color: const Color(0xFF1A1832),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  title,
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 14,
+                    lWeight: FontWeight.w500,
+                    color: const Color(0xFF1A1832),
+                  ),
                 ),
               ),
-            ),
-            Icon(Icons.chevron_right_rounded,
-                size: 20, color: Colors.grey.shade400),
-          ],
+              Icon(Icons.chevron_right_rounded,
+                  size: 20, color: Colors.grey.shade400),
+            ],
+          ),
         ),
       ),
     );
@@ -308,41 +313,44 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
     required String title,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFF5F5),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFFFDDDD)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.10),
-                borderRadius: BorderRadius.circular(10),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFF5F5),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFFFDDDD)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.10),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, size: 19, color: Colors.red.shade600),
               ),
-              child: Icon(icon, size: 19, color: Colors.red.shade600),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                title,
-                style: FontManager().getTextStyle(
-                  context,
-                  fontSize: 14,
-                  lWeight: FontWeight.w500,
-                  color: Colors.red.shade700,
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  title,
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 14,
+                    lWeight: FontWeight.w500,
+                    color: Colors.red.shade700,
+                  ),
                 ),
               ),
-            ),
-            Icon(Icons.chevron_right_rounded,
-                size: 20, color: Colors.red.shade300),
-          ],
+              Icon(Icons.chevron_right_rounded,
+                  size: 20, color: Colors.red.shade300),
+            ],
+          ),
         ),
       ),
     );
@@ -436,7 +444,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
           Navigator.pop(context);
           await collectionsController.deleteCollection(
             collectionsController.selectedCollection.value!.id,
-             context,
+            context,
           );
         },
       ),
@@ -714,4 +722,13 @@ class _StyledTextField extends StatelessWidget {
       ),
     );
   }
+}
+
+List<Map<String, dynamic>> buildInviteList(List<Map<String, dynamic>> members) {
+  return members.map((m) {
+    return {
+      "friendId": m["id"],
+      "role": (m["role"] ?? "VIEW").toString().toUpperCase(),
+    };
+  }).toList();
 }

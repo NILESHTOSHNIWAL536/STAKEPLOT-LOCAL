@@ -145,9 +145,9 @@ class _StepAssignRolesState extends State<StepAssignRoles> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _roleChip(id, "View"),
+                roleChip(id, "View"),
                 
-                _roleChip(id, "Contribute"),
+                roleChip(id, "Contribute"),
               ],
             ),
           ),
@@ -158,7 +158,7 @@ class _StepAssignRolesState extends State<StepAssignRoles> {
 
   // ---------------------------------------------------
   // ROLE CHIP
-  Widget _roleChip(String id, String role) {
+  Widget roleChip(String id, String role) {
     final isSelected = roles[id] == role;
 
     return GestureDetector(

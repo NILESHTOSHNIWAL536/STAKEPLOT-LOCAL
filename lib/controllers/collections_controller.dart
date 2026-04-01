@@ -699,4 +699,32 @@ class CollectionsController extends GetxController {
       debugPrint("rejectInvitation error: $e");
     }
   }
+
+
+
+  // =========================
+// UPDATE MEMBER ROLE
+// =========================
+Future<void> updateMemberRole({
+  required String collectionId,
+  required String userId,
+  required dynamic body,
+}) async {
+  try {
+    final response = await updateDataApiCall2(
+      CollectionsRoute.updateMemberRole(collectionId, userId),
+      body,
+    );
+
+    if (getFlagOfResponse(response))
+    {
+      await refreshCollectionData(collectionId);
+    }
+
+  } catch (e) {
+    debugPrint("updateMemberRole error: $e");
+  }
+}
+
+
 }

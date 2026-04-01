@@ -38,14 +38,13 @@ class AuthApiRoutes {
 
 class UserRoutes {
   static final String _urlPath = API.mainBackendUrl + "/user";
-
   static String update = "$_urlPath/";
   static String deleteUser = "$_urlPath/";
   static String getInfo = "$_urlPath/info";
   static String updateFetchStatus = "$_urlPath/updateFetchStatus";
   static String logout = "$_urlPath/logout";
   static String addFriend = "$_urlPath/friend/add";
-  static String findFriend = "$_urlPath/friends/find";
+  static String findFriend = "$_urlPath/friend/find";
   static String removeFriend = "$_urlPath/friend/remove";
   static String rejectRequest = "$_urlPath/friend/rejectRequest/";
   static String sendRequest = "$_urlPath/friend/sendRequest/";
