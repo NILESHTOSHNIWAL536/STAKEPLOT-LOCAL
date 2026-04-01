@@ -11,14 +11,11 @@ class BalanceModel {
     this.user,
   });
 
-  factory BalanceModel.fromJson(
-      Map<String, dynamic> json, String type) {
+  factory BalanceModel.fromJson(Map<String, dynamic> json, String type) {
     return BalanceModel(
       amount: (json['amount'] ?? 0).toDouble(),
       type: type,
-      user: json['friend'] != null
-          ? UserModel.fromJson(json['friend'])
-          : null,
+      user: json['friend'] != null ? UserModel.fromJson(json['friend']) : null,
     );
   }
 }
@@ -95,7 +92,8 @@ class CollectionModel {
       ownerId: json['ownerId'] ?? '',
       description: json['description'] ?? '',
       status: json['status'] ?? '',
-      expiryAt: json['expiryAt'] != null ? DateTime.parse(json['expiryAt']) : null,
+      expiryAt:
+          json['expiryAt'] != null ? DateTime.parse(json['expiryAt']) : null,
       totalAmount: (json['totalAmount'] ?? 0).toDouble(),
       totalCredit: (objjson['totalCredit'] ?? 0).toDouble(),
       totalDebit: (objjson['totalDebit'] ?? 0).toDouble(),
@@ -130,11 +128,10 @@ class MemberModel {
       userId: json['userId'].toString(),
       name: json["user"]['name'].toString(),
       role: json['role'] ?? 'VIEW',
-      setAmount: (json['setAmount'] ?? '500.0').toString(),
-      amountSpend: (json['amountSpend'] ?? '200.0').toString(),
+      setAmount: (json['limitAmount'] ?? '500.0').toString(),
+      amountSpend: (json['amountSpent'] ?? '200.0').toString(),
     );
   }
-
 }
 
 class CollectionDetailsModel {
@@ -268,8 +265,6 @@ class UserModel {
     );
   }
 }
-
-
 
 class InvitationModel {
   String id;

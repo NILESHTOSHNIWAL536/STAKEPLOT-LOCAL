@@ -119,10 +119,11 @@ class CollectionDetailsPage extends StatelessWidget {
                   InkWell(
                       onTap: () {
                         // Open settings page
-                        (collectionsController.currentUser?.role == "VIEW")
-                            ? snackBarCalledfail(
-                                context, "You have view only access")
-                            : showCollectionSettingsModal(context);
+                        // (collectionsController.currentUser?.role == "VIEW")
+                        //     ? snackBarCalledfail(
+                        //         context, "You have view only access")
+                        //     :
+                        showCollectionSettingsModal(context);
                       },
                       child: _iconButton(HomePageIcons.settings)),
                 ],

@@ -88,6 +88,7 @@ class _ModalContentState extends State<ModalContent>
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
     collectionsController.getCollections();
+    collectionsController.getPendingInvitations();();
   }
 
   void _populateInitialFilteredCategories() {

@@ -711,6 +711,7 @@ Future<void> updateMemberRole({
   required dynamic body,
 }) async {
   try {
+
     final response = await updateDataApiCall2(
       CollectionsRoute.updateMemberRole(collectionId, userId),
       body,
@@ -724,6 +725,38 @@ Future<void> updateMemberRole({
   } catch (e) {
     debugPrint("updateMemberRole error: $e");
   }
+}
+
+
+
+void clearAllData() {
+  /// 🔥 MAIN DATA
+  collectionsList.clear();
+  selectedCollection.value = null;
+  collectionDetails.value = null;
+
+  /// 🔥 LISTS
+  splitsList.clear();
+  balancesList.clear();
+  availableTransactions.clear();
+  AllTransactions.clear();
+  SeletedTransactionsList.clear();
+  selectedTransactions.clear();
+
+  /// 🔥 INVITATIONS
+  invitationsList.clear();
+
+  /// 🔥 FLAGS
+  isLoading.value = false;
+  isSplitLoading.value = false;
+  isBalanceLoading.value = false;
+  isMemberLoading.value = false;
+  isInvitationLoading.value = false;
+
+  /// 🔥 CURRENT USER
+  currentUser = null;
+
+  debugPrint("✅ CollectionsController fully cleared");
 }
 
 

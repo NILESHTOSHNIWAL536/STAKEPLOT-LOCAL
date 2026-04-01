@@ -330,6 +330,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
         onTap: () {
           selectedTab.value = title;
 
+          collectionsController.getCollections();
+          collectionsController.getPendingInvitations();
+
           // OPTIONAL: handle logic
           // if (title == "Collections") { ... }
         },
@@ -544,7 +547,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
       },
     );
   }
-
 
   Widget _buildSearchField(BuildContext context, bool fromAutoPay) {
     return AnimatedBuilder(

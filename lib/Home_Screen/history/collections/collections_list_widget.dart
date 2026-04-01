@@ -17,8 +17,6 @@ import 'invitations_list.dart';
 /// ------------------------------
 
 Widget buildCollectionsBody(BuildContext context) {
-  collectionsController.getCollections();
-  collectionsController.getPendingInvitations();
 
   return Obx(() {
     final hasInvitations = collectionsController.invitationsList.isNotEmpty;
@@ -158,43 +156,47 @@ Widget CollectionsBody(BuildContext context) {
         .where((e) => e.status.toLowerCase() == "closed")
         .toList(growable: false);
 
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-          sliver: SliverToBoxAdapter(child: _CreateCollectionButton(context)),
-        ),
-        if (allCollections.isNotEmpty) ...[
-          const SliverPadding(
-            padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
-            sliver: SliverToBoxAdapter(
-              child: _SectionTitle(title: "All Collections"),
-            ),
-          ),
+    return Container(
+      height: MediaQuery.of(context).size.height / 2,
+      // color: AppColors.redColor,
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
-            sliver: _CollectionSliverList(
-              collections: allCollections,
-            ),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+            sliver: SliverToBoxAdapter(child: _CreateCollectionButton(context)),
           ),
+          if (allCollections.isNotEmpty) ...[
+            const SliverPadding(
+              padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
+              sliver: SliverToBoxAdapter(
+                child: _SectionTitle(title: "All Collections"),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+              sliver: _CollectionSliverList(
+                collections: allCollections,
+              ),
+            ),
+          ],
+          if (closedCollections.isNotEmpty) ...[
+            const SliverPadding(
+              padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
+              sliver: SliverToBoxAdapter(
+                child: _SectionTitle(title: "Closed Collections"),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+              sliver: _CollectionSliverList(
+                collections: closedCollections,
+              ),
+            ),
+          ],
+          const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
         ],
-        if (closedCollections.isNotEmpty) ...[
-          const SliverPadding(
-            padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
-            sliver: SliverToBoxAdapter(
-              child: _SectionTitle(title: "Closed Collections"),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-            sliver: _CollectionSliverList(
-              collections: closedCollections,
-            ),
-          ),
-        ],
-        const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
-      ],
+      ),
     );
   });
 }
