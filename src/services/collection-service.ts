@@ -8,7 +8,78 @@ import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
 import UserService from './user-service';
 
-const MAX_COLLECTIONS_PER_USER = 2;
+const MAX_COLLECTIONS_PER_USER = 5;
+
+// Helper function to calculate member spending metrics
+const calculateMemberSpending = (userId: string, splits: any[]) => {
+  let totalAmountPaid = 0;
+  let totalAmountOwed = 0;
+  let numberOfSplits = 0;
+  const splitBreakdown = [];
+
+  splits.forEach((split) => {
+    const paidBy = split.paidBy.toString();
+    const isUserPayer = paidBy === userId;
+    const userInSplit = split.splits.find((s: any) => s.userId?.toString() === userId);
+
+    if (isUserPayer || userInSplit) {
+      numberOfSplits++;
+
+      if (isUserPayer) {
+        const totalSplitAmount = split.splits.reduce((sum: number, s: any) => sum + (s.amount || 0), 0);
+        totalAmountPaid += totalSplitAmount;
+      }
+
+      if (userInSplit) {
+        totalAmountOwed += userInSplit.amount || 0;
+      }
+
+      splitBreakdown.push({
+        splitId: split._id,
+        totalAmount: split.splits.reduce((sum: number, s: any) => sum + (s.amount || 0), 0),
+        paidBy: split.paidBy,
+        userAmount: userInSplit?.amount || 0,
+        userPaid: isUserPayer,
+        splitType: split.splitType,
+        createdAt: split.createdAt,
+      });
+    }
+  });
+
+  return {
+    totalAmountPaid,
+    totalAmountOwed,
+    numberOfSplits,
+    netAmount: totalAmountPaid - totalAmountOwed,
+    splitBreakdown,
+  };
+};
+
+// Format splits with member-specific spending details
+const formatSplitsWithMemberDetails = (splits: any[], userId: string, userMap: Map<string, any>) => {
+  return splits.map((split) => {
+    const totalSplitAmount = split.splits.reduce((sum: number, si: any) => sum + (si.amount || 0), 0);
+    const userSplitItem = split.splits.find((si: any) => si.userId?.toString() === userId);
+
+    return {
+      _id: split._id,
+      collectionId: split.collectionId,
+      splitType: split.splitType,
+      totalAmount: totalSplitAmount,
+      userAmount: userSplitItem?.amount || 0,
+      isPayer: split.paidBy.toString() === userId,
+      paidBy: split.paidBy,
+      paidByUser: userMap.get(split.paidBy.toString()) || { _id: split.paidBy },
+      splits: split.splits.map((si: any) => ({
+        userId: si.userId,
+        amount: si.amount,
+        user: userMap.get(si.userId.toString()) || { _id: si.userId },
+      })),
+      createdAt: split.createdAt,
+      updatedAt: split.updatedAt,
+    };
+  });
+};
 
 export const createCollection = async (userId: string, data: any) => {
   const memberCount = await CollectionMember.countDocuments({ userId });
@@ -53,16 +124,16 @@ export const getUserCollections = async (userId: string) => {
   const collections = members.map((m) => m.collectionId as unknown as ICollection);
 
   // Hydrate ownerIds
-  const ownerIds = collections.map(c => c.ownerId.toString());
+  const ownerIds = collections.map((c) => c.ownerId.toString());
   const userData = await UserService.hydrateUsers(ownerIds);
   const userMap = new Map();
-  userData.forEach(u => userMap.set(u._id.toString(), u));
+  userData.forEach((u) => userMap.set(u._id.toString(), u));
 
-  return collections.map(c => {
+  return collections.map((c) => {
     const co = (c as any).toObject ? (c as any).toObject() : c;
     return {
       ...co,
-      owner: userMap.get(c.ownerId.toString()) || { _id: c.ownerId }
+      owner: userMap.get(c.ownerId.toString()) || { _id: c.ownerId },
     };
   });
 };
@@ -75,46 +146,64 @@ export const getCollectionById = async (collectionId: string, userId: string) =>
 
   const collection = await Collection.findById(collectionId);
   const members = await CollectionMember.find({ collectionId }).lean();
-  const transactions = await CollectionTransaction.find({ collectionId }).populate('transactionId');
+  const transactions = await CollectionTransaction.find({ collectionId }).populate('transactionId').select('-_id -__v');
   const splits = await Split.find({ collectionId }).lean();
 
   // Hydrate user IDs
   const userIdsSet = new Set<string>();
   if (collection) userIdsSet.add(collection.ownerId.toString());
-  members.forEach(m => userIdsSet.add(m.userId.toString()));
-  splits.forEach(s => {
+  members.forEach((m) => userIdsSet.add(m.userId.toString()));
+  splits.forEach((s) => {
     userIdsSet.add(s.paidBy.toString());
-    s.splits.forEach(si => userIdsSet.add(si.userId.toString()));
+    s.splits.forEach((si) => userIdsSet.add(si.userId.toString()));
   });
 
   const userData = await UserService.hydrateUsers(Array.from(userIdsSet));
   const userMap = new Map();
-  userData.forEach(u => userMap.set(u._id.toString(), u));
+  userData.forEach((u) => userMap.set(u._id.toString(), u));
 
   // Map user data back to collection owner
   const colObj = (collection as any).toObject ? (collection as any).toObject() : collection;
   const hydratedCollection = {
     ...colObj,
-    owner: userMap.get(collection?.ownerId.toString() || '') || { _id: collection?.ownerId }
+    owner: userMap.get(collection?.ownerId.toString() || '') || { _id: collection?.ownerId },
   };
 
   // Map user data back to members
-  const hydratedMembers = members.map(m => ({
+  const hydratedMembers = members.map((m) => ({
     ...m,
-    user: userMap.get(m.userId.toString()) || { _id: m.userId }
+    user: userMap.get(m.userId.toString()) || { _id: m.userId },
   }));
 
-  // Map user data back to splits
-  const hydratedSplits = splits.map(s => ({
-    ...s,
-    paidByUser: userMap.get(s.paidBy.toString()) || { _id: s.paidBy },
-    splits: s.splits.map(si => ({
-      ...si,
-      user: userMap.get(si.userId.toString()) || { _id: si.userId }
-    }))
-  }));
+  // Map user data back to splits with user-specific details
+  const hydratedSplits = formatSplitsWithMemberDetails(splits, userId, userMap);
 
-  return { collection: hydratedCollection, members: hydratedMembers, transactions, splits: hydratedSplits };
+  // Calculate transaction totals
+  let totalCredit = 0;
+  let totalDebit = 0;
+
+  transactions.forEach((tx: any) => {
+    const bankTx = tx.transactionId;
+    if (bankTx) {
+      if (bankTx.type === 'CREDIT') {
+        totalCredit += bankTx.amount || 0;
+      } else if (bankTx.type === 'DEBIT') {
+        totalDebit += bankTx.amount || 0;
+      }
+    }
+  });
+
+  const outStandingAmount = totalDebit - totalCredit;
+
+  return {
+    collection: hydratedCollection,
+    members: hydratedMembers,
+    transactions,
+    splits: hydratedSplits,
+    totalCredit,
+    totalDebit,
+    outStandingAmount,
+  };
 };
 
 export interface IFriendInput {
@@ -156,14 +245,14 @@ export const addMembers = async (collectionId: string, authorId: string, friends
     }
 
     // Hydrate before returning
-    const userIds = addedMembers.map(m => m.userId.toString());
+    const userIds = addedMembers.map((m) => m.userId.toString());
     const userData = await UserService.hydrateUsers(userIds);
     const userMap = new Map();
-    userData.forEach(u => userMap.set(u._id.toString(), u));
+    userData.forEach((u) => userMap.set(u._id.toString(), u));
 
-    const result = addedMembers.map(m => ({
+    const result = addedMembers.map((m) => ({
       ...m.toObject(),
-      user: userMap.get(m.userId.toString()) || { _id: m.userId }
+      user: userMap.get(m.userId.toString()) || { _id: m.userId },
     }));
 
     await session.commitTransaction();
@@ -177,13 +266,7 @@ export const addMembers = async (collectionId: string, authorId: string, friends
   }
 };
 
-export const addTransactions = async (
-  collectionId: string,
-  userId: string,
-  transactionIds: string[],
-  splitType: 'EQUAL' | 'CUSTOM',
-  customSplits?: ISplitItem[]
-) => {
+export const addTransactions = async (collectionId: string, userId: string, transactionIds: string[], splitType?: 'EQUAL' | 'CUSTOM', customSplits?: ISplitItem[]) => {
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member || member.role !== 'CONTRIBUTE') {
     throw new AppError('You do not have permission to add transactions to this collection', StatusCodes.FORBIDDEN);
@@ -231,7 +314,20 @@ export const addTransactions = async (
     collection.totalAmount = (collection.totalAmount || 0) + totalAmount;
     await collection.save({ session });
 
-    // generate splits
+    console.log('collection: ', collection);
+
+    // ── PERSONAL collection: no splits, return early ──
+    if (collection.type === 'PERSONAL') {
+      await session.commitTransaction();
+      session.endSession();
+      return { colTxs, splitDoc: null };
+    }
+
+    // ── SHARED collection: generate splits ──
+    if (!splitType) {
+      throw new AppError('splitType is required for shared collections', StatusCodes.BAD_REQUEST);
+    }
+
     let splits: ISplitItem[] = [];
     if (splitType === 'EQUAL') {
       const allMembers = await CollectionMember.find({ collectionId }).session(session);
@@ -267,13 +363,13 @@ export const addTransactions = async (
     // Hydrate users in splits before returning
     const userIdsToHydrate = new Set<string>();
     userIdsToHydrate.add(splitDoc.paidBy.toString());
-    splitDoc.splits.forEach(s => {
+    splitDoc.splits.forEach((s) => {
       if (s.userId) userIdsToHydrate.add(s.userId.toString());
     });
 
     const userData = await UserService.hydrateUsers(Array.from(userIdsToHydrate));
     const userMap = new Map();
-    userData.forEach(u => userMap.set(u._id.toString(), u));
+    userData.forEach((u) => userMap.set(u._id.toString(), u));
 
     const plainSplitDoc = splitDoc.toObject();
     const hydratedSplit = {
@@ -281,8 +377,8 @@ export const addTransactions = async (
       paidByUser: userMap.get(plainSplitDoc.paidBy.toString()) || { _id: plainSplitDoc.paidBy },
       splits: plainSplitDoc.splits.map((s: any) => ({
         ...s,
-        user: s.userId ? userMap.get(s.userId.toString()) || { _id: s.userId } : null
-      }))
+        user: s.userId ? userMap.get(s.userId.toString()) || { _id: s.userId } : null,
+      })),
     };
 
     await session.commitTransaction();
@@ -296,12 +392,7 @@ export const addTransactions = async (
   }
 };
 
-export const updateSplit = async (
-  collectionId: string,
-  userId: string,
-  splitId: string,
-  customSplits: ISplitItem[]
-) => {
+export const updateSplit = async (collectionId: string, userId: string, splitId: string, customSplits: ISplitItem[]) => {
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member || member.role !== 'CONTRIBUTE') {
     throw new AppError('You do not have permission to modify splits', StatusCodes.FORBIDDEN);
@@ -329,13 +420,13 @@ export const updateSplit = async (
   // Hydrate before returning
   const userIdsToHydrate = new Set<string>();
   userIdsToHydrate.add(splitDoc.paidBy.toString());
-  splitDoc.splits.forEach(s => {
+  splitDoc.splits.forEach((s) => {
     if (s.userId) userIdsToHydrate.add(s.userId.toString());
   });
 
   const userData = await UserService.hydrateUsers(Array.from(userIdsToHydrate));
   const userMap = new Map();
-  userData.forEach(u => userMap.set(u._id.toString(), u));
+  userData.forEach((u) => userMap.set(u._id.toString(), u));
 
   const plainSplitDoc = splitDoc.toObject();
   return {
@@ -343,28 +434,24 @@ export const updateSplit = async (
     paidByUser: userMap.get(plainSplitDoc.paidBy.toString()) || { _id: plainSplitDoc.paidBy },
     splits: plainSplitDoc.splits.map((s: any) => ({
       ...s,
-      user: s.userId ? userMap.get(s.userId.toString()) || { _id: s.userId } : null
-    }))
+      user: s.userId ? userMap.get(s.userId.toString()) || { _id: s.userId } : null,
+    })),
   };
 };
 
-export const getAvailableTransactions = async (
-  userId: string,
-  collectionId: string,
-  page: number = 1,
-  limit: number = 20
-) => {
+export const getAvailableTransactions = async (userId: string, collectionId: string, page: number = 1, limit: number = 20) => {
   const collectionTransactions = await CollectionTransaction.find({ collectionId }).select('transactionId -_id');
-  const usedTransactionIds = collectionTransactions.map(t => t.transactionId);
+
+  const usedTransactionIds = collectionTransactions.map((t) => new mongoose.Types.ObjectId(t.transactionId));
 
   const query = {
     userId,
-    _id: { $nin: usedTransactionIds }
+    _id: { $nin: usedTransactionIds },
   };
 
   const total = await BankTransaction.countDocuments(query);
   const transactions = await BankTransaction.find(query)
-    .sort({ createdAt: -1 })
+    .sort({ transactionTimestamp: -1 })
     .skip((page - 1) * limit)
     .limit(limit)
     .lean();
@@ -375,8 +462,8 @@ export const getAvailableTransactions = async (
       total,
       page,
       limit,
-      pages: Math.ceil(total / limit)
-    }
+      pages: Math.ceil(total / limit),
+    },
   };
 };
 
@@ -388,27 +475,25 @@ export const getCollectionSplits = async (collectionId: string, userId: string) 
 
   // Find all splits for this collection
   // Populate the transaction tracking
-  const splits = await Split.find({ collectionId })
-    .populate('transactionIds')
-    .lean();
+  const splits = await Split.find({ collectionId }).populate('transactionIds').lean();
 
   // Hydrate user IDs
   const userIdsSet = new Set<string>();
-  splits.forEach(s => {
+  splits.forEach((s) => {
     userIdsSet.add(s.paidBy.toString());
-    s.splits.forEach(si => userIdsSet.add(si.userId.toString()));
+    s.splits.forEach((si) => userIdsSet.add(si.userId.toString()));
   });
   const userData = await UserService.hydrateUsers(Array.from(userIdsSet));
   const userMap = new Map();
-  userData.forEach(u => userMap.set(u._id.toString(), u));
+  userData.forEach((u) => userMap.set(u._id.toString(), u));
 
-  const hydratedSplits = splits.map(s => ({
+  const hydratedSplits = splits.map((s) => ({
     ...s,
     paidByUser: userMap.get(s.paidBy.toString()) || { _id: s.paidBy },
-    splits: s.splits.map(si => ({
+    splits: s.splits.map((si) => ({
       ...si,
-      user: userMap.get(si.userId.toString()) || { _id: si.userId }
-    }))
+      user: userMap.get(si.userId.toString()) || { _id: si.userId },
+    })),
   }));
 
   return hydratedSplits;
@@ -422,38 +507,68 @@ export const getBalances = async (collectionId: string, userId: string) => {
   }
 
   const splits = await Split.find({ collectionId });
-  const netBalances: Record<string, number> = {};
 
-  splits.forEach(split => {
+  // Per-user net from logged-in user's perspective:
+  //   positive => other user owes the logged-in user (toReceive)
+  //   negative => logged-in user owes the other user (toPay)
+  const userBalances: Record<string, number> = {};
+
+  splits.forEach((split) => {
     const paidBy = split.paidBy.toString();
-    split.splits.forEach(s => {
-      if (!s.userId) return;
-      const owingUser = s.userId.toString();
-      if (paidBy !== owingUser) {
-        netBalances[paidBy] = (netBalances[paidBy] || 0) + s.amount;
-        netBalances[owingUser] = (netBalances[owingUser] || 0) - s.amount;
+
+    // Calculate how much each person in the split owes/is owed
+    split.splits.forEach((splitItem) => {
+      if (!splitItem.userId) return;
+      const splitUserId = splitItem.userId.toString();
+      const amount = splitItem.amount;
+
+      if (splitUserId === userId) {
+        // The logged-in user's share in this split
+        if (paidBy === userId) {
+          // Logged-in user paid: they advanced money for their own share
+          // Net effect: no debt (they paid for themselves)
+        } else {
+          // Someone else paid for the logged-in user's share
+          // Logged-in user owes the payer their share amount
+          userBalances[paidBy] = (userBalances[paidBy] || 0) - amount;
+        }
+      } else {
+        // Another user's share in this split
+        if (paidBy === userId) {
+          // Logged-in user paid: other users owe them their share amounts
+          userBalances[splitUserId] = (userBalances[splitUserId] || 0) + amount;
+        }
+        // If someone else paid, we don't track balances with this other person from this split
       }
     });
   });
 
-  // Get unique user IDs to hydrate
-  const userIds = Object.keys(netBalances);
-  const userData = await UserService.hydrateUsers(userIds);
+  // Hydrate involved user IDs
+  const friendIds = Object.keys(userBalances);
+  const userData = await UserService.hydrateUsers([userId, ...friendIds]);
   const userMap = new Map();
-  userData.forEach(u => userMap.set(u._id.toString(), u));
+  userData.forEach((u) => userMap.set(u._id.toString(), u));
 
-  // Convert to an array format
-  const balances = Object.keys(netBalances).map(uId => {
-    const bal = netBalances[uId];
-    return {
-      userId: uId,
-      user: userMap.get(uId) || { _id: uId },
-      balance: Math.abs(bal),
-      type: bal > 0 ? 'toReceive' : (bal < 0 ? 'toPay' : 'settled')
+  const toPay: Array<{ friend: any; amount: number }> = [];
+  const toReceive: Array<{ friend: any; amount: number }> = [];
+
+  for (const friendId of friendIds) {
+    const net = userBalances[friendId];
+    if (net === 0) continue; // settled, skip
+
+    const entry = {
+      friend: userMap.get(friendId) || { _id: friendId },
+      amount: Math.abs(net),
     };
-  }).filter(b => b.type !== 'settled');
 
-  return balances;
+    if (net > 0) {
+      toReceive.push(entry); // friend owes logged-in user
+    } else {
+      toPay.push(entry); // logged-in user owes friend
+    }
+  }
+
+  return { toPay, toReceive };
 };
 
 export const deleteCollection = async (collectionId: string, userId: string) => {
@@ -482,6 +597,119 @@ export const deleteCollection = async (collectionId: string, userId: string) => 
   }
 };
 
+export const updateCollection = async (collectionId: string, userId: string, data: { name?: string; description?: string; expiryAt?: Date }) => {
+  const member = await CollectionMember.findOne({ collectionId, userId });
+  if (!member || member.role !== 'CONTRIBUTE') {
+    throw new AppError('You do not have permission to update this collection', StatusCodes.FORBIDDEN);
+  }
+
+  const collection = await Collection.findById(collectionId);
+  if (!collection) {
+    throw new AppError('Collection not found', StatusCodes.NOT_FOUND);
+  }
+  if (collection.status === 'CLOSED') {
+    throw new AppError('Cannot update a closed collection', StatusCodes.BAD_REQUEST);
+  }
+
+  if (data.name !== undefined) collection.name = data.name;
+  if (data.description !== undefined) collection.description = data.description;
+  if (data.expiryAt !== undefined) collection.expiryAt = data.expiryAt;
+
+  await collection.save();
+  return collection.toObject();
+};
+
+export const closeCollection = async (collectionId: string, userId: string) => {
+  const collection = await Collection.findById(collectionId);
+  if (!collection) {
+    throw new AppError('Collection not found', StatusCodes.NOT_FOUND);
+  }
+  if (collection.ownerId.toString() !== userId.toString()) {
+    throw new AppError('Only the owner can close the collection', StatusCodes.FORBIDDEN);
+  }
+  if (collection.status === 'CLOSED') {
+    throw new AppError('Collection is already closed', StatusCodes.BAD_REQUEST);
+  }
+
+  collection.status = 'CLOSED';
+  await collection.save();
+  return collection.toObject();
+};
+
+export const getAllTransactions = async (collectionId: string, userId: string, page: number = 1, limit: number = 20) => {
+  const member = await CollectionMember.findOne({ collectionId, userId });
+  if (!member) {
+    throw new AppError('User is not a member of this collection', StatusCodes.FORBIDDEN);
+  }
+
+  const total = await CollectionTransaction.countDocuments({ collectionId });
+  const colTxs = await CollectionTransaction.find({ collectionId })
+    .populate('transactionId')
+    .sort({ createdAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+
+  let totalCredit = 0;
+  let totalDebit = 0;
+
+  // Compute totals across ALL transactions (not just this page)
+  const allColTxs = await CollectionTransaction.find({ collectionId }).populate('transactionId').lean();
+  allColTxs.forEach((ct: any) => {
+    const tx = ct.transactionId;
+    if (tx) {
+      if (tx.type === 'CREDIT') totalCredit += tx.amount || 0;
+      else if (tx.type === 'DEBIT') totalDebit += tx.amount || 0;
+    }
+  });
+
+  const outStandingAmount = totalDebit - totalCredit;
+
+  return {
+    transactions: colTxs,
+    totalCredit,
+    totalDebit,
+    outStandingAmount,
+    pagination: {
+      total,
+      page,
+      limit,
+      pages: Math.ceil(total / limit),
+    },
+  };
+};
+
+export const updateCollectionMember = async (collectionId: string, userId: string, targetUserId: string, role?: 'VIEW' | 'CONTRIBUTE', limitAmount?: string) => {
+  const requesterMember = await CollectionMember.findOne({ collectionId, userId });
+  if (!requesterMember || requesterMember.role !== 'CONTRIBUTE') {
+    throw new AppError('You do not have permission to update member amounts', StatusCodes.FORBIDDEN);
+  }
+
+  const targetMember = await CollectionMember.findOne({ collectionId, userId: targetUserId });
+  if (!targetMember) {
+    throw new AppError('Target member not found in this collection', StatusCodes.NOT_FOUND);
+  }
+
+  if (role) {
+    targetMember.role = role;
+  }
+
+  if (limitAmount) {
+    targetMember.limitAmount = limitAmount;
+  }
+
+  await targetMember.save();
+
+  // Hydrate user data before returning
+  const userData = await UserService.hydrateUsers([targetUserId]);
+  const hydratedMember = {
+    ...targetMember.toObject(),
+    user: userData[0] || { _id: targetUserId },
+  };
+
+  return hydratedMember;
+};
+
 export default {
   createCollection,
   getUserCollections,
@@ -493,4 +721,8 @@ export default {
   getAvailableTransactions,
   getCollectionSplits,
   getBalances,
+  updateCollection,
+  closeCollection,
+  getAllTransactions,
+  updateCollectionMember,
 };
