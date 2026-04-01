@@ -1,24 +1,24 @@
 import 'TransactionModel.dart';
 
 class BalanceModel {
-  String userId;
-  double balance;
-  String type;
+  double amount;
+  String type; // toPay / toReceive
   UserModel? user;
 
   BalanceModel({
-    required this.userId,
-    required this.balance,
+    required this.amount,
     required this.type,
     this.user,
   });
 
-  factory BalanceModel.fromJson(Map<String, dynamic> json) {
+  factory BalanceModel.fromJson(
+      Map<String, dynamic> json, String type) {
     return BalanceModel(
-      userId: json['userId'] ?? '',
-      balance: (json['balance'] ?? 0).toDouble(),
-      type: json['type'] ?? '',
-      user: json['user'] != null ? UserModel.fromJson(json['user']) : null,
+      amount: (json['amount'] ?? 0).toDouble(),
+      type: type,
+      user: json['friend'] != null
+          ? UserModel.fromJson(json['friend'])
+          : null,
     );
   }
 }
@@ -128,6 +128,7 @@ class MemberModel {
       role: json['role'] ?? 'VIEW',
     );
   }
+
 }
 
 class CollectionDetailsModel {

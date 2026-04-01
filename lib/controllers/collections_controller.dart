@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 
 import '../Home_Screen/history/collections/collections_HomePage.dart';
@@ -52,6 +53,14 @@ class CollectionsController extends GetxController {
 
   final RxList<InvitationModel> invitationsList = <InvitationModel>[].obs;
   final RxBool isInvitationLoading = false.obs;
+
+  MemberModel? currentUser;
+
+  MemberModel? get currentUserInCollection {
+    if (collectionDetails.value == null) return null;
+    return collectionDetails.value!.members
+        .firstWhereOrNull((m) => m.id == userController.userId);
+  }
 
   // =========================
   // GET COLLECTIONS LIST
@@ -115,6 +124,11 @@ class CollectionsController extends GetxController {
       final details = CollectionDetailsModel.fromJson(data['data']);
       collectionDetails.value = details;
       selectedCollection.value = details.collection;
+      currentUser = details.members.firstWhereOrNull(
+        (m) =>
+            m.userId.toString().trim() ==
+            userController.userId.toString().trim(),
+      );
       splitsList.clear();
       await getSplits(id);
 
@@ -413,9 +427,11 @@ class CollectionsController extends GetxController {
     required String splitType,
     List<dynamic>? customSplits,
     required BuildContext context,
+    bool isFixedBill = false,
   }) async {
     final body = <String, dynamic>{
       "transactionIds": transactionIds,
+      "isFixedBill": isFixedBill,
       "splitType": splitType,
       if (splitType == "CUSTOM" && customSplits != null)
         "customSplits": customSplits,
@@ -428,16 +444,15 @@ class CollectionsController extends GetxController {
       selectedTransactions.clear();
       SeletedTransactionsList.clear();
       await refreshCollectionData(collectionId);
-      if (context != null && context.mounted) {
-        Navigator.popUntil(context, (route) => route.isFirst);
-      }
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const TransactionHistoryScreen(),
-        ),
-      );
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => const TransactionHistoryScreen(),
+      //   ),
+      // );
 
       return true;
     }
@@ -484,13 +499,23 @@ class CollectionsController extends GetxController {
           await getDataApiCall(CollectionsRoute.getBalances(collectionId));
 
       if (getFlagOfResponse(response)) {
-        final data = json.decode(response.body);
-        print(data['data']);
-        final list = (data['data'] as List)
-            .map((e) => BalanceModel.fromJson(e))
-            .toList();
-        balancesList.clear();
-        balancesList.addAll(list);
+        final data = json.decode(response.body)['data'];
+
+        List<BalanceModel> tempList = [];
+
+        /// ✅ TO PAY
+        final toPayList = data['toPay'] as List? ?? [];
+        for (var item in toPayList) {
+          tempList.add(BalanceModel.fromJson(item, "toPay"));
+        }
+
+        /// ✅ TO RECEIVE
+        final toReceiveList = data['toReceive'] as List? ?? [];
+        for (var item in toReceiveList) {
+          tempList.add(BalanceModel.fromJson(item, "toReceive"));
+        }
+
+        balancesList.assignAll(tempList);
       }
     } catch (e) {
       debugPrint("getBalances error: $e");
@@ -618,62 +643,60 @@ class CollectionsController extends GetxController {
     return false;
   }
 
-
   Future<void> getPendingInvitations() async {
-  try {
-    isInvitationLoading.value = true;
+    try {
+      isInvitationLoading.value = true;
 
-    final response = await getDataApiCall(
-      CollectionsRoute.getPendingInvitations(),
-    );
+      final response = await getDataApiCall(
+        CollectionsRoute.getPendingInvitations(),
+      );
 
-    if (getFlagOfResponse(response)) {
-      final data = json.decode(response.body);
+      if (getFlagOfResponse(response)) {
+        final data = json.decode(response.body);
 
-      final list = (data['data']['invitations'] as List? ?? [])
-          .map((e) => InvitationModel.fromJson(e))
-          .toList();
+        final list = (data['data']['invitations'] as List? ?? [])
+            .map((e) => InvitationModel.fromJson(e))
+            .toList();
 
-      invitationsList.assignAll(list);
+        invitationsList.assignAll(list);
+      }
+    } catch (e) {
+      debugPrint("getPendingInvitations error: $e");
+    } finally {
+      isInvitationLoading.value = false;
     }
-  } catch (e) {
-    debugPrint("getPendingInvitations error: $e");
-  } finally {
-    isInvitationLoading.value = false;
   }
-}
-Future<void> acceptInvitation(String invitationId) async {
-  try {
-    final response = await postDataApiCall(
-      CollectionsRoute.acceptInvitation(invitationId),
-      {},
-    );
 
-    if (getFlagOfResponse(response)) {
-      invitationsList.removeWhere((e) => e.id == invitationId);
+  Future<void> acceptInvitation(String invitationId) async {
+    try {
+      final response = await postDataApiCall(
+        CollectionsRoute.acceptInvitation(invitationId),
+        {},
+      );
 
-      /// Refresh collections also
-      await getCollections(forceRefresh: true);
+      if (getFlagOfResponse(response)) {
+        invitationsList.removeWhere((e) => e.id == invitationId);
+
+        /// Refresh collections also
+        await getCollections(forceRefresh: true);
+      }
+    } catch (e) {
+      debugPrint("acceptInvitation error: $e");
     }
-  } catch (e) {
-    debugPrint("acceptInvitation error: $e");
   }
-}
 
+  Future<void> rejectInvitation(String invitationId) async {
+    try {
+      final response = await postDataApiCall(
+        CollectionsRoute.rejectInvitation(invitationId),
+        {},
+      );
 
-Future<void> rejectInvitation(String invitationId) async {
-  try {
-    final response = await postDataApiCall(
-      CollectionsRoute.rejectInvitation(invitationId),
-      {},
-    );
-
-    if (getFlagOfResponse(response)) {
-      invitationsList.removeWhere((e) => e.id == invitationId);
+      if (getFlagOfResponse(response)) {
+        invitationsList.removeWhere((e) => e.id == invitationId);
+      }
+    } catch (e) {
+      debugPrint("rejectInvitation error: $e");
     }
-  } catch (e) {
-    debugPrint("rejectInvitation error: $e");
   }
-}
-
 }
