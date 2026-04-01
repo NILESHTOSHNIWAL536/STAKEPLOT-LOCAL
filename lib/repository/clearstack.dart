@@ -211,6 +211,7 @@ void clearGetX() {
   loadBanks.value = true;
   deleteGetControllers();
   HiveStorage.closeAllBoxes();
+  collectionsController.clearAllData();
 }
 
 RxMap<String, String> ListOfBankImages = RxMap();

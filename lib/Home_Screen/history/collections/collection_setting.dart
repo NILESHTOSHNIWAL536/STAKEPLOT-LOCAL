@@ -6,9 +6,11 @@ import '../../../Constants/colors.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../Home_Screen/history/collections/create_collection_data.dart';
 import '../../../Home_Screen/history/collections/create_collection_pages/step_select_duration.dart';
+import '../../../backed_connections/apis_connect.dart';
 import '../../../backed_connections/bankServices/collection_pdf_export.dart';
 import '../../../controllers/Invite-members-screen.dart';
 import '../../../controllers/collections_controller.dart';
+import '../../../model/collections_model.dart';
 
 class CollectionSettingsModal extends StatefulWidget {
   const CollectionSettingsModal({super.key});
@@ -32,13 +34,14 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height * 0.9,
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
       decoration: const BoxDecoration(
         color: Color(0xFFF5F3EF),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        // mainAxisSize: MainAxisSize.min,
         children: [
           /// ── DRAG HANDLE ──
           const SizedBox(height: 10),
@@ -85,59 +88,82 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
             ],
           ),
 
-          const SizedBox(height: 20),
+          Expanded(
+            child: ListView(
+              children: [
+                const SizedBox(height: 20),
 
-          /// ── ALERT CARD ──
-          _alertCard(context),
+                /// ── ALERT CARD ──
+                _alertCard(context),
 
-          const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-          /// ── EXPORT ──
-          _settingsTile(
-            context,
-            iconAsset: Icons.file_upload_outlined,
-            title: "Export Transactions",
-            onTap: () => _exportTransactions(context),
+                AccessPermissionsWidget(),
+
+                /// ── EXPORT ──
+                _settingsTile(
+                  context,
+                  iconAsset: Icons.file_upload_outlined,
+                  title: "Export Transactions",
+                  onTap: () => _exportTransactions(context),
+                ),
+
+                _settingsTile(
+                  context,
+                  iconAsset: Icons.file_upload_outlined,
+                  title: "Person Limit",
+                  onTap: () => _showLimitDialog(
+                      context, collectionsController.currentUser),
+                ),
+
+                /// ── RENAME ──
+                _settingsTile(
+                  context,
+                  iconAsset: Icons.edit_outlined,
+                  title: "Rename Collection",
+                  onTap: () => _showRenameDialog(context),
+                ),
+
+                /// ── DURATION ──
+                _settingsTile(
+                  context,
+                  iconAsset: Icons.access_time_outlined,
+                  title: "Edit Duration Range",
+                  onTap: () => _showDurationPopup(context),
+                ),
+
+                /// ── CLOSE COLLECTION ──
+                _dangerTile(
+                  context,
+                  icon: Icons.cancel_outlined,
+                  title: "Close Collection",
+                  onTap: () => _confirmClose(context),
+                ),
+
+                /// ── DELETE COLLECTION ──
+                _dangerTile(
+                  context,
+                  icon: Icons.delete_outline_rounded,
+                  title: "Delete Collection",
+                  onTap: () => _confirmDelete(context, "delete"),
+                ),
+
+                _dangerTile(
+                  context,
+                  icon: Icons.delete_outline_rounded,
+                  title: "Exit Collection",
+                  onTap: () => _confirmDelete(context, "exit"),
+                ),
+
+                // AccessPermissionsWidget(),
+
+                // InviteMembersScreen(
+                //     collectionId: collectionsController
+                //             .collectionDetails.value?.collection.id ??
+                //         ''),
+              ],
+            ),
           ),
-
-          /// ── RENAME ──
-          _settingsTile(
-            context,
-            iconAsset: Icons.edit_outlined,
-            title: "Rename Collection",
-            onTap: () => _showRenameDialog(context),
-          ),
-
-          /// ── DURATION ──
-          _settingsTile(
-            context,
-            iconAsset: Icons.access_time_outlined,
-            title: "Edit Duration Range",
-            onTap: () => _showDurationPopup(context),
-          ),
-
-          /// ── CLOSE COLLECTION ──
-          _dangerTile(
-            context,
-            icon: Icons.cancel_outlined,
-            title: "Close Collection",
-            onTap: () => _confirmClose(context),
-          ),
-
-          /// ── DELETE COLLECTION ──
-          _dangerTile(
-            context,
-            icon: Icons.delete_outline_rounded,
-            title: "Delete Collection",
-            onTap: () => _confirmDelete(context),
-          ),
-
-          AccessPermissionsWidget(),
-
-          InviteMembersScreen(
-              collectionId: collectionsController
-                      .collectionDetails.value?.collection.id ??
-                  ''),
         ],
       ),
     );
@@ -426,19 +452,21 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
   }
 
   // ─────────────────────── DELETE ───────────────────────
-  void _confirmDelete(BuildContext context) {
+  void _confirmDelete(BuildContext context, String type) {
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (_) => _StyledDialog(
-        title: "Delete Collection",
+        title: type == "exit" ? "Delete Collection" : "Exit Collection",
         icon: Icons.delete_outline_rounded,
         iconColor: Colors.red,
-        content: const Text(
-          "This action cannot be undone. All data in this collection will be permanently deleted.",
+        content: Text(
+          type == "delete"
+              ? "This action cannot be undone. All data in this collection will be permanently deleted."
+              : "Are you sure you want to exit this collection? You will lose access to all transactions and details of this collection.",
           style: TextStyle(fontSize: 13, color: Colors.grey, height: 1.5),
         ),
-        confirmLabel: "Delete",
+        confirmLabel: type == "delete" ? "Delete" : "Exit Collection",
         confirmColor: Colors.red,
         onConfirm: () async {
           Navigator.pop(context);
@@ -517,7 +545,9 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
   void _exportTransactions(BuildContext context) async {
     await exportCollectionPdf(
       context,
-      collectionsController.selectedCollection.value!.id,
+      collectionsController.collectionDetails.value!,
+      collectionsController.splitsList,
+      collectionsController.balancesList,
     );
   }
 }
@@ -731,4 +761,63 @@ List<Map<String, dynamic>> buildInviteList(List<Map<String, dynamic>> members) {
       "role": (m["role"] ?? "VIEW").toString().toUpperCase(),
     };
   }).toList();
+}
+
+void _showLimitDialog(
+  BuildContext context,
+  MemberModel? member,
+) {
+  final ctrl = TextEditingController(
+    text: member?.setAmount.toString(),
+  );
+
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (_) => _StyledDialog(
+      title: "Set Amount Limit",
+      icon: Icons.account_balance_wallet_outlined,
+      iconColor: const Color(0xFF2D2B5B),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Set spending limit for this member.",
+            style: TextStyle(fontSize: 13, color: Colors.grey),
+          ),
+
+          const SizedBox(height: 14),
+
+          /// 🔥 INPUT FIELD
+          _StyledTextField(
+            controller: ctrl,
+            hintText: "Enter amount",
+            prefixIcon: Icons.currency_rupee,
+            keyboardType: TextInputType.number,
+          ),
+        ],
+      ),
+      confirmLabel: "Save",
+      confirmColor: const Color(0xFF2D2B5B),
+      onConfirm: () async {
+        Navigator.pop(context);
+
+        final value = ctrl.text.trim();
+        if (value.isEmpty) return;
+
+        final collectionId =
+            collectionsController.collectionDetails.value!.collection.id;
+
+        /// 🔥 API CALL
+        await collectionsController.updateMemberRole(
+          collectionId: collectionId,
+          userId: member?.userId ?? "",
+          body: {
+            "limitAmount": double.tryParse(value) ?? 0,
+          },
+        );
+      },
+    ),
+  );
 }
