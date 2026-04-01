@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:get/get.dart';
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
@@ -48,7 +49,7 @@ class CollectionDetailsPage extends StatelessWidget {
             Obx(() => Expanded(
                   child: collectionsController.splitsList.length > 0
                       ? (type == "SHARED"
-                          ? TripDashboardScreen()
+                          ? SharedCollectionDashboard()
                           : _transactionsUI(context))
                       : emptyTransactionsUI(context, type),
                 ))
@@ -64,7 +65,7 @@ class CollectionDetailsPage extends StatelessWidget {
       color: AppColors.newbg,
       child: Padding(
         padding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p12),
+            const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p2),
         child: Row(
           children: [
             /// BACK
@@ -83,6 +84,7 @@ class CollectionDetailsPage extends StatelessWidget {
             Container(
               // color: AppColors.bg1,
               width: MediaQuery.of(context).size.width / 1.9,
+              alignment: Alignment.center,
               child: Text(
                 title,
                 style: FontManager().getTextStyle(
@@ -97,7 +99,8 @@ class CollectionDetailsPage extends StatelessWidget {
 
             /// FILTER
             Container(
-              padding: const EdgeInsets.all(AppSizes.p8),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.p8, vertical: AppSizes.p2),
               decoration: BoxDecoration(
                 color: AppColors.backgroundColor,
                 borderRadius: BorderRadius.circular(10),
@@ -116,7 +119,10 @@ class CollectionDetailsPage extends StatelessWidget {
                   InkWell(
                       onTap: () {
                         // Open settings page
-                        showCollectionSettingsModal(context);
+                        (collectionsController.currentUser?.role == "VIEW")
+                            ? snackBarCalledfail(
+                                context, "You have view only access")
+                            : showCollectionSettingsModal(context);
                       },
                       child: _iconButton(HomePageIcons.settings)),
                 ],
@@ -323,7 +329,7 @@ class CollectionDetailsPage extends StatelessWidget {
         child: AvatarProfileImageZero(
           url: asset,
           width: 40,
-          height: 45,
+          height: 40,
         ),
       ),
     );

@@ -59,7 +59,7 @@ class _StepOptionalDescriptionState extends State<StepOptionalDescription> {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (_) => const TripDashboardScreen(),
+              builder: (_) => const SharedCollectionDashboard(),
             ),
             (route) => route.isFirst,
           );
