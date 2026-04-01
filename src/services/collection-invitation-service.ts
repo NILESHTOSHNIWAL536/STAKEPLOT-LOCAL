@@ -23,6 +23,10 @@ export const sendInvitations = async (
     throw new AppError('Collection not found', StatusCodes.NOT_FOUND);
   }
 
+  if (collection.type == 'PERSONAL') {
+    throw new AppError('personal collection cannot have members', StatusCodes.FORBIDDEN);
+  }
+
   const authorMember = await CollectionMember.findOne({ collectionId, userId: invitedByUserId });
   if (!authorMember || authorMember.role !== 'CONTRIBUTE') {
     throw new AppError('Only collection contributors can send invitations', StatusCodes.FORBIDDEN);
@@ -120,15 +124,7 @@ export const sendInvitations = async (
 /**
  * Get all pending invitations for a user
  */
-export const getPendingInvitations = async (userId: string, page: number = 1, limit: number = 20): Promise<{ invitations: any[]; pagination: any }> => {
-  const skip = (page - 1) * limit;
-
-  const total = await CollectionInvitation.countDocuments({
-    invitedUserId: userId,
-    status: 'PENDING',
-    expiresAt: { $gt: new Date() }, // Not expired
-  });
-
+export const getPendingInvitations = async (userId: string): Promise<{ invitations: any[] }> => {
   const invitations = await CollectionInvitation.find({
     invitedUserId: userId,
     status: 'PENDING',
@@ -136,8 +132,6 @@ export const getPendingInvitations = async (userId: string, page: number = 1, li
   })
     .populate('collectionId')
     .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit)
     .lean();
 
   // Hydrate user data
@@ -152,18 +146,12 @@ export const getPendingInvitations = async (userId: string, page: number = 1, li
 
   const hydratedInvitations = invitations.map((inv: any) => ({
     ...inv,
-    invitedBy: userMap.get(inv.invitedByUserId.toString()) || { _id: inv.invitedByUserId },
+      invitedBy: userMap.get(inv.invitedByUserId.toString()) || { _id: inv.invitedByUserId },
     collection: inv.collectionId,
   }));
 
   return {
     invitations: hydratedInvitations,
-    pagination: {
-      total,
-      page,
-      limit,
-      pages: Math.ceil(total / limit),
-    },
   };
 };
 

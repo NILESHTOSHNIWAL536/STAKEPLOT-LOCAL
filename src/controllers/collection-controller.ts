@@ -140,7 +140,6 @@ export const getBalances = async (req: Request, res: Response, next: NextFunctio
     const userId = req.user._id;
     const { id: collectionId } = req.params;
     const balances = await CollectionService.getBalances(collectionId, userId);
-    console.log("balances for collection: ", balances);
     SuccessResponse.data = balances;
     SuccessResponse.message = 'Balances calculated successfully';
     res.status(StatusCodes.OK).json(SuccessResponse);
@@ -192,6 +191,21 @@ export const getAllTransactions = async (req: Request, res: Response, next: Next
   }
 };
 
+export const updateCollectionMember = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId, memberId } = req.params;
+    const { role, limitAmount } = req.body;
+
+    const updatedMember = await CollectionService.updateCollectionMember(collectionId, userId, memberId, role, limitAmount);
+    SuccessResponse.data = updatedMember;
+    SuccessResponse.message = 'Collection member amount updated successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // ============================================
 // COLLECTION INVITATION ENDPOINTS
 // ============================================
@@ -199,11 +213,8 @@ export const getAllTransactions = async (req: Request, res: Response, next: Next
 export const getPendingInvitations = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user._id;
-    const { page, limit } = req.query;
-    const pageNum = parseInt(page as string) || 1;
-    const limitNum = parseInt(limit as string) || 20;
 
-    const result = await CollectionInvitationService.getPendingInvitations(userId, pageNum, limitNum);
+    const result = await CollectionInvitationService.getPendingInvitations(userId);
     SuccessResponse.data = result;
     SuccessResponse.message = 'Pending invitations fetched successfully';
     res.status(StatusCodes.OK).json(SuccessResponse);
@@ -254,21 +265,13 @@ export const cancelInvitation = async (req: Request, res: Response, next: NextFu
   }
 };
 
-export const getCollectionInvitations = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getCollectionInvitations = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user._id;
     const { id: collectionId } = req.params;
     const { status } = req.query;
 
-    const invitations = await CollectionInvitationService.getCollectionInvitations(
-      collectionId,
-      userId,
-      status as 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED' | undefined
-    );
+    const invitations = await CollectionInvitationService.getCollectionInvitations(collectionId, userId, status as 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED' | undefined);
     SuccessResponse.data = invitations;
     SuccessResponse.message = 'Collection invitations fetched successfully';
     res.status(StatusCodes.OK).json(SuccessResponse);
@@ -291,6 +294,7 @@ export default {
   updateCollection,
   closeCollection,
   getAllTransactions,
+  updateCollectionMember,
   getPendingInvitations,
   acceptInvitation,
   rejectInvitation,
