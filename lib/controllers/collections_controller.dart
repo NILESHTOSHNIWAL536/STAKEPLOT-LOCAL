@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Home_Screen/history/collections/collections_HomePage.dart';
+import '../Home_Screen/history/collections/trip/screens/trip_dashboard_screen.dart';
+import '../Home_Screen/history/transactionHistoryScreen.dart';
+import '../Utils/durations_range.dart';
 import '../backed_connections/apiAutomations/curd.dart';
 import '../model/TransactionModel.dart';
 import '../model/collections_model.dart';
@@ -11,28 +14,33 @@ class CollectionsController extends GetxController {
   // =========================
   // LOADING STATES
   // =========================
-  RxBool isLoading = false.obs;
-  RxBool isSplitLoading = false.obs;
-  RxBool isBalanceLoading = false.obs;
-  RxBool isMemberLoading = false.obs;
+  final RxBool isLoading = false.obs;
+  final RxBool isSplitLoading = false.obs;
+  final RxBool isBalanceLoading = false.obs;
+  final RxBool isMemberLoading = false.obs;
 
   // =========================
   // DATA
   // =========================
-  RxList<CollectionModel> collectionsList = <CollectionModel>[].obs;
-  Rx<CollectionModel?> selectedCollection = Rx<CollectionModel?>(null);
-  Rx<CollectionDetailsModel?> collectionDetails =
+  final RxList<CollectionModel> collectionsList = <CollectionModel>[].obs;
+  final Rx<CollectionModel?> selectedCollection = Rx<CollectionModel?>(null);
+  final Rx<CollectionDetailsModel?> collectionDetails =
       Rx<CollectionDetailsModel?>(null);
 
-  RxList<SplitModel> splitsList = <SplitModel>[].obs;
-  RxList<BalanceModel> balancesList = <BalanceModel>[].obs;
+  final RxList<SplitModel> splitsList = <SplitModel>[].obs;
+  final RxList<BalanceModel> balancesList = <BalanceModel>[].obs;
 
-  RxList<CollectionTransactionModel> availableTransactions =
+  final RxList<CollectionTransactionModel> availableTransactions =
       <CollectionTransactionModel>[].obs;
 
-  RxList<TransactionModel> AllTransactions = <TransactionModel>[].obs;
-  RxList<TransactionModel> SeletedTransactionsList = <TransactionModel>[].obs;
-  RxList<String> selectedTransactions = <String>[].obs;
+  final RxList<TransactionModel> AllTransactions = <TransactionModel>[].obs;
+  final RxList<TransactionModel> SeletedTransactionsList =
+      <TransactionModel>[].obs;
+  final RxList<String> selectedTransactions = <String>[].obs;
+
+  /// Prevent duplicate concurrent fetches
+  bool _isFetchingCollections = false;
+  bool _isFetchingDetails = false;
 
   // ✅ Computed helpers
   bool get hasCollectionDetails => collectionDetails.value != null;
@@ -44,32 +52,38 @@ class CollectionsController extends GetxController {
   // =========================
   // GET COLLECTIONS LIST
   // =========================
-  Future<void> getCollections() async {
+  Future<void> getCollections({bool forceRefresh = false}) async {
+    /// Skip if already loading or has data and not forced
+    if (_isFetchingCollections) return;
+    if (!forceRefresh && collectionsList.isNotEmpty) return;
+
+    _isFetchingCollections = true;
     try {
       isLoading.value = true;
 
-      var response = await getDataApiCall(CollectionsRoute.getCollections);
-      print("response.body ${response.body}");
+      final response = await getDataApiCall(CollectionsRoute.getCollections);
+
       if (getFlagOfResponse(response)) {
-        var decoded = json.decode(response.body);
-
-        if (decoded['data'] != null && decoded['data'] is List) {
-          List list = decoded['data'];
-          collectionsList.clear();
-
-          for (var item in list) {
+        final decoded = json.decode(response.body);
+        if (decoded['data'] is List) {
+          final list = decoded['data'] as List;
+          final parsed = <CollectionModel>[];
+          for (final item in list) {
             try {
-              collectionsList.add(CollectionModel.fromJson(item, {}));
+              parsed.add(CollectionModel.fromJson(item, {}));
             } catch (e) {
               debugPrint("CollectionModel parse error: $e — item: $item");
             }
           }
+          // Batch update — single UI rebuild
+          collectionsList.assignAll(parsed);
         }
       }
     } catch (e) {
       debugPrint("getCollections error: $e");
     } finally {
       isLoading.value = false;
+      _isFetchingCollections = false;
     }
   }
 
@@ -77,67 +91,77 @@ class CollectionsController extends GetxController {
   // GET COLLECTION BY ID
   // =========================
   Future<void> getCollectionById(String id, BuildContext context) async {
+    if (_isFetchingDetails) return;
+    _isFetchingDetails = true;
+
     try {
       isLoading.value = true;
+      collectionDetails.value = null;
+
+      final response =
+          await getDataApiCall(CollectionsRoute.getCollectionById(id));
+
+      if (!getFlagOfResponse(response)) return;
+
+      final data = json.decode(response.body);
+      final details = CollectionDetailsModel.fromJson(data['data']);
+      collectionDetails.value = details;
+      selectedCollection.value = details.collection;
       splitsList.clear();
+      await getSplits(id);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => CollectionDetailsPage(
+            title: details.collection.name,
+            type: details.collection.type,
+            hasTransactions: details.collection.type == "SHARED"
+                ? splitsList.isNotEmpty
+                : details.transactions.isNotEmpty,
+          ),
+        ),
+      );
+
       balancesList.clear();
       AllTransactions.clear();
 
-      var response =
-          await getDataApiCall(CollectionsRoute.getCollectionById(id));
-      if (getFlagOfResponse(response)) {
-        var data = json.decode(response.body);
-        collectionDetails.value = CollectionDetailsModel.fromJson(data['data']);
-        selectedCollection.value = collectionDetails.value?.collection;
+      /// Load splits and balances in parallel — much faster
+      await Future.wait([
+        getBalances(id),
+        getAllCollectionsTransactions(),
+      ]);
 
-        // Load splits and balances in parallel
-        await Future.wait([
-          getSplits(id),
-          getBalances(id),
-          getAllCollectionsTransactions(),
-        ]);
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => CollectionDetailsPage(
-              title: collectionDetails.value!.collection.name,
-              type: collectionDetails.value!.collection.type,
-              hasTransactions: collectionDetails.value!.collection.type ==
-                      "SHARED"
-                  ? splitsList.isNotEmpty
-                  : collectionDetails.value?.transactions.isNotEmpty ?? false,
-            ),
-          ),
-        );
-      }
+      if (!context.mounted) return;
     } catch (e) {
       debugPrint("getCollectionById error: $e");
     } finally {
       isLoading.value = false;
+      _isFetchingDetails = false;
     }
   }
 
   // =========================
   // REFRESH COLLECTION DATA
   // =========================
-  /// Reloads collection details, splits, and balances in one shot.
   Future<void> refreshCollectionData(String collectionId) async {
     try {
-      isLoading.value = true;
       final response = await getDataApiCall(
           CollectionsRoute.getCollectionById(collectionId));
+
       if (getFlagOfResponse(response)) {
         final data = json.decode(response.body);
-        collectionDetails.value = CollectionDetailsModel.fromJson(data['data']);
-        selectedCollection.value = collectionDetails.value?.collection;
-        await getSplits(collectionId);
-        await getBalances(collectionId);
+        final details = CollectionDetailsModel.fromJson(data['data']);
+        collectionDetails.value = details;
+        selectedCollection.value = details.collection;
+
+        await Future.wait([
+          getSplits(collectionId),
+          getBalances(collectionId),
+        ]);
       }
     } catch (e) {
-      print("refreshCollectionData error: $e");
-    } finally {
-      isLoading.value = false;
+      debugPrint("refreshCollectionData error: $e");
     }
   }
 
@@ -151,17 +175,18 @@ class CollectionsController extends GetxController {
     String? expiryAt,
   }) async {
     try {
-      var body = {
+      final body = <String, dynamic>{
         "name": name,
         "type": type,
         "description": description,
-        if (expiryAt != null) "expiryAt": expiryAt,
+        if (expiryAt != null) "expiryAt": getIsoDateFromDuration(expiryAt),
       };
 
-      var response =
+      final response =
           await postDataApiCall(CollectionsRoute.createCollection, body);
+
       if (getFlagOfResponse(response)) {
-        await getCollections();
+        await getCollections(forceRefresh: true);
         return true;
       }
     } catch (e) {
@@ -180,16 +205,17 @@ class CollectionsController extends GetxController {
     try {
       isMemberLoading.value = true;
 
-      var body = {"friends": friends};
-      var response =
-          await postDataApiCall(CollectionsRoute.addMember(collectionId), body);
+      final response = await postDataApiCall(
+        CollectionsRoute.addMember(collectionId),
+        {"friends": friends},
+      );
 
       if (getFlagOfResponse(response)) {
-        // Refresh collection details to get updated members list
-        var detailsResponse = await getDataApiCall(
+        final detailsResponse = await getDataApiCall(
             CollectionsRoute.getCollectionById(collectionId));
+
         if (getFlagOfResponse(detailsResponse)) {
-          var data = json.decode(detailsResponse.body);
+          final data = json.decode(detailsResponse.body);
           collectionDetails.value =
               CollectionDetailsModel.fromJson(data['data']);
           selectedCollection.value = collectionDetails.value?.collection;
@@ -207,9 +233,6 @@ class CollectionsController extends GetxController {
   // =========================
   // CREATE COLLECTION + ADD MEMBERS
   // =========================
-  /// Creates a collection then adds friends as members.
-  /// [friends] is a list of {"friendId": ..., "role": ...} maps.
-  /// Returns the new collection ID, or null on failure.
   Future<String?> createCollectionWithMembers({
     required String name,
     required String type,
@@ -225,35 +248,34 @@ class CollectionsController extends GetxController {
         "name": name,
         "type": type.toUpperCase(),
         "description": description,
+        if (expiryAt != null) "expiryAt": getIsoDateFromDuration(expiryAt),
       };
-      if (expiryAt != null) body["expiryAt"] = expiryAt;
 
       final createRes =
           await postDataApiCall(CollectionsRoute.createCollection, body);
 
       if (!getFlagOfResponse(createRes)) {
-        print("❌ createCollection failed: ${createRes.body}");
+        debugPrint("❌ createCollection failed: ${createRes.body}");
         return null;
       }
 
       final resData = json.decode(createRes.body);
       final newId = resData["data"]["_id"] as String;
 
-      // Add members only for shared collections
       if (friends.isNotEmpty) {
         final memberRes = await postDataApiCall(
           CollectionsRoute.addMember(newId),
           {"friends": friends},
         );
         if (!getFlagOfResponse(memberRes)) {
-          print("⚠️ addMember failed: ${memberRes.body}");
+          debugPrint("⚠️ addMember failed: ${memberRes.body}");
         }
       }
 
-      await getCollections();
+      await getCollections(forceRefresh: true);
       return newId;
     } catch (e) {
-      print("createCollectionWithMembers error: $e");
+      debugPrint("createCollectionWithMembers error: $e");
       return null;
     } finally {
       isLoading.value = false;
@@ -263,21 +285,25 @@ class CollectionsController extends GetxController {
   // =========================
   // DELETE COLLECTION
   // =========================
-  Future<void> deleteCollection(String id, {BuildContext? context}) async {
+  Future<void> deleteCollection(String id, BuildContext context) async {
     try {
-      var response =
+      final response =
           await deleteDataApiCall(CollectionsRoute.deleteCollection(id));
+
       if (getFlagOfResponse(response)) {
-        collectionsList.removeWhere((e) => e.id == id);
+        /// Batch clear
         collectionDetails.value = null;
         selectedCollection.value = null;
         splitsList.clear();
         balancesList.clear();
+        collectionsList.removeWhere((e) => e.id == id);
 
-        if (context != null && context.mounted) {
-          // Pop back to collections list (pop 2 screens: settings modal + detail page)
-          Navigator.popUntil(context, (route) => route.isFirst);
-        }
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const TransactionHistoryScreen(),
+          ),
+        );
       }
     } catch (e) {
       debugPrint("deleteCollection error: $e");
@@ -291,13 +317,14 @@ class CollectionsController extends GetxController {
     try {
       isSplitLoading.value = true;
 
-      var response =
+      final response =
           await getDataApiCall(CollectionsRoute.getSplits(collectionId));
 
       if (getFlagOfResponse(response)) {
-        var data = json.decode(response.body);
-        splitsList.value =
+        final data = json.decode(response.body);
+        final list =
             (data['data'] as List).map((e) => SplitModel.fromJson(e)).toList();
+        splitsList.assignAll(list);
       }
     } catch (e) {
       debugPrint("getSplits error: $e");
@@ -316,18 +343,19 @@ class CollectionsController extends GetxController {
 
       if (collectionDetails.value == null) return;
 
-      var response = await getDataApiCall(
-          CollectionsRoute.getAvailableTransactions(
-              collectionDetails.value!.collection.id,
-              page: page,
-              limit: limit));
+      final response = await getDataApiCall(
+        CollectionsRoute.getAvailableTransactions(
+          collectionDetails.value!.collection.id,
+          page: page,
+          limit: limit,
+        ),
+      );
 
       if (getFlagOfResponse(response)) {
-        var data = json.decode(response.body);
-        List<TransactionModel> modalObj =
+        final data = json.decode(response.body);
+        final list =
             TransactionModel.listFromJson(data["data"]["transactions"]);
-        AllTransactions.clear();
-        AllTransactions.addAll(modalObj);
+        AllTransactions.assignAll(list);
       }
     } catch (e) {
       debugPrint("getAllCollectionsTransactions error: $e");
@@ -337,75 +365,81 @@ class CollectionsController extends GetxController {
   }
 
   // =========================
-  // ADD TRANSACTION + SPLIT
+  // ADD TRANSACTION (PERSONAL)
   // =========================
   Future<bool> addTransactionToPersonal({
     required String collectionId,
     required List<String> transactionIds,
     BuildContext? context,
   }) async {
-    var response = await postDataApiCall(
-        CollectionsRoute.addTransaction(collectionId),
-        {"transactionIds": transactionIds, "splitType": "PERSONAL"});
+    final response = await postDataApiCall(
+      CollectionsRoute.addTransaction(collectionId),
+      {"transactionIds": transactionIds, "splitType": "PERSONAL"},
+    );
 
     if (getFlagOfResponse(response)) {
-      // Reset selection state
       selectedTransactions.clear();
       SeletedTransactionsList.clear();
-      // Refresh all collection data
       await refreshCollectionData(collectionId);
-      // Pop all split screens back to dashboard
       if (context != null && context.mounted) {
         Navigator.popUntil(context, (route) => route.isFirst);
       }
-    } else {
-      print("❌ addTransaction failed: ${response.body}");
-      Get.snackbar(
-        "Error",
-        "Failed to add transaction. Please try again.",
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      return true;
     }
+
+    debugPrint("❌ addTransactionToPersonal failed: ${response.body}");
+    Get.snackbar(
+      "Error",
+      "Failed to add transaction. Please try again.",
+      snackPosition: SnackPosition.BOTTOM,
+    );
     return false;
   }
 
+  // =========================
+  // ADD TRANSACTION (SHARED)
+  // =========================
   Future<bool> addTransaction({
     required String collectionId,
     required List<String> transactionIds,
     required String splitType,
     List<dynamic>? customSplits,
-    BuildContext? context,
+    required BuildContext context,
   }) async {
-    var body = <String, dynamic>{
+    final body = <String, dynamic>{
       "transactionIds": transactionIds,
       "splitType": splitType,
+      if (splitType == "CUSTOM" && customSplits != null)
+        "customSplits": customSplits,
     };
 
-    if (splitType == "CUSTOM" && customSplits != null) {
-      body["customSplits"] = customSplits;
-    }
-
-    var response = await postDataApiCall(
+    final response = await postDataApiCall(
         CollectionsRoute.addTransaction(collectionId), body);
 
     if (getFlagOfResponse(response)) {
-      // Reset selection state
       selectedTransactions.clear();
       SeletedTransactionsList.clear();
-      // Refresh all collection data
       await refreshCollectionData(collectionId);
-      // Pop all split screens back to dashboard
       if (context != null && context.mounted) {
         Navigator.popUntil(context, (route) => route.isFirst);
       }
-    } else {
-      print("❌ addTransaction failed: ${response.body}");
-      Get.snackbar(
-        "Error",
-        "Failed to add transaction. Please try again.",
-        snackPosition: SnackPosition.BOTTOM,
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const TransactionHistoryScreen(),
+        ),
       );
+
+      return true;
     }
+
+    debugPrint("❌ addTransaction failed: ${response.body}");
+    Get.snackbar(
+      "Error",
+      "Failed to add transaction. Please try again.",
+      snackPosition: SnackPosition.BOTTOM,
+    );
     return false;
   }
 
@@ -418,11 +452,9 @@ class CollectionsController extends GetxController {
     required List<Map<String, dynamic>> customSplits,
   }) async {
     try {
-      var body = {"customSplits": customSplits};
-
-      var response = await updateDataApiCall2(
+      final response = await updateDataApiCall2(
         CollectionsRoute.updateSplit(collectionId, splitId),
-        body,
+        {"customSplits": customSplits},
       );
 
       if (getFlagOfResponse(response)) {
@@ -440,14 +472,16 @@ class CollectionsController extends GetxController {
     try {
       isBalanceLoading.value = true;
 
-      var response =
+      final response =
           await getDataApiCall(CollectionsRoute.getBalances(collectionId));
 
       if (getFlagOfResponse(response)) {
-        var data = json.decode(response.body);
-        balancesList.value = (data['data'] as List)
+        final data = json.decode(response.body);
+        final list = (data['data'] as List)
             .map((e) => BalanceModel.fromJson(e))
             .toList();
+        balancesList.clear();
+        balancesList.addAll(list);
       }
     } catch (e) {
       debugPrint("getBalances error: $e");
@@ -459,8 +493,6 @@ class CollectionsController extends GetxController {
   // =========================
   // REFRESH DASHBOARD
   // =========================
-  /// Call this after any mutation (add transaction, update split) to refresh
-  /// the dashboard's splits, balances, and available transactions.
   Future<void> refreshDashboard(String collectionId) async {
     await Future.wait([
       getSplits(collectionId),
@@ -469,22 +501,62 @@ class CollectionsController extends GetxController {
     ]);
   }
 
+  // =========================
+  // UPDATE COLLECTION
+  // =========================
   Future<bool> updateCollection({
     required String id,
     String? name,
     String? duration,
   }) async {
     try {
-      var body = {
+      final body = <String, dynamic>{
         if (name != null) "name": name,
-        if (duration != null) "duration": duration,
+        if (duration != null) "expiryAt": getIsoDateFromDuration(duration),
       };
 
-      var response =
+      final response =
           await updateDataApiCall2(CollectionsRoute.updateCollection(id), body);
 
       if (getFlagOfResponse(response)) {
-        await getCollections();
+        /// Update local list item without full re-fetch for instant UI update
+        final data = json.decode(response.body)['data'];
+
+        final idx = collectionsList.indexWhere((e) => e.id == id);
+        if (idx != -1 && name != null) {
+          final old = collectionsList[idx];
+          collectionsList[idx] = CollectionModel(
+            id: old.id,
+            name: name,
+            type: old.type,
+            ownerId: old.ownerId,
+            description: old.description,
+            expiryAt: data['expiryAt'] != null
+                ? DateTime.parse(data['expiryAt'])
+                : null,
+            status: old.status,
+            totalAmount: collectionDetails.value?.collection.totalAmount ??
+                old.totalAmount ??
+                0,
+            totalCredit: collectionDetails.value?.collection.totalCredit ??
+                old.totalCredit ??
+                0,
+            totalDebit: collectionDetails.value?.collection.totalDebit ??
+                old.totalDebit ??
+                0,
+            outStandingAmount:
+                collectionDetails.value?.collection.outStandingAmount ??
+                    old.outStandingAmount ??
+                    0,
+          );
+
+          collectionDetails.value = CollectionDetailsModel(
+            collection: collectionsList[idx],
+            members: collectionDetails.value?.members ?? [],
+            transactions: collectionDetails.value?.transactions ?? [],
+          );
+        }
+
         return true;
       }
     } catch (e) {
@@ -493,13 +565,42 @@ class CollectionsController extends GetxController {
     return false;
   }
 
+  // =========================
+  // CLOSE COLLECTION
+  // =========================
   Future<bool> closeCollection(String id) async {
     try {
-      var response =
-          await updateDataApiCall(CollectionsRoute.closeCollection(id));
+      final response =
+          await updateDataApiCallPut(CollectionsRoute.closeCollection(id));
 
       if (getFlagOfResponse(response)) {
-        await getCollections();
+        /// Update status locally — no full reload needed
+        final idx = collectionsList.indexWhere((e) => e.id == id);
+        if (idx != -1) {
+          final old = collectionsList[idx];
+          collectionsList[idx] = CollectionModel(
+            id: old.id,
+            name: old.name,
+            type: old.type,
+            ownerId: old.ownerId,
+            description: old.description,
+            expiryAt: old.expiryAt,
+            status: "closed",
+            totalAmount: collectionDetails.value?.collection.totalAmount ??
+                old.totalAmount ??
+                0,
+            totalCredit: collectionDetails.value?.collection.totalCredit ??
+                old.totalCredit ??
+                0,
+            totalDebit: collectionDetails.value?.collection.totalDebit ??
+                old.totalDebit ??
+                0,
+            outStandingAmount:
+                collectionDetails.value?.collection.outStandingAmount ??
+                    old.outStandingAmount ??
+                    0,
+          );
+        }
         return true;
       }
     } catch (e) {

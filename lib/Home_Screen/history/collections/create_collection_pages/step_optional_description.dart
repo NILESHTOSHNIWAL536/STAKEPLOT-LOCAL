@@ -44,7 +44,7 @@ class _StepOptionalDescriptionState extends State<StepOptionalDescription> {
         name: collectionDraft.name ?? "Untitled",
         type: collectionDraft.type ?? "PERSONAL",
         description: collectionDraft.description?.trim() ?? "",
-        expiryAt: "2026-12-31T23:59:59.000Z",
+        expiryAt: collectionDraft.duration,
         friends: _buildFriendsList(),
         context: context,
       );

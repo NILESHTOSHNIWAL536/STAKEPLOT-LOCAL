@@ -52,10 +52,14 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
 
     if (widget.splitType != "SHARED") {
       collectionsController.addTransaction(
-          collectionId:collectionsController.collectionDetails.value?.collection.id ??'',
+          collectionId:
+              collectionsController.collectionDetails.value?.collection.id ??
+                  '',
           transactionIds: collectionsController.selectedTransactions,
-          splitType: ""
-        );
+          splitType: "",
+          context: context
+          );
+      Navigator.pop(context);
       return;
     }
 
@@ -191,41 +195,41 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
             ),
 
             // Selection summary bar
-            AnimatedSize(
-              duration: const Duration(milliseconds: 250),
-              child: collectionsController.selectedTransactions.length > 0
-                  ? Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 6),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryDark.withOpacity(0.06),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                            color: AppColors.primaryDark.withOpacity(0.15)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Obx(() => Text(
-                                '${collectionsController.selectedTransactions.length} Selected',
-                                style: AppTextStyles.bodyMedium.copyWith(
-                                  color: AppColors.primaryDark,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              )),
-                          // Text(
-                          //   'Total: ₹${_selectedTotal.toStringAsFixed(2)}',
-                          //   style: AppTextStyles.labelBold.copyWith(
-                          //     color: AppColors.primaryDark,
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
+            Obx(() => AnimatedSize(
+                  duration: const Duration(milliseconds: 250),
+                  child: collectionsController.selectedTransactions.length > 0
+                      ? Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryDark.withOpacity(0.06),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                                color: AppColors.primaryDark.withOpacity(0.15)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Obx(() => Text(
+                                    '${collectionsController.selectedTransactions.length} Selected',
+                                    style: AppTextStyles.bodyMedium.copyWith(
+                                      color: AppColors.primaryDark,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )),
+                              // Text(
+                              //   'Total: ₹${_selectedTotal.toStringAsFixed(2)}',
+                              //   style: AppTextStyles.labelBold.copyWith(
+                              //     color: AppColors.primaryDark,
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                )),
 
             // Group header
             Padding(

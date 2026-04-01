@@ -62,14 +62,15 @@ const List<ReserveCategory> kReserveCategories = [
 ];
 
 class ReserveState {
-  // ── Screen 1 ──
+  
   final Set<int> selectedCategories;
 
-  // ── Screen 2 ──
+  
   double amount;
-  int selectedDay;
-
-  // ── Screen 3 ──
+  // int selectedDay;
+DateTime? startDate;
+DateTime? endDate;
+  
   double notifyPercent; // 0.1 – 1.0
   int reminderHour; // 1 – 12
   int reminderMinute; // 0, 5, 10 … 55
@@ -77,18 +78,31 @@ class ReserveState {
   bool partnerReserve;
   bool reserveWidget;
 
-  ReserveState({
-    Set<int>? selectedCategories,
-    this.amount = 4000,
-    this.selectedDay = 7,
-    this.notifyPercent = 0.8,
-    this.reminderHour = 8,
-    this.reminderMinute = 0,
-    this.reminderPeriod = 'PM',
-    this.partnerReserve = true,
-    this.reserveWidget = false,
-  }) : selectedCategories = selectedCategories ?? {};
-
+  // ReserveState({
+  //   Set<int>? selectedCategories,
+  //   this.amount = 4000,
+  //   this.selectedDay = 7,
+  //   this.notifyPercent = 0.8,
+  //   this.reminderHour = 8,
+  //   this.reminderMinute = 0,
+  //   this.reminderPeriod = 'PM',
+  //   this.partnerReserve = true,
+  //   this.reserveWidget = false,
+  // }) : selectedCategories = selectedCategories ?? {};
+ReserveState({
+  Set<int>? selectedCategories,
+  this.amount = 4000,
+  DateTime? startDate,
+  DateTime? endDate,
+  this.notifyPercent = 0.8,
+  this.reminderHour = 8,
+  this.reminderMinute = 0,
+  this.reminderPeriod = 'PM',
+  this.partnerReserve = true,
+  this.reserveWidget = false,
+})  : selectedCategories = selectedCategories ?? {},
+      startDate = startDate,
+      endDate = endDate;
   // ── Derived helpers ──────────────────────────────────────────────────────
 
   /// Human-readable time string, e.g. "08:00 PM"
@@ -97,7 +111,10 @@ class ReserveState {
     final m = reminderMinute.toString().padLeft(2, '0');
     return '$h:$m $reminderPeriod';
   }
-
+int get selectedDays {
+  if (startDate == null || endDate == null) return 0;
+  return endDate!.difference(startDate!).inDays + 1;
+}
   /// Notify percent as an integer label, e.g. "80%"
   String get notifyLabel => '${(notifyPercent * 100).toInt()}%';
 
@@ -106,7 +123,9 @@ class ReserveState {
         'categories':
             selectedCategories.map((i) => kReserveCategories[i].name).toList(),
         'amount': amount,
-        'duration_days': selectedDay,
+       'duration_days': selectedDays,
+'start_date': startDate?.toIso8601String(),
+'end_date': endDate?.toIso8601String(),
         'notify_at_percent': (notifyPercent * 100).toInt(),
         'reminder_time': reminderTimeLabel,
         'partner_reserve': partnerReserve,

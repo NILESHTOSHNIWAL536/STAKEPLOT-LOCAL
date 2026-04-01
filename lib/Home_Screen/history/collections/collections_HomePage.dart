@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
+import 'package:get/get.dart';
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
@@ -34,7 +35,6 @@ class CollectionDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     if (hasTransactions && type == "PERSONAL") {
       return const CollectionSummarySection();
     }
@@ -44,14 +44,14 @@ class CollectionDetailsPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // _appBar(context),
-            Expanded(
-              child: hasTransactions
-                  ? (type == "SHARED"
-                      ? TripDashboardScreen()
-                      : _transactionsUI(context))
-                  : emptyTransactionsUI(context, type),
-            )
+            _appBar(context),
+            Obx(() => Expanded(
+                  child: collectionsController.splitsList.length > 0
+                      ? (type == "SHARED"
+                          ? TripDashboardScreen()
+                          : _transactionsUI(context))
+                      : emptyTransactionsUI(context, type),
+                ))
           ],
         ),
       ),
@@ -109,7 +109,7 @@ class CollectionDetailsPage extends StatelessWidget {
                   ),
 
                   /// SETTINGS
-                  GestureDetector(
+                  InkWell(
                       onTap: () {
                         // Open settings page
                         showCollectionSettingsModal(context);
@@ -318,8 +318,8 @@ class CollectionDetailsPage extends StatelessWidget {
       child: Center(
         child: AvatarProfileImageZero(
           url: asset,
-          width: 50,
-          height: 50,
+          width: 40,
+          height: 45,
         ),
       ),
     );

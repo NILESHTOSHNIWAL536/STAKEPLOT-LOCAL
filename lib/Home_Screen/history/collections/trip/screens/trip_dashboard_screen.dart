@@ -47,44 +47,6 @@ class _TripDashboardScreenState extends State<TripDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.arrow_back_ios_new,
-              size: 16,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Obx(() => Text(
-              collectionsController.selectedCollection.value?.name ??
-                  "Collection",
-              style: AppTextStyles.heading3,
-            )),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
-            onPressed: _loadDashboardData,
-          ),
-        ],
-      ),
       body: CustomScrollView(
         slivers: [
           // Search + Add button

@@ -1,8 +1,7 @@
-
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import '../../repository/reserve_repository.dart';
 import 'reserve.dart';
-
 
 class ReserveFlow extends StatefulWidget {
   const ReserveFlow({super.key});
@@ -12,14 +11,17 @@ class ReserveFlow extends StatefulWidget {
 }
 
 class _ReserveFlowState extends State<ReserveFlow> {
-  int  _step    = 0;
+  int _step = 0;
   bool _loading = false;
   final ReserveState _state = ReserveState();
 
   // ── Navigation ─────────────────────────────────────────────────────────────
 
   void _next() => _step < 2 ? setState(() => _step++) : _submit();
-  void _back() { if (_step > 0) setState(() => _step--); }
+  void _back() {
+    if (_step > 0) setState(() => _step--);
+  }
+
   void _rebuild() => setState(() {}); // propagate child mutations upward
 
   // ── Submission ─────────────────────────────────────────────────────────────
@@ -87,9 +89,12 @@ class _ReserveFlowState extends State<ReserveFlow> {
       body: IndexedStack(
         index: _step,
         children: [
-          Screen1(state: _state, onNext: _next, onBack: _back, onChange: _rebuild),
-          Screen2(state: _state, onNext: _next, onBack: _back, onChange: _rebuild),
-          Screen3(state: _state, onNext: _next, onBack: _back, onChange: _rebuild),
+          Screen1(
+              state: _state, onNext: _next, onBack: _back, onChange: _rebuild),
+          Screen2(
+              state: _state, onNext: _next, onBack: _back, onChange: _rebuild),
+          Screen3(
+              state: _state, onNext: _next, onBack: _back, onChange: _rebuild),
         ],
       ),
     );
@@ -101,11 +106,11 @@ class _ReserveFlowState extends State<ReserveFlow> {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 class ReserveScaffold extends StatelessWidget {
-  final int          step;
+  final int step;
   final VoidCallback onBack;
   final VoidCallback onNext;
-  final Widget       body;
-  final String       nextLabel;
+  final Widget body;
+  final String nextLabel;
 
   const ReserveScaffold({
     super.key,
@@ -130,7 +135,6 @@ class ReserveScaffold extends StatelessWidget {
             ),
           ),
           _ActionButton(label: nextLabel, onTap: onNext),
-         
         ],
       ),
     );
@@ -142,7 +146,7 @@ class ReserveScaffold extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _AppHeader extends StatelessWidget {
-  final int          step;
+  final int step;
   final VoidCallback onBack;
   const _AppHeader({required this.step, required this.onBack});
 
@@ -151,9 +155,9 @@ class _AppHeader extends StatelessWidget {
     return Container(
       color: AppColors2.header,
       padding: EdgeInsets.only(
-        top:    MediaQuery.of(context).padding.top + 8,
-        left:   16,
-        right:  16,
+        top: MediaQuery.of(context).padding.top + 8,
+        left: 16,
+        right: 16,
         bottom: 16,
       ),
       child: Row(
@@ -162,7 +166,8 @@ class _AppHeader extends StatelessWidget {
           GestureDetector(
             onTap: onBack,
             child: Container(
-              width: 36, height: 36,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.15),
                 shape: BoxShape.circle,
@@ -210,7 +215,7 @@ class _AppHeader extends StatelessWidget {
 }
 
 class _ActionButton extends StatelessWidget {
-  final String       label;
+  final String label;
   final VoidCallback onTap;
   const _ActionButton({required this.label, required this.onTap});
 
@@ -243,8 +248,6 @@ class _ActionButton extends StatelessWidget {
     );
   }
 }
-
-
 
 class Screen1 extends StatelessWidget {
   final ReserveState state;
@@ -301,9 +304,9 @@ class _CategoryList extends StatelessWidget {
       child: Column(
         children: List.generate(kReserveCategories.length, (i) {
           return _CategoryRow(
-            category:   kReserveCategories[i],
+            category: kReserveCategories[i],
             isSelected: state.selectedCategories.contains(i),
-            isLast:     i == kReserveCategories.length - 1,
+            isLast: i == kReserveCategories.length - 1,
             onTap: () {
               state.selectedCategories.contains(i)
                   ? state.selectedCategories.remove(i)
@@ -319,9 +322,9 @@ class _CategoryList extends StatelessWidget {
 
 class _CategoryRow extends StatelessWidget {
   final ReserveCategory category;
-  final bool            isSelected;
-  final bool            isLast;
-  final VoidCallback    onTap;
+  final bool isSelected;
+  final bool isLast;
+  final VoidCallback onTap;
 
   const _CategoryRow({
     required this.category,
@@ -386,7 +389,8 @@ class _Checkbox extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      width: 22, height: 22,
+      width: 22,
+      height: 22,
       decoration: BoxDecoration(
         color: selected ? AppColors2.navyBtn : Colors.transparent,
         borderRadius: BorderRadius.circular(6),
@@ -437,6 +441,32 @@ class _Screen2State extends State<Screen2> {
     });
   }
 
+  String _formatDate(DateTime date) {
+    return "${date.day}/${date.month}";
+  }
+
+  String _formatFullDate(DateTime date) {
+    return "${_monthName(date.month)} ${date.day}";
+  }
+
+  String _monthName(int m) {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+    return months[m - 1];
+  }
+
   @override
   void dispose() {
     _amountCtrl.dispose();
@@ -473,13 +503,110 @@ class _Screen2State extends State<Screen2> {
             ),
           ),
           const SizedBox(height: 12),
-          _DaySelector(
-            selected: widget.state.selectedDay,
-            onChanged: (day) {
-              setState(() => widget.state.selectedDay = day);
-              widget.onChange();
-            },
+          _GuardrailCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.calendar_today, color: AppColors2.accent),
+                    SizedBox(width: 10),
+                    Text(
+                      "Select duration",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors2.textDark,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                CalendarDatePicker2(
+                  config: CalendarDatePicker2Config(
+                    calendarType: CalendarDatePicker2Type.range,
+                    selectedDayHighlightColor: AppColors2.navyBtn,
+                    // rangeHighlightColor: AppColors2.sliderTrack,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 30)),
+                  ),
+                  value: [
+                    widget.state.startDate,
+                    widget.state.endDate,
+                  ],
+                  onValueChanged: (dates) {
+                    if (dates.isEmpty) return;
+
+                    final start = dates.first;
+                    final end = dates.length > 1 ? dates.last : null;
+
+                    if (start != null && end != null) {
+                      final diff = end.difference(start).inDays + 1;
+
+                      if (diff > 7) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Max 7 days allowed")),
+                        );
+                        return;
+                      }
+                    }
+
+                    setState(() {
+                      widget.state.startDate = start;
+                      widget.state.endDate = end;
+                    });
+
+                    widget.onChange();
+                  },
+                ),
+
+                const SizedBox(height: 12),
+
+                // 🔥 CLEAN DATE DISPLAY
+                if (widget.state.startDate != null &&
+                    widget.state.endDate != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors2.cream,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      "${_formatFullDate(widget.state.startDate!)} → ${_formatFullDate(widget.state.endDate!)}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors2.textDark,
+                      ),
+                    ),
+                  ),
+
+                const SizedBox(height: 6),
+
+                // 🔥 DAYS COUNT
+                if (widget.state.startDate != null &&
+                    widget.state.endDate != null)
+                  Text(
+                    "${widget.state.selectedDays} days selected",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors2.textMid,
+                    ),
+                  ),
+              ],
+            ),
           ),
+
+          // _DaySelector(
+          //   selected: widget.state.selectedDay,
+          //   onChanged: (day) {
+          //     setState(() => widget.state.selectedDay = day);
+          //     widget.onChange();
+          //   },
+          // ),
         ],
       ),
     );
@@ -550,8 +677,8 @@ class _AmountInput extends StatelessWidget {
 }
 
 class _DaySelector extends StatelessWidget {
-  final int                 selected;
-  final ValueChanged<int>   onChanged;
+  final int selected;
+  final ValueChanged<int> onChanged;
   const _DaySelector({required this.selected, required this.onChanged});
 
   @override
@@ -565,7 +692,8 @@ class _DaySelector extends StatelessWidget {
           onTap: () => onChanged(day),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 180),
-            width: 40, height: 40,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: isSelected ? AppColors2.navyBtn : Colors.white,
               borderRadius: BorderRadius.circular(12),
@@ -620,10 +748,10 @@ class _Screen3State extends State<Screen3> {
   @override
   void initState() {
     super.initState();
-    _hourCtrl   = FixedExtentScrollController(
+    _hourCtrl = FixedExtentScrollController(
       initialItem: widget.state.reminderHour - 1,
     );
-    _minCtrl    = FixedExtentScrollController(
+    _minCtrl = FixedExtentScrollController(
       initialItem: widget.state.reminderMinute ~/ 5,
     );
     _periodCtrl = FixedExtentScrollController(
@@ -674,23 +802,26 @@ class _Screen3State extends State<Screen3> {
           // ── Reminder + inline scroll picker ────────────────────────────
           _GuardrailCard(
             child: _ReminderPicker(
-              timeLabel:   widget.state.reminderTimeLabel,
-              pickerOpen:  _pickerOpen,
-              onToggle:    () => setState(() => _pickerOpen = !_pickerOpen),
-              hourCtrl:    _hourCtrl,
-              minCtrl:     _minCtrl,
-              periodCtrl:  _periodCtrl,
+              timeLabel: widget.state.reminderTimeLabel,
+              pickerOpen: _pickerOpen,
+              onToggle: () => setState(() => _pickerOpen = !_pickerOpen),
+              hourCtrl: _hourCtrl,
+              minCtrl: _minCtrl,
+              periodCtrl: _periodCtrl,
               onHourChanged: (i) {
                 widget.state.reminderHour = i + 1;
-                widget.onChange(); _rebuild();
+                widget.onChange();
+                _rebuild();
               },
               onMinChanged: (i) {
                 widget.state.reminderMinute = i * 5;
-                widget.onChange(); _rebuild();
+                widget.onChange();
+                _rebuild();
               },
               onPeriodChanged: (i) {
                 widget.state.reminderPeriod = i == 0 ? 'AM' : 'PM';
-                widget.onChange(); _rebuild();
+                widget.onChange();
+                _rebuild();
               },
             ),
           ),
@@ -699,12 +830,13 @@ class _Screen3State extends State<Screen3> {
           // ── Partner reserve ─────────────────────────────────────────────
           _GuardrailCard(
             child: _ToggleRow(
-              icon:      Icons.people_outlined,
-              label:     'Partner reserve',
-              value:     widget.state.partnerReserve,
+              icon: Icons.people_outlined,
+              label: 'Partner reserve',
+              value: widget.state.partnerReserve,
               onChanged: (v) {
                 widget.state.partnerReserve = v;
-                widget.onChange(); _rebuild();
+                widget.onChange();
+                _rebuild();
               },
             ),
           ),
@@ -713,12 +845,13 @@ class _Screen3State extends State<Screen3> {
           // ── Reserve widget ──────────────────────────────────────────────
           _GuardrailCard(
             child: _ToggleRow(
-              icon:      Icons.widgets_outlined,
-              label:     'Reserve widget',
-              value:     widget.state.reserveWidget,
+              icon: Icons.widgets_outlined,
+              label: 'Reserve widget',
+              value: widget.state.reserveWidget,
               onChanged: (v) {
                 widget.state.reserveWidget = v;
-                widget.onChange(); _rebuild();
+                widget.onChange();
+                _rebuild();
               },
             ),
           ),
@@ -731,8 +864,8 @@ class _Screen3State extends State<Screen3> {
 // ─── Screen 3 sub-widgets ─────────────────────────────────────────────────────
 
 class _NotifySlider extends StatelessWidget {
-  final double          value;
-  final String          label;
+  final double value;
+  final String label;
   final ValueChanged<double> onChanged;
 
   const _NotifySlider({
@@ -764,22 +897,25 @@ class _NotifySlider extends StatelessWidget {
         const SizedBox(height: 14),
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            trackHeight:        4,
-            thumbShape:         const RoundSliderThumbShape(enabledThumbRadius: 8),
-            overlayShape:       const RoundSliderOverlayShape(overlayRadius: 16),
-            activeTrackColor:   AppColors2.accent,
+            trackHeight: 4,
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
+            activeTrackColor: AppColors2.accent,
             inactiveTrackColor: AppColors2.sliderTrack,
-            thumbColor:         AppColors2.accent,
-            overlayColor:       AppColors2.accent.withOpacity(0.15),
+            thumbColor: AppColors2.accent,
+            overlayColor: AppColors2.accent.withOpacity(0.15),
           ),
           child: Slider(
-            value: value, min: 0.1, max: 1.0, divisions: 9,
+            value: value,
+            min: 0.1,
+            max: 1.0,
+            divisions: 9,
             onChanged: onChanged,
           ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: ['10%','20%','40%','60%','80%','100%']
+          children: ['10%', '20%', '40%', '60%', '80%', '100%']
               .map((e) => Text(
                     e,
                     style: const TextStyle(
@@ -795,15 +931,15 @@ class _NotifySlider extends StatelessWidget {
 }
 
 class _ReminderPicker extends StatelessWidget {
-  final String                       timeLabel;
-  final bool                         pickerOpen;
-  final VoidCallback                 onToggle;
-  final FixedExtentScrollController  hourCtrl;
-  final FixedExtentScrollController  minCtrl;
-  final FixedExtentScrollController  periodCtrl;
-  final ValueChanged<int>            onHourChanged;
-  final ValueChanged<int>            onMinChanged;
-  final ValueChanged<int>            onPeriodChanged;
+  final String timeLabel;
+  final bool pickerOpen;
+  final VoidCallback onToggle;
+  final FixedExtentScrollController hourCtrl;
+  final FixedExtentScrollController minCtrl;
+  final FixedExtentScrollController periodCtrl;
+  final ValueChanged<int> onHourChanged;
+  final ValueChanged<int> onMinChanged;
+  final ValueChanged<int> onPeriodChanged;
 
   const _ReminderPicker({
     required this.timeLabel,
@@ -850,7 +986,8 @@ class _ReminderPicker extends StatelessWidget {
               // Time chip — turns navy when open
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: pickerOpen ? AppColors2.navyBtn : AppColors2.cream,
                   borderRadius: BorderRadius.circular(8),
@@ -891,10 +1028,9 @@ class _ReminderPicker extends StatelessWidget {
         // ── Expanding scroll-wheel drums ────────────────────────────────
         AnimatedCrossFade(
           duration: const Duration(milliseconds: 300),
-          crossFadeState: pickerOpen
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
-          firstChild:  const SizedBox.shrink(),
+          crossFadeState:
+              pickerOpen ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          firstChild: const SizedBox.shrink(),
           secondChild: Column(
             children: [
               const SizedBox(height: 14),
@@ -908,7 +1044,8 @@ class _ReminderPicker extends StatelessWidget {
                       child: _WheelDrum(
                         controller: hourCtrl,
                         items: List.generate(
-                          12, (i) => (i + 1).toString().padLeft(2, '0'),
+                          12,
+                          (i) => (i + 1).toString().padLeft(2, '0'),
                         ),
                         onChanged: onHourChanged,
                       ),
@@ -918,7 +1055,8 @@ class _ReminderPicker extends StatelessWidget {
                       child: _WheelDrum(
                         controller: minCtrl,
                         items: List.generate(
-                          12, (i) => (i * 5).toString().padLeft(2, '0'),
+                          12,
+                          (i) => (i * 5).toString().padLeft(2, '0'),
                         ),
                         onChanged: onMinChanged,
                       ),
@@ -965,8 +1103,8 @@ class _DrumSeparator extends StatelessWidget {
 /// Single scroll-wheel drum column with selection highlight + fade.
 class _WheelDrum extends StatelessWidget {
   final FixedExtentScrollController controller;
-  final List<String>                 items;
-  final ValueChanged<int>            onChanged;
+  final List<String> items;
+  final ValueChanged<int> onChanged;
 
   const _WheelDrum({
     required this.controller,
@@ -990,11 +1128,11 @@ class _WheelDrum extends StatelessWidget {
         ),
         // Wheel
         ListWheelScrollView.useDelegate(
-          controller:         controller,
-          itemExtent:         44,
-          diameterRatio:      1.6,
-          perspective:        0.004,
-          physics:            const FixedExtentScrollPhysics(),
+          controller: controller,
+          itemExtent: 44,
+          diameterRatio: 1.6,
+          perspective: 0.004,
+          physics: const FixedExtentScrollPhysics(),
           onSelectedItemChanged: onChanged,
           childDelegate: ListWheelChildBuilderDelegate(
             childCount: items.length,
@@ -1034,9 +1172,9 @@ class _WheelDrum extends StatelessWidget {
 }
 
 class _ToggleRow extends StatelessWidget {
-  final IconData           icon;
-  final String             label;
-  final bool               value;
+  final IconData icon;
+  final String label;
+  final bool value;
   final ValueChanged<bool> onChanged;
 
   const _ToggleRow({
@@ -1124,7 +1262,8 @@ class _SuccessIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 80, height: 80,
+      width: 80,
+      height: 80,
       decoration: BoxDecoration(
         color: AppColors2.navyBtn,
         shape: BoxShape.circle,
@@ -1142,8 +1281,8 @@ class _SuccessIcon extends StatelessWidget {
 }
 
 class _PayloadSummaryCard extends StatelessWidget {
-  final Map<String, dynamic>     payload;
-  final String Function(String)  formatKey;
+  final Map<String, dynamic> payload;
+  final String Function(String) formatKey;
 
   const _PayloadSummaryCard({
     required this.payload,
@@ -1231,7 +1370,8 @@ class _DoneButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity, height: 52,
+      width: double.infinity,
+      height: 52,
       child: ElevatedButton(
         onPressed: () => Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const ReserveFlow()),
@@ -1268,13 +1408,14 @@ class _IconBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    width: 36, height: 36,
-    decoration: BoxDecoration(
-      color: AppColors2.cream,
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Icon(icon, size: 18, color: AppColors2.accent),
-  );
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: AppColors2.cream,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(icon, size: 18, color: AppColors2.accent),
+      );
 }
 
 /// Navy pill badge used to show the selected notify %.
@@ -1284,20 +1425,20 @@ class _Badge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-    decoration: BoxDecoration(
-      color: AppColors2.navyBtn,
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Text(
-      label,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 13,
-        fontWeight: FontWeight.w700,
-      ),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+        decoration: BoxDecoration(
+          color: AppColors2.navyBtn,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      );
 }
 
 /// White card wrapper with subtle shadow used for guardrail sections.
@@ -1307,26 +1448,26 @@ class _GuardrailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.04),
-          blurRadius: 10,
-          offset: const Offset(0, 2),
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-      ],
-    ),
-    child: child,
-  );
+        child: child,
+      );
 }
 
 /// Custom animated iOS-style toggle switch.
 class _StyledSwitch extends StatelessWidget {
-  final bool               value;
+  final bool value;
   final ValueChanged<bool> onChanged;
   const _StyledSwitch({required this.value, required this.onChanged});
 
@@ -1336,7 +1477,8 @@ class _StyledSwitch extends StatelessWidget {
       onTap: () => onChanged(!value),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        width: 48, height: 28,
+        width: 48,
+        height: 28,
         decoration: BoxDecoration(
           color: value ? AppColors2.toggleOn : AppColors2.toggleOff,
           borderRadius: BorderRadius.circular(14),
@@ -1346,7 +1488,8 @@ class _StyledSwitch extends StatelessWidget {
           alignment: value ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
             margin: const EdgeInsets.all(3),
-            width: 22, height: 22,
+            width: 22,
+            height: 22,
             decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -1372,14 +1515,14 @@ class _ScreenTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(
-    text,
-    textAlign: TextAlign.center,
-    style: const TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.w700,
-      color: AppColors2.textDark,
-    ),
-  );
+        text,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          color: AppColors2.textDark,
+        ),
+      );
 }
 
 /// Centred screen subtitle — shared across all 3 screens.
@@ -1389,15 +1532,15 @@ class _ScreenSubtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 10),
-    child: Text(
-      text,
-      textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontSize: 13,
-        color: AppColors2.textMid,
-        height: 1.5,
-      ),
-    ),
-  );
+        padding: const EdgeInsets.only(top: 10),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 13,
+            color: AppColors2.textMid,
+            height: 1.5,
+          ),
+        ),
+      );
 }

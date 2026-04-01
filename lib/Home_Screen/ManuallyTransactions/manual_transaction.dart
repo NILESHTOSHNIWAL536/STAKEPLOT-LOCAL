@@ -951,7 +951,6 @@ if (collectionMembers.isNotEmpty && total > 0) {
                           .listofSubCategories[item['subcategory']] ??
                       "assets/icons/subCategoryIcons/default.svg";
                 }
-
                 return ListTile(
                   dense: true,
                   visualDensity: const VisualDensity(vertical: -2),

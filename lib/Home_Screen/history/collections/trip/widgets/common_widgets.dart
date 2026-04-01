@@ -34,7 +34,7 @@ class MemberAvatar extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          member.name.substring(0,2),
+          member.name.substring(0, 2),
           style: TextStyle(
             color: Colors.white,
             fontSize: size * 0.38,
@@ -102,6 +102,13 @@ class TransactionCard extends StatelessWidget {
     required this.tx,
     this.showCheckbox = false,
   });
+
+  String amountUi() {
+    final String formatAmount = tx.type == 'CREDIT'
+        ? "+₹${formatMoneyIndian(tx.amount.toString())}"
+        : "-₹${formatMoneyIndian(tx.amount.toString())}";
+    return formatAmount;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,9 +212,11 @@ class TransactionCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '-₹${tx.amount.toStringAsFixed(2)}',
+                      amountUi(),
                       style: AppTextStyles.amountMedium.copyWith(
-                        color: AppColors.errorRed,
+                        color: tx.type == 'CREDIT'
+                            ? AppColors.successGreen
+                            : AppColors.errorRed,
                         fontSize: 15,
                       ),
                     ),
