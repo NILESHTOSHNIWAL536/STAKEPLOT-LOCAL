@@ -21,6 +21,7 @@ import { predictCategoriesForTransactions } from '@/helpers/predictions.helper';
 import { startOfWeek, endOfWeek, subDays, startOfMonth, endOfMonth } from 'date-fns';
 import buildMatch from '@/utils/helpers/buildMatch';
 import { getMatchedKeywords } from '@/utils/helpers/transactionSearchFilter';
+import BankTransaction from '@/models/transactions-automation/transaction';
 
 // Helper type for userId inputs
 type UserIdLike = string | Types.ObjectId;
@@ -361,14 +362,275 @@ export async function getBanksLinkedAndAccounts(userId: UserIdLike): Promise<any
     await redisClient.setEx(cacheKey, 3600, JSON.stringify(accounts));
     return accounts;
   } catch (error: any) {
-    logger.error(`Error from getBanksLinkedAndAccounts: ${error}`);
+    logger.error(`❌ Error from getBanksLinkedAndAccounts: ${error}`);
     return { error: error.message || String(error) };
   }
 }
 
-// -------------------------
-// TRANSACTION RELATED
-// -------------------------
+/* =====================================================
+   HELPER: PERCENTAGE CALCULATION
+===================================================== */
+
+export function calculatePercentages(
+  credit: number,
+  debit: number,
+  outstanding: number
+) {
+  const total = credit + debit + outstanding;
+
+  if (total === 0) {
+    return {
+      creditPercent: 0,
+      debitPercent: 0,
+      outstandingPercent: 0,
+    };
+  }
+
+  return {
+    creditPercent: Number(((credit / total) * 100).toFixed(2)),
+    debitPercent: Number(((debit / total) * 100).toFixed(2)),
+    outstandingPercent: Number(((outstanding / total) * 100).toFixed(2)),
+  };
+}
+
+
+export async function getMonthlyAggregation({
+  userId,
+  bankId,
+  accountIds,
+  fromDate,
+  toDate,
+}: {
+  userId: Types.ObjectId;
+  bankId: Types.ObjectId;
+  accountIds: Types.ObjectId[];
+  fromDate: Date;
+  toDate: Date;
+}) {
+  return BankTransaction.aggregate([
+    {
+      $match: {
+        userId,
+        bankId,
+        accountId: { $in: accountIds },
+        Hidden: false,
+        isExcluded: false,
+        transactionTimestamp: { $gte: fromDate, $lte: toDate },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          type: "$type",
+          manual: "$manualTransaction",
+        },
+        total: { $sum: "$amount" },
+      },
+    },
+  ]);
+}
+
+
+export async function getBankBalanceAndDebitSummary({
+  userId,
+  view,
+  month,
+  year,
+}: {
+  userId: Types.ObjectId;
+  view: "monthly" | "yearly";
+  month?: number;
+  year: number;
+}) {
+  const banks = await new FipRepository().getBank(userId);
+
+  const combined = {
+    currentBalance: 0,
+    credit: 0,
+    debit: 0,
+    outstanding: 0,
+  };
+
+  const now = new Date();
+  const maxMonth =
+    view === "yearly" && year === now.getFullYear()
+      ? now.getMonth() + 1
+      : 12;
+
+  const bankResults = await Promise.all(
+    banks.map(async (bank) => {
+      const accounts = await new AccountRepository().getAccounts({
+        bankId: bank._id,
+      });
+
+      if (!accounts.length) return null;
+
+      const accountIds = accounts.map(a => a._id);
+
+      // -------- CURRENT BALANCE
+      const summaries = await new SummaryRepository().getSummary({
+        accountIds,
+      });
+
+      const currentBalance = summaries.reduce(
+        (sum, s) => sum + Number(s?.data?.currentBalance || 0),
+        0
+      );
+
+      combined.currentBalance += currentBalance;
+
+      // ================= MONTHLY =================
+      if (view === "monthly") {
+        const fromDate = new Date(year, month! - 1, 1, 0, 0, 0);
+        const toDate = new Date(year, month!, 0, 23, 59, 59);
+
+        const agg = await getMonthlyAggregation({
+          userId,
+          bankId: bank._id,
+          accountIds,
+          fromDate,
+          toDate,
+        });
+
+        let credit = 0;
+        let debit = 0;
+        let manualCredit = 0;
+        let manualDebit = 0;
+
+        for (const r of agg) {
+          if (r._id.type === "CREDIT") {
+            credit += r.total;
+            if (r._id.manual) manualCredit += r.total;
+          }
+          if (r._id.type === "DEBIT") {
+            debit += r.total;
+            if (r._id.manual) manualDebit += r.total;
+          }
+        }
+
+        const outstanding =
+          currentBalance + manualCredit - manualDebit;
+
+        combined.credit += credit;
+        combined.debit += debit;
+        combined.outstanding += outstanding;
+
+        return {
+          bankId: bank._id,
+          bankName: bank.fipName,
+          fipId: bank.fipId,
+          month,
+          year,
+          currentBalance,
+          credit,
+          debit,
+          outstanding,
+          percentages: calculatePercentages(
+            credit,
+            debit,
+            outstanding
+          ),
+        };
+      }
+
+      // ================= YEARLY =================
+      let lastBalance = currentBalance;
+      const monthsData: any[] = [];
+
+      let yearlyCredit = 0;
+      let yearlyDebit = 0;
+      let yearlyOutstanding = 0;
+
+      for (let m = 0; m < maxMonth; m++) {
+        const fromDate = new Date(year, m, 1, 0, 0, 0);
+        const toDate = new Date(year, m + 1, 0, 23, 59, 59);
+
+        const agg = await getMonthlyAggregation({
+          userId,
+          bankId: bank._id,
+          accountIds,
+          fromDate,
+          toDate,
+        });
+
+        let credit = 0;
+        let debit = 0;
+        let manualCredit = 0;
+        let manualDebit = 0;
+
+        for (const r of agg) {
+          if (r._id.type === "CREDIT") {
+            credit += r.total;
+            if (r._id.manual) manualCredit += r.total;
+          }
+          if (r._id.type === "DEBIT") {
+            debit += r.total;
+            if (r._id.manual) manualDebit += r.total;
+          }
+        }
+
+        const outstanding =
+          lastBalance + manualCredit - manualDebit;
+
+        lastBalance = outstanding;
+
+        yearlyCredit += credit;
+        yearlyDebit += debit;
+        yearlyOutstanding += outstanding;
+
+        monthsData.push({
+          month: m + 1,
+          credit,
+          debit,
+          outstanding,
+          percentages: calculatePercentages(
+            credit,
+            debit,
+            outstanding
+          ),
+        });
+      }
+
+      combined.credit += yearlyCredit;
+      combined.debit += yearlyDebit;
+      combined.outstanding += yearlyOutstanding;
+
+      return {
+        bankId: bank._id,
+        bankName: bank.fipName,
+        fipId: bank.fipId,
+        year,
+        currentBalance,
+        credit: yearlyCredit,
+        debit: yearlyDebit,
+        outstanding: yearlyOutstanding,
+        percentages: calculatePercentages(
+          yearlyCredit,
+          yearlyDebit,
+          yearlyOutstanding
+        ),
+        months: monthsData,
+      };
+    })
+  );
+
+  return {
+    view,
+    year,
+    month: view === "monthly" ? month : undefined,
+    combined: {
+      ...combined,
+      percentages: calculatePercentages(
+        combined.credit,
+        combined.debit,
+        combined.outstanding
+      ),
+    },
+    banks: bankResults.filter(Boolean),
+  };
+}
+
+
 export async function getSearchedTransactions(params: any) {
   const keywords = params.search ? params.search.split(' ').filter(Boolean) : [];
 
