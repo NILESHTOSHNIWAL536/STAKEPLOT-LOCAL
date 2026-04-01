@@ -49,6 +49,9 @@ class CollectionsController extends GetxController {
       collectionDetails.value != null &&
       collectionDetails.value!.members.isNotEmpty;
 
+  final RxList<InvitationModel> invitationsList = <InvitationModel>[].obs;
+  final RxBool isInvitationLoading = false.obs;
+
   // =========================
   // GET COLLECTIONS LIST
   // =========================
@@ -75,7 +78,9 @@ class CollectionsController extends GetxController {
               debugPrint("CollectionModel parse error: $e — item: $item");
             }
           }
-          // Batch update — single UI rebuild
+
+          /// Batch update — single UI rebuild
+          collectionsList.clear();
           collectionsList.assignAll(parsed);
         }
       }
@@ -477,6 +482,7 @@ class CollectionsController extends GetxController {
 
       if (getFlagOfResponse(response)) {
         final data = json.decode(response.body);
+        print(data['data']);
         final list = (data['data'] as List)
             .map((e) => BalanceModel.fromJson(e))
             .toList();
@@ -608,4 +614,63 @@ class CollectionsController extends GetxController {
     }
     return false;
   }
+
+
+  Future<void> getPendingInvitations() async {
+  try {
+    isInvitationLoading.value = true;
+
+    final response = await getDataApiCall(
+      CollectionsRoute.getPendingInvitations(),
+    );
+
+    if (getFlagOfResponse(response)) {
+      final data = json.decode(response.body);
+
+      final list = (data['data']['invitations'] as List? ?? [])
+          .map((e) => InvitationModel.fromJson(e))
+          .toList();
+
+      invitationsList.assignAll(list);
+    }
+  } catch (e) {
+    debugPrint("getPendingInvitations error: $e");
+  } finally {
+    isInvitationLoading.value = false;
+  }
+}
+Future<void> acceptInvitation(String invitationId) async {
+  try {
+    final response = await postDataApiCall(
+      CollectionsRoute.acceptInvitation(invitationId),
+      {},
+    );
+
+    if (getFlagOfResponse(response)) {
+      invitationsList.removeWhere((e) => e.id == invitationId);
+
+      /// Refresh collections also
+      await getCollections(forceRefresh: true);
+    }
+  } catch (e) {
+    debugPrint("acceptInvitation error: $e");
+  }
+}
+
+
+Future<void> rejectInvitation(String invitationId) async {
+  try {
+    final response = await postDataApiCall(
+      CollectionsRoute.rejectInvitation(invitationId),
+      {},
+    );
+
+    if (getFlagOfResponse(response)) {
+      invitationsList.removeWhere((e) => e.id == invitationId);
+    }
+  } catch (e) {
+    debugPrint("rejectInvitation error: $e");
+  }
+}
+
 }

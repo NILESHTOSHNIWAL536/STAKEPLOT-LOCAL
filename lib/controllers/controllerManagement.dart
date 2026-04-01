@@ -12,4 +12,5 @@ class ControllerManagement {
   // static FinoraController get finoraController => Get.find<FinoraController>();
   // final GlobalKey<CommunityState> communityKey = GlobalKey<CommunityState>();
   
+  
 }

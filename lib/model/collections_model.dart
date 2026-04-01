@@ -261,3 +261,49 @@ class UserModel {
     );
   }
 }
+
+
+
+class InvitationModel {
+  String id;
+  String invitedEmail;
+  String role;
+  String status;
+  DateTime? expiresAt;
+  DateTime? createdAt;
+
+  CollectionModel? collection;
+  UserModel? invitedBy;
+
+  InvitationModel({
+    required this.id,
+    required this.invitedEmail,
+    required this.role,
+    required this.status,
+    this.expiresAt,
+    this.createdAt,
+    this.collection,
+    this.invitedBy,
+  });
+
+  factory InvitationModel.fromJson(Map<String, dynamic> json) {
+    return InvitationModel(
+      id: json['_id'] ?? '',
+      invitedEmail: json['invitedEmail'] ?? '',
+      role: json['role'] ?? '',
+      status: json['status'] ?? '',
+      expiresAt: json['expiresAt'] != null
+          ? DateTime.tryParse(json['expiresAt'])
+          : null,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'])
+          : null,
+      collection: json['collection'] != null
+          ? CollectionModel.fromJson(json['collection'], {})
+          : null,
+      invitedBy: json['invitedBy'] != null
+          ? UserModel.fromJson(json['invitedBy'])
+          : null,
+    );
+  }
+}
