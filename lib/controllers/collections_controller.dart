@@ -173,7 +173,7 @@ class CollectionsController extends GetxController {
         final details = CollectionDetailsModel.fromJson(data['data']);
         collectionDetails.value = details;
         selectedCollection.value = details.collection;
-
+        AllTransactions.clear();
         await Future.wait([
           getSplits(collectionId),
           getBalances(collectionId),
@@ -355,7 +355,7 @@ class CollectionsController extends GetxController {
   // =========================
   // GET AVAILABLE TRANSACTIONS
   // =========================
-  Future<void> getAllCollectionsTransactions(
+  Future<void> getAllCollectionsTransactionsq(
       {int page = 1, int limit = 20}) async {
     try {
       isSplitLoading.value = true;
@@ -697,64 +697,82 @@ class CollectionsController extends GetxController {
     }
   }
 
-
-
   // =========================
 // UPDATE MEMBER ROLE
 // =========================
-Future<void> updateMemberRole({
-  required String collectionId,
-  required String userId,
-  required dynamic body,
-}) async {
-  try {
+  Future<void> updateMemberRole({
+    required String collectionId,
+    required String userId,
+    required dynamic body,
+  }) async {
+    try {
+      final response = await updateDataApiCall2(
+        CollectionsRoute.updateMemberRole(collectionId, userId),
+        body,
+      );
 
-    final response = await updateDataApiCall2(
-      CollectionsRoute.updateMemberRole(collectionId, userId),
-      body,
-    );
-
-    if (getFlagOfResponse(response))
-    {
-      await refreshCollectionData(collectionId);
+      if (getFlagOfResponse(response)) {
+        await refreshCollectionData(collectionId);
+      }
+    } catch (e) {
+      debugPrint("updateMemberRole error: $e");
     }
-
-  } catch (e) {
-    debugPrint("updateMemberRole error: $e");
   }
-}
 
+  void clearAllData() {
+    /// 🔥 MAIN DATA
+    collectionsList.clear();
+    selectedCollection.value = null;
+    collectionDetails.value = null;
 
+    /// 🔥 LISTS
+    splitsList.clear();
+    balancesList.clear();
+    availableTransactions.clear();
+    AllTransactions.clear();
+    SeletedTransactionsList.clear();
+    selectedTransactions.clear();
 
-void clearAllData() {
-  /// 🔥 MAIN DATA
-  collectionsList.clear();
-  selectedCollection.value = null;
-  collectionDetails.value = null;
+    /// 🔥 INVITATIONS
+    invitationsList.clear();
 
-  /// 🔥 LISTS
-  splitsList.clear();
-  balancesList.clear();
-  availableTransactions.clear();
-  AllTransactions.clear();
-  SeletedTransactionsList.clear();
-  selectedTransactions.clear();
+    /// 🔥 FLAGS
+    isLoading.value = false;
+    isSplitLoading.value = false;
+    isBalanceLoading.value = false;
+    isMemberLoading.value = false;
+    isInvitationLoading.value = false;
 
-  /// 🔥 INVITATIONS
-  invitationsList.clear();
+    /// 🔥 CURRENT USER
+    currentUser = null;
 
-  /// 🔥 FLAGS
-  isLoading.value = false;
-  isSplitLoading.value = false;
-  isBalanceLoading.value = false;
-  isMemberLoading.value = false;
-  isInvitationLoading.value = false;
+    debugPrint("✅ CollectionsController fully cleared");
+  }
 
-  /// 🔥 CURRENT USER
-  currentUser = null;
+  Future<void> getAllCollectionsTransactions(
+      {int page = 1, int limit = 20}) async {
+    try {
+      isSplitLoading.value = true;
 
-  debugPrint("✅ CollectionsController fully cleared");
-}
+      if (collectionDetails.value == null) return;
 
+      final response = await getDataApiCall(
+        CollectionsRoute.getAvailableTransactions(
+          collectionDetails.value!.collection.id,
+          page: page,
+          limit: limit,
+        ),
+      );
 
+      if (getFlagOfResponse(response)) {
+        final data = json.decode(response.body);
+        final list = TransactionModel.listFromJson(data["data"]["transactions"]);
+        AllTransactions.addAll(list);
+      }
+    } catch (e) {
+      debugPrint("getAllCollectionsTransactions error: $e");
+    } finally {
+      isSplitLoading.value = false;
+    }
+  }
 }

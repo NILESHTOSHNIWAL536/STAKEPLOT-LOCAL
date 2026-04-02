@@ -1392,7 +1392,7 @@ class _NotificationsState extends State<Notifications> {
             padding: const EdgeInsets.all(AppSizes.p12),
             child: Column(
               children: [
-                GetInvitationsList(),
+                 GetInvitationsList(),
                 const SizedBox(height: AppSizes.p16),
                 Column(
                   children: _buildGroupedNotifications(),
@@ -1406,6 +1406,10 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget GetInvitationsList() {
+
+    if (collectionsController.invitationsList.isEmpty)
+      return const SizedBox.shrink();
+
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
