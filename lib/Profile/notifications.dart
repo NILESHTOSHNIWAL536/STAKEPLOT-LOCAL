@@ -1,4 +1,3 @@
-
 // import "package:flutter/cupertino.dart";
 // import "package:flutter/material.dart";
 // import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
@@ -20,13 +19,10 @@
 // import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
 // import "package:flutter_application_code_stakeplot/repository/payables_repository.dart";
 
-
 // import "package:get/get.dart";
 
 // import "../Constants/core/app_padding_sizes.dart";
 // import "../components/shared_utils.dart";
-
-
 
 // RxBool notificationsFlag = true.obs;
 
@@ -45,10 +41,6 @@
 
 //     // Debug notification list on init
 //   }
-
- 
-
- 
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -248,7 +240,6 @@
 //   );
 // }
 
-
 // Widget _buildDateSection(
 //   String title,
 //   List<Map<String, dynamic>> items,
@@ -337,7 +328,7 @@
 //             ),
 //           );
 //         }).toList(),
-      
+
 //       ],
 //     ),
 //   );
@@ -631,7 +622,7 @@
 //              ],
 //            ),
 //             const SizedBox(height: 4),
-           
+
 //                 /// MESSAGE
 //                 Text(
 //                   message,
@@ -643,8 +634,7 @@
 //                     color: AppColors.grey,
 //                   ),
 //                 ),
-             
-                
+
 //                 if (actions.isNotEmpty)
 //                   Padding(
 //                     padding: const EdgeInsets.only(top: AppSizes.p8),
@@ -652,7 +642,7 @@
 //          children: actions.map((a) {
 //            final bool primary =
 //                 a['key'] == 'accept' || a['key'] == 'approve';
-                
+
 //            return Padding(
 //              padding: const EdgeInsets.only(right: 8),
 //              child: GestureDetector(
@@ -694,7 +684,7 @@
 //            );
 //          }).toList(),
 //                     )
-             
+
 //                   )
 //          ],
 //                     ),
@@ -1128,7 +1118,7 @@
 //                       ),
 //                   )),
 //                 ),
-          
+
 //           SizedBox(width:AppSizes.w10),
 //            SizedBox(
 //           width: MediaQuery.of(context).size.width / 1.5,
@@ -1194,9 +1184,9 @@
 //         crossAxisAlignment: CrossAxisAlignment.start,
 
 //         children: [
-          
+
 //           avatar.isNotEmpty
-//               ? 
+//               ?
 //                Padding(
 //                   padding: const EdgeInsets.only(bottom: AppSizes.p12),
 //                   child: CircleAvatar(
@@ -1330,8 +1320,6 @@
 //   }
 // }
 
-
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -1341,6 +1329,7 @@ import '../Constants/colors.dart';
 import '../Constants/font_manager.dart';
 import '../Constants/loader.dart';
 import '../Constants/core/app_padding_sizes.dart';
+import '../Home_Screen/history/collections/invitations_list.dart';
 import '../Tribe/tribe_one.dart';
 import '../components/helper.dart';
 import '../backed_connections/apis_connect.dart';
@@ -1368,6 +1357,7 @@ class _NotificationsState extends State<Notifications> {
   void initState() {
     super.initState();
     getNotifications(context);
+    collectionsController.getPendingInvitations();
   }
 
   @override
@@ -1391,7 +1381,7 @@ class _NotificationsState extends State<Notifications> {
       body: SafeArea(
         child: Obx(() {
           if (notificationsFlag.value) {
-            return  Spinner();
+            return Spinner();
           }
 
           if (notificationList.isEmpty) {
@@ -1401,10 +1391,58 @@ class _NotificationsState extends State<Notifications> {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(AppSizes.p12),
             child: Column(
-              children: _buildGroupedNotifications(),
+              children: [
+                GetInvitationsList(),
+                const SizedBox(height: AppSizes.p16),
+                Column(
+                  children: _buildGroupedNotifications(),
+                ),
+              ],
             ),
           );
         }),
+      ),
+    );
+  }
+
+  Widget GetInvitationsList() {
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF3F4F6), // light grey bg
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// 🔥 HEADER
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "Invitations",
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 15,
+                lWeight: FontWeight.w600,
+                color: AppColors.accentColor,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          /// 🔥 DIVIDER (optional but looks premium)
+          Container(
+            height: 1,
+            width: double.infinity,
+            color: Colors.grey.shade300,
+          ),
+
+          const SizedBox(height: 10),
+
+          /// 🔥 LIST
+          InvitationsList(),
+        ],
       ),
     );
   }
@@ -1416,8 +1454,7 @@ class _NotificationsState extends State<Notifications> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.notifications_none,
-              size: 80, color: AppColors.grey),
+          Icon(Icons.notifications_none, size: 80, color: AppColors.grey),
           const SizedBox(height: 16),
           Text(
             "No Notifications",
@@ -1435,7 +1472,6 @@ class _NotificationsState extends State<Notifications> {
               context,
               fontSize: 14,
               color: AppColors.grey,
-
             ),
           ),
         ],
@@ -1446,19 +1482,21 @@ class _NotificationsState extends State<Notifications> {
   // ---------------- GROUP BY DATE ----------------
 
   List<Widget> _buildGroupedNotifications() {
-  final Map<String, List<Map<String, dynamic>>> grouped = {};
+    final Map<String, List<Map<String, dynamic>>> grouped = {};
 
-  for (var n in notificationList) {
-    final String key = n['dateGroup'] ?? "Others";
+    for (var n in notificationList) {
+      final String key = n['dateGroup'] ?? "Others";
 
-    grouped.putIfAbsent(key, () => []);
-    grouped[key]!.add(n);
+      grouped.putIfAbsent(key, () => []);
+      grouped[key]!.add(n);
+    }
+
+    List<Widget> ListNotications = grouped.entries.map((entry) {
+      return _buildDateSection(entry.key, entry.value);
+    }).toList();
+
+    return ListNotications;
   }
-
-  return grouped.entries.map((entry) {
-    return _buildDateSection(entry.key, entry.value);
-  }).toList();
-}
 
   bool _isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
@@ -1466,10 +1504,9 @@ class _NotificationsState extends State<Notifications> {
 
   // ---------------- DATE SECTION ----------------
 
-  Widget _buildDateSection(
-      String title, List<Map<String, dynamic>> items) {
+  Widget _buildDateSection(String title, List<Map<String, dynamic>> items) {
     return Container(
-      margin: const EdgeInsets.only(bottom:AppSizes.p16),
+      margin: const EdgeInsets.only(bottom: AppSizes.p16),
       padding: const EdgeInsets.all(AppSizes.p12),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
@@ -1508,95 +1545,93 @@ class _NotificationsState extends State<Notifications> {
           color: AppColors.redColor,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(Icons.delete,
-            color: AppColors.backgroundColor),
+        child: const Icon(Icons.delete, color: AppColors.backgroundColor),
       ),
       child: _notificationCard(n),
     );
   }
-void handleNotificationAction(
-  String actionKey,
-  Map<String, dynamic> notification,
-) async {
-  final String type = notification['type'];
-  final Map<String, dynamic> payload =
-      notification['payload'] ?? {};
-  final String notificationId = notification['id'];
 
-  try {
-    switch (type) {
+  void handleNotificationAction(
+    String actionKey,
+    Map<String, dynamic> notification,
+  ) async {
+    final String type = notification['type'];
+    final Map<String, dynamic> payload = notification['payload'] ?? {};
+    final String notificationId = notification['id'];
 
-      // ---------------- FRIEND REQUEST ----------------
-      case "friendRequest":
-        if (actionKey == "accept") {
-          addUserAsFrd(payload['fromUserId'], context);
-        } else if (actionKey == "reject") {
-          rejectFrdRequest(payload, context);
-        }
-        break;
+    try {
+      switch (type) {
+        // ---------------- FRIEND REQUEST ----------------
+        case "friendRequest":
+          if (actionKey == "accept") {
+            addUserAsFrd(payload['fromUserId'], context);
+          } else if (actionKey == "reject") {
+            rejectFrdRequest(payload, context);
+          }
+          break;
 
-      // ---------------- SPLIT ----------------
-      case "splitApprovalRequest":
-        if (actionKey == "approve") {
-           settleAmount(
-            context,
-            payload['splitId'],
-            "split",
-            payload['fromUserId'],
-          );
-        } else if (actionKey == "reject") {
-           declineAmount(
-            context,
-            payload['splitId'],
-            "split",
-            payload['fromUserId'],
-          );
-        }
-        break;
+        // ---------------- SPLIT ----------------
+        case "splitApprovalRequest":
+          if (actionKey == "approve") {
+            settleAmount(
+              context,
+              payload['splitId'],
+              "split",
+              payload['fromUserId'],
+            );
+          } else if (actionKey == "reject") {
+            declineAmount(
+              context,
+              payload['splitId'],
+              "split",
+              payload['fromUserId'],
+            );
+          }
+          break;
 
-      // ---------------- LEND ----------------
-      case "lendApprovalRequest":
-        if (actionKey == "approve") {
-           settleAmount(
-            context,
-            payload['lendId'],
-            "lend",
-            payload['fromUserId'],
-          );
-        } else if (actionKey == "reject") {
-           declineAmount(
-            context,
-            payload['lendId'],
-            "lend",
-            payload['fromUserId'],
-          );
-        }
-        break;
+        // ---------------- LEND ----------------
+        case "lendApprovalRequest":
+          if (actionKey == "approve") {
+            settleAmount(
+              context,
+              payload['lendId'],
+              "lend",
+              payload['fromUserId'],
+            );
+          } else if (actionKey == "reject") {
+            declineAmount(
+              context,
+              payload['lendId'],
+              "lend",
+              payload['fromUserId'],
+            );
+          }
+          break;
 
-      // ---------------- COMMENT / LIKE ----------------
-      case "comment":
-      case "like":
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (_) => TribeUnique(
-        //       id: payload['postId'],
-        //       popBox: false.obs,
-        //     ),
-        //   ),
-        // );
-        break;
+        // ---------------- COMMENT / LIKE ----------------
+        case "comment":
+        case "like":
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (_) => TribeUnique(
+          //       id: payload['postId'],
+          //       popBox: false.obs,
+          //     ),
+          //   ),
+          // );
+          break;
 
-      default:
-        debugPrint("Unhandled action: $actionKey for $type");
+        default:
+          debugPrint("Unhandled action: $actionKey for $type");
+      }
+    } catch (e) {
+      snackBarCalledfail(context, "Action failed");
     }
-  } catch (e) {
-    snackBarCalledfail(context, "Action failed");
-  }
 
-  // ✅ Always remove after action
-  _deleteNotification(notificationId);
-}
+    // ✅ Always remove after action
+    _deleteNotification(notificationId);
+  }
 
   // ---------------- CARD UI ----------------
 
@@ -1634,18 +1669,17 @@ void handleNotificationAction(
                           color: AppColors.accentColor,
                         ),
                       ),
-                        Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      (n['time']),
-                      
-                      style: FontManager().getTextStyle(
-                        context,
-                        fontSize: 11,
-                        color: AppColors.grey,
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          (n['time']),
+                          style: FontManager().getTextStyle(
+                            context,
+                            fontSize: 11,
+                            color: AppColors.grey,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -1658,45 +1692,46 @@ void handleNotificationAction(
                     ),
                   ),
                   const SizedBox(height: 6),
-                Row(
-  children: (n['actions'] as List).map<Widget>((a) {
-    final bool isPrimary = a['key'] == 'accept' || a['key'] == 'approve';
+                  Row(
+                    children: (n['actions'] as List).map<Widget>((a) {
+                      final bool isPrimary =
+                          a['key'] == 'accept' || a['key'] == 'approve';
 
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: GestureDetector(
-        onTap: () => handleNotificationAction(a['key'], n),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.p12,
-            vertical: AppSizes.p6,
-          ),
-          decoration: BoxDecoration(
-            color: isPrimary
-                ? AppColors.primaryColor
-                : AppColors.backgroundColor,
-            borderRadius: BorderRadius.circular(6),
-            border: isPrimary
-                ? null
-                : Border.all(color: AppColors.notificationCardBorderColor),
-          ),
-          child: Text(
-            a['label'],
-            style: FontManager().getTextStyle(
-              context,
-              fontSize: 13,
-              color: isPrimary
-                  ? AppColors.backgroundColor
-                  : AppColors.grey,
-            ),
-          ),
-        ),
-      ),
-    );
-  }).toList(),
-),
-
-                
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: GestureDetector(
+                          onTap: () => handleNotificationAction(a['key'], n),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSizes.p12,
+                              vertical: AppSizes.p6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isPrimary
+                                  ? AppColors.primaryColor
+                                  : AppColors.backgroundColor,
+                              borderRadius: BorderRadius.circular(6),
+                              border: isPrimary
+                                  ? null
+                                  : Border.all(
+                                      color: AppColors
+                                          .notificationCardBorderColor),
+                            ),
+                            child: Text(
+                              a['label'],
+                              style: FontManager().getTextStyle(
+                                context,
+                                fontSize: 13,
+                                color: isPrimary
+                                    ? AppColors.backgroundColor
+                                    : AppColors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ],
               ),
             ),
@@ -1705,17 +1740,16 @@ void handleNotificationAction(
       ),
     );
   }
-void handleNotificationTap(Map<String, dynamic> notification) async {
-  final String type = notification['type'];
-  final Map<String, dynamic> payload =
-      notification['payload'] ?? {};
 
-  switch (type) {
+  void handleNotificationTap(Map<String, dynamic> notification) async {
+    final String type = notification['type'];
+    final Map<String, dynamic> payload = notification['payload'] ?? {};
 
-    // ---------------- COMMENT / LIKE ----------------
-    case "comment":
-    case "like":
-      try {
+    switch (type) {
+      // ---------------- COMMENT / LIKE ----------------
+      case "comment":
+      case "like":
+        try {
           if (payload['id'] == null || payload['id'].isEmpty) {
             snackBarCalledfail(context, "Cannot navigate: Invalid post ID");
             return;
@@ -1754,49 +1788,47 @@ void handleNotificationTap(Map<String, dynamic> notification) async {
         }
         // No navigation for pending friend requests since they have buttons
         break;
-      
-  
 
-    // ---------------- FRIEND REQUEST ----------------
-    case "friendRequest":
-      // No auto-navigation
-      // User must click Accept / Reject
-      break;
+      // ---------------- FRIEND REQUEST ----------------
+      case "friendRequest":
+        // No auto-navigation
+        // User must click Accept / Reject
+        break;
 
-    // ---------------- SPLIT / LEND ----------------
-    case "splitApprovalRequest":
-    case "lendApprovalRequest":
-    case "split":
-    case "lend":
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => UserListScreen(isPayable: true),
-        ),
-      );
-      break;
+      // ---------------- SPLIT / LEND ----------------
+      case "splitApprovalRequest":
+      case "lendApprovalRequest":
+      case "split":
+      case "lend":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => UserListScreen(isPayable: true),
+          ),
+        );
+        break;
 
-    case "lendAccepted":
-    case "lendSettled":
-    case "splitSettled":
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => UserListScreen(isPayable: false),
-        ),
-      );
-      break;
+      case "lendAccepted":
+      case "lendSettled":
+      case "splitSettled":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => UserListScreen(isPayable: false),
+          ),
+        );
+        break;
 
-    // ---------------- FETCHED DATA ----------------
-    case "FetchedData":
-      // Optional: navigate to bank / analytics page
-      // or do nothing
-      break;
+      // ---------------- FETCHED DATA ----------------
+      case "FetchedData":
+        // Optional: navigate to bank / analytics page
+        // or do nothing
+        break;
 
-    default:
-      debugPrint("No navigation defined for $type");
+      default:
+        debugPrint("No navigation defined for $type");
+    }
   }
-}
 
   Widget _notificationIcon(String? icon) {
     if (icon != null && icon.isNotEmpty) {

@@ -157,16 +157,21 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
                 const Spacer(),
 
                 /// 🏷 TITLE
-                Obx(() => Text(
-                      collectionsController
-                              .collectionDetails.value?.collection.name ??
-                          "Collection",
-                      style: FontManager().getTextStyle(
-                        context,
-                        fontSize: 18,
-                        lWeight: FontWeight.w600,
-                      ),
-                    )),
+                Container(
+                    // color: AppColors.bg1,
+                    width: MediaQuery.of(context).size.width / 2,
+                    alignment: Alignment.center,
+                    child: Obx(() => Text(
+                          collectionsController
+                                  .collectionDetails.value?.collection.name ??
+                              "Collection",
+                          style: FontManager().getTextStyle(
+                            context,
+                            fontSize: 18,
+                            lWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ))),
 
                 const Spacer(),
 

@@ -26,6 +26,24 @@ class AccessPermissionsWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// TITLE
+            ///
+            Text(
+              "created by" +
+                  (collectionsController
+                              .collectionDetails.value?.collection.ownerId ==
+                          collectionsController.currentUser?.id
+                      ? " you"
+                      : " ${'Unknown'}"),
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 16,
+                lWeight: FontWeight.w700,
+              ),
+            ),
+
+            const SizedBox(
+              height: 10,
+            ),
             Text(
               "Access & Permissions",
               style: FontManager().getTextStyle(
@@ -39,8 +57,6 @@ class AccessPermissionsWidget extends StatelessWidget {
 
             /// MEMBERS
             ...members.map((m) => _memberRow(context, m)),
-
-            const SizedBox(height: 16),
 
             /// INVITE BUTTON
             _inviteRow(context),
@@ -65,7 +81,7 @@ class AccessPermissionsWidget extends StatelessWidget {
         );
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(14),
@@ -133,7 +149,6 @@ void _showRoleDialog(BuildContext context, MemberModel m) {
           ),
           ElevatedButton(
             onPressed: () async {
-
               final collectionId =
                   collectionsController.collectionDetails.value!.collection.id;
 
@@ -154,7 +169,7 @@ void _showRoleDialog(BuildContext context, MemberModel m) {
 
 Widget _memberRow(BuildContext context, MemberModel m) {
   return Container(
-    margin: const EdgeInsets.only(bottom: 10),
+    margin: const EdgeInsets.only(bottom: 5),
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
     decoration: BoxDecoration(
       color: Colors.white,

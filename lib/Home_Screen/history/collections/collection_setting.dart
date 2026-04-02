@@ -6,6 +6,7 @@ import '../../../Constants/colors.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../Home_Screen/history/collections/create_collection_data.dart';
 import '../../../Home_Screen/history/collections/create_collection_pages/step_select_duration.dart';
+import '../../../Utils/collections_helper.dart';
 import '../../../backed_connections/apis_connect.dart';
 import '../../../backed_connections/bankServices/collection_pdf_export.dart';
 import '../../../controllers/Invite-members-screen.dart';
@@ -98,69 +99,126 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
 
                 const SizedBox(height: 12),
 
-                AccessPermissionsWidget(),
+                 if (can("accessPermission"))AccessPermissionsWidget(),
 
                 /// ── EXPORT ──
-                _settingsTile(
-                  context,
-                  iconAsset: Icons.file_upload_outlined,
-                  title: "Export Transactions",
-                  onTap: () => _exportTransactions(context),
-                ),
+                // _settingsTile(
+                //   context,
+                //   iconAsset: Icons.file_upload_outlined,
+                //   title: "Export Transactions",
+                //   onTap: () => _exportTransactions(context),
+                // ),
 
-                _settingsTile(
-                  context,
-                  iconAsset: Icons.file_upload_outlined,
-                  title: "Person Limit",
-                  onTap: () => _showLimitDialog(
-                      context, collectionsController.currentUser),
-                ),
+                // _settingsTile(
+                //   context,
+                //   iconAsset: Icons.file_upload_outlined,
+                //   title: "Person Limit",
+                //   onTap: () => _showLimitDialog(
+                //       context, collectionsController.currentUser),
+                // ),
 
-                /// ── RENAME ──
-                _settingsTile(
-                  context,
-                  iconAsset: Icons.edit_outlined,
-                  title: "Rename Collection",
-                  onTap: () => _showRenameDialog(context),
-                ),
+                // /// ── RENAME ──
+                // _settingsTile(
+                //   context,
+                //   iconAsset: Icons.edit_outlined,
+                //   title: "Rename Collection",
+                //   onTap: () => _showRenameDialog(context),
+                // ),
 
-                /// ── DURATION ──
-                _settingsTile(
-                  context,
-                  iconAsset: Icons.access_time_outlined,
-                  title: "Edit Duration Range",
-                  onTap: () => _showDurationPopup(context),
-                ),
+                // /// ── DURATION ──
+                // _settingsTile(
+                //   context,
+                //   iconAsset: Icons.access_time_outlined,
+                //   title: "Edit Duration Range",
+                //   onTap: () => _showDurationPopup(context),
+                // ),
 
-                /// ── CLOSE COLLECTION ──
-                _dangerTile(
-                  context,
-                  icon: Icons.cancel_outlined,
-                  title: "Close Collection",
-                  onTap: () => _confirmClose(context),
-                ),
+                // /// ── CLOSE COLLECTION ──
+                // _dangerTile(
+                //   context,
+                //   icon: Icons.cancel_outlined,
+                //   title: "Close Collection",
+                //   onTap: () => _confirmClose(context),
+                // ),
 
-                /// ── DELETE COLLECTION ──
-                _dangerTile(
-                  context,
-                  icon: Icons.delete_outline_rounded,
-                  title: "Delete Collection",
-                  onTap: () => _confirmDelete(context, "delete"),
-                ),
+                // /// ── DELETE COLLECTION ──
+                // _dangerTile(
+                //   context,
+                //   icon: Icons.delete_outline_rounded,
+                //   title: "Delete Collection",
+                //   onTap: () => _confirmDelete(context, "delete"),
+                // ),
 
-                _dangerTile(
-                  context,
-                  icon: Icons.delete_outline_rounded,
-                  title: "Exit Collection",
-                  onTap: () => _confirmDelete(context, "exit"),
-                ),
+                // _dangerTile(
+                //   context,
+                //   icon: Icons.delete_outline_rounded,
+                //   title: "Exit Collection",
+                //   onTap: () => _confirmDelete(context, "exit"),
+                // ),
 
-                // AccessPermissionsWidget(),
+                /// EXPORT
+                if (can("export"))
+                  _settingsTile(
+                    context,
+                    iconAsset: Icons.file_upload_outlined,
+                    title: "Export Transactions",
+                    onTap: () => _exportTransactions(context),
+                  ),
 
-                // InviteMembersScreen(
-                //     collectionId: collectionsController
-                //             .collectionDetails.value?.collection.id ??
-                //         ''),
+                /// PERSON LIMIT
+                if (can("personLimit"))
+                  _settingsTile(
+                    context,
+                    iconAsset: Icons.file_upload_outlined,
+                    title: "Person Limit",
+                    onTap: () => _showLimitDialog(
+                        context, collectionsController.currentUser),
+                  ),
+
+                /// RENAME
+                if (can("rename"))
+                  _settingsTile(
+                    context,
+                    iconAsset: Icons.edit_outlined,
+                    title: "Rename Collection",
+                    onTap: () => _showRenameDialog(context),
+                  ),
+
+                /// DURATION
+                if (can("duration"))
+                  _settingsTile(
+                    context,
+                    iconAsset: Icons.access_time_outlined,
+                    title: "Edit Duration Range",
+                    onTap: () => _showDurationPopup(context),
+                  ),
+
+                /// CLOSE
+                if (can("close"))
+                  _dangerTile(
+                    context,
+                    icon: Icons.cancel_outlined,
+                    title: "Close Collection",
+                    onTap: () => _confirmClose(context),
+                  ),
+
+                /// DELETE
+                if (can("delete"))
+                  _dangerTile(
+                    context,
+                    icon: Icons.delete_outline_rounded,
+                    title: "Delete Collection",
+                    onTap: () => _confirmDelete(context, "delete"),
+                  ),
+
+                /// EXIT
+                if (can("exit"))
+                  _dangerTile(
+                    context,
+                    icon: Icons.delete_outline_rounded,
+                    title: "Exit Collection",
+                    onTap: () => _confirmDelete(context, "exit"),
+                  ),
               ],
             ),
           ),
@@ -168,6 +226,11 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal> {
       ),
     );
   }
+
+  bool can(String action) => hasPermission(
+      type: collectionsController.collectionDetails.value!.collection.type,
+      role: collectionsController.currentUser?.role,
+      action: action);
 
   // ─────────────────────── ALERT CARD ───────────────────────
   Widget _alertCard(BuildContext context) {

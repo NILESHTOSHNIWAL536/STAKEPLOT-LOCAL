@@ -126,10 +126,6 @@ class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
             final splits = collectionsController.splitsList;
             final members =
                 collectionsController.collectionDetails.value?.members ?? [];
-            final totalAmount =
-                collectionsController.selectedCollection.value?.totalAmount ??
-                    0;
-            final balances = collectionsController.balancesList;
 
             if (splits.isEmpty) {
               return SliverToBoxAdapter(
