@@ -169,9 +169,19 @@ export const getCollectionById = async (collectionId: string, userId: string) =>
     owner: userMap.get(collection?.ownerId.toString() || '') || { _id: collection?.ownerId },
   };
 
+  const amountSpentMap = new Map<string, number>();
+
+  transactions.forEach((t: any) => {
+    const userId = t.addedBy.toString();
+    const amount = t.amount || 0;
+
+    amountSpentMap.set(userId, (amountSpentMap.get(userId) || 0) + amount);
+  });
+
   // Map user data back to members
   const hydratedMembers = members.map((m) => ({
     ...m,
+    amountSpent: amountSpentMap.get(m.userId.toString()) || 0,
     user: userMap.get(m.userId.toString()) || { _id: m.userId },
   }));
 
