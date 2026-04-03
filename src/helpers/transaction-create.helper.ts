@@ -22,7 +22,7 @@ export const createTransactionsBulk = async ({ transactions, accountId, userId, 
   // 1. Manual transaction (shortcut path)
   if (transactions[0]?.manualTransaction) {
     const created = await Transaction.create(transactions[0]);
-    return { data: created };
+    return { data: created, categorizedTransactions: [created] };
   }
 
   // 2. Fetch rules (used for auto-tagging)
@@ -47,12 +47,14 @@ export const createTransactionsBulk = async ({ transactions, accountId, userId, 
     return {
       insertedCount: insertResult.length,
       message: 'Transactions inserted',
+      categorizedTransactions: categorized,
     };
   } catch (error: any) {
     if (error.code === 11000) {
       return {
         insertedCount: error.result?.insertedCount || 0,
         message: 'Some transactions were duplicates',
+        categorizedTransactions: categorized,
       };
     }
     throw error;

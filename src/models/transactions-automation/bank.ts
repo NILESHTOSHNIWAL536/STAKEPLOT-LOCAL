@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { IBank, encryptedFieldSchema, IFiAccountInfo } from '@/types/bank';
 
 const fiAccountInfoSchema = new Schema<IFiAccountInfo>({
@@ -37,6 +37,12 @@ const bankSchema = new Schema<IBank>({
   consentHandleId: {
     type: encryptedFieldSchema,  // ✅ Changed from spread
     required: true,
+  },
+
+  sessionId: {
+    type: encryptedFieldSchema,
+    required: false,
+    default: null,
   },
 
   fiAccountInfo: {

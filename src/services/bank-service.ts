@@ -22,6 +22,8 @@ import { startOfWeek, endOfWeek, subDays, startOfMonth, endOfMonth } from 'date-
 import buildMatch from '@/utils/helpers/buildMatch';
 import { getMatchedKeywords } from '@/utils/helpers/transactionSearchFilter';
 import BankTransaction from '@/models/transactions-automation/transaction';
+import UserDailyMetrics from '@/models/transactions-automation/user-daily-metrics';
+import { updateDailyMetrics } from '@/services/daily-metrics.service';
 
 // Helper type for userId inputs
 type UserIdLike = string | Types.ObjectId;
@@ -407,27 +409,32 @@ export async function getMonthlyAggregation({
   fromDate: Date;
   toDate: Date;
 }) {
-  return BankTransaction.aggregate([
+  const [totals] = await UserDailyMetrics.aggregate([
     {
       $match: {
         userId,
         bankId,
         accountId: { $in: accountIds },
-        Hidden: false,
-        isExcluded: false,
-        transactionTimestamp: { $gte: fromDate, $lte: toDate },
+        sourceType: 'BANK',
+        date: { $gte: fromDate, $lte: toDate },
       },
     },
     {
       $group: {
-        _id: {
-          type: "$type",
-          manual: "$manualTransaction",
-        },
-        total: { $sum: "$amount" },
+        _id: null,
+        totalDebit: { $sum: '$totalDebit' },
+        totalCredit: { $sum: '$totalCredit' },
       },
     },
   ]);
+
+  const totalDebit = totals?.totalDebit || 0;
+  const totalCredit = totals?.totalCredit || 0;
+
+  return [
+    { _id: { type: 'CREDIT', manual: false }, total: totalCredit },
+    { _id: { type: 'DEBIT', manual: false }, total: totalDebit },
+  ];
 }
 
 
@@ -825,7 +832,26 @@ export async function updateTransaction(updateData: any, userId: UserIdLike, tra
     }
 
     const ObjectId = new mongoose.Types.ObjectId(transactionId);
+    const existing = await Transaction.findOne({ _id: ObjectId, userId }).select('transactionTimestamp manualTransaction bankId accountId').lean();
     const response = await new AutoTransactionRepository().updateTransaction(userId, ObjectId, updateData);
+    if (response?.data) {
+      const metricsTxs: any[] = [response.data];
+      const oldTimestamp = existing?.transactionTimestamp ? new Date(existing.transactionTimestamp) : null;
+      const newTimestamp = response?.data?.transactionTimestamp ? new Date(response.data.transactionTimestamp) : null;
+      if (oldTimestamp && newTimestamp) {
+        const oldDay = oldTimestamp.toISOString().slice(0, 10);
+        const newDay = newTimestamp.toISOString().slice(0, 10);
+        if (oldDay !== newDay) {
+          metricsTxs.push({
+            transactionTimestamp: oldTimestamp,
+            manualTransaction: existing?.manualTransaction,
+            bankId: existing?.bankId || null,
+            accountId: existing?.accountId || null,
+          });
+        }
+      }
+      await updateDailyMetrics(metricsTxs, userId);
+    }
 
     return response;
   } catch (error: any) {
@@ -1000,25 +1026,24 @@ export async function getUserSpending(userId: UserIdLike): Promise<any> {
     const endDate = new Date(months[0].year, months[0].month, 0);
     endDate.setHours(23, 59, 59, 999);
 
-    const transactionData = await Transaction.aggregate([
+    const transactionData = await UserDailyMetrics.aggregate([
       {
         $match: {
           userId: new mongoose.Types.ObjectId(String(userId)),
-          transactionTimestamp: {
+          date: {
             $gte: startDate,
             $lte: endDate,
           },
-          type: 'DEBIT',
         },
       },
       {
         $group: {
           _id: {
-            month: { $month: '$transactionTimestamp' },
-            year: { $year: '$transactionTimestamp' },
-            day: { $dayOfMonth: '$transactionTimestamp' },
+            month: { $month: '$date' },
+            year: { $year: '$date' },
+            day: { $dayOfMonth: '$date' },
           },
-          total: { $sum: '$amount' },
+          total: { $sum: '$totalDebit' },
         },
       },
     ]);

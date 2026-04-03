@@ -4,6 +4,7 @@ import Bank from "./transactions-automation/bank";
 import Profile from "./transactions-automation/profile";
 import Summary from "./transactions-automation/summary";
 import Transaction from "./transactions-automation/transaction";
+import UserDailyMetrics from "./transactions-automation/user-daily-metrics";
 import PendingTransaction from "./pendingTransaction";
 import GroupedTransaction from "./transactions-automation/grouped-transactions";
 import Finvu from "./transactions-automation/finvu";
@@ -43,6 +44,7 @@ export {
   Profile,
   Summary,
   Transaction,
+  UserDailyMetrics,
   PendingTransaction,
   GroupedTransaction,
   Finvu,

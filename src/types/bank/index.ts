@@ -10,3 +10,4 @@ export * from './groupedTransactions';
 export * from './failedTransaction';
 export * from './customCategory';
 export * from './consentDetails';
+export * from './userDailyMetrics';
