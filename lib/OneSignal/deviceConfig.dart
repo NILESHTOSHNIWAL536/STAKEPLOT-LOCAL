@@ -24,6 +24,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../components/shared_utils.dart';
+import '../controllers/finora_controller.dart';
 import '../repository/auth_service/login_apis.dart';
 import '../routes/index_route.dart';
 
@@ -255,12 +256,13 @@ class InstallationChecker {
 }
 
 catWidgetBindUpdate(context) {
+  final controller = Get.find<FinoraController>();
   WidgetsBinding.instance.addPostFrameCallback((_) async {
     await HomeWidget.setAppGroupId('group.com.stakeplot.pfa');
     await updateWidgetSpendingCategories();
   });
-  ever(spendingsOnCategories, (_) => updateWidgetSpendingCategories());
-  ever(totalValue, (_) => updateWidgetSpendingCategories());
+  ever(controller.spendingsOnCategories, (_) => updateWidgetSpendingCategories());
+  ever(controller.totalValue, (_) => updateWidgetSpendingCategories());
 }
 
 HomeWidgetBindUpdate() {

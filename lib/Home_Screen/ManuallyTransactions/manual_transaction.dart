@@ -88,7 +88,8 @@ class _ModalContentState extends State<ModalContent>
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
     collectionsController.getCollections();
-    collectionsController.getPendingInvitations();();
+    collectionsController.getPendingInvitations();
+    ();
   }
 
   void _populateInitialFilteredCategories() {
@@ -390,15 +391,16 @@ class _ModalContentState extends State<ModalContent>
           // ✅ ADD THIS
           memberAmounts.clear();
 
-double total = double.tryParse(_amountController.text) ?? 0;
+          double total =
+              double.tryParse(_amountController.text.toString()) ?? 0;
 
-if (collectionMembers.isNotEmpty && total > 0) {
-  double split = total / collectionMembers.length;
+          if (collectionMembers.isNotEmpty && total > 0) {
+            double split = total / collectionMembers.length;
 
-  for (var m in collectionMembers) {
-    memberAmounts[m['user']['id']] = split;
-  }
-}
+            for (var m in collectionMembers) {
+              memberAmounts[m['user']['id']] = split;
+            }
+          }
         });
       }
     } catch (e) {
@@ -760,13 +762,13 @@ if (collectionMembers.isNotEmpty && total > 0) {
                           amount = double.tryParse(value);
                           double total = double.tryParse(value) ?? 0;
 
-if (collectionMembers.isNotEmpty && total > 0) {
-  double split = total / collectionMembers.length;
+                          if (collectionMembers.isNotEmpty && total > 0) {
+                            double split = total / collectionMembers.length;
 
-  for (var m in collectionMembers) {
-    memberAmounts[m['user']['id']] = split;
-  }
-}
+                            for (var m in collectionMembers) {
+                              memberAmounts[m['user']['id']] = split;
+                            }
+                          }
                           if (!widget.isDebit) {
                             selectedCategory = "Income";
                             categoryFieldController.text = "Income";
@@ -775,7 +777,7 @@ if (collectionMembers.isNotEmpty && total > 0) {
                           _isAmountFieldFocused = false;
                         });
                       },
-                      
+
                       onEditingComplete: () {
                         fin = '$selectedCategory ($selectedSubCategory)';
                         FocusScope.of(context).unfocus();
@@ -1114,8 +1116,10 @@ if (collectionMembers.isNotEmpty && total > 0) {
                   width: 100,
                   child: TextField(
                     controller: TextEditingController(
-  text: memberAmounts[member['user']['id']]?.toStringAsFixed(0) ?? '',
-),
+                      text: memberAmounts[member['user']['id']]
+                              ?.toStringAsFixed(0) ??
+                          '',
+                    ),
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
@@ -1127,33 +1131,35 @@ if (collectionMembers.isNotEmpty && total > 0) {
                       prefixText: "₹ ",
                       border: OutlineInputBorder(),
                     ),
-                  onChanged: (value) {
-  double entered = double.tryParse(value) ?? 0;
-  String currentId = member['user']['id'];
+                    onChanged: (value) {
+                      double entered = double.tryParse(value) ?? 0;
+                      String currentId = member['user']['id'];
 
-  memberAmounts[currentId] = entered;
+                      memberAmounts[currentId] = entered;
 
-  double total = double.tryParse(_amountController.text) ?? 0;
+                      double total =
+                          double.tryParse(_amountController.text) ?? 0;
 
-  double used = memberAmounts.values.fold(0, (a, b) => a + b);
+                      double used =
+                          memberAmounts.values.fold(0, (a, b) => a + b);
 
-  double remaining = total - used;
+                      double remaining = total - used;
 
-  // get other members
-  var otherMembers = collectionMembers
-      .where((m) => m['user']['id'] != currentId)
-      .toList();
+                      // get other members
+                      var otherMembers = collectionMembers
+                          .where((m) => m['user']['id'] != currentId)
+                          .toList();
 
-  if (otherMembers.isNotEmpty && remaining >= 0) {
-    double split = remaining / otherMembers.length;
+                      if (otherMembers.isNotEmpty && remaining >= 0) {
+                        double split = remaining / otherMembers.length;
 
-    for (var m in otherMembers) {
-      memberAmounts[m['user']['id']] = split;
-    }
-  }
+                        for (var m in otherMembers) {
+                          memberAmounts[m['user']['id']] = split;
+                        }
+                      }
 
-  setState(() {});
-},
+                      setState(() {});
+                    },
                   ),
                 ),
               ],
@@ -1355,7 +1361,7 @@ if (collectionMembers.isNotEmpty && total > 0) {
                 cashInAndOut.value = true;
 
                 addTransaction(
-                  amount.toString(),
+                  _amountController.text.toString(),
                   selectedSubCategory2.toString(),
                   selectedCategory2.toString(),
                   context,

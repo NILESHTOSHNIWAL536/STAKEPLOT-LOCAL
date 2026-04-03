@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Hive_localstorage/card_swipe_
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/routes/routes.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import '../../Home_Screen/categoriseSpending.dart';
 import '../../backed_connections/apiAutomations/getTrasactions.dart';
@@ -13,50 +14,51 @@ import '../../controllers/finora_controller.dart';
 import 'init_hive.dart';
 
 class CategoryStorage {
+  //  final controller = Get.find<FinoraController>();
   //  FinoraController finoraController = ControllerManagement.finoraController;
   // finora
-  Future<void> cacheCardInsightsDataLocally() async {
+  Future<void> cacheCardInsightsDataLocally(FinoraController controller) async {
     HiveHelper.openBoxIfNot<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
     final box = await HiveStorage.cardInsightsBox;
     await box.clear();
     try {
       final cardInsightsData = CardInsightsModel(
-        totalDebitThisMonth:   totalDebitThisMonth.value,
-        totalDebitThisWeek:   totalDebitThisWeek.value,
-        moreDrasticChange:   moreDrasticChange.cast<Map<String, dynamic>>(),
+        totalDebitThisMonth:   controller.totalDebitThisMonth.value,
+        totalDebitThisWeek:   controller.totalDebitThisWeek.value,
+        moreDrasticChange:   controller.moreDrasticChange.cast<Map<String, dynamic>>(),
         moreDrasticChangeWeek:
-              moreDrasticChangeWeek.cast<Map<String, dynamic>>(),
-        frequentPayments:   frequentPayments.cast<Map<String, dynamic>>(),
-        frequentPaymentsWeek:   frequentPaymentsWeek.cast<Map<String, dynamic>>(),
-        categoriesList:   categoriesList.cast<Map<String, dynamic>>(),
+              controller.moreDrasticChangeWeek.cast<Map<String, dynamic>>(),
+        frequentPayments:   controller.frequentPayments.cast<Map<String, dynamic>>(),
+        frequentPaymentsWeek:   controller.frequentPaymentsWeek.cast<Map<String, dynamic>>(),
+        categoriesList:   controller.categoriesList.cast<Map<String, dynamic>>(),
       );
       await box.add(cardInsightsData);
     } catch (e) {}
   }
 
-   Future<void> loadCardInsightsDataFromHive() async {
+   Future<void> loadCardInsightsDataFromHive(FinoraController controller) async {
     HiveHelper.openBoxIfNot<CardInsightsModel>(HiveStorage.cardInsightsBoxName);
     final box = await HiveStorage.cardInsightsBox;
 
     if (box.isNotEmpty) {
       final latestData = box.values.last;
 
-        totalDebitThisMonth.value = latestData.totalDebitThisMonth;
-        totalDebitThisWeek.value = latestData.totalDebitThisWeek;
+        controller.totalDebitThisMonth.value = latestData.totalDebitThisMonth;
+        controller.totalDebitThisWeek.value = latestData.totalDebitThisWeek;
 
-        moreDrasticChange.value =
+        controller.moreDrasticChange.value =
           List<Map<String, dynamic>>.from(latestData.moreDrasticChange);
-        moreDrasticChangeWeek.value =
+        controller.moreDrasticChangeWeek.value =
           List<Map<String, dynamic>>.from(latestData.moreDrasticChangeWeek);
 
-        frequentPayments.value =
+        controller.frequentPayments.value =
           List<Map<String, dynamic>>.from(latestData.frequentPayments);
-        frequentPaymentsWeek.value =
+        controller.frequentPaymentsWeek.value =
           List<Map<String, dynamic>>.from(latestData.frequentPaymentsWeek);
-        categoriesList.value =
+        controller.categoriesList.value =
           List<Map<String, dynamic>>.from(latestData.categoriesList);
 
-        isFinoraVisible.value =   totalDebitThisMonth.value > 0;
+        isFinoraVisible.value =   controller.totalDebitThisMonth.value > 0;
       processChartData();
     } else {}
   }
@@ -72,6 +74,7 @@ class CategoryStorage {
 
 void processChartData() {
     // FinoraController finoraController = ControllerManagement.finoraController;
+    final controller = Get.find<FinoraController>();
   try {
     // Recompute everything from scratch
     List<ChartData> newData = [];
@@ -80,7 +83,7 @@ void processChartData() {
     // categoryColors should be a Map<String, Color>
     Map<String, Color> categoryColors = colorcodes;
 
-    for (var item in categoriesList) {
+    for (var item in controller.categoriesList.value) {
     // for (var item in   categoriesList) {
       final String category = (item["category"] ?? "Others").toString();
       final String percentage = (item["total_debit_percentage"] ?? "").toString();
@@ -101,20 +104,21 @@ void processChartData() {
     }
 
     // Replace the reactive list atomically so UI reacts correctly
-    spendingsOnCategories
+    controller.spendingsOnCategories
       ..clear()
       ..addAll(newData);
 
     // Assign computed total (not incremental)
-    totalValue.value = newTotalValue;
+    controller.totalValue.value = newTotalValue;
 
     // If you want to signal any other reactive flags, refresh them:
-    spendingsOnCategories.refresh();
-    totalValue.refresh();
+    controller.spendingsOnCategories.refresh();
+    controller.totalValue.refresh();
   } catch (e, st) {
     // Consider logging the error for debugging
   }
 }
+
 
 // if any problem in above function use this below function
 // void processChartData() {

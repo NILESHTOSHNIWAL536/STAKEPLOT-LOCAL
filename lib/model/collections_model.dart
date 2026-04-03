@@ -148,25 +148,28 @@ class CollectionDetailsModel {
   });
 
   factory CollectionDetailsModel.fromJson(Map<String, dynamic> json) {
-    return CollectionDetailsModel(
-      // ✅ COLLECTION
-      collection: CollectionModel.fromJson(json['collection'] ?? {}, json),
+    print("👉 FULL JSON: $json");
+    try {
+      print("👉 FULL JSON: $json");
 
-      // ✅ MEMBERS
-      members: (json['members'] as List? ?? [])
-          .map((e) => MemberModel.fromJson(e))
-          .toList(),
+      print("👉 COLLECTION: ${json['collection']}");
+      print("👉 MEMBERS: ${json['members']}");
+      print("👉 TRANSACTIONS: ${json['transactions']}");
 
-      // ✅ TRANSACTIONS
-      transactions: (json['transactions'] as List? ?? [])
-          .map((e) => TransactionModel.fromJson(e["transactionId"] ?? {}))
-          .toList(),
-
-      // // ✅ SPLITS
-      // splits: (json['splits'] as List? ?? [])
-      //     .map((e) => SplitModel.fromJson(e))
-      //     .toList(),
-    );
+      return CollectionDetailsModel(
+        collection: CollectionModel.fromJson(json['collection'] ?? {}, json),
+        members: (json['members'] as List? ?? [])
+            .map((e) => MemberModel.fromJson(e))
+            .toList(),
+        transactions: (json['transactions'] as List? ?? [])
+            .map((e) => TransactionModel.fromJson(e["transactionId"] ?? {}))
+            .toList(),
+      );
+    } catch (e, stack) {
+      print("❌ ERROR INSIDE fromJson: $e");
+      print(stack);
+      rethrow;
+    }
   }
 }
 

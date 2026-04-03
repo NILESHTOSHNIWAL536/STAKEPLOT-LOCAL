@@ -1,50 +1,109 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
+import 'package:get/get.dart';
 
-// import 'package:get/get.dart';
+// ─── Chart Data Model ────────────────────────────────────────────────────────
 
-// // import '../backed_connections/apis_connect.dart';
-// import '../repository/finora_repository.dart';
-// import '../routes/route_transactions.dart';
 
-// class FinoraController extends GetxController {
 
-//   /// ---------------- STATE ----------------
+// ─── Finora Controller ───────────────────────────────────────────────────────
 
-//   final isLoading = false.obs;
+class FinoraController extends GetxController {
+  // ── Loading states ──────────────────────────────────────────────────────────
+  final RxBool isLoading = false.obs;
+  final RxBool finoraLoading = false.obs;
+  final RxBool isFinoraVisible = false.obs;
+  final RxBool setDonectChat = false.obs;
 
-//   final selectedPeriod = 'Month'.obs;
+  // ── Raw API response ────────────────────────────────────────────────────────
+  final Rx<Map<String, dynamic>> finoraTransactionData =
+      Rx<Map<String, dynamic>>({});
 
-//   final frequentPayments = <Map<String, dynamic>>[].obs;
-//   final moreDrasticChange = <Map<String, dynamic>>[].obs;
-//   final moreDrasticChangeWeek = <Map<String, dynamic>>[].obs;
+  // ── Totals ──────────────────────────────────────────────────────────────────
+  final RxDouble totalDebitThisMonth = 0.0.obs;
+  final RxDouble totalDebitThisWeek = 0.0.obs;
 
-//   final totalDebitThisMonth = 0.0.obs;
-// RxList categoriesList = [].obs;
+  // ── Monthly lists ───────────────────────────────────────────────────────────
+  final RxList<Map<String, dynamic>> categoriesList =
+      <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> frequentPayments =
+      <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> moreDrasticChange =
+      <Map<String, dynamic>>[].obs;
 
-// RxDouble totalDebitThisWeek = 0.0.obs;
-// RxList categoriesListWeek = [].obs;
+  // ── Weekly lists ────────────────────────────────────────────────────────────
+  final RxList<Map<String, dynamic>> categoriesListWeek =
+      <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> frequentPaymentsWeek =
+      <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> moreDrasticChangeWeek =
+      <Map<String, dynamic>>[].obs;
 
-// RxList frequentPaymentsWeek = [].obs;
-// RxList mostSpentCategoryInMonth = [].obs;
-// RxList mostSpentDayInMonth = [].obs;
-// RxList weeklyTrend = [].obs;
-// final isFinoraVisible = false.obs;
-// RxBool setDonectChat = false.obs;
+  // ── Insights ────────────────────────────────────────────────────────────────
+  final RxList<Map<String, dynamic>> mostSpentCategoryInMonth =
+      <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> mostSpentDayInMonth =
+      <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> weeklyTrend =
+      <Map<String, dynamic>>[].obs;
 
-//   /// ---------------- LIFECYCLE ----------------
+  // ── Chart / category spending ───────────────────────────────────────────────
+  final RxList<ChartData> spendingsOnCategories = <ChartData>[].obs;
+  final RxDouble totalValue = 0.0.obs;
+  final RxBool spendingsOnCategoriesBool = false.obs;
 
- 
-//   void togglePeriod() {
-//     selectedPeriod.value =
-//         selectedPeriod.value == "Month" ? "Week" : "Month";
-//   }
+  // ── UI state ────────────────────────────────────────────────────────────────
+  final RxInt selectedIndex = (-1).obs;
+  final RxString selectedPeriod = 'Month'.obs;
 
-//   List<Map<String, dynamic>> get drasticList =>
-//       selectedPeriod.value == "Month"
-//           ? moreDrasticChange
-//           : moreDrasticChangeWeek;
+  // ── Helpers ─────────────────────────────────────────────────────────────────
 
-//   /// ---------------- API ----------------
+  /// Clear all monthly + weekly data lists before a fresh API populate.
+  void clearAllLists() {
+    categoriesList.clear();
+    frequentPayments.clear();
+    moreDrasticChange.clear();
+    categoriesListWeek.clear();
+    frequentPaymentsWeek.clear();
+    moreDrasticChangeWeek.clear();
+    mostSpentCategoryInMonth.clear();
+    mostSpentDayInMonth.clear();
+    weeklyTrend.clear();
+  }
 
- 
-// }
+  /// Call after populating [categoriesList] to rebuild [spendingsOnCategories].
+  void processChartData(Map<String, Color> categoryColors) {
+    try {
+      final List<ChartData> newData = [];
+      double newTotal = 0.0;
 
+      for (final item in categoriesList) {
+        final String category =
+            (item['category'] ?? 'Others').toString();
+        final String percentage =
+            (item['total_debit_percentage'] ?? '').toString();
+
+        double value = 0.0;
+        final dynamic raw = item['total_debit'];
+        if (raw is num) {
+          value = raw.toDouble();
+        } else if (raw is String) {
+          value = double.tryParse(raw) ?? 0.0;
+        }
+
+        final Color color = categoryColors[category] ?? Colors.grey;
+        newData.add(ChartData(category, value, color, percentage));
+        newTotal += value;
+      }
+
+      spendingsOnCategories
+        ..clear()
+        ..addAll(newData);
+
+      totalValue.value = newTotal;
+
+      spendingsOnCategories.refresh();
+      totalValue.refresh();
+    } catch (_) {}
+  }
+}

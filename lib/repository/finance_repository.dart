@@ -66,14 +66,12 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
         type: weekORmonth.toLowerCase(),
         value: formattedDate,
       );
-
-
-
+      
   try {
     final response = await getDataApiCall(urlPath);
     if (getFlagOfResponse(response)) {
       final his = jsonDecode(response.body);
-      print("graph data ");
+    
       print(his);
       transactionChatGraph.clear();
 

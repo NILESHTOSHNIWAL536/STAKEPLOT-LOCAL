@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -21,26 +20,23 @@ void getAck() async {
   }
 }
 
-
 void sendNotificationsToDevice(id, context, msg,
     [String screen = "/home",
     String title = "",
     String pic = "",
     String message = "",
     String billid = ""]) async {
-      
-    String urlPath = SendNotificationsRoutes.SendNotificationsToDevice;
+  String urlPath = SendNotificationsRoutes.SendNotificationsToDevice;
 
   try {
-    final response = await postDataApiCall(urlPath,{
-        'id': id,
-        'message': msg,
-        'screen': screen,
-        'title': title,
-        'pic': pic,
-        "billId": billid
-      }
-    );
+    final response = await postDataApiCall(urlPath, {
+      'id': id,
+      'message': msg,
+      'screen': screen,
+      'title': title,
+      'pic': pic,
+      "billId": billid
+    });
 
     if (response.statusCode == 429) {
       var data = jsonDecode(response.body);
@@ -53,46 +49,43 @@ void sendNotificationsToDevice(id, context, msg,
   } catch (e) {}
 }
 
- Future<void> deleteNotification(String? notifyId, context) async {
-    if (notifyId == null) return;
-    String urlPath = '${UserRoutes.deleteNotifications}/$notifyId';
-    var response = await getDataApiCall(urlPath);
-    if (!getFlagOfResponse(response)) 
-     
-    {
-      snackBarCalledfail(context, SnackbarData().deleteNotificationFailed);
-    }
+Future<void> deleteNotification(String? notifyId, context) async {
+  if (notifyId == null) return;
+  String urlPath = '${UserRoutes.deleteNotifications}/$notifyId';
+  var response = await getDataApiCall(urlPath);
+  if (!getFlagOfResponse(response)) {
+    snackBarCalledfail(context, SnackbarData().deleteNotificationFailed);
   }
-
+}
 
 Future<PostModel?> fetchPostById(String postId, BuildContext context) async {
-    try {
-      final response = await getDataApiCall(
-          '${PostRoutes.post}$postId'); // Adjust the endpoint based on your API);
-      if (getFlagOfResponse(response)) {
-        var jsonData = jsonDecode(response.body);
-        // Adjust based on your API response structure, e.g., jsonData['data']
-        return PostModel.fromJson(jsonData['data'][0] ?? jsonData);
-      } else {
-        return null;
-      }
-    } catch (e) {
+  try {
+    final response = await getDataApiCall(
+        '${PostRoutes.post}$postId'); // Adjust the endpoint based on your API);
+    if (getFlagOfResponse(response)) {
+      var jsonData = jsonDecode(response.body);
+      // Adjust based on your API response structure, e.g., jsonData['data']
+      return PostModel.fromJson(jsonData['data'][0] ?? jsonData);
+    } else {
       return null;
     }
+  } catch (e) {
+    return null;
   }
+}
 
 //   void getNotifications(context) async {
-  
+
 //   final response = await getDataApiCall(UserRoutes.myNotifications);
- 
+
 //   if (getFlagOfResponse(response)) {
 //     var his = jsonDecode(response.body);
 
 //     notificationList.clear();
 //     notificationList.addAll(his['data']);
 //     print("notifications");
-//     print(notificationList);  
-    
+//     print(notificationList);
+
 //     notificationList.forEach((req) {
 //       String type = req['notificationMessage']['type'];
 //       var e = req['notificationMessage'];

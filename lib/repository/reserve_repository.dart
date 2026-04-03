@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 
 import '../finance_screen/finanace_dashboard/reserve.dart';
+import '../routes/route_transactions.dart';
 
 sealed class ApiResult<T> {
   const ApiResult();
@@ -21,16 +22,11 @@ final class ApiFailure<T> extends ApiResult<T> {
 
 class ReserveApiService {
   // Replace with your real base URL or inject via constructor / DI.
-  static const String _baseUrl = '';
+  
 
-  static const Map<String, String> _defaultHeaders = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  };
 
-  /// POST /api/reserves
-  /// Returns [ApiSuccess] with the decoded response body on 200/201,
-  /// or [ApiFailure] with a human-readable error message otherwise.
+
+
   static Future<ApiResult<Map<String, dynamic>>> createReserve(
     ReserveState state,
   ) async {
@@ -41,7 +37,7 @@ class ReserveApiService {
     try {
       final response = await postDataApiCall(
        
-        '$_baseUrl/api/reserves',
+        BankTransactionRoutes.createReserve,
        
         payload,
       );

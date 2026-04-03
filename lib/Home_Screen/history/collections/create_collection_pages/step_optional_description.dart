@@ -51,11 +51,10 @@ class _StepOptionalDescriptionState extends State<StepOptionalDescription> {
 
       if (newCollectionId != null && context.mounted) {
         // Load the new collection's data into the controller
-        await collectionsController
-            .refreshCollectionData(newCollectionId);
+        await collectionsController.refreshCollectionData(newCollectionId);
 
         if (context.mounted) {
-          // Navigate to the dashboard, removing all create-flow screens
+           // Navigate to the dashboard, removing all create-flow screens
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -64,7 +63,8 @@ class _StepOptionalDescriptionState extends State<StepOptionalDescription> {
             (route) => route.isFirst,
           );
         }
-      } else if (context.mounted) {
+      }
+       else if (context.mounted) {
         Get.snackbar(
           "Error",
           "Failed to create collection. Please try again.",
@@ -114,6 +114,8 @@ class _StepOptionalDescriptionState extends State<StepOptionalDescription> {
                         await _submit(context);
                       },
                 child: Text(
+
+
                   "Skip",
                   style: FontManager().getTextStyle(
                     context,

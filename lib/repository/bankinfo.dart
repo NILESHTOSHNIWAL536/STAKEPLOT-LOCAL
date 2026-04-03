@@ -23,6 +23,7 @@ import '../loginservices/login.dart';
 import '../model/bank_model.dart';
 import '../model/fips_metric_model.dart';
 
+import '../model/quick_check_model.dart';
 import '../routes/route_finvu.dart';
 
 RxList<BankAccountModel> bankAccountLinkedList =
@@ -334,52 +335,82 @@ void pinPasswordVerify(
   }
 }
 
-Future<void> getQuickCheck({
-  required String view,
-  int? month,
-  required int year,
-}) async {
-  try {
-    final String url = view == 'monthly'
-        ? "${BankTransactionRoutes.getQuickCheck}"
-            "?view=monthly&month=${month ?? DateTime.now().month}&year=$year"
-        : "${BankTransactionRoutes.getQuickCheck}"
-            "?view=yearly&year=$year";
+
+
+// Future<void> getQuickCheck({
+//   required String view,
+//   int? month,
+//   required int year,
+// }) async {
+//   try {
+//     final String url = view == 'monthly'
+//         ? "${BankTransactionRoutes.getQuickCheck}"
+//             "?view=monthly&month=${month ?? DateTime.now().month}&year=$year"
+//         : "${BankTransactionRoutes.getQuickCheck}"
+//             "?view=yearly&year=$year";
            
            
 
-    final response = await getDataApiCall(url);
+//     final response = await getDataApiCall(url);
    
 
-    if (!getFlagOfResponse(response)) return;
+//     if (!getFlagOfResponse(response)) return;
 
-    final decoded = jsonDecode(response.body);
-    final data = decoded['data'];
+//     final decoded = jsonDecode(response.body);
+//     final data = decoded['data'];
 
-    // 🔹 BANKS LIST
-    quickCheckBanks.value =
-        (data['banks'] ?? []).map<Map<String, dynamic>>(
-          (b) => Map<String, dynamic>.from(b),
-        ).toList();
+//     // 🔹 BANKS LIST
+//     quickCheckBanks.value =
+//         (data['banks'] ?? []).map<Map<String, dynamic>>(
+//           (b) => Map<String, dynamic>.from(b),
+//         ).toList();
 
-    // 🔹 COMBINED DATA (USED FOR "All")
-    final combined = data['combined'] ?? {};
-    final percentages = combined['percentages'] ?? {};
-quickCheckCurrentBalance.value =
-        (combined['currentBalance'] ?? 0).toDouble();
-    quickCheckCredit.value = (combined['credit'] ?? 0).toDouble();
-    quickCheckDebit.value = (combined['debit'] ?? 0).toDouble();
-    quickCheckOutstanding.value =
-        (combined['outstanding'] ?? 0).toDouble();
+//     // 🔹 COMBINED DATA (USED FOR "All")
+//     final combined = data['combined'] ?? {};
+//     final percentages = combined['percentages'] ?? {};
+// quickCheckCurrentBalance.value =
+//         (combined['currentBalance'] ?? 0).toDouble();
+//     quickCheckCredit.value = (combined['credit'] ?? 0).toDouble();
+//     quickCheckDebit.value = (combined['debit'] ?? 0).toDouble();
+//     quickCheckOutstanding.value =
+//         (combined['outstanding'] ?? 0).toDouble();
 
-    quickCheckCreditPercent.value =
-        (percentages['creditPercent'] ?? 0).toDouble();
-    quickCheckDebitPercent.value =
-        (percentages['debitPercent'] ?? 0).toDouble();
-    quickCheckOutstandingPercent.value =
-        (percentages['outstandingPercent'] ?? 0).toDouble();
-  } catch (e) {
+//     quickCheckCreditPercent.value =
+//         (percentages['creditPercent'] ?? 0).toDouble();
+//     quickCheckDebitPercent.value =
+//         (percentages['debitPercent'] ?? 0).toDouble();
+//     quickCheckOutstandingPercent.value =
+//         (percentages['outstandingPercent'] ?? 0).toDouble();
+//   } catch (e) {
     
-  }
-}
+//   }
+// }
 
+// final Rxn<QuickCheckModel> quickCheck = Rxn<QuickCheckModel>();
+// Future<void> getQuickCheck({
+//   required String view,
+//   int? month,
+//   required int year,
+// }) async {
+//   try {
+//     final String url = view == 'monthly'
+//         ? "${BankTransactionRoutes.getQuickCheck}"
+//             "?view=monthly&month=${month ?? DateTime.now().month}&year=$year"
+//         : "${BankTransactionRoutes.getQuickCheck}"
+//             "?view=yearly&year=$year";
+
+//     final response = await getDataApiCall(url);
+
+//     if (!getFlagOfResponse(response)) return;
+
+//     final decoded = jsonDecode(response.body);
+//     final data = decoded['data'];
+
+//     // ✅ SINGLE SOURCE OF TRUTH
+//     quickCheck.value = QuickCheckModel.fromJson(data);
+
+//   } catch (e, st) {
+//     print(e);
+//     print(st);
+//   }
+// }

@@ -1,9 +1,9 @@
 class PredictionEntry {
-    final String category;
+  final String category;
   final double score;
 
   PredictionEntry({
-    required this.category, 
+    required this.category,
     required this.score,
   });
 
@@ -34,19 +34,21 @@ class Predictions {
       for (int i = 1; i <= 5; i++) {
         final categoryKey = 'top${i}_category';
         final scoreKey = 'top${i}_score';
-        
+
         // Check if category exists and is non-null/non-empty
-        if (json.containsKey(categoryKey) && json[categoryKey] is String && json[categoryKey].isNotEmpty) {
-          final score = json.containsKey(scoreKey) ? (json[scoreKey] as num?)?.toDouble() ?? 0.0 : 0.0;
+        if (json.containsKey(categoryKey) &&
+            json[categoryKey] is String &&
+            json[categoryKey].isNotEmpty) {
+          final score = json.containsKey(scoreKey)
+              ? (json[scoreKey] as num?)?.toDouble() ?? 0.0
+              : 0.0;
           entries.add(PredictionEntry(
             category: json[categoryKey] as String,
             score: score,
           ));
         }
       }
-    } catch (e) {
-     
-    }
+    } catch (e) {}
     return Predictions(entries: entries);
   }
 
@@ -137,16 +139,23 @@ class TransactionModel {
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     final id = json['_id'] is Map ? json['_id']['\$oid'] : json['_id'];
-    final accountId = json['accountId'] is Map ? json['accountId']['\$oid'] : json['accountId'];
-    final userId = json['userId'] is Map ? json['userId']['\$oid'] : json['userId'];
-    final ts = json['transactionTimestamp'] is Map ? json['transactionTimestamp']['\$date'] : json['transactionTimestamp'];
+    final accountId = json['accountId'] is Map
+        ? json['accountId']['\$oid']
+        : json['accountId'];
+    final userId =
+        json['userId'] is Map ? json['userId']['\$oid'] : json['userId'];
+    final ts = json['transactionTimestamp'] is Map
+        ? json['transactionTimestamp']['\$date']
+        : json['transactionTimestamp'];
 
     return TransactionModel(
       id: id,
       type: json['type'] ?? '',
       mode: json['mode'] ?? '',
       amount: (json['amount'] ?? 0).toDouble(),
-      currentBalance: (json['currentBalance']  ?? json['transactionalBalance']  ?? 0).toDouble(),
+      currentBalance:
+          (json['currentBalance'] ?? json['transactionalBalance'] ?? 0)
+              .toDouble(),
       transactionTimestamp: DateTime.parse(ts),
       txnId: json['txnId'] ?? '',
       narration: json['narration'] ?? '',
@@ -171,11 +180,14 @@ class TransactionModel {
       bankLogo: json['bankLogo'] ?? '',
       v: json['__v'],
       isBalanceOut: json['isBalanceOut'] ?? false,
-      balanceOut: ((json['isBalanceOut'] ?? false) && json['balanceOut'].toString() != '')
+      balanceOut: ((json['isBalanceOut'] ?? false) &&
+              json['balanceOut'].toString() != '')
           ? (json['balanceOut'] ?? 0.0).toDouble()
           : 0.0,
       isExcluded: json['isExcluded'] ?? false,
-      predictions: json['predictions'] != null ? Predictions.fromJson(json['predictions']) : null, // Parse predictions
+      predictions: json['predictions'] != null
+          ? Predictions.fromJson(json['predictions'])
+          : null, // Parse predictions
     );
   }
 
@@ -215,8 +227,8 @@ class TransactionModel {
       "predictions": predictions?.toJson(), // Serialize predictions
     };
   }
-  
-TransactionModel copyWith({
+
+  TransactionModel copyWith({
     String? id,
     String? type,
     String? mode,
@@ -286,7 +298,6 @@ TransactionModel copyWith({
     );
   }
 
- 
   static List<TransactionModel> listFromJson(List<dynamic> jsonList) {
     return jsonList
         .map((json) {
@@ -306,5 +317,3 @@ TransactionModel copyWith({
     return 'TransactionModel(id: $id, type: $type, amount: $amount, narration: $narration, bankName: $bankName, predictions: $predictions)';
   }
 }
-
-

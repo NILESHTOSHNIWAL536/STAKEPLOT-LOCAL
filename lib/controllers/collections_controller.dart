@@ -101,9 +101,7 @@ class CollectionsController extends GetxController {
     }
   }
 
-  // =========================
-  // GET COLLECTION BY ID
-  // =========================
+  
   Future<void> getCollectionById(String id, BuildContext context) async {
     if (_isFetchingDetails) return;
     _isFetchingDetails = true;

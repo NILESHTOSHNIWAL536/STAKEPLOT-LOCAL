@@ -140,6 +140,9 @@ static String getSearchedTransactions(
 
   // Delete transactions
   static String deleteTransactions = "$_urlPath/delete";
+
+  // reserve 
+  static String createReserve = "$_urlPath/api/reserves";
 }
 
 class TransactionRoutes {

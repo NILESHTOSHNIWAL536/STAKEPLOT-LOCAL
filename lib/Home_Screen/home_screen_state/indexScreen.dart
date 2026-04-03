@@ -72,8 +72,8 @@ class IndexScreen extends StatelessWidget {
                       ),
 
                       Obx(() => isFinoraVisible.value
-                          ? const SwipeableCardsScreen()
-                          : const SwipeableCardsScreen()),
+                          ?  SwipeableCardsScreen()
+                          :  SwipeableCardsScreen()),
 
                       Obx(() => isAutoPayFected.value
                           ? GetAutopays(height)

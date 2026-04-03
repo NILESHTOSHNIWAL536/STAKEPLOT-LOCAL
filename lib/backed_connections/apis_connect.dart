@@ -82,17 +82,17 @@ RxInt budgetLength = 0.obs;
 RxString splitID = "".obs;
 
 
-RxList categoriesList = [].obs;
-RxList moreDrasticChange = [].obs;
-RxList frequentPayments = [].obs;
-RxDouble totalDebitThisMonth = 0.0.obs;
-RxDouble totalDebitThisWeek = 0.0.obs;
-RxList categoriesListWeek = [].obs;
-RxList moreDrasticChangeWeek = [].obs;
-RxList frequentPaymentsWeek = [].obs;
-RxList mostSpentCategoryInMonth = [].obs;
-RxList mostSpentDayInMonth = [].obs;
-RxList weeklyTrend = [].obs;
+// RxList categoriesList = [].obs;
+// RxList moreDrasticChange = [].obs;
+// RxList frequentPayments = [].obs;
+// RxDouble totalDebitThisMonth = 0.0.obs;
+// RxDouble totalDebitThisWeek = 0.0.obs;
+// RxList categoriesListWeek = [].obs;
+// RxList moreDrasticChangeWeek = [].obs;
+// RxList frequentPaymentsWeek = [].obs;
+// RxList mostSpentCategoryInMonth = [].obs;
+// RxList mostSpentDayInMonth = [].obs;
+// RxList weeklyTrend = [].obs;
 
 
 
@@ -164,7 +164,7 @@ List<String> labels = [];
 List<String> labels2 = [];
 RxDouble maxYValue = 0.0.obs;
 RxList<TransactionModel> hiddentrasactionsHistory = <TransactionModel>[].obs;
-RxList<TransactionModel> topThreeTransactions = <TransactionModel>[].obs;
+// RxList<TransactionModel> topThreeTransactions = <TransactionModel>[].obs;
 RxList<TransactionModel> transactionsHistory = <TransactionModel>[].obs;
 RxMap lastWeekjson = {}.obs;
 RxMap lastmonthjson = {}.obs;
@@ -231,18 +231,18 @@ var showResults = false.obs;
 RxBool isLoadingInflation = false.obs;
 RxString changeAvater = ControllerManagement.userController.avatar.value.obs;
 
-RxDouble quickCheckCurrentBalance = 0.0.obs;
-RxDouble quickCheckCredit = 0.0.obs;
-RxDouble quickCheckDebit = 0.0.obs;
-RxDouble quickCheckOutstanding = 0.0.obs;
-RxDouble quickCheckCreditPercent = 0.0.obs;
-RxDouble quickCheckDebitPercent = 0.0.obs;
-RxDouble quickCheckOutstandingPercent = 0.0.obs;
-RxList<Map<String, dynamic>> quickCheckBanks = <Map<String, dynamic>>[].obs;
+// RxDouble quickCheckCurrentBalance = 0.0.obs;
+// RxDouble quickCheckCredit = 0.0.obs;
+// RxDouble quickCheckDebit = 0.0.obs;
+// RxDouble quickCheckOutstanding = 0.0.obs;
+// RxDouble quickCheckCreditPercent = 0.0.obs;
+// RxDouble quickCheckDebitPercent = 0.0.obs;
+// RxDouble quickCheckOutstandingPercent = 0.0.obs;
+// RxList<Map<String, dynamic>> quickCheckBanks = <Map<String, dynamic>>[].obs;
 final RxList<Map<String, dynamic>> yearlyMonths = <Map<String, dynamic>>[].obs;
-final RxDouble annualCredited = 0.0.obs;
-final RxDouble annualDebited = 0.0.obs;
-final RxDouble annualOutstanding = 0.0.obs;
+// final RxDouble annualCredited = 0.0.obs;
+// final RxDouble annualDebited = 0.0.obs;
+// final RxDouble annualOutstanding = 0.0.obs;
    List<BudgetChartDataPoint> budgetChartData = [];
    String selectedBudgetPeriod = 'monthly';
    List<dynamic> budgetTransactions = []; // Store raw transactions from API

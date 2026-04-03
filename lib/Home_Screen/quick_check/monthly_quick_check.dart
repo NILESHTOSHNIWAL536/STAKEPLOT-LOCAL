@@ -9,7 +9,9 @@ import '../../Constants/font_manager.dart';
 import '../../Utils/snackBar.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../constants/app_styles.dart';
+import '../../controllers/quick_check_controller.dart';
 import '../../image_service/avatarProfile.dart';
+import '../../model/quick_check_model.dart';
 import '../../repository/bankinfo.dart';
 import 'package:intl/intl.dart';
 
@@ -22,7 +24,7 @@ import 'package:intl/intl.dart';
 }
 
 class _BalanceScreenState extends State<BalanceScreen> {
-
+  final controller = Get.find<QuickCheckController>();
  
   final Color backgroundColor = const Color(0xFFFFF9F0); 
  // light cream
@@ -42,7 +44,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
   var hasSelectedInsight = false.obs;    // 'Credited' | 'Debited' | 'Outstanding'
   var selectedPeriod = 'Monthly'.obs;        // 'Monthly' | 'Annually'
 
-var selectedBankData = Rxn<Map<String, dynamic>>();
+// var selectedBankData = Rxn<Map<String, dynamic>>();
+var selectedBankData = Rxn<QuickCheckBankData>();
 var selectedYear = DateTime.now().year.obs;
 
 
@@ -97,7 +100,7 @@ Future<void> fetchMonthlyInsights({
     final int month =
         monthName != null ? _monthNumberFromName(monthName) : DateTime.now().month;
 
-    await getQuickCheck( view: 'monthly',
+    await controller.getQuickCheck( view: 'monthly',
   month: _monthNumberFromName(selectedMonth.value),
   year: DateTime.now().year,);
 
@@ -105,9 +108,9 @@ Future<void> fetchMonthlyInsights({
       "MONTHLY API TIME: ${DateTime.now().difference(start).inMilliseconds} ms",
     );
     updateMonthlyPercentages(
-      credited: quickCheckCreditPercent.value,
-      debited: quickCheckDebitPercent.value,
-      outstanding: quickCheckOutstandingPercent.value,
+      credited: controller.quickCheck.value?.creditPercent ?? 0,
+      debited: controller.quickCheck.value?.debitPercent ?? 0,
+      outstanding: controller.quickCheck.value?.outstandingPercent ?? 0,
     );
     selectedInsightTab.value = null;
 hasSelectedInsight.value = false;
@@ -157,29 +160,31 @@ List<int> get availableYears {
   String get currentSelectedAmountString {
   final bank = selectedBankData.value;
 
-  if (bank == null) {
-    switch (selectedInsightTab.value) {
-      case 'Credited':
-        return '₹${quickCheckCredit.value.toStringAsFixed(2)}';
-      case 'Debited':
-        return '₹${quickCheckDebit.value.toStringAsFixed(2)}';
-      case 'Outstanding':
-        return '₹${quickCheckOutstanding.value.toStringAsFixed(2)}';
-      default:
-        return '₹0.00';
-    }
-  }
+ final data = controller.quickCheck.value;
 
+if (bank == null) {
   switch (selectedInsightTab.value) {
     case 'Credited':
-      return '₹${(bank['credit'] ?? 0).toStringAsFixed(2)}';
+      return '₹${(data?.credit ?? 0).toStringAsFixed(2)}';
     case 'Debited':
-      return '₹${(bank['debit'] ?? 0).toStringAsFixed(2)}';
+      return '₹${(data?.debit ?? 0).toStringAsFixed(2)}';
     case 'Outstanding':
-      return '₹${(bank['outstanding'] ?? 0).toStringAsFixed(2)}';
+      return '₹${(data?.outstanding ?? 0).toStringAsFixed(2)}';
     default:
       return '₹0.00';
   }
+}
+
+switch (selectedInsightTab.value) {
+  case 'Credited':
+    return '₹${bank.credit.toStringAsFixed(2)}';
+  case 'Debited':
+    return '₹${bank.debit.toStringAsFixed(2)}';
+  case 'Outstanding':
+    return '₹${bank.outstanding.toStringAsFixed(2)}';
+  default:
+    return '₹0.00';
+}
 }
 
 
@@ -196,16 +201,16 @@ List<int> get availableYears {
 
   if (bank == null) {
     return {
-      'Credited': quickCheckCreditPercent.value,
-      'Debited': quickCheckDebitPercent.value,
-      'Outstanding': quickCheckOutstandingPercent.value,
+      'Credited': controller.quickCheck.value?.creditPercent ?? 0,
+      'Debited': controller.quickCheck.value?.debitPercent ?? 0,
+      'Outstanding': controller.quickCheck.value?.outstandingPercent ?? 0,
     }[type]!;
   }
 
   return {
-    'Credited': bank['percentages']['creditPercent'],
-    'Debited': bank['percentages']['debitPercent'],
-    'Outstanding': bank['percentages']['outstandingPercent'],
+    'Credited': bank.creditPercent,
+    'Debited': bank.debitPercent,
+    'Outstanding': bank.outstandingPercent,
   }[type]!.toDouble();
 }
 
@@ -311,7 +316,8 @@ List<int> get availableYears {
 SingleChildScrollView(
   scrollDirection: Axis.horizontal,
   child: Obx(() {
-    final banks = quickCheckBanks.value;
+    // final banks = quickCheckBanks.value;
+final banks = controller.quickCheck.value?.banks ?? [];
 
     if (banks.isEmpty) return const SizedBox();
 
@@ -323,7 +329,7 @@ SingleChildScrollView(
           return Padding(
             padding: const EdgeInsets.only(left: 6),
             child: _bankChip(
-              bank['bankName'],
+              bank.bankName,
               Icons.account_balance,
             ),
           );
@@ -344,7 +350,7 @@ SingleChildScrollView(
   return Text(
     bank == null
         ? 'Combined Balance'
-        : '${bank['bankName']} Balance',
+        : '${bank.bankName} Balance',
     style: const TextStyle(
       color: Colors.white70,
       fontSize: 12,
@@ -356,7 +362,7 @@ SingleChildScrollView(
         Obx(() {
   if (selectedBankData.value == null) {
     return Text(
-      '₹${quickCheckCurrentBalance.value.toStringAsFixed(2)}',
+      '₹${controller.quickCheck.value?.currentBalance.toStringAsFixed(2)}',
       style: TextStyle(
         color: primaryText,
         fontSize: 26,
@@ -366,7 +372,7 @@ SingleChildScrollView(
   }
 
   return Text(
-    '₹${(selectedBankData.value!['currentBalance'] ?? 0).toStringAsFixed(2)}',
+    '₹${(selectedBankData.value!.currentBalance ?? 0).toStringAsFixed(2)}',
     style: TextStyle(
       color: primaryText,
       fontSize: 26,
@@ -383,7 +389,7 @@ SingleChildScrollView(
         SingleChildScrollView(
   scrollDirection: Axis.horizontal,
   child: Obx(() {
-    final banks = quickCheckBanks;
+    final banks = controller.quickCheck.value?.banks ?? [];
 
     if (banks.isEmpty) return const SizedBox();
 
@@ -396,8 +402,8 @@ SingleChildScrollView(
           return Row(
             children: [
               _smallAccountChip(
-                bank['bankName'],
-                '₹${(bank['currentBalance'] ?? 0).toString()}',
+                bank.bankName,
+                '₹${(bank.currentBalance ?? 0).toString()}',
               ),
 
               if (index != banks.length - 1) ...[
@@ -471,12 +477,17 @@ Widget _roundIconButton(IconData icon, BuildContext context) {
   if (label == 'All') {
     selectedBankData.value = null; // combined mode
   } else {
-    final bank = quickCheckBanks.firstWhere(
-      (b) => b['bankName'] == label,
-      orElse: () => {},
-    );
+    final bank = controller.quickCheck.value?.banks.firstWhere(
+  (b) => b.bankName == label,
+);
 
-    selectedBankData.value = bank;
+selectedBankData.value = bank;
+    // final bank = quickCheckBanks.firstWhere(
+    //   (b) => b['bankName'] == label,
+    //   orElse: () => {},
+    // );
+
+   
   }
 },
 
@@ -654,16 +665,16 @@ Widget _buildInsightsSection() {
         final bank = selectedBankData.value;
 
 final credited = bank == null
-    ? quickCheckCredit.value
-    : bank['credit'];
+    ? controller.quickCheck.value?.credit
+    : bank.credit;
 
 final debited = bank == null
-    ? quickCheckDebit.value
-    : bank['debit'];
+    ? controller.quickCheck.value?.debit
+    : bank.debit;
 
 final outstanding = bank == null
-    ? quickCheckOutstanding.value
-    : bank['outstanding'];
+    ? controller.quickCheck.value?.outstanding
+    : bank.outstanding;
 
   if (selectedPeriod.value == 'Annually') {
     
@@ -676,7 +687,7 @@ final outstanding = bank == null
       _breakdownTile(
         context: context,
         title: "Credited",
-        amount: "₹${credited.toStringAsFixed(1)}",
+        amount: "₹${credited?.toStringAsFixed(1)?? 0}",
         color: AppColors.creditColor,
         icon: AvatarProfileImageZero(
           url: Finance.credited,
@@ -691,7 +702,7 @@ final outstanding = bank == null
       _breakdownTile(
         context: context,
         title: "Debited",
-        amount: "₹${debited.toStringAsFixed(1)}",
+        amount: "₹${debited?.toStringAsFixed(1)?? 0}",
         color: AppColors.debitedAmount,
         icon: AvatarProfileImageZero(
           url: Finance.debited,
@@ -706,7 +717,7 @@ final outstanding = bank == null
       _breakdownTile(
         context: context,
         title: "Outstanding",
-        amount: "₹${outstanding.toStringAsFixed(1)}",
+        amount: "₹${outstanding?.toStringAsFixed(1)?? 0}",
         color: AppColors.backgroundColor,
         icon: AvatarProfileImageZero(
           url: Finance.outstanding,
@@ -852,7 +863,7 @@ Widget _periodButton(String label) {
             monthName: selectedMonth.value,
           );
         } else {
-          getQuickCheck(
+          controller.getQuickCheck(
             view: 'yearly',
             year: selectedYear.value,
           );
@@ -959,7 +970,7 @@ selectedInsightTab.value = null;
 hasSelectedInsight.value = false;
 
 // API later (no await)
-getQuickCheck(
+ controller.getQuickCheck(
   view: 'yearly',
   year: value,
 );
@@ -1121,8 +1132,8 @@ Widget _annualBarGraph() {
       // ALL BANKS → merge months by index
       final Map<int, Map<String, double>> merged = {};
 
-      for (final b in quickCheckBanks) {
-        for (final m in (b['months'] ?? [])) {
+      for (final b in controller.quickCheck.value?.banks ?? []) {
+        for (final m in (b.months ?? [])) {
           final int month = m['month'];
 
           merged.putIfAbsent(month, () => {
@@ -1151,7 +1162,7 @@ Widget _annualBarGraph() {
         ..sort((a, b) => (a['month'] as int).compareTo(b['month'] as int));
 
     } else {
-      months = bank['months'] ?? [];
+      months = bank.months ?? [];
     }
 
    

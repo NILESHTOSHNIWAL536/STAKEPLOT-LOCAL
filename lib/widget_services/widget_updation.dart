@@ -1,16 +1,20 @@
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/widget_services/widget_service.dart';
+import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../controllers/finora_controller.dart';
+
 Future<void> updateWidgetSpendingCategories() async {
+  final controller = Get.find<FinoraController>();
   try {
-    final total = '₹${totalValue.value?.toStringAsFixed(2) ?? '0.00'}';
+    final total = '₹${controller.totalValue.value?.toStringAsFixed(2) ?? '0.00'}';
     final timestamp = getMonthlyRange();
     String categories = 'None';
-    if (spendingsOnCategories.isNotEmpty) {
-      categories = spendingsOnCategories
+    if (controller.spendingsOnCategories.isNotEmpty) {
+      categories = controller.spendingsOnCategories
           .map((data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
           .join('\n');
     }

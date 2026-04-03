@@ -10,6 +10,8 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'Constants/core/app_component_sizes.dart';
 import 'app_init/AppTheme.dart';
+import 'controllers/finora_controller.dart';
+import 'controllers/quick_check_controller.dart';
 import 'repository/clearstack.dart';
 import 'controllers/controllerManagement.dart';
 import 'controllers/theme_controller.dart';
@@ -35,7 +37,6 @@ void main() async {
   //   // Handle uncaught async errors here
   //   handleError(error, stack);
   // });
-
 }
 
 class MyApp extends StatefulWidget {
@@ -51,6 +52,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initGetControllersIfisRegistered();
+   
     initializeOneSignal(context);
     init_widget_main();
     themeController = ControllerManagement.themeController;
@@ -80,7 +82,8 @@ class _MyAppState extends State<MyApp> {
             routes: routes,
             builder: (context, child) {
               return Navigator(
-                key:updateNavigatorKey, // Attach updateNavigatorKey for update dialogs
+                key:
+                    updateNavigatorKey, // Attach updateNavigatorKey for update dialogs
                 onGenerateRoute: (settings) => MaterialPageRoute(
                   builder: (context) =>
                       child ?? Container(), // Fallback to empty container

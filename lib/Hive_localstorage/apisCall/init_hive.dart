@@ -15,9 +15,11 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/hive_storage.dart';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/transactions_data/transaction.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../components/shared_utils.dart';
+import '../../controllers/finora_controller.dart';
 import '../autopays_data/cards_data.dart';
 import '../bank_data/bank_account_model.dart';
 import '../bank_data/consent_detail_model.dart';
@@ -34,6 +36,7 @@ part 'hive_helper.dart';
 /// Main Hive Init Entry Point
 /// ---------------------------------------------------------
 Future<void> initAllHive() async {
+  final controller = Get.find<FinoraController>();
   final dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
   await init_banks();
@@ -43,8 +46,8 @@ Future<void> initAllHive() async {
   await init_Transactions();
   await init_finance();
   await init_post();
-  await initCardInsightsData();
-  await initFinoraLastTwoMonthsData();
+  await initCardInsightsData(controller);
+  // await initFinoraLastTwoMonthsData();
   await init_insights();
 }
 
@@ -110,21 +113,21 @@ Future<void> init_insights() async {
   );
 }
 
-Future<void> initCardInsightsData() async {
+Future<void> initCardInsightsData(FinoraController controller) async {
   await HiveHelper.initHiveBox<CardInsightsModel>(
     adapter: CardInsightsModelAdapter(),
     boxName: HiveStorage.cardInsightsBoxName,
-    onLoaded: () => CategoryStorage().loadCardInsightsDataFromHive(),
+    onLoaded: () => CategoryStorage().loadCardInsightsDataFromHive(controller),
   );
 }
 
-Future<void> initFinoraLastTwoMonthsData() async {
-  await HiveHelper.initHiveBox<FinoraLastTwoMonthsModel>(
-    adapter: FinoraLastTwoMonthsModelAdapter(),
-    boxName: HiveStorage.finoraLastTwoMonthsBoxName,
-    onLoaded: () => FinoraLastTwoMonthsStorage.loadFinoraLastTwoMonthsDataFromHive(),
-  );
-}
+// Future<void> initFinoraLastTwoMonthsData() async {
+//   await HiveHelper.initHiveBox<FinoraLastTwoMonthsModel>(
+//     adapter: FinoraLastTwoMonthsModelAdapter(),
+//     boxName: HiveStorage.finoraLastTwoMonthsBoxName,
+//     onLoaded: () => FinoraLastTwoMonthsStorage.loadFinoraLastTwoMonthsDataFromHive(),
+//   );
+// }
 
 Future<void> initCardsData() async {
   await HiveHelper.initHiveBox<CardsData>(

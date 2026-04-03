@@ -28,6 +28,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import '../controllers/collections_controller.dart';
 import '../controllers/credit_card_controller.dart';
 import '../controllers/fipmetrics-controller.dart';
+import '../controllers/quick_check_controller.dart';
 import '../controllers/theme_controller.dart';
 import '../services/secure_storage.dart';
 import '../loginservices/login.dart';
@@ -158,6 +159,7 @@ void clearGraph() {
 }
 
 void clearGetX() {
+  final controller = Get.find<FinoraController>();
   messages.clear();
   messagesTemp.clear();
 
@@ -201,7 +203,7 @@ void clearGetX() {
   bankAccountLinkedList.clear();
   FipIdsConnected.clear();
   transactionsHistory.clear();
-  spendingsOnCategories.clear();
+  controller.spendingsOnCategories.clear();
   isLoadingMore.value = false;
   isFected.value = false;
   currentPage = 1;
@@ -316,5 +318,11 @@ void initGetControllersIfisRegistered() {
   }
   if (!Get.isRegistered<CollectionsController>()) {
     Get.put(CollectionsController());
+  }
+  if (!Get.isRegistered<FinoraController>()) {
+    Get.put(FinoraController());
+  }
+  if (!Get.isRegistered<QuickCheckController>()) {
+    Get.put(QuickCheckController());
   }
 }

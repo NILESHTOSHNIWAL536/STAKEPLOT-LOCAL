@@ -18,7 +18,7 @@ import '../backed_connections/googlesignin/credentials.dart';
 import 'package:get/get.dart';
 
 void initFinvuManager(BuildContext context) async {
-  String url = FinspaceStrings().liveIntegration
+  String url = !FinspaceStrings().liveIntegration
       ? Credentials.Live_finvu_api
       : Credentials.Dev_finvu_api;
   finvuManager.initialize(
@@ -37,8 +37,7 @@ void initFinvuManager(BuildContext context) async {
 Future<String> login(context) async {
   try {
     otpReference = "";
-    var login =
-        await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
+    var login =await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
       '${number.value}@finvu',
       '${number.value}',
       handleId.value,
