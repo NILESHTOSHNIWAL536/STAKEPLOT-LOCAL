@@ -294,15 +294,15 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
               ),
             ),
           ),
-          Obx(() => widget.splitType == 'SHARED'
-              ? _SplitButton(
-                  enabled:
-                      collectionsController.selectedTransactions.isNotEmpty,
-                  onTap: collectionsController.selectedTransactions.isNotEmpty
-                      ? _proceedToMembers
-                      : null,
-                )
-              : const SizedBox(width: 36)),
+          widget.splitType == 'SHARED'
+              ? Obx(() => _SplitButton(
+                    enabled:
+                        collectionsController.selectedTransactions.isNotEmpty,
+                    onTap: collectionsController.selectedTransactions.isNotEmpty
+                        ? _proceedToMembers
+                        : null,
+                  ))
+              : const SizedBox(width: 36),
         ],
       ),
     );

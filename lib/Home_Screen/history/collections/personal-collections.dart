@@ -20,17 +20,17 @@ import 'trip/screens/select_transactions_sheet.dart';
 
 // ── Local tokens ─────────────────────────────────────────────────────────────
 class _C {
-  static const bg      = Color(0xFFF5F3EF);
+  static const bg = Color(0xFFF5F3EF);
   static const surface = Colors.white;
-  static const navy    = Color(0xFF2D2B5B);
+  static const navy = Color(0xFF2D2B5B);
   static const navyMid = Color(0xFF4B4D73);
-  static const navyBg  = Color(0xFFEEEDF8);
-  static const border  = Color(0xFFEBEBEB);
-  static const textDark= Color(0xFF1A1832);
+  static const navyBg = Color(0xFFEEEDF8);
+  static const border = Color(0xFFEBEBEB);
+  static const textDark = Color(0xFF1A1832);
   static const textMid = Color(0xFF6B7280);
-  static const textLight= Color(0xFFACACAC);
-  static const green   = Color(0xFF6FEDB1);
-  static const orange  = Color(0xFFFF8C69);
+  static const textLight = Color(0xFFACACAC);
+  static const green = Color(0xFF6FEDB1);
+  static const orange = Color(0xFFFF8C69);
 }
 
 class CollectionSummarySection extends StatefulWidget {
@@ -41,8 +41,7 @@ class CollectionSummarySection extends StatefulWidget {
       _CollectionSummarySectionState();
 }
 
-class _CollectionSummarySectionState
-    extends State<CollectionSummarySection> {
+class _CollectionSummarySectionState extends State<CollectionSummarySection> {
   final controller = collectionsController;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
@@ -66,10 +65,10 @@ class _CollectionSummarySectionState
   List<dynamic> _filtered(List<dynamic> transactions) {
     if (_searchQuery.isEmpty) return transactions;
     return transactions.where((tx) {
-      final name     = (tx.name ?? '').toString().toLowerCase();
+      final name = (tx.name ?? '').toString().toLowerCase();
       final category = (tx.category ?? '').toString().toLowerCase();
-      final amount   = (tx.amount ?? '').toString().toLowerCase();
-      final date     = (tx.transactionTimestamp ?? '').toString().toLowerCase();
+      final amount = (tx.amount ?? '').toString().toLowerCase();
+      final date = (tx.transactionTimestamp ?? '').toString().toLowerCase();
       return name.contains(_searchQuery) ||
           category.contains(_searchQuery) ||
           amount.contains(_searchQuery) ||
@@ -119,26 +118,20 @@ class _CollectionSummarySectionState
                 child: filtered.isEmpty
                     ? _emptyState()
                     : ListView.builder(
-                        padding: const EdgeInsets.only(
-                            bottom: 24, left: 16, right: 16),
                         physics: const BouncingScrollPhysics(),
                         itemCount: filtered.length,
                         itemBuilder: (context, index) {
                           final tx = filtered[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: _TransactionCard(
-                              child: HistoryTransactions(
-                                context: context,
-                                transaction: tx,
-                                index: index,
-                                isExpanded: false,
-                                hide: false,
-                                hideReview: false,
-                                fromAutoPay: false,
-                                date: tx.transactionTimestamp.toString(),
-                              ),
-                            ),
+                          return HistoryTransactions(
+                            context: context,
+                            transaction: tx,
+                            index: index,
+                            isExpanded: false,
+                            hide: false,
+                            hideReview: false,
+                            fromAutoPay: false,
+                            date: tx.transactionTimestamp.toString(),
+                            // ),
                           );
                         },
                       ),
@@ -157,14 +150,12 @@ class _CollectionSummarySectionState
       child: Container(
         decoration: BoxDecoration(
           color: _C.bg,
-          border: Border(
-              bottom: BorderSide(color: _C.border.withOpacity(0.6))),
+          border: Border(bottom: BorderSide(color: _C.border.withOpacity(0.6))),
         ),
         child: SafeArea(
           bottom: false,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
                 // Back button
@@ -252,9 +243,9 @@ class _CollectionSummarySectionState
 
   // ─────────────────────── SUMMARY CARD ───────────────────────
   Widget _summaryCard(BuildContext context, CollectionDetailsModel data) {
-    final totalCredit  = data.collection.totalCredit;
-    final totalDebit   = data.collection.totalDebit;
-    final outstanding  = data.collection.outStandingAmount;
+    final totalCredit = data.collection.totalCredit;
+    final totalDebit = data.collection.totalDebit;
+    final outstanding = data.collection.outStandingAmount;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -284,7 +275,8 @@ class _CollectionSummarySectionState
                   Expanded(
                     child: _StatTile(
                       label: "Received",
-                      sub: "${data.transactions.where((t) => (t.type ?? '') == 'credit').length} credits",
+                      sub:
+                          "${data.transactions.where((t) => (t.type ?? '') == 'credit').length} credits",
                       amount: totalCredit,
                       isCredit: true,
                     ),
@@ -297,7 +289,8 @@ class _CollectionSummarySectionState
                   Expanded(
                     child: _StatTile(
                       label: "Spent",
-                      sub: "${data.transactions.where((t) => (t.type ?? '') != 'credit').length} debits",
+                      sub:
+                          "${data.transactions.where((t) => (t.type ?? '') != 'credit').length} debits",
                       amount: totalDebit,
                       isCredit: false,
                     ),
@@ -327,9 +320,7 @@ class _CollectionSummarySectionState
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: outstanding > 0
-                              ? _C.orange
-                              : _C.green,
+                          color: outstanding > 0 ? _C.orange : _C.green,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -345,8 +336,8 @@ class _CollectionSummarySectionState
                     ],
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                     decoration: BoxDecoration(
                       color: outstanding > 0
                           ? _C.orange.withOpacity(0.15)
@@ -394,8 +385,7 @@ class _CollectionSummarySectionState
               ),
               child: TextField(
                 controller: _searchController,
-                style: const TextStyle(
-                    fontSize: 14, color: _C.textDark),
+                style: const TextStyle(fontSize: 14, color: _C.textDark),
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.search_rounded,
@@ -418,8 +408,8 @@ class _CollectionSummarySectionState
                     fontSize: 13,
                   ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 13, horizontal: 4),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 13, horizontal: 4),
                 ),
               ),
             ),
@@ -470,8 +460,7 @@ class _CollectionSummarySectionState
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
               color: _C.navy.withOpacity(0.08),
               borderRadius: BorderRadius.circular(20),
@@ -525,8 +514,7 @@ class _CollectionSummarySectionState
             _searchQuery.isEmpty
                 ? "Add your first transaction using the + button"
                 : "Try searching a different name or category",
-            style: TextStyle(
-                fontSize: 13, color: Colors.grey.shade500),
+            style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
             textAlign: TextAlign.center,
           ),
         ],
@@ -554,8 +542,8 @@ class _StatTile extends StatelessWidget {
     final accent = isCredit ? const Color(0xFF6FEDB1) : const Color(0xFFFF8C69);
 
     return Padding(
-      padding: EdgeInsets.only(
-          left: isCredit ? 0 : 20, right: isCredit ? 20 : 0),
+      padding:
+          EdgeInsets.only(left: isCredit ? 0 : 20, right: isCredit ? 20 : 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -638,6 +626,7 @@ class _TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),

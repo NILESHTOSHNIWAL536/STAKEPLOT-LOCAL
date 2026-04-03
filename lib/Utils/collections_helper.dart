@@ -4,7 +4,7 @@ final Map<String, dynamic> permissionJson = {
   "PERSONAL": {
     "accessPermission": false,
     "export": true,
-    "personLimit": true,
+    "personLimit": false,
     "rename": true,
     "duration": true,
     "close": true,
