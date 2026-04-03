@@ -1,3 +1,7 @@
+// ─── collections_summary_section.dart ────────────────────────────────────────
+// PATH: lib/Home_Screen/history/collections/collections_summary_section.dart
+//  (or wherever CollectionSummarySection is currently located)
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +17,21 @@ import '../../../model/collections_model.dart';
 import '../transactions_ui_component.dart';
 import 'collection_setting.dart';
 import 'trip/screens/select_transactions_sheet.dart';
+
+// ── Local tokens ─────────────────────────────────────────────────────────────
+class _C {
+  static const bg = Color(0xFFF5F3EF);
+  static const surface = Colors.white;
+  static const navy = Color(0xFF2D2B5B);
+  static const navyMid = Color(0xFF4B4D73);
+  static const navyBg = Color(0xFFEEEDF8);
+  static const border = Color(0xFFEBEBEB);
+  static const textDark = Color(0xFF1A1832);
+  static const textMid = Color(0xFF6B7280);
+  static const textLight = Color(0xFFACACAC);
+  static const green = Color(0xFF6FEDB1);
+  static const orange = Color(0xFFFF8C69);
+}
 
 class CollectionSummarySection extends StatefulWidget {
   const CollectionSummarySection({super.key});
@@ -63,12 +82,12 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
       final data = controller.collectionDetails.value;
 
       if (data == null) {
-        return SafeArea(
-          child: const Scaffold(
-            backgroundColor: Color(0xFFF5F3EF),
+        return const SafeArea(
+          child: Scaffold(
+            backgroundColor: _C.bg,
             body: Center(
               child: CircularProgressIndicator(
-                color: Color(0xFF2D2B5B),
+                color: _C.navy,
                 strokeWidth: 2.5,
               ),
             ),
@@ -80,44 +99,39 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
 
       return SafeArea(
         child: Scaffold(
-          backgroundColor: const Color(0xFFF5F3EF),
+          backgroundColor: _C.bg,
           appBar: _appBar(context),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Summary Card ──
+              // ── SUMMARY CARD
               _summaryCard(context, data),
 
-              // ── Search + Add ──
+              // ── SEARCH + ADD
               _searchRow(context, data.collection.type),
 
-              // ── Section Label ──
+              // ── SECTION LABEL
               _sectionLabel(filtered.length),
 
-              // ── Transactions List ──
+              // ── TRANSACTIONS LIST
               Expanded(
                 child: filtered.isEmpty
                     ? _emptyState()
                     : ListView.builder(
-                        padding: const EdgeInsets.only(bottom: 24),
                         physics: const BouncingScrollPhysics(),
                         itemCount: filtered.length,
                         itemBuilder: (context, index) {
                           final tx = filtered[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: _TransactionCard(
-                              child: HistoryTransactions(
-                                context: context,
-                                transaction: tx,
-                                index: index,
-                                isExpanded: false,
-                                hide: false,
-                                hideReview: false,
-                                fromAutoPay: false,
-                                date: tx.transactionTimestamp.toString(),
-                              ),
-                            ),
+                          return HistoryTransactions(
+                            context: context,
+                            transaction: tx,
+                            index: index,
+                            isExpanded: false,
+                            hide: false,
+                            hideReview: false,
+                            fromAutoPay: false,
+                            date: tx.transactionTimestamp.toString(),
+                            // ),
                           );
                         },
                       ),
@@ -129,67 +143,80 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
     });
   }
 
+  // ─────────────────────── APP BAR ───────────────────────
   PreferredSizeWidget _appBar(BuildContext context) {
     return PreferredSize(
-      preferredSize: const Size.fromHeight(70), // 🔥 height control
+      preferredSize: const Size.fromHeight(64),
       child: Container(
-        color: AppColors.newbg,
+        decoration: BoxDecoration(
+          color: _C.bg,
+          border: Border(bottom: BorderSide(color: _C.border.withOpacity(0.6))),
+        ),
         child: SafeArea(
           bottom: false,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: AppSizes.p12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
-                /// 🔙 BACK
-                InkWell(
+                // Back button
+                GestureDetector(
                   onTap: () => Navigator.pop(context),
-                  child: const CircleAvatar(
-                    backgroundColor: AppColors.backgroundColor,
-                    child: Icon(
-                      Icons.arrow_back,
+                  child: Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: _C.surface,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: _C.border),
+                    ),
+                    child: const Icon(
+                      Icons.arrow_back_rounded,
                       size: 18,
-                      color: AppColors.accentColor,
+                      color: _C.textDark,
                     ),
                   ),
                 ),
 
                 const Spacer(),
 
-                /// 🏷 TITLE
+                // Title
                 Obx(() => Text(
                       collectionsController
                               .collectionDetails.value?.collection.name ??
                           "Collection",
                       style: FontManager().getTextStyle(
                         context,
-                        fontSize: 18,
-                        lWeight: FontWeight.w600,
+                        fontSize: 17,
+                        lWeight: FontWeight.w700,
+                        color: _C.textDark,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     )),
 
                 const Spacer(),
 
-                /// ⚙ FILTER + SETTINGS
+                // Actions
                 Container(
-                  padding: const EdgeInsets.all(AppSizes.p8),
                   decoration: BoxDecoration(
-                    color: AppColors.backgroundColor,
-                    borderRadius: BorderRadius.circular(10),
+                    color: _C.surface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: _C.border),
                   ),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      _iconButton(HomePageIcons.filterOn),
-                      VerticalDashDivider(
-                        height: 30,
-                        color: AppColors.border,
-                        dashGap: 0,
+                      _AppBarIconBtn(
+                        asset: HomePageIcons.filterOn,
+                        onTap: null,
                       ),
-                      InkWell(
-                        onTap: () {
-                          showCollectionSettingsModal(context);
-                        },
-                        child: _iconButton(HomePageIcons.settings),
+                      Container(
+                        width: 1,
+                        height: 24,
+                        color: _C.border,
+                      ),
+                      _AppBarIconBtn(
+                        asset: HomePageIcons.settings,
+                        onTap: () => _showCollectionSettingsModal(context),
                       ),
                     ],
                   ),
@@ -202,28 +229,15 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
     );
   }
 
-  void showCollectionSettingsModal(BuildContext context) {
+  void _showCollectionSettingsModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       builder: (_) => const CollectionSettingsModal(),
-    );
-  }
-
-  Widget _iconButton(String asset) {
-    return Container(
-      padding: const EdgeInsets.all(AppSizes.p8),
-      child: Center(
-        child: AvatarProfileImageZero(
-          url: asset,
-          width: 50,
-          height: 50,
-        ),
-      ),
     );
   }
 
@@ -237,11 +251,15 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF2D2B5B),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF2D2B5B), Color(0xFF3D3A70)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF2D2B5B).withOpacity(0.28),
+              color: _C.navy.withOpacity(0.28),
               blurRadius: 24,
               offset: const Offset(0, 10),
             ),
@@ -249,28 +267,30 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
         ),
         child: Column(
           children: [
-            // credit / debit row
+            // ── CREDIT / DEBIT ROW
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
                 children: [
                   Expanded(
-                    child: _statTile(
+                    child: _StatTile(
                       label: "Received",
-                      sub: "10 credits",
+                      sub:
+                          "${data.transactions.where((t) => (t.type ?? '') == 'credit').length} credits",
                       amount: totalCredit,
                       isCredit: true,
                     ),
                   ),
                   Container(
                     width: 1,
-                    height: 80,
-                    color: Colors.white.withOpacity(0.15),
+                    height: 90,
+                    color: Colors.white.withOpacity(0.12),
                   ),
                   Expanded(
-                    child: _statTile(
+                    child: _StatTile(
                       label: "Spent",
-                      sub: "10 debits",
+                      sub:
+                          "${data.transactions.where((t) => (t.type ?? '') != 'credit').length} debits",
                       amount: totalDebit,
                       isCredit: false,
                     ),
@@ -279,16 +299,16 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
               ),
             ),
 
-            // divider
+            // ── DIVIDER
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Divider(
-                color: Colors.white.withOpacity(0.12),
+                color: Colors.white.withOpacity(0.10),
                 height: 28,
               ),
             ),
 
-            // outstanding row
+            // ── OUTSTANDING ROW
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Row(
@@ -300,9 +320,7 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: outstanding > 0
-                              ? const Color(0xFFFF8C69)
-                              : const Color(0xFF6FEDB1),
+                          color: outstanding > 0 ? _C.orange : _C.green,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -311,18 +329,28 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
                         "Outstanding Amount",
                         style: TextStyle(
                           fontSize: 13,
-                          color: Colors.white.withOpacity(0.70),
+                          color: Colors.white.withOpacity(0.65),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
                   ),
-                  Text(
-                    "₹${outstanding.toStringAsFixed(2)}",
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: outstanding > 0
+                          ? _C.orange.withOpacity(0.15)
+                          : _C.green.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      "₹${outstanding.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: outstanding > 0 ? _C.orange : _C.green,
+                      ),
                     ),
                   ),
                 ],
@@ -334,12 +362,183 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
     );
   }
 
-  Widget _statTile({
-    required String label,
-    required String sub,
-    required double amount,
-    required bool isCredit,
-  }) {
+  // ─────────────────────── SEARCH ROW ───────────────────────
+  Widget _searchRow(BuildContext context, String type) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 46,
+              decoration: BoxDecoration(
+                color: _C.surface,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: _C.border),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: _searchController,
+                style: const TextStyle(fontSize: 14, color: _C.textDark),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.search_rounded,
+                    color: Colors.grey.shade400,
+                    size: 20,
+                  ),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? GestureDetector(
+                          onTap: _searchController.clear,
+                          child: Icon(
+                            Icons.close_rounded,
+                            color: Colors.grey.shade400,
+                            size: 18,
+                          ),
+                        )
+                      : null,
+                  hintText: "Search transactions…",
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade400,
+                    fontSize: 13,
+                  ),
+                  border: InputBorder.none,
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 13, horizontal: 4),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          GestureDetector(
+            onTap: () => openSelectTransactions(context, type),
+            child: Container(
+              width: 46,
+              height: 46,
+              decoration: BoxDecoration(
+                color: _C.navy,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: _C.navy.withOpacity(0.28),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.white,
+                size: 22,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─────────────────────── SECTION LABEL ───────────────────────
+  Widget _sectionLabel(int count) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "Transactions",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: _C.textDark,
+              letterSpacing: 0.2,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: _C.navy.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              "$count ${count == 1 ? 'entry' : 'entries'}",
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: _C.navy,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─────────────────────── EMPTY STATE ───────────────────────
+  Widget _emptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 76,
+            height: 76,
+            decoration: BoxDecoration(
+              color: _C.navy.withOpacity(0.07),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.receipt_long_rounded,
+              color: _C.navy,
+              size: 34,
+            ),
+          ),
+          const SizedBox(height: 18),
+          Text(
+            _searchQuery.isEmpty
+                ? "No Transactions Yet"
+                : 'No results for "$_searchQuery"',
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: _C.textDark,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            _searchQuery.isEmpty
+                ? "Add your first transaction using the + button"
+                : "Try searching a different name or category",
+            style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────── STAT TILE ───────────────────────
+class _StatTile extends StatelessWidget {
+  final String label;
+  final String sub;
+  final double amount;
+  final bool isCredit;
+
+  const _StatTile({
+    required this.label,
+    required this.sub,
+    required this.amount,
+    required this.isCredit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final accent = isCredit ? const Color(0xFF6FEDB1) : const Color(0xFFFF8C69);
 
     return Padding(
@@ -361,7 +560,7 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
                   isCredit
                       ? Icons.south_west_rounded
                       : Icons.north_east_rounded,
-                  size: 16,
+                  size: 15,
                   color: accent,
                 ),
               ),
@@ -381,14 +580,14 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
             sub,
             style: TextStyle(
               fontSize: 11,
-              color: Colors.white.withOpacity(0.50),
+              color: Colors.white.withOpacity(0.45),
             ),
           ),
           const SizedBox(height: 6),
           Text(
             "₹${amount.toStringAsFixed(0)}",
             style: const TextStyle(
-              fontSize: 22,
+              fontSize: 24,
               fontWeight: FontWeight.w800,
               color: Colors.white,
               letterSpacing: -0.5,
@@ -398,166 +597,22 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
       ),
     );
   }
+}
 
-  // ─────────────────────── SEARCH ROW ───────────────────────
-  Widget _searchRow(BuildContext context, String type) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              height: 46,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextField(
-                controller: _searchController,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF1A1832),
-                ),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.search_rounded,
-                    color: Colors.grey.shade400,
-                    size: 20,
-                  ),
-                  suffixIcon: _searchQuery.isNotEmpty
-                      ? GestureDetector(
-                          onTap: _searchController.clear,
-                          child: Icon(
-                            Icons.close_rounded,
-                            color: Colors.grey.shade400,
-                            size: 18,
-                          ),
-                        )
-                      : null,
-                  hintText: "Search transactions…",
-                  hintStyle: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 14,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 13,
-                    horizontal: 4,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          GestureDetector(
-            onTap: () => openSelectTransactions(context, type),
-            child: Container(
-              width: 46,
-              height: 46,
-              decoration: BoxDecoration(
-                color: const Color(0xFF2D2B5B),
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF2D2B5B).withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.add_rounded,
-                color: Colors.white,
-                size: 22,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+// ─────────────────────── APP BAR ICON BTN ───────────────────────
+class _AppBarIconBtn extends StatelessWidget {
+  final String asset;
+  final VoidCallback? onTap;
 
-  // ─────────────────────── SECTION LABEL ───────────────────────
-  Widget _sectionLabel(int count) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            "Transactions",
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF1A1832),
-              letterSpacing: 0.2,
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2D2B5B).withOpacity(0.08),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              "$count entries",
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF2D2B5B),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  const _AppBarIconBtn({required this.asset, this.onTap});
 
-  // ─────────────────────── EMPTY STATE ───────────────────────
-  Widget _emptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: const Color(0xFF2D2B5B).withOpacity(0.07),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.receipt_long_rounded,
-              color: Color(0xFF2D2B5B),
-              size: 32,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            _searchQuery.isEmpty
-                ? "No Transactions Yet"
-                : 'No results for "$_searchQuery"',
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1A1832),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            _searchQuery.isEmpty
-                ? "Add your first transaction above"
-                : "Try a different name, category or date",
-            style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
-          ),
-        ],
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSizes.p8),
+        child: AvatarProfileImageZero(url: asset, width: 50, height: 50),
       ),
     );
   }
@@ -571,12 +626,14 @@ class _TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFEBEBEB)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

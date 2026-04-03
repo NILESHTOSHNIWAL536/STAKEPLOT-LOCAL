@@ -8,26 +8,22 @@ import 'package:printing/printing.dart';
 import '../../model/TransactionModel.dart';
 import '../../model/collections_model.dart';
 
-
-// ─────────────────────────────────────────────
-// THEME CONSTANTS
-// ─────────────────────────────────────────────
-const _kPrimary    = PdfColor.fromInt(0xFF1A237E); // deep indigo
-const _kAccent     = PdfColor.fromInt(0xFF3949AB); // lighter indigo
-const _kGreenBg    = PdfColor.fromInt(0xFFE8F5E9);
-const _kGreen      = PdfColor.fromInt(0xFF2E7D32);
-const _kRedBg      = PdfColor.fromInt(0xFFFFEBEE);
-const _kRed        = PdfColor.fromInt(0xFFC62828);
-const _kAmberBg    = PdfColor.fromInt(0xFFFFF8E1);
-const _kAmber      = PdfColor.fromInt(0xFFF57F17);
-const _kGrey100    = PdfColor.fromInt(0xFFF5F5F5);
-const _kGrey300    = PdfColor.fromInt(0xFFE0E0E0);
-const _kGrey600    = PdfColor.fromInt(0xFF757575);
-const _kWhite      = PdfColors.white;
+const _kPrimary = PdfColor.fromInt(0xFF4B4D73); // deep indigo
+const _kAccent = PdfColor.fromInt(0xFF3949AB); // lighter indigo
+const _kGreenBg = PdfColor.fromInt(0xFFE8F5E9);
+const _kGreen = PdfColor.fromInt(0xFF2E7D32);
+const _kRedBg = PdfColor.fromInt(0xFFFFEBEE);
+const _kRed = PdfColor.fromInt(0xFFEF4444);
+const _kAmberBg = PdfColor.fromInt(0xFFFFF8E1);
+const _kAmber = PdfColor.fromInt(0xFFF57F17);
+const _kGrey100 = PdfColor.fromInt(0xFFF5F5F5);
+const _kGrey300 = PdfColor.fromInt(0xFFE0E0E0);
+const _kGrey600 = PdfColor.fromInt(0xFF757575);
+const _kWhite = PdfColors.white;
 
 final _fmt = NumberFormat('#,##0.00', 'en_IN');
 
-String _rupees(double v) => '₹${_fmt.format(v)}';
+String _rupees(double v) => '${_fmt.format(v)}';
 
 String _fmtDate(dynamic d) {
   try {
@@ -248,15 +244,16 @@ pw.Widget _sectionTitle(String title) {
 pw.Widget _summaryCards(CollectionModel col) {
   return pw.Row(
     children: [
-      _statCard('Total Spend',    _rupees(col.totalAmount),      _kGrey100,   _kPrimary),
+      _statCard('Total Spend', _rupees(col.totalAmount), _kGrey100, _kPrimary),
       pw.SizedBox(width: 8),
-      _statCard('Total Credit',   _rupees(col.totalCredit),      _kGreenBg,   _kGreen),
+      _statCard('Total Credit', _rupees(col.totalCredit), _kGreenBg, _kGreen),
       pw.SizedBox(width: 8),
-      _statCard('Total Debit',    _rupees(col.totalDebit),       _kRedBg,     _kRed),
+      _statCard('Total Debit', _rupees(col.totalDebit), _kRedBg, _kRed),
       pw.SizedBox(width: 8),
-      _statCard('Outstanding',    _rupees(col.outStandingAmount),_kAmberBg,   _kAmber),
+      _statCard(
+          'Outstanding', _rupees(col.outStandingAmount), _kAmberBg, _kAmber),
       pw.SizedBox(width: 8),
-      _statCard('Expiry',         _fmtDate(col.expiryAt),        _kGrey100,   _kGrey600),
+      _statCard('Expiry', _fmtDate(col.expiryAt), _kGrey100, _kGrey600),
     ].map((w) => pw.Expanded(child: w)).toList(),
   );
 }
@@ -307,9 +304,11 @@ pw.Widget _membersTable(List<MemberModel> members) {
         decoration: hdDec,
         children: [
           _cell('Member Name', hdStyle, _kWhite, isHeader: true),
-          _cell('Role',        hdStyle, _kWhite, isHeader: true),
-          _cell('Limit',       hdStyle, _kWhite, isHeader: true, align: pw.Alignment.centerRight),
-          _cell('Spent',       hdStyle, _kWhite, isHeader: true, align: pw.Alignment.centerRight),
+          _cell('Role', hdStyle, _kWhite, isHeader: true),
+          _cell('Limit', hdStyle, _kWhite,
+              isHeader: true, align: pw.Alignment.centerRight),
+          _cell('Spent', hdStyle, _kWhite,
+              isHeader: true, align: pw.Alignment.centerRight),
         ],
       ),
       // rows
@@ -326,7 +325,8 @@ pw.Widget _membersTable(List<MemberModel> members) {
           children: [
             _cell(m.name, const pw.TextStyle(fontSize: 9), PdfColors.black),
             _cell(m.role, const pw.TextStyle(fontSize: 9), _kGrey600),
-            _cell(_rupees(limit), const pw.TextStyle(fontSize: 9), PdfColors.black,
+            _cell(_rupees(limit), const pw.TextStyle(fontSize: 9),
+                PdfColors.black,
                 align: pw.Alignment.centerRight),
             _cell(
               _rupees(spent),
@@ -354,27 +354,29 @@ pw.Widget _transactionsTable(List<TransactionModel> txns) {
   return pw.Table(
     border: pw.TableBorder.all(color: _kGrey300, width: 0.4),
     columnWidths: {
-      0: const pw.FixedColumnWidth(70),   // Date & time
-      1: const pw.FlexColumnWidth(4),     // Narration / details
-      2: const pw.FixedColumnWidth(42),   // Type
-      3: const pw.FixedColumnWidth(58),   // Amount
-      4: const pw.FixedColumnWidth(60),   // Balance
+      0: const pw.FixedColumnWidth(70), // Date & time
+      1: const pw.FlexColumnWidth(4), // Narration / details
+      2: const pw.FixedColumnWidth(42), // Type
+      3: const pw.FixedColumnWidth(58), // Amount
+      4: const pw.FixedColumnWidth(60), // Balance
     },
     children: [
       pw.TableRow(
         decoration: hdDec,
         children: [
-          _cell('Date',    hdStyle, _kWhite, isHeader: true),
+          _cell('Date', hdStyle, _kWhite, isHeader: true),
           _cell('Details', hdStyle, _kWhite, isHeader: true),
-          _cell('Type',    hdStyle, _kWhite, isHeader: true),
-          _cell('Amount',  hdStyle, _kWhite, isHeader: true, align: pw.Alignment.centerRight),
-          _cell('Balance', hdStyle, _kWhite, isHeader: true, align: pw.Alignment.centerRight),
+          _cell('Type', hdStyle, _kWhite, isHeader: true),
+          _cell('Amount', hdStyle, _kWhite,
+              isHeader: true, align: pw.Alignment.centerRight),
+          _cell('Balance', hdStyle, _kWhite,
+              isHeader: true, align: pw.Alignment.centerRight),
         ],
       ),
       ...txns.asMap().entries.map((entry) {
-        final i   = entry.key;
+        final i = entry.key;
         final txn = entry.value;
-        final bg  = i.isEven ? _kGrey100 : _kWhite;
+        final bg = i.isEven ? _kGrey100 : _kWhite;
         final isCredit = (txn.type ?? '').toUpperCase().contains('CREDIT');
 
         return pw.TableRow(
@@ -424,10 +426,9 @@ pw.Widget _transactionsTable(List<TransactionModel> txns) {
 // SPLIT CARD
 // ─────────────────────────────────────────────
 pw.Widget _splitCard(SplitModel split) {
-  final totalPaid = split.transactionIds.fold<double>(
-      0, (sum, t) => sum + (t.amount ?? 0));
-  final paidByName =
-      split.paidByUser?.name ?? split.paidBy;
+  final totalPaid =
+      split.transactionIds.fold<double>(0, (sum, t) => sum + (t.amount ?? 0));
+  final paidByName = split.paidByUser?.name ?? split.paidBy;
 
   return pw.Container(
     margin: const pw.EdgeInsets.only(bottom: 10),
@@ -461,8 +462,7 @@ pw.Widget _splitCard(SplitModel split) {
                   ),
                   pw.Text(
                     'Date: ${_fmtDate(split.createdAt)}   Split: ${split.splitType}',
-                    style:
-                        const pw.TextStyle(fontSize: 8, color: _kGrey600),
+                    style: const pw.TextStyle(fontSize: 8, color: _kGrey600),
                   ),
                 ],
               ),
@@ -470,8 +470,8 @@ pw.Widget _splitCard(SplitModel split) {
                 crossAxisAlignment: pw.CrossAxisAlignment.end,
                 children: [
                   pw.Text('Total Paid',
-                      style: const pw.TextStyle(
-                          fontSize: 7.5, color: _kGrey600)),
+                      style:
+                          const pw.TextStyle(fontSize: 7.5, color: _kGrey600)),
                   pw.Text(
                     _rupees(totalPaid),
                     style: pw.TextStyle(
@@ -499,8 +499,7 @@ pw.Widget _splitCard(SplitModel split) {
                         color: _kAccent)),
                 pw.SizedBox(height: 4),
                 pw.Table(
-                  border: pw.TableBorder.all(
-                      color: _kGrey300, width: 0.4),
+                  border: pw.TableBorder.all(color: _kGrey300, width: 0.4),
                   columnWidths: {
                     0: const pw.FlexColumnWidth(3),
                     1: const pw.FixedColumnWidth(70),
@@ -510,22 +509,22 @@ pw.Widget _splitCard(SplitModel split) {
                     pw.TableRow(
                       decoration: pw.BoxDecoration(color: _kGrey300),
                       children: [
-                        _cell('Narration',
+                        _cell(
+                            'Narration',
                             pw.TextStyle(
-                                fontSize: 8,
-                                fontWeight: pw.FontWeight.bold),
+                                fontSize: 8, fontWeight: pw.FontWeight.bold),
                             PdfColors.black,
                             isHeader: true),
-                        _cell('Date',
+                        _cell(
+                            'Date',
                             pw.TextStyle(
-                                fontSize: 8,
-                                fontWeight: pw.FontWeight.bold),
+                                fontSize: 8, fontWeight: pw.FontWeight.bold),
                             PdfColors.black,
                             isHeader: true),
-                        _cell('Amount',
+                        _cell(
+                            'Amount',
                             pw.TextStyle(
-                                fontSize: 8,
-                                fontWeight: pw.FontWeight.bold),
+                                fontSize: 8, fontWeight: pw.FontWeight.bold),
                             PdfColors.black,
                             isHeader: true,
                             align: pw.Alignment.centerRight),
@@ -533,13 +532,12 @@ pw.Widget _splitCard(SplitModel split) {
                     ),
                     ...split.transactionIds.map((txn) => pw.TableRow(
                           children: [
-                            _cell(txn.narration ?? '—',
+                            _cell(
+                                txn.narration ?? '—',
                                 const pw.TextStyle(fontSize: 8),
                                 PdfColors.black),
-                            _cell(
-                                _fmtDate(txn.transactionTimestamp),
-                                const pw.TextStyle(fontSize: 8),
-                                _kGrey600),
+                            _cell(_fmtDate(txn.transactionTimestamp),
+                                const pw.TextStyle(fontSize: 8), _kGrey600),
                             _cell(
                                 _rupees(txn.amount ?? 0),
                                 pw.TextStyle(
@@ -569,8 +567,7 @@ pw.Widget _splitCard(SplitModel split) {
                         color: _kAccent)),
                 pw.SizedBox(height: 4),
                 pw.Table(
-                  border: pw.TableBorder.all(
-                      color: _kGrey300, width: 0.4),
+                  border: pw.TableBorder.all(color: _kGrey300, width: 0.4),
                   columnWidths: {
                     0: const pw.FlexColumnWidth(3),
                     1: const pw.FlexColumnWidth(1),
@@ -580,23 +577,23 @@ pw.Widget _splitCard(SplitModel split) {
                     pw.TableRow(
                       decoration: pw.BoxDecoration(color: _kGrey300),
                       children: [
-                        _cell('User',
+                        _cell(
+                            'User',
                             pw.TextStyle(
-                                fontSize: 8,
-                                fontWeight: pw.FontWeight.bold),
+                                fontSize: 8, fontWeight: pw.FontWeight.bold),
                             PdfColors.black,
                             isHeader: true),
-                        _cell('Share %',
+                        _cell(
+                            'Share %',
                             pw.TextStyle(
-                                fontSize: 8,
-                                fontWeight: pw.FontWeight.bold),
+                                fontSize: 8, fontWeight: pw.FontWeight.bold),
                             PdfColors.black,
                             isHeader: true,
                             align: pw.Alignment.center),
-                        _cell('Amount Owed',
+                        _cell(
+                            'Amount Owed',
                             pw.TextStyle(
-                                fontSize: 8,
-                                fontWeight: pw.FontWeight.bold),
+                                fontSize: 8, fontWeight: pw.FontWeight.bold),
                             PdfColors.black,
                             isHeader: true,
                             align: pw.Alignment.centerRight),
@@ -620,8 +617,7 @@ pw.Widget _splitCard(SplitModel split) {
                                     : pw.FontWeight.normal),
                             isSelf ? _kGreen : PdfColors.black,
                           ),
-                          _cell(pct, const pw.TextStyle(fontSize: 8),
-                              _kGrey600,
+                          _cell(pct, const pw.TextStyle(fontSize: 8), _kGrey600,
                               align: pw.Alignment.center),
                           _cell(
                             _rupees(item.amount),
@@ -638,12 +634,28 @@ pw.Widget _splitCard(SplitModel split) {
 
                     // ── totals row ──
                     pw.TableRow(
-                      decoration:
-                          pw.BoxDecoration(color: _kAccent),
+                      decoration: pw.BoxDecoration(color: _kAccent),
                       children: [
-                        _cell('Total', pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold), _kWhite, isHeader: true),
-                        _cell('100%',  pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold), _kWhite, isHeader: true, align: pw.Alignment.center),
-                        _cell(_rupees(totalPaid), pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold), _kWhite, isHeader: true, align: pw.Alignment.centerRight),
+                        _cell(
+                            'Total',
+                            pw.TextStyle(
+                                fontSize: 9, fontWeight: pw.FontWeight.bold),
+                            _kWhite,
+                            isHeader: true),
+                        _cell(
+                            '100%',
+                            pw.TextStyle(
+                                fontSize: 9, fontWeight: pw.FontWeight.bold),
+                            _kWhite,
+                            isHeader: true,
+                            align: pw.Alignment.center),
+                        _cell(
+                            _rupees(totalPaid),
+                            pw.TextStyle(
+                                fontSize: 9, fontWeight: pw.FontWeight.bold),
+                            _kWhite,
+                            isHeader: true,
+                            align: pw.Alignment.centerRight),
                       ],
                     ),
                   ],
@@ -660,15 +672,16 @@ pw.Widget _splitCard(SplitModel split) {
 // BALANCES TABLE
 // ─────────────────────────────────────────────
 pw.Widget _balancesTable(List<BalanceModel> balances) {
-  final toPay     = balances.where((b) => b.type == 'toPay').toList();
+  final toPay = balances.where((b) => b.type == 'toPay').toList();
   final toReceive = balances.where((b) => b.type == 'toReceive').toList();
 
   return pw.Row(
     crossAxisAlignment: pw.CrossAxisAlignment.start,
     children: [
-      pw.Expanded(child: _balanceGroup('You Owe', toPay,     _kRedBg,   _kRed)),
+      pw.Expanded(child: _balanceGroup('You Owe', toPay, _kRedBg, _kRed)),
       pw.SizedBox(width: 12),
-      pw.Expanded(child: _balanceGroup('Owed to You', toReceive, _kGreenBg, _kGreen)),
+      pw.Expanded(
+          child: _balanceGroup('Owed to You', toReceive, _kGreenBg, _kGreen)),
     ],
   );
 }
@@ -730,7 +743,8 @@ pw.Widget _balanceGroup(
         ),
         // rows
         ...items.map((b) => pw.Container(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding:
+                  const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: const pw.BoxDecoration(
                 border: pw.Border(
                     bottom: pw.BorderSide(width: 0.3, color: _kGrey300)),

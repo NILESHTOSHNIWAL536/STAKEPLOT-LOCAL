@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:get/get.dart';
 import '../Constants/font_manager.dart';
 import '../backed_connections/apis_connect.dart';
@@ -26,6 +27,24 @@ class AccessPermissionsWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// TITLE
+            ///
+            // Text(
+            //   "created by" +
+            //       (collectionsController
+            //                   .collectionDetails.value?.collection.ownerId ==
+            //               collectionsController.currentUser?.id
+            //           ? " you"
+            //           : " ${'Unknown'}"),
+            //   style: FontManager().getTextStyle(
+            //     context,
+            //     fontSize: 16,
+            //     lWeight: FontWeight.w700,
+            //   ),
+            // ),
+
+            const SizedBox(
+              height: 10,
+            ),
             Text(
               "Access & Permissions",
               style: FontManager().getTextStyle(
@@ -39,8 +58,6 @@ class AccessPermissionsWidget extends StatelessWidget {
 
             /// MEMBERS
             ...members.map((m) => _memberRow(context, m)),
-
-            const SizedBox(height: 16),
 
             /// INVITE BUTTON
             _inviteRow(context),
@@ -65,7 +82,7 @@ class AccessPermissionsWidget extends StatelessWidget {
         );
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(14),
@@ -111,7 +128,13 @@ void _showRoleDialog(BuildContext context, MemberModel m) {
     context: context,
     builder: (_) {
       return AlertDialog(
-        title: const Text("Change Access"),
+        title: Text("Change Access",
+            style: FontManager().getTextStyle(
+              context,
+              fontSize: 16,
+              lWeight: FontWeight.w600,
+            )),
+        backgroundColor: Colors.white,
         content: StatefulBuilder(
           builder: (context, setState) {
             return Column(
@@ -126,25 +149,71 @@ void _showRoleDialog(BuildContext context, MemberModel m) {
             );
           },
         ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
+          Row(
+            children: [
+              /// ❌ CANCEL BUTTON
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Cancel",
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 13,
+                        lWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
 
-              final collectionId =
-                  collectionsController.collectionDetails.value!.collection.id;
+              const SizedBox(width: 10),
 
-              await collectionsController.updateMemberRole(
-                collectionId: collectionId,
-                userId: m.userId,
-                body: {"role": selectedRole},
-              );
-              Navigator.pop(context);
-            },
-            child: const Text("Save"),
+              /// ✅ SAVE BUTTON
+              Expanded(
+                child: GestureDetector(
+                  onTap: () async {
+                    final collectionId = collectionsController
+                        .collectionDetails.value!.collection.id;
+
+                    await collectionsController.updateMemberRole(
+                      collectionId: collectionId,
+                      userId: m.userId,
+                      body: {"role": selectedRole},
+                    );
+
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor, // primary cool color
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Save",
+                      style: FontManager().getTextStyle(
+                        context,
+                        fontSize: 13,
+                        lWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       );
@@ -153,78 +222,78 @@ void _showRoleDialog(BuildContext context, MemberModel m) {
 }
 
 Widget _memberRow(BuildContext context, MemberModel m) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 10),
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
-      border: Border.all(color: Colors.grey.shade200),
-    ),
-    child: Row(
-      children: [
-        /// AVATAR
-        CircleAvatar(
-          radius: 18,
-          backgroundColor: Colors.indigo.shade200,
-          child: Text(
-            m.name[0].toUpperCase(),
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-
-        const SizedBox(width: 10),
-
-        /// NAME
-        Expanded(
-          flex: 2,
-          child: Text(
-            m.name,
-            style: FontManager().getTextStyle(
-              context,
-              fontSize: 14,
-              lWeight: FontWeight.w600,
+  return InkWell(
+    onTap: () => _showRoleDialog(context, m),
+    child: Container(
+      margin: const EdgeInsets.only(bottom: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          /// AVATAR
+          CircleAvatar(
+            radius: 18,
+            backgroundColor: Colors.indigo.shade200,
+            child: Text(
+              m.name[0].toUpperCase(),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
-        ),
 
-        /// AMOUNT
-        Expanded(
-          child: Text(
-            "₹${m.setAmount}",
-            textAlign: TextAlign.center,
-            style: FontManager().getTextStyle(
-              context,
-              fontSize: 13,
-              lWeight: FontWeight.w600,
-              color: Colors.green,
+          const SizedBox(width: 10),
+
+          /// NAME
+          Expanded(
+            flex: 2,
+            child: Text(
+              m.name,
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 14,
+                lWeight: FontWeight.w600,
+              ),
             ),
           ),
-        ),
 
-        /// ROLE CHIP
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: Colors.blue.shade50,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(
-            m.role,
-            style: const TextStyle(
-              fontSize: 11,
-              color: Colors.blue,
-              fontWeight: FontWeight.w600,
+          /// AMOUNT
+          Expanded(
+            child: Text(
+              "₹${m.setAmount}",
+              textAlign: TextAlign.center,
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 13,
+                lWeight: FontWeight.w600,
+                color: Colors.green,
+              ),
             ),
           ),
-        ),
 
-        const SizedBox(width: 8),
+          /// ROLE CHIP
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade50,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              m.role,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.blue,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
 
-        /// EDIT
-        GestureDetector(
-          onTap: () => _showRoleDialog(context, m),
-          child: Row(
+          const SizedBox(width: 8),
+
+          /// EDIT
+          Row(
             children: [
               const Icon(Icons.lock_outline, size: 18),
               const SizedBox(width: 4),
@@ -235,8 +304,8 @@ Widget _memberRow(BuildContext context, MemberModel m) {
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }
@@ -250,7 +319,7 @@ Widget _roleOption(String role, String selectedRole, VoidCallback onTap,
     child: Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isSelected ? Colors.blue.shade50 : Colors.grey.shade100,
+        color: isSelected ? Colors.blue.shade100 : Colors.grey.shade200,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
