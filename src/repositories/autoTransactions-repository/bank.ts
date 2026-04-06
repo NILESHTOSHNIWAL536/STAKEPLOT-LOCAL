@@ -13,7 +13,7 @@ interface CreateFipData {
   fipName: string;
   custId: string;
   consentId: string;
-  sessionId: string;
+  sessionId?: string;
   consentHandleId: string;
   from: Date;
   to: Date;
@@ -55,16 +55,15 @@ class FipRepository extends CrudRepository<typeof Bank> {
     );
 
     // Encrypt main fields
-    const encryptionTasks = {
-      fipId: encrypt(fipData.fipId, plaintextKey),
-      fipName: encrypt(fipData.fipName, plaintextKey),
-      custId: encrypt(fipData.custId, plaintextKey),
-      consentId: encrypt(fipData.consentId, plaintextKey),
-      sessionId: encrypt(fipData.sessionId, plaintextKey),
-      consentHandleId: encrypt(fipData.consentHandleId, plaintextKey),
-    };
+    const encrypted = await Promise.all([
+      encrypt(fipData.fipId, plaintextKey),
+      encrypt(fipData.fipName, plaintextKey),
+      encrypt(fipData.custId, plaintextKey),
+      encrypt(fipData.consentId, plaintextKey),
+      fipData.sessionId ? encrypt(fipData.sessionId, plaintextKey) : Promise.resolve(undefined),
+      encrypt(fipData.consentHandleId, plaintextKey),
+    ]);
 
-    const encrypted = await Promise.all(Object.values(encryptionTasks));
     const [fipId, fipName, custId, consentId, sessionId, consentHandleId] = encrypted;
 
     const payload = {
@@ -72,7 +71,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
       fipName,
       custId,
       consentId,
-      sessionId,
+      ...(sessionId ? { sessionId } : {}),
       consentHandleId,
       fiAccountInfo,
       from: fipData.from,
@@ -150,7 +149,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
       fipName: decryptField(record.fipName),
       custId: decryptField(record.custId),
       consentId: decryptField(record.consentId),
-      sessionId: decryptField(record.sessionId),
+      sessionId: record.sessionId ? decryptField(record.sessionId) : null,
       consentHandleId: decryptField(record.consentHandleId),
       userId: record.userId,
       fiAccountInfo: record.fiAccountInfo.map((acc: any) => ({
@@ -201,7 +200,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
           fipName: decryptField(rec.fipName),
           custId: decryptField(rec.custId),
           consentId: decryptField(rec.consentId),
-          sessionId: decryptField(rec.sessionId),
+          sessionId: rec.sessionId ? decryptField(rec.sessionId) : null,
           consentHandleId: ch,
           userId: rec.userId,
         };
@@ -229,7 +228,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
       encrypt(data.fipName, plaintextKey),
       encrypt(data.custId, plaintextKey),
       encrypt(data.consentId, plaintextKey),
-      encrypt(data.sessionId, plaintextKey),
+      data.sessionId ? encrypt(data.sessionId, plaintextKey) : Promise.resolve(undefined),
       encrypt(data.consentHandleId, plaintextKey),
     ]);
 
@@ -240,7 +239,7 @@ class FipRepository extends CrudRepository<typeof Bank> {
       fipName,
       custId,
       consentId,
-      sessionId,
+      ...(sessionId ? { sessionId } : {}),
       consentHandleId,
       fiAccountInfo,
       userId: data.userId,
