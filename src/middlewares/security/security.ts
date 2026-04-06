@@ -5,6 +5,8 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import { ServerConfig } from '@/config';
 
 export function securityMiddleware(app: Application): void {
   // ✅ Body parsers
@@ -46,9 +48,33 @@ export function securityMiddleware(app: Application): void {
 
   // ✅ Rate limiter
   const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 200,
+    windowMs: ServerConfig.RATE_LIMIT_WINDOW_MS,
+    max: ServerConfig.RATE_LIMIT_MAX,
     message: { error: 'Too many requests, please try again later.' },
+    // Use the authenticated user id (JWT `sub`) as the key so the limit applies per-user
+    // instead of per-proxy IP, which avoids 429s when all traffic is funneled through
+    // mobile-backend. Fallback to IP if no/invalid token is present.
+    keyGenerator: (req: Request): string => {
+      const authHeader = req.headers.authorization;
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.split(' ')[1];
+        try {
+          const payload = jwt.verify(token, ServerConfig.SERVICE_JWT_SECRET) as jwt.JwtPayload;
+          if (payload?.sub) return `user:${payload.sub}`;
+        } catch {
+          // ignore and fall back to IP
+        }
+      }
+      return req.ip;
+    },
+    skip: (req: Request) => {
+      // Skip rate limit for internal, trusted paths if needed (e.g., batch hydration)
+      // Extend this list cautiously to avoid bypassing protection on public endpoints.
+      const internalPaths = ['/api/user/internal/users/batch', '/api/internal/health'];
+      return internalPaths.includes(req.path);
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
   });
 
   app.use(limiter);

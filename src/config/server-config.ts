@@ -8,4 +8,6 @@ export const ServerConfig = {
   ONE_SIGNAL_API_KEY: process.env.ONE_SIGNAL_API_KEY!,
   PREDICT_URL: process.env.PREDICT_URL!,
   MOBILE_BACKEND_URL: process.env.MOBILE_BACKEND_URL || 'http://localhost:5000',
+  RATE_LIMIT_MAX: parseInt(process.env.RATE_LIMIT_MAX || '200', 10),
+  RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS || `${15 * 60 * 1000}`, 10),
 };

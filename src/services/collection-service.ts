@@ -8,7 +8,27 @@ import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
 import UserService from './user-service';
 
-const MAX_COLLECTIONS_PER_USER = 5;
+const MAX_COLLECTIONS_PER_USER = 10;
+
+const transactionOptions: mongoose.mongo.TransactionOptions = {
+  readPreference: 'primary',
+  readConcern: { level: 'snapshot' },
+  writeConcern: { w: 'majority' },
+};
+
+const runInTransaction = async <T>(fn: (session: mongoose.ClientSession) => Promise<T>): Promise<T> => {
+  const session = await mongoose.startSession();
+  try {
+    let result: T;
+    await session.withTransaction(async () => {
+      result = await fn(session);
+    }, transactionOptions);
+    // `result` is definitely assigned inside the transaction callback
+    return result!;
+  } finally {
+    await session.endSession();
+  }
+};
 
 // Helper function to calculate member spending metrics
 const calculateMemberSpending = (userId: string, splits: any[]) => {
@@ -87,9 +107,7 @@ export const createCollection = async (userId: string, data: any) => {
     throw new AppError('User has reached the maximum allowed collections (2)', StatusCodes.BAD_REQUEST);
   }
 
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  try {
+  return runInTransaction(async (session) => {
     const collection = new Collection({
       ...data,
       ownerId: userId,
@@ -108,15 +126,8 @@ export const createCollection = async (userId: string, data: any) => {
     const hydratedCollection = collection.toObject();
     (hydratedCollection as any).owner = userData[0] || { _id: userId };
 
-    await session.commitTransaction();
-    session.endSession();
-
     return hydratedCollection;
-  } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
-    throw error;
-  }
+  });
 };
 
 export const getUserCollections = async (userId: string) => {
@@ -227,11 +238,8 @@ export const addMembers = async (collectionId: string, authorId: string, friends
     throw new AppError('You do not have permission to add members', StatusCodes.FORBIDDEN);
   }
 
-  const addedMembers = [];
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
-  try {
+  return runInTransaction(async (session) => {
+    const addedMembers = [];
     for (const friend of friends) {
       const { friendId, role } = friend;
 
@@ -260,31 +268,17 @@ export const addMembers = async (collectionId: string, authorId: string, friends
     const userMap = new Map();
     userData.forEach((u) => userMap.set(u._id.toString(), u));
 
-    const result = addedMembers.map((m) => ({
+    return addedMembers.map((m) => ({
       ...m.toObject(),
       user: userMap.get(m.userId.toString()) || { _id: m.userId },
     }));
-
-    await session.commitTransaction();
-    session.endSession();
-
-    return result;
-  } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
-    throw error;
-  }
+  });
 };
 
 export const addTransactions = async (collectionId: string, userId: string, transactionIds: string[], splitType?: 'EQUAL' | 'CUSTOM', customSplits?: ISplitItem[]) => {
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member || member.role !== 'CONTRIBUTE') {
     throw new AppError('You do not have permission to add transactions to this collection', StatusCodes.FORBIDDEN);
-  }
-
-  const collection = await Collection.findById(collectionId);
-  if (!collection || collection.status === 'CLOSED') {
-    throw new AppError('Collection not found or closed', StatusCodes.BAD_REQUEST);
   }
 
   if (!transactionIds || transactionIds.length === 0) {
@@ -305,9 +299,12 @@ export const addTransactions = async (collectionId: string, userId: string, tran
 
   const totalAmount = transactions.reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  try {
+  return runInTransaction(async (session) => {
+    const collection = await Collection.findById(collectionId).session(session);
+    if (!collection || collection.status === 'CLOSED') {
+      throw new AppError('Collection not found or closed', StatusCodes.BAD_REQUEST);
+    }
+
     const colTxs = [];
     for (const tx of transactions) {
       const colTx = new CollectionTransaction({
@@ -328,8 +325,6 @@ export const addTransactions = async (collectionId: string, userId: string, tran
 
     // ── PERSONAL collection: no splits, return early ──
     if (collection.type === 'PERSONAL') {
-      await session.commitTransaction();
-      session.endSession();
       return { colTxs, splitDoc: null };
     }
 
@@ -391,15 +386,8 @@ export const addTransactions = async (collectionId: string, userId: string, tran
       })),
     };
 
-    await session.commitTransaction();
-    session.endSession();
-
     return { colTxs, splitDoc: hydratedSplit };
-  } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
-    throw error;
-  }
+  });
 };
 
 export const updateSplit = async (collectionId: string, userId: string, splitId: string, customSplits: ISplitItem[]) => {
@@ -590,21 +578,12 @@ export const deleteCollection = async (collectionId: string, userId: string) => 
     throw new AppError('Only the owner can delete the collection', StatusCodes.FORBIDDEN);
   }
 
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  try {
+  await runInTransaction(async (session) => {
     await Collection.findByIdAndDelete(collectionId).session(session);
     await CollectionMember.deleteMany({ collectionId }).session(session);
     await CollectionTransaction.deleteMany({ collectionId }).session(session);
     await Split.deleteMany({ collectionId }).session(session);
-
-    await session.commitTransaction();
-    session.endSession();
-  } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
-    throw error;
-  }
+  });
 };
 
 export const updateCollection = async (collectionId: string, userId: string, data: { name?: string; description?: string; expiryAt?: Date }) => {
