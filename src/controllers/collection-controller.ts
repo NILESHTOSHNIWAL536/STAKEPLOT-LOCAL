@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { SuccessResponse } from '../utils/common';
 import CollectionService from '../services/collection-service';
 import CollectionInvitationService from '../services/collection-invitation-service';
+import { publishSocketEvent } from '@/utils/webHook';
 
 export const createCollection = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -69,6 +70,13 @@ export const addTransaction = async (req: Request, res: Response, next: NextFunc
     const { id: collectionId } = req.params;
     const { transactionIds, splitType, customSplits } = req.body;
     const result = await CollectionService.addTransactions(collectionId, userId, transactionIds, splitType, customSplits);
+     await publishSocketEvent(collectionId, 'collection', {
+        type: 'splitUpdate',
+        data: {
+           "collection":result
+        },
+      });
+
     SuccessResponse.data = result;
     SuccessResponse.message = 'Transactions added to collection successfully';
     res.status(StatusCodes.OK).json(SuccessResponse);
@@ -154,6 +162,13 @@ export const updateCollection = async (req: Request, res: Response, next: NextFu
     const { id: collectionId } = req.params;
     const { name, description, expiryAt } = req.body;
     const collection = await CollectionService.updateCollection(collectionId, userId, { name, description, expiryAt });
+    await publishSocketEvent(collectionId, 'collection', {
+        type: name ? 'nameUpdate' : description ? 'descriptionUpdate' : expiryAt ? 'expiryUpdate' : 'update',
+        data: {
+           collection
+        },
+      });
+
     SuccessResponse.data = collection;
     SuccessResponse.message = 'Collection updated successfully';
     res.status(StatusCodes.OK).json(SuccessResponse);
@@ -200,6 +215,12 @@ export const updateCollectionMember = async (req: Request, res: Response, next: 
     const updatedMember = await CollectionService.updateCollectionMember(collectionId, userId, memberId, role, limitAmount);
     SuccessResponse.data = updatedMember;
     SuccessResponse.message = 'Collection member amount updated successfully';
+      await publishSocketEvent(collectionId, 'collection', {
+        type: 'updatedMember',
+        data: {
+           "members":updatedMember
+        },
+      });
     res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
     next(error);
@@ -231,6 +252,7 @@ export const acceptInvitation = async (req: Request, res: Response, next: NextFu
     const result = await CollectionInvitationService.acceptInvitation(invitationId, userId);
     SuccessResponse.data = result;
     SuccessResponse.message = 'Invitation accepted successfully';
+
     res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
     next(error);

@@ -162,3 +162,4 @@ async function webHook(req: Request, res: Response): Promise<Response> {
 }
 
 export default webHook;
+export { publishSocketEvent };

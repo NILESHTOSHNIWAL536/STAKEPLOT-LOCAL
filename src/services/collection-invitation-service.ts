@@ -146,7 +146,7 @@ export const getPendingInvitations = async (userId: string): Promise<{ invitatio
 
   const hydratedInvitations = invitations.map((inv: any) => ({
     ...inv,
-      invitedBy: userMap.get(inv.invitedByUserId.toString()) || { _id: inv.invitedByUserId },
+    invitedBy: userMap.get(inv.invitedByUserId.toString()) || { _id: inv.invitedByUserId },
     collection: inv.collectionId,
   }));
 
@@ -233,15 +233,15 @@ export const acceptInvitation = async (invitationId: string, userId: string): Pr
     await notificationForOwner.save({ session });
 
     // Publish event to collection owner and members
-    await publishSocketEvent(invitation.invitedByUserId, 'collection:member_joined', {
-      collectionId: invitation.collectionId.toString(),
-      collectionName: collection?.name || 'Unknown',
-      newMember: {
-        _id: userId,
-        name: acceptingUserData[0]?.name || 'Unknown',
-        role: invitation.role,
-      },
-    });
+    // await publishSocketEvent(invitation.invitedByUserId, 'collection:member_joined', {
+    //   collectionId: invitation.collectionId.toString(),
+    //   collectionName: collection?.name || 'Unknown',
+    //   newMember: {
+    //     _id: userId,
+    //     name: acceptingUserData[0]?.name || 'Unknown',
+    //     role: invitation.role,
+    //   },
+    // });
 
     // Also notify other members of the collection
     const otherMembers = await CollectionMember.find({
@@ -252,16 +252,10 @@ export const acceptInvitation = async (invitationId: string, userId: string): Pr
       .session(session)
       .lean();
 
-    for (const member of otherMembers) {
-      await publishSocketEvent(member.userId, 'collection:member_joined', {
-        collectionId: invitation.collectionId.toString(),
-        newMember: {
-          _id: userId,
-          name: acceptingUserData[0]?.name || 'Unknown',
-          role: invitation.role,
-        },
-      });
-    }
+    await publishSocketEvent(invitation.collectionId, 'collection', {
+      type: 'AcceptInvitation',
+      collectionId: invitation.collectionId.toString(),
+    });
 
     await session.commitTransaction();
     session.endSession();

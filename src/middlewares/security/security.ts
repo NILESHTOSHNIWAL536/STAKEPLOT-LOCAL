@@ -45,13 +45,13 @@ export function securityMiddleware(app: Application): void {
   );
 
   // ✅ Rate limiter
-  const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 200,
-    message: { error: 'Too many requests, please try again later.' },
-  });
+  // const limiter = rateLimit({
+  //   windowMs: 15 * 60 * 1000,
+  //   max: 200,
+  //   message: { error: 'Too many requests, please try again later.' },
+  // });
 
-  app.use(limiter);
+  // app.use(limiter);
 
   // ✅ CSP nonce
   app.use((req: Request, res: Response, next: NextFunction) => {
