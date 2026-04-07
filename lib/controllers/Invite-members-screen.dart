@@ -1,5 +1,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
+
 import '../backed_connections/apis_connect.dart';
 import 'user-controller.dart';
 
@@ -282,7 +284,7 @@ import 'package:get/get.dart';
 class _AppColors {
   static const bg = Color(0xFFF5F6FA);
   static const surface = Colors.white;
-  static const primary = Color(0xFF3D6FFF);
+  static const primary = AppColors.appIcon;
   static const primaryLight = Color(0xFFEEF2FF);
   static const accent = Color(0xFF22C55E);
   static const textPrimary = Color(0xFF111827);

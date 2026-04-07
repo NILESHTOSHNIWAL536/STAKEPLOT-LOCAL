@@ -69,6 +69,7 @@ class CollectionModel {
   double totalCredit;
   double totalDebit;
   double outStandingAmount;
+  List<String> members;
 
   CollectionModel({
     required this.id,
@@ -82,6 +83,7 @@ class CollectionModel {
     this.totalCredit = 0,
     this.totalDebit = 0,
     this.outStandingAmount = 0,
+    required this.members,
   });
 
   factory CollectionModel.fromJson(Map<String, dynamic> json, objjson) {
@@ -92,12 +94,12 @@ class CollectionModel {
       ownerId: json['ownerId'] ?? '',
       description: json['description'] ?? '',
       status: json['status'] ?? '',
-      expiryAt:
-          json['expiryAt'] != null ? DateTime.parse(json['expiryAt']) : null,
+      expiryAt:json['expiryAt'] != null ? DateTime.parse(json['expiryAt']) : null,
       totalAmount: (json['totalAmount'] ?? 0).toDouble(),
       totalCredit: (objjson['totalCredit'] ?? 0).toDouble(),
       totalDebit: (objjson['totalDebit'] ?? 0).toDouble(),
       outStandingAmount: (objjson['outStandingAmount'] ?? 0).toDouble(),
+      members: (json['members'] as List? ?? []).cast<String>(),
     );
   }
 }

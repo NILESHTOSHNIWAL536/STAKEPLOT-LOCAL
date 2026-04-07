@@ -115,8 +115,7 @@ class CollectionsController extends GetxController {
       isLoading.value = true;
       collectionDetails.value = null;
 
-      final response =
-          await getDataApiCall(CollectionsRoute.getCollectionById(id));
+      final response = await getDataApiCall(CollectionsRoute.getCollectionById(id));
 
       if (!getFlagOfResponse(response)) return;
 
@@ -319,9 +318,11 @@ class CollectionsController extends GetxController {
   Future<void> deleteCollection(
       String id, BuildContext context, String type) async {
     try {
-      final response = await deleteDataApiCall(type == "exit"
+      String url = type == "exit"
           ? CollectionsRoute.exitCollection(id)
-          : CollectionsRoute.deleteCollection(id));
+          : CollectionsRoute.deleteCollection(id);
+
+      final response = await deleteDataApiCall(url);
 
       if (getFlagOfResponse(response)) {
         /// Batch clear
@@ -589,6 +590,7 @@ class CollectionsController extends GetxController {
                 collectionDetails.value?.collection.outStandingAmount ??
                     old.outStandingAmount ??
                     0,
+            members: collectionDetails.value?.collection.members ?? [],
           );
 
           collectionDetails.value = CollectionDetailsModel(
@@ -641,6 +643,7 @@ class CollectionsController extends GetxController {
                 collectionDetails.value?.collection.outStandingAmount ??
                     old.outStandingAmount ??
                     0,
+            members: collectionDetails.value?.collection.members ?? [],
           );
           AppNavigator.pushReplacement(context, TransactionHistoryScreen());
         }
@@ -876,6 +879,7 @@ class CollectionsController extends GetxController {
           totalCredit: old.collection.totalCredit,
           totalDebit: old.collection.totalDebit,
           outStandingAmount: old.collection.outStandingAmount,
+          members: old.collection.members,
         ),
         members: old.members,
         transactions: old.transactions,
@@ -900,6 +904,7 @@ class CollectionsController extends GetxController {
         totalCredit: old.totalCredit,
         totalDebit: old.totalDebit,
         outStandingAmount: old.outStandingAmount,
+        members: old.members,
       );
     }
   }

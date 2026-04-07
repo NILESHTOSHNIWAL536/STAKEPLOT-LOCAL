@@ -48,11 +48,10 @@ class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
   }
 
   Future<void> _loadDashboardData() async {
-    final collectionId =
-        collectionsController.collectionDetails.value?.collection.id;
+    final collectionId =collectionsController.collectionDetails.value?.collection.id;
     if (collectionId == null) return;
-    await collectionsController.getAllCollectionsTransactions();
     await collectionsController.getBalances(collectionId);
+    await collectionsController.getSplits(collectionId);
   }
 
   void _openSelectTransactions() {

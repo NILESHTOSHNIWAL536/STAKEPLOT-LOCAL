@@ -102,20 +102,16 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                 const SizedBox(height: 8),
 
                 // ── ACCESS PERMISSIONS
-                if (can("accessPermission")) ...[
-                  AccessPermissionsWidget(),
-                  const SizedBox(height: 8),
-                ],
 
                 // ── SETTINGS GROUP
                 _buildSectionLabel("Actions"),
                 const SizedBox(height: 8),
-                if (can("export"))
+                if (can("rename"))
                   _settingsTile(context,
-                      icon: Icons.file_upload_outlined,
-                      title: "Export Transactions",
-                      subtitle: "Download as PDF",
-                      onTap: () => _exportTransactions(context)),
+                      icon: Icons.edit_outlined,
+                      title: "Rename Collection",
+                      subtitle: "Change display name",
+                      onTap: () => _showRenameDialog(context)),
                 if (can("personLimit"))
                   _settingsTile(context,
                       icon: Icons.account_balance_wallet_outlined,
@@ -123,18 +119,24 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                       subtitle: "Set spending limits",
                       onTap: () => _showLimitDialog(
                           context, collectionsController.currentUser)),
-                if (can("rename"))
-                  _settingsTile(context,
-                      icon: Icons.edit_outlined,
-                      title: "Rename Collection",
-                      subtitle: "Change display name",
-                      onTap: () => _showRenameDialog(context)),
                 if (can("duration"))
                   _settingsTile(context,
                       icon: Icons.access_time_outlined,
                       title: "Edit Duration Range",
                       subtitle: "Adjust active period",
                       onTap: () => _showDurationPopup(context)),
+
+                if (can("export"))
+                  _settingsTile(context,
+                      icon: Icons.file_upload_outlined,
+                      title: "Export Transactions",
+                      subtitle: "Download as PDF",
+                      onTap: () => _exportTransactions(context)),
+
+                if (can("accessPermission")) ...[
+                  AccessPermissionsWidget(),
+                  const SizedBox(height: 8),
+                ],
 
                 // ── DANGER GROUP
                 if (can("close") || can("delete") || can("exit")) ...[
@@ -686,7 +688,9 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
         onConfirm: () async {
           AppNavigator.pop(_context);
           await collectionsController.deleteCollection(
-              collectionsController.selectedCollection.value!.id, context,type);
+              collectionsController.selectedCollection.value!.id,
+              context,
+              type);
         },
       ),
     );

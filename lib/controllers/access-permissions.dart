@@ -26,22 +26,6 @@ class AccessPermissionsWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// TITLE
-            ///
-            // Text(
-            //   "created by" +
-            //       (collectionsController
-            //                   .collectionDetails.value?.collection.ownerId ==
-            //               collectionsController.currentUser?.id
-            //           ? " you"
-            //           : " ${'Unknown'}"),
-            //   style: FontManager().getTextStyle(
-            //     context,
-            //     fontSize: 16,
-            //     lWeight: FontWeight.w700,
-            //   ),
-            // ),
-
             const SizedBox(
               height: 10,
             ),
@@ -49,12 +33,13 @@ class AccessPermissionsWidget extends StatelessWidget {
               "Access & Permissions",
               style: FontManager().getTextStyle(
                 context,
-                fontSize: 16,
+                fontSize: 14,
+                color: AppColors.primaryColor,
                 lWeight: FontWeight.w700,
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
             /// MEMBERS
             ...members.map((m) => _memberRow(context, m)),
@@ -91,8 +76,8 @@ class AccessPermissionsWidget extends StatelessWidget {
           children: [
             /// ➕ ICON (MATCH DESIGN)
             Container(
-              width: 40,
-              height: 40,
+              width: 30,
+              height: 30,
               decoration: BoxDecoration(
                 color: const Color(0xFF5B5F7B), // dark bluish
                 shape: BoxShape.circle,
@@ -100,7 +85,9 @@ class AccessPermissionsWidget extends StatelessWidget {
               child: const Icon(Icons.add, color: Colors.white),
             ),
 
-            const SizedBox(width: 12),
+            const SizedBox(
+              width: 10,
+            ),
 
             /// TEXT
             Expanded(
@@ -108,7 +95,7 @@ class AccessPermissionsWidget extends StatelessWidget {
                 "Invite more members",
                 style: FontManager().getTextStyle(
                   context,
-                  fontSize: 15,
+                  fontSize: 13,
                   lWeight: FontWeight.w600,
                   color: const Color(0xFF5B5F7B),
                 ),
@@ -237,7 +224,7 @@ Widget _memberRow(BuildContext context, MemberModel m) {
           /// AVATAR
           CircleAvatar(
             radius: 18,
-            backgroundColor: Colors.indigo.shade200,
+            backgroundColor: AppColors.primaryColor, // primary cool color
             child: Text(
               m.name[0].toUpperCase(),
               style: const TextStyle(color: Colors.white),
@@ -253,7 +240,7 @@ Widget _memberRow(BuildContext context, MemberModel m) {
               m.name,
               style: FontManager().getTextStyle(
                 context,
-                fontSize: 14,
+                fontSize: 12,
                 lWeight: FontWeight.w600,
               ),
             ),
@@ -282,27 +269,20 @@ Widget _memberRow(BuildContext context, MemberModel m) {
             ),
             child: Text(
               m.role,
-              style: const TextStyle(
+              style: FontManager().getTextStyle(
+                context,
                 fontSize: 11,
-                color: Colors.blue,
-                fontWeight: FontWeight.w600,
+                color: AppColors.appIcon,
+                lWeight: FontWeight.w600,
               ),
             ),
           ),
 
-          const SizedBox(width: 8),
-
-          /// EDIT
-          Row(
-            children: [
-              const Icon(Icons.lock_outline, size: 18),
-              const SizedBox(width: 4),
-              Text(
-                "Edit",
-                style: FontManager().getTextStyle(context,
-                    fontSize: 12, color: Colorcodes.black),
-              ),
-            ],
+          const SizedBox(width: 4),
+          Text(
+            "Edit",
+            style: FontManager()
+                .getTextStyle(context, fontSize: 12, color: Colorcodes.black),
           ),
         ],
       ),
