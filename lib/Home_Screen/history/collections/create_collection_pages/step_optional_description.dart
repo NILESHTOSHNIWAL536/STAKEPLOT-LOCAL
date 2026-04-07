@@ -72,7 +72,6 @@ class _StepOptionalDescriptionState extends State<StepOptionalDescription> {
         );
       }
     } catch (e) {
-      print("_submit error: $e");
       if (context.mounted) {
         Get.snackbar(
           "Error",

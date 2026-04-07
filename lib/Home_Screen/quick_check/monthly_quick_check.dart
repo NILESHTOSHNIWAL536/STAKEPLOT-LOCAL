@@ -103,10 +103,6 @@ Future<void> fetchMonthlyInsights({
     await controller.getQuickCheck( view: 'monthly',
   month: _monthNumberFromName(selectedMonth.value),
   year: DateTime.now().year,);
-
-    print(
-      "MONTHLY API TIME: ${DateTime.now().difference(start).inMilliseconds} ms",
-    );
     updateMonthlyPercentages(
       credited: controller.quickCheck.value?.creditPercent ?? 0,
       debited: controller.quickCheck.value?.debitPercent ?? 0,

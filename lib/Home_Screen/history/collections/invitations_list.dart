@@ -209,11 +209,11 @@ class InvitationsList extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                Navigator.pop(context);
-
                 if (isAccept) {
-                  await collectionsController.acceptInvitation(invitationId);
+                  await collectionsController.acceptInvitation(
+                      invitationId, context);
                 } else {
+                  Navigator.pop(context);
                   await collectionsController.rejectInvitation(invitationId);
                 }
               },

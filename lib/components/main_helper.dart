@@ -15,6 +15,7 @@ import '../Constants/colors.dart';
 import '../Constants/core/app_component_sizes.dart';
 import '../OneSignal/deviceConfig.dart';
 import '../Profile/friends.dart';
+import '../Utils/socket_connect.dart';
 import '../backed_connections/apis_connect.dart';
 import '../routes/index_route.dart';
 import '../widget_services/widget_bridge.dart';
@@ -35,6 +36,7 @@ void main_apis_call_init()async{
     await prefs.setString('accountId', accountId);
   }
   initializeGlobalErrorHandling();
+  SocketService().initSocket(API.urlWithLocallHost);
 
   // Initialize widget service (handles WorkManager and widgets only)
   initializeWidgetService();

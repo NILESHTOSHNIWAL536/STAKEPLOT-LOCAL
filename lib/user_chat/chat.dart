@@ -57,8 +57,7 @@ class _ChatState extends State<Chat> {
 
   String path = "assets/avatar/menp1.svg";
   ValueNotifier<bool> onlineUser = ValueNotifier<bool>(false);
-  ValueNotifier<bool> isUploading =
-      ValueNotifier<bool>(false); // Declare isUploading here
+  ValueNotifier<bool> isUploading =ValueNotifier<bool>(false); // Declare isUploading here
 
   @override
   void initState() {
@@ -102,10 +101,8 @@ class _ChatState extends State<Chat> {
     socket.on(
         'online',
         (res) => {
-           print(res),
           if(res['id']==roomId.value)
           {
-              print({"id":roomId.value,"flag":true}),
               setState(() {
                     onlineUser.value = res['flag'];
                   })

@@ -74,7 +74,6 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
     
       print(his);
       transactionChatGraph.clear();
-
       try {
         final data = his['data']['result'] as Map;
         totalDebitValuePercent.value = double.tryParse(
