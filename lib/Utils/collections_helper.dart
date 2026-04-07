@@ -20,7 +20,7 @@ final Map<String, dynamic> permissionJson = {
       "duration": false,
       "close": false,
       "delete": false,
-      "exit": true && !isOwner
+      "exit": true
     },
     "CONTRIBUTE": {
       "accessPermission": true,
@@ -28,28 +28,48 @@ final Map<String, dynamic> permissionJson = {
       "personLimit": true,
       "rename": true,
       "duration": true,
-      "close": true && isOwner,
-      "delete": true && isOwner,
-      "exit": true && !isOwner
+      "close": true,
+      "delete": true,
+      "exit": true
     }
   }
 };
 
-bool isOwner =
-    collectionsController.collectionDetails.value?.collection.ownerId ==
-        collectionsController.currentUser?.id;
+bool isOwner() {
+  final details = collectionsController.collectionDetails.value;
+  final currentUser = collectionsController.currentUser;
+  return details?.collection.ownerId == currentUser?.userId;
+}
 
 bool hasPermission({
-  required String type, // personal / shared
-  String? role, // view / contribute
+  required String type,
+  String? role,
   required String action,
 }) {
+  final details = collectionsController.collectionDetails.value;
+  if (details == null) return false;
+  final currentUser = collectionsController.currentUser;
+
+  final bool isOwner = details.collection.ownerId == currentUser?.userId;
+
   if (type == "PERSONAL") {
     return permissionJson["PERSONAL"]?[action] ?? false;
   }
 
   if (type == "SHARED") {
-    return permissionJson["SHARED"]?[role]?[action] ?? false;
+    if (role == null) return false;
+
+    bool allowed = permissionJson["SHARED"]?[role]?[action] ?? false;
+
+    if (action == "close" || action == "delete") {
+      return allowed && isOwner;
+    }
+
+    if (action == "exit") {
+      return allowed && !isOwner;
+    }
+
+    return allowed;
   }
 
   return false;

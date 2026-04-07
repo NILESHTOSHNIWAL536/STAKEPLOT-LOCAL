@@ -18,8 +18,8 @@ class CollectionsRoute {
       "$_urlPath/$collectionId/all-transactions";
 
   // Delete Collection
-  static String deleteCollection(String collectionId) =>
-      "$_urlPath/$collectionId";
+  static String deleteCollection(String collectionId) => "$_urlPath/$collectionId";
+  static String exitCollection(String collectionId) => "$_urlPath/$collectionId/exit";
 
   // Add Member
   static String addMember(String collectionId) =>
