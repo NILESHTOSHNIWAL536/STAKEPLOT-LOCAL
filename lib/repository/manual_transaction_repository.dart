@@ -59,6 +59,7 @@ void addTransaction(String amount, String subCategory, String categories,
     ].map((fn) => fn())).then((_) {
       // All actions are complete
     });
+    // getBudget();
     getBudget();
   } else {
     snackBarCalledfail(context, SnackbarData().transactionAddFail,  AppColors.redColor);
