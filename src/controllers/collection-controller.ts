@@ -7,8 +7,8 @@ import CollectionInvitationService from '../services/collection-invitation-servi
 export const createCollection = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user._id;
-    const data = req.body;
-    const collection = await CollectionService.createCollection(userId, data);
+    const { friends = [], ...collectionData } = req.body;
+    const collection = await CollectionService.createCollection(userId, collectionData, friends);
     SuccessResponse.data = collection;
     SuccessResponse.message = 'Collection created successfully';
     res.status(StatusCodes.CREATED).json(SuccessResponse);

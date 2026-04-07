@@ -8,7 +8,7 @@ import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
 import UserService from './user-service';
 
-const MAX_COLLECTIONS_PER_USER = 10;
+const MAX_COLLECTIONS_PER_USER = 5;
 
 const transactionOptions: mongoose.mongo.TransactionOptions = {
   readPreference: 'primary',
@@ -101,15 +101,69 @@ const formatSplitsWithMemberDetails = (splits: any[], userId: string, userMap: M
   });
 };
 
-export const createCollection = async (userId: string, data: any) => {
-  const memberCount = await CollectionMember.countDocuments({ userId });
+export const createCollection = async (userId: string, data: any, friends: IFriendInput[] = []) => {
+  const counts = await CollectionMember.aggregate([
+    { $match: { userId } },
+    {
+      $lookup: {
+        from: 'collections',
+        localField: 'collectionId',
+        foreignField: '_id',
+        as: 'collectionData',
+      },
+    },
+    { $unwind: '$collectionData' },
+    { $match: { 'collectionData.status': 'ACTIVE' } },
+    { $count: 'count' },
+  ]);
+
+  const memberCount = counts.length > 0 ? counts[0].count : 0;
   if (memberCount >= MAX_COLLECTIONS_PER_USER) {
     throw new AppError('User has reached the maximum allowed collections (2)', StatusCodes.BAD_REQUEST);
   }
 
+  // Validate potential members' limits up front
+  const friendIds = Array.from(new Set(friends.map((f) => f.friendId).filter(Boolean)));
+
+  const friendCounts = await CollectionMember.aggregate([
+    { $match: { userId: { $in: friendIds } } },
+    {
+      $lookup: {
+        from: 'collections',
+        localField: 'collectionId',
+        foreignField: '_id',
+        as: 'collectionData',
+      },
+    },
+    { $unwind: '$collectionData' },
+    { $match: { 'collectionData.status': 'ACTIVE' } },
+    { $group: { _id: '$userId', count: { $sum: 1 } } },
+  ]);
+
+  console.log('friends count: ', friendCounts);
+
+  const countMap = new Map(friendCounts.map((c) => [c._id.toString(), c.count]));
+  console.log('count map: ', countMap);
+
+  const invalidFriendIds = friendIds.filter((id) => (countMap.get(id) || 0) >= MAX_COLLECTIONS_PER_USER);
+  console.log('invalid friends: ', invalidFriendIds);
+
+  if (invalidFriendIds.length > 0) {
+    const usersData = await UserService.hydrateUsers(invalidFriendIds);
+
+    const names = usersData
+      .map((u) => u?.name)
+      .filter(Boolean)
+      .join(', ');
+
+    throw new AppError(`${names} ${invalidFriendIds.length > 1 ? 'have' : 'has'} reached the maximum allowed collections (${MAX_COLLECTIONS_PER_USER})`, StatusCodes.BAD_REQUEST);
+  }
+  // Remove friends from data to avoid persisting arbitrary fields
+  const { friends: _ignoredFriends, ...collectionData } = data || {};
+
   return runInTransaction(async (session) => {
     const collection = new Collection({
-      ...data,
+      ...collectionData,
       ownerId: userId,
     });
     await collection.save({ session });
@@ -243,7 +297,22 @@ export const addMembers = async (collectionId: string, authorId: string, friends
     for (const friend of friends) {
       const { friendId, role } = friend;
 
-      const friendCollectionCount = await CollectionMember.countDocuments({ userId: friendId }).session(session);
+      const counts = await CollectionMember.aggregate([
+        { $match: { userId: friendId } },
+        {
+          $lookup: {
+            from: 'collections',
+            localField: 'collectionId',
+            foreignField: '_id',
+            as: 'collectionData',
+          },
+        },
+        { $unwind: '$collectionData' },
+        { $match: { 'collectionData.status': 'ACTIVE' } },
+        { $count: 'count' },
+      ]).session(session);
+
+      const friendCollectionCount = counts.length > 0 ? counts[0].count : 0;
       if (friendCollectionCount >= MAX_COLLECTIONS_PER_USER) {
         throw new AppError(`User ${friendId} has already reached the maximum allowed collections (2)`, StatusCodes.BAD_REQUEST);
       }
