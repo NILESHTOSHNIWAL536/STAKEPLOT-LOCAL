@@ -40,7 +40,6 @@ export async function deduplicateAllTransactions(userId: string | Types.ObjectId
     ]);
 
     const duplicateIds = duplicates.flatMap((d) => d.duplicateIds);
-    console.log('Duplicate IDs:', duplicateIds);
 
     // -------------------------------
     // Step 2: Delete duplicates
@@ -50,7 +49,6 @@ export async function deduplicateAllTransactions(userId: string | Types.ObjectId
         _id: { $in: duplicateIds },
       });
 
-      console.log(`✅ Deleted ${result.deletedCount} duplicate transactions.`);
     } else {
       console.log('✅ No duplicates found for user.');
     }

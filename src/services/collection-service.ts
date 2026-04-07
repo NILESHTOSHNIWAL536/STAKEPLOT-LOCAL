@@ -8,7 +8,7 @@ import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
 import UserService from './user-service';
 
-const MAX_COLLECTIONS_PER_USER = 10;
+const MAX_COLLECTIONS_PER_USER = 5;
 
 const transactionOptions: mongoose.mongo.TransactionOptions = {
   readPreference: 'primary',
@@ -320,8 +320,6 @@ export const addTransactions = async (collectionId: string, userId: string, tran
     // increment collection total
     collection.totalAmount = (collection.totalAmount || 0) + totalAmount;
     await collection.save({ session });
-
-    console.log('collection: ', collection);
 
     // ── PERSONAL collection: no splits, return early ──
     if (collection.type === 'PERSONAL') {
