@@ -56,6 +56,9 @@ router.patch('/:id/closeCollection', CollectionController.closeCollection);
 
 router.patch('/:id/members/:memberId', CollectionController.updateCollectionMember);
 
+// Exit collection by member (delete member from collection)
+router.delete('/:id/exit', CollectionController.exitCollection);
+
 router.get('/:id/all-transactions', CollectionController.getAllTransactions);
 
 export default router;

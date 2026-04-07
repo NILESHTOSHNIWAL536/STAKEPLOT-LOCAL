@@ -8,8 +8,8 @@ import { publishSocketEvent } from '@/utils/webHook';
 export const createCollection = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user._id;
-    const data = req.body;
-    const collection = await CollectionService.createCollection(userId, data);
+    const { friends = [], ...collectionData } = req.body;
+    const collection = await CollectionService.createCollection(userId, collectionData, friends);
     SuccessResponse.data = collection;
     SuccessResponse.message = 'Collection created successfully';
     res.status(StatusCodes.CREATED).json(SuccessResponse);
@@ -227,6 +227,21 @@ export const updateCollectionMember = async (req: Request, res: Response, next: 
   }
 };
 
+export const exitCollection = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+
+    const result = await CollectionService.exitCollectionByMember(collectionId, userId);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Successfully exited the collection';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    console.log("error: ", error);
+    next(error);
+  }
+};
+
 // ============================================
 // COLLECTION INVITATION ENDPOINTS
 // ============================================
@@ -317,6 +332,7 @@ export default {
   closeCollection,
   getAllTransactions,
   updateCollectionMember,
+  exitCollection,
   getPendingInvitations,
   acceptInvitation,
   rejectInvitation,

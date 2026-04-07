@@ -9,6 +9,8 @@ import UserService from './user-service';
 import { redisClient } from '../config';
 import { Types } from 'mongoose';
 
+const MAX_COLLECTIONS_PER_USER = 10;
+
 /**
  * Send invitations to multiple friends for a collection
  */
@@ -47,6 +49,27 @@ export const sendInvitations = async (
     const friendData = await UserService.hydrateUsers([friendId]);
     if (!friendData || friendData.length === 0) {
       throw new AppError(`User ${friendId} not found`, StatusCodes.NOT_FOUND);
+    }
+
+    const friendCollectionCount = await CollectionMember.aggregate([
+      { $match: { userId: friendId } },
+      {
+        $lookup: {
+          from: 'collections',
+          localField: 'collectionId',
+          foreignField: '_id',
+          as: 'collectionData',
+        },
+      },
+      { $unwind: '$collectionData' },
+      { $match: { 'collectionData.status': 'ACTIVE' } },
+      { $count: 'count' },
+    ]);
+
+    const memberCount = friendCollectionCount.length > 0 ? friendCollectionCount[0].count : 0;
+
+    if (memberCount >= MAX_COLLECTIONS_PER_USER) {
+      throw new AppError(`User ${friendId} has reached the maximum allowed collections (2)`, StatusCodes.BAD_REQUEST);
     }
 
     // Check if user is already a member
