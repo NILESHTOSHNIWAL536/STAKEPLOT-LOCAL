@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../../Constants/colors.dart';
 import '../../../../Constants/core/app_padding_sizes.dart';
 import '../../../../Constants/font_manager.dart';
+import '../collections_HomePage.dart';
 import '../create_collection_data.dart';
 import 'create_collection_flow.dart';
 
@@ -54,17 +55,20 @@ class _StepOptionalDescriptionState extends State<StepOptionalDescription> {
         await collectionsController.refreshCollectionData(newCollectionId);
 
         if (context.mounted) {
-           // Navigate to the dashboard, removing all create-flow screens
+          // Navigate to the dashboard, removing all create-flow screens
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (_) => const SharedCollectionDashboard(),
+              builder: (_) => CollectionDetailsPage(
+                hasTransactions: false,
+                title: collectionDraft.name ?? "Untitled",
+                type: collectionDraft.type ?? "PERSONAL",
+              ),
             ),
             (route) => route.isFirst,
           );
         }
-      }
-       else if (context.mounted) {
+      } else if (context.mounted) {
         Get.snackbar(
           "Error",
           "Failed to create collection. Please try again.",
@@ -113,8 +117,6 @@ class _StepOptionalDescriptionState extends State<StepOptionalDescription> {
                         await _submit(context);
                       },
                 child: Text(
-
-
                   "Skip",
                   style: FontManager().getTextStyle(
                     context,

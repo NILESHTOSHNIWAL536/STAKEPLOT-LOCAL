@@ -11,18 +11,16 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/app_shadows.dart';
 
-
-void navToHistory(context)
-{
-                    HapticFeedback.selectionClick();
-                    isLoadingMore.value=false;
-                    clearTransactions(context: context,f: false);
-                     Navigator.push(
-                      context,  
-                      MaterialPageRoute(
-                        builder: (context) => const TransactionHistoryScreen(),
-                      ),
-                    );
+void navToHistory(context) {
+  HapticFeedback.selectionClick();
+  isLoadingMore.value = false;
+  clearTransactions(context: context, f: false);
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const TransactionHistoryScreen(),
+    ),
+  );
 }
 
 // Widget historyButton(double fontSizeFactor,BuildContext context) {
@@ -57,10 +55,8 @@ void navToHistory(context)
 //         ],),
 //       )
 //     );
-    
 
 //   }
-
 
 Widget historyButton(BuildContext context) {
   return InkWell(
@@ -69,37 +65,35 @@ Widget historyButton(BuildContext context) {
     },
     borderRadius: BorderRadius.circular(10),
     child: Container(
-      width: MediaQuery.sizeOf(context).width/2.4,
-      height: MediaQuery.sizeOf(context).height/21,
+      width: MediaQuery.sizeOf(context).width / 2.4,
+      height: MediaQuery.sizeOf(context).height / 21,
       padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
         // base white fill
         color: AppColors.backgroundColor,
         // semi-opaque white overlay (matches your linear-gradient with same stops)
-       
-        borderRadius: BorderRadius.circular(10), // nice rounded corners similar to SVG
+
+        borderRadius:
+            BorderRadius.circular(10), // nice rounded corners similar to SVG
         border: Border.all(
           color: AppColors.primaryColor, // stroke color from SVG
           width: 1,
         ),
         // subtle elevation feel — optional, remove if you don't want it
-        boxShadow: [
-          AppShadows.soft
-        ],
+        boxShadow: [AppShadows.soft],
       ),
       child: Center(
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            
             AvatarProfileImageZero(
               url: HomePageIcons.history,
-               width: 5,
-                height: 32,
+              width: 5,
+              height: 32,
             ),
-        
-             SizedBox(width: AppSizes.w8),
-        
+
+            SizedBox(width: AppSizes.w8),
+
             // Text label
             Text(
               'History',

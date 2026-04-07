@@ -26,10 +26,11 @@ import 'package:flutter_application_code_stakeplot/repository/transactions_repos
 import 'package:flutter_application_code_stakeplot/widget_services/widget_updation.dart';
 import 'package:get/get.dart';
 import '../../components/shared_utils.dart';
+import '../../controllers/collections_controller.dart';
 import '../../controllers/user-controller.dart';
 import '../insightsController.dart';
 
-Future<void>  callApi(context) async {
+Future<void> callApi(context) async {
   await Get.find<UserController>().fetchUserInfo();
   final InsightsController _controller = Get.put(InsightsController());
   getBankAccounts();
@@ -46,9 +47,11 @@ Future<void>  callApi(context) async {
   unawaited(getGroupTransactions());
   unawaited(getCustomCategory(context));
   unawaited(getAutoPayInfo());
-  unawaited(getAllTransactionHistory(context, false, false, isRefreshing: true));
+  unawaited(
+      getAllTransactionHistory(context, false, false, isRefreshing: true));
   unawaited(getAllTransactionHistory(context, true, false, isRefreshing: true));
-  getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,isSplashScreen: true);
+  getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,
+      isSplashScreen: true);
   custom = getthelist();
   allOrGroupTransactionsName.value = StringConstant.allTransactions;
   clearAllFlags();
@@ -60,6 +63,7 @@ Future<void>  callApi(context) async {
   lifecycleHandler = AppLifecycleHandler(userController.userId.value);
   WidgetsBinding.instance.addObserver(lifecycleHandler);
   setUpSocketListenerMainPage(context);
+  CollectionsController().getCollections();
 }
 
 void initializeData(context, mounted) {

@@ -115,9 +115,7 @@ Future<bool> check(context, String flag) async {
 
 Future<void> storeDeviceInfo(context) async {
   var json = await getUserStats();
-  var responce = await postDataApiCall(
-      "${SendNotificationsRoutes.deviceScreenTime}", json);
-  if (getFlagOfResponse(responce)) {}
+  await postDataApiCall("${SendNotificationsRoutes.deviceScreenTime}", json);
   try {
     await postDataApiCall(AuthApiRoutes.logout, {});
   } catch (e) {

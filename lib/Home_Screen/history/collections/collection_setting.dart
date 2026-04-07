@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/controllers/access-permissions.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../Home_Screen/history/collections/create_collection_data.dart';
 import '../../../Home_Screen/history/collections/create_collection_pages/step_select_duration.dart';
 import '../../../Utils/collections_helper.dart';
+import '../../../Utils/navigateTo.dart';
 import '../../../backed_connections/apis_connect.dart';
 import '../../../backed_connections/bankServices/collection_pdf_export.dart';
 import '../../../controllers/collections_controller.dart';
@@ -145,10 +147,45 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                       title: "Exit Collection",
                       subtitle: "Leave this collection",
                       onTap: () => _confirmDelete(context, "exit")),
+
+                getOwner(),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget getOwner() {
+    final CollectionDetailsModel? details =
+        collectionsController.collectionDetails.value;
+
+    if (details == null) return const SizedBox.shrink();
+
+    final bool isShared = details.collection.type == "SHARED";
+    final bool hasMembers = details.members.isNotEmpty;
+
+    final String? ownerName = isShared && hasMembers
+        ? details.members
+            .firstWhereOrNull((m) => m.userId == details.collection.ownerId)
+            ?.name
+        : null;
+
+    String? name = ownerName == collectionsController.currentUser?.name
+        ? "You"
+        : ownerName;
+
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Center(
+        child: textStyle(
+          text: name == null ? "" : "Collection Created by $name",
+          context: context,
+          fontsize: 11,
+          fontWeight: FontWeight.w300,
+          c: _T.red,
+        ),
       ),
     );
   }
@@ -553,7 +590,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => _StyledDialog(
+      builder: (_context) => _StyledDialog(
         title: "Rename Collection",
         icon: Icons.edit_outlined,
         iconColor: _T.navy,
@@ -576,13 +613,13 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
         confirmLabel: "Save Changes",
         confirmColor: _T.navy,
         onConfirm: () async {
-          Navigator.pop(context);
           final name = ctrl.text.trim();
           if (name.isEmpty) return;
           await collectionsController.updateCollection(
             id: collectionsController.selectedCollection.value!.id,
             name: name,
           );
+          Navigator.pop(_context);
         },
       ),
     );
@@ -593,7 +630,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => _StyledDialog(
+      builder: (_CONTEXT) => _StyledDialog(
         title: "Close Collection",
         icon: Icons.cancel_outlined,
         iconColor: Colors.orange,
@@ -604,11 +641,11 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
         confirmLabel: "Close Collection",
         confirmColor: Colors.orange,
         onConfirm: () async {
-          Navigator.pop(context);
+          AppNavigator.pop(_CONTEXT);
           await collectionsController.closeCollection(
             collectionsController.selectedCollection.value!.id,
+            context,
           );
-          if (context.mounted) Navigator.pop(context);
         },
       ),
     );
@@ -634,11 +671,9 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
         confirmLabel: type == "delete" ? "Delete" : "Exit Collection",
         confirmColor: Colors.red,
         onConfirm: () async {
-          Navigator.pop(_context);
+          AppNavigator.pop(_context);
           await collectionsController.deleteCollection(
-            collectionsController.selectedCollection.value!.id,
-            context,
-          );
+              collectionsController.selectedCollection.value!.id, context);
         },
       ),
     );

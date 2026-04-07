@@ -274,13 +274,19 @@ class CollectionsController extends GetxController {
         "type": type.toUpperCase(),
         "description": description,
         if (expiryAt != null) "expiryAt": getIsoDateFromDuration(expiryAt),
+        "friends": friends
       };
 
+      print(friends);
       final createRes =
           await postDataApiCall(CollectionsRoute.createCollection, body);
 
       if (!getFlagOfResponse(createRes)) {
-        debugPrint("❌ createCollection failed: ${createRes.body}");
+        final resData = json.decode(createRes.body);
+        snackBarCalledfail(
+            context,
+            resData["error"] ??
+                "Failed to create collection. Please try again.");
         return null;
       }
 
@@ -322,13 +328,7 @@ class CollectionsController extends GetxController {
         splitsList.clear();
         balancesList.clear();
         collectionsList.removeWhere((e) => e.id == id);
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const TransactionHistoryScreen(),
-          ),
-        );
+        AppNavigator.pushReplacement(context, TransactionHistoryScreen());
       }
     } catch (e) {
       debugPrint("deleteCollection error: $e");
@@ -608,10 +608,10 @@ class CollectionsController extends GetxController {
   // =========================
   // CLOSE COLLECTION
   // =========================
-  Future<bool> closeCollection(String id) async {
+  Future<bool> closeCollection(String id, BuildContext context) async {
     try {
       final response =
-          await updateDataApiCallPut(CollectionsRoute.closeCollection(id));
+          await updateDataApiCall(CollectionsRoute.closeCollection(id));
 
       if (getFlagOfResponse(response)) {
         /// Update status locally — no full reload needed
@@ -640,6 +640,7 @@ class CollectionsController extends GetxController {
                     old.outStandingAmount ??
                     0,
           );
+          AppNavigator.pushReplacement(context, TransactionHistoryScreen());
         }
         return true;
       }
@@ -687,7 +688,7 @@ class CollectionsController extends GetxController {
         /// Refresh collections also
         await getCollections(forceRefresh: true);
 
-        AppNavigator.pushReplacementNamed(context, '/Collections');
+        // AppNavigator.pushReplacementNamed(context, '/Collections');
       }
     } catch (e) {
       debugPrint("acceptInvitation error: $e");
@@ -738,6 +739,7 @@ class CollectionsController extends GetxController {
 
   void clearAllData() {
     /// 🔥 MAIN DATA
+    selectedTab.value = "All";
     collectionsList.clear();
     selectedCollection.value = null;
     collectionDetails.value = null;

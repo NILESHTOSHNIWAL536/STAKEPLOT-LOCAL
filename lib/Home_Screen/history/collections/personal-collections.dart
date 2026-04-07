@@ -13,6 +13,7 @@ import '../../../backed_connections/apis_connect.dart';
 import '../../../components/shared_utils.dart';
 import '../../../controllers/collections_controller.dart';
 import '../../../image_service/avatarProfile.dart';
+import '../../../model/TransactionModel.dart';
 import '../../../model/collections_model.dart';
 import '../transactions_ui_component.dart';
 import 'collection_setting.dart';
@@ -62,13 +63,13 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
     super.dispose();
   }
 
-  List<dynamic> _filtered(List<dynamic> transactions) {
+  List<dynamic> _filtered(List<TransactionModel> transactions) {
     if (_searchQuery.isEmpty) return transactions;
     return transactions.where((tx) {
-      final name = (tx.name ?? '').toString().toLowerCase();
-      final category = (tx.category ?? '').toString().toLowerCase();
-      final amount = (tx.amount ?? '').toString().toLowerCase();
-      final date = (tx.transactionTimestamp ?? '').toString().toLowerCase();
+      final name = (tx.narration).toString().toLowerCase();
+      final category = (tx.category).toString().toLowerCase();
+      final amount = (tx.amount).toString().toLowerCase();
+      final date = (tx.transactionTimestamp).toString().toLowerCase();
       return name.contains(_searchQuery) ||
           category.contains(_searchQuery) ||
           amount.contains(_searchQuery) ||

@@ -28,7 +28,7 @@ final Map<String, dynamic> permissionJson = {
       "personLimit": true,
       "rename": true,
       "duration": true,
-      "close": true,
+      "close": true && isOwner,
       "delete": true && isOwner,
       "exit": true && !isOwner
     }

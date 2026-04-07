@@ -192,7 +192,7 @@ class InvitationsList extends StatelessWidget {
       BuildContext context, String invitationId, bool isAccept) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (_context) {
         return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -210,12 +210,11 @@ class InvitationsList extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 if (isAccept) {
-                  await collectionsController.acceptInvitation(
-                      invitationId, context);
+                  await collectionsController.acceptInvitation(invitationId, context);
                 } else {
-                  Navigator.pop(context);
                   await collectionsController.rejectInvitation(invitationId);
                 }
+                  Navigator.pop(_context);
               },
               child: Text(isAccept ? "Accept" : "Delete"),
             ),
