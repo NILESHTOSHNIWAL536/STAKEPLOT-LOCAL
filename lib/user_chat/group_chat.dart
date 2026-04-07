@@ -45,10 +45,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     socket.connect();
 
     /// 3️⃣ On connect → join group room
-    socket.onConnect((_) {
-      debugPrint("✅ Connected to socket");
-      debugPrint("📌 Joining group: ${widget.groupId}");
-
+    socket.onConnect((_) {   
       socket.emit("joinRoom", widget.groupId);
     });
 

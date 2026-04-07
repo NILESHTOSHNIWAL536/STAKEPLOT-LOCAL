@@ -6,6 +6,8 @@ import '../Home_Screen/history/collections/collections_HomePage.dart';
 import '../Home_Screen/history/collections/trip/screens/shared_dashboard_screen.dart';
 import '../Home_Screen/history/transactionHistoryScreen.dart';
 import '../Utils/durations_range.dart';
+import '../Utils/navigateTo.dart';
+import '../Utils/socket_connect.dart';
 import '../backed_connections/apiAutomations/curd.dart';
 import '../model/TransactionModel.dart';
 import '../model/collections_model.dart';
@@ -104,7 +106,8 @@ class CollectionsController extends GetxController {
   // =========================
   // GET COLLECTION BY ID
   // =========================
-  Future<void> getCollectionById(String id, BuildContext context) async {
+  Future<void> getCollectionById(String id, BuildContext context,
+      [bool forceRefresh = false]) async {
     if (_isFetchingDetails) return;
     _isFetchingDetails = true;
 
@@ -126,6 +129,9 @@ class CollectionsController extends GetxController {
             m.userId.toString().trim() ==
             userController.userId.toString().trim(),
       );
+
+      if (forceRefresh) return;
+
       splitsList.clear();
       await getSplits(id);
 
@@ -441,6 +447,8 @@ class CollectionsController extends GetxController {
       selectedTransactions.clear();
       SeletedTransactionsList.clear();
       await refreshCollectionData(collectionId);
+      emitCollectionsOnSocket(
+          "collection", {"id": collectionId, "action": "update"});
       Navigator.pop(context);
       Navigator.pop(context);
       Navigator.pop(context);
@@ -586,6 +594,7 @@ class CollectionsController extends GetxController {
             members: collectionDetails.value?.members ?? [],
             transactions: collectionDetails.value?.transactions ?? [],
           );
+          emitCollectionsOnSocket("collection", {"id": id, "action": "update"});
         }
 
         return true;
@@ -664,7 +673,8 @@ class CollectionsController extends GetxController {
     }
   }
 
-  Future<void> acceptInvitation(String invitationId) async {
+  Future<void> acceptInvitation(
+      String invitationId, BuildContext context) async {
     try {
       final response = await postDataApiCall(
         CollectionsRoute.acceptInvitation(invitationId),
@@ -676,10 +686,17 @@ class CollectionsController extends GetxController {
 
         /// Refresh collections also
         await getCollections(forceRefresh: true);
+
+        AppNavigator.pushReplacementNamed(context, '/Collections');
       }
     } catch (e) {
       debugPrint("acceptInvitation error: $e");
     }
+  }
+
+  void emitCollectionsOnSocket(String type, jsonData) {
+    final socket = SocketService().getSocket();
+    socket.emit(type, jsonData);
   }
 
   Future<void> rejectInvitation(String invitationId) async {
@@ -766,13 +783,167 @@ class CollectionsController extends GetxController {
 
       if (getFlagOfResponse(response)) {
         final data = json.decode(response.body);
-        final list = TransactionModel.listFromJson(data["data"]["transactions"]);
+        final list =
+            TransactionModel.listFromJson(data["data"]["transactions"]);
         AllTransactions.addAll(list);
       }
     } catch (e) {
       debugPrint("getAllCollectionsTransactions error: $e");
     } finally {
       isSplitLoading.value = false;
+    }
+  }
+
+  void socketMessage(dynamic data, BuildContext context) {
+    if (data == null || data['type'] == null) return;
+
+    final type = data['type'];
+
+    if (type == "splitUpdate") {
+      getSplits(collectionDetails.value!.collection.id);
+      getBalances(collectionDetails.value!.collection.id);
+      return;
+    }
+
+    if (type == "AcceptInvitation") {
+      getCollectionById(data['collectionId'], context, true);
+      return;
+    }
+    if (type == "updatedMember") {
+      var collection = data["data"]["members"];
+      _updateMember(collection);
+      return;
+    }
+
+    final collectionData = data['data']?['collection'];
+
+    if (collectionData == null) return;
+
+    final id = collectionData['_id'];
+
+    switch (type) {
+      case "nameUpdate":
+        _updateCollectionField(id, name: collectionData['name']);
+        break;
+
+      case "descriptionUpdate":
+        _updateCollectionField(id, description: collectionData['description']);
+        break;
+
+      case "expiryUpdate":
+        _updateCollectionField(
+          id,
+          expiryAt: collectionData['expiryAt'],
+        );
+        break;
+
+      case "update":
+        refreshCollectionData(id); // fallback
+        break;
+
+      default:
+        refreshCollectionData(id);
+        print("⚠️ Unknown socket type: $type");
+    }
+  }
+
+  void _updateCollectionField(
+    String id, {
+    String? name,
+    String? description,
+    String? expiryAt,
+  }) {
+    /// ✅ Update collectionDetails
+    if (collectionDetails.value?.collection.id == id) {
+      final old = collectionDetails.value!;
+
+      collectionDetails.value = CollectionDetailsModel(
+        collection: CollectionModel(
+          id: old.collection.id,
+          name: name ?? old.collection.name,
+          type: old.collection.type,
+          ownerId: old.collection.ownerId,
+          description: description ?? old.collection.description,
+          expiryAt: expiryAt != null
+              ? DateTime.tryParse(expiryAt)
+              : old.collection.expiryAt,
+          status: old.collection.status,
+          totalAmount: old.collection.totalAmount,
+          totalCredit: old.collection.totalCredit,
+          totalDebit: old.collection.totalDebit,
+          outStandingAmount: old.collection.outStandingAmount,
+        ),
+        members: old.members,
+        transactions: old.transactions,
+      );
+    }
+
+    /// ✅ Update collectionsList
+    final index = collectionsList.indexWhere((e) => e.id == id);
+
+    if (index != -1) {
+      final old = collectionsList[index];
+
+      collectionsList[index] = CollectionModel(
+        id: old.id,
+        name: name ?? old.name,
+        type: old.type,
+        ownerId: old.ownerId,
+        description: description ?? old.description,
+        expiryAt: expiryAt != null ? DateTime.tryParse(expiryAt) : old.expiryAt,
+        status: old.status,
+        totalAmount: old.totalAmount,
+        totalCredit: old.totalCredit,
+        totalDebit: old.totalDebit,
+        outStandingAmount: old.outStandingAmount,
+      );
+    }
+  }
+
+  void _updateMember(dynamic memberData) {
+    if (memberData == null) return;
+
+    final memberId = memberData["_id"];
+
+    /// ✅ Update collectionDetails.members
+    if (collectionDetails.value != null) {
+      final oldDetails = collectionDetails.value!;
+
+      final members = List<MemberModel>.from(oldDetails.members);
+
+      final index = members.indexWhere((m) => m.id == memberId);
+
+      if (index != -1) {
+        final old = members[index];
+
+        members[index] = MemberModel(
+          id: old.id,
+          collectionId: old.collectionId,
+          userId: old.userId,
+          name: memberData["user"]?["name"] ?? old.name,
+          role: memberData["role"] ?? old.role,
+          setAmount: (memberData["limitAmount"] ?? old.setAmount).toString(),
+          amountSpend: old.amountSpend, // unchanged
+        );
+      } else {
+        /// 🔥 If new member (optional)
+        members.add(MemberModel(
+          id: memberData["_id"],
+          collectionId: memberData["collectionId"],
+          userId: memberData["userId"],
+          name: memberData["user"]?["name"] ?? "",
+          role: memberData["role"] ?? "VIEW",
+          setAmount: (memberData["limitAmount"] ?? 0).toString(),
+          amountSpend: "0",
+        ));
+      }
+
+      /// 🔥 Reassign (VERY IMPORTANT)
+      collectionDetails.value = CollectionDetailsModel(
+        collection: oldDetails.collection,
+        members: members,
+        transactions: oldDetails.transactions,
+      );
     }
   }
 }

@@ -48,9 +48,7 @@ void getCategoryData() async {
     // API call inside try
     var res = await getDataApiCall(BankTransactionRoutes.categorizeTransactions);
 
-    if (getFlagOfResponse(res)) {
-      print("response finora ${res.body}");
-    
+    if (getFlagOfResponse(res)) {    
       var data = jsonDecode(res.body);
       
        categoriesList.clear();

@@ -61,8 +61,6 @@ class ReserveApiService {
 
   /// Prints the full payload to the debug console (no-op in release mode).
   static void _logPayload(Map<String, dynamic> p) {
-    debugPrint('========== RESERVE PAYLOAD ==========');
     p.forEach((k, v) => debugPrint('  $k: $v'));
-    debugPrint('=====================================');
   }
 }

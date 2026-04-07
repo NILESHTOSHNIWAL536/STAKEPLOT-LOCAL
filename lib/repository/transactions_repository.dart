@@ -201,9 +201,7 @@ Future<void> getAllTransactionHistory(
           );
 
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      print("🔹 Transaction History Response: $data");
-      
+      var data = jsonDecode(response.body);      
       var obj = data['data'];
       if (obj != null) {
         if (isRefreshing) {

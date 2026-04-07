@@ -90,8 +90,6 @@ Future<PostModel?> fetchPostById(String postId, BuildContext context) async {
 
 //     notificationList.clear();
 //     notificationList.addAll(his['data']);
-//     print("notifications");
-//     print(notificationList);  
     
 //     notificationList.forEach((req) {
 //       String type = req['notificationMessage']['type'];

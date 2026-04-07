@@ -119,7 +119,6 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   }
 //   Widget build(BuildContext context) {
 // final bottomSafe = MediaQuery.of(context).padding.bottom;
-// print("bottomSafe $bottomSafe");
 //     return Container(
 //       height: 60+bottomSafe,
 //       color: AppColors.backgroundColor,

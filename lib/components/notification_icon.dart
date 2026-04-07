@@ -41,7 +41,7 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
                    onTap: (){
                      HapticFeedback.mediumImpact();
                            Navigator.pushNamed(context, '/Notifications');
-                       },
+                    },
                     child: Obx(()=> !hasGetNewNotifications.value? 
                     AvatarProfileImageZero(url: HomePageIcons.notification, width: 30, height: 30):
                      AvatarProfileImageZero(url: HomePageIcons.notificationStack, width: 30, height: 30)
@@ -53,11 +53,11 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
                    onTap: (){
                      HapticFeedback.mediumImpact();
                            Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const UpdatesScreen(),
-          ),
-        );
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UpdatesScreen(),
+                            ),
+                          );
                        },
                     child: 
                     AvatarProfileImageZero(url: HomePageIcons.appUpdates, width: 30, height: 30)

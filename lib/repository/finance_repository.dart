@@ -73,10 +73,7 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
     final response = await getDataApiCall(urlPath);
     if (getFlagOfResponse(response)) {
       final his = jsonDecode(response.body);
-      print("graph data ");
-      print(his);
       transactionChatGraph.clear();
-
       try {
         final data = his['data']['result'] as Map;
         totalDebitValuePercent.value = double.tryParse(
