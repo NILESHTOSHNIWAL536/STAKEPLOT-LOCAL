@@ -51,8 +51,24 @@ export const sendInvitations = async (
       throw new AppError(`User ${friendId} not found`, StatusCodes.NOT_FOUND);
     }
 
-    const friendCollectionCount = await CollectionMember.countDocuments({ userId: friendId });
-    if (friendCollectionCount >= MAX_COLLECTIONS_PER_USER) {
+    const friendCollectionCount = await CollectionMember.aggregate([
+      { $match: { userId: friendId } },
+      {
+        $lookup: {
+          from: 'collections',
+          localField: 'collectionId',
+          foreignField: '_id',
+          as: 'collectionData',
+        },
+      },
+      { $unwind: '$collectionData' },
+      { $match: { 'collectionData.status': 'ACTIVE' } },
+      { $count: 'count' },
+    ]);
+
+    const memberCount = friendCollectionCount.length > 0 ? friendCollectionCount[0].count : 0;
+
+    if (memberCount >= MAX_COLLECTIONS_PER_USER) {
       throw new AppError(`User ${friendId} has reached the maximum allowed collections (2)`, StatusCodes.BAD_REQUEST);
     }
 
@@ -153,7 +169,7 @@ export const getPendingInvitations = async (userId: string): Promise<{ invitatio
 
   const hydratedInvitations = invitations.map((inv: any) => ({
     ...inv,
-      invitedBy: userMap.get(inv.invitedByUserId.toString()) || { _id: inv.invitedByUserId },
+    invitedBy: userMap.get(inv.invitedByUserId.toString()) || { _id: inv.invitedByUserId },
     collection: inv.collectionId,
   }));
 
