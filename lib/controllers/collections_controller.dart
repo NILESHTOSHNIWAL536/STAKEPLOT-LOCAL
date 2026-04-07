@@ -316,10 +316,12 @@ class CollectionsController extends GetxController {
   // =========================
   // DELETE COLLECTION
   // =========================
-  Future<void> deleteCollection(String id, BuildContext context) async {
+  Future<void> deleteCollection(
+      String id, BuildContext context, String type) async {
     try {
-      final response =
-          await deleteDataApiCall(CollectionsRoute.deleteCollection(id));
+      final response = await deleteDataApiCall(type == "exit"
+          ? CollectionsRoute.exitCollection(id)
+          : CollectionsRoute.deleteCollection(id));
 
       if (getFlagOfResponse(response)) {
         /// Batch clear

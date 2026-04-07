@@ -40,7 +40,7 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
                   InkWell(
                    onTap: (){
                      HapticFeedback.mediumImpact();
-                           Navigator.pushNamed(context, '/Notifications');
+                      Navigator.pushNamed(context, '/Notifications');
                     },
                     child: Obx(()=> !hasGetNewNotifications.value? 
                     AvatarProfileImageZero(url: HomePageIcons.notification, width: 30, height: 30):

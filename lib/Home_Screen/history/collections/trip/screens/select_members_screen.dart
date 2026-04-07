@@ -45,15 +45,23 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
   void _proceedToSplit() {
     List<MemberModel> selectedMembers = [];
 
-    collectionsController.collectionDetails.value?.members.forEach((e) =>
-        selectedMembers.add(MemberModel(
+    final members =
+        collectionsController.collectionDetails.value?.members ?? [];
+
+    selectedMembers = members
+        .where((e) => _selectedMemberIds.contains(e.id))
+        .map(
+          (e) => MemberModel(
             collectionId: e.collectionId,
             id: e.id,
             name: e.name,
             role: e.role,
             userId: e.userId,
             setAmount: e.setAmount,
-            amountSpend: e.amountSpend)));
+            amountSpend: e.amountSpend,
+          ),
+        )
+        .toList();
 
     Navigator.push(
       context,

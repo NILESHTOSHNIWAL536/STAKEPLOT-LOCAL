@@ -63,10 +63,23 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
     super.dispose();
   }
 
-  bool can(String action) => hasPermission(
-      type: collectionsController.collectionDetails.value!.collection.type,
-      role: collectionsController.currentUser?.role,
-      action: action);
+  // bool can(String action) => hasPermission(
+  //     type: collectionsController.collectionDetails.value!.collection.type,
+  //     role: collectionsController.currentUser?.role,
+  //     action: action);
+
+  bool can(String action) {
+    final details = collectionsController.collectionDetails.value;
+    final role = collectionsController.currentUser?.role;
+
+    if (details == null || role == null) return false;
+
+    return hasPermission(
+      type: details.collection.type,
+      role: role,
+      action: action,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -673,7 +686,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
         onConfirm: () async {
           AppNavigator.pop(_context);
           await collectionsController.deleteCollection(
-              collectionsController.selectedCollection.value!.id, context);
+              collectionsController.selectedCollection.value!.id, context,type);
         },
       ),
     );
