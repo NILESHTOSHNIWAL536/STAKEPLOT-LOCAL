@@ -124,9 +124,10 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
 
   // Validate potential members' limits up front
   const friendIds = Array.from(new Set(friends.map((f) => f.friendId).filter(Boolean)));
+  const friendObjectIds = friendIds.map((id) => new mongoose.Types.ObjectId(id));
 
   const friendCounts = await CollectionMember.aggregate([
-    { $match: { userId: { $in: friendIds } } },
+    { $match: { userId: { $in: friendObjectIds } } },
     {
       $lookup: {
         from: 'collections',
@@ -140,13 +141,9 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
     { $group: { _id: '$userId', count: { $sum: 1 } } },
   ]);
 
-  console.log('friends count: ', friendCounts);
-
   const countMap = new Map(friendCounts.map((c) => [c._id.toString(), c.count]));
-  console.log('count map: ', countMap);
 
   const invalidFriendIds = friendIds.filter((id) => (countMap.get(id) || 0) >= MAX_COLLECTIONS_PER_USER);
-  console.log('invalid friends: ', invalidFriendIds);
 
   if (invalidFriendIds.length > 0) {
     const usersData = await UserService.hydrateUsers(invalidFriendIds);
@@ -158,7 +155,7 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
 
     throw new AppError(`${names} ${invalidFriendIds.length > 1 ? 'have' : 'has'} reached the maximum allowed collections (${MAX_COLLECTIONS_PER_USER})`, StatusCodes.BAD_REQUEST);
   }
-  // Remove friends from data to avoid persisting arbitrary fields
+  // Remove friends from data to avoid persisting arbitrary fields[]
   const { friends: _ignoredFriends, ...collectionData } = data || {};
 
   return runInTransaction(async (session) => {
