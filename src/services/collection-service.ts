@@ -191,13 +191,32 @@ export const getUserCollections = async (userId: string) => {
   const userMap = new Map();
   userData.forEach((u) => userMap.set(u._id.toString(), u));
 
-  return collections.map((c) => {
-    const co = (c as any).toObject ? (c as any).toObject() : c;
-    return {
-      ...co,
-      owner: userMap.get(c.ownerId.toString()) || { _id: c.ownerId },
-    };
-  });
+  // Fetch members for each collection
+  const collectionsWithMembers = await Promise.all(
+    collections.map(async (c) => {
+      const collectionMembers = await CollectionMember.find({ collectionId: c._id }).lean();
+      
+      // Hydrate member user data
+      const memberUserIds = collectionMembers.map((m) => m.userId.toString());
+      const memberUserData = await UserService.hydrateUsers(memberUserIds);
+      const memberUserMap = new Map();
+      memberUserData.forEach((u) => memberUserMap.set(u._id.toString(), u));
+
+      const hydratedMembers = collectionMembers.map((m) => ({
+        ...m,
+        user: memberUserMap.get(m.userId.toString()) || { _id: m.userId },
+      }));
+
+      const co = (c as any).toObject ? (c as any).toObject() : c;
+      return {
+        ...co,
+        owner: userMap.get(c.ownerId.toString()) || { _id: c.ownerId },
+        members: hydratedMembers.map((m) => m.user?.name),
+      };
+    })
+  );
+
+  return collectionsWithMembers;
 };
 
 export const getCollectionById = async (collectionId: string, userId: string) => {
@@ -765,6 +784,21 @@ export const updateCollectionMember = async (collectionId: string, userId: strin
   return hydratedMember;
 };
 
+export const exitCollectionByMember = async (collectionId: string, userId: string) => {
+  // Check if member exists in the collection
+  const member = await CollectionMember.findOne({ collectionId, userId });
+  if (!member) {
+    throw new AppError('You are not a member of this collection', StatusCodes.NOT_FOUND);
+  }
+
+  // Delete the collection member document
+  await CollectionMember.deleteOne({ collectionId, userId });
+
+  return {
+    message: 'Successfully exited the collection',
+  };
+};
+
 export default {
   createCollection,
   getUserCollections,
@@ -780,4 +814,5 @@ export default {
   closeCollection,
   getAllTransactions,
   updateCollectionMember,
+  exitCollectionByMember,
 };
