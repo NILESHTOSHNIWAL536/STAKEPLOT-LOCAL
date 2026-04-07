@@ -26,7 +26,7 @@ const redisClient: RedisClientType = createClient({
     port: Number(ServerConfig.REDIS_PORT) || 6379,
     reconnectStrategy: (retries) => Math.min(retries * 50, 2000),
   },
-  password: ServerConfig.REDIS_PASSWORD,
+  // password: ServerConfig.REDIS_PASSWORD,
 });
 
 // Handle Redis connection events

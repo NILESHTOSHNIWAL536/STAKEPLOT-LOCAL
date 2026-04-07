@@ -84,7 +84,7 @@ export function extractWithPython(
 ): Promise<any> {
   return new Promise((resolve, reject) => {
     // const py = spawn('python', ['scrapemail.py']);
-    const py = spawn('python3', ['scrapemail.py']);
+    const py = spawn('python', ['scrapemail.py']);
     let data = '';
     let errorData = '';
 
