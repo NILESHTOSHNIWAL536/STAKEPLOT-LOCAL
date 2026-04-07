@@ -136,7 +136,7 @@ static String getSearchedTransactions(
   // Delete bank data
   static String deleteBankAccount(
           {required String bankId, required String accountId}) =>
-      "$_urlPath/$bankId/$accountId";
+"$_urlPath/$bankId/$accountId";
 
   // Delete transactions
   static String deleteTransactions = "$_urlPath/delete";

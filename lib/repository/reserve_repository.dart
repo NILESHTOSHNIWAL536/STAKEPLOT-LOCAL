@@ -40,7 +40,7 @@ class ReserveApiService {
         BankTransactionRoutes.createReserve,
        
         payload,
-      );
+      );  
 
       if (getFlagOfResponse(response)) {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
@@ -54,7 +54,47 @@ class ReserveApiService {
       return ApiFailure('Network error:\n$e');
     }
   }
+static Future<ApiResult<Map<String, dynamic>>> postDaysForSuggestedAmount(
+  String url,
+  Map<String, dynamic> payload,
+) async {
+  _logPayload(payload);
 
+  try {
+    final response = await postDataApiCall(
+      url,
+      payload,
+    );
+
+    if (getFlagOfResponse(response)) {
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      return ApiSuccess(body);
+    }
+
+    return ApiFailure(
+      'Server error ${response.statusCode}:\n${response.body}',
+    );
+  } catch (e) {
+    return ApiFailure('Network error:\n$e');
+  }
+}
+
+static Future<ApiResult<Map<String, dynamic>>> getSuggestedAmount(
+  String url,
+) async {
+  try {
+    final response = await getDataApiCall(url);
+    if (getFlagOfResponse(response)) {
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      return ApiSuccess(body);
+    }
+    return ApiFailure(
+      'Server error ${response.statusCode}:\n${response.body}',
+    );
+  } catch (e) {
+    return ApiFailure('Network error:\n$e');
+  }
+}
   /// Prints the full payload to the debug console (no-op in release mode).
   static void _logPayload(Map<String, dynamic> p) {
     debugPrint('========== RESERVE PAYLOAD ==========');

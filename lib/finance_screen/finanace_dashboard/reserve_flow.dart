@@ -624,7 +624,7 @@ class _SuggestedChip extends StatelessWidget {
         border: Border.all(color: AppColors2.inputBorder),
       ),
       child: const Text(
-        'Suggested Amount    ₹ 6700.34',
+        'Suggested Amount ₹ 6700.34',
         style: TextStyle(fontSize: 13, color: AppColors2.textMid),
       ),
     );
