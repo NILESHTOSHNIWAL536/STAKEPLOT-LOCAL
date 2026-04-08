@@ -295,6 +295,66 @@ export const getCollectionInvitations = async (req: Request, res: Response, next
   }
 };
 
+export const recordPayment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId, splitId } = req.params;
+    const { amount, note } = req.body;
+
+    if (!amount || isNaN(Number(amount))) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'amount is required and must be a number' });
+    }
+
+    const result = await CollectionService.recordPayment(collectionId, userId, splitId, Number(amount), note);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Payment recorded successfully';
+    res.status(StatusCodes.CREATED).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const clearPayment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId, splitId } = req.params;
+    const { payerId, amount, note } = req.body;
+
+    if (!payerId) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'payerId is required' });
+    }
+    if (!amount || isNaN(Number(amount))) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'amount is required and must be a number' });
+    }
+
+    const result = await CollectionService.clearPayment(collectionId, userId, splitId, payerId, Number(amount), note);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Payment cleared successfully';
+    res.status(StatusCodes.CREATED).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const setMemberLimits = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const { id: collectionId } = req.params;
+    const { limits } = req.body;
+
+    if (!Array.isArray(limits) || limits.length === 0) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'limits must be a non-empty array' });
+    }
+
+    const result = await CollectionService.setMemberLimits(collectionId, userId, limits);
+    SuccessResponse.data = result;
+    SuccessResponse.message = 'Member limits updated successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createCollection,
   getUserCollections,
@@ -316,4 +376,7 @@ export default {
   rejectInvitation,
   cancelInvitation,
   getCollectionInvitations,
+  recordPayment,
+  clearPayment,
+  setMemberLimits,
 };
