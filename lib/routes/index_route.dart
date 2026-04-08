@@ -2,18 +2,16 @@ import '../backed_connections/googlesignin/credentials.dart';
 
 class API {
   static final bool apis_flag = !true;
+
   static final String urlWithLocallHost = apis_flag
       ? Credentials.LIVE_API
       : Credentials.LIVE_API_TEST; // main backend api
+
   static final String urlWithLocallHost2 = apis_flag ? Credentials.LIVE_API2
       : Credentials.LIVE_API_TEST2; // email sync api
-  static final String urlWithLocallHost3 =
-      !apis_flag ? Credentials.FINVU_LIVE : Credentials.FINVU_TEST; // bank api
 
-  // static final String mainBackendUrl = "${urlWithLocallHost}api/v1";
-  // static final String EmailUrl = "${urlWithLocallHost2}api";
-  // static final String BankApiUrl = "${urlWithLocallHost3}api";
-
+  static final String urlWithLocallHost3 =!apis_flag ? Credentials.FINVU_LIVE : Credentials.FINVU_TEST; // bank api
+  
   static final String mainBackendUrl = "${urlWithLocallHost}api/v1";
   static final String EmailUrl = "${urlWithLocallHost}api/v1/email";
   static final String BankApiUrl = "${urlWithLocallHost}api/v1/bank";

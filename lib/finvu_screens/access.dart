@@ -549,11 +549,12 @@ class _AccessState extends State<Access> {
 
   void approveConsentRequest() async {
     try {
-      FinvuConsentRequestDetailInfo info =
-          await finvuManager.getConsentRequestDetails(handleId.value);
+      
+      FinvuConsentRequestDetailInfo info = await finvuManager.getConsentRequestDetails(handleId.value);
       await finvuManager.approveConsentRequest(info, seletedAccountInfomations);
       snackBarCalled(context, SnackbarData().consentApproved);
       FetchTransactionFromFinvuApi(context);
+
     } catch (e) {
       skipOrLets.value = "Skip";
       snackBarCalledfail(context, SnackbarData().consentApproveError);

@@ -178,11 +178,7 @@ class _MobileNumberState extends State<MobileNumber> {
                             //hintText: 'Mobile Number',
                             ),
                       ),
-
-                      SizedBox(
-                          height: AppSizes
-                              .h20), // Add spacing between TextField and button
-                      // Button for "Get OTP"
+                      SizedBox(height: AppSizes.h20),
                       GestureDetector(
                         onTap: () async {
                           // Handle OTP logic here
@@ -208,6 +204,7 @@ class _MobileNumberState extends State<MobileNumber> {
                             otpController = TextEditingController();
                             startOtpTimer();
                             isOtpWrong.value = false;
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -219,13 +216,6 @@ class _MobileNumberState extends State<MobileNumber> {
                                 ),
                               ),
                             );
-
-                            // showModalBottomSheet(
-                            //     context: context,
-                            //     isScrollControlled: true,
-                            //     builder: (BuildContext context) {
-                            //       return verifyaotp(context);
-                            //     });
                           } else {
                             snackBarCalledfail(
                                 context, SnackbarData().errorGeneratingOtp);

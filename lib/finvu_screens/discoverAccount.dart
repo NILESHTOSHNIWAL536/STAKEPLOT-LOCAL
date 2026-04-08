@@ -107,10 +107,10 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
   void _loadBanks() async {
     fipDis = await finvuManager.fipsAllFIPOptions();
-    fipDisOrginal
-      ..clear()
-      ..addAll(fipDis);
-    for (final b in fipDis) {
+    fipDisOrginal..clear()..addAll(fipDis);
+
+    for (final b in fipDis)
+    {
       bankImageAndid[b.fipId] = b.productIconUri.toString();
     }
     getBanks.value = !getBanks.value;
@@ -182,8 +182,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (_, i) {
                     final bank = list[i];
-                    final messages =
-                        _metrics?.discoveryMessages(bank.fipId) ?? [];
+                    final messages =_metrics?.discoveryMessages(bank.fipId) ?? [];
                     return _BankRow(
                       bankData: bank,
                       isSelected: isSeletedBankAccout.contains(bank.fipId),

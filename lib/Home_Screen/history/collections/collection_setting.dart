@@ -18,7 +18,6 @@ class _T {
   static const bg = Color(0xFFF5F3EF);
   static const surface = Colors.white;
   static const navy = Color(0xFF2D2B5B);
-  static const navyMid = Color(0xFF4B4D73);
   static const navyBg = Color(0xFFEEEDF8);
   static const border = Color(0xFFEBEBEB);
   static const textDark = Color(0xFF1A1832);
@@ -27,8 +26,6 @@ class _T {
   static const red = Color(0xFFEF4444);
   static const redBg = Color(0xFFFFF5F5);
   static const redBorder = Color(0xFFFFDDDD);
-  static const green = Color(0xFF22C55E);
-  static const greenBg = Color(0xFFDCFCE7);
 }
 
 class CollectionSettingsModal extends StatefulWidget {
