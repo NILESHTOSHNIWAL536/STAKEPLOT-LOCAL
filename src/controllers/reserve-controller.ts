@@ -1,44 +1,64 @@
-import { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import AppError from "../utils/errors/app-error";
-import logger from "../utils/common/logger";
-import { ReserveService } from "../services/reserve-service";
+import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import AppError from '../utils/errors/app-error';
+import logger from '../utils/common/logger';
+import { ReserveService } from '../services/reserve-service';
+import reserveEngine from '../services/reserve-engine';
+import { scheduleReserveReminder, removeReserveReminder } from '../services/bull-queue-service/reserve-reminder-queue';
 const categoryMapping: Record<string, string> = {
-  "Transport": "travel",
-  "Dining out": "food",
-  "Shopping": "shopping",
-  "Groceries": "groceries",
-  "Overall spend": "all",
+  Transport: 'travel',
+  'Dining out': 'food',
+  Shopping: 'shopping',
+  Groceries: 'groceries',
+  'Overall spend': 'overall',
 };
 export class ReserveController {
-  // 🔥 CREATE
-  static async createReserve(req: Request, res: Response) {
+  static async suggest(req: Request, res: Response) {
+    try {
+      const userId = req.user!._id;
+      const { durationDays = 7 } = req.body;
 
+      const suggestion = await reserveEngine.computeSuggestion({
+        userId,
+        durationDays,
+      });
+
+      return res.status(StatusCodes.OK).json({ success: true, data: suggestion });
+    } catch (error: any) {
+      return ReserveController.handleError(res, error);
+    }
+  }
+
+  // CREATE
+  static async createReserve(req: Request, res: Response) {
     try {
       const userId = req.user!._id;
 
       const { startDate, endDate } = req.body;
 
       if (!startDate || !endDate) {
-             throw new AppError("Start and End dates required", 400);
+        throw new AppError('Start and End dates required', 400);
       }
 
-      // 🔥 VALIDATE RANGE
+      // VALIDATE RANGE
       const start = new Date(startDate);
       const end = new Date(endDate);
 
-      const diff =
-        (end.getTime() - start.getTime()) /
-        (1000 * 60 * 60 * 24) +
-        1;
+      const diff = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24) + 1;
 
       if (diff > 7) {
-        throw new AppError("Max 7 days allowed", 400);
+        throw new AppError('Max 7 days allowed', 400);
       }
 
-      // 🔥 CATEGORY TRANSFORM (your previous logic)
+      // CATEGORY TRANSFORM (your previous logic)
       const transformedCategories = req.body.categories.map((cat: string) => {
         return categoryMapping[cat] || cat.toLowerCase();
+      });
+
+      const suggestion = await reserveEngine.computeSuggestion({
+        userId,
+        categories: transformedCategories,
+        durationDays: diff,
       });
 
       const reserve = await ReserveService.createReserve({
@@ -47,7 +67,14 @@ export class ReserveController {
         userId,
         startDate: start,
         endDate: end,
+        duration_days: diff,
+        ...suggestion,
       });
+
+      const snapshots = await reserveEngine.buildSnapshots(reserve);
+      reserve.set('snapshots', snapshots as any);
+      await reserve.save();
+      await scheduleReserveReminder(reserve.id, userId.toString(), start, end, req.body.reminder_time);
 
       return res.status(201).json({
         success: true,
@@ -58,7 +85,7 @@ export class ReserveController {
     }
   }
 
-  // 🔥 GET ALL
+  // GET ALL
   static async getReserves(req: Request, res: Response) {
     try {
       const userId = req.user!._id;
@@ -74,13 +101,15 @@ export class ReserveController {
     }
   }
 
-  // 🔥 GET BY ID
+  // GET BY ID
   static async getReserveById(req: Request, res: Response) {
     try {
-      const reserve = await ReserveService.getReserveById(
-        req.user!._id.toString(),
-        req.params.rid
-      );
+      const reserve = await ReserveService.getReserveById(req.user!._id.toString(), req.params.rid);
+
+      if (reserve) {
+        await reserveEngine.evaluateReserve(reserve as any);
+        await reserve.save();
+      }
 
       return res.status(StatusCodes.OK).json({
         success: true,
@@ -91,13 +120,11 @@ export class ReserveController {
     }
   }
 
-  // 🔥 DELETE
+  // DELETE
   static async deleteReserve(req: Request, res: Response) {
     try {
-      const data = await ReserveService.deleteReserve(
-        req.user!._id.toString(),
-        req.params.rid
-      );
+      const data = await ReserveService.deleteReserve(req.user!._id.toString(), req.params.rid);
+      await removeReserveReminder(req.params.rid);
 
       return res.status(StatusCodes.OK).json({
         success: true,
@@ -114,7 +141,7 @@ export class ReserveController {
 
     return res.status(status).json({
       success: false,
-      message: error?.message || "Internal server error",
+      message: error?.message || 'Internal server error',
     });
   }
 }

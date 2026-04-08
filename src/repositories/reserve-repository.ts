@@ -10,8 +10,10 @@ class ReserveRepository extends CrudRepository<typeof Reserve> {
     return Reserve.find({ userId }).sort({ createdAt: -1 });
   }
 
-  async getReserveById(rid: string) {
-    return Reserve.findOne({ _id: rid });
+  async getReserveById(rid: string, userId?: string) {
+    const query: any = { _id: rid };
+    if (userId) query.userId = userId;
+    return Reserve.findOne(query);
   }
 
   async deleteReserves(userId: string) {

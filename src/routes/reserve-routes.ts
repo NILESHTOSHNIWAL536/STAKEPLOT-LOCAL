@@ -4,6 +4,8 @@ import { ReserveController } from "../controllers/reserve-controller";
 
 const router = express.Router();
 
+router.post("/suggest", AuthMiddlewares.protect, ReserveController.suggest);
+
 router.post("/", AuthMiddlewares.protect, ReserveController.createReserve);
 
 router.get("/", AuthMiddlewares.protect, ReserveController.getReserves);
