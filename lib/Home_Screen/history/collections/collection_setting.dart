@@ -775,7 +775,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
       context,
       collectionsController.collectionDetails.value!,
       collectionsController.splitsList,
-      collectionsController.balancesList,
+      collectionsController.balancesListPay,
+      collectionsController.balancesListReceive,
     );
   }
 }

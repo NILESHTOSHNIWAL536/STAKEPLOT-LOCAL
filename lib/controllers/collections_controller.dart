@@ -31,7 +31,11 @@ class CollectionsController extends GetxController {
       Rx<CollectionDetailsModel?>(null);
 
   final RxList<SplitModel> splitsList = <SplitModel>[].obs;
-  final RxList<BalanceModel> balancesList = <BalanceModel>[].obs;
+  final RxList<BalanceModel> balancesListPay = <BalanceModel>[].obs;
+  // final RxList<BalanceModel> balancesList = <BalanceModel>[].obs;
+  final RxList<BalanceModel> balancesListReceive = <BalanceModel>[].obs;
+  final RxDouble totalToPay = 0.0.obs;
+  final RxDouble totalToReceive = 0.0.obs;
 
   final RxList<CollectionTransactionModel> availableTransactions =
       <CollectionTransactionModel>[].obs;
@@ -115,7 +119,8 @@ class CollectionsController extends GetxController {
       isLoading.value = true;
       collectionDetails.value = null;
 
-      final response = await getDataApiCall(CollectionsRoute.getCollectionById(id));
+      final response =
+          await getDataApiCall(CollectionsRoute.getCollectionById(id));
 
       if (!getFlagOfResponse(response)) return;
 
@@ -147,7 +152,8 @@ class CollectionsController extends GetxController {
         ),
       );
 
-      balancesList.clear();
+      balancesListReceive.clear();
+      balancesListPay.clear();
       AllTransactions.clear();
 
       /// Load splits and balances in parallel — much faster
@@ -329,7 +335,8 @@ class CollectionsController extends GetxController {
         collectionDetails.value = null;
         selectedCollection.value = null;
         splitsList.clear();
-        balancesList.clear();
+        balancesListPay.clear();
+        balancesListReceive.clear();
         collectionsList.removeWhere((e) => e.id == id);
         AppNavigator.pushReplacement(context, TransactionHistoryScreen());
       }
@@ -509,21 +516,44 @@ class CollectionsController extends GetxController {
       if (getFlagOfResponse(response)) {
         final data = json.decode(response.body)['data'];
 
-        List<BalanceModel> tempList = [];
+        // List<BalanceModel> tempList = [];
 
-        /// ✅ TO PAY
-        final toPayList = data['toPay'] as List? ?? [];
-        for (var item in toPayList) {
-          tempList.add(BalanceModel.fromJson(item, "toPay"));
-        }
+        // /// ✅ TO PAY
+        // final toPayList = data['toPay'] as List? ?? [];
+        // for (var item in toPayList) {
+        //   tempList.add(BalanceModel.fromJson(item, "toPay"));
+        // }
 
-        /// ✅ TO RECEIVE
-        final toReceiveList = data['toReceive'] as List? ?? [];
-        for (var item in toReceiveList) {
-          tempList.add(BalanceModel.fromJson(item, "toReceive"));
-        }
+        // /// ✅ TO RECEIVE
+        // final toReceiveList = data['toReceive'] as List? ?? [];
+        // for (var item in toReceiveList) {
+        //   tempList.add(BalanceModel.fromJson(item, "toReceive"));
+        // }
 
-        balancesList.assignAll(tempList);
+        final dataJson = json.decode(response.body)['data'];
+
+        final balanceData = BalanceDataModel.fromJson(dataJson);
+        // balancesList.assignAll(tempList);
+
+        /// 🔥 If you want single combined list
+        // List<BalanceModel> combinedList = [
+        //   ...balanceData.toPay,
+        //   ...balanceData.toReceive,
+        // ];
+
+        // /// ✅ Store
+        // balancesList.clear();
+        // balancesList.assignAll(combinedList);
+
+        balancesListPay.clear();
+        balancesListReceive.clear();
+
+        balancesListPay.addAll(balanceData.toPay);
+        balancesListReceive.addAll(balanceData.toReceive);
+
+        /// Optional totals
+        totalToPay.value = balanceData.totalToPay;
+        totalToReceive.value = balanceData.totalToReceive;
       }
     } catch (e) {
       debugPrint("getBalances error: $e");
@@ -751,7 +781,8 @@ class CollectionsController extends GetxController {
 
     /// 🔥 LISTS
     splitsList.clear();
-    balancesList.clear();
+    balancesListPay.clear();
+    balancesListReceive.clear();
     availableTransactions.clear();
     AllTransactions.clear();
     SeletedTransactionsList.clear();
@@ -906,6 +937,37 @@ class CollectionsController extends GetxController {
         outStandingAmount: old.outStandingAmount,
         members: old.members,
       );
+    }
+  }
+
+  void clearSplit(String splitId, double amount) async {
+    try {
+      String id = collectionDetails.value!.collection.id;
+      final response = await postDataApiCall(
+        CollectionsRoute.paySplit(id, splitId),
+        {"amount": amount},
+      );
+      if (getFlagOfResponse(response)) {
+        getBalances(id);
+      }
+    } catch (e) {
+      debugPrint("rejectInvitation error: $e");
+    }
+  }
+
+  void clearSplitAmountComplete(
+      String splitId, double amount, String playerId) async {
+    try {
+      String id = collectionDetails.value!.collection.id;
+      final response = await postDataApiCall(
+        CollectionsRoute.clearPayment(id, splitId),
+        {"amount": amount, "payerId": playerId},
+      );
+      if (getFlagOfResponse(response)) {
+        getBalances(id);
+      }
+    } catch (e) {
+      debugPrint("rejectInvitation error: $e");
     }
   }
 

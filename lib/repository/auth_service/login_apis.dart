@@ -26,6 +26,7 @@ import '../../routes/route_user_login.dart';
 import '../../signInOut/userName.dart';
 
 class LoginService {
+  
   static Future<void> signUp(
       context, Map<String, dynamic> data, String avatarUrl) async {
     String name = data['name'];

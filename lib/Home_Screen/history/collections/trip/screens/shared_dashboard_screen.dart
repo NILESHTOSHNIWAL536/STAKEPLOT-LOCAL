@@ -43,12 +43,13 @@ class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
     });
 
     socket.on("collection", (data) {
-      collectionsController.socketMessage(data,context);
+      collectionsController.socketMessage(data, context);
     });
   }
 
   Future<void> _loadDashboardData() async {
-    final collectionId =collectionsController.collectionDetails.value?.collection.id;
+    final collectionId =
+        collectionsController.collectionDetails.value?.collection.id;
     if (collectionId == null) return;
     await collectionsController.getBalances(collectionId);
     await collectionsController.getSplits(collectionId);
@@ -117,7 +118,7 @@ class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
                     const SizedBox(height: 16),
 
                     // ── BALANCE STATUS
-                    const BalanceStatusWidget(),
+                   const BalanceStatusWidget(),
 
                     const SizedBox(height: 20),
 
