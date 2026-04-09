@@ -49,10 +49,20 @@ router.post('/:id/transactions', CollectionController.addTransaction);
 
 router.put('/:id/splits/:splitId', CollectionController.updateSplit);
 
+// Payer (X) records that they paid their share in a split to the creditor
+router.post('/:id/splits/:splitId/pay', CollectionController.recordPayment);
+
+// Receiver (Y) confirms/clears that a debtor paid them for a split
+router.post('/:id/splits/:splitId/clear', CollectionController.clearPayment);
+
 router.get('/:id/balances', CollectionController.getBalances);
 
 
 router.patch('/:id/closeCollection', CollectionController.closeCollection);
+
+// Bulk set spending limits for multiple members (owner only)
+// NOTE: must come BEFORE /:id/members/:memberId to avoid route shadowing
+router.patch('/:id/members/limits', CollectionController.setMemberLimits);
 
 router.patch('/:id/members/:memberId', CollectionController.updateCollectionMember);
 

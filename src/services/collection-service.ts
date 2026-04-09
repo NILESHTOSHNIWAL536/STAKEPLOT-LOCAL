@@ -3,6 +3,7 @@ import Collection, { ICollection } from '../models/collections/collection.model'
 import CollectionMember from '../models/collections/collection-member.model';
 import CollectionTransaction from '../models/collections/collection-transaction.model';
 import Split, { ISplitItem } from '../models/collections/split.model';
+import SplitPayment from '../models/collections/split-payment.model';
 import BankTransaction from '../models/transactions-automation/transaction';
 import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
@@ -581,75 +582,287 @@ export const getCollectionSplits = async (collectionId: string, userId: string) 
 };
 
 export const getBalances = async (collectionId: string, userId: string) => {
-  // Validate authorization
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member) {
     throw new AppError('User is not a member of this collection', StatusCodes.FORBIDDEN);
   }
 
-  const splits = await Split.find({ collectionId });
+  const splits = await Split.find({ collectionId }).lean();
 
-  // Per-user net from logged-in user's perspective:
-  //   positive => other user owes the logged-in user (toReceive)
-  //   negative => logged-in user owes the other user (toPay)
-  const userBalances: Record<string, number> = {};
-
-  splits.forEach((split) => {
-    const paidBy = split.paidBy.toString();
-
-    // Calculate how much each person in the split owes/is owed
-    split.splits.forEach((splitItem) => {
-      if (!splitItem.userId) return;
-      const splitUserId = splitItem.userId.toString();
-      const amount = splitItem.amount;
-
-      if (splitUserId === userId) {
-        // The logged-in user's share in this split
-        if (paidBy === userId) {
-          // Logged-in user paid: they advanced money for their own share
-          // Net effect: no debt (they paid for themselves)
-        } else {
-          // Someone else paid for the logged-in user's share
-          // Logged-in user owes the payer their share amount
-          userBalances[paidBy] = (userBalances[paidBy] || 0) - amount;
-        }
-      } else {
-        // Another user's share in this split
-        if (paidBy === userId) {
-          // Logged-in user paid: other users owe them their share amounts
-          userBalances[splitUserId] = (userBalances[splitUserId] || 0) + amount;
-        }
-        // If someone else paid, we don't track balances with this other person from this split
-      }
-    });
+  // Sum all payment records for this collection, grouped by (splitId + payerId + receiverId)
+  const allPayments = await SplitPayment.find({ collectionId }).lean();
+  const paymentTotals = new Map<string, number>();
+  allPayments.forEach((p) => {
+    const key = `${p.splitId}_${p.payerId}_${p.receiverId}`;
+    paymentTotals.set(key, (paymentTotals.get(key) || 0) + p.paidAmount);
   });
 
-  // Hydrate involved user IDs
-  const friendIds = Object.keys(userBalances);
-  const userData = await UserService.hydrateUsers([userId, ...friendIds]);
-  const userMap = new Map();
-  userData.forEach((u) => userMap.set(u._id.toString(), u));
+  // Per-split breakdown
+  // toPay  => logged-in user is the debtor  (splitItem.userId === userId, paidBy !== userId)
+  // toReceive => logged-in user is the creditor (paidBy === userId, splitItem.userId !== userId)
+  const toPayItems: Array<any> = [];
+  const toReceiveItems: Array<any> = [];
 
-  const toPay: Array<{ friend: any; amount: number }> = [];
-  const toReceive: Array<{ friend: any; amount: number }> = [];
+  for (const split of splits) {
+    const paidBy = split.paidBy.toString();
 
-  for (const friendId of friendIds) {
-    const net = userBalances[friendId];
-    if (net === 0) continue; // settled, skip
+    for (const splitItem of split.splits) {
+      if (!splitItem.userId) continue;
+      const splitUserId = splitItem.userId.toString();
 
-    const entry = {
-      friend: userMap.get(friendId) || { _id: friendId },
-      amount: Math.abs(net),
-    };
+      // Skip: paidBy covers their own share – no external debt
+      if (splitUserId === paidBy) continue;
 
-    if (net > 0) {
-      toReceive.push(entry); // friend owes logged-in user
-    } else {
-      toPay.push(entry); // logged-in user owes friend
+      const originalAmount = splitItem.amount;
+      const payKey = `${split._id}_${splitUserId}_${paidBy}`;
+      const paidAmount = paymentTotals.get(payKey) || 0;
+      const remainingAmount = Math.max(0, originalAmount - paidAmount);
+
+      const status =
+        paidAmount === 0 ? 'PENDING' :
+        remainingAmount === 0 ? 'SETTLED' : 'PARTIAL';
+
+      if (splitUserId === userId) {
+        // Logged-in user owes the paidBy person
+        toPayItems.push({
+          splitId: split._id,
+          receiverId: paidBy,
+          totalAmount: originalAmount,
+          paidAmount,
+          remainingAmount,
+          status,
+          date: split.createdAt,
+        });
+      } else if (paidBy === userId) {
+        // splitUserId owes the logged-in user
+        toReceiveItems.push({
+          splitId: split._id,
+          payerId: splitUserId,
+          totalAmount: originalAmount,
+          clearedAmount: paidAmount,
+          pendingAmount: remainingAmount,
+          status,
+          date: split.createdAt,
+        });
+      }
     }
   }
 
-  return { toPay, toReceive };
+  // Calculate totals (only unsettled items)
+  const totalToPay = toPayItems
+    .filter((i) => i.status !== 'SETTLED')
+    .reduce((sum, i) => sum + i.remainingAmount, 0);
+
+  const totalToReceive = toReceiveItems
+    .filter((i) => i.status !== 'SETTLED')
+    .reduce((sum, i) => sum + i.pendingAmount, 0);
+
+  // Hydrate user IDs
+  const userIdsSet = new Set<string>();
+  toPayItems.forEach((i) => userIdsSet.add(i.receiverId));
+  toReceiveItems.forEach((i) => userIdsSet.add(i.payerId));
+
+  const userData = await UserService.hydrateUsers(Array.from(userIdsSet));
+  const userMap = new Map();
+  userData.forEach((u) => userMap.set(u._id.toString(), u));
+
+  return {
+    totalToPay,
+    totalToReceive,
+    toPay: toPayItems.map((item) => ({
+      ...item,
+      friend: userMap.get(item.receiverId) || { _id: item.receiverId },
+    })),
+    toReceive: toReceiveItems.map((item) => ({
+      ...item,
+      friend: userMap.get(item.payerId) || { _id: item.payerId },
+    })),
+  };
+};
+
+/**
+ * Payer (X) records a payment towards their split debt to the receiver (Y = split.paidBy).
+ * Full or partial amounts are allowed. Multiple payments accumulate until fully settled.
+ */
+export const recordPayment = async (
+  collectionId: string,
+  userId: string,   // payer / debtor
+  splitId: string,
+  amount: number,
+  note?: string,
+) => {
+  const member = await CollectionMember.findOne({ collectionId, userId });
+  if (!member) {
+    throw new AppError('User is not a member of this collection', StatusCodes.FORBIDDEN);
+  }
+
+  const split = await Split.findOne({ _id: splitId, collectionId }).lean();
+  if (!split) {
+    throw new AppError('Split not found', StatusCodes.NOT_FOUND);
+  }
+
+  const splitItem = split.splits.find((s) => s.userId?.toString() === userId);
+  if (!splitItem) {
+    throw new AppError('You do not have a share in this split', StatusCodes.BAD_REQUEST);
+  }
+
+  const receiverId = split.paidBy.toString();
+  if (receiverId === userId) {
+    throw new AppError('You cannot record a payment to yourself', StatusCodes.BAD_REQUEST);
+  }
+
+  // Calculate remaining balance
+  const existingPayments = await SplitPayment.find({ splitId, payerId: userId, receiverId }).lean();
+  const alreadyPaid = existingPayments.reduce((sum, p) => sum + p.paidAmount, 0);
+  const remaining = splitItem.amount - alreadyPaid;
+
+  if (remaining <= 0) {
+    throw new AppError('This split debt is already fully settled', StatusCodes.BAD_REQUEST);
+  }
+  if (amount <= 0 || amount > remaining + 0.01) {
+    throw new AppError(`Amount must be > 0 and ≤ remaining balance of ${remaining}`, StatusCodes.BAD_REQUEST);
+  }
+
+  const payment = new SplitPayment({
+    collectionId,
+    splitId,
+    payerId: userId,
+    receiverId,
+    splitAmount: splitItem.amount,
+    paidAmount: Math.min(amount, remaining),
+    initiatedBy: userId,
+    note,
+  });
+  await payment.save();
+
+  // Hydrate and return
+  const userData = await UserService.hydrateUsers([userId, receiverId]);
+  const userMap = new Map();
+  userData.forEach((u) => userMap.set(u._id.toString(), u));
+
+  return {
+    ...payment.toObject(),
+    payer: userMap.get(userId) || { _id: userId },
+    receiver: userMap.get(receiverId) || { _id: receiverId },
+    newRemainingAmount: remaining - payment.paidAmount,
+  };
+};
+
+/**
+ * Receiver (Y = split.paidBy) clears/confirms that the debtor (X) paid them.
+ * Can be called independently (offline cash scenario) without the payer having
+ * called recordPayment first. Full or partial amounts allowed.
+ */
+export const clearPayment = async (
+  collectionId: string,
+  userId: string,   // receiver / creditor (Y)
+  splitId: string,
+  payerId: string,  // the debtor (X) whose debt is being cleared
+  amount: number,
+  note?: string,
+) => {
+  const member = await CollectionMember.findOne({ collectionId, userId });
+  if (!member) {
+    throw new AppError('User is not a member of this collection', StatusCodes.FORBIDDEN);
+  }
+
+  const split = await Split.findOne({ _id: splitId, collectionId }).lean();
+  if (!split) {
+    throw new AppError('Split not found', StatusCodes.NOT_FOUND);
+  }
+
+  if (split.paidBy.toString() !== userId) {
+    throw new AppError('Only the creditor (person who paid the split) can clear payments', StatusCodes.FORBIDDEN);
+  }
+
+  const splitItem = split.splits.find((s) => s.userId?.toString() === payerId);
+  if (!splitItem) {
+    throw new AppError('This user does not have a share in this split', StatusCodes.BAD_REQUEST);
+  }
+
+  if (payerId === userId) {
+    throw new AppError('You cannot clear a payment for yourself', StatusCodes.BAD_REQUEST);
+  }
+
+  // Calculate remaining balance
+  const existingPayments = await SplitPayment.find({ splitId, payerId, receiverId: userId }).lean();
+  const alreadyPaid = existingPayments.reduce((sum, p) => sum + p.paidAmount, 0);
+  const remaining = splitItem.amount - alreadyPaid;
+
+  if (remaining <= 0) {
+    throw new AppError('This split debt is already fully settled', StatusCodes.BAD_REQUEST);
+  }
+  if (amount <= 0 || amount > remaining + 0.01) {
+    throw new AppError(`Amount must be > 0 and ≤ remaining balance of ${remaining}`, StatusCodes.BAD_REQUEST);
+  }
+
+  const payment = new SplitPayment({
+    collectionId,
+    splitId,
+    payerId,
+    receiverId: userId,
+    splitAmount: splitItem.amount,
+    paidAmount: Math.min(amount, remaining),
+    initiatedBy: userId,
+    note,
+  });
+  await payment.save();
+
+  // Hydrate and return
+  const userData = await UserService.hydrateUsers([userId, payerId]);
+  const userMap = new Map();
+  userData.forEach((u) => userMap.set(u._id.toString(), u));
+
+  return {
+    ...payment.toObject(),
+    payer: userMap.get(payerId) || { _id: payerId },
+    receiver: userMap.get(userId) || { _id: userId },
+    newRemainingAmount: remaining - payment.paidAmount,
+  };
+};
+
+/**
+ * Owner sets spending limits for multiple collection members in one call.
+ * Only the collection owner can perform this action.
+ */
+export const setMemberLimits = async (
+  collectionId: string,
+  userId: string,   // must be owner
+  limits: Array<{ userId: string; limitAmount: string }>,
+) => {
+  const collection = await Collection.findById(collectionId);
+  if (!collection) {
+    throw new AppError('Collection not found', StatusCodes.NOT_FOUND);
+  }
+  if (collection.ownerId.toString() !== userId) {
+    throw new AppError('Only the collection owner can set member limits', StatusCodes.FORBIDDEN);
+  }
+  if (!limits || limits.length === 0) {
+    throw new AppError('limits array must not be empty', StatusCodes.BAD_REQUEST);
+  }
+
+  const updatedMembers: any[] = [];
+
+  for (const limit of limits) {
+    const targetMember = await CollectionMember.findOne({ collectionId, userId: limit.userId });
+    if (!targetMember) {
+      throw new AppError(`Member with userId ${limit.userId} not found in this collection`, StatusCodes.NOT_FOUND);
+    }
+    targetMember.limitAmount = limit.limitAmount;
+    await targetMember.save();
+    updatedMembers.push(targetMember.toObject());
+  }
+
+  // Hydrate user data
+  const userIds = limits.map((l) => l.userId);
+  const userData = await UserService.hydrateUsers(userIds);
+  const userMap = new Map();
+  userData.forEach((u) => userMap.set(u._id.toString(), u));
+
+  return updatedMembers.map((m) => ({
+    ...m,
+    user: userMap.get(m.userId.toString()) || { _id: m.userId },
+  }));
 };
 
 export const deleteCollection = async (collectionId: string, userId: string) => {
@@ -813,4 +1026,7 @@ export default {
   getAllTransactions,
   updateCollectionMember,
   exitCollectionByMember,
+  recordPayment,
+  clearPayment,
+  setMemberLimits,
 };
