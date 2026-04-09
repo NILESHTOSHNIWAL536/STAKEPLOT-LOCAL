@@ -31,7 +31,8 @@ part '../Constants/snackBars.dart';
 
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();
-CollectionsController get collectionsController => Get.find<CollectionsController>();
+CollectionsController get collectionsController =>
+    Get.find<CollectionsController>();
 RxMap deviceData = {}.obs;
 RxBool isBankAccountLink = false.obs;
 RxInt scrollBankPage = 0.obs;
@@ -40,7 +41,6 @@ RxList notificationList = [].obs;
 RxList<String> listofLinkedAccount = <String>[].obs;
 
 // RxList finoraTransactionData = [].obs;
-
 
 RxList trasactionsHideData = [].obs; // hidden tnx
 
@@ -61,7 +61,6 @@ RxList userPostList = [].obs;
 RxList chatList = [].obs;
 RxList chatListOriginal = [].obs;
 
-
 RxList customCategoryList = [].obs;
 RxList customCategoryUnUsedList = [].obs;
 RxMap friendsListDetails = {}.obs;
@@ -72,15 +71,12 @@ RxBool hideTransactionReload = false.obs;
 RxBool aboutMe = false.obs;
 RxBool myNotificationBool = false.obs;
 
-
 RxBool hideBackAccountPassword = false.obs;
 bool sizeRoom = false;
 double fontSize = 20;
 RxInt budgetLength = 0.obs;
 
-
 RxString splitID = "".obs;
-
 
 // RxList categoriesList = [].obs;
 // RxList moreDrasticChange = [].obs;
@@ -93,8 +89,6 @@ RxString splitID = "".obs;
 // RxList mostSpentCategoryInMonth = [].obs;
 // RxList mostSpentDayInMonth = [].obs;
 // RxList weeklyTrend = [].obs;
-
-
 
 RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;
@@ -129,7 +123,6 @@ bool hasMoreData = true;
 int m = DateTime.now().month;
 
 List arr = [];
-
 
 RxBool reRender = false.obs;
 
@@ -183,7 +176,8 @@ RxBool getGraphDataoverall = false.obs;
 RxDouble totalDebitValuePercent = 0.0.obs;
 
 final RxList<String> monthLabels = <String>[].obs;
-final Rx<Map<String, List<double>>> currentChartData = Rx<Map<String, List<double>>>({});
+final Rx<Map<String, List<double>>> currentChartData =
+    Rx<Map<String, List<double>>>({});
 final RxList<String> currentDays = <String>[].obs;
 final RxBool isLoading = false.obs;
 late FinvuAccountLinkingRequestReference linkingReference;
@@ -226,7 +220,8 @@ void toggleDateFilter() {
 RxDouble originalAmount = 0.0.obs;
 RxDouble inflatedYears = 0.0.obs;
 RxDouble inflatedFutureValue = 0.0.obs;
-final RxList<Map<String, dynamic>> inflationPredictions = <Map<String, dynamic>>[].obs;
+final RxList<Map<String, dynamic>> inflationPredictions =
+    <Map<String, dynamic>>[].obs;
 var showResults = false.obs;
 RxBool isLoadingInflation = false.obs;
 RxString changeAvater = ControllerManagement.userController.avatar.value.obs;
@@ -243,25 +238,25 @@ final RxList<Map<String, dynamic>> yearlyMonths = <Map<String, dynamic>>[].obs;
 // final RxDouble annualCredited = 0.0.obs;
 // final RxDouble annualDebited = 0.0.obs;
 // final RxDouble annualOutstanding = 0.0.obs;
-   List<BudgetChartDataPoint> budgetChartData = [];
-   String selectedBudgetPeriod = 'monthly';
-   List<dynamic> budgetTransactions = []; // Store raw transactions from API
+  //  List<BudgetChartDataPoint> budgetChartData = [];
+  //  String selectedBudgetPeriod = 'monthly';
+  //  List<dynamic> budgetTransactions = []; // Store raw transactions from API
   
-   List<String>? budgetInsights;
-   List<Map<String, dynamic>> categorySpendings = [];
-   List<Map<String, dynamic>> pieGraphData = [];
-   bool isBudgetDeleting = false;
+  //  List<String>? budgetInsights;
+  //  List<Map<String, dynamic>> categorySpendings = [];
+  //  List<Map<String, dynamic>> pieGraphData = [];
+  //  bool isBudgetDeleting = false;
 
-  /// Renamed from _ChartData to BudgetChartDataPoint and made it a static inner class
-   class BudgetChartDataPoint {
-    BudgetChartDataPoint({required this.x, required this.y, required this.xString});
-    final int x;
-    final double y;
-    final String xString;
+  // /// Renamed from _ChartData to BudgetChartDataPoint and made it a static inner class
+  //  class BudgetChartDataPoint {
+  //   BudgetChartDataPoint({required this.x, required this.y, required this.xString});
+  //   final int x;
+  //   final double y;
+  //   final String xString;
 
-    @override
-    String toString() => '($x, $y, $xString)';
-  }
+  //   @override
+  //   String toString() => '($x, $y, $xString)';
+  // }
 
 
  

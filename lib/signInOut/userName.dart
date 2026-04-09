@@ -87,14 +87,12 @@
 //       snackBarCalledfail(context, SignupData().shortUsername,  AppColors.redColor);
 //       return;
 //     }
-  
 
 //     // Prepare updated data for storeData
 //     final updatedData = {
 //       'name': username,
 //       'email': widget.data['data']['email'] ?? "heyooo@gmail.com",
 //     };
-
 
 //     flag.value = true;
 //     fg.value=true;
@@ -218,7 +216,6 @@
 //     );
 //   }
 
-
 // Widget topHeaderToCreateProfile() {
 //     return Column(
 //       crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,7 +242,6 @@
 //                       );
 //   }
 // }
-
 
 // class UserDetailsPage2 extends StatefulWidget {
 //   final Map<String, dynamic> data;
@@ -308,7 +304,6 @@
 //       snackBarCalledfail(context, SignupData().shortUsername,  AppColors.redColor);
 //       return;
 //     }
-    
 
 //     // Prepare updated data for storeData
 //     final updatedData = {
@@ -316,7 +311,6 @@
 //       'email': widget.data['data']['email'],
 //       'appleUserId': widget.data['data']['appleUserId'],
 //     };
-
 
 //     flag.value = true;
 //     await storeData2(context, updatedData, 'assets/avatar/FRAME-2.svg');
@@ -370,7 +364,7 @@
 //             padding: EdgeInsets.symmetric(horizontal: AppSizes.p20),
 //             child: Column(
 //               children: [
-               
+
 //                 Padding(
 //                   padding:
 //                       EdgeInsets.symmetric(vertical: Colorcodes.paddingSize),
@@ -444,7 +438,6 @@
 //   }
 // }
 
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -468,7 +461,9 @@ import '../repository/auth_service/login_apis.dart';
 import '../repository/clearstack.dart';
 import '../routes/route_user_login.dart';
 import '../services/secure_storage.dart';
-RxBool isValidUser=false.obs;
+
+RxBool isValidUser = false.obs;
+
 class UserDetailsPage extends StatefulWidget {
   final Map<String, dynamic> data;
   final bool isAppleUser;
@@ -530,7 +525,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     final username = usernameController.text;
 
     if (!isValidUser.value) {
-      snackBarCalledfail(context, SignupData().emptyUsernameValid,  AppColors.redColor);
+      snackBarCalledfail(
+          context, SignupData().emptyUsernameValid, AppColors.redColor);
       return;
     }
 
@@ -550,8 +546,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
     updateDeviceData(deviceData);
 
-    final response =
-        await postDataApiCall(AuthApiRoutes.signUp, payload);
+    final response = await postDataApiCall(AuthApiRoutes.signUp, payload);
 
     loading.value = false;
     fg.value = false;
@@ -561,7 +556,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
       if (!body['success']) {
         snackBarCalledfail(
-            context, body['error']['explanation'],  AppColors.redColor);
+            context, body['error']['explanation'], AppColors.redColor);
         return;
       }
 
@@ -573,7 +568,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       // Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
       Navigator.pushReplacementNamed(context, '/user_onboarding');
     } catch (e) {
-      snackBarCalledfail(context, SignupData().errorInvalidOtp, );
+      snackBarCalledfail(
+        context,
+        SignupData().errorInvalidOtp,
+      );
     }
   }
 
@@ -590,14 +588,13 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   /// HEADER
                   AvatarProfileImageZero(
                     url: Sign.appSignInimage,
                     width: 14,
                     height: 14,
                   ),
-                   SizedBox(height: AppSizes.h24),
+                  SizedBox(height: AppSizes.h24),
                   textStyle(
                     context: context,
                     text: 'What should we call you?',
@@ -606,20 +603,18 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     c: AppColors.accentColor,
                   ),
 
-                   SizedBox(height: AppSizes.h100),
-                    Center(
-                      child: Lottie.asset(
-                                "assets/splashScreen/username.json",
-                                // fit: BoxFit.cover,
-                                height: 230,
-                               
-                                
-                              ),
+                  SizedBox(height: AppSizes.h100),
+                  Center(
+                    child: Lottie.asset(
+                      "assets/splashScreen/username.json",
+                      // fit: BoxFit.cover,
+                      height: 230,
                     ),
-         SizedBox(height: AppSizes.h75),
+                  ),
+                  SizedBox(height: AppSizes.h75),
 
-                  /// USERNAME FIELD
-                  TextFeildWidgetUnderline(
+                  
+                  TextFeildWidget(
                     textEditingController: usernameController,
                     heading: SignupData().usernameLabel,
                     keyBoard: TextInputType.name,
@@ -627,25 +622,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     icon: Icons.person_2_outlined,
                   ),
 
-                  Obx(() => usernameError.value.isNotEmpty
-                      ? Padding(
-                          padding:
-                              const EdgeInsets.only(left:AppSizes.p10, top:AppSizes.p6),
-                          child: Text(
-                            usernameError.value,
-                            style:  TextStyle(
-                                color:  AppColors.redColor, fontSize: 12),
-                          ),
-                        )
-                      : const SizedBox.shrink()),
-
                   SizedBox(height: AppSizes.h20),
 
                   /// SUBMIT BUTTON
                   Obx(() => Center(
                         child: Container(
-                          width:
-                              MediaQuery.of(context).size.width / 1.1,
+                          width: MediaQuery.of(context).size.width / 1.1,
                           padding: const EdgeInsets.symmetric(
                               vertical: AppSizes.p12),
                           decoration: BoxDecoration(
@@ -655,19 +637,15 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: InkWell(
-                            onTap: isValidUser.value
-                                ? submitDetails
-                                : null,
+                            onTap: isValidUser.value ? submitDetails : null,
                             child: Center(
                               child: loading.value || fg.value
                                   ? Spinner(
                                       size: 20,
-                                      
                                     )
                                   : Text(
                                       'Continue',
-                                      style: FontManager()
-                                          .getTextStyle(
+                                      style: FontManager().getTextStyle(
                                         context,
                                         fontSize: 20,
                                         lWeight: FontWeight.bold,

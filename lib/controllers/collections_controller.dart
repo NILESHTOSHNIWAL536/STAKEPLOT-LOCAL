@@ -35,6 +35,8 @@ class CollectionsController extends GetxController {
 
   final RxList<CollectionTransactionModel> availableTransactions =
       <CollectionTransactionModel>[].obs;
+  
+   final RxSet<String> selectedUserIds = <String>{}.obs;
 
   final RxList<TransactionModel> AllTransactions = <TransactionModel>[].obs;
   final RxList<TransactionModel> SeletedTransactionsList =

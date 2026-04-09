@@ -126,6 +126,9 @@ static String getSearchedTransactions(
   static String getTopThreeTransactionsOfWeek =
       "$_urlPath/top-three-transactions-of-week";
 
+  static String getHighestSpentInsight =
+      "$_urlPath/insights";
+
 
 
 

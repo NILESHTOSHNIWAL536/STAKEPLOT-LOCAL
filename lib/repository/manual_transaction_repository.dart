@@ -19,6 +19,7 @@ import 'package:flutter_application_code_stakeplot/repository/payables_repositor
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_post.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_transactions.dart';
+import 'package:get/get.dart';
 
 import '../controllers/finora_controller.dart';
 
@@ -28,6 +29,7 @@ import '../controllers/finora_controller.dart';
 void addTransaction(String amount, String subCategory, String categories,
     BuildContext context, String dropdownValue,
     [bool isSplit = false, bool snackBar = true]) async {
+      final budgetController = Get.find<BudgetController>();
       //  FinoraController finoraController = ControllerManagement.finoraController;
   var body = {
     'amount': amount.toString(),
@@ -60,7 +62,8 @@ void addTransaction(String amount, String subCategory, String categories,
       // All actions are complete
     });
     // getBudget();
-    getBudget();
+  
+   budgetController.getBudget();
   } else {
     snackBarCalledfail(context, SnackbarData().transactionAddFail,  AppColors.redColor);
   }

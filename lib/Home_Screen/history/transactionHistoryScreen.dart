@@ -119,8 +119,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
     currentPage = 1;
     showFilter.value = false;
     accountSelected.value = '';
-    addManually.clear();
-    balanceOutList.clear();
+    // addManually.clear();
+    // balanceOutList.clear();
     maxController.text = "";
     minController.text = "";
     startDateController.text = "";

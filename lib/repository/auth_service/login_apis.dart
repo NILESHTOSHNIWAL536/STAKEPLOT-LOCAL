@@ -115,7 +115,8 @@ class LoginService {
         ForceLogout.forceLoginShowModal(
             context, decodedResponse, emailController);
       } else if (response.statusCode == 400) {
-        snackBarCalledfail(context, decodedResponse['error']);
+        snackBarCalledfail(context, decodedResponse['error']["explanation"]);
+        // var ErrorRes = decodedResponse['error'];
         acceptReset.value = false;
         OtpService.getOTPForTwoFactorAuth(
             context, "MoneyMosaic", emailController.text.toString());
@@ -228,7 +229,7 @@ class LoginService {
     initGetControllers();
     await SecureStorageService()
         .setString("accessToken", "Bearer " + accessToken);
-     await initializeOneSignal(context);
+    await initializeOneSignal(context);
     userController.userId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
     acceptReset.value = false;
@@ -280,9 +281,10 @@ void updateDeviceData(RxMap deviceData) {
       ? deviceData['os'].toString()
       : 'UNKNOWN_OS';
 }
+
 Future<void> screenDataLocalStorage() async {
   final pref = await SharedPreferences.getInstance();
-  String userId =await  SecureStorageService().read("accessToken").toString();
+  String userId = await SecureStorageService().read("accessToken").toString();
   final todayKey =
       'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId';
   int dailyLoginCount = pref.getInt(todayKey) ?? 0;
@@ -303,21 +305,20 @@ Future<void> screenDataLocalStorage() async {
   ScreenTimeTracker().switchTab('Home');
 }
 
-
-
-
-void addThisDeviceToBackendDevice(SharedPreferences pref, context) async 
-{
-  await _addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
+void addThisDeviceToBackendDevice(SharedPreferences pref, context) async {
+  await _addThisDeviceToBackend(
+      jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
 }
 
 Future<void> _addThisDeviceToBackend(deviceData, context) async {
-   try {
-     await postDataApiCall(SendNotificationsRoutes.addDeviceToNotify, deviceData);
-   } catch (e) {}
+  try {
+    await postDataApiCall(
+        SendNotificationsRoutes.addDeviceToNotify, deviceData);
+  } catch (e) {}
 }
 
 Future<Widget> checkAuthAndNavigate() async {
-  final bool isLoggedIn = await SecureStorageService().containsKey("accessToken");
+  final bool isLoggedIn =
+      await SecureStorageService().containsKey("accessToken");
   return isLoggedIn ? HomePage() : LoginScreen();
 }

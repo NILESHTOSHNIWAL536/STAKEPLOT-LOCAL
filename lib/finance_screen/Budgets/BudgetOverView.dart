@@ -43,7 +43,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
   List<FocusNode> _focusNodes = [];
   List<bool> _isEditing = []; // Tracks editing state for each category
   List<double> _initialAmounts = []; // Stores initial amounts for each category
-
+final budgetController = Get.find<BudgetController>();
   @override
   void initState() {
     super.initState();
@@ -261,7 +261,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                   }
 
                   // Add budget
-                  addBudget(context, widget.name, widget.amount,
+                  budgetController.addBudget(context, widget.name, widget.amount,
                       categoriesDividedList, widget.period);
 
                   // Dismiss loader

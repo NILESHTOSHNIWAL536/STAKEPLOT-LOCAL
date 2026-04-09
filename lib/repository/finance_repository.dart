@@ -184,15 +184,13 @@ void _setEmptyState(String weekORmonth, String date, String? endDate) {
     debitList = List.filled(daysDiff, 0.0);
     creditList = List.filled(daysDiff, 0.0);
     for (int i = 0; i < daysDiff; i++) {
-      labelsLocal
-          .add(DateFormat('MMM d').format(startDate.add(Duration(days: i))));
+      labelsLocal.add(DateFormat('MMM d').format(startDate.add(Duration(days: i))));
     }
   } else {
     labelsLocal = weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
     debitList = List.filled(labelsLocal.length, 0.0);
     creditList = List.filled(labelsLocal.length, 0.0);
   }
-
   transactionChatGraph['debited'] = debitList;
   transactionChatGraph['credited'] = creditList;
   labels.assignAll(labelsLocal);

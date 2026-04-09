@@ -60,12 +60,8 @@ class _NotificationsBudgetState extends State<NotificationsBudget> {
                           );
                        },
                     child: 
-                    AvatarProfileImageZero(url: HomePageIcons.appUpdates, width: 30, height: 30)
-                     
-                    )
-                    
-                  
-                             
+                    AvatarProfileImageZero(url: HomePageIcons.appUpdates, width: 30, height: 30) 
+                    )                            
                 ],
              ),
    );

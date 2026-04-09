@@ -42,11 +42,11 @@ class _BudgetSearchState extends State<BudgetSearch> {
   bool _isSearchFocused = false;
   // Declare a Map to track the deletion state for each category
   Map<String, bool> _isDeletingMap = {};
-
+final budgetController = Get.find<BudgetController>();
   @override
   void initState() {
     super.initState();
-    getTopFiveCater();
+    budgetController.getTopFiveCater();
 
     filteredCategories.assignAll(BudgetCategories2.categories);
 
