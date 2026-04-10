@@ -196,7 +196,7 @@ export const getUserCollections = async (userId: string) => {
   const collectionsWithMembers = await Promise.all(
     collections.map(async (c) => {
       const collectionMembers = await CollectionMember.find({ collectionId: c._id }).lean();
-      
+
       // Hydrate member user data
       const memberUserIds = collectionMembers.map((m) => m.userId.toString());
       const memberUserData = await UserService.hydrateUsers(memberUserIds);
@@ -429,9 +429,9 @@ export const addTransactions = async (collectionId: string, userId: string, tran
       if (!customSplits || customSplits.length === 0) {
         throw new AppError('Custom splits must be provided', StatusCodes.BAD_REQUEST);
       }
-      const totalSplit = customSplits.reduce((acc, s) => acc + s.amount, 0);
+      const totalSplit = customSplits.reduce((acc, s) => acc + parseInt(s.amount?.toString() || '0'), 0);
       // allows small floating precision diffs
-      if (Math.abs(totalSplit - totalAmount) > 0.01) {
+      if (Math.abs(Math.round(totalSplit) - Math.round(totalAmount)) !== 0) {
         throw new AppError('Custom splits total must equal total transaction amount', StatusCodes.BAD_REQUEST);
       }
       splits = customSplits;
@@ -618,9 +618,7 @@ export const getBalances = async (collectionId: string, userId: string) => {
       const paidAmount = paymentTotals.get(payKey) || 0;
       const remainingAmount = Math.max(0, originalAmount - paidAmount);
 
-      const status =
-        paidAmount === 0 ? 'PENDING' :
-        remainingAmount === 0 ? 'SETTLED' : 'PARTIAL';
+      const status = paidAmount === 0 ? 'PENDING' : remainingAmount === 0 ? 'SETTLED' : 'PARTIAL';
 
       if (splitUserId === userId) {
         // Logged-in user owes the paidBy person
@@ -649,13 +647,9 @@ export const getBalances = async (collectionId: string, userId: string) => {
   }
 
   // Calculate totals (only unsettled items)
-  const totalToPay = toPayItems
-    .filter((i) => i.status !== 'SETTLED')
-    .reduce((sum, i) => sum + i.remainingAmount, 0);
+  const totalToPay = toPayItems.filter((i) => i.status !== 'SETTLED').reduce((sum, i) => sum + i.remainingAmount, 0);
 
-  const totalToReceive = toReceiveItems
-    .filter((i) => i.status !== 'SETTLED')
-    .reduce((sum, i) => sum + i.pendingAmount, 0);
+  const totalToReceive = toReceiveItems.filter((i) => i.status !== 'SETTLED').reduce((sum, i) => sum + i.pendingAmount, 0);
 
   // Hydrate user IDs
   const userIdsSet = new Set<string>();
@@ -686,10 +680,10 @@ export const getBalances = async (collectionId: string, userId: string) => {
  */
 export const recordPayment = async (
   collectionId: string,
-  userId: string,   // payer / debtor
+  userId: string, // payer / debtor
   splitId: string,
   amount: number,
-  note?: string,
+  note?: string
 ) => {
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member) {
@@ -755,11 +749,11 @@ export const recordPayment = async (
  */
 export const clearPayment = async (
   collectionId: string,
-  userId: string,   // receiver / creditor (Y)
+  userId: string, // receiver / creditor (Y)
   splitId: string,
-  payerId: string,  // the debtor (X) whose debt is being cleared
+  payerId: string, // the debtor (X) whose debt is being cleared
   amount: number,
-  note?: string,
+  note?: string
 ) => {
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member) {
@@ -827,8 +821,8 @@ export const clearPayment = async (
  */
 export const setMemberLimits = async (
   collectionId: string,
-  userId: string,   // must be owner
-  limits: Array<{ userId: string; limitAmount: string }>,
+  userId: string, // must be owner
+  limits: Array<{ userId: string; limitAmount: string }>
 ) => {
   const collection = await Collection.findById(collectionId);
   if (!collection) {
