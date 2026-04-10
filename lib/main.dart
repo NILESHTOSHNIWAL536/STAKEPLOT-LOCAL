@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initGetControllersIfisRegistered();
-   
+
     initializeOneSignal(context);
     init_widget_main();
     themeController = ControllerManagement.themeController;

@@ -1,23 +1,72 @@
 import 'TransactionModel.dart';
 
+class BalanceDataModel {
+  double totalToPay;
+  double totalToReceive;
+  List<BalanceModel> toPay;
+  List<BalanceModel> toReceive;
+
+  BalanceDataModel({
+    required this.totalToPay,
+    required this.totalToReceive,
+    required this.toPay,
+    required this.toReceive,
+  });
+
+  factory BalanceDataModel.fromJson(Map<String, dynamic> json) {
+    return BalanceDataModel(
+      totalToPay: (json['totalToPay'] ?? 0).toDouble(),
+      totalToReceive: (json['totalToReceive'] ?? 0).toDouble(),
+      toPay: (json['toPay'] as List? ?? [])
+          .map((e) => BalanceModel.fromJson(e, "toPay"))
+          .toList(),
+      toReceive: (json['toReceive'] as List? ?? [])
+          .map((e) => BalanceModel.fromJson(e, "toReceive"))
+          .toList(),
+    );
+  }
+}
+
 class BalanceModel {
-  double amount;
+  String splitId;
+  String payerId;
+  double totalAmount;
+  double clearedAmount;
+  double pendingAmount;
+  String status;
+  DateTime? date;
   String type; // toPay / toReceive
   UserModel? user;
 
   BalanceModel({
-    required this.amount,
+    required this.splitId,
+    required this.payerId,
+    required this.totalAmount,
+    required this.clearedAmount,
+    required this.pendingAmount,
+    required this.status,
+    required this.date,
     required this.type,
     this.user,
   });
 
   factory BalanceModel.fromJson(Map<String, dynamic> json, String type) {
     return BalanceModel(
-      amount: (json['amount'] ?? 0).toDouble(),
+      splitId: json['splitId'] ?? '',
+      payerId: json['payerId'] ?? '',
+      totalAmount: (json['totalAmount'] ?? 0).toDouble(),
+      clearedAmount: (json['clearedAmount'] ?? 0).toDouble(),
+      pendingAmount:
+          (json['pendingAmount'] ?? json['remainingAmount'] ?? 0).toDouble(),
+      status: json['status'] ?? '',
+      date: json['date'] != null ? DateTime.parse(json['date']) : null,
       type: type,
       user: json['friend'] != null ? UserModel.fromJson(json['friend']) : null,
     );
   }
+
+  /// 🔥 Useful computed field (UI use)
+  double get displayAmount => pendingAmount;
 }
 
 class CollectionTransactionModel {
@@ -69,6 +118,7 @@ class CollectionModel {
   double totalCredit;
   double totalDebit;
   double outStandingAmount;
+  List<String> members;
 
   CollectionModel({
     required this.id,
@@ -82,6 +132,7 @@ class CollectionModel {
     this.totalCredit = 0,
     this.totalDebit = 0,
     this.outStandingAmount = 0,
+    required this.members,
   });
 
   factory CollectionModel.fromJson(Map<String, dynamic> json, objjson) {
@@ -98,6 +149,7 @@ class CollectionModel {
       totalCredit: (objjson['totalCredit'] ?? 0).toDouble(),
       totalDebit: (objjson['totalDebit'] ?? 0).toDouble(),
       outStandingAmount: (objjson['outStandingAmount'] ?? 0).toDouble(),
+      members: (json['members'] as List? ?? []).cast<String>(),
     );
   }
 }

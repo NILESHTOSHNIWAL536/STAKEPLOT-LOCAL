@@ -24,7 +24,7 @@ class _ManualTransactionPageState extends State<ManualTransactionPage>
   void initState() {
     super.initState();
     
-    showKeyboard = true;
+    // showKeyboard = true;
     _tabController = TabController(length: 2, vsync: this);
   }
 

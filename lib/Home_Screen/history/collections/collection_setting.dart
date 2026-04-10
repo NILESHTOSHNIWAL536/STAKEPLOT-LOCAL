@@ -18,7 +18,6 @@ class _T {
   static const bg = Color(0xFFF5F3EF);
   static const surface = Colors.white;
   static const navy = Color(0xFF2D2B5B);
-  static const navyMid = Color(0xFF4B4D73);
   static const navyBg = Color(0xFFEEEDF8);
   static const border = Color(0xFFEBEBEB);
   static const textDark = Color(0xFF1A1832);
@@ -27,8 +26,6 @@ class _T {
   static const red = Color(0xFFEF4444);
   static const redBg = Color(0xFFFFF5F5);
   static const redBorder = Color(0xFFFFDDDD);
-  static const green = Color(0xFF22C55E);
-  static const greenBg = Color(0xFFDCFCE7);
 }
 
 class CollectionSettingsModal extends StatefulWidget {
@@ -102,20 +99,16 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                 const SizedBox(height: 8),
 
                 // ── ACCESS PERMISSIONS
-                if (can("accessPermission")) ...[
-                  AccessPermissionsWidget(),
-                  const SizedBox(height: 8),
-                ],
 
                 // ── SETTINGS GROUP
                 _buildSectionLabel("Actions"),
                 const SizedBox(height: 8),
-                if (can("export"))
+                if (can("rename"))
                   _settingsTile(context,
-                      icon: Icons.file_upload_outlined,
-                      title: "Export Transactions",
-                      subtitle: "Download as PDF",
-                      onTap: () => _exportTransactions(context)),
+                      icon: Icons.edit_outlined,
+                      title: "Rename Collection",
+                      subtitle: "Change display name",
+                      onTap: () => _showRenameDialog(context)),
                 if (can("personLimit"))
                   _settingsTile(context,
                       icon: Icons.account_balance_wallet_outlined,
@@ -123,18 +116,24 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                       subtitle: "Set spending limits",
                       onTap: () => _showLimitDialog(
                           context, collectionsController.currentUser)),
-                if (can("rename"))
-                  _settingsTile(context,
-                      icon: Icons.edit_outlined,
-                      title: "Rename Collection",
-                      subtitle: "Change display name",
-                      onTap: () => _showRenameDialog(context)),
                 if (can("duration"))
                   _settingsTile(context,
                       icon: Icons.access_time_outlined,
                       title: "Edit Duration Range",
                       subtitle: "Adjust active period",
                       onTap: () => _showDurationPopup(context)),
+
+                if (can("export"))
+                  _settingsTile(context,
+                      icon: Icons.file_upload_outlined,
+                      title: "Export Transactions",
+                      subtitle: "Download as PDF",
+                      onTap: () => _exportTransactions(context)),
+
+                if (can("accessPermission")) ...[
+                  AccessPermissionsWidget(),
+                  const SizedBox(height: 8),
+                ],
 
                 // ── DANGER GROUP
                 if (can("close") || can("delete") || can("exit")) ...[
@@ -686,7 +685,9 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
         onConfirm: () async {
           AppNavigator.pop(_context);
           await collectionsController.deleteCollection(
-              collectionsController.selectedCollection.value!.id, context,type);
+              collectionsController.selectedCollection.value!.id,
+              context,
+              type);
         },
       ),
     );
@@ -774,7 +775,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
       context,
       collectionsController.collectionDetails.value!,
       collectionsController.splitsList,
-      collectionsController.balancesList,
+      collectionsController.balancesListPay,
+      collectionsController.balancesListReceive,
     );
   }
 }

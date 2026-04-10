@@ -55,6 +55,12 @@ class CollectionsRoute {
   static String closeCollection(String collectionId) =>
       "$_urlPath/$collectionId/closeCollection";
 
+  static String paySplit(String collectionId, String splitId) =>
+    "$_urlPath/$collectionId/splits/$splitId/pay";
+  
+  static clearPayment(String collectionId, String splitId) =>
+    "$_urlPath/$collectionId/splits/$splitId/clear";
+
 
   // ===============================
 // INVITATION ROUTES (NEW)

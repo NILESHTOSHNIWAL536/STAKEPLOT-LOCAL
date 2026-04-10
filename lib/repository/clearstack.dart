@@ -25,6 +25,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 
+import '../budget/budget_controller.dart';
 import '../controllers/collections_controller.dart';
 import '../controllers/credit_card_controller.dart';
 import '../controllers/fipmetrics-controller.dart';
@@ -322,5 +323,8 @@ void initGetControllersIfisRegistered() {
   }
   if (!Get.isRegistered<QuickCheckController>()) {
     Get.put(QuickCheckController());
+  }
+  if (!Get.isRegistered<BudgetController>()) {
+    Get.put(BudgetController());
   }
 }

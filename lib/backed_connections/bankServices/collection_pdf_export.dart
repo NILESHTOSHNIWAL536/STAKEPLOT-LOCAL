@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -52,10 +53,12 @@ Future<void> exportCollectionPdf(
   BuildContext context,
   CollectionDetailsModel details,
   List<SplitModel> splits,
-  List<BalanceModel> balances,
+  List<BalanceModel> balancespay,
+  List<BalanceModel> balancesreceive,
 ) async {
   try {
-    final bytes = await _buildPdf(details, splits, balances);
+    final bytes =
+        await _buildPdf(details, splits, balancespay, balancesreceive);
     await Printing.layoutPdf(onLayout: (_) async => bytes);
   } catch (e) {
     debugPrint('exportCollectionPdf error: $e');
@@ -69,6 +72,7 @@ Future<Uint8List> _buildPdf(
   CollectionDetailsModel details,
   List<SplitModel> splits,
   List<BalanceModel> balances,
+  List<BalanceModel> balancesreceive,
 ) async {
   final pdf = pw.Document(
     title: details.collection.name,
@@ -672,8 +676,8 @@ pw.Widget _splitCard(SplitModel split) {
 // BALANCES TABLE
 // ─────────────────────────────────────────────
 pw.Widget _balancesTable(List<BalanceModel> balances) {
-  final toPay = balances.where((b) => b.type == 'toPay').toList();
-  final toReceive = balances.where((b) => b.type == 'toReceive').toList();
+  final toPay = collectionsController.balancesListPay;
+  final toReceive = collectionsController.balancesListReceive;
 
   return pw.Row(
     crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -704,7 +708,7 @@ pw.Widget _balanceGroup(
     );
   }
 
-  final total = items.fold<double>(0, (s, b) => s + b.amount);
+  final total = items.fold<double>(0, (s, b) => s + b.pendingAmount);
 
   return pw.Container(
     decoration: pw.BoxDecoration(
@@ -757,7 +761,7 @@ pw.Widget _balanceGroup(
                     style: const pw.TextStyle(fontSize: 9),
                   ),
                   pw.Text(
-                    _rupees(b.amount),
+                    _rupees(b.pendingAmount),
                     style: pw.TextStyle(
                         fontSize: 9.5,
                         fontWeight: pw.FontWeight.bold,

@@ -15,11 +15,11 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../repository/bankinfo.dart';
 import '../routes/index_route.dart';
 
-
- RxString skipOrLets = "Let\'s Go".obs;
- RxString mess = "".obs;
+RxString skipOrLets = "Let\'s Go".obs;
+RxString mess = "".obs;
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -35,7 +35,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
   late IO.Socket socket;
- 
 
   @override
   void initState() {
@@ -56,9 +55,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
     _animationController.forward();
     _updateProgress();
-   
-    socket = IO.io(API.urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
-    
+
+    socket = IO.io(API.urlWithLocallHost,
+        IO.OptionBuilder().setTransports(['websocket']).build());
+
     fetchedTrsacntionList.clear();
     setUpSocketListener();
   }
@@ -72,25 +72,23 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     socket.on(
         "registerUser",
         (data) => {
-
-             if(data['data']['data']=="error" || data['data']['data']=="account-data-not-found")
-             {
-                  skipOrLets.value="Skip",
-             }else{
-                skipOrLets.value="Let\'s Go",
-             },
-              mess.value=data['message'],
+              if (data['data']['data'] == "error" ||
+                  data['data']['data'] == "account-data-not-found")
+                {
+                  skipOrLets.value = "Skip",
+                }
+              else
+                {
+                  skipOrLets.value = "Let\'s Go",
+                },
+              mess.value = data['message'],
               flagToFetchData.value = true,
               fetchedData.value = true,
               fetchedTrsacntionList.clear(),
               fetchedTrsacntionList.addAll(data['data']['data']),
-
-
             });
 
-    socket.onConnectError((data) {
-   
-    });
+    socket.onConnectError((data) {});
   }
 
   void _updateProgress() {
@@ -152,12 +150,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 children: [
                   OnboardingPage(
                     title: 'A powerful tool for expense tracking.',
-                    subtitle: 'Your go-to tool for hassle-free expense management.',
+                    subtitle:
+                        'Your go-to tool for hassle-free expense management.',
                     baseImage: OnboardingImages.page11, // this week
-                    baseSize: Size(
-                        screenWidth * 0.02, screenHeight * 0.02), // Responsive size
-                    baseOffset: Offset(
-                        screenWidth * 0.1, screenHeight * 0.1), // Responsive offset
+                    baseSize: Size(screenWidth * 0.02,
+                        screenHeight * 0.02), // Responsive size
+                    baseOffset: Offset(screenWidth * 0.1,
+                        screenHeight * 0.1), // Responsive offset
                     animatedImages: [
                       AnimatedImage(
                         path: OnboardingImages.page12, // graph
@@ -193,10 +192,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     title: 'Plot your finances with our calculators',
                     subtitle: 'Use our EMI, Credit and 5+ calculators',
                     baseImage: OnboardingImages.page21,
-                    baseSize: Size(
-                        screenWidth * 0.23, screenHeight * 0.23), // Responsive size
-                    baseOffset: Offset(
-                        screenWidth * 0.3, screenHeight * 0.1), // Responsive offset
+                    baseSize: Size(screenWidth * 0.23,
+                        screenHeight * 0.23), // Responsive size
+                    baseOffset: Offset(screenWidth * 0.3,
+                        screenHeight * 0.1), // Responsive offset
                     animatedImages: [
                       AnimatedImage(
                         path: OnboardingImages.page22,
@@ -221,20 +220,21 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   ),
                   OnboardingPage(
                     title: 'Connect with the unique community.',
-                    subtitle: 'Connect and engage with a community like no other.',
+                    subtitle:
+                        'Connect and engage with a community like no other.',
                     baseImage: OnboardingImages.p1,
-                    baseSize: Size(
-                        screenWidth * 0.9, screenHeight * 0.45), // Responsive size
+                    baseSize: Size(screenWidth * 0.9,
+                        screenHeight * 0.45), // Responsive size
                     baseOffset: Offset(screenWidth * 0.07,
                         screenHeight * 0.04), // Responsive offset
                     animatedImages: [
                       AnimatedImage(
-                        path: OnboardingImages.p2,//beard man
-                          size: Size(screenWidth * 0.15,
-                            screenHeight * 0.15), 
+                        path: OnboardingImages.p2, //beard man
+                        size: Size(screenWidth * 0.15, screenHeight * 0.15),
                         initialOffset:
                             const Offset(-1.0, 0.0), // Start from top-right
-                        finalOffset: const Offset(0.75, 0.25), // Responsive offset
+                        finalOffset:
+                            const Offset(0.75, 0.25), // Responsive offset
                         duration: const Duration(milliseconds: 500),
                       ),
                       AnimatedImage(
@@ -248,7 +248,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         duration: const Duration(milliseconds: 700),
                       ),
                       AnimatedImage(
-                        path: OnboardingImages.p4,//black hair
+                        path: OnboardingImages.p4, //black hair
                         size: Size(screenWidth * 0.15,
                             screenHeight * 0.15), // Responsive size
                         initialOffset: Offset(0.0, 1.0),
@@ -258,13 +258,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         duration: const Duration(milliseconds: 900),
                       ),
                       AnimatedImage(
-                        path: OnboardingImages.p5,//specs lady
+                        path: OnboardingImages.p5, //specs lady
                         size: Size(screenWidth * 0.15,
                             screenHeight * 0.15), // Responsive size
                         initialOffset: Offset(1.0, -1.0),
                         // finalOffset: Offset(screenWidth * 0.3,
                         //     screenHeight * 0.3), // Responsive offset
-                         finalOffset: const Offset(0.8, 0.6),
+                        finalOffset: const Offset(0.8, 0.6),
                         duration: const Duration(milliseconds: 1100),
                       ),
                       AnimatedImage(
@@ -274,7 +274,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         initialOffset: Offset(0.0, 1.0),
                         // finalOffset: Offset(screenWidth * 0.15,
                         //     screenHeight * 0.25), // Responsive offset
-                         finalOffset: const Offset(0.5, 0.45),
+                        finalOffset: const Offset(0.5, 0.45),
                         duration: const Duration(milliseconds: 1300),
                       ),
                     ],
@@ -284,8 +284,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     title: 'We look after your budgets and debts.',
                     subtitle: 'We manage your budgets and debts with care.',
                     baseImage: OnboardingImages.page41,
-                    baseSize: Size(
-                        screenWidth * 0.32, screenHeight * 0.3), // Responsive size
+                    baseSize: Size(screenWidth * 0.32,
+                        screenHeight * 0.3), // Responsive size
                     baseOffset: Offset(screenWidth * 0.07,
                         screenHeight * 0.02), // Responsive offset
                     animatedImages: [
@@ -354,26 +354,29 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                             child: Spinner(
                                 size: screenWidth * 0.08), // Responsive size
                           ),
-                          SizedBox(width: screenWidth * 0.02), // 5% of screen width
+                          SizedBox(
+                              width: screenWidth * 0.02), // 5% of screen width
                           Text(
                             "It will take around 10 minutes to fetch the data.",
                             style: TextStyle(
-                                fontSize: screenWidth * 0.02), // 4% of screen width
+                                fontSize:
+                                    screenWidth * 0.02), // 4% of screen width
                           ),
                         ],
                       )
                     : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
                             child: Text(
                               mess.value,
                               style: TextStyle(
-                                  fontSize: screenWidth * 0.02), // 4% of screen width
+                                  fontSize:
+                                      screenWidth * 0.02), // 4% of screen width
                             ),
                           ),
-                      ],
-                    )),
+                        ],
+                      )),
               ),
             ],
           ),
@@ -599,7 +602,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                       color: AppColors.backgroundColor),
                 ),
               ),
-               SizedBox(height:screenHeight * 0.07),
+              SizedBox(height: screenHeight * 0.07),
               Obx(() => flagToFetchData.value
                   ? getGestTap(_onboardingScreenState)
                   : getGestTap(_onboardingScreenState)),
@@ -652,7 +655,8 @@ class _OnboardingPageState extends State<OnboardingPage>
                 value: animatedValue,
                 strokeWidth: 4,
                 backgroundColor: AppColors.accentColor,
-                valueColor: const AlwaysStoppedAnimation<Color>(AppColors.backgroundColor),
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppColors.backgroundColor),
               );
             },
           ),
@@ -663,6 +667,7 @@ class _OnboardingPageState extends State<OnboardingPage>
             if (flagToFetchData.value) {
               clearStack(context);
               callApi(context);
+              getBankAccounts();
               Navigator.pushNamed(context, "/home");
             }
           } else {
@@ -691,8 +696,9 @@ class _OnboardingPageState extends State<OnboardingPage>
             : Padding(
                 padding: const EdgeInsets.only(top: 17, bottom: 30),
                 child: flagToFetchData.value
-                    ? Center(child: getButton(context, skipOrLets.value,
-                        AppColors.primaryColor, AppColors.backgroundColor))
+                    ? Center(
+                        child: getButton(context, skipOrLets.value,
+                            AppColors.primaryColor, AppColors.backgroundColor))
                     : getButton(context, skipOrLets.value, Colorcodes.greyLight,
                         AppColors.bg1),
               ),

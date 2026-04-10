@@ -12,12 +12,7 @@ import 'create_collection_data.dart';
 import 'create_collection_pages/create_collection_flow.dart';
 import 'invitations_list.dart';
 
-/// ------------------------------
-/// MAIN
-/// ------------------------------
-
 Widget buildCollectionsBody(BuildContext context) {
-
   return Obx(() {
     final hasInvitations = collectionsController.invitationsList.isNotEmpty;
 
@@ -201,9 +196,6 @@ Widget CollectionsBody(BuildContext context) {
   });
 }
 
-/// ------------------------------
-/// SECTION TITLE
-/// ------------------------------
 class _SectionTitle extends StatelessWidget {
   final String title;
   const _SectionTitle({required this.title});
@@ -249,9 +241,6 @@ class _CollectionSliverList extends StatelessWidget {
   }
 }
 
-/// ------------------------------
-/// TIMELINE ITEM
-/// ------------------------------
 class _TimelineItem extends StatelessWidget {
   final CollectionModel item;
   final bool isLast;
@@ -385,10 +374,8 @@ class _CollectionCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const _MemberCircle(label: "A"),
-                  const _MemberCircle(label: "B"),
-                  const _MemberCircle(label: "C"),
-                  const _MemberCircle(label: "+2"),
+                  ...item.members.map((member) => _MemberCircle(
+                      label: member.substring(0, 2).toUpperCase())),
                   if (item.totalAmount > 0) ...[
                     const SizedBox(width: 8),
                     Container(
@@ -456,7 +443,7 @@ class _MemberCircle extends StatelessWidget {
         label,
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 10,
+          fontSize: 12,
           fontWeight: FontWeight.w600,
         ),
       ),

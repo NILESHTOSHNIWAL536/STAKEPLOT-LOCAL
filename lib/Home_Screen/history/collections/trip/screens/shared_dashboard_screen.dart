@@ -43,7 +43,7 @@ class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
     });
 
     socket.on("collection", (data) {
-      collectionsController.socketMessage(data,context);
+      collectionsController.socketMessage(data, context);
     });
   }
 
@@ -51,8 +51,8 @@ class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
     final collectionId =
         collectionsController.collectionDetails.value?.collection.id;
     if (collectionId == null) return;
-    await collectionsController.getAllCollectionsTransactions();
     await collectionsController.getBalances(collectionId);
+    await collectionsController.getSplits(collectionId);
   }
 
   void _openSelectTransactions() {
@@ -118,7 +118,7 @@ class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
                     const SizedBox(height: 16),
 
                     // ── BALANCE STATUS
-                    const BalanceStatusWidget(),
+                   const BalanceStatusWidget(),
 
                     const SizedBox(height: 20),
 
