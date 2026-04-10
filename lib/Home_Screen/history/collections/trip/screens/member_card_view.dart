@@ -334,11 +334,11 @@ class ToPayScreen extends StatelessWidget {
       body: Column(
         children: [
           // Total banner
-          _TotalBanner(
-            label: 'Total Amount to Pay',
-            total: collectionsController.totalToPay.value,
-            isPay: true,
-          ),
+          Obx(() => _TotalBanner(
+                label: 'Total Amount to Pay',
+                total: collectionsController.totalToPay.value,
+                isPay: true,
+              )),
           const SizedBox(height: 8),
 
           // List
@@ -503,11 +503,11 @@ class ToReceiveScreen extends StatelessWidget {
       appBar: _appBar(context, 'To Receive'),
       body: Column(
         children: [
-          _TotalBanner(
-            label: 'Total Amount to Receive',
-            total: _total,
-            isPay: false,
-          ),
+          Obx(() => _TotalBanner(
+                label: 'Total Amount to Receive',
+                total: collectionsController.totalToReceive.value,
+                isPay: false,
+              )),
           const SizedBox(height: 8),
           Obx(
             () => Expanded(
@@ -621,14 +621,14 @@ class _ToReceiveCardState extends State<_ToReceiveCard> {
                   ],
                 ),
                 const SizedBox(height: 3),
-                Obx(() => Text(
-                      '₹${collectionsController.totalToPay.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: _C.green,
-                      ),
-                    )),
+                Text(
+                  '₹${widget.item.pendingAmount.toStringAsFixed(0)}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: _C.green,
+                  ),
+                ),
               ],
             ),
           ),
@@ -754,14 +754,14 @@ class _ClearSplitDialogState extends State<_ClearSplitDialog> {
                       ),
                     ),
                   ),
-                  Obx(() => Text(
-                        '₹${collectionsController.totalToReceive.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: _C.navy,
-                        ),
-                      )),
+                  Text(
+                    '₹${widget.totalAmount.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: _C.navy,
+                    ),
+                  ),
                 ],
               ),
             ),
