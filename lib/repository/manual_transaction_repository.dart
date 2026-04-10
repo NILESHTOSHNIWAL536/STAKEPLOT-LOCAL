@@ -25,7 +25,7 @@ void addTransaction(String amount, String subCategory, String categories,
     BuildContext context, String dropdownValue,
     [bool isSplit = false, bool snackBar = true, bool isDebit = true]) async {
   // final budgetController = Get.find<BudgetController>();
-  BudgetController budgetController = ControllerManagement.budgetController;
+  // BudgetController budgetController = ControllerManagement.budgetController;
   var body = {
     'amount': amount.toString(),
     'category': categories.toString(),
@@ -35,18 +35,27 @@ void addTransaction(String amount, String subCategory, String categories,
     'isSplit': isSplit,
     'isDebit': isDebit
   };
-  final response =await postDataApiCall("${TransactionRoutes.addTransaction}].", body);
+  final response =
+      await postDataApiCall(TransactionRoutes.addTransaction, body);
   if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
-    transactionsHistory.insert(
-        0, TransactionModel.fromJson(body['data'][0]['data']));
+    TransactionModel addedTransactions =
+        TransactionModel.fromJson(body['data'][0]['data']);
+    if (collectionsController.selectedCollectionId != "") {
+      collectionsController.splitManulaTansactions(
+          addedTransactions.id.toString(), context);
+    }
+    transactionsHistory.insert(0, addedTransactions);
+
     updateCatAndMoneyMap(context);
     userController.fetchUserInfo();
+
     Future.wait([
       () async {
         reloadHistory.value = !reloadHistory.value;
         setDonectChat.value = !setDonectChat.value;
         // finoraController.setDonectChat.value = !finoraController.setDonectChat.value;
+
         if (!isSplit && snackBar) {
           snackBarCalled(
             context,
@@ -60,10 +69,12 @@ void addTransaction(String amount, String subCategory, String categories,
     });
     // getBudget();
 
-    budgetController.getBudget();
+    // budgetController.getBudget();
   } else {
     snackBarCalledfail(
-        context, SnackbarData().transactionAddFail,);
+      context,
+      SnackbarData().transactionAddFail,
+    );
   }
 
   cashInAndOut.value = false;

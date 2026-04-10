@@ -30,8 +30,6 @@ class QuickCheckController extends GetxController {
 
       quickCheck.value = QuickCheckModel.fromJson(data);
     } catch (e, st) {
-      print(e);
-      print(st);
     } finally {
       isLoading.value = false;
     }

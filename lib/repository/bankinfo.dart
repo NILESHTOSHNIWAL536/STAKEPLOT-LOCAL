@@ -26,16 +26,15 @@ import '../model/fips_metric_model.dart';
 import '../model/quick_check_model.dart';
 import '../routes/route_finvu.dart';
 
-RxList<BankAccountModel> bankAccountLinkedList =
-    <BankAccountModel>[].obs;
+RxList<BankAccountModel> bankAccountLinkedList = <BankAccountModel>[].obs;
 RxList<FipsMetric> fipsMetricList = <FipsMetric>[].obs;
-RxList<ConsentInfoModel> consentAndHandleDetails =
-    <ConsentInfoModel>[].obs;
+RxList<ConsentInfoModel> consentAndHandleDetails = <ConsentInfoModel>[].obs;
 RxMap bankImagemap = {}.obs;
 
 Future<void> getBankAccounts() async {
   try {
-    var response = await getDataApiCall(BankTransactionRoutes.getBanksLinkedAndAccounts);
+    var response =
+        await getDataApiCall(BankTransactionRoutes.getBanksLinkedAndAccounts);
     if (getFlagOfResponse(response)) {
       storeDataLocal(response);
     }
@@ -68,23 +67,19 @@ void storeDataLocal(response) {
             consendHandleId: bank['consendHandleId']?.toString() ?? '',
             sessionId: bank['sessionId']?.toString() ?? '',
             custId: bank['custId']?.toString() ?? '',
-            lastFetch: bank['accounts'] != null &&
-                    bank['accounts'].isNotEmpty
+            lastFetch: bank['accounts'] != null && bank['accounts'].isNotEmpty
                 ? bank['accounts'][0]['lastFetch']?.toString() ?? ''
                 : '',
-            nextFetch: bank['accounts'] != null &&
-                    bank['accounts'].isNotEmpty
+            nextFetch: bank['accounts'] != null && bank['accounts'].isNotEmpty
                 ? bank['accounts'][0]['nextFetch']?.toString() ?? ''
                 : '',
             fetchCount: int.tryParse(
-                    (bank['accounts'] != null &&
-                            bank['accounts'].isNotEmpty
-                        ? bank['accounts'][0]['fetchCount']?.toString()
-                        : null) ??
+                    (bank['accounts'] != null && bank['accounts'].isNotEmpty
+                            ? bank['accounts'][0]['fetchCount']?.toString()
+                            : null) ??
                         '0') ??
                 0,
-            accountId: bank['accounts'] != null &&
-                    bank['accounts'].isNotEmpty
+            accountId: bank['accounts'] != null && bank['accounts'].isNotEmpty
                 ? bank['accounts'][0]['accountId']?.toString() ?? ''
                 : '',
             bankName: bank['bankName']?.toString() ?? 'BankName',
@@ -108,25 +103,22 @@ void storeDataLocal(response) {
           bankLogo: (bank['bankLogo'] ?? bankImage).toString(),
           fipId: bank['fipId']?.toString() ?? '',
           accountId: account['accountId']?.toString() ?? '',
-          maskedAccNumber:
-              account['maskedAccNumber']?.toString() ?? '',
+          maskedAccNumber: account['maskedAccNumber']?.toString() ?? '',
           type: account['type']?.toString() ?? '',
-          currentBalance: double.tryParse(
-                  account['currentBalance']?.toString() ?? '0') ??
-              0.0,
+          currentBalance:
+              double.tryParse(account['currentBalance']?.toString() ?? '0') ??
+                  0.0,
           lastFetch: account['lastFetch']?.toString() ?? "",
           nextFetch: account['nextFetch']?.toString() ?? "",
-          fetchCount: int.tryParse(
-                  account['fetchCount']?.toString() ?? '0') ??
-              0,
+          fetchCount:
+              int.tryParse(account['fetchCount']?.toString() ?? '0') ?? 0,
           name: profile['name']?.toString() ?? "",
           pan: profile['pan']?.toString() ?? "",
           dob: profile['dob']?.toString() ?? "",
           mobile: profile['mobile']?.toString() ?? "",
           address: profile['address']?.toString() ?? "",
           ifscCode: account['ifscCode']?.toString() ?? "0",
-          branchAddress:
-              account['branchAddress']?.toString() ?? "0",
+          branchAddress: account['branchAddress']?.toString() ?? "0",
         ),
       );
     });
@@ -258,7 +250,10 @@ Future<void> getFipAccountInfo(
 
 void setPasswordApiCalled(context, String password) async {
   if (password == "00") {
-    snackBarCalledfail(context, SnackbarData().pinSetFail00,);
+    snackBarCalledfail(
+      context,
+      SnackbarData().pinSetFail00,
+    );
     return; // Exit the function without setting the PIN
   }
 
@@ -271,7 +266,10 @@ void setPasswordApiCalled(context, String password) async {
     userController.cupertinoPin.value = password;
     hideBackAccountPassword.value = false;
 
-    snackBarCalled(context, SnackbarData().pinSetSuccess,);
+    snackBarCalled(
+      context,
+      SnackbarData().pinSetSuccess,
+    );
   } else {
     snackBarCalledfail(context, SnackbarData().pinSetFail);
   }
@@ -410,7 +408,5 @@ void pinPasswordVerify(
 //     quickCheck.value = QuickCheckModel.fromJson(data);
 
 //   } catch (e, st) {
-//     print(e);
-//     print(st);
 //   }
 // }

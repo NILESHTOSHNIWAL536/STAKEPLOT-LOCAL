@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:get/get.dart';
 
-
 import '../routes/route_transactions.dart';
 
 class HighestSpentInsightsController extends GetxController {
@@ -38,7 +37,7 @@ class HighestSpentInsightsController extends GetxController {
       isLoading.value = true;
       isError.value = false;
 
-      final response = await getDataApiCall( baseUrl);
+      final response = await getDataApiCall(baseUrl);
 
       if (getFlagOfResponse(response)) {
         final data = jsonDecode(response.body);
@@ -53,20 +52,16 @@ class HighestSpentInsightsController extends GetxController {
         /// Highest Month
         highestMonthLabel.value = data['highestMonth']['label'];
         highestMonthIndex.value = data['highestMonth']['index'];
-        increase.value =
-            (data['highestMonth']['increase'] as num).toDouble();
+        increase.value = (data['highestMonth']['increase'] as num).toDouble();
 
         /// Most Active Day
         mostActiveDay.value = data['mostActiveDay']['day'];
         message.value = data['mostActiveDay']['message'];
-
       } else {
         isError.value = true;
-        print("API Error: ${response.statusCode}");
       }
     } catch (e) {
       isError.value = true;
-      print("Exception: $e");
     } finally {
       isLoading.value = false;
     }
