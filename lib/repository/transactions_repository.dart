@@ -248,7 +248,7 @@ Future<void> getAllTransactionHistory(
 void updateTheTagOfTransactions2(
     category, subCategory, transactionId, context, index) async {
   String urlPath = BankTransactionRoutes.updateTransaction(transactionId: transactionId);
-  final budgetController = Get.find<BudgetController>();
+  final budgetController = Get.find<BudgetControllerScreenModel>();
   var response = await updateDataApiCall2(urlPath, {
     'category': category,
     'subcategory': subCategory,

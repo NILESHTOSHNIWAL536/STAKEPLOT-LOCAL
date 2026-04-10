@@ -6,8 +6,8 @@ import 'package:flutter_application_code_stakeplot/components/shared_utils.dart'
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/model/collections_model.dart';
 import 'package:get/get.dart';
-import '../utils/app_theme.dart';
-import '../models/models.dart';
+import '../utils/app_theme_collections.dart';
+import '../models/collection_helper_models.dart';
 
 // ── Avatar ────────────────────────────────────────────────────────────────────
 class MemberAvatar extends StatelessWidget {
@@ -56,7 +56,7 @@ class CategoryTag extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       decoration: BoxDecoration(
-        color: AppColors.tagBg,
+        color: AppColorsForCollection.tagBg,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(label, style: AppTextStyles.bodySmall),
@@ -130,12 +130,12 @@ class TransactionCard extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: AppColorsForCollection.surface,
               borderRadius: BorderRadius.circular(14),
               border:
                   collectionsController.selectedTransactions.contains(tx.id) &&
                           showCheckbox
-                      ? Border.all(color: AppColors.primaryBlue, width: 1.5)
+                      ? Border.all(color: AppColorsForCollection.primaryBlue, width: 1.5)
                       : null,
               boxShadow: [
                 BoxShadow(
@@ -154,13 +154,13 @@ class TransactionCard extends StatelessWidget {
                     height: 22,
                     decoration: BoxDecoration(
                       color: flag.value
-                          ? AppColors.primaryDark
+                          ? AppColorsForCollection.primaryDark
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
                         color: flag.value
-                            ? AppColors.primaryDark
-                            : AppColors.divider,
+                            ? AppColorsForCollection.primaryDark
+                            : AppColorsForCollection.divider,
                         width: 1.5,
                       ),
                     ),
@@ -174,13 +174,13 @@ class TransactionCard extends StatelessWidget {
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
-                    color: AppColors.tagBg,
+                    color: AppColorsForCollection.tagBg,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
                     Icons.north_east,
                     size: 16,
-                    color: AppColors.textSecondary,
+                    color: AppColorsForCollection.textSecondary,
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -200,7 +200,7 @@ class TransactionCard extends StatelessWidget {
                           const Icon(
                             Icons.group,
                             size: 14,
-                            color: AppColors.textLight,
+                            color: AppColorsForCollection.textLight,
                           ),
                         ],
                       ),
@@ -215,8 +215,8 @@ class TransactionCard extends StatelessWidget {
                       amountUi(),
                       style: AppTextStyles.amountMedium.copyWith(
                         color: tx.type == 'CREDIT'
-                            ? AppColors.successGreen
-                            : AppColors.errorRed,
+                            ? AppColorsForCollection.successGreen
+                            : AppColorsForCollection.errorRed,
                         fontSize: 15,
                       ),
                     ),
@@ -225,7 +225,7 @@ class TransactionCard extends StatelessWidget {
                       const Icon(
                         Icons.bookmark_border,
                         size: 18,
-                        color: AppColors.textLight,
+                        color: AppColorsForCollection.textLight,
                       ),
                   ],
                 ),
@@ -263,7 +263,7 @@ class FixedBillCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColorsForCollection.surface,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
@@ -279,13 +279,13 @@ class FixedBillCard extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.tagBg,
+              color: AppColorsForCollection.tagBg,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               _iconFor(bill.iconKey),
               size: 20,
-              color: AppColors.primaryBlue,
+              color: AppColorsForCollection.primaryBlue,
             ),
           ),
           const SizedBox(width: 12),
@@ -311,7 +311,7 @@ class FixedBillCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(
-                  color: isPaid ? AppColors.paidBadge : AppColors.pendingBadge,
+                  color: isPaid ? AppColorsForCollection.paidBadge : AppColorsForCollection.pendingBadge,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -320,8 +320,8 @@ class FixedBillCard extends StatelessWidget {
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: isPaid
-                        ? AppColors.successGreen
-                        : AppColors.warningOrange,
+                        ? AppColorsForCollection.successGreen
+                        : AppColorsForCollection.warningOrange,
                   ),
                 ),
               ),
@@ -361,7 +361,7 @@ class SectionHeader extends StatelessWidget {
                 actionLabel!,
                 style: const TextStyle(
                   fontSize: 13,
-                  color: AppColors.primaryBlue,
+                  color: AppColorsForCollection.primaryBlue,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -394,7 +394,7 @@ class PrimaryButton extends StatelessWidget {
           ? OutlinedButton(
               onPressed: onPressed,
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: AppColors.primaryDark),
+                side: const BorderSide(color: AppColorsForCollection.primaryDark),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14)),
               ),
@@ -407,8 +407,8 @@ class PrimaryButton extends StatelessWidget {
               onPressed: onPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor: onPressed != null
-                    ? AppColors.primaryDark
-                    : AppColors.textLight,
+                    ? AppColorsForCollection.primaryDark
+                    : AppColorsForCollection.textLight,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14)),

@@ -1,6 +1,3 @@
-// ─── collections_summary_section.dart ────────────────────────────────────────
-// PATH: lib/Home_Screen/history/collections/collections_summary_section.dart
-//  (or wherever CollectionSummarySection is currently located)
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

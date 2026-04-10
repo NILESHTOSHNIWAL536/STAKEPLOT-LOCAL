@@ -54,7 +54,7 @@ class FixedBill {
 
 enum BillStatus { paid, pending }
 
-class Transaction {
+class TransactionForCollections {
   final String id;
   final String title;
   final String date;
@@ -65,7 +65,7 @@ class Transaction {
   bool isSelected;
   final List<SplitEntry>? splits;
 
-  Transaction({
+  TransactionForCollections({
     required this.id,
     required this.title,
     required this.date,

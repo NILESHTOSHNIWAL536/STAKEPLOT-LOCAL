@@ -22,7 +22,7 @@ class BudgetChartDataPoint {
     @override
     String toString() => '($x, $y, $xString)';
   }
-class BudgetController extends GetxController {
+class BudgetControllerScreenModel extends GetxController {
    List<BudgetChartDataPoint> budgetChartData = [];
    String selectedBudgetPeriod = 'monthly';
    List<dynamic> budgetTransactions = []; // Store raw transactions from API

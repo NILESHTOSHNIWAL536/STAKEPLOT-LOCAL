@@ -43,7 +43,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
   List<FocusNode> _focusNodes = [];
   List<bool> _isEditing = []; // Tracks editing state for each category
   List<double> _initialAmounts = []; // Stores initial amounts for each category
-final budgetController = Get.find<BudgetController>();
+final budgetController = Get.find<BudgetControllerScreenModel>();
   @override
   void initState() {
     super.initState();

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
 import 'package:get/get.dart';
-import '../models/models.dart';
+import '../models/collection_helper_models.dart';
 import '../widgets/common_widgets.dart';
 import 'select_members_screen.dart';
 
@@ -105,10 +105,10 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
           0.0, (sum, t) => sum + t.amount);
 
   void _proceedToMembers() {
-    List<Transaction> selected = [];
+    List<TransactionForCollections> selected = [];
     for (final obj in collectionsController.SeletedTransactionsList) {
       if (collectionsController.selectedTransactions.contains(obj.id)) {
-        selected.add(Transaction(
+        selected.add(TransactionForCollections(
           id: obj.id,
           title: obj.narration,
           date: formatWhatsAppDate(obj.transactionTimestamp),

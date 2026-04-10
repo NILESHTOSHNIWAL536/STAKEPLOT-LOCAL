@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/model/collections_model.dart'
 import '../../../../../Utils/socket_connect.dart';
 import '../../../../../controllers/SplitDetailsScreen.dart';
 import '../../../../../routes/index_route.dart';
-import '../utils/app_theme.dart';
+import '../utils/app_theme_collections.dart';
 import 'member_card_view.dart';
 import 'member_spend_amount.dart';
 import 'select_transactions_sheet.dart';
@@ -69,9 +69,9 @@ class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColorsForCollection.background,
       body: RefreshIndicator(
-        color: AppColors.primaryDark,
+        color: AppColorsForCollection.primaryDark,
         onRefresh: _loadDashboardData,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(
@@ -203,11 +203,11 @@ class _SearchAddBar extends StatelessWidget {
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   prefixIcon: const Icon(Icons.search_rounded,
-                      color: AppColors.textLight, size: 20),
+                      color: AppColorsForCollection.textLight, size: 20),
                   contentPadding: const EdgeInsets.symmetric(vertical: 13),
                   hintText: 'Search splits...',
                   hintStyle:
-                      const TextStyle(color: AppColors.textLight, fontSize: 13),
+                      const TextStyle(color: AppColorsForCollection.textLight, fontSize: 13),
                 ),
               ),
             ),
@@ -219,11 +219,11 @@ class _SearchAddBar extends StatelessWidget {
               width: 46,
               height: 46,
               decoration: BoxDecoration(
-                color: AppColors.primaryDark,
+                color: AppColorsForCollection.primaryDark,
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primaryDark.withOpacity(0.30),
+                    color: AppColorsForCollection.primaryDark.withOpacity(0.30),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -255,7 +255,7 @@ class _CombinedAmountCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.surface.withOpacity(0.8),
+              color: AppColorsForCollection.surface.withOpacity(0.8),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: const Color(0xFFEBEBEB)),
             ),
@@ -263,7 +263,7 @@ class _CombinedAmountCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(Icons.group_outlined,
-                    size: 15, color: AppColors.textLight),
+                    size: 15, color: AppColorsForCollection.textLight),
                 const SizedBox(width: 6),
                 Text(
                   '${members.length} Member${members.length != 1 ? 's' : ''}',
@@ -331,7 +331,7 @@ class _SectionHeader extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
             decoration: BoxDecoration(
-              color: AppColors.primaryDark.withOpacity(0.08),
+              color: AppColorsForCollection.primaryDark.withOpacity(0.08),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -339,7 +339,7 @@ class _SectionHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: AppColors.primaryDark,
+                color: AppColorsForCollection.primaryDark,
               ),
             ),
           ),
@@ -351,7 +351,7 @@ class _SectionHeader extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryDark,
+                  color: AppColorsForCollection.primaryDark,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -631,12 +631,12 @@ class _EmptyDashboard extends StatelessWidget {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: AppColors.primaryDark.withOpacity(0.07),
+              color: AppColorsForCollection.primaryDark.withOpacity(0.07),
               shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.call_split_rounded,
-              color: AppColors.primaryDark,
+              color: AppColorsForCollection.primaryDark,
               size: 36,
             ),
           ),
