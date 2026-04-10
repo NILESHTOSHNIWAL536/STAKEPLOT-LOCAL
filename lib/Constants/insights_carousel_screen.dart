@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/AdjustAmountScreen.dart';
+import 'package:get/get.dart';
 import '../Home_Screen/home_screen_state/home_page.dart';
 import 'package:flutter_application_code_stakeplot/constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/Constants/core/app_padding_sizes.dart';
+import '../controllers/highest_spent_insight.dart';
 import 'font_manager.dart';
 
 
@@ -16,7 +18,15 @@ class InsightsCarouselScreen extends StatefulWidget {
 class _InsightsCarouselScreenState extends State<InsightsCarouselScreen> {
   PageController controller = PageController();
   int pageIndex = 0;
+  final HighestSpentInsightsController controllerInsights = Get.put(HighestSpentInsightsController());
+ 
 
+  @override
+  void initState() {
+    super.initState();
+    // Fetch insights when screen loads
+    controllerInsights.fetchInsights();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,9 +50,9 @@ class _InsightsCarouselScreenState extends State<InsightsCarouselScreen> {
                     setState(() => pageIndex = index);
                   },
                   children: [
-              highestSpendingMonthCard(),
+              highestSpendingMonthCard(controllerInsights),
               topCategoriesCard(),
-              mostActiveDayCard(),
+              mostActiveDayCard(controllerInsights),
               ],
               
                 ),
@@ -82,7 +92,7 @@ class _InsightsCarouselScreenState extends State<InsightsCarouselScreen> {
   }
 
   // ─────────── CARD 1 ───────────
-  Widget highestSpendingMonthCard() {
+  Widget highestSpendingMonthCard(HighestSpentInsightsController controllerInsights) {
   return Container(
  height: MediaQuery.of(context).size.height / 2,
 
@@ -100,8 +110,8 @@ class _InsightsCarouselScreenState extends State<InsightsCarouselScreen> {
         /// TITLE
         Padding(
           padding: const EdgeInsets.only(top:AppSizes.p10),
-          child: Text(
-            "Highest spending month",
+          child: Obx(() => Text(
+            controllerInsights.highestMonthLabel.value,
             style:  FontManager().getTextStyle(context, 
                       fontSize: 24, 
                       color: AppColors.accentColor,
@@ -112,17 +122,17 @@ class _InsightsCarouselScreenState extends State<InsightsCarouselScreen> {
                       ),
             textAlign: TextAlign.center,
           ),
-        ),
+        ),),
 
         SizedBox(
   height: MediaQuery.of(context).size.height / 33, // ≈ 24px
 ),
 
-        /// MONTH NAME
+        // / MONTH NAME
         Padding(
           padding: const EdgeInsets.only(top:AppSizes.p20),
           child:  Text(
-            "January",
+            controllerInsights.highestMonthLabel.value,
             style:  FontManager().getTextStyle(context, 
                     fontSize: 24, 
                     color: AppColors.primaryColor,
@@ -136,23 +146,42 @@ SizedBox(
 
 
         /// BAR GRAPH (Dummy UI like image)
-        SizedBox(
-         height: MediaQuery.of(context).size.height / 6.6, // ≈ 120px
+        // SizedBox(
+        //  height: MediaQuery.of(context).size.height / 6.6, // ≈ 120px
 
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              bar(60,false),
-              bar(80,false),
-              bar(100,false),
-              bar(130,true),   // highlighted bar as in image
-              bar(95,false),
-              bar(85,false),
-              bar(60,false),
-            ],
-          ),
-        ),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //     crossAxisAlignment: CrossAxisAlignment.end,
+        //     children: [
+        //       bar(60,false),
+        //       bar(80,false),
+        //       bar(100,false),
+        //       bar(130,true),   // highlighted bar as in image
+        //       bar(95,false),
+        //       bar(85,false),
+        //       bar(60,false),
+        //     ],
+        //   ),
+        // ),
+        Obx(() {
+  if (controllerInsights.bars.isEmpty) return SizedBox();
+
+  double max = controllerInsights.bars.reduce((a, b) => a > b ? a : b);
+
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: List.generate(controllerInsights.bars.length, (index) {
+      final value = controllerInsights.bars[index];
+      final height = max == 0 ? 0 : (value / max) * 130;
+
+      return bar(
+        height.toDouble(),
+        index == controllerInsights.highestMonthIndex.value,
+      );
+    }),
+  );
+}),
 
       SizedBox(
   height: MediaQuery.of(context).size.height / 30, // ≈ 20px
@@ -386,7 +415,7 @@ Widget categoryRow({
 
 
   // ─────────── CARD 3 (Scrollable & longer) ───────────
-  Widget mostActiveDayCard() {
+  Widget mostActiveDayCard(HighestSpentInsightsController controllerInsights) {
   return Container(
   height: MediaQuery.of(context).size.height / 2,
     margin: const EdgeInsets.symmetric(horizontal: AppSizes.m16, vertical: AppSizes.m24),
@@ -402,7 +431,7 @@ Widget categoryRow({
       
           /// TITLE
           Text(
-            "Most active spending day",
+            controllerInsights.mostActiveDay.value,
             style:  FontManager().getTextStyle(context, 
                       fontSize: 24, 
                       color: AppColors.accentColor,
@@ -427,7 +456,7 @@ Widget categoryRow({
       
           /// DAY TEXT
            Text(
-            "Friday",
+            controllerInsights.message.value,
             style:  FontManager().getTextStyle(context, 
                       fontSize: 24, 
                       color: AppColors.primaryColor,
@@ -441,9 +470,7 @@ Widget categoryRow({
            Padding(
             padding: EdgeInsets.symmetric(horizontal: AppSizes.p8),
             child: Text(
-              "This is your peak-spend day.\n"
-              "Set a reserve now—and take control\n"
-              "before it takes over.",
+              controllerInsights.message.value,
               textAlign: TextAlign.center,
               style: FontManager().getTextStyle(context, 
                       fontSize: 16, 

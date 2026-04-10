@@ -34,7 +34,7 @@ class _CreateCollectionFlowState extends State<CreateCollectionFlow> {
   /// SINGLE SOURCE OF TRUTH
   final RxList<Map<String, dynamic>> selectedMembers =
       <Map<String, dynamic>>[].obs;
-  final RxSet<String> selectedUserIds = <String>{}.obs;
+ 
 
   void next() {
     // if (step >= 5) return;
@@ -93,7 +93,7 @@ class _CreateCollectionFlowState extends State<CreateCollectionFlow> {
                   StepCollectionType(onNext: next),
                   StepAddPeople(
                     members: selectedMembers,
-                    userIds: selectedUserIds,
+                    userIds: collectionsController.selectedUserIds,
                     onNext: (members) {
                       collectionDraft.members = members;
                       next();

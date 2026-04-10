@@ -33,11 +33,12 @@ import '../insightsController.dart';
 Future<void> callApi(context) async {
   await Get.find<UserController>().fetchUserInfo();
   final InsightsController _controller = Get.put(InsightsController());
+  final budgetController = Get.find<BudgetController>();
   getBankAccounts();
   getAck();
   contextGlobal = context;
   // getUserLend(context);
-  unawaited(getBudget());
+  unawaited(budgetController.getBudget());
   getHiddenTransactions(context);
   _controller.getHomePageInsights(context);
   _controller.getHomePageMoneyMapInsights(context);

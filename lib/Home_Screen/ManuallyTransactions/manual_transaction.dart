@@ -1,34 +1,30 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-import 'package:flutter_application_code_stakeplot/Constants/search.dart';
 import 'package:confetti/confetti.dart';
-import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/friends_bill_split.dart';
-import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
-import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/repository/manual_transaction_repository.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/image_service/profile.dart';
-import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-
+import '../../Constants/app_styles.dart';
+import '../../Constants/booleanFlag.dart';
+import '../../Constants/colors.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/app_shadows.dart';
+import '../../Constants/font_manager.dart';
+import '../../Constants/search.dart';
+import '../../Utils/homepageStrings.dart.dart';
 import '../../backed_connections/apiAutomations/curd.dart';
+import '../../backed_connections/apis_connect.dart';
 import '../../components/shared_utils.dart';
 import '../../controllers/collections_controller.dart';
+import '../../finvu_screens/shareAccountLogin.dart';
+import '../../image_service/avatarProfile.dart';
+import '../../image_service/profile.dart';
+import '../../repository/manual_transaction_repository.dart';
+import '../../repository/transactions_repository.dart';
 import '../../routes/index_route.dart';
 import '../../routes/route_collections.dart';
 import 'custom_keyboard.dart';
-
-bool isDebit = true;
-bool showKeyboard = true;
+import 'friends_bill_split.dart';
 
 class ModalContent extends StatefulWidget {
   final bool isDebit;
@@ -55,6 +51,7 @@ class _ModalContentState extends State<ModalContent>
   String? selectedCategory2;
   String? selectedSubCategory2;
   bool _isAmountFieldFocused = true;
+  bool showKeyboard = true;
   final FocusNode _amountFocusNode = FocusNode();
   late IO.Socket socket;
 
@@ -362,7 +359,7 @@ class _ModalContentState extends State<ModalContent>
     setState(() {
       amount = double.tryParse(value);
 
-      if (!isDebit) {
+      if (!widget.isDebit) {
         selectedCategory = "Income";
         categoryFieldController.text = "Income";
       }
@@ -1366,6 +1363,9 @@ class _ModalContentState extends State<ModalContent>
                   selectedCategory2.toString(),
                   context,
                   "cash",
+                  false,
+                  true,
+                  widget.isDebit,
                 );
               },
               child: Obx(() => cashInAndOut.value

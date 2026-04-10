@@ -186,6 +186,7 @@ Future<http.Response> getDataApiCall(urlPath) async {
       throw TimeoutException("Request timed out");
     },
   );
+  print("response $urlPath : ${accessToken}");
 
   // printData(response);
   return response;

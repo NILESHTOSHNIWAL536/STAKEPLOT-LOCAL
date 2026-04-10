@@ -5,10 +5,14 @@ import 'package:flutter_application_code_stakeplot/controllers/theme_controller.
 import 'package:flutter_application_code_stakeplot/controllers/user-controller.dart';
 import 'package:get/get.dart';
 
+import '../repository/budget_apis.dart';
+
 class ControllerManagement {
   static UserController get userController => Get.find<UserController>();
   static PostController get postController => Get.find<PostController>();
   static ThemeController get themeController => Get.find<ThemeController>();
+  static BudgetController get budgetController => Get.find<BudgetController>();
+  
   // static FinoraController get finoraController => Get.find<FinoraController>();
   // final GlobalKey<CommunityState> communityKey = GlobalKey<CommunityState>();
   

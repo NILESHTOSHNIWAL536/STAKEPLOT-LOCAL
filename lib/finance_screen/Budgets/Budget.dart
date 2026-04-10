@@ -64,11 +64,12 @@ class _BudgetState extends State<Budget> {
   TextEditingController amountController = TextEditingController(text: "");
   RxString period = "".obs;
   RxBool boolFlag = false.obs;
+  final budgetController = Get.find<BudgetController>();
 
   @override
   void initState() {
     super.initState();
-    getTopFiveCater();
+    budgetController.getTopFiveCater();
   }
 
   @override

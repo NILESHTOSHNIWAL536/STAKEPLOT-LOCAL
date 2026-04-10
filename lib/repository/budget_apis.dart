@@ -9,12 +9,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_finances.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:get/get.dart';
 
 import '../components/helper.dart';
 import '../components/shared_utils.dart';
+class BudgetChartDataPoint {
+    BudgetChartDataPoint({required this.x, required this.y, required this.xString});
+    final int x;
+    final double y;
+    final String xString;
 
-class BudgetService {
-  static Future<void> fetchBudgetInsights(String budgetId) async {
+    @override
+    String toString() => '($x, $y, $xString)';
+  }
+class BudgetController extends GetxController {
+   List<BudgetChartDataPoint> budgetChartData = [];
+   String selectedBudgetPeriod = 'monthly';
+   List<dynamic> budgetTransactions = []; // Store raw transactions from API
+  
+   List<String>? budgetInsights;
+   List<Map<String, dynamic>> categorySpendings = [];
+   List<Map<String, dynamic>> pieGraphData = [];
+   bool isBudgetDeleting = false;
+
+  /// Renamed from _ChartData to BudgetChartDataPoint and made it a static inner class
+   
+
+  Future<void> fetchBudgetInsights(String budgetId) async {
     final String apiUrl = BudgetRoutes.getInsights(bid: budgetId);
 
     try {
@@ -28,8 +49,7 @@ class BudgetService {
     } catch (e) {}
   }
 
-  static Future<void> fetchBudgetData(
-      Map<String, dynamic> budgetDataParam) async {
+  Future<void> fetchBudgetData(Map<String, dynamic> budgetDataParam) async {
     final String budgetId =
         budgetDataParam['_id']?.toString() ?? '67b84fdcfab72f34be29c893';
 
@@ -143,7 +163,7 @@ class BudgetService {
     } catch (e) {}
   }
 
-  static Future<void> deleteBudget(
+  Future<void> deleteBudget(
     String budgetId,
     BuildContext context, {
     required VoidCallback onDeleteSuccess,
@@ -168,98 +188,98 @@ class BudgetService {
       isBudgetDeleting = false;
     }
   }
-}
 
-void getTopFiveCater() async {
-  String urlPath = BankTransactionRoutes.getBudgetTopFiveCategories;
-  try {
-    var responce = await getDataApiCall(urlPath);
-    if (getFlagOfResponse(responce)) {
-      var his = jsonDecode(responce.body);
-      categoriesSeleted.clear();
-      categoriesSeleted.addAll(his['data']);
-      getCategories.value = !getCategories.value;
+  void getTopFiveCater() async {
+    String urlPath = BankTransactionRoutes.getBudgetTopFiveCategories;
+    try {
+      var responce = await getDataApiCall(urlPath);
+      if (getFlagOfResponse(responce)) {
+        var his = jsonDecode(responce.body);
+        categoriesSeleted.clear();
+        categoriesSeleted.addAll(his['data']);
+        getCategories.value = !getCategories.value;
+      }
+    } catch (e) {}
+  }
+
+  Future<void> getBudget() async {
+    String urlPath = BudgetRoutes.getAllBudgets;
+    try {
+      var responce = await getDataApiCall(urlPath);
+      if (getFlagOfResponse(responce)) {
+        var his = jsonDecode(responce.body);
+        var obj = his['data'];
+        budgetList.clear();
+        budgetList.addAll(obj);
+        budgetLength.value = obj.length;
+        if (!getCreditCardBudgetDebts.value)
+          getCreditCardBudgetDebts.value = budgetList.isNotEmpty;
+      }
+    } catch (e) {}
+  }
+
+  void addBudget(BuildContext context, String name, String amount,
+      List expenseCategory, String budgetPeriod) async {
+    List filteredCategories = expenseCategory
+        .where((e) => !isZeroAmount(e['amount'].toString()))
+        .toList();
+
+    if (filteredCategories.isEmpty) {
+      createBudget.value = false;
+      snackBarCalledfail(context, SnackbarData().budgetAddFailed, );
+      return;
     }
-  } catch (e) {}
-}
+    var body = {
+      'name': name.toString(),
+      'amount': amount.toString(),
+      'categoryBudgets': filteredCategories,
+      'budgetPeriod': budgetPeriod.toString(),
+    };
 
-Future<void> getBudget() async {
-  String urlPath = BudgetRoutes.getAllBudgets;
-  try {
-    var responce = await getDataApiCall(urlPath);
-    if (getFlagOfResponse(responce)) {
-      var his = jsonDecode(responce.body);
-      var obj = his['data'];
-      budgetList.clear();
-      budgetList.addAll(obj);
-      budgetLength.value = obj.length;
-      if (!getCreditCardBudgetDebts.value)
-        getCreditCardBudgetDebts.value = budgetList.isNotEmpty;
+    final response = await postDataApiCall(BudgetRoutes.createBudget, body);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      getBudget();
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+
+      snackBarCalled(context, SnackbarData().budgetAdded);
+    } else {
+      snackBarCalledfail(context, SnackbarData().budgetAddFailed, );
     }
-  } catch (e) {}
-}
 
-void addBudget(BuildContext context, String name, String amount,
-    List expenseCategory, String budgetPeriod) async {
-  List filteredCategories = expenseCategory
-      .where((e) => !isZeroAmount(e['amount'].toString()))
-      .toList();
-
-  if (filteredCategories.isEmpty) {
+    acceptReset.value = false;
     createBudget.value = false;
-    snackBarCalledfail(context, SnackbarData().budgetAddFailed, );
-    return;
-  }
-  var body = {
-    'name': name.toString(),
-    'amount': amount.toString(),
-    'categoryBudgets': filteredCategories,
-    'budgetPeriod': budgetPeriod.toString(),
-  };
-
-  final response = await postDataApiCall(BudgetRoutes.createBudget, body);
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    getBudget();
-    Navigator.pop(context);
-    Navigator.pop(context);
-    Navigator.pop(context);
-
-    snackBarCalled(context, SnackbarData().budgetAdded);
-  } else {
-    snackBarCalledfail(context, SnackbarData().budgetAddFailed, );
   }
 
-  acceptReset.value = false;
-  createBudget.value = false;
-}
+  void budgetUpdate(context, name, amount, expenseCategory, budgetType,
+      budgetPeriod, id) async {
+    final response = await postDataApiCall(BudgetRoutes.editBudget(id: id), {
+      'name': name.toString(),
+      'amount': amount.toString(),
+      'expenseCategories': expenseCategory,
+      'budgetType': budgetType.toString(),
+      'budgetPeriod': budgetPeriod.toString(),
+    });
 
-void budgetUpdate(context, name, amount, expenseCategory, budgetType,
-    budgetPeriod, id) async {
-  final response = await postDataApiCall(BudgetRoutes.editBudget(id: id), {
-    'name': name.toString(),
-    'amount': amount.toString(),
-    'expenseCategories': expenseCategory,
-    'budgetType': budgetType.toString(),
-    'budgetPeriod': budgetPeriod.toString(),
-  });
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(context, SnackbarData().budgetUpdated);
-    Navigator.pop(context);
-    Navigator.pop(context);
-  } else {
-    snackBarCalledfail(context, SnackbarData().budgetUpdateFailed, );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      snackBarCalled(context, SnackbarData().budgetUpdated);
+      Navigator.pop(context);
+      Navigator.pop(context);
+    } else {
+      snackBarCalledfail(context, SnackbarData().budgetUpdateFailed, );
+    }
   }
-}
 
-void getInsights(context, String id) async {
-  var response = await getDataApiCall(BudgetRoutes.getInsights(bid: id));
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    inSights.clear();
-    inSights.addAll(obj);
-    getHistory.value = !getHistory.value;
-  } else {}
+  void getInsights(context, String id) async {
+    var response = await getDataApiCall(BudgetRoutes.getInsights(bid: id));
+    if (response.statusCode == 200) {
+      var his = jsonDecode(response.body);
+      var obj = his['data'];
+      inSights.clear();
+      inSights.addAll(obj);
+      getHistory.value = !getHistory.value;
+    } else {}
+  }
 }

@@ -45,7 +45,7 @@ Future<String> login(context) async {
       handleId.value,
     );
     otpReference = login.reference;
-  } catch (e) {
+  } catch (e) { 
     snackBarCalledfail(context, e.toString());
   }
   return otpReference;

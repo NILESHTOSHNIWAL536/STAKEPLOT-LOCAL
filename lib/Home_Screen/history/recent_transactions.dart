@@ -180,76 +180,9 @@ class RecentTransactionsScreen extends StatelessWidget {
     );
   }
 
-  // ---------------- PLACEHOLDER LIST ----------------
-  Widget _yourTransactionsList(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: 4,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(AppSizes.p14),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.accentColor.withOpacity(0.3)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border:
-                      Border.all(color: AppColors.accentColor.withOpacity(0.3)),
-                ),
-                child: Icon(Icons.north_east,
-                    color: AppColors.primaryColor),
-              ),
-              SizedBox(width: AppSizes.w12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Meena",
-                      style: FontManager().getTextStyle(
-                        context,
-                        fontSize: 14,
-                        lWeight: FontWeight.w600,
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                    SizedBox(height: AppSizes.h4),
-                    Text(
-                      "25 Oct • Food",
-                      style: FontManager().getTextStyle(
-                        context,
-                        fontSize: 12,
-                        lWeight: FontWeight.w400,
-                        color: AppColors.accentColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                "- ₹15.00",
-                style: FontManager().getTextStyle(
-                  context,
-                  fontSize: 14,
-                  lWeight: FontWeight.w600,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
 
+  
+}
 // ---------------- STAT ITEM ----------------
 class _StatItem extends StatelessWidget {
   final String title;

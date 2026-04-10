@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/repository/budget_apis.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math' as math;
 
@@ -28,6 +29,7 @@ class MyBudgetScreen extends StatefulWidget {
 }
 
 class _MyBudgetScreenState extends State<MyBudgetScreen> {
+  final budgetController = Get.find<BudgetController>();
   @override
   void initState() {
     super.initState();
@@ -39,8 +41,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   Future<void> _loadBudgetData() async {
     final String budgetId = widget.data['_id']?.toString() ?? '679b6ea12af555d641c5da61';
     await Future.wait([
-      BudgetService.fetchBudgetData(widget.data),
-      BudgetService.fetchBudgetInsights(budgetId),
+      budgetController.fetchBudgetData(widget.data),
+      budgetController.fetchBudgetInsights(budgetId),
     ]);
     if (mounted) {
       setState(() {});
@@ -49,14 +51,14 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
 
   Future<void> deleteBudget() async {
     final String budgetId = widget.data['_id']?.toString() ?? '679b6ea12af555d641c5da61';
-    await BudgetService.deleteBudget(
+    await budgetController.deleteBudget(
       budgetId,
       context,
       onDeleteSuccess: () {
         if (mounted) {
           Navigator.of(context).pop();
         }
-        getBudget();
+        budgetController.getBudget();
       },
     );
   }
@@ -138,11 +140,11 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
 
   Widget _buildContentSection() {
     // Check if budgetChartData is empty or all values are zero
-    bool hasNoData = budgetChartData.isEmpty ||
-        budgetChartData.every((item) => item.y == 0.0);
+    bool hasNoData = budgetController.budgetChartData.isEmpty ||
+        budgetController.budgetChartData.every((item) => item.y == 0.0);
 
     // Add a loading indicator if data is still being fetched
-    if (budgetTransactions.isEmpty && budgetInsights == null) {
+    if (budgetController.budgetTransactions.isEmpty && budgetController.budgetInsights == null) {
       return Center(
         child:Spinner(), // Loader when data is loading
       );
@@ -195,8 +197,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   }
 
   Widget _buildBudgetSummary() {
-    double totalSpent = budgetChartData.isNotEmpty
-        ? budgetChartData.map((e) => e.y).reduce((a, b) => a + b)
+    double totalSpent = budgetController.budgetChartData.isNotEmpty
+        ? budgetController.budgetChartData.map((e) => e.y).reduce((a, b) => a + b)
         : 0.0;
     return Container(
       padding: EdgeInsets.all(AppSizes.p16),
@@ -285,18 +287,18 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         SizedBox(
           height: MediaQuery.sizeOf(context).height / 3,
           child: LineChartSample(
-              budgetData: budgetChartData, budgetType: selectedBudgetPeriod),
+              budgetData: budgetController.budgetChartData, budgetType: budgetController.selectedBudgetPeriod),
         ),
       ],
     );
   }
 
   Widget _buildInsights() {
-    if (budgetInsights == null) {
+    if (budgetController.budgetInsights == null) {
     
       return Center(child: CircularProgressIndicator());
     }
-    List<dynamic>? insightsList = budgetInsights; // Extract list
+    List<dynamic>? insightsList = budgetController.budgetInsights; // Extract list
    
     return Container(
       padding: EdgeInsets.all(AppSizes.p16),
@@ -365,7 +367,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   Widget graph() {
     return PieChartGraph(
       title: "Categories",
-      graphData: pieGraphData,
+      graphData: budgetController.pieGraphData,
       graphDisc: [],
     );
   }

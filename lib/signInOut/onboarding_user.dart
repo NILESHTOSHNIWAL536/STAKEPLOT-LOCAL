@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Utils/navigateTo.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/colors.dart';
@@ -16,23 +17,24 @@ class _UserOnboardingState extends State<UserOnboarding> {
   final PageController _pageController = PageController();
   int currentIndex = 0;
   final List<_OnboardingData> pages = [
-
     _OnboardingData(
       image: Sign.userOnboard,
       title: 'Stakeplot is more than just\ntracking numbers,',
-      description: 'it helps you understand your finances deeply and build smart, lasting habits. It turns money management into a mindful way of living.',
+      description:
+          'it helps you understand your finances deeply and build smart, lasting habits. It turns money management into a mindful way of living.',
     ),
-
     _OnboardingData(
-     image: Sign.userOnboard,
+      image: Sign.userOnboard,
       title: 'Your financial world deserves a\nsafe space.',
-      description: 'Stakeplot keeps it private and secure while guiding you gently, one step at a time.',
+      description:
+          'Stakeplot keeps it private and secure while guiding you gently, one step at a time.',
     ),
-
     _OnboardingData(
-    image: Sign.userOnboard,
-      title: 'We earn, spend, and save – but\noften lose sight of where our money really goes',
-      description: 'Stakeplot helps you see the story behind your spending and understand your money better.',
+      image: Sign.userOnboard,
+      title:
+          'We earn, spend, and save – but\noften lose sight of where our money really goes',
+      description:
+          'Stakeplot helps you see the story behind your spending and understand your money better.',
     ),
   ];
 
@@ -44,7 +46,7 @@ class _UserOnboardingState extends State<UserOnboarding> {
         child: Column(
           children: [
             Container(
-              height: MediaQuery.sizeOf(context).height/1.3,
+              height: MediaQuery.sizeOf(context).height / 1.3,
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: pages.length,
@@ -56,7 +58,6 @@ class _UserOnboardingState extends State<UserOnboarding> {
                 },
               ),
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
@@ -75,44 +76,39 @@ class _UserOnboardingState extends State<UserOnboarding> {
                 ),
               ),
             ),
-
-             SizedBox(height: AppSizes.h24),
-
+            SizedBox(height: AppSizes.h24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (currentIndex < pages.length - 1) {
-                      _pageController.nextPage(
-                        duration: const Duration(milliseconds: 400),
-                        curve: Curves.easeInOut,
-                      );
-                    } else {
-
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    onPressed: () {
+                      if (currentIndex < pages.length - 1) {
+                        _pageController.nextPage(
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.easeInOut,
+                        );
+                      } else {
+                        AppNavigator.pushReplacementNamed(context, "/home");
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                  ),
-                   child:Text("Dive In", 
-          textAlign: TextAlign.center,
-           style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color:  AppColors.backgroundColor
-                                  ),)
-                 
-                ),
+                    child: Text(
+                      "Dive In",
+                      textAlign: TextAlign.center,
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: AppColors.backgroundColor),
+                    )),
               ),
             ),
-
             SizedBox(height: AppSizes.h30),
           ],
         ),
@@ -135,53 +131,51 @@ class _OnboardingPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// IMAGE
-          Center(child: Padding(
-            padding: const EdgeInsets.only(left:AppSizes.p20),
-            child: AvatarProfileImageZero(url: data.image, width: 1, height: 2.2),
+          Center(
+              child: Padding(
+            padding: const EdgeInsets.only(left: AppSizes.p20),
+            child:
+                AvatarProfileImageZero(url: data.image, width: 1, height: 2.2),
           )),
-         
 
           SizedBox(height: AppSizes.h40),
 
           RichText(
-  text: TextSpan(
-    children: [
-      /// TITLE PART
-      TextSpan(
-        text: '${data.title} ',
-        style: FontManager().getTextStyle(
-          context,
-          lWeight: FontWeight.w600,
-          fontSize: 22,
-          lineHeight: 34 / 24,
-          color: AppColors.primaryColor,
-        ),
-      ),
+            text: TextSpan(
+              children: [
+                /// TITLE PART
+                TextSpan(
+                  text: '${data.title} ',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 22,
+                    lineHeight: 34 / 24,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
 
-      /// DESCRIPTION PART
-      TextSpan(
-        text: data.description,
-        style: FontManager().getTextStyle(
-          context,
-          lWeight: FontWeight.w400,
-          fontSize: 16,
-          lineHeight: 24 / 18,
-          color: AppColors.grey,
-        ),
-      ),
-    ],
-  ),
-)
+                /// DESCRIPTION PART
+                TextSpan(
+                  text: data.description,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w400,
+                    fontSize: 16,
+                    lineHeight: 24 / 18,
+                    color: AppColors.grey,
+                  ),
+                ),
+              ],
+            ),
+          )
 
-        
           //     color: Color(0xFF7A7A7A),
-          
         ],
       ),
     );
   }
 }
-
 
 class _OnboardingData {
   final String image;
