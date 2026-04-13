@@ -9,6 +9,7 @@ import logger from '@/utils/common/logger';
 import { scheduleReserveReminder } from './bull-queue-service/reserve-reminder-queue';
 
 const reserveRepo = new ReserveRepository();
+const round2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 
 type SuggestionInput = {
   userId: string | Types.ObjectId;
@@ -71,12 +72,12 @@ export async function computeSuggestion({ userId, durationDays, now = new Date()
   const mtdAdjustment = Math.min(Math.max(mtdPressure, 0.5), 1.5);
   const adjustmentFactor = base * momentumAdjustment * mtdAdjustment;
 
-  const suggestedLimit = dailyBaseline * durationDays * adjustmentFactor;
-  const plannedDaily = suggestedLimit / durationDays;
+  const suggestedLimit = round2(dailyBaseline * durationDays * adjustmentFactor);
+  const plannedDaily = round2(suggestedLimit / durationDays);
 
   return {
     suggested_limit: suggestedLimit,
-    daily_baseline: dailyBaseline,
+    daily_baseline: round2(dailyBaseline),
     momentum,
     mtd_pressure: mtdPressure,
     adjustment_factor: adjustmentFactor,
@@ -86,15 +87,15 @@ export async function computeSuggestion({ userId, durationDays, now = new Date()
 
 export async function buildSnapshots(reserve: ReserveDocument, now = new Date()): Promise<ReserveSnapshot[]> {
   const days: ReserveSnapshot[] = [];
-  const start = moment(reserve.startDate).startOf('day');
-  const end = moment(reserve.endDate).endOf('day');
+  const start = moment.utc(reserve.startDate).startOf('day');
+  const end = moment.utc(reserve.endDate).endOf('day');
   const duration = end.diff(start, 'days') + 1;
 
   for (let i = 0; i < duration; i++) {
-    const day = moment(start).add(i, 'days');
+    const day = moment.utc(start).add(i, 'days');
     const remainingDays = Math.max(0, end.diff(day, 'days')) + 1;
-    const remaining = reserve.amount;
-    const daily = reserve.planned_daily || reserve.amount / duration;
+    const remaining = round2(reserve.amount);
+    const daily = round2(reserve.planned_daily || reserve.amount / duration);
     days.push({
       date: day.toDate(),
       spend: 0,
@@ -113,11 +114,11 @@ export async function buildSnapshots(reserve: ReserveDocument, now = new Date())
 }
 
 export async function recomputeReserveProgress(reserve: ReserveDocument) {
-  const start = moment(reserve.startDate).startOf('day');
-  const end = moment(reserve.endDate).endOf('day');
+  const start = moment.utc(reserve.startDate).startOf('day');
+  const end = moment.utc(reserve.endDate).endOf('day');
   const duration = end.diff(start, 'days') + 1;
   const useAllCategories = reserve.categories.includes('overall');
-  const today = moment().startOf('day');
+  const today = moment.utc().startOf('day');
   const userObjectId = new Types.ObjectId(reserve.userId as any);
 
   // fetch spend in window for categories
@@ -151,16 +152,16 @@ export async function recomputeReserveProgress(reserve: ReserveDocument) {
   }
 
   for (let i = 0; i < duration; i++) {
-    const day = moment(start).add(i, 'days');
-    const row = rows.find((r) => moment(r._id).isSame(day, 'day'));
+    const day = moment.utc(start).add(i, 'days');
+    const row = rows.find((r) => moment.utc(r._id).isSame(day, 'day'));
     const spend = row?.debit || 0;
     cumulative += spend;
     const percentUsed = (cumulative / reserve.amount) * 100;
-    const remaining = Math.max(reserve.amount - cumulative, 0);
+    const remaining = round2(Math.max(reserve.amount - cumulative, 0));
     const remainingDays = Math.max(end.diff(day, 'days') + 1, 0);
-    const recommendedDaily = remainingDays > 0 ? remaining / remainingDays : 0;
+    const recommendedDaily = remainingDays > 0 ? round2(remaining / remainingDays) : 0;
     const overspend = Math.max(cumulative - reserve.amount, 0);
-    const recoveryTarget = remainingDays > 0 ? overspend / remainingDays : 0;
+    const recoveryTarget = remainingDays > 0 ? round2(overspend / remainingDays) : 0;
 
     snapshots.push({
       date: day.toDate(),
@@ -222,7 +223,7 @@ export async function evaluateReserve(reserve: ReserveDocument) {
 }
 
 export async function runDailyReserveSweep() {
-  const today = moment().startOf('day').toDate();
+  const today = moment.utc().startOf('day').toDate();
   const active = await reserveRepo.get({ startDate: { $lte: today }, endDate: { $gte: today } });
 
   for (const res of active as ReserveDocument[]) {
@@ -236,7 +237,7 @@ export async function runDailyReserveSweep() {
 }
 
 export async function scheduleExistingReserves() {
-  const today = moment().startOf('day').toDate();
+  const today = moment.utc().startOf('day').toDate();
   const active = await reserveRepo.get({ startDate: { $lte: today }, endDate: { $gte: today } });
   for (const res of active as ReserveDocument[]) {
     try {

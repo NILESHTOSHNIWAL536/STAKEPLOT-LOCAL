@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import moment from 'moment-timezone';
 import AppError from '../utils/errors/app-error';
 import logger from '../utils/common/logger';
 import { ReserveService } from '../services/reserve-service';
@@ -55,12 +56,14 @@ export class ReserveController {
         return categoryMapping[cat] || cat.toLowerCase();
       });
 
+      // CREATE SUGGESTED AMOUNT, daily_baseline, recommended_spend accoriding the ALGO
       const suggestion = await reserveEngine.computeSuggestion({
         userId,
         categories: transformedCategories,
         durationDays: diff,
       });
 
+      // CREATE RESERVE s
       const reserve = await ReserveService.createReserve({
         ...req.body,
         categories: transformedCategories,
@@ -71,8 +74,13 @@ export class ReserveController {
         ...suggestion,
       });
 
-      const snapshots = await reserveEngine.buildSnapshots(reserve);
-      reserve.set('snapshots', snapshots as any);
+      // Immediately evaluate to set correct status/snapshots instead of leaving default UPCOMING
+      await reserveEngine.evaluateReserve(reserve as any);
+      // ensure status reflects current day even if creation happens on startDate
+      const today = moment().startOf('day');
+      if (today.isBetween(moment(start).startOf('day'), moment(end).endOf('day'), 'day', '[]')) {
+        reserve.status = 'ACTIVE';
+      }
       await reserve.save();
       await scheduleReserveReminder(reserve.id, userId.toString(), start, end, req.body.reminder_time);
 
