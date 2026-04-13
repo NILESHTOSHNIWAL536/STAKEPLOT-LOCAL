@@ -77,7 +77,7 @@ export function securityMiddleware(app: Application): void {
     legacyHeaders: false,
   });
 
-  app.use(limiter);
+  // app.use(limiter);
 
   // ✅ CSP nonce
   app.use((req: Request, res: Response, next: NextFunction) => {
