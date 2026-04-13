@@ -328,6 +328,12 @@ export const recordPayment = async (req: Request, res: Response, next: NextFunct
     }
 
     const result = await CollectionService.recordPayment(collectionId, userId, splitId, Number(amount), note);
+     await publishSocketEvent(collectionId, 'collection', {
+        type: 'splitUpdate',
+        data: {
+           "collection":result
+        },
+      });
     SuccessResponse.data = result;
     SuccessResponse.message = 'Payment recorded successfully';
     res.status(StatusCodes.CREATED).json(SuccessResponse);
@@ -350,6 +356,12 @@ export const clearPayment = async (req: Request, res: Response, next: NextFuncti
     }
 
     const result = await CollectionService.clearPayment(collectionId, userId, splitId, payerId, Number(amount), note);
+     await publishSocketEvent(collectionId, 'collection', {
+        type: 'splitUpdate',
+        data: {
+           "collection":result
+        },
+      });
     SuccessResponse.data = result;
     SuccessResponse.message = 'Payment cleared successfully';
     res.status(StatusCodes.CREATED).json(SuccessResponse);
