@@ -40,7 +40,7 @@ export async function computeSuggestion({ userId, durationDays, now = new Date()
   const agg = await UserDailyMetrics.aggregate(pipeline);
   const debit = agg?.[0]?.debit || 0;
   const dayCount = (agg?.[0]?.days || []).length || 1;
-  const dailyBaseline = debit / dayCount;
+  const dailyBaseline = debit / 70;
 
   // momentum: last 7 days vs baseline
   const last7End = end;

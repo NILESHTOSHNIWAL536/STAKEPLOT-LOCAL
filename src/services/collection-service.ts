@@ -185,9 +185,8 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
 export const getUserCollections = async (userId: string) => {
   const members = await CollectionMember.find({ userId }).populate('collectionId');
   // const collections = members.map((m) => m.collectionId as unknown as ICollection);
-  const collections = members
-  .map((m) => m.collectionId as unknown as ICollection)
-  .filter((c) => c && c.ownerId); 
+  const collections = members.map((m) => m.collectionId as unknown as ICollection).filter((c) => c && c.ownerId);
+
   // Hydrate ownerIds
   const ownerIds = collections.map((c) =>  c.ownerId.toString());
   const userData = await UserService.hydrateUsers(ownerIds);
