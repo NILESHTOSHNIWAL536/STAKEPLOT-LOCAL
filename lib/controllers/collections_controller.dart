@@ -605,11 +605,13 @@ class CollectionsController extends GetxController {
   // =========================
   // UPDATE COLLECTION
   // =========================
-  Future<bool> updateCollection(
-      {required String id,
-      String? name,
-      String? duration,
-      bool active = false}) async {
+  Future<bool> updateCollection({
+    required String id,
+    String? name,
+    String? duration,
+    bool active = false,
+    required BuildContext context,
+  }) async {
     try {
       final body = <String, dynamic>{
         if (name != null) "name": name,
@@ -658,14 +660,17 @@ class CollectionsController extends GetxController {
             members: collectionDetails.value?.members ?? [],
             transactions: collectionDetails.value?.transactions ?? [],
           );
-          if (active)
-          {
-            collectionsController.collectionDetails.value?.collection.status = "ACTIVE";
+          if (active) {
+            collectionsController.collectionDetails.value?.collection.status =
+                "ACTIVE";
           }
           emitCollectionsOnSocket("collection", {"id": id, "action": "update"});
         }
 
         return true;
+      } else {
+        snackBarCalledfail(
+            context, json.decode(response.body)['error'] ?? "Error");
       }
     } catch (e) {
       debugPrint("updateCollection error: $e");

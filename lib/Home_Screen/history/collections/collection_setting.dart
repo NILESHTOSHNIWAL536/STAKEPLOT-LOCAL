@@ -642,6 +642,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
           if (name.isEmpty) return;
           await collectionsController.updateCollection(
             id: collectionsController.selectedCollection.value!.id,
+            context: context,
             name: name,
           );
           Navigator.pop(_context);
@@ -769,10 +770,10 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
               AppNavigator.pop(_context);
 
               await collectionsController.updateCollection(
-                id: collectionsController.selectedCollection.value!.id,
-                active: true,
-                duration: selectedDuration.value,
-              );
+                  id: collectionsController.selectedCollection.value!.id,
+                  active: true,
+                  duration: selectedDuration.value,
+                  context: context);
             },
           )),
     );
@@ -841,9 +842,9 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
               child: StepSelectDuration(
                 onNext: () async {
                   await collectionsController.updateCollection(
-                    id: collectionsController.selectedCollection.value!.id,
-                    duration: collectionDraft.duration,
-                  );
+                      id: collectionsController.selectedCollection.value!.id,
+                      duration: collectionDraft.duration,
+                      context: context);
                   if (context.mounted) Navigator.pop(context);
                 },
               ),
