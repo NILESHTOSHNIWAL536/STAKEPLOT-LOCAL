@@ -184,10 +184,12 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
 
 export const getUserCollections = async (userId: string) => {
   const members = await CollectionMember.find({ userId }).populate('collectionId');
-  const collections = members.map((m) => m.collectionId as unknown as ICollection);
-
+  // const collections = members.map((m) => m.collectionId as unknown as ICollection);
+  const collections = members
+  .map((m) => m.collectionId as unknown as ICollection)
+  .filter((c) => c && c.ownerId); 
   // Hydrate ownerIds
-  const ownerIds = collections.map((c) => c.ownerId.toString());
+  const ownerIds = collections.map((c) =>  c.ownerId.toString());
   const userData = await UserService.hydrateUsers(ownerIds);
   const userMap = new Map();
   userData.forEach((u) => userMap.set(u._id.toString(), u));
@@ -195,8 +197,7 @@ export const getUserCollections = async (userId: string) => {
   // Fetch members for each collection
   const collectionsWithMembers = await Promise.all(
     collections.map(async (c) => {
-      const collectionMembers = await CollectionMember.find({ collectionId: c._id }).lean();
-
+      const collectionMembers = await CollectionMember.find({ collectionId: c._id }).lean()
       // Hydrate member user data
       const memberUserIds = collectionMembers.map((m) => m.userId.toString());
       const memberUserData = await UserService.hydrateUsers(memberUserIds);
@@ -932,7 +933,7 @@ export const getAllTransactions = async (collectionId: string, userId: string, p
   let totalCredit = 0;
   let totalDebit = 0;
 
-  // Compute totals across ALL transactions (not just this page)
+  // pute totals across ALL transactions (not just this page)
   const allColTxs = await CollectionTransaction.find({ collectionId }).populate('transactionId').lean();
   allColTxs.forEach((ct: any) => {
     const tx = ct.transactionId;
