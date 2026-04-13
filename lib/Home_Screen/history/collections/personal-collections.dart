@@ -9,12 +9,14 @@ import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
+import '../../../Utils/collections_helper.dart';
 import '../../../backed_connections/apis_connect.dart';
 import '../../../components/shared_utils.dart';
 import '../../../controllers/collections_controller.dart';
 import '../../../image_service/avatarProfile.dart';
 import '../../../model/TransactionModel.dart';
 import '../../../model/collections_model.dart';
+import '../history_button.dart';
 import '../transactions_ui_component.dart';
 import 'collection_setting.dart';
 import 'trip/screens/select_transactions_sheet.dart';
@@ -98,46 +100,52 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
 
       final filtered = _filtered(data.transactions);
 
-      return SafeArea(
-        child: Scaffold(
-          backgroundColor: _C.bg,
-          appBar: _appBar(context),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ── SUMMARY CARD
-              _summaryCard(context, data),
+      return WillPopScope(
+        onWillPop: () async {
+          navToHistoryReplacment(context);
+          return true;
+        },
+        child: SafeArea(
+          child: Scaffold(
+            backgroundColor: _C.bg,
+            appBar: _appBar(context),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── SUMMARY CARD
+                _summaryCard(context, data),
 
-              // ── SEARCH + ADD
-              _searchRow(context, data.collection.type),
+                // ── SEARCH + ADD
+                _searchRow(context, data.collection.type),
 
-              // ── SECTION LABEL
-              _sectionLabel(filtered.length),
+                // ── SECTION LABEL
+                _sectionLabel(filtered.length),
 
-              // ── TRANSACTIONS LIST
-              Expanded(
-                child: filtered.isEmpty
-                    ? _emptyState()
-                    : ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: filtered.length,
-                        itemBuilder: (context, index) {
-                          final tx = filtered[index];
-                          return HistoryTransactions(
-                            context: context,
-                            transaction: tx,
-                            index: index,
-                            isExpanded: false,
-                            hide: false,
-                            hideReview: false,
-                            fromAutoPay: false,
-                            date: tx.transactionTimestamp.toString(),
-                            // ),
-                          );
-                        },
-                      ),
-              ),
-            ],
+                // ── TRANSACTIONS LIST
+                Expanded(
+                  child: filtered.isEmpty
+                      ? _emptyState()
+                      : ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: filtered.length,
+                          itemBuilder: (context, index) {
+                            final tx = filtered[index];
+                            return HistoryTransactions(
+                              context: context,
+                              transaction: tx,
+                              index: index,
+                              isExpanded: false,
+                              hide: false,
+                              hideReview: false,
+                              fromAutoPay: false,
+                              date: tx.transactionTimestamp.toString(),
+                              // ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -161,7 +169,7 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
               children: [
                 // Back button
                 GestureDetector(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () => {navToHistoryReplacment(context)},
                   child: Container(
                     width: 38,
                     height: 38,
@@ -417,7 +425,10 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
           ),
           const SizedBox(width: 10),
           GestureDetector(
-            onTap: () => openSelectTransactions(context, type),
+            onTap: () {
+              if (checkAndCallSnackbar(context)) return;
+              openSelectTransactions(context, type);
+            },
             child: Container(
               width: 46,
               height: 46,

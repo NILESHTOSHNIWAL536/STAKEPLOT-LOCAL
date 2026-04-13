@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/controllers/access-permissions.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
+import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../Home_Screen/history/collections/create_collection_data.dart';
 import '../../../Home_Screen/history/collections/create_collection_pages/step_select_duration.dart';
@@ -12,6 +13,7 @@ import '../../../backed_connections/apis_connect.dart';
 import '../../../backed_connections/bankServices/collection_pdf_export.dart';
 import '../../../controllers/collections_controller.dart';
 import '../../../model/collections_model.dart';
+import 'create_collection_pages/create_collection_flow.dart';
 
 // ── Local design tokens ───────────────────────────────────────────────────────
 class _T {
@@ -43,6 +45,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
   final collectionsController = Get.find<CollectionsController>();
   late AnimationController _expandAnim;
   late Animation<double> _expandFade;
+  RxString selectedDuration = "".obs;
 
   @override
   void initState() {
@@ -68,14 +71,17 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
   bool can(String action) {
     final details = collectionsController.collectionDetails.value;
     final role = collectionsController.currentUser?.role;
+    bool status =
+        collectionsController.collectionDetails.value?.collection.status ==
+            "CLOSED";
 
     if (details == null || role == null) return false;
 
     return hasPermission(
-      type: details.collection.type,
-      role: role,
-      action: action,
-    );
+        type: details.collection.type,
+        role: role,
+        action: action,
+        status: status);
   }
 
   @override
@@ -147,6 +153,13 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                       title: "Close Collection",
                       subtitle: "Stop new transactions",
                       onTap: () => _confirmClose(context)),
+                if (can("reopen"))
+                  _dangerTile(context,
+                      icon: Icons.delete_outline_rounded,
+                      title: "Reopen Collection",
+                      subtitle: "Permanently Get Back all data",
+                      onTap: () => _confirmReopen(context)),
+
                 if (can("delete"))
                   _dangerTile(context,
                       icon: Icons.delete_outline_rounded,
@@ -690,6 +703,78 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
               type);
         },
       ),
+    );
+  }
+
+  Widget _durationChip(String label, Function(String) onTap) {
+    return GestureDetector(
+      onTap: () => onTap(label),
+      child: Obx(() => chipCollection(
+            label,
+            context,
+            isSelected: selectedDuration.value == label,
+          )),
+    );
+  }
+
+  void _confirmReopen(BuildContext context) {
+    selectedDuration.value = collectionDraft.duration ?? "";
+
+    void select(String value) {
+      selectedDuration.value = value;
+      collectionDraft.duration = value;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_context) => Obx(() => _StyledDialog(
+            title: "Reopen Collection",
+            icon: Icons.refresh,
+            iconColor: Colors.green,
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Are you sure you want to reopen this collection?",
+                  style:
+                      TextStyle(fontSize: 13, color: _T.textMid, height: 1.5),
+                ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12),
+                  child: Column(
+                    children: [
+                      _durationChip("Until I change", select),
+                      _durationChip("3 Months", select),
+                      _durationChip("6 Months", select),
+                      _durationChip("1 Year", select),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            // 🔥 Disable button visually (if your dialog supports it)
+            confirmLabel: "Reopen",
+            confirmColor:
+                selectedDuration.value.isEmpty ? Colors.grey : Colors.green,
+
+            onConfirm: () async {
+              if (selectedDuration.value.isEmpty) {
+                snackBarCalled(context, "Please select a duration to reopen.");
+                return;
+              }
+
+              AppNavigator.pop(_context);
+
+              await collectionsController.updateCollection(
+                id: collectionsController.selectedCollection.value!.id,
+                active: true,
+                duration: selectedDuration.value,
+              );
+            },
+          )),
     );
   }
 

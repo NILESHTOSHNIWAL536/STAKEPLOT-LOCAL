@@ -8,6 +8,7 @@ import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
+import '../history_button.dart';
 import '../transactionHistoryScreen.dart';
 import 'collection_setting.dart';
 import 'group_collections_page.dart';
@@ -36,27 +37,39 @@ class CollectionDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (hasTransactions && type == "PERSONAL") {
-      return const CollectionSummarySection();
-    }
+    return Obx(() {
+      final hasTransactions = collectionsController
+              .collectionDetails.value?.transactions?.isNotEmpty ??
+          false;
 
-    return Scaffold(
-      backgroundColor: AppColors.border,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _appBar(context),
-            Obx(() => Expanded(
-                  child: collectionsController.splitsList.length > 0
-                      ? (type == "SHARED"
+      if (hasTransactions && type.toUpperCase() == "PERSONAL") {
+        return const CollectionSummarySection();
+      }
+
+      return WillPopScope(
+        onWillPop: () async {
+          navToHistoryReplacment(context);
+          return true;
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.border,
+          body: SafeArea(
+            child: Column(
+              children: [
+                _appBar(context),
+                Expanded(
+                  child: collectionsController.splitsList.isNotEmpty
+                      ? (type.toUpperCase() == "SHARED"
                           ? SharedCollectionDashboard()
                           : _transactionsUI(context))
                       : emptyTransactionsUI(context, type),
-                ))
-          ],
+                )
+              ],
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   /// ---------------- APP BAR ----------------
@@ -70,7 +83,7 @@ class CollectionDetailsPage extends StatelessWidget {
           children: [
             /// BACK
             InkWell(
-              onTap: () => Navigator.pop(context),
+              onTap: () => {navToHistoryReplacment(context)},
               child: const CircleAvatar(
                 backgroundColor: AppColors.white,
                 child: Icon(Icons.arrow_back,

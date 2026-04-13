@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Constants/colors.dart';
@@ -65,7 +64,7 @@ class _NotificationsState extends State<Notifications> {
             padding: const EdgeInsets.all(AppSizes.p12),
             child: Column(
               children: [
-                 GetInvitationsList(),
+                GetInvitationsList(),
                 const SizedBox(height: AppSizes.p16),
                 Column(
                   children: _buildGroupedNotifications(),
@@ -79,7 +78,6 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget GetInvitationsList() {
-
     if (collectionsController.invitationsList.isEmpty)
       return const SizedBox.shrink();
 
@@ -162,10 +160,11 @@ class _NotificationsState extends State<Notifications> {
     final Map<String, List<Map<String, dynamic>>> grouped = {};
 
     for (var n in notificationList) {
-      final String key = n['dateGroup'] ?? "Others";
-
-      grouped.putIfAbsent(key, () => []);
-      grouped[key]!.add(n);
+      if (n['notificationMessage']['type'] != "COLLECTION_INVITATION") {
+        final String key = n['dateGroup'] ?? "Others";
+        grouped.putIfAbsent(key, () => []);
+        grouped[key]!.add(n);
+      }
     }
 
     List<Widget> ListNotications = grouped.entries.map((entry) {
@@ -212,7 +211,7 @@ class _NotificationsState extends State<Notifications> {
 
   Widget _buildNotificationTile(Map<String, dynamic> n) {
     return Dismissible(
-      key: Key(n['id']),
+      key: Key(n["id"]),
       direction: DismissDirection.endToStart,
       onDismissed: (_) => _deleteNotification(n['id']),
       background: Container(

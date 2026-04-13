@@ -18,8 +18,12 @@ class CollectionsRoute {
       "$_urlPath/$collectionId/all-transactions";
 
   // Delete Collection
-  static String deleteCollection(String collectionId) => "$_urlPath/$collectionId";
-  static String exitCollection(String collectionId) => "$_urlPath/$collectionId/exit";
+  static String deleteCollection(String collectionId) =>
+      "$_urlPath/$collectionId";
+  static String exitCollection(String collectionId) =>
+      "$_urlPath/$collectionId/exit";
+  static String reopenCollection(String collectionId) =>
+      "$_urlPath/$collectionId/reopen";
 
   // Add Member
   static String addMember(String collectionId) =>
@@ -56,45 +60,39 @@ class CollectionsRoute {
       "$_urlPath/$collectionId/closeCollection";
 
   static String paySplit(String collectionId, String splitId) =>
-    "$_urlPath/$collectionId/splits/$splitId/pay";
-  
-  static clearPayment(String collectionId, String splitId) =>
-    "$_urlPath/$collectionId/splits/$splitId/clear";
+      "$_urlPath/$collectionId/splits/$splitId/pay";
 
+  static clearPayment(String collectionId, String splitId) =>
+      "$_urlPath/$collectionId/splits/$splitId/clear";
 
   // ===============================
 // INVITATION ROUTES (NEW)
 // ===============================
 
 // Get pending invitations for current user
-static String getPendingInvitations() =>
-    "$_urlPath/invitations/pending";
+  static String getPendingInvitations() => "$_urlPath/invitations/pending";
 
 // Accept invitation
-static String acceptInvitation(String invitationId) =>
-    "$_urlPath/invitations/$invitationId/accept";
+  static String acceptInvitation(String invitationId) =>
+      "$_urlPath/invitations/$invitationId/accept";
 
 // Reject invitation
-static String rejectInvitation(String invitationId) =>
-    "$_urlPath/invitations/$invitationId/reject";
+  static String rejectInvitation(String invitationId) =>
+      "$_urlPath/invitations/$invitationId/reject";
 
 // Get invitations for a collection
-static String getCollectionInvitations(String collectionId) =>
-    "$_urlPath/$collectionId/invitations";
+  static String getCollectionInvitations(String collectionId) =>
+      "$_urlPath/$collectionId/invitations";
 
 // Cancel specific invitation
-static String cancelInvitation(String collectionId, String invitationId) =>
-    "$_urlPath/$collectionId/invitations/$invitationId";
-    
+  static String cancelInvitation(String collectionId, String invitationId) =>
+      "$_urlPath/$collectionId/invitations/$invitationId";
 
+  /// Update member role
+  static String updateMemberRole(String collectionId, String userId) =>
+      "$_urlPath/$collectionId/members/$userId";
 
-/// Update member role
-static String updateMemberRole(String collectionId, String userId) =>
-    "$_urlPath/$collectionId/members/$userId";
-
-/// Invite members (bulk)
-static String inviteMember(String collectionId) =>
-    "$_urlPath/$collectionId/invitations";
-
-      
+  /// Invite members (bulk)
+  static String inviteMember(String collectionId) =>
+      "$_urlPath/$collectionId/invitations";
 }

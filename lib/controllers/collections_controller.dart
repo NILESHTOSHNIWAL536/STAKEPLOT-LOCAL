@@ -79,7 +79,6 @@ class CollectionsController extends GetxController {
   Future<void> getCollections({bool forceRefresh = false}) async {
     /// Skip if already loading or has data and not forced
     if (_isFetchingCollections) return;
-    if (!forceRefresh) return;
 
     _isFetchingCollections = true;
     try {
@@ -353,6 +352,27 @@ class CollectionsController extends GetxController {
     }
   }
 
+  Future<void> reopenCollections(String id, BuildContext context) async {
+    try {
+      String url = CollectionsRoute.reopenCollection(id);
+
+      final response = await updateDataApiCall(url);
+
+      if (getFlagOfResponse(response)) {
+        /// Batch clear
+        collectionDetails.value = null;
+        selectedCollection.value = null;
+        splitsList.clear();
+        balancesListPay.clear();
+        balancesListReceive.clear();
+        collectionsList.removeWhere((e) => e.id == id);
+        AppNavigator.pushReplacement(context, TransactionHistoryScreen());
+      }
+    } catch (e) {
+      debugPrint("deleteCollection error: $e");
+    }
+  }
+
   // =========================
   // GET SPLITS
   // =========================
@@ -523,7 +543,7 @@ class CollectionsController extends GetxController {
           await getDataApiCall(CollectionsRoute.getBalances(collectionId));
 
       if (getFlagOfResponse(response)) {
-        final data = json.decode(response.body)['data'];
+        // final data = json.decode(response.body)['data'];
 
         // List<BalanceModel> tempList = [];
 
@@ -585,15 +605,16 @@ class CollectionsController extends GetxController {
   // =========================
   // UPDATE COLLECTION
   // =========================
-  Future<bool> updateCollection({
-    required String id,
-    String? name,
-    String? duration,
-  }) async {
+  Future<bool> updateCollection(
+      {required String id,
+      String? name,
+      String? duration,
+      bool active = false}) async {
     try {
       final body = <String, dynamic>{
         if (name != null) "name": name,
         if (duration != null) "expiryAt": getIsoDateFromDuration(duration),
+        "active": active
       };
 
       final response =
@@ -615,7 +636,7 @@ class CollectionsController extends GetxController {
             expiryAt: data['expiryAt'] != null
                 ? DateTime.parse(data['expiryAt'])
                 : null,
-            status: old.status,
+            status: active ? "ACTIVE" : old.status,
             totalAmount: collectionDetails.value?.collection.totalAmount ??
                 old.totalAmount ??
                 0,
@@ -637,6 +658,10 @@ class CollectionsController extends GetxController {
             members: collectionDetails.value?.members ?? [],
             transactions: collectionDetails.value?.transactions ?? [],
           );
+          if (active)
+          {
+            collectionsController.collectionDetails.value?.collection.status = "ACTIVE";
+          }
           emitCollectionsOnSocket("collection", {"id": id, "action": "update"});
         }
 
@@ -849,6 +874,9 @@ class CollectionsController extends GetxController {
     if (type == "splitUpdate") {
       getSplits(collectionDetails.value!.collection.id);
       getBalances(collectionDetails.value!.collection.id);
+      if (data["data"]["collection"]['collectionDetails']['collection'] != null)
+        updateCollectionByIdSocket(
+            data["data"]["collection"]['collectionDetails']);
       return;
     }
 
@@ -890,6 +918,21 @@ class CollectionsController extends GetxController {
 
       default:
         refreshCollectionData(id);
+    }
+  }
+
+  void updateCollectionByIdSocket(collection) {
+    try {
+      print("collectopnd");
+      print(collection);
+      final details = CollectionDetailsModel.fromJson(collection);
+      print("details");
+      print(details.collection.totalAmount);
+      collectionDetails.value = details;
+      selectedCollection.value = details.collection;
+    } catch (e) {
+      print("error");
+      print(e);
     }
   }
 

@@ -10,12 +10,27 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/core/app_shadows.dart';
+import '../../Utils/homepageStrings.dart.dart';
 
 void navToHistory(context) {
   HapticFeedback.selectionClick();
   isLoadingMore.value = false;
   clearTransactions(context: context, f: false);
+
   Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const TransactionHistoryScreen(),
+    ),
+  );
+}
+
+void navToHistoryReplacment(context) {
+  HapticFeedback.selectionClick();
+  isLoadingMore.value = false;
+  clearTransactions(context: context, f: false);
+  selectedTab.value = HomepageStringsDart().collectionscreate;
+  Navigator.pushReplacement(
     context,
     MaterialPageRoute(
       builder: (context) => const TransactionHistoryScreen(),
