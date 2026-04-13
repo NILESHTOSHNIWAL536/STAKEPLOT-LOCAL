@@ -79,7 +79,7 @@ class CollectionsController extends GetxController {
   Future<void> getCollections({bool forceRefresh = false}) async {
     /// Skip if already loading or has data and not forced
     if (_isFetchingCollections) return;
-    if (!forceRefresh && collectionsList.isNotEmpty) return;
+    if (!forceRefresh) return;
 
     _isFetchingCollections = true;
     try {
