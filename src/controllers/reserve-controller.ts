@@ -128,6 +128,31 @@ export class ReserveController {
     }
   }
 
+  // TOGGLE SHARE WITH COMMUNITY
+  static async toggleShare(req: Request, res: Response) {
+    try {
+      const userId = req.user!._id.toString();
+      const { share_with_community = true } = req.body;
+      const rid = req.params.rid;
+
+      const reserve = await ReserveService.getReserveById(userId, rid);
+      if (!reserve) throw new AppError('Reserve not found', StatusCodes.NOT_FOUND);
+
+      if (share_with_community && !reserve.achieved) {
+        throw new AppError('Reserve must be achieved before sharing', StatusCodes.BAD_REQUEST);
+      }
+
+      const updated = await ReserveService.updateShareFlag(userId, rid, !!share_with_community);
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        data: updated,
+      });
+    } catch (error: any) {
+      return ReserveController.handleError(res, error);
+    }
+  }
+
   // DELETE
   static async deleteReserve(req: Request, res: Response) {
     try {

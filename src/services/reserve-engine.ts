@@ -1,4 +1,3 @@
-import moment from 'moment-timezone';
 import ReserveRepository from '../repositories/reserve-repository';
 import UserDailyMetrics from '@/models/transactions-automation/user-daily-metrics';
 import { ReserveSnapshot, ReserveDocument } from '@/models/reserve-model';
@@ -7,6 +6,7 @@ import { getDeviceIdsByUserId } from '@/utils/helpers/getDeviceIds';
 import pushNotificationService from './notification-service';
 import logger from '@/utils/common/logger';
 import { scheduleReserveReminder } from './bull-queue-service/reserve-reminder-queue';
+import { getEndOfDay, getLast70DaysRange, getLast7DaysRange, getMonthToDateRatio, getStartOfDay, DEFAULT_TZ } from '@/utils/time';
 
 const reserveRepo = new ReserveRepository();
 const round2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
@@ -16,12 +16,12 @@ type SuggestionInput = {
   categories?: string[];
   durationDays: number;
   now?: Date;
+  tz?: string;
 };
 
-export async function computeSuggestion({ userId, durationDays, now = new Date() }: SuggestionInput) {
+export async function computeSuggestion({ userId, durationDays, now = new Date(), tz = DEFAULT_TZ }: SuggestionInput) {
   // Suggestion is based on overall spend, ignoring selected categories
-  const end = moment(now).utc().endOf('day').toDate();
-  const start = moment(end).subtract(70, 'days').startOf('day').toDate();
+  const { start, end } = getLast70DaysRange(now, tz);
 
   const pipeline: PipelineStage[] = [];
   pipeline.push({
@@ -41,11 +41,10 @@ export async function computeSuggestion({ userId, durationDays, now = new Date()
   const agg = await UserDailyMetrics.aggregate(pipeline);
   const debit = agg?.[0]?.debit || 0;
   const dayCount = (agg?.[0]?.days || []).length || 1;
-  const dailyBaseline = debit / 70;
+  const dailyBaseline = debit / dayCount;
 
   // momentum: last 7 days vs baseline
-  const last7End = end;
-  const last7Start = moment(end).subtract(6, 'days').startOf('day').toDate();
+  const { start: last7Start, end: last7End } = getLast7DaysRange(end, tz);
   const last7Pipeline: PipelineStage[] = [];
   last7Pipeline.push({
     $match: {
@@ -64,8 +63,7 @@ export async function computeSuggestion({ userId, durationDays, now = new Date()
   const last7 = last7Agg?.[0]?.debit || 0;
   const momentum = dailyBaseline > 0 ? last7 / (dailyBaseline * 7) : 1;
 
-  const today = moment(now).tz('Asia/Kolkata');
-  const mtdPressure = today.date() / today.daysInMonth();
+  const mtdPressure = getMonthToDateRatio(now, tz);
 
   const base = 1;
   const momentumAdjustment = Math.min(Math.max(momentum, 0.5), 1.5);
@@ -87,17 +85,17 @@ export async function computeSuggestion({ userId, durationDays, now = new Date()
 
 export async function buildSnapshots(reserve: ReserveDocument, now = new Date()): Promise<ReserveSnapshot[]> {
   const days: ReserveSnapshot[] = [];
-  const start = moment.utc(reserve.startDate).startOf('day');
-  const end = moment.utc(reserve.endDate).endOf('day');
-  const duration = end.diff(start, 'days') + 1;
+  const startDate = getStartOfDay(reserve.startDate);
+  const endDate = getEndOfDay(reserve.endDate);
+  const duration = Math.floor((endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000)) + 1;
 
   for (let i = 0; i < duration; i++) {
-    const day = moment.utc(start).add(i, 'days');
-    const remainingDays = Math.max(0, end.diff(day, 'days')) + 1;
+    const dayUtc = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+    const remainingDays = Math.max(0, Math.floor((endDate.getTime() - dayUtc.getTime()) / (24 * 60 * 60 * 1000))) + 1;
     const remaining = round2(reserve.amount);
     const daily = round2(reserve.planned_daily || reserve.amount / duration);
     days.push({
-      date: day.toDate(),
+      date: dayUtc,
       spend: 0,
       projectedTotal: 0,
       percentUsed: 0,
@@ -114,11 +112,11 @@ export async function buildSnapshots(reserve: ReserveDocument, now = new Date())
 }
 
 export async function recomputeReserveProgress(reserve: ReserveDocument) {
-  const start = moment.utc(reserve.startDate).startOf('day');
-  const end = moment.utc(reserve.endDate).endOf('day');
-  const duration = end.diff(start, 'days') + 1;
+  const startDate = getStartOfDay(reserve.startDate);
+  const endDate = getEndOfDay(reserve.endDate);
+  const duration = Math.floor((endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000)) + 1;
   const useAllCategories = reserve.categories.includes('overall');
-  const today = moment.utc().startOf('day');
+  const today = getStartOfDay(new Date());
   const userObjectId = new Types.ObjectId(reserve.userId as any);
 
   // fetch spend in window for categories
@@ -126,7 +124,7 @@ export async function recomputeReserveProgress(reserve: ReserveDocument) {
   pipeline.push({
     $match: {
       userId: userObjectId,
-      date: { $gte: start.toDate(), $lte: end.toDate() },
+      date: { $gte: startDate, $lte: endDate },
       ...(useAllCategories ? {} : { 'categoryBreakdown.category': { $in: reserve.categories } }),
     },
   } as PipelineStage.Match);
@@ -145,26 +143,26 @@ export async function recomputeReserveProgress(reserve: ReserveDocument) {
   const rows = await UserDailyMetrics.aggregate(pipeline);
   const snapshots: ReserveSnapshot[] = [];
   let cumulative = 0;
-  if (today.isBetween(start, end, 'day', '[]')) {
+  if (today.getTime() >= startDate.getTime() && today.getTime() <= endDate.getTime()) {
     reserve.status = reserve.status === 'OVERSPENT' ? 'OVERSPENT' : 'ACTIVE';
-  } else if (today.isBefore(start)) {
+  } else if (today.getTime() < startDate.getTime()) {
     reserve.status = 'UPCOMING';
   }
 
   for (let i = 0; i < duration; i++) {
-    const day = moment.utc(start).add(i, 'days');
-    const row = rows.find((r) => moment.utc(r._id).isSame(day, 'day'));
+    const dayUtc = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+    const row = rows.find((r) => getStartOfDay(r._id).getTime() === dayUtc.getTime());
     const spend = row?.debit || 0;
     cumulative += spend;
     const percentUsed = (cumulative / reserve.amount) * 100;
     const remaining = round2(Math.max(reserve.amount - cumulative, 0));
-    const remainingDays = Math.max(end.diff(day, 'days') + 1, 0);
+    const remainingDays = Math.max(Math.floor((endDate.getTime() - dayUtc.getTime()) / (24 * 60 * 60 * 1000)) + 1, 0);
     const recommendedDaily = remainingDays > 0 ? round2(remaining / remainingDays) : 0;
     const overspend = Math.max(cumulative - reserve.amount, 0);
     const recoveryTarget = remainingDays > 0 ? round2(overspend / remainingDays) : 0;
 
     snapshots.push({
-      date: day.toDate(),
+      date: dayUtc,
       spend,
       projectedTotal: cumulative,
       percentUsed,
@@ -212,6 +210,9 @@ export async function notifyIfNeeded(reserve: ReserveDocument, snapshots: Reserv
   // completion
   if (last.projectedTotal <= reserve.amount && last.remainingDays === 0) {
     reserve.status = 'COMPLETED';
+    reserve.achieved = true;
+  } else {
+    reserve.achieved = false;
   }
 }
 
@@ -223,7 +224,7 @@ export async function evaluateReserve(reserve: ReserveDocument) {
 }
 
 export async function runDailyReserveSweep() {
-  const today = moment.utc().startOf('day').toDate();
+  const today = getStartOfDay(new Date());
   const active = await reserveRepo.get({ startDate: { $lte: today }, endDate: { $gte: today } });
 
   for (const res of active as ReserveDocument[]) {
@@ -237,7 +238,7 @@ export async function runDailyReserveSweep() {
 }
 
 export async function scheduleExistingReserves() {
-  const today = moment.utc().startOf('day').toDate();
+  const today = getStartOfDay(new Date());
   const active = await reserveRepo.get({ startDate: { $lte: today }, endDate: { $gte: today } });
   for (const res of active as ReserveDocument[]) {
     try {
