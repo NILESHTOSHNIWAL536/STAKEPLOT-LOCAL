@@ -877,7 +877,7 @@ export const deleteCollection = async (collectionId: string, userId: string) => 
   });
 };
 
-export const updateCollection = async (collectionId: string, userId: string, data: { name?: string; description?: string; expiryAt?: Date }) => {
+export const updateCollection = async (collectionId: string, userId: string, data: { name?: string; description?: string; expiryAt?: Date,active }) => {
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member || member.role !== 'CONTRIBUTE') {
     throw new AppError('You do not have permission to update this collection', StatusCodes.FORBIDDEN);
@@ -887,13 +887,23 @@ export const updateCollection = async (collectionId: string, userId: string, dat
   if (!collection) {
     throw new AppError('Collection not found', StatusCodes.NOT_FOUND);
   }
-  if (collection.status === 'CLOSED') {
+  if (collection.status === 'CLOSED' && !data.active) {
     throw new AppError('Cannot update a closed collection', StatusCodes.BAD_REQUEST);
   }
 
   if (data.name !== undefined) collection.name = data.name;
   if (data.description !== undefined) collection.description = data.description;
   if (data.expiryAt !== undefined) collection.expiryAt = data.expiryAt;
+  if(data.active){
+     const activeCount = await Collection.countDocuments({status: "ACTIVE",});
+     console.log(activeCount);
+     console.log(MAX_COLLECTIONS_PER_USER);
+     if(MAX_COLLECTIONS_PER_USER<activeCount){
+       collection.status='ACTIVE';
+      }else{
+        throw new AppError('You have reached the maximum number of active collections.', StatusCodes.BAD_REQUEST);
+      }
+  }
 
   await collection.save();
   return collection.toObject();

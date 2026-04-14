@@ -70,10 +70,12 @@ export const addTransaction = async (req: Request, res: Response, next: NextFunc
     const { id: collectionId } = req.params;
     const { transactionIds, splitType, customSplits } = req.body;
     const result = await CollectionService.addTransactions(collectionId, userId, transactionIds, splitType, customSplits);
+    const collectionDetails=await CollectionService.getCollectionById(collectionId,userId);  
+    
      await publishSocketEvent(collectionId, 'collection', {
         type: 'splitUpdate',
         data: {
-           "collection":result
+           "collection":{...result,"collectionDetails":collectionDetails}
         },
       });
 
@@ -160,15 +162,14 @@ export const updateCollection = async (req: Request, res: Response, next: NextFu
   try {
     const userId = req.user._id;
     const { id: collectionId } = req.params;
-    const { name, description, expiryAt } = req.body;
-    const collection = await CollectionService.updateCollection(collectionId, userId, { name, description, expiryAt });
+    const { name, description, expiryAt,active } = req.body;
+    const collection = await CollectionService.updateCollection(collectionId, userId, { name, description, expiryAt,active });
     await publishSocketEvent(collectionId, 'collection', {
         type: name ? 'nameUpdate' : description ? 'descriptionUpdate' : expiryAt ? 'expiryUpdate' : 'update',
         data: {
            collection
         },
       });
-
     SuccessResponse.data = collection;
     SuccessResponse.message = 'Collection updated successfully';
     res.status(StatusCodes.OK).json(SuccessResponse);
