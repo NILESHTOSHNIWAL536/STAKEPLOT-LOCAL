@@ -1,12 +1,12 @@
 // ─── screens/split_confirmation_screen.dart ──────────────────────────────────
 import 'package:flutter/material.dart';
 import '../../../../../backed_connections/apis_connect.dart';
-import '../models/models.dart';
-import '../utils/app_theme.dart';
+import '../models/collection_helper_models.dart';
+import '../utils/app_theme_collections.dart';
 import '../widgets/common_widgets.dart';
 
 class SplitConfirmationScreen extends StatefulWidget {
-  final List<Transaction> selectedTransactions;
+  final List<TransactionForCollections> selectedTransactions;
   final List<SplitEntry> splitEntries;
   final double totalAmount;
 
@@ -55,20 +55,20 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColorsForCollection.background,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColorsForCollection.background,
         elevation: 0,
         leading: IconButton(
           icon: Container(
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: AppColorsForCollection.surface,
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(Icons.arrow_back_ios_new,
-                size: 16, color: AppColors.textPrimary),
+                size: 16, color: AppColorsForCollection.textPrimary),
           ),
           onPressed: () => Navigator.pop(context),
           padding: const EdgeInsets.all(8),
@@ -84,7 +84,7 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: AppColorsForCollection.surface,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -103,7 +103,7 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
                     '₹${widget.totalAmount.toStringAsFixed(2)}',
                     style: AppTextStyles.amountLarge,
                   ),
-                  const Divider(height: 24, color: AppColors.divider),
+                  const Divider(height: 24, color: AppColorsForCollection.divider),
                   Text(
                     '${widget.selectedTransactions.length} Transaction${widget.selectedTransactions.length > 1 ? 's' : ''} • ${widget.splitEntries.length} Members',
                     style: AppTextStyles.bodySmall,
@@ -122,7 +122,7 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: AppColorsForCollection.surface,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -141,7 +141,7 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.errorRed,
+                        color: AppColorsForCollection.errorRed,
                       ),
                     ),
                   ],
@@ -160,7 +160,7 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: AppColorsForCollection.surface,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -174,7 +174,7 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
                     Text(
                       '₹${e.amount.toStringAsFixed(2)}',
                       style: AppTextStyles.amountMedium
-                          .copyWith(color: AppColors.primaryBlue, fontSize: 15),
+                          .copyWith(color: AppColorsForCollection.primaryBlue, fontSize: 15),
                     ),
                   ],
                 ),

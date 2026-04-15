@@ -1,7 +1,7 @@
 // ─── utils/app_theme.dart ─────────────────────────────────────────────────────
 import 'package:flutter/material.dart';
 
-class AppColors {
+class AppColorsForCollection {
   static const Color background = Color(0xFFF5F0E8);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color cardBg = Color(0xFFF8F5EF);
@@ -35,70 +35,70 @@ class AppTextStyles {
   static const TextStyle heading1 = TextStyle(
     fontSize: 28,
     fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
+    color: AppColorsForCollection.textPrimary,
     letterSpacing: -0.5,
   );
   static const TextStyle heading2 = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppColorsForCollection.textPrimary,
   );
   static const TextStyle heading3 = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppColorsForCollection.textPrimary,
   );
   static const TextStyle bodyLarge = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
-    color: AppColors.textPrimary,
+    color: AppColorsForCollection.textPrimary,
   );
   static const TextStyle bodyMedium = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    color: AppColors.textSecondary,
+    color: AppColorsForCollection.textSecondary,
   );
   static const TextStyle bodySmall = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w400,
-    color: AppColors.textLight,
+    color: AppColorsForCollection.textLight,
   );
   static const TextStyle amountLarge = TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
+    color: AppColorsForCollection.textPrimary,
     letterSpacing: -1,
   );
   static const TextStyle amountMedium = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppColorsForCollection.textPrimary,
   );
   static const TextStyle labelBold = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppColorsForCollection.textPrimary,
   );
 }
 
-class AppTheme {
+class AppThemeInCollection {
   static ThemeData get theme => ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: AppColors.background,
+        scaffoldBackgroundColor: AppColorsForCollection.background,
         colorScheme: const ColorScheme.light(
-          primary: AppColors.primaryDark,
-          secondary: AppColors.primaryBlue,
-          surface: AppColors.surface,
+          primary: AppColorsForCollection.primaryDark,
+          secondary: AppColorsForCollection.primaryBlue,
+          surface: AppColorsForCollection.surface,
         ),
         appBarTheme: const AppBarTheme(
-          backgroundColor: AppColors.background,
+          backgroundColor: AppColorsForCollection.background,
           elevation: 0,
           centerTitle: true,
           titleTextStyle: AppTextStyles.heading3,
-          iconTheme: IconThemeData(color: AppColors.textPrimary),
+          iconTheme: IconThemeData(color: AppColorsForCollection.textPrimary),
         ),
         cardTheme: CardTheme(
-          color: AppColors.surface,
+          color: AppColorsForCollection.surface,
           elevation: 0,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -106,7 +106,7 @@ class AppTheme {
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: AppColors.surface,
+          fillColor: AppColorsForCollection.surface,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
@@ -114,12 +114,12 @@ class AppTheme {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide:
-                const BorderSide(color: AppColors.divider, width: 1),
+                const BorderSide(color: AppColorsForCollection.divider, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide:
-                const BorderSide(color: AppColors.primaryBlue, width: 1.5),
+                const BorderSide(color: AppColorsForCollection.primaryBlue, width: 1.5),
           ),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

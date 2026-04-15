@@ -57,7 +57,7 @@ class HistoryTransactions extends StatelessWidget {
     final isManual = transaction.manualTransaction;
     final isSplit = transaction.isSplit;
     final formattedDate = date != null
-        ? formatWhatsAppDateWithoutTime(convertStringToDateTime(date!))
+        ? formatWhatsAppDate(convertStringToDateTime(date!))
         : 'Date';
     final formattedDateManual = date != null
         ? formatWhatsAppDate(convertStringToDateTime(date!))

@@ -25,7 +25,7 @@ void addTransaction(String amount, String subCategory, String categories,
     BuildContext context, String dropdownValue,
     [bool isSplit = false, bool snackBar = true, bool isDebit = true]) async {
   // final budgetController = Get.find<BudgetController>();
-  // BudgetController budgetController = ControllerManagement.budgetController;
+  // BudgetControllerScreenModel budgetController = ControllerManagement.budgetController;
   var body = {
     'amount': amount.toString(),
     'category': categories.toString(),

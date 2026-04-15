@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import '../../../../../model/collections_model.dart';
-import '../models/models.dart';
-import '../utils/app_theme.dart';
+import '../models/collection_helper_models.dart';
+import '../utils/app_theme_collections.dart';
 import '../widgets/common_widgets.dart';
 import 'split_amount_screen.dart';
 
 class SelectMembersScreen extends StatefulWidget {
-  final List<Transaction> selectedTransactions;
+  final List<TransactionForCollections> selectedTransactions;
   final double totalAmount;
 
   const SelectMembersScreen({
@@ -80,20 +80,20 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
     final filtered = _filtered;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColorsForCollection.background,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColorsForCollection.background,
         elevation: 0,
         leading: IconButton(
           icon: Container(
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: AppColorsForCollection.surface,
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(Icons.arrow_downward,
-                size: 18, color: AppColors.textPrimary),
+                size: 18, color: AppColorsForCollection.textPrimary),
           ),
           onPressed: () => Navigator.pop(context),
           padding: const EdgeInsets.all(8),
@@ -109,7 +109,7 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: AppColors.primaryDark,
+                color: AppColorsForCollection.primaryDark,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(Icons.space_dashboard_outlined,
@@ -130,9 +130,9 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
               decoration: InputDecoration(
                 hintText: 'search Transactions',
                 prefixIcon: const Icon(Icons.search,
-                    color: AppColors.textLight, size: 20),
+                    color: AppColorsForCollection.textLight, size: 20),
                 filled: true,
-                fillColor: AppColors.surface,
+                fillColor: AppColorsForCollection.surface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -156,7 +156,7 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: AppColorsForCollection.surface,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
@@ -171,7 +171,7 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
                 separatorBuilder: (_, __) => const Divider(
                   height: 1,
                   indent: 60,
-                  color: AppColors.divider,
+                  color: AppColorsForCollection.divider,
                 ),
                 itemBuilder: (ctx, i) {
                   final member = filtered[i];
@@ -189,13 +189,13 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
                         height: 32,
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? AppColors.primaryDark
+                              ? AppColorsForCollection.primaryDark
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
                             color: isSelected
-                                ? AppColors.primaryDark
-                                : AppColors.divider,
+                                ? AppColorsForCollection.primaryDark
+                                : AppColorsForCollection.divider,
                             width: 1.5,
                           ),
                         ),
@@ -203,7 +203,7 @@ class _SelectMembersScreenState extends State<SelectMembersScreen> {
                             ? const Icon(Icons.check,
                                 size: 16, color: Colors.white)
                             : const Icon(Icons.add,
-                                size: 16, color: AppColors.textSecondary),
+                                size: 16, color: AppColorsForCollection.textSecondary),
                       ),
                     ),
                   );

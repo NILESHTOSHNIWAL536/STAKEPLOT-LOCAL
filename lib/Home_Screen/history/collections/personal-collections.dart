@@ -1,7 +1,3 @@
-// ─── collections_summary_section.dart ────────────────────────────────────────
-// PATH: lib/Home_Screen/history/collections/collections_summary_section.dart
-//  (or wherever CollectionSummarySection is currently located)
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,6 +5,7 @@ import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
+import '../../../Constants/loader.dart';
 import '../../../Utils/collections_helper.dart';
 import '../../../backed_connections/apis_connect.dart';
 import '../../../components/shared_utils.dart';
@@ -85,14 +82,11 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
       final data = controller.collectionDetails.value;
 
       if (data == null) {
-        return const SafeArea(
+        return SafeArea(
           child: Scaffold(
             backgroundColor: _C.bg,
             body: Center(
-              child: CircularProgressIndicator(
-                color: _C.navy,
-                strokeWidth: 2.5,
-              ),
+              child: Spinner(),
             ),
           ),
         );
@@ -260,11 +254,7 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: Container(
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF2D2B5B), Color(0xFF3D3A70)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
@@ -323,43 +313,20 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: outstanding > 0 ? _C.orange : _C.green,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        "Outstanding Amount",
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.white.withOpacity(0.65),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: outstanding > 0
-                          ? _C.orange.withOpacity(0.15)
-                          : _C.green.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(10),
+                  Text(
+                    "Outstanding Amount",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.grey,
+                      fontWeight: FontWeight.w500,
                     ),
-                    child: Text(
-                      "₹${outstanding.toStringAsFixed(2)}",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w800,
-                        color: outstanding > 0 ? _C.orange : _C.green,
-                      ),
+                  ),
+                  Text(
+                    "₹${outstanding.toStringAsFixed(2)}",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.grey,
                     ),
                   ),
                 ],
@@ -551,8 +518,6 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = isCredit ? const Color(0xFF6FEDB1) : const Color(0xFFFF8C69);
-
     return Padding(
       padding:
           EdgeInsets.only(left: isCredit ? 0 : 20, right: isCredit ? 20 : 0),
@@ -562,18 +527,16 @@ class _StatTile extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 30,
-                height: 30,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
-                  color: accent.withOpacity(0.15),
+                  color: AppColors.primaryColor,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  isCredit
-                      ? Icons.south_west_rounded
-                      : Icons.north_east_rounded,
-                  size: 15,
-                  color: accent,
+                  isCredit ? Icons.arrow_downward : Icons.arrow_upward,
+                  size: 20,
+                  color: AppColors.backgroundColor,
                 ),
               ),
               const SizedBox(width: 8),
@@ -582,7 +545,7 @@ class _StatTile extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: accent,
+                  color: AppColors.primaryColor,
                 ),
               ),
             ],
@@ -592,7 +555,7 @@ class _StatTile extends StatelessWidget {
             sub,
             style: TextStyle(
               fontSize: 11,
-              color: Colors.white.withOpacity(0.45),
+              color: AppColors.grey,
             ),
           ),
           const SizedBox(height: 6),
@@ -601,7 +564,7 @@ class _StatTile extends StatelessWidget {
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w800,
-              color: Colors.white,
+              color: AppColors.accentColor,
               letterSpacing: -0.5,
             ),
           ),

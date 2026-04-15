@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/components/textfeild.dart';
 import 'package:get/get.dart';
 
 import '../../Constants/core/app_padding_sizes.dart';
+import '../../controllers/controllerManagement.dart';
 import 'BudgetSearch.dart';
 
 RxList categoriesSeleted = [].obs;
@@ -64,7 +65,7 @@ class _BudgetState extends State<Budget> {
   TextEditingController amountController = TextEditingController(text: "");
   RxString period = "".obs;
   RxBool boolFlag = false.obs;
-  final budgetController = Get.find<BudgetController>();
+  final budgetController = ControllerManagement.budgetController;
 
   @override
   void initState() {
@@ -154,19 +155,18 @@ class _BudgetState extends State<Budget> {
               color: Color(0xFFF3F4F6),
               width: 1,
             ),
-            boxShadow:  [
-             AppShadows.soft
-            ],
+            boxShadow: [AppShadows.soft],
           ),
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p4),
+              padding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.p14, vertical: AppSizes.p4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: AppSizes.p8, vertical: AppSizes.p12),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.p8, vertical: AppSizes.p12),
                     child: Text(
                       "Add budget",
                       style: FontManager().getTextStyle(
@@ -223,8 +223,9 @@ class _BudgetState extends State<Budget> {
                                     period.value.isEmpty ? null : period.value,
                                 hint: Center(
                                   child: Padding(
-                                    padding:  EdgeInsets.symmetric(
-                                        horizontal: AppSizes.p16, vertical: AppSizes.p10),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: AppSizes.p16,
+                                        vertical: AppSizes.p10),
                                     child: textStyle(
                                       context: context,
                                       text: "Select Duration",
@@ -252,7 +253,8 @@ class _BudgetState extends State<Budget> {
                                     value: periodItem,
                                     child: Center(
                                       child: Padding(
-                                        padding: const EdgeInsets.all(AppSizes.p8),
+                                        padding:
+                                            const EdgeInsets.all(AppSizes.p8),
                                         child: textStyle(
                                           context: context,
                                           text: periodItem,
@@ -293,7 +295,9 @@ class _BudgetState extends State<Budget> {
                     child: getButton(
                         context, PlotFinanceStaticData().continueButton),
                   ),
-                  SizedBox(height: AppSizes.h20), // Extra padding at bottom for scroll
+                  SizedBox(
+                      height:
+                          AppSizes.h20), // Extra padding at bottom for scroll
                 ],
               ),
             ),
@@ -327,10 +331,12 @@ class _BudgetState extends State<Budget> {
             duration: Duration(milliseconds: 300),
             width: buttonWidth.clamp(80, 120), // Min 80, max 120
             padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.p12, vertical: AppSizes.p10), // Adjusted padding
+                horizontal: AppSizes.p12,
+                vertical: AppSizes.p10), // Adjusted padding
             decoration: BoxDecoration(
-              color:
-                  period.value == text ? AppColors.accentColor : AppColors.backgroundColor,
+              color: period.value == text
+                  ? AppColors.accentColor
+                  : AppColors.backgroundColor,
               borderRadius: BorderRadius.circular(12),
               boxShadow: period.value == text
                   ? [
@@ -348,7 +354,9 @@ class _BudgetState extends State<Budget> {
                 text: text,
                 fontWeight: FontWeight.w600,
                 fontsize: 10, // Decreased font size
-                c: period.value == text ? AppColors.backgroundColor : AppColors.bg3,
+                c: period.value == text
+                    ? AppColors.backgroundColor
+                    : AppColors.bg3,
               ),
             ),
           ),
@@ -359,8 +367,7 @@ class _BudgetState extends State<Budget> {
     if (nameController.text.isEmpty ||
         amountController.text.isEmpty ||
         period.value.isEmpty) {
-      snackBarCalledfail(
-          context, SnackbarData().fillAllRequiredFields);
+      snackBarCalledfail(context, SnackbarData().fillAllRequiredFields);
       return;
     }
 
@@ -410,7 +417,6 @@ class _BudgetState extends State<Budget> {
             const Duration(milliseconds: 300), // Animation duration
       ),
     );
-  
   }
   // void bedgetCalculator() {
   //   if (nameController.text == "" ||
@@ -446,7 +452,7 @@ Widget textStyle({
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-       SizedBox(width: AppSizes.w8),
+      SizedBox(width: AppSizes.w8),
       Text(
         text.toString(),
         style: FontManager().getTextStyle(context,

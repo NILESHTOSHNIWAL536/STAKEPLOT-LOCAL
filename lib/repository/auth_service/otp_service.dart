@@ -14,9 +14,15 @@ class OtpService {
       'name': name,
     });
     if (getFlagOfResponse(response)) {
-      snackBarCalled(context, SnackbarData().sentOtpToEmail,);
+      snackBarCalled(
+        context,
+        SnackbarData().sentOtpToEmail,
+      );
     } else {
-      snackBarCalledfail(context, SnackbarData().cantSendOtp,);
+      snackBarCalledfail(
+        context,
+        SnackbarData().cantSendOtp,
+      );
     }
   }
 
@@ -46,8 +52,10 @@ class OtpService {
           decodedResponse['message'] != null) {
         snackBarCalledfail(context, decodedResponse['message']);
       } else {
-        snackBarCalledfail(context,
-            "Too many OTP requests. Please try again later.",);
+        snackBarCalledfail(
+          context,
+          "Too many OTP requests. Please try again later.",
+        );
       }
     } else {
       snackBarCalledfail(context, decodedResponse['message']);
@@ -60,14 +68,23 @@ class OtpService {
       var response = await postDataApiCallwithOutSharedPref(otpRoutes.sendOtp,
           {'email': email, 'name': name, 'type': "deleteAccount"});
       if (getFlagOfResponse(response)) {
-        snackBarCalled(context, SnackbarData().sentOtpToEmail,);
+        snackBarCalled(
+          context,
+          SnackbarData().sentOtpToEmail,
+        );
         return true;
       } else {
-        snackBarCalledfail(context, SnackbarData().cantSendOtp,);
+        snackBarCalledfail(
+          context,
+          SnackbarData().cantSendOtp,
+        );
         return false;
       }
     } catch (e) {
-      snackBarCalledfail(context, 'Failed to send OTP: $e',);
+      snackBarCalledfail(
+        context,
+        'Failed to send OTP: $e',
+      );
       return false;
     }
   }
@@ -80,8 +97,10 @@ class OtpService {
       var response = await postDataApiCallwithOutSharedPref(
           otpRoutes.verifyOtp, {'email': email, 'otp': deleteOtp});
       if (getFlagOfResponse(response)) {
-        snackBarCalled(context, 'OTP verified successfully',
-            ); // Adjusted message for clarity
+        snackBarCalled(
+          context,
+          'OTP verified successfully',
+        ); // Adjusted message for clarity
         return true;
       } else {
         snackBarCalledfail(
@@ -95,7 +114,7 @@ class OtpService {
   }
 
   static Future<bool> verifyOTPForLogin(BuildContext context, String email,
-       String otp, dynamic loginResponse, bool isForcedLogin,
+      String otp, dynamic loginResponse, bool isForcedLogin,
       {bool isNewUser = false}) async {
     try {
       if (isNewUser) {
@@ -123,17 +142,22 @@ class OtpService {
   }
 }
 
-void resendOtpToUser(context, email, name) async
-{
-   var response=await postDataApiCallwithOutSharedPref(otpRoutes.resendOtp,{
-      'email': email,
-      "name": name,
-    });
+void resendOtpToUser(context, email, name) async {
+  var response = await postDataApiCallwithOutSharedPref(otpRoutes.resendOtp, {
+    'email': email,
+    "name": name,
+  });
 
   if (getFlagOfResponse(response)) {
     acceptReset.value = false;
-    snackBarCalled(context,SnackbarData().otpResent,);
+    snackBarCalled(
+      context,
+      SnackbarData().otpResent,
+    );
   } else {
-    snackBarCalledfail(context,SnackbarData().otpSendFail1,);
+    snackBarCalledfail(
+      context,
+      SnackbarData().otpSendFail1,
+    );
   }
 }

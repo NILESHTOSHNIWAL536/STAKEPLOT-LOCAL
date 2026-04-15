@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
-
 import '../backed_connections/apiAutomations/curd.dart';
 import '../model/quick_check_model.dart';
 import '../routes/route_transactions.dart';
@@ -27,9 +25,9 @@ class QuickCheckController extends GetxController {
       if (!getFlagOfResponse(response)) return;
 
       final data = jsonDecode(response.body)['data'];
-
       quickCheck.value = QuickCheckModel.fromJson(data);
-    } catch (e, st) {
+    } catch (e) {
+      
     } finally {
       isLoading.value = false;
     }

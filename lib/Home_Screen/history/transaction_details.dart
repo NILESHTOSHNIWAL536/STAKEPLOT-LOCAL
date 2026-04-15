@@ -17,7 +17,7 @@
 //     final formattedDate = transaction.transactionTimestamp != null
 //         ? formatWhatsAppDate4(convertStringToDateTime(
 //             transaction.transactionTimestamp.toString()))
-//         : 'N/A'; 
+//         : 'N/A';
 
 //     return Scaffold(
 //       backgroundColor: Colors.grey[100], // Light background
@@ -31,7 +31,7 @@
 //               fontSize: 18,
 //               color: AppColors.accentColor),
 //         ),
-       
+
 //       ),
 //       body: SingleChildScrollView(
 //         child: Padding(
@@ -165,7 +165,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -181,21 +180,21 @@ import '../../backed_connections/apis_connect.dart';
 import '../../components/shared_utils.dart';
 import '../../image_service/avatarProfile.dart';
 
-
 final RxBool excludeCashFlow = false.obs;
 
 class TransactionDetailsPage extends StatelessWidget {
   final TransactionModel transaction;
   final int index;
 
-  const TransactionDetailsPage({Key? key, required this.transaction, required this.index})
+  const TransactionDetailsPage(
+      {Key? key, required this.transaction, required this.index})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final formattedDate = transaction.transactionTimestamp != null
-        ? formatWhatsAppDate4(
-            convertStringToDateTime(transaction.transactionTimestamp.toString()))
+        ? formatWhatsAppDate(convertStringToDateTime(
+            transaction.transactionTimestamp.toString()))
         : 'N/A';
 
     final bool isDebit = transaction.type == 'DEBIT';
@@ -207,25 +206,26 @@ class TransactionDetailsPage extends StatelessWidget {
           children: [
             _header(context),
             SizedBox(
-              height: MediaQuery.of(context).size.height/1.2,
+              height: MediaQuery.of(context).size.height / 1.2,
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(AppSizes.p16),
                 child: Column(
                   children: [
-                    ((transaction.isBalanceOut ?? false) && transaction.balanceOut != "₹-1")?
-                    Row(
-                      children: [
-                        _amountSection(context, isDebit),
-                         SizedBox(width: AppSizes.w16),
-                         const VerticalDashDivider(),
-                       SizedBox(width: AppSizes.w16),
-                        _balanceOutSection(context, isDebit),
-                      ],
-                    ):
-                    _amountSection(context, isDebit),
+                    ((transaction.isBalanceOut ?? false) &&
+                            transaction.balanceOut != "₹-1")
+                        ? Row(
+                            children: [
+                              _amountSection(context, isDebit),
+                              SizedBox(width: AppSizes.w16),
+                              const VerticalDashDivider(),
+                              SizedBox(width: AppSizes.w16),
+                              _balanceOutSection(context, isDebit),
+                            ],
+                          )
+                        : _amountSection(context, isDebit),
                     SizedBox(height: AppSizes.h16),
                     // _locationChips(context),
-                     SizedBox(height: AppSizes.h16),
+                    SizedBox(height: AppSizes.h16),
                     _receivedCard(context, formattedDate),
                     SizedBox(height: AppSizes.h20),
                     _moreDetails(context),
@@ -244,7 +244,8 @@ class TransactionDetailsPage extends StatelessWidget {
   // ---------------- HEADER ----------------
   Widget _header(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p14),
+      padding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p14),
       decoration: const BoxDecoration(
         color: AppColors.newbg,
         borderRadius: BorderRadius.vertical(
@@ -255,7 +256,7 @@ class TransactionDetailsPage extends StatelessWidget {
         children: [
           InkWell(
             onTap: () => Navigator.pop(context),
-            child:globalbackArrow(),
+            child: globalbackArrow(),
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
@@ -275,11 +276,11 @@ class TransactionDetailsPage extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.1,
             height: MediaQuery.of(context).size.width * 0.1,
             decoration: BoxDecoration(
-              color: AppColors.backgroundColor,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [AppShadows.tabs]
-            ),
-            child:  AvatarProfileImage(url: HomePageIcons.splitIcon, width: 50, height: 50),
+                color: AppColors.backgroundColor,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [AppShadows.tabs]),
+            child: AvatarProfileImage(
+                url: HomePageIcons.splitIcon, width: 50, height: 50),
           ),
         ],
       ),
@@ -298,14 +299,13 @@ class TransactionDetailsPage extends StatelessWidget {
             context,
             fontSize: 32,
             lWeight: FontWeight.bold,
-            color: isDebit
-                ? AppColors.redColor
-                : AppColors.primaryColor,
+            color: isDebit ? AppColors.redColor : AppColors.primaryColor,
           ),
         ),
-         SizedBox(height: AppSizes.h12),
+        SizedBox(height: AppSizes.h12),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p6),
+          padding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p6),
           decoration: BoxDecoration(
             color: AppColors.greyCard,
             borderRadius: BorderRadius.circular(20),
@@ -323,34 +323,34 @@ class TransactionDetailsPage extends StatelessWidget {
       ],
     );
   }
+
   Widget _balanceOutSection(BuildContext context, bool isDebit) {
     return Column(
       children: [
-          
-               
-          ((transaction.isBalanceOut ?? false) && transaction.balanceOut != "₹-1")?
-          Text(
-          isDebit
-              ? "- ₹${formatMoneyIndian(transaction.balanceOut.toString())}"
-              : "+ ₹${formatMoneyIndian(transaction.balanceOut.toString())}",
-          style: FontManager().getTextStyle(
-            context,
-            fontSize: 24,
-            lWeight: FontWeight.bold,
-            color: isDebit
-                ? AppColors.debitColor
-                : AppColors.primaryColor,
-          ),
-        ) : const SizedBox.shrink(),
-         SizedBox(height: AppSizes.h16),
+        ((transaction.isBalanceOut ?? false) && transaction.balanceOut != "₹-1")
+            ? Text(
+                isDebit
+                    ? "- ₹${formatMoneyIndian(transaction.balanceOut.toString())}"
+                    : "+ ₹${formatMoneyIndian(transaction.balanceOut.toString())}",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 24,
+                  lWeight: FontWeight.bold,
+                  color:
+                      isDebit ? AppColors.debitColor : AppColors.primaryColor,
+                ),
+              )
+            : const SizedBox.shrink(),
+        SizedBox(height: AppSizes.h16),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p6),
+          padding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p6),
           decoration: BoxDecoration(
             color: AppColors.greyCard,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
-             "Balanced Out",
+            "Balanced Out",
             style: FontManager().getTextStyle(
               context,
               fontSize: 13,
@@ -375,11 +375,11 @@ class TransactionDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _chip(BuildContext context, String text,
-      {bool selected = false}) {
+  Widget _chip(BuildContext context, String text, {bool selected = false}) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 6),
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p14, vertical: AppSizes.p6),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p14, vertical: AppSizes.p6),
       decoration: BoxDecoration(
         color: selected ? AppColors.primaryColor : AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(20),
@@ -391,8 +391,7 @@ class TransactionDetailsPage extends StatelessWidget {
           context,
           fontSize: 12,
           lWeight: FontWeight.w500,
-          color:
-              selected ? AppColors.backgroundColor : AppColors.primaryColor,
+          color: selected ? AppColors.backgroundColor : AppColors.primaryColor,
         ),
       ),
     );
@@ -408,8 +407,7 @@ class TransactionDetailsPage extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _infoRow2(context, "Received In",
-              transaction.bankName ?? 'N/A'),
+          _infoRow2(context, "Received In", transaction.bankName ?? 'N/A'),
           SizedBox(height: AppSizes.h12),
           _infoRow2(context, "On Date ", formattedDate),
         ],
@@ -431,7 +429,7 @@ class TransactionDetailsPage extends StatelessWidget {
             color: AppColors.bg1,
           ),
         ),
-         SizedBox(height: AppSizes.h10),
+        SizedBox(height: AppSizes.h10),
         Container(
           padding: const EdgeInsets.all(AppSizes.p16),
           decoration: BoxDecoration(
@@ -440,17 +438,12 @@ class TransactionDetailsPage extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _infoRow(context, "Transaction ID",
-                  transaction.txnId.toString(),
+              _infoRow(context, "Transaction ID", transaction.txnId.toString(),
                   copy: true),
-                 SizedBox(height: AppSizes.h12),
-              
-              _infoRow(context, "Narration",
-                  transaction.narration),
-             SizedBox(height: AppSizes.h12),
-              
-              _infoRow(context, "Mode", "UPI",
-                  trailingIcon: Icons.flash_on),
+              SizedBox(height: AppSizes.h12),
+              _infoRow(context, "Narration", transaction.narration),
+              SizedBox(height: AppSizes.h12),
+              _infoRow(context, "Mode", "UPI", trailingIcon: Icons.flash_on),
             ],
           ),
         ),
@@ -460,124 +453,123 @@ class TransactionDetailsPage extends StatelessWidget {
 
   // ---------------- EXCLUDE ----------------
   Widget _excludeCashFlow(BuildContext context) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p12),
-    decoration: BoxDecoration(
-      color: AppColors.backgroundColor,
-      borderRadius: BorderRadius.circular(16),
-    ),
-    child: Row(
-      children: [
-        const Icon(Icons.show_chart, color: AppColors.primaryColor),
-        SizedBox(width: AppSizes.w12),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.55,
-          child: Text(
-            "Exclude from Cash Flow",
-            style: FontManager().getTextStyle(
-              context,
-              fontSize: 14,
-              lWeight: FontWeight.w500,
-              color: AppColors.accentColor,
+    return Container(
+      padding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p12),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.show_chart, color: AppColors.primaryColor),
+          SizedBox(width: AppSizes.w12),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.55,
+            child: Text(
+              "Exclude from Cash Flow",
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 14,
+                lWeight: FontWeight.w500,
+                color: AppColors.accentColor,
+              ),
             ),
           ),
-        ),
 
-        /// ✅ FIXED SWITCH
-      Obx(() {
-  final bool isExcluded = transactionsHistory[index].isExcluded ?? false;
+          /// ✅ FIXED SWITCH
+          Obx(() {
+            final bool isExcluded =
+                transactionsHistory[index].isExcluded ?? false;
 
-  return Switch(
-    value: isExcluded,
-    onChanged: (v) {
-      excludeCashFlowTransaction(
-        index,
-        v,
-        context,
-        transaction.id!,
-      );
-      Navigator.pop(context);
-    },
-    activeColor: AppColors.primaryColor,
-    inactiveThumbColor: AppColors.grey,
-
-    inactiveTrackColor: AppColors.grey.withOpacity(0.4),
-  );
-})
-
-      ],
-    ),
-  );
-}
+            return Switch(
+              value: isExcluded,
+              onChanged: (v) {
+                excludeCashFlowTransaction(
+                  index,
+                  v,
+                  context,
+                  transaction.id!,
+                );
+                Navigator.pop(context);
+              },
+              activeColor: AppColors.primaryColor,
+              inactiveThumbColor: AppColors.grey,
+              inactiveTrackColor: AppColors.grey.withOpacity(0.4),
+            );
+          })
+        ],
+      ),
+    );
+  }
 
   // ---------------- COMMON ROW ----------------
   Widget _infoRow(
-  BuildContext context,
-  String label,
-  String value, {
-  bool copy = false,
-  IconData? trailingIcon,
-}) {
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Text(
-        label,
-        style: FontManager().getTextStyle(
-          context,
-          fontSize: 14,
-          lWeight: FontWeight.w400,
-          color: AppColors.grey,
+    BuildContext context,
+    String label,
+    String value, {
+    bool copy = false,
+    IconData? trailingIcon,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: FontManager().getTextStyle(
+            context,
+            fontSize: 14,
+            lWeight: FontWeight.w400,
+            color: AppColors.grey,
+          ),
         ),
-      ),
- 
-            Container(
-              width: MediaQuery.of(context).size.width * 0.5,
-              
-              child: Wrap(
-
-               crossAxisAlignment: WrapCrossAlignment.end,
-               alignment: WrapAlignment.end,
-                children: [
-                  SelectableText( // 👈 bonus: user can long-press select also
-                    value,
-                    maxLines: null,
-                    style: FontManager().getTextStyle(
-                      context,
-                      fontSize: 14,
-                      lWeight: FontWeight.w500,
+        Container(
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.end,
+            alignment: WrapAlignment.end,
+            children: [
+              SelectableText(
+                // 👈 bonus: user can long-press select also
+                value,
+                maxLines: null,
+                style: FontManager().getTextStyle(context,
+                    fontSize: 14,
+                    lWeight: FontWeight.w500,
+                    color: AppColors.accentColor,
+                    lineHeight: 20 / fontSize),
+              ),
+              if (copy)
+                GestureDetector(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: value));
+                    HapticFeedback.selectionClick();
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: AppSizes.p4),
+                    child: Icon(
+                      Icons.copy_rounded,
+                      size: 16,
                       color: AppColors.accentColor,
-                      lineHeight: 20/fontSize
                     ),
                   ),
-                    if (copy)
-                      GestureDetector(
-                        onTap: () {
-              Clipboard.setData(ClipboardData(text: value));
-              HapticFeedback.selectionClick();
-              
-                         
-                        },
-                        child: const Padding(
-              padding: EdgeInsets.only(left: AppSizes.p4),
-              child: Icon(Icons.copy_rounded, size: 16, color: AppColors.accentColor,),
-                        ),
-                      ),
-              
-                    if (trailingIcon != null)
-                      Padding(
-                         padding: EdgeInsets.only(left: AppSizes.p4),
-                        child: Icon(trailingIcon, size: 16, color: AppColors.primaryColor,),
-                      ),
-                ],
-              ),
-            ),
-    
-    ],
-  );
-}
-
+                ),
+              if (trailingIcon != null)
+                Padding(
+                  padding: EdgeInsets.only(left: AppSizes.p4),
+                  child: Icon(
+                    trailingIcon,
+                    size: 16,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _infoRow2(
     BuildContext context,
@@ -590,32 +582,26 @@ class TransactionDetailsPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
-              Text(
-                label,
-                style: FontManager().getTextStyle(
-                  context,
-                  fontSize: 14,
-                  lWeight: FontWeight.w400,
-                  color: AppColors.grey,
-                ),
-              ),
-              SizedBox(height: AppSizes.h4),
-              Text(
-                value,
-                style: FontManager().getTextStyle(
-                  context,
-                  fontSize: 14,
-                  lWeight: FontWeight.w500,
-                  color: AppColors.accentColor,
-                ),
-              ),
-            ],
-          );
-        
-       
+        Text(
+          label,
+          style: FontManager().getTextStyle(
+            context,
+            fontSize: 14,
+            lWeight: FontWeight.w400,
+            color: AppColors.grey,
+          ),
+        ),
+        SizedBox(height: AppSizes.h4),
+        Text(
+          value,
+          style: FontManager().getTextStyle(
+            context,
+            fontSize: 14,
+            lWeight: FontWeight.w500,
+            color: AppColors.accentColor,
+          ),
+        ),
+      ],
+    );
   }
-
-
 }
-

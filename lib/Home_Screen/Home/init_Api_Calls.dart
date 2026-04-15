@@ -33,7 +33,7 @@ import '../insightsController.dart';
 Future<void> callApi(context) async {
   await Get.find<UserController>().fetchUserInfo();
   final InsightsController _controller = Get.put(InsightsController());
-  final budgetController = Get.find<BudgetController>();
+  final budgetController = Get.find<BudgetControllerScreenModel>();
   getBankAccounts();
   getAck();
   contextGlobal = context;

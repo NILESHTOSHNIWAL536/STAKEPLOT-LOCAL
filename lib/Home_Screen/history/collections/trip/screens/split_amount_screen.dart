@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../../model/collections_model.dart';
-import '../models/models.dart';
-import '../utils/app_theme.dart';
+import '../models/collection_helper_models.dart';
+import '../utils/app_theme_collections.dart';
 import '../widgets/common_widgets.dart';
 import 'split_confirmation_screen.dart';
 
@@ -25,7 +25,7 @@ class _C {
 }
 
 class SplitAmountScreen extends StatefulWidget {
-  final List<Transaction> selectedTransactions;
+  final List<TransactionForCollections> selectedTransactions;
   final List<MemberModel> selectedMembers;
   final double totalAmount;
 

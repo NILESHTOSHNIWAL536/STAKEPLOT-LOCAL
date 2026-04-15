@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 import '../../../../../backed_connections/apis_connect.dart';
 import '../../../../../model/collections_model.dart';
-import '../utils/app_theme.dart';
+import '../utils/app_theme_collections.dart';
 
 class MembersSpendSection extends StatelessWidget {
   const MembersSpendSection({super.key});
@@ -35,7 +35,7 @@ class MembersSpendSection extends StatelessWidget {
                     style: AppTextStyles.amountLarge.copyWith(
                       fontSize: 28,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
+                      color: AppColorsForCollection.textPrimary,
                       letterSpacing: -0.5,
                     ),
                   ),
@@ -43,7 +43,7 @@ class MembersSpendSection extends StatelessWidget {
                   Text(
                     'Combined Amount',
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textLight,
+                      color: AppColorsForCollection.textLight,
                       fontSize: 12,
                     ),
                   ),
@@ -55,7 +55,7 @@ class MembersSpendSection extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryDark.withOpacity(0.08),
+                  color: AppColorsForCollection.primaryDark.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -64,7 +64,7 @@ class MembersSpendSection extends StatelessWidget {
                     Icon(
                       Icons.group_outlined,
                       size: 14,
-                      color: AppColors.primaryDark,
+                      color: AppColorsForCollection.primaryDark,
                     ),
                     const SizedBox(width: 5),
                     Text(
@@ -72,7 +72,7 @@ class MembersSpendSection extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.primaryDark,
+                        color: AppColorsForCollection.primaryDark,
                       ),
                     ),
                   ],

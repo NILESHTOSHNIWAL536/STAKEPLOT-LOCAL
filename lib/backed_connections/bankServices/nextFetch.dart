@@ -70,7 +70,7 @@ class _RotatingIconState extends State<Nextfetch>
       try {
         if (nextFecthDate.value.isNotEmpty) {
           DateTime nextFetchDateTime = DateTime.parse(nextFecthDate.value);
-          formattedNextFetch = formatWhatsAppDate2(nextFetchDateTime);
+          formattedNextFetch = formatWhatsAppDate(nextFetchDateTime);
         } else {
           formattedNextFetch = HomepageStringsDart().notScheduled;
         }
@@ -199,7 +199,7 @@ class _RotatingIconState extends State<Nextfetch>
       lastFetchDate = DateTime.now();
     }
 
-    String formattedNextFetch = formatWhatsAppDate2(nextFetchDate);
+    String formattedNextFetch = formatWhatsAppDate(nextFetchDate);
     String formattedLastFetch = formatWhatsAppDate(lastFetchDate);
 
     final double screenWidth = MediaQuery.of(context).size.width;

@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import '../../Constants/colors.dart';
@@ -8,15 +6,16 @@ import '../../Constants/core/app_padding_sizes.dart';
 import '../../Constants/font_manager.dart';
 import '../../Utils/snackBar.dart';
 import '../../backed_connections/apis_connect.dart';
+import '../../components/helper.dart';
 import '../../constants/app_styles.dart';
 import '../../controllers/quick_check_controller.dart';
+import '../../finvu_screens/shareAccountLogin.dart';
 import '../../image_service/avatarProfile.dart';
 import '../../model/quick_check_model.dart';
 import '../../repository/bankinfo.dart';
 import 'package:intl/intl.dart';
 
-
- class BalanceScreen extends StatefulWidget {
+class BalanceScreen extends StatefulWidget {
   BalanceScreen({super.key});
 
   @override
@@ -25,36 +24,34 @@ import 'package:intl/intl.dart';
 
 class _BalanceScreenState extends State<BalanceScreen> {
   final controller = Get.find<QuickCheckController>();
- 
-  final Color backgroundColor = const Color(0xFFFFF9F0); 
- // light cream
-  final Color cardColor = const Color(0xFF4B4D73);       
-       // dark purple
+
+  final Color backgroundColor = const Color(0xFFFFF9F0);
+  // light cream
+  final Color cardColor = const Color(0xFF4B4D73);
+  // dark purple
   final Color primaryText = Colors.white;
 
-  final Color creditedBaseColor    = const Color(0xFF4B4D73);
+  final Color creditedBaseColor = const Color(0xFF4B4D73);
 
-  final Color debitedBaseColor     = const Color(0xFF9394B8);
+  final Color debitedBaseColor = const Color(0xFF9394B8);
 
   final Color outstandingBaseColor = const Color(0xFF80B7C7);
   var selectedBank = 'All'.obs;
- final RxnString selectedInsightTab = RxnString();
- // null initially
+  final RxnString selectedInsightTab = RxnString();
+  // null initially
 
-  var hasSelectedInsight = false.obs;    // 'Credited' | 'Debited' | 'Outstanding'
-  var selectedPeriod = 'Monthly'.obs;        // 'Monthly' | 'Annually'
+  var hasSelectedInsight = false.obs; // 'Credited' | 'Debited' | 'Outstanding'
+  var selectedPeriod = 'Monthly'.obs; // 'Monthly' | 'Annually'
 
 // var selectedBankData = Rxn<Map<String, dynamic>>();
-var selectedBankData = Rxn<QuickCheckBankData>();
-var selectedYear = DateTime.now().year.obs;
-
+  var selectedBankData = Rxn<QuickCheckBankData>();
+  var selectedYear = DateTime.now().year.obs;
 
   // 🔹 NEW: month selection for the dropdown
-  var selectedMonth =
-    DateFormat('MMMM').format(DateTime.now()).obs;
-        // default month
+  var selectedMonth = DateFormat('MMMM').format(DateTime.now()).obs;
+  // default month
   final List<String> months = const [
-    'January', 
+    'January',
     'February',
     'March',
     'April',
@@ -69,71 +66,70 @@ var selectedYear = DateTime.now().year.obs;
   ];
 
   // loading state for graph data
-  
-  var isInsightsLoading = true.obs;
-@override
-void initState() {
-  super.initState();
 
-  // 🔹 initial load (Monthly, current month & year)
-  fetchMonthlyInsights(
-    year: DateTime.now().year,
-    monthName: selectedMonth.value,
-  );
+  var isInsightsLoading = true.obs;
+  @override
+  void initState() {
+    super.initState();
+
+    // 🔹 initial load (Monthly, current month & year)
+    fetchMonthlyInsights(
+      year: DateTime.now().year,
+      monthName: selectedMonth.value,
+    );
 //   getQuickCheck(
 //   view: 'yearly',
 //   year: DateTime.now().year,
 // );
-}
-
-
- int _monthNumberFromName(String name) {
-  return months.indexOf(name) + 1;
-}
-Future<void> fetchMonthlyInsights({
-  required int year,
-  String? monthName,
-}) async {
-  isInsightsLoading.value = true;
- final start = DateTime.now();
-  try {
-    final int month =
-        monthName != null ? _monthNumberFromName(monthName) : DateTime.now().month;
-
-    await controller.getQuickCheck( view: 'monthly',
-  month: _monthNumberFromName(selectedMonth.value),
-  year: DateTime.now().year,);
-    updateMonthlyPercentages(
-      credited: controller.quickCheck.value?.creditPercent ?? 0,
-      debited: controller.quickCheck.value?.debitPercent ?? 0,
-      outstanding: controller.quickCheck.value?.outstandingPercent ?? 0,
-    );
-    selectedInsightTab.value = null;
-hasSelectedInsight.value = false;
-
-
-    selectedMonth.value =
-        monthName ?? months[month - 1];
-  } finally {
-    isInsightsLoading.value = false;
   }
-}
 
-List<String> get availableMonths {
-  final now = DateTime.now();
+  int _monthNumberFromName(String name) {
+    return months.indexOf(name) + 1;
+  }
 
-  // If current year → allow only past & current months
-  return months.take(now.month).toList();
-}
-List<int> get availableYears {
-  final currentYear = DateTime.now().year;
+  Future<void> fetchMonthlyInsights({
+    required int year,
+    String? monthName,
+  }) async {
+    isInsightsLoading.value = true;
 
-  // show last 5 years including current
-  return List.generate(5, (index) => currentYear - index);
-}
+    try {
+      final int month = monthName != null
+          ? _monthNumberFromName(monthName)
+          : DateTime.now().month;
 
+      await controller.getQuickCheck(
+        view: 'monthly',
+        month: _monthNumberFromName(selectedMonth.value),
+        year: DateTime.now().year,
+      );
+      updateMonthlyPercentages(
+        credited: controller.quickCheck.value?.creditPercent ?? 0,
+        debited: controller.quickCheck.value?.debitPercent ?? 0,
+        outstanding: controller.quickCheck.value?.outstandingPercent ?? 0,
+      );
+      selectedInsightTab.value = null;
+      hasSelectedInsight.value = false;
 
+      selectedMonth.value = monthName ?? months[month - 1];
+    } finally {
+      isInsightsLoading.value = false;
+    }
+  }
 
+  List<String> get availableMonths {
+    final now = DateTime.now();
+
+    // If current year → allow only past & current months
+    return months.take(now.month).toList();
+  }
+
+  List<int> get availableYears {
+    final currentYear = DateTime.now().year;
+
+    // show last 5 years including current
+    return List.generate(5, (index) => currentYear - index);
+  }
 
   final RxMap<String, double> monthlyPercentages = <String, double>{
     'Credited': 0,
@@ -148,43 +144,39 @@ List<int> get availableYears {
     'Outstanding': 0,
   }.obs;
 
-
   // Title like: "Credited", "Debited", "Outstanding"
   String? get currentSelectedTypeLabel => selectedInsightTab.value;
 
   // Amount based on percentage * total balance
   String get currentSelectedAmountString {
-  final bank = selectedBankData.value;
+    final bank = selectedBankData.value;
 
- final data = controller.quickCheck.value;
+    final data = controller.quickCheck.value;
 
-if (bank == null) {
-  switch (selectedInsightTab.value) {
-    case 'Credited':
-      return '₹${(data?.credit ?? 0).toStringAsFixed(2)}';
-    case 'Debited':
-      return '₹${(data?.debit ?? 0).toStringAsFixed(2)}';
-    case 'Outstanding':
-      return '₹${(data?.outstanding ?? 0).toStringAsFixed(2)}';
-    default:
-      return '₹0.00';
+    if (bank == null) {
+      switch (selectedInsightTab.value) {
+        case 'Credited':
+          return '₹${(data?.credit ?? 0).toStringAsFixed(2)}';
+        case 'Debited':
+          return '₹${(data?.debit ?? 0).toStringAsFixed(2)}';
+        case 'Outstanding':
+          return '₹${(data?.outstanding ?? 0).toStringAsFixed(2)}';
+        default:
+          return '₹0.00';
+      }
+    }
+
+    switch (selectedInsightTab.value) {
+      case 'Credited':
+        return '₹${bank.credit.toStringAsFixed(2)}';
+      case 'Debited':
+        return '₹${bank.debit.toStringAsFixed(2)}';
+      case 'Outstanding':
+        return '₹${bank.outstanding.toStringAsFixed(2)}';
+      default:
+        return '₹0.00';
+    }
   }
-}
-
-switch (selectedInsightTab.value) {
-  case 'Credited':
-    return '₹${bank.credit.toStringAsFixed(2)}';
-  case 'Debited':
-    return '₹${bank.debit.toStringAsFixed(2)}';
-  case 'Outstanding':
-    return '₹${bank.outstanding.toStringAsFixed(2)}';
-  default:
-    return '₹0.00';
-}
-}
-
-
-
 
   /// 👉 percentage for currently selected period + tab
   double get currentSelectedPercentage {
@@ -192,23 +184,24 @@ switch (selectedInsightTab.value) {
   }
 
   /// 👉 helper used by bottom tabs ("(62%)") and dot grid
- double percentageFor(String type) {
-  final bank = selectedBankData.value;
+  double percentageFor(String type) {
+    final bank = selectedBankData.value;
 
-  if (bank == null) {
+    if (bank == null) {
+      return {
+        'Credited': controller.quickCheck.value?.creditPercent ?? 0,
+        'Debited': controller.quickCheck.value?.debitPercent ?? 0,
+        'Outstanding': controller.quickCheck.value?.outstandingPercent ?? 0,
+      }[type]!;
+    }
+
     return {
-      'Credited': controller.quickCheck.value?.creditPercent ?? 0,
-      'Debited': controller.quickCheck.value?.debitPercent ?? 0,
-      'Outstanding': controller.quickCheck.value?.outstandingPercent ?? 0,
-    }[type]!;
+      'Credited': bank.creditPercent,
+      'Debited': bank.debitPercent,
+      'Outstanding': bank.outstandingPercent,
+    }[type]!
+        .toDouble();
   }
-
-  return {
-    'Credited': bank.creditPercent,
-    'Debited': bank.debitPercent,
-    'Outstanding': bank.outstandingPercent,
-  }[type]!.toDouble();
-}
 
   void updateMonthlyPercentages({
     required double credited,
@@ -230,24 +223,19 @@ switch (selectedInsightTab.value) {
     annualPercentages['Outstanding'] = outstanding;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor,
-  
-        
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildTopCard(context),
-              const SizedBox(height: 22),
-               _buildInsightsSection(),
-            
-            ],
-          ),
+      backgroundColor: backgroundColor,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildTopCard(context),
+            const SizedBox(height: 22),
+            _buildInsightsSection(),
+          ],
         ),
-      
+      ),
     );
   }
 
@@ -279,18 +267,15 @@ switch (selectedInsightTab.value) {
             children: [
               // ---------- first row: back, title, download ----------
               Padding(
-                padding: const EdgeInsets.only(top:12.0),
+                padding: const EdgeInsets.only(top: 12.0),
                 child: Row(
-                  
-                
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      
-                      child: globalbackArrow()),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: globalbackArrow()),
                     Text(
                       'Balance',
                       style: TextStyle(
@@ -299,9 +284,7 @@ switch (selectedInsightTab.value) {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                     _roundIconButton(Icons.download, context),
-                
-                    
+                    _roundIconButton(Icons.download, context),
                   ],
                 ),
               ),
@@ -309,195 +292,177 @@ switch (selectedInsightTab.value) {
               const SizedBox(height: 24),
               // add more widgets here inside the top card
 
-SingleChildScrollView(
-  scrollDirection: Axis.horizontal,
-  child: Obx(() {
-    // final banks = quickCheckBanks.value;
-final banks = controller.quickCheck.value?.banks ?? [];
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Obx(() {
+                  // final banks = quickCheckBanks.value;
+                  final banks = controller.quickCheck.value?.banks ?? [];
 
-    if (banks.isEmpty) return const SizedBox();
+                  if (banks.isEmpty) return const SizedBox();
 
-    return Row(
-      children: [
-        _bankChip('All', Icons.account_balance),
-
-        ...banks.map((bank) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 6),
-            child: _bankChip(
-              bank.bankName,
-              Icons.account_balance,
-            ),
-          );
-        }).toList(),
-      ],
-    );
-  }),
-),
-
-          
-
-          const SizedBox(height:28),
-
-          // ---------- Combined balance text ----------
-          Obx(() {
-  final bank = selectedBankData.value;
-
-  return Text(
-    bank == null
-        ? 'Combined Balance'
-        : '${bank.bankName} Balance',
-    style: const TextStyle(
-      color: Colors.white70,
-      fontSize: 12,
-    ),
-  );
-}),
-
-          const SizedBox(height: 6),
-        Obx(() {
-  if (selectedBankData.value == null) {
-    return Text(
-      '₹${controller.quickCheck.value?.currentBalance.toStringAsFixed(2)}',
-      style: TextStyle(
-        color: primaryText,
-        fontSize: 26,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
-  return Text(
-    '₹${(selectedBankData.value!.currentBalance ?? 0).toStringAsFixed(2)}',
-    style: TextStyle(
-      color: primaryText,
-      fontSize: 26,
-      fontWeight: FontWeight.bold,
-    ),
-  );
-
-}),
-
-
-          const SizedBox(height: 20),
-
-
-        SingleChildScrollView(
-  scrollDirection: Axis.horizontal,
-  child: Obx(() {
-    final banks = controller.quickCheck.value?.banks ?? [];
-
-    if (banks.isEmpty) return const SizedBox();
-
-    return Row(
-      children: [
-        ...banks.asMap().entries.map((entry) {
-          final index = entry.key;
-          final bank = entry.value;
-
-          return Row(
-            children: [
-              _smallAccountChip(
-                bank.bankName,
-                '₹${(bank.currentBalance ?? 0).toString()}',
+                  return Row(
+                    children: [
+                      _bankChip('All', Icons.account_balance),
+                      ...banks.map((bank) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: _bankChip(
+                            bank.bankName,
+                            Icons.account_balance,
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  );
+                }),
               ),
 
-              if (index != banks.length - 1) ...[
-                const SizedBox(width: 6),
-                _verticalDivider(),
-                const SizedBox(width: 6),
-              ],
+              const SizedBox(height: 28),
+
+              // ---------- Combined balance text ----------
+              Obx(() {
+                final bank = selectedBankData.value;
+
+                return Text(
+                  bank == null
+                      ? 'Combined Balance'
+                      : '${bank.bankName} Balance',
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                );
+              }),
+
+              const SizedBox(height: 6),
+              Obx(() {
+                if (selectedBankData.value == null) {
+                  return Text(
+                    '₹${controller.quickCheck.value?.currentBalance.toStringAsFixed(2)}',
+                    style: TextStyle(
+                      color: primaryText,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }
+
+                return Text(
+                  '₹${(selectedBankData.value!.currentBalance ?? 0).toStringAsFixed(2)}',
+                  style: TextStyle(
+                    color: primaryText,
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              }),
+
+              const SizedBox(height: 20),
+
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Obx(() {
+                  final banks = controller.quickCheck.value?.banks ?? [];
+
+                  if (banks.isEmpty) return const SizedBox();
+
+                  return Row(
+                    children: [
+                      ...banks.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final bank = entry.value;
+
+                        return Row(
+                          children: [
+                            _smallAccountChip(
+                              bank.bankName,
+                              '₹${(bank.currentBalance ?? 0).toString()}',
+                            ),
+                            if (index != banks.length - 1) ...[
+                              const SizedBox(width: 6),
+                              _verticalDivider(),
+                              const SizedBox(width: 6),
+                            ],
+                          ],
+                        );
+                      }).toList(),
+                      const SizedBox(width: 8),
+                      _addAccountButton(),
+                    ],
+                  );
+                }),
+              ),
             ],
-          );
-        }).toList(),
-
-        const SizedBox(width: 8),
-        _addAccountButton(),
-      ],
+          ),
+        ),
+      ),
     );
-  }),
-),
-
-          ],
-    ),),),);
-
-          
-     
   }
 
-Widget _roundIconButton(IconData icon, BuildContext context) {
-  return GestureDetector(
-    
-          onTap: () {
-            int len = bankAccountLinkedList.length;
-            if (len == 0) {
-              snackBarCalled(context, SnackbarData().noBankForLinking);
-            }
-            
-          //   else {
-          //     accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
-          //     showModalForPdfDownloadBankUiCheckBox(context);
-          //   }
-          // },
-          else {
-  if (bankAccountLinkedList.isNotEmpty) {
-    accountIdPdf.value = bankAccountLinkedList[0].accountId;
-    showModalForPdfDownloadBankUiCheckBox(context);
+  Widget _roundIconButton(IconData icon, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        int len = bankAccountLinkedList.length;
+        if (len == 0) {
+          snackBarCalled(context, SnackbarData().noBankForLinking);
+        }
+
+        //   else {
+        //     accountIdPdf.value = bankAccountLinkedList[0]['accountId'];
+        //     showModalForPdfDownloadBankUiCheckBox(context);
+        //   }
+        // },
+        else {
+          if (bankAccountLinkedList.isNotEmpty) {
+            accountIdPdf.value = bankAccountLinkedList[0].accountId;
+            showModalForPdfDownloadBankUiCheckBox(context);
+          }
+        }
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          color: Color(0xFF3F3D7D),
+        ),
+      ),
+    );
   }
-}
-
-
-         
-    },
-    child: Container(
-      width: 40,
-      height: 40,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        icon,
-        color: Color(0xFF3F3D7D),
-      ),
-    ),
-  );
-}
 
   /// Bank filter chip (All, Axis Bank, etc.)
   Widget _bankChip(String label, IconData icon) {
     return GestureDetector(
       onTap: () {
-  selectedBank.value = label;
+        selectedBank.value = label;
 
-  if (label == 'All') {
-    selectedBankData.value = null; // combined mode
-  } else {
-    final bank = controller.quickCheck.value?.banks.firstWhere(
-  (b) => b.bankName == label,
-);
+        if (label == 'All') {
+          selectedBankData.value = null; // combined mode
+        } else {
+          final bank = controller.quickCheck.value?.banks.firstWhere(
+            (b) => b.bankName == label,
+          );
 
-selectedBankData.value = bank;
-    // final bank = quickCheckBanks.firstWhere(
-    //   (b) => b['bankName'] == label,
-    //   orElse: () => {},
-    // );
-
-   
-  }
-},
-
-      child:Obx(
+          selectedBankData.value = bank;
+          // final bank = quickCheckBanks.firstWhere(
+          //   (b) => b['bankName'] == label,
+          //   orElse: () => {},
+          // );
+        }
+      },
+      child: Obx(
         () {
           final bool isSelected = selectedBank.value == label;
           return Container(
-            padding: const EdgeInsets.symmetric( horizontal:8,vertical: 6),
-            
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             decoration: BoxDecoration(
               color: isSelected ? Colors.white : Color(0xFF4B4D73),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(color: Colors.white10, width: 2),
-              
             ),
             child: Row(
               children: [
@@ -519,276 +484,255 @@ selectedBankData.value = bank;
             ),
           );
         },
-      ),);
+      ),
+    );
   }
 
   /// Small chip under balance, showing per account amount
   Widget _smallAccountChip(String bankShortName, String amount) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-      decoration: BoxDecoration(
-       
-        
-      ),
+      decoration: BoxDecoration(),
       child: Row(
         children: [
           Icon(Icons.account_balance, size: 14, color: Colors.white70),
           const SizedBox(width: 6),
-         
+
           // const SizedBox(width: 4),
           Text(
             amount,
-            style: const TextStyle(color: Colors.white, fontSize:14),
-            
+            style: const TextStyle(color: Colors.white, fontSize: 14),
           ),
           const SizedBox(width: 2),
-          
-          
-          
         ],
-      ),);
+      ),
+    );
   }
 
-Widget _verticalDivider() {
-  return Container(
-    width: 1.5,
-    height: 18,
-    color: Colors.white,
-    margin: const EdgeInsets.symmetric(horizontal: 1),
-  );
-}
+  Widget _verticalDivider() {
+    return Container(
+      width: 1.5,
+      height: 18,
+      color: Colors.white,
+      margin: const EdgeInsets.symmetric(horizontal: 1),
+    );
+  }
 
   /// "+" button at the end of the small chips row
   Widget _addAccountButton() {
-    return Container(
-      width: 18,
-      height: 18,
-      decoration: BoxDecoration(
-        color: Color(0xFF4B4D73),
-        borderRadius: BorderRadius.circular(3),
-        border: Border.all(color: Colors.white)
-    ),
-      child: const Icon(Icons.add,size: 16, color: Colors.white),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => ShareAccountLogin()),
+        );
+      },
+      child: Container(
+        width: 18,
+        height: 18,
+        decoration: BoxDecoration(
+            color: Color(0xFF4B4D73),
+            borderRadius: BorderRadius.circular(3),
+            border: Border.all(color: Colors.white)),
+        child: const Icon(Icons.add, size: 16, color: Colors.white),
+      ),
     );
-
-    
   }
 
-Widget _buildInsightsSection() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 22),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        
-        Padding(
-          padding: const EdgeInsets.only(left: 25,right:15),
-           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Obx(
-                () => Row(
-                  
-                  children: [
-                    _periodButton('Monthly'),
-                    const SizedBox(width: 4),
-                    _periodButton('Annually'), // small typo fix
-                  ],
+  Widget _buildInsightsSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 25, right: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Obx(
+                  () => Row(
+                    children: [
+                      _periodButton('Monthly'),
+                      const SizedBox(width: 4),
+                      _periodButton('Annually'), // small typo fix
+                    ],
+                  ),
                 ),
-              ),
-              _simpleDropdown(),
-            ],
+                _simpleDropdown(),
+              ],
+            ),
           ),
-        ),
 
-        const SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-        // ---------- DYNAMIC "MOST USED ACCOUNT / INSIGHT" AREA ----------
-        Obx(() {
-  if (selectedPeriod.value == 'Annually' || !hasSelectedInsight.value) {
-    return const SizedBox();
+          // ---------- DYNAMIC "MOST USED ACCOUNT / INSIGHT" AREA ----------
+          Obx(() {
+            if (selectedPeriod.value == 'Annually' ||
+                !hasSelectedInsight.value) {
+              return const SizedBox();
+            }
+
+            return Center(
+                child: Column(
+              children: [
+                Text(
+                  currentSelectedTypeLabel ?? '',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  currentSelectedAmountString,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${currentSelectedPercentage.toStringAsFixed(2)}% of total',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black45,
+                  ),
+                ),
+              ],
+            ));
+          }),
+
+          // ---------- DOT GRID ----------
+          Obx(() {
+            if (selectedPeriod.value == 'Monthly') {
+              return Center(child: _dotGrid());
+            }
+
+            // 👇 Annual view
+            return _annualBarGraph();
+          }),
+
+          const SizedBox(height: 30),
+
+          // ---------- BOTTOM TABS ----------
+          Obx(() {
+            final bank = selectedBankData.value;
+
+            final credited = bank == null
+                ? controller.quickCheck.value?.credit
+                : bank.credit;
+
+            final debited =
+                bank == null ? controller.quickCheck.value?.debit : bank.debit;
+
+            final outstanding = bank == null
+                ? controller.quickCheck.value?.outstanding
+                : bank.outstanding;
+
+            if (selectedPeriod.value == 'Annually') {
+              return Column(
+                children: [
+                  const SizedBox(height: 32),
+                  _breakdownTile(
+                    context: context,
+                    title: "Credited",
+                    amount: "₹${credited?.toStringAsFixed(1) ?? 0}",
+                    color: AppColors.creditColor,
+                    icon: AvatarProfileImageZero(
+                      url: Finance.credited,
+                      width: 10,
+                      height: 30,
+                    ),
+                    textColor: AppColors.backgroundColor,
+                  ),
+                  const SizedBox(height: 12),
+                  _breakdownTile(
+                    context: context,
+                    title: "Debited",
+                    amount: "₹${debited?.toStringAsFixed(1) ?? 0}",
+                    color: AppColors.debitedAmount,
+                    icon: AvatarProfileImageZero(
+                      url: Finance.debited,
+                      width: 10,
+                      height: 30,
+                    ),
+                    textColor: AppColors.backgroundColor,
+                  ),
+                  const SizedBox(height: 12),
+                  _breakdownTile(
+                    context: context,
+                    title: "Outstanding",
+                    amount: "₹${outstanding?.toStringAsFixed(1) ?? 0}",
+                    color: AppColors.backgroundColor,
+                    icon: AvatarProfileImageZero(
+                      url: Finance.outstanding,
+                      width: 10,
+                      height: 30,
+                    ),
+                    textColor: AppColors.bg1,
+                    titleColor: AppColors.bg1,
+                    border: true,
+                  ),
+                ],
+              );
+            }
+
+            return Row(
+              children: [
+                Expanded(
+                  child: _insightTab(
+                    label: 'Credited',
+                    percentage:
+                        '${percentageFor('Credited').toStringAsFixed(1)}%',
+                    isSelected: selectedInsightTab.value == 'Credited',
+                    activeColor: creditedBaseColor,
+                    onTap: () {
+                      selectedInsightTab.value = 'Credited';
+                      hasSelectedInsight.value = true;
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _insightTab(
+                    label: 'Debited',
+                    percentage:
+                        '${percentageFor('Debited').toStringAsFixed(1)}%',
+                    isSelected: selectedInsightTab.value == 'Debited',
+                    activeColor: debitedBaseColor,
+                    onTap: () {
+                      selectedInsightTab.value = 'Debited';
+                      hasSelectedInsight.value = true;
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _insightTab(
+                    label: 'Outstanding',
+                    percentage:
+                        '${percentageFor('Outstanding').toStringAsFixed(1)}%',
+                    isSelected: selectedInsightTab.value == 'Outstanding',
+                    activeColor: outstandingBaseColor,
+                    onTap: () {
+                      selectedInsightTab.value = 'Outstanding';
+                      hasSelectedInsight.value = true;
+                    },
+                  ),
+                ),
+              ],
+            );
+          }),
+        ],
+      ),
+    );
   }
 
-  return Center(
-    child:  Column(
-          children: [
-            Text(
-              currentSelectedTypeLabel?? '',
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              currentSelectedAmountString,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${currentSelectedPercentage.toStringAsFixed(2)}% of total',
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.black45,
-              ),
-            ),
-          ],
-        )
-     
-  );
-}),
-
-        // ---------- DOT GRID ----------
-        Obx(() {
-  if (selectedPeriod.value == 'Monthly') {
-    return Center(child: _dotGrid());
-  }
-
-  // 👇 Annual view
-  return _annualBarGraph();
-}),
-
-
-        const SizedBox(height: 30),
-
-        // ---------- BOTTOM TABS ----------
-       Obx(() {
-        final bank = selectedBankData.value;
-
-final credited = bank == null
-    ? controller.quickCheck.value?.credit
-    : bank.credit;
-
-final debited = bank == null
-    ? controller.quickCheck.value?.debit
-    : bank.debit;
-
-final outstanding = bank == null
-    ? controller.quickCheck.value?.outstanding
-    : bank.outstanding;
-
-  if (selectedPeriod.value == 'Annually') {
-    
-       
-
-  return Column(
-    children: [
-      const SizedBox(height: 32),
-
-      _breakdownTile(
-        context: context,
-        title: "Credited",
-        amount: "₹${credited?.toStringAsFixed(1)?? 0}",
-        color: AppColors.creditColor,
-        icon: AvatarProfileImageZero(
-          url: Finance.credited,
-          width: 10,
-          height: 30,
-        ),
-        textColor: AppColors.backgroundColor,
-      ),
-
-      const SizedBox(height: 12),
-
-      _breakdownTile(
-        context: context,
-        title: "Debited",
-        amount: "₹${debited?.toStringAsFixed(1)?? 0}",
-        color: AppColors.debitedAmount,
-        icon: AvatarProfileImageZero(
-          url: Finance.debited,
-          width: 10,
-          height: 30,
-        ),
-        textColor: AppColors.backgroundColor,
-      ),
-
-      const SizedBox(height: 12),
-
-      _breakdownTile(
-        context: context,
-        title: "Outstanding",
-        amount: "₹${outstanding?.toStringAsFixed(1)?? 0}",
-        color: AppColors.backgroundColor,
-        icon: AvatarProfileImageZero(
-          url: Finance.outstanding,
-          width: 10,
-          height: 30,
-        ),
-        textColor: AppColors.bg1,
-        titleColor: AppColors.bg1,
-        border: true,
-      ),
-    ],
-  );
-
-  }
-
-  return Row(
-    children: [
-      Expanded(
-        child: _insightTab(
-          label: 'Credited',
-          percentage:
-              '${percentageFor('Credited').toStringAsFixed(1)}%',
-          isSelected:
-              selectedInsightTab.value == 'Credited',
-          activeColor: creditedBaseColor,
-          onTap: () {
-            selectedInsightTab.value = 'Credited';
-            hasSelectedInsight.value = true;
-          },
-        ),
-      ),
-      const SizedBox(width: 8),
-      Expanded(
-        child: _insightTab(
-          label: 'Debited',
-          percentage:
-              '${percentageFor('Debited').toStringAsFixed(1)}%',
-          isSelected:
-              selectedInsightTab.value == 'Debited',
-          activeColor: debitedBaseColor,
-          onTap: () {
-            selectedInsightTab.value = 'Debited';
-            hasSelectedInsight.value = true;
-          },
-        ),
-      ),
-      const SizedBox(width: 8),
-      Expanded(
-        child: _insightTab(
-          label: 'Outstanding',
-          percentage:
-              '${percentageFor('Outstanding').toStringAsFixed(1)}%',
-          isSelected:
-              selectedInsightTab.value == 'Outstanding',
-          activeColor: outstandingBaseColor,
-          onTap: () {
-            selectedInsightTab.value = 'Outstanding';
-            hasSelectedInsight.value = true;
-          },
-        ),
-      ),
-    ],
-  );
-}),
-
-        
-
-              
-            
-      ],
-    ),
-  );
-}
-Widget _breakdownTile({
-   required BuildContext context, 
+  Widget _breakdownTile({
+    required BuildContext context,
     required String title,
     required String amount,
     required Color color,
@@ -798,39 +742,38 @@ Widget _breakdownTile({
     bool border = false,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p16, vertical:AppSizes.p10),
-     
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p16, vertical: AppSizes.p10),
       decoration: BoxDecoration(
-      color: color,
+        color: color,
         borderRadius: BorderRadius.circular(8),
         // border: border ? Border.all(color: Colors.pink) : null,
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left:AppSizes.p10),
+        padding: const EdgeInsets.only(left: AppSizes.p10),
         child: Row(
-          
           children: [
-             icon,
+            icon,
             const SizedBox(width: AppSizes.w20),
             Text(
               title,
               style: FontManager().getTextStyle(
-                context, 
-                fontSize: 16, 
-                 color: titleColor ?? AppColors.backgroundColor, // ← Use your AppColors white
+                context,
+                fontSize: 16,
+                color: titleColor ??
+                    AppColors.backgroundColor, // ← Use your AppColors white
                 lWeight: FontWeight.w500,
               ),
             ),
-          
-           const Spacer(),
+            const Spacer(),
             Text(
               amount,
               style: FontManager().getTextStyle(
-            context, 
-            fontSize: 18, 
-        color: titleColor ?? AppColors.backgroundColor,
-            lWeight: FontWeight.w600,
-          ),
+                context,
+                fontSize: 18,
+                color: titleColor ?? AppColors.backgroundColor,
+                lWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -838,372 +781,351 @@ Widget _breakdownTile({
     );
   }
 
-Widget _periodButton(String label) {
-  final bool isSelected = selectedPeriod.value == label;
+  Widget _periodButton(String label) {
+    final bool isSelected = selectedPeriod.value == label;
 
-  return GestureDetector(
-    onTap: isInsightsLoading.value
-    ? null
-    : () {
-        // 🛑 GUARD: same period tapped again
-        if (selectedPeriod.value == label) return;
+    return GestureDetector(
+      onTap: isInsightsLoading.value
+          ? null
+          : () {
+              // 🛑 GUARD: same period tapped again
+              if (selectedPeriod.value == label) return;
 
-        selectedPeriod.value = label;
+              selectedPeriod.value = label;
 
-        selectedInsightTab.value = null;
-        hasSelectedInsight.value = false;
+              selectedInsightTab.value = null;
+              hasSelectedInsight.value = false;
 
-        if (label == 'Monthly') {
-          fetchMonthlyInsights(
-            year: selectedYear.value,
-            monthName: selectedMonth.value,
-          );
-        } else {
-          controller.getQuickCheck(
-            view: 'yearly',
-            year: selectedYear.value,
-          );
-        }
-      },
-
-
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: isSelected ? cardColor : Colors.white,
-        borderRadius: BorderRadius.circular(6),
-        boxShadow: isSelected
-            ? [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 30,
-                   spreadRadius: 4,
-                  offset: const Offset(0, 4),
-                )
-              ]
-            : null,
-        border: Border.all(
-          color: isSelected ? cardColor : Colors.grey.shade300,
+              if (label == 'Monthly') {
+                fetchMonthlyInsights(
+                  year: selectedYear.value,
+                  monthName: selectedMonth.value,
+                );
+              } else {
+                controller.getQuickCheck(
+                  view: 'yearly',
+                  year: selectedYear.value,
+                );
+              }
+            },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? cardColor : Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 30,
+                    spreadRadius: 4,
+                    offset: const Offset(0, 4),
+                  )
+                ]
+              : null,
+          border: Border.all(
+            color: isSelected ? cardColor : Colors.grey.shade300,
+          ),
         ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: isSelected ? Colors.white : cardColor,
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _simpleDropdown() {
-  return Obx(() {
-    final bool isMonthly = selectedPeriod.value == 'Monthly';
-
-    return Container(
-      height: 32,
-      padding: const EdgeInsets.symmetric(horizontal: 6),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: const Color(0xFFE6E3DD)),
-        color: const Color(0xFFFFF9F0),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<dynamic>(
-          value: isMonthly
-              ? selectedMonth.value
-              : selectedYear.value,
-          icon: const Icon(Icons.keyboard_arrow_down, size: 18),
-          isDense: true,
-          padding: EdgeInsets.zero,
-
-          items: isMonthly
-              ? availableMonths.map((m) {
-                  return DropdownMenuItem(
-                    value: m,
-                    child: Text(m, style: const TextStyle(fontSize: 12)),
-                  );
-                }).toList()
-              : availableYears.map((y) {
-                  return DropdownMenuItem(
-                    value: y,
-                    child: Text(
-                      y.toString(),
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  );
-                }).toList(),
-
-          onChanged: (value) async {
-            if (value == null) return;
-            final start = DateTime.now();
-
-            if (isMonthly) {
-              // selectedMonth.value = value;
-
-             // 1️⃣ Guard same selection
-if (value == selectedMonth.value) return;
-
-// 2️⃣ Update UI immediately
-selectedMonth.value = value;
-selectedInsightTab.value = null;
-hasSelectedInsight.value = false;
-
-// 3️⃣ Fire API WITHOUT await
-fetchMonthlyInsights(
-  year: selectedYear.value,
-  monthName: value,
-);
-
-            } else {
-              if (value == selectedYear.value) return;
-
-// UI first
-selectedYear.value = value;
-selectedInsightTab.value = null;
-hasSelectedInsight.value = false;
-
-// API later (no await)
- controller.getQuickCheck(
-  view: 'yearly',
-  year: value,
-);
-
-            }
-             
-          },
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: isSelected ? Colors.white : cardColor,
+          ),
         ),
       ),
     );
-  });
-}
+  }
 
-Widget _dotGrid() {
-  return Obx(() {
-    const int gridSize = 10;
-    const int totalDots = gridSize * gridSize;
-    const double dotSize = 14;
-    const double spacing = 10;
+  Widget _simpleDropdown() {
+    return Obx(() {
+      final bool isMonthly = selectedPeriod.value == 'Monthly';
 
-    final double creditedPct = percentageFor('Credited');
-    final double debitedPct = percentageFor('Debited');
-    final double outstandingPct = percentageFor('Outstanding');
+      return Container(
+        height: 32,
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: const Color(0xFFE6E3DD)),
+          color: const Color(0xFFFFF9F0),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<dynamic>(
+            value: isMonthly ? selectedMonth.value : selectedYear.value,
+            icon: const Icon(Icons.keyboard_arrow_down, size: 18),
+            isDense: true,
+            padding: EdgeInsets.zero,
+            items: isMonthly
+                ? availableMonths.map((m) {
+                    return DropdownMenuItem(
+                      value: m,
+                      child: Text(m, style: const TextStyle(fontSize: 12)),
+                    );
+                  }).toList()
+                : availableYears.map((y) {
+                    return DropdownMenuItem(
+                      value: y,
+                      child: Text(
+                        y.toString(),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    );
+                  }).toList(),
+            onChanged: (value) async {
+              if (value == null) return;
+              final start = DateTime.now();
 
-    int creditedDots =
-        (totalDots * creditedPct / 100).round().clamp(0, totalDots);
-    int debitedDots =
-        (totalDots * debitedPct / 100).round().clamp(0, totalDots);
-    int outstandingDots =
-        (totalDots * outstandingPct / 100).round().clamp(0, totalDots);
+              if (isMonthly) {
+                // selectedMonth.value = value;
 
-    final String? selectedLabel = selectedInsightTab.value;
+                // 1️⃣ Guard same selection
+                if (value == selectedMonth.value) return;
 
-    return SizedBox(
-      width: (dotSize + spacing) * gridSize,
-      child: Wrap(
-        spacing: spacing,
-        runSpacing: spacing,
-        children: List.generate(totalDots, (index) {
-          late String segmentLabel;
-
-          if (index < creditedDots) {
-            segmentLabel = 'Credited';
-          } else if (index < creditedDots + debitedDots) {
-            segmentLabel = 'Debited';
-          } else {
-            segmentLabel = 'Outstanding';
-          }
-
-          Color baseColor;
-          switch (segmentLabel) {
-            case 'Credited':
-              baseColor = creditedBaseColor;
-              break;
-            case 'Debited':
-              baseColor = debitedBaseColor;
-              break;
-            default:
-              baseColor = outstandingBaseColor;
-          }
-
-          final bool isActive =
-              selectedLabel == null || selectedLabel == segmentLabel;
-
-          return GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: () {
-              if (selectedInsightTab.value == segmentLabel) {
+// 2️⃣ Update UI immediately
+                selectedMonth.value = value;
                 selectedInsightTab.value = null;
                 hasSelectedInsight.value = false;
+
+// 3️⃣ Fire API WITHOUT await
+                fetchMonthlyInsights(
+                  year: selectedYear.value,
+                  monthName: value,
+                );
               } else {
-                selectedInsightTab.value = segmentLabel;
-                hasSelectedInsight.value = true;
+                if (value == selectedYear.value) return;
+
+// UI first
+                selectedYear.value = value;
+                selectedInsightTab.value = null;
+                hasSelectedInsight.value = false;
+
+// API later (no await)
+                controller.getQuickCheck(
+                  view: 'yearly',
+                  year: value,
+                );
               }
             },
-            child: SizedBox(
-              width: 28,
-              height: 28,
-              child: Center(
-                child: AnimatedScale(
-                  scale:
-                      selectedLabel == segmentLabel ? 1.15 : 1.0,
-                  duration: const Duration(milliseconds: 180),
-                  child: Container(
-                    width: dotSize,
-                    height: dotSize,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isActive
-                          ? baseColor
-                          : baseColor.withOpacity(0.18),
-                    ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _dotGrid() {
+    return Obx(() {
+      const int gridSize = 10;
+      const int totalDots = gridSize * gridSize;
+
+      final double creditedPct = percentageFor('Credited');
+      final double debitedPct = percentageFor('Debited');
+
+      int creditedDots =
+          (totalDots * creditedPct / 100).round().clamp(0, totalDots);
+      int debitedDots =
+          (totalDots * debitedPct / 100).round().clamp(0, totalDots);
+
+      final String? selectedLabel = selectedInsightTab.value;
+
+      return SizedBox(
+        height: 300,
+        width: 300,
+        child: GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: totalDots,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 10, // 🔥 FIXED 10 columns
+            crossAxisSpacing: 6,
+            mainAxisSpacing: 6,
+          ),
+          itemBuilder: (context, index) {
+            late String segmentLabel;
+
+            if (index < creditedDots) {
+              segmentLabel = 'Credited';
+            } else if (index < creditedDots + debitedDots) {
+              segmentLabel = 'Debited';
+            } else {
+              segmentLabel = 'Outstanding';
+            }
+
+            Color baseColor;
+            switch (segmentLabel) {
+              case 'Credited':
+                baseColor = creditedBaseColor;
+                break;
+              case 'Debited':
+                baseColor = debitedBaseColor;
+                break;
+              default:
+                baseColor = outstandingBaseColor;
+            }
+
+            final bool isActive =
+                selectedLabel == null || selectedLabel == segmentLabel;
+
+            return GestureDetector(
+              onTap: () {
+                if (selectedInsightTab.value == segmentLabel) {
+                  selectedInsightTab.value = null;
+                  hasSelectedInsight.value = false;
+                } else {
+                  selectedInsightTab.value = segmentLabel;
+                  hasSelectedInsight.value = true;
+                }
+              },
+              child: AnimatedScale(
+                scale: 0.7,
+                duration: const Duration(milliseconds: 150),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isActive ? baseColor : baseColor.withOpacity(0.2),
                   ),
                 ),
               ),
-            ),
-          );
-        }),
-      ),
-    );
-  });
-}
+            );
+          },
+        ),
+      );
+    });
+  }
 
-Widget _insightTab({
-  required String label,
-  required String percentage,
-  required bool isSelected,
-  required Color activeColor,
-  required VoidCallback onTap,   // 🔹 new
-}) {
-  return GestureDetector(
-    onTap: onTap,                // 🔹 use callback from outside
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.white : Colors.transparent,
-        borderRadius: BorderRadius.circular(6),
-      
-        border: Border.all(
-          color: isSelected ? activeColor : Colors.black26,
-                width: isSelected ? 2 : 1,    
+  Widget _insightTab({
+    required String label,
+    required String percentage,
+    required bool isSelected,
+    required Color activeColor,
+    required VoidCallback onTap, // 🔹 new
+  }) {
+    return GestureDetector(
+      onTap: onTap, // 🔹 use callback from outside
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            color: isSelected ? activeColor : Colors.black26,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                color: isSelected ? activeColor : Colors.black54,
+              ),
+            ),
+            const SizedBox(width: 8, height: 2),
+            Text(
+              '($percentage)',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                color: isSelected ? activeColor : Colors.black45,
+              ),
+            ),
+          ],
         ),
       ),
-      child: Row(
-         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // mainAxisAlignment: MainAxisAlignment.center,
-         mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w800,
-              color: isSelected ? activeColor : Colors.black54,
-            ),
-          ),
-          const SizedBox(width:8,height:2),
-          Text(
-            '($percentage)',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w800,
-              color: isSelected ? activeColor : Colors.black45,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-Widget _annualBarGraph() {
-  return Obx(() {
-    final bank = selectedBankData.value;
+    );
+  }
 
-    // 1️⃣ Decide data source
-    List months = [];
+  Widget _annualBarGraph() {
+    return Obx(() {
+      final bank = selectedBankData.value;
 
-    if (bank == null) {
-      // ALL BANKS → merge months by index
-      final Map<int, Map<String, double>> merged = {};
+      // 1️⃣ Decide data source
+      List months = [];
 
-      for (final b in controller.quickCheck.value?.banks ?? []) {
-        for (final m in (b.months ?? [])) {
-          final int month = m['month'];
+      if (bank == null) {
+        // ALL BANKS → merge months by index
+        final Map<int, Map<String, double>> merged = {};
 
-          merged.putIfAbsent(month, () => {
-                'credit': 0,
-                'debit': 0,
-                'outstanding': 0,
-              });
+        for (final b in controller.quickCheck.value?.banks ?? []) {
+          for (final m in (b.months ?? [])) {
+            final int month = m['month'];
 
-          merged[month]!['credit'] =
-              merged[month]!['credit']! + (m['credit'] ?? 0);
-          merged[month]!['debit'] =
-              merged[month]!['debit']! + (m['debit'] ?? 0);
-          merged[month]!['outstanding'] =
-              merged[month]!['outstanding']! + (m['outstanding'] ?? 0);
+            merged.putIfAbsent(
+                month,
+                () => {
+                      'credit': 0,
+                      'debit': 0,
+                      'outstanding': 0,
+                    });
+
+            merged[month]!['credit'] =
+                merged[month]!['credit']! + (m['credit'] ?? 0);
+            merged[month]!['debit'] =
+                merged[month]!['debit']! + (m['debit'] ?? 0);
+            merged[month]!['outstanding'] =
+                merged[month]!['outstanding']! + (m['outstanding'] ?? 0);
+          }
         }
+
+        months = merged.entries.map((e) {
+          return {
+            'month': e.key,
+            'credit': e.value['credit'],
+            'debit': e.value['debit'],
+            'outstanding': e.value['outstanding'],
+          };
+        }).toList()
+          ..sort((a, b) => (a['month'] as int).compareTo(b['month'] as int));
+      } else {
+        months = bank.months ?? [];
       }
 
-      months = merged.entries.map((e) {
-        return {
-          'month': e.key,
-          'credit': e.value['credit'],
-          'debit': e.value['debit'],
-          'outstanding': e.value['outstanding'],
-        };
-      }).toList()
-        ..sort((a, b) => (a['month'] as int).compareTo(b['month'] as int));
-
-    } else {
-      months = bank.months ?? [];
-    }
-
-   
-
-    // 2️⃣ Render graph
-    return SizedBox(
-      height: 220,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: months.map((m) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  _stackedBar(
-                    credited: (m['credit'] ?? 0).toDouble(),
-                    debited: (m['debit'] ?? 0).toDouble(),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    DateFormat.MMM().format(
-                      DateTime(0, m['month']),
+      // 2️⃣ Render graph
+      return SizedBox(
+        height: 220,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: months.map((m) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _stackedBar(
+                      credited: (m['credit'] ?? 0).toDouble(),
+                      debited: (m['debit'] ?? 0).toDouble(),
                     ),
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
+                    const SizedBox(height: 6),
+                    Text(
+                      DateFormat.MMM().format(
+                        DateTime(0, m['month']),
+                      ),
+                      style: const TextStyle(fontSize: 12, color: Colors.black),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
         ),
-      ),
-    );
-  });
-}
+      );
+    });
+  }
 
- Widget _stackedBar({
+  Widget _stackedBar({
     required double credited,
     required double debited,
   }) {
-    const double barHeight =160;
+    const double barHeight = 160;
     const double barWidth = 40;
-    
+
     // Calculate outstanding
     // final double outstanding = credited - debited;
     final double outstanding = (credited - debited).clamp(0, double.infinity);
@@ -1271,6 +1193,4 @@ Widget _annualBarGraph() {
       ),
     );
   }
-
 }
-
