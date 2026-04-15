@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
+import '../Home_Screen/ManuallyTransactions/collections_manualtransactions.dart';
 import '../Home_Screen/history/collections/collections_HomePage.dart';
 import '../Home_Screen/history/collections/trip/screens/shared_dashboard_screen.dart';
 import '../Home_Screen/history/transactionHistoryScreen.dart';
@@ -21,6 +23,8 @@ class CollectionsController extends GetxController {
   final RxBool isSplitLoading = false.obs;
   final RxBool isBalanceLoading = false.obs;
   final RxBool isMemberLoading = false.obs;
+  RxString selectedCollectionId = ''.obs;
+  RxBool canAddTransactions = true.obs;
 
   // =========================
   // DATA
@@ -39,8 +43,8 @@ class CollectionsController extends GetxController {
 
   final RxList<CollectionTransactionModel> availableTransactions =
       <CollectionTransactionModel>[].obs;
-  
-   final RxSet<String> selectedUserIds = <String>{}.obs;
+
+  final RxSet<String> selectedUserIds = <String>{}.obs;
 
   final RxList<TransactionModel> AllTransactions = <TransactionModel>[].obs;
   final RxList<TransactionModel> SeletedTransactionsList =
@@ -136,7 +140,11 @@ class CollectionsController extends GetxController {
             userController.userId.toString().trim(),
       );
 
-      if (forceRefresh) return;
+      if (forceRefresh) {
+        isLoading.value = false;
+        _isFetchingDetails = false;
+        return;
+      }
 
       splitsList.clear();
       await getSplits(id);
@@ -283,8 +291,6 @@ class CollectionsController extends GetxController {
         if (expiryAt != null) "expiryAt": getIsoDateFromDuration(expiryAt),
         "friends": friends
       };
-
-      print(friends);
       final createRes =
           await postDataApiCall(CollectionsRoute.createCollection, body);
 
@@ -443,6 +449,7 @@ class CollectionsController extends GetxController {
     List<dynamic>? customSplits,
     required BuildContext context,
     bool isFixedBill = false,
+    required bool clearn,
   }) async {
     final body = <String, dynamic>{
       "transactionIds": transactionIds,
@@ -454,24 +461,24 @@ class CollectionsController extends GetxController {
 
     final response = await postDataApiCall(
         CollectionsRoute.addTransaction(collectionId), body);
-
+    final data = json.decode(response.body);
     if (getFlagOfResponse(response)) {
       selectedTransactions.clear();
       SeletedTransactionsList.clear();
+      selectedCollectionId.value = "";
       await refreshCollectionData(collectionId);
       emitCollectionsOnSocket(
           "collection", {"id": collectionId, "action": "update"});
-      Navigator.pop(context);
-      Navigator.pop(context);
-      Navigator.pop(context);
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => const TransactionHistoryScreen(),
-      //   ),
-      // );
+      snackBarCalled(context, data['message'] ?? "Added Success!");
 
+      if (clearn) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }
+      Navigator.pop(context);
       return true;
+    } else if (response.statusCode == 400) {
+      snackBarCalledfail(context, data['error']);
     }
 
     debugPrint("❌ addTransaction failed: ${response.body}");
@@ -883,7 +890,6 @@ class CollectionsController extends GetxController {
 
       default:
         refreshCollectionData(id);
-        print("⚠️ Unknown socket type: $type");
     }
   }
 
@@ -1018,5 +1024,65 @@ class CollectionsController extends GetxController {
         transactions: oldDetails.transactions,
       );
     }
+  }
+
+  Future<void> splitManulaTansactions(String transactionId, context) async {
+    final List<Map<String, dynamic>> members =
+        collectionDetails.value!.members.where((e) {
+      final text = controllersList[e.userId]?.text;
+      final value = double.tryParse(text ?? '');
+      return value != null && value > 0;
+    }).map((e) {
+      return {
+        "userId": e.userId,
+        "amount": double.parse(controllersList[e.userId]!.text),
+      };
+    }).toList();
+
+    await addTransaction(
+        collectionId: selectedCollectionId.value,
+        transactionIds: [transactionId],
+        splitType: "CUSTOM",
+        context: context,
+        customSplits: members,
+        clearn: false);
+
+    controllersList.clear();
+  }
+
+  Future<void> fetchCollectionMembers(String collectionId) async {
+    //   try {
+    //     setState(() => isCollectionLoading = true);
+
+    //     var response = await getDataApiCall(
+    //       CollectionsRoute.getCollectionById(collectionId),
+    //     );
+
+    //     if (getFlagOfResponse(response)) {
+    //       var data = json.decode(response.body);
+
+    //       setState(() {
+    //         collectionMembers = data['data']['members'] ?? [];
+
+    //         // ✅ ADD THIS
+    //         memberAmounts.clear();
+
+    //         double total =
+    //             double.tryParse(_amountController.text.toString()) ?? 0;
+
+    //         if (collectionMembers.isNotEmpty && total > 0) {
+    //           double split = total / collectionMembers.length;
+
+    //           for (var m in collectionMembers) {
+    //             memberAmounts[m['user']['id']] = split;
+    //           }
+    //         }
+    //       });
+    //     }
+    //   } catch (e) {
+    //     debugPrint("fetchCollectionMembers error: $e");
+    //   } finally {
+    //     setState(() => isCollectionLoading = false);
+    //   }
   }
 }

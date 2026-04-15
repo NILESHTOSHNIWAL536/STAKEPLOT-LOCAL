@@ -137,6 +137,19 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/next_fetch_widget_info"/>
         </receiver>
+        <receiver
+    android:name="com.stakeplot.pfa.StridesWidgetProvider"
+    android:exported="true"
+    android:permission="android.permission.BIND_APPWIDGET">
+
+    <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+    </intent-filter>
+
+    <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/strides_widget_info"/>
+</receiver>
 
         <!-- Flutter embedding meta-data -->
         <meta-data android:name="flutterEmbedding" android:value="2"/>

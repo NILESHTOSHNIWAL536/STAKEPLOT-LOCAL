@@ -16,11 +16,12 @@ import 'package:flutter/services.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 import '../../repository/transactions_repository.dart';
-
+import '../ManuallyTransactions/collections_manualtransactions.dart';
 
 RxMap<String, String> redioButton = <String, String>{}.obs;
 RxMap<String, int> redioButtonIndex = <String, int>{}.obs;
-RxMap<String, TransactionModel> balanceOutList = <String, TransactionModel>{}.obs;
+RxMap<String, TransactionModel> balanceOutList =
+    <String, TransactionModel>{}.obs;
 RxMap<String, double> redioButtonAmount = <String, double>{}.obs;
 RxList<String> addManually = <String>[].obs;
 RxBool showCheckBox = false.obs;
@@ -57,8 +58,9 @@ class HistoryTransactions extends StatelessWidget {
     final formattedDate = date != null
         ? formatWhatsAppDateWithoutTime(convertStringToDateTime(date!))
         : 'Date';
-    final formattedDateManual =
-        date != null ? formatWhatsAppDate(convertStringToDateTime(date!)) : 'Date';
+    final formattedDateManual = date != null
+        ? formatWhatsAppDate(convertStringToDateTime(date!))
+        : 'Date';
     final type = transaction.type;
     final narration = transaction.narration;
     final id = transaction.id;
@@ -69,11 +71,13 @@ class HistoryTransactions extends StatelessWidget {
 
     final List<String> parts = _parseNarration(narration);
     final String nameOfUser = transaction.title ?? _getNameOfUser(parts);
-    final Color amtColor =type == 'CREDIT' ? AppColors.primaryColor : AppColors.primaryColor;
+    final Color amtColor =
+        type == 'CREDIT' ? AppColors.primaryColor : AppColors.primaryColor;
     final String formatAmount = type == 'CREDIT'
         ? "+₹${formatMoneyIndian(amount.toString())}"
         : "-₹${formatMoneyIndian(amount.toString())}";
-    final String formatAmountBalance = "₹${formatMoneyIndian(transaction.balanceOut.toString())}";
+    final String formatAmountBalance =
+        "₹${formatMoneyIndian(transaction.balanceOut.toString())}";
     final fontSizes = FontSizeFactor(context);
 
     return WillPopScope(
@@ -137,8 +141,6 @@ class HistoryTransactions extends StatelessWidget {
   }
 }
 
-
-
 Widget reviewTagTransactions(
     bool isReview,
     double scaleFactor,
@@ -151,13 +153,13 @@ Widget reviewTagTransactions(
     String narration_id) {
   return Column(
     children: [
-      
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           if (isReview)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSizes.p4),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: AppSizes.p4),
               decoration: BoxDecoration(
                 color: AppColors.redColor,
                 borderRadius: BorderRadius.only(
@@ -174,7 +176,7 @@ Widget reviewTagTransactions(
             ),
         ],
       ),
-       SizedBox(height: AppSizes.h4)
+      SizedBox(height: AppSizes.h4)
     ],
   );
 }
@@ -224,13 +226,9 @@ Widget animatedIconTransition(BuildContext context) {
   );
 }
 
-Future<dynamic> showCustomFriendsModalTransactionHistory(
-    BuildContext context,
-    double amount,
-    bool isLendMode,
-    String category,
-    String subcategory,
-    [bool isManualTransaction = false]) async {
+Future<dynamic> showCustomFriendsModalTransactionHistory(BuildContext context,
+    double amount, bool isLendMode, String category, String subcategory,
+    [bool isManualTransaction = false, String transactionid = ""]) async {
   return await showModalBottomSheet<dynamic>(
     context: context,
     isScrollControlled: true,
@@ -238,17 +236,21 @@ Future<dynamic> showCustomFriendsModalTransactionHistory(
       borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
     ),
     builder: (BuildContext context) {
-      return NewFriendsUi(
-        totalAmount: amount.toDouble(),
-        userId: userController.userId.value,
-        userName: userController.userName.value,
-        userAvatar: userController.avatar.value,
-        isLendMode: isLendMode,
-        category: category,
-        subcategory: subcategory,
-        flag: true,
-        ismanual: false,
+      return CollectionsManualtransactions(
+        amount: amount,
+        transactionId: transactionid,
       );
+      // return NewFriendsUi(
+      //   totalAmount: amount.toDouble(),
+      //   userId: userController.userId.value,
+      //   userName: userController.userName.value,
+      //   userAvatar: userController.avatar.value,
+      //   isLendMode: isLendMode,
+      //   category: category,
+      //   subcategory: subcategory,
+      //   flag: true,
+      //   ismanual: false,
+      // );
     },
   );
 }
@@ -268,7 +270,7 @@ Widget getTagButton(TransactionModel transaction, int index, String category,
           size: 30,
         ),
       ),
-       SizedBox(width: AppSizes.w10),
+      SizedBox(width: AppSizes.w10),
       InkWell(
         onTap: () {
           addTagToTransactions(context, narration_id, true, index);

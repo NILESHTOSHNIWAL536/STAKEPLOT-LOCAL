@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/strides_widget"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="10dp"
+    android:background="@drawable/widget_background"
+    android:clickable="true"
+
+    android:focusable="true">
+
+    <!-- LEFT SIDE (COLUMN) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- 🔢 NUMBER -->
+        <TextView
+            android:id="@+id/strides_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#000000"/>
+
+        <!-- 📝 STRIDES TEXT -->
+        <TextView
+            android:id="@+id/strides_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Strides"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- 📅 WEEK DAYS -->
+       <LinearLayout
+    android:id="@+id/week_row"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <!-- MON -->
+    <TextView
+        android:id="@+id/day_mo"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:gravity="center"
+        android:text="Mo"
+        android:textSize="10sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/circle_unselected"
+        android:layout_marginEnd="6dp"/>
+
+    <!-- TUE -->
+    <TextView
+        android:id="@+id/day_tu"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:gravity="center"
+        android:text="Tu"
+        android:textSize="10sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/circle_unselected"
+        android:layout_marginEnd="6dp"/>
+
+    <!-- WED -->
+    <TextView
+        android:id="@+id/day_we"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:gravity="center"
+        android:text="We"
+        android:textSize="10sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/circle_unselected"
+        android:layout_marginEnd="6dp"/>
+
+    <!-- THU -->
+    <TextView
+        android:id="@+id/day_th"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:gravity="center"
+        android:text="Th"
+        android:textSize="10sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/circle_unselected"
+        android:layout_marginEnd="6dp"/>
+
+    <!-- FRI -->
+    <TextView
+        android:id="@+id/day_fr"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:gravity="center"
+        android:text="Fr"
+        android:textSize="10sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/circle_unselected"
+        android:layout_marginEnd="6dp"/>
+
+    <!-- SAT -->
+    <TextView
+        android:id="@+id/day_sa"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:gravity="center"
+        android:text="Sa"
+        android:textSize="10sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/circle_unselected"
+        android:layout_marginEnd="6dp"/>
+
+    <!-- SUN -->
+    <TextView
+        android:id="@+id/day_su"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:gravity="center"
+        android:text="Su"
+        android:textSize="10sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/circle_unselected"/>
+</LinearLayout>
+
+    </LinearLayout>  <!-- ✅ THIS WAS MISSING -->
+
+    <!-- RIGHT SIDE IMAGE -->
+    <ImageView
+        android:id="@+id/strides_icon"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:src="@drawable/stride"
+        android:scaleType="centerInside"
+        android:layout_marginStart="10dp"/>
+
+</LinearLayout>

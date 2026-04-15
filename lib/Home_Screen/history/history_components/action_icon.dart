@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
@@ -7,15 +5,12 @@ import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/repository/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactions_ui_component.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart'; 
+import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/TransactionModel.dart';
 import 'package:flutter_application_code_stakeplot/repository/transactions_repository.dart';
 import 'predictions_category_icon.dart';
-
-
-
 
 class ActionIcons extends StatelessWidget {
   final TransactionModel transaction;
@@ -51,10 +46,11 @@ class ActionIcons extends StatelessWidget {
           message: HomepageStringsDart().hideTooltip,
           child: GestureDetector(
             onTap: hide
-                ? () => _showHideConfirmationDialog(context, transaction.id, index)
+                ? () =>
+                    _showHideConfirmationDialog(context, transaction.id, index)
                 : null,
             child: hide
-                ?const  Icon(
+                ? const Icon(
                     Icons.visibility_outlined,
                     color: AppColors.primaryColor,
                     size: 18,
@@ -63,28 +59,22 @@ class ActionIcons extends StatelessWidget {
           ),
         ),
         SizedBox(width: 8 * scaleFactor),
-        // Tooltip(
-        //   message: HomepageStringsDart().splitWithFriendsTooltip,
-        //   child: GestureDetector(
-        //     onTap: () async {
-        //       FocusScope.of(context).unfocus();
-        //       transactionsId.value = transaction.id;
-        //       await showCustomFriendsModalTransactionHistory(
-        //         context,
-        //         amount,
-        //         false,
-        //         category,
-        //         subcategory,
-        //         false,
-        //       );
-        //     },
-        //     child: AvatarProfileImage(
-        //       url: HomePageIcons.splitIcon,
-        //       width: 120,
-        //       height: 46,
-        //     ),
-        //   ),
-        // ),
+        Tooltip(
+          message: HomepageStringsDart().splitWithFriendsTooltip,
+          child: GestureDetector(
+            onTap: () async {
+              FocusScope.of(context).unfocus();
+              transactionsId.value = transaction.id;
+              await showCustomFriendsModalTransactionHistory(context, amount,
+                  false, category, subcategory, false, transaction.id);
+            },
+            child: AvatarProfileImage(
+              url: HomePageIcons.splitIcon,
+              width: 120,
+              height: 46,
+            ),
+          ),
+        ),
         getRightSidePart(
           category,
           context,
@@ -189,7 +179,8 @@ class ActionIcons extends StatelessWidget {
                           horizontal: screenWidth * 0.06,
                           vertical: screenWidth * 0.03,
                         ),
-                        backgroundColor: AppColors.primaryColor.withOpacity(0.1),
+                        backgroundColor:
+                            AppColors.primaryColor.withOpacity(0.1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -212,5 +203,3 @@ class ActionIcons extends StatelessWidget {
     );
   }
 }
-
-

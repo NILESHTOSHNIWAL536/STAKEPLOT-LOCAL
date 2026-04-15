@@ -186,7 +186,6 @@ Future<http.Response> getDataApiCall(urlPath) async {
       throw TimeoutException("Request timed out");
     },
   );
-
   // printData(response);
   return response;
 }

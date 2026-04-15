@@ -200,14 +200,7 @@ class CollectionDetailsModel {
   });
 
   factory CollectionDetailsModel.fromJson(Map<String, dynamic> json) {
-    print("👉 FULL JSON: $json");
     try {
-      print("👉 FULL JSON: $json");
-
-      print("👉 COLLECTION: ${json['collection']}");
-      print("👉 MEMBERS: ${json['members']}");
-      print("👉 TRANSACTIONS: ${json['transactions']}");
-
       return CollectionDetailsModel(
         collection: CollectionModel.fromJson(json['collection'] ?? {}, json),
         members: (json['members'] as List? ?? [])
@@ -218,8 +211,6 @@ class CollectionDetailsModel {
             .toList(),
       );
     } catch (e, stack) {
-      print("❌ ERROR INSIDE fromJson: $e");
-      print(stack);
       rethrow;
     }
   }

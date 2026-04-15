@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
+import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/collections_manualtransactions.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../Constants/app_styles.dart';
@@ -60,8 +62,8 @@ class _ModalContentState extends State<ModalContent>
   final GlobalKey _categoryKey = GlobalKey();
   String? selectedCollection;
   bool isCollectionExpanded = false;
-  final CollectionsController collectionsController =
-      Get.put(CollectionsController());
+  // final CollectionsController collectionsController =
+  //     Get.put(CollectionsController());
   String? selectedCollectionId;
   List<dynamic> collectionMembers = [];
   bool isCollectionLoading = false;
@@ -70,6 +72,7 @@ class _ModalContentState extends State<ModalContent>
   void initState() {
     super.initState();
     getAllTransaction(context);
+    collectionsController.selectedCollectionId.value = "";
 
     // initial filtered categories based on tab (cash-in or cash-out)
     _populateInitialFilteredCategories();
@@ -371,42 +374,6 @@ class _ModalContentState extends State<ModalContent>
     FocusScope.of(context).unfocus();
   }
 
-  Future<void> fetchCollectionMembers(String collectionId) async {
-    try {
-      setState(() => isCollectionLoading = true);
-
-      var response = await getDataApiCall(
-        CollectionsRoute.getCollectionById(collectionId),
-      );
-
-      if (getFlagOfResponse(response)) {
-        var data = json.decode(response.body);
-
-        setState(() {
-          collectionMembers = data['data']['members'] ?? [];
-
-          // ✅ ADD THIS
-          memberAmounts.clear();
-
-          double total =
-              double.tryParse(_amountController.text.toString()) ?? 0;
-
-          if (collectionMembers.isNotEmpty && total > 0) {
-            double split = total / collectionMembers.length;
-
-            for (var m in collectionMembers) {
-              memberAmounts[m['user']['id']] = split;
-            }
-          }
-        });
-      }
-    } catch (e) {
-      debugPrint("fetchCollectionMembers error: $e");
-    } finally {
-      setState(() => isCollectionLoading = false);
-    }
-  }
-
   @override
   bool get wantKeepAlive => true;
 
@@ -577,28 +544,14 @@ class _ModalContentState extends State<ModalContent>
                             child: subcategoryWidget(),
                           ),
                         ],
-                        // if (selectedCategory != null) ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: AppSizes.p20),
-                          child: collectionWidget(),
-                        ),
-                        // ],
-                        if (selectedCollectionId != null) ...[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: AppSizes.p20),
-                            child: collectionMembersWidget(),
+                        if (_amountController.text.isNotEmpty &&
+                            (selectedCategory2 != null ||
+                                selectedSubCategory2 != null))
+                          CollectionsManualtransactions(
+                            amount: double.parse(_amountController.text),
+                            transactionId: "",
                           ),
-                        ],
                         if (fin != null) ...[
-                          // Padding(
-                          //   padding: const EdgeInsets.symmetric(
-                          //       horizontal: AppSizes.p20),
-                          //   child: widget.isDebit
-                          //       ? SplitLendButton()
-                          //       : const SizedBox.shrink(),
-                          // ),
                           continueButton(),
                         ],
                       ],
@@ -608,69 +561,6 @@ class _ModalContentState extends State<ModalContent>
         ),
       ),
     );
-  }
-
-  Widget collectionWidget() {
-    return Obx(() {
-      if (collectionsController.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      return Container(
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(12),
-          border: AppBorders.soft,
-          boxShadow: [AppShadows.soft],
-        ),
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Add Collection",
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: AppColors.accentColor,
-                )),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 10,
-              children: collectionsController.collectionsList.map((collection) {
-                return GestureDetector(
-                  onTap: () async {
-                    await fetchCollectionMembers(collection.id); // ✅ NEW
-
-                    setState(() {
-                      selectedCollectionId = collection.id;
-                    });
-                  },
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: selectedCollectionId == collection.id
-                          ? AppColors.button
-                          : AppColors.backgroundColor,
-                      borderRadius: BorderRadius.circular(10),
-                      border: AppBorders.soft,
-                    ),
-                    child: Text(collection.name,
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: AppColors.accentColor,
-                        )),
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      );
-    });
   }
 
   Widget AmountWidget() {
@@ -1073,100 +963,6 @@ class _ModalContentState extends State<ModalContent>
     );
   }
 
-  Widget collectionMembersWidget() {
-    if (isCollectionLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (collectionMembers.isEmpty) {
-      return const SizedBox();
-    }
-
-    final members = collectionMembers;
-
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(12),
-        border: AppBorders.soft,
-        boxShadow: [AppShadows.soft],
-      ),
-      child: Column(
-        children: members.map((member) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  member['user']['name'] ?? '',
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: AppColors.accentColor,
-                  ),
-                ),
-                SizedBox(
-                  width: 100,
-                  child: TextField(
-                    controller: TextEditingController(
-                      text: memberAmounts[member['user']['id']]
-                              ?.toStringAsFixed(0) ??
-                          '',
-                    ),
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: AppColors.accentColor,
-                    ),
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      prefixText: "₹ ",
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (value) {
-                      double entered = double.tryParse(value) ?? 0;
-                      String currentId = member['user']['id'];
-
-                      memberAmounts[currentId] = entered;
-
-                      double total =
-                          double.tryParse(_amountController.text) ?? 0;
-
-                      double used =
-                          memberAmounts.values.fold(0, (a, b) => a + b);
-
-                      double remaining = total - used;
-
-                      // get other members
-                      var otherMembers = collectionMembers
-                          .where((m) => m['user']['id'] != currentId)
-                          .toList();
-
-                      if (otherMembers.isNotEmpty && remaining >= 0) {
-                        double split = remaining / otherMembers.length;
-
-                        for (var m in otherMembers) {
-                          memberAmounts[m['user']['id']] = split;
-                        }
-                      }
-
-                      setState(() {});
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
   Widget subcategoryWidget() {
     if (selectedCategory == null || !categories.containsKey(selectedCategory)) {
       return const SizedBox.shrink();
@@ -1357,6 +1153,13 @@ class _ModalContentState extends State<ModalContent>
                 if (cashInAndOut.value) return;
                 cashInAndOut.value = true;
 
+                if (!collectionsController.canAddTransactions.value) {
+                  cashInAndOut.value = false;
+                  snackBarCalledfail(context,
+                      "Split Amount need to be equal to the Total Amount");
+                  return;
+                }
+
                 addTransaction(
                   _amountController.text.toString(),
                   selectedSubCategory2.toString(),
@@ -1370,7 +1173,12 @@ class _ModalContentState extends State<ModalContent>
               },
               child: Obx(() => cashInAndOut.value
                   ? getspinner(context)
-                  : getButton(context, HomepageStringsDart().addButton)),
+                  : getButton(
+                      context,
+                      HomepageStringsDart().addButton,
+                      collectionsController.canAddTransactions.value
+                          ? AppColors.primaryColor
+                          : AppColors.primaryColor.withOpacity(0.3))),
             ),
           ),
         ),

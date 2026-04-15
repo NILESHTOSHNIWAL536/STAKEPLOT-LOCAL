@@ -13,15 +13,10 @@ import 'package:flutter_application_code_stakeplot/routes/route_transactions.dar
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-
 Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
     {String weekORmonth = 'month',
     String? endDate,
     bool isSplashScreen = false}) async {
-
-
-  
-
   String storedPeriod = weekORmonth == 'month'
       ? 'Month'
       : weekORmonth == 'week'
@@ -54,25 +49,23 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
   List<String> labelsLocal = [];
   List<double> debitList = [];
   List<double> creditList = [];
-  
+
   String urlPath = endDate != null && weekORmonth == 'Custom'
-    ? BankTransactionRoutes.getAllCustomTransactions(
-        accountId: accountId.value,
-        type: weekORmonth.toLowerCase(),
-        value: "$formattedDate,${getNextDay(endDate)}",
-      )
-    : BankTransactionRoutes.getAllCustomTransactions(
-        accountId: accountId.value,
-        type: weekORmonth.toLowerCase(),
-        value: formattedDate,
-      );
-      
+      ? BankTransactionRoutes.getAllCustomTransactions(
+          accountId: accountId.value,
+          type: weekORmonth.toLowerCase(),
+          value: "$formattedDate,${getNextDay(endDate)}",
+        )
+      : BankTransactionRoutes.getAllCustomTransactions(
+          accountId: accountId.value,
+          type: weekORmonth.toLowerCase(),
+          value: formattedDate,
+        );
+
   try {
     final response = await getDataApiCall(urlPath);
     if (getFlagOfResponse(response)) {
       final his = jsonDecode(response.body);
-    
-      print(his);
       transactionChatGraph.clear();
       try {
         final data = his['data']['result'] as Map;
@@ -138,7 +131,7 @@ Future<void> getWeeklyGraphAndCustomDateGraph(String date, BuildContext context,
           getGraphData.value = true;
 
           // Cache the data
-          unawaited( FinanceLocalStorage.cacheFinanceDataLocally(
+          unawaited(FinanceLocalStorage.cacheFinanceDataLocally(
             period: storedPeriod,
             startDate: formattedDate,
             endDate: endDate,
@@ -184,7 +177,8 @@ void _setEmptyState(String weekORmonth, String date, String? endDate) {
     debitList = List.filled(daysDiff, 0.0);
     creditList = List.filled(daysDiff, 0.0);
     for (int i = 0; i < daysDiff; i++) {
-      labelsLocal.add(DateFormat('MMM d').format(startDate.add(Duration(days: i))));
+      labelsLocal
+          .add(DateFormat('MMM d').format(startDate.add(Duration(days: i))));
     }
   } else {
     labelsLocal = weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
@@ -199,5 +193,3 @@ void _setEmptyState(String weekORmonth, String date, String? endDate) {
   maxYValue.value = 500.0;
   getGraphData.value = true;
 }
-
-

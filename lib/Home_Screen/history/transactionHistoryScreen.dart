@@ -443,10 +443,15 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                         : _buildSearchIcon(),
                   ),
                   SizedBox(width: AppSizes.w2),
-                  if (!widget.fromAutoPay && !isSearchActive)
+                  if (isCollectionsTab) CreateCollectionButtonInRow(context),
+                  if (!widget.fromAutoPay &&
+                      !isSearchActive &&
+                      !isCollectionsTab)
                     _buildToggleDateSummaryBtn(),
                   SizedBox(width: AppSizes.w10),
-                  if (!widget.fromAutoPay && !isSearchActive)
+                  if (!widget.fromAutoPay &&
+                      !isSearchActive &&
+                      !isCollectionsTab)
                     _buildFilterButton(),
                 ]
               ],

@@ -42,12 +42,12 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
         List<String>.from(collectionsController.selectedTransactions);
 
     await collectionsController.addTransaction(
-      collectionId: collectionId,
-      splitType: "CUSTOM",
-      transactionIds: transactionIds,
-      customSplits: members,
-      context: context,
-    );
+        collectionId: collectionId,
+        splitType: "CUSTOM",
+        transactionIds: transactionIds,
+        customSplits: members,
+        context: context,
+        clearn: true);
 
     if (mounted) setState(() => _isSubmitting = false);
   }
@@ -194,8 +194,7 @@ class _SplitConfirmationScreenState extends State<SplitConfirmationScreen> {
             PrimaryButton(
               label: 'Go Back & Edit',
               isOutlined: true,
-              onPressed:
-                  _isSubmitting ? null : () => Navigator.pop(context),
+              onPressed: _isSubmitting ? null : () => Navigator.pop(context),
             ),
             const SizedBox(height: 20),
           ],

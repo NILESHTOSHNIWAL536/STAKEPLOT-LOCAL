@@ -121,12 +121,13 @@ class _SelectTransactionsSheetState extends State<SelectTransactionsSheet> {
 
     if (widget.splitType != 'SHARED') {
       collectionsController.addTransaction(
-        collectionId:
-            collectionsController.collectionDetails.value?.collection.id ?? '',
-        transactionIds: collectionsController.selectedTransactions,
-        splitType: '',
-        context: context,
-      );
+          collectionId:
+              collectionsController.collectionDetails.value?.collection.id ??
+                  '',
+          transactionIds: collectionsController.selectedTransactions,
+          splitType: '',
+          context: context,
+          clearn: true);
       Navigator.pop(context);
       return;
     }

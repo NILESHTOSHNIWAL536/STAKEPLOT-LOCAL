@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../Constants/app_styles.dart';
 import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
+import '../../../Constants/core/container_border.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../backed_connections/apis_connect.dart';
 import '../../../image_service/avatarProfile.dart';
@@ -157,10 +158,10 @@ Widget CollectionsBody(BuildContext context) {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            sliver: SliverToBoxAdapter(child: _CreateCollectionButton(context)),
-          ),
+          // SliverPadding(
+          //   padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          //   sliver: SliverToBoxAdapter(child: CreateCollectionButton(context)),
+          // ),
           if (allCollections.isNotEmpty) ...[
             const SliverPadding(
               padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
@@ -235,6 +236,8 @@ class _CollectionSliverList extends StatelessWidget {
           key: ValueKey(item.id),
           item: item,
           isLast: isLast,
+          isFirst: index == 0,
+          isSingle: collections.length == 1,
         );
       },
     );
@@ -244,54 +247,83 @@ class _CollectionSliverList extends StatelessWidget {
 class _TimelineItem extends StatelessWidget {
   final CollectionModel item;
   final bool isLast;
-
+  final bool isFirst;
+  final bool isSingle;
   const _TimelineItem({
     super.key,
     required this.item,
     required this.isLast,
+    required this.isFirst,
+    required this.isSingle,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 14,
-          child: Column(
-            children: [
-              const SizedBox(height: 16),
-              Container(
-                width: 14,
-                height: 14,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: AppColors.primaryColor,
-                    width: 2,
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// 🔥 TIMELINE
+          SizedBox(
+            width: 20,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                /// 🔼 TOP LINE
+                if (!isFirst || isSingle)
+                  Positioned(
+                    top: 0,
+                    bottom: 9,
+                    child: Container(
+                      width: 2,
+                      color: AppColors.primaryColor,
+                    ),
                   ),
-                  shape: BoxShape.circle,
+
+                /// 🔽 BOTTOM LINE
+                if (!isLast || isSingle)
+                  Positioned(
+                    top: 9,
+                    bottom: 0,
+                    child: Container(
+                      width: 2,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+
+                /// 🔵 CIRCLE
+                Positioned(
+                  top: 0,
+                  child: Container(
+                    width: 18,
+                    height: 18,
+                    decoration: BoxDecoration(
+                      color: AppColors.border,
+                      border: Border.all(
+                        color: AppColors.primaryColor,
+                        width: 2,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
                 ),
-              ),
-              if (!isLast)
-                Container(
-                  width: 2,
-                  height: 84,
-                  color: AppColors.primaryColor.withOpacity(0.4),
-                ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: GestureDetector(
-            onTap: () async {
-              await collectionsController.getCollectionById(item.id, context);
-            },
-            child: _CollectionCard(item: item),
+
+          const SizedBox(width: 12),
+
+          /// 📦 CARD
+          Expanded(
+            child: GestureDetector(
+              onTap: () async {
+                await collectionsController.getCollectionById(item.id, context);
+              },
+              child: _CollectionCard(item: item),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -306,11 +338,15 @@ class _CollectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("all items");
+    print(item.members);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
+        color: item.status.toLowerCase() == "closed"
+            ? AppColors.grey
+            : AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -334,7 +370,7 @@ class _CollectionCard extends StatelessWidget {
                     context,
                     fontSize: 15,
                     lWeight: FontWeight.w600,
-                    color: AppColors.accentColor,
+                    color: AppColors.primaryColor,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -374,23 +410,45 @@ class _CollectionCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  ...item.members.map((member) => _MemberCircle(
-                      label: member.substring(0, 2).toUpperCase())),
+                  if (item.type.toLowerCase() == "shared") ...[
+                    SizedBox(
+                      height: 28,
+                      width: item.members.length * 20.0, // ✅ FIX
+                      child: Stack(
+                        clipBehavior: Clip.none, // ✅ allow overflow if needed
+                        children: List.generate(item.members.length, (index) {
+                          final member = item.members[index];
+
+                          return Positioned(
+                            left: index * 22,
+                            child: _MemberCircle(
+                              label: member.substring(0, 1).toUpperCase(),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                  ],
+                  SizedBox(
+                    width: 30,
+                  ),
+                  // ...item.members.map((member) => _MemberCircle(
+                  //     label: member.substring(0, 2).toUpperCase())),
                   if (item.totalAmount > 0) ...[
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
+                        color: AppColors.border,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        "₹${item.totalAmount.toStringAsFixed(0)}",
+                        " Contributed : ₹${item.totalAmount.toStringAsFixed(0)}",
                         style: FontManager().getTextStyle(
                           context,
                           fontSize: 11,
-                          color: AppColors.white,
+                          color: AppColors.primaryColor,
                         ),
                       ),
                     ),
@@ -424,6 +482,32 @@ class _CollectionCard extends StatelessWidget {
 /// ------------------------------
 /// MEMBER CHIP (const-safe)
 /// ------------------------------
+// class _MemberCircle extends StatelessWidget {
+//   final String label;
+//   const _MemberCircle({required this.label});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       margin: const EdgeInsets.only(right: 4),
+//       width: 28,
+//       height: 28,
+//       decoration: const BoxDecoration(
+//         color: AppColors.primaryColor,
+//         shape: BoxShape.circle,
+//       ),
+//       alignment: Alignment.center,
+//       child: Text(
+//         label,
+//         style: const TextStyle(
+//           color: Colors.white,
+//           fontSize: 12,
+//           fontWeight: FontWeight.w600,
+//         ),
+//       ),
+//     );
+//   }
+// }
 class _MemberCircle extends StatelessWidget {
   final String label;
   const _MemberCircle({required this.label});
@@ -431,12 +515,15 @@ class _MemberCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 4),
-      width: 28,
-      height: 28,
-      decoration: const BoxDecoration(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
         color: AppColors.primaryColor,
         shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.white, // 🔥 important for overlap look
+          width: 1,
+        ),
       ),
       alignment: Alignment.center,
       child: Text(
@@ -454,9 +541,9 @@ class _MemberCircle extends StatelessWidget {
 /// ------------------------------
 /// CREATE COLLECTION BUTTON
 /// ------------------------------
-class _CreateCollectionButton extends StatelessWidget {
+class CreateCollectionButton extends StatelessWidget {
   final BuildContext parentContext;
-  const _CreateCollectionButton(this.parentContext);
+  const CreateCollectionButton(this.parentContext);
 
   @override
   Widget build(BuildContext context) {
@@ -493,6 +580,49 @@ class _CreateCollectionButton extends StatelessWidget {
             fontSize: 16,
             lWeight: FontWeight.w500,
             color: AppColors.backgroundColor,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CreateCollectionButtonInRow extends StatelessWidget {
+  final BuildContext parentContext;
+  const CreateCollectionButtonInRow(this.parentContext);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        collectionDraft.name = null;
+        collectionDraft.type = null;
+        collectionDraft.members = [];
+        collectionDraft.roles = {};
+        collectionDraft.duration = null;
+        collectionDraft.description = null;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CreateCollectionFlow(),
+          ),
+        );
+      },
+      child: CustomStyledContainer(
+        radius: 5.0, // <-- Passing a custom radius
+        width: 100,
+        height: 36,
+
+        child: Center(
+          child: Text(
+            "Create",
+            style: FontManager().getTextStyle(
+              context,
+              fontSize: 16,
+              lWeight: FontWeight.w600,
+              color: AppColors.primaryColor,
+            ),
           ),
         ),
       ),
@@ -632,7 +762,7 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
             ),
           ),
           SizedBox(height: AppSizes.h30),
-          _CreateCollectionButton(context),
+          CreateCollectionButton(context),
         ],
       ),
     ),
@@ -642,4 +772,4 @@ Widget _buildEmptyCollectionsUI(BuildContext context) {
 // Backward-compat alias for CreateCollections usage across the app
 // ignore: non_constant_identifier_names
 Widget CreateCollections(BuildContext context) =>
-    _CreateCollectionButton(context);
+    CreateCollectionButton(context);
