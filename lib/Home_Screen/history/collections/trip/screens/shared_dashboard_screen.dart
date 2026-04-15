@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/model/collections_model.dart';
+import '../../../../../Constants/colors.dart';
+import '../../../../../Utils/collections_helper.dart';
 import '../../../../../Utils/socket_connect.dart';
 import '../../../../../controllers/SplitDetailsScreen.dart';
 import '../../../../../routes/index_route.dart';
@@ -118,13 +120,13 @@ class _SharedCollectionDashboardState extends State<SharedCollectionDashboard> {
                     const SizedBox(height: 16),
 
                     // ── BALANCE STATUS
-                   const BalanceStatusWidget(),
+                    const BalanceStatusWidget(),
 
                     const SizedBox(height: 20),
 
                     // ── TRANSACTIONS HEADER
                     _SectionHeader(
-                      title: 'Transactions',
+                      title: 'Splits',
                       count: filteredSplits.length,
                       isViewOnly:
                           collectionsController.currentUser?.role == "VIEW",
@@ -214,7 +216,10 @@ class _SearchAddBar extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           GestureDetector(
-            onTap: onAdd,
+            onTap: () {
+              if (checkAndCallSnackbar(context)) return;
+              onAdd();
+            },
             child: Container(
               width: 46,
               height: 46,
@@ -346,7 +351,10 @@ class _SectionHeader extends StatelessWidget {
           const Spacer(),
           if (!isViewOnly)
             GestureDetector(
-              onTap: onAdd,
+              onTap: () {
+                if (checkAndCallSnackbar(context)) return;
+                onAdd();
+              },
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
@@ -480,13 +488,13 @@ class _SplitCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 2),
-                      const Text(
-                        'Paid for group',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF6B7280),
-                        ),
-                      ),
+                      // const Text(
+                      //   'Paid for group',
+                      //   style: TextStyle(
+                      //     fontSize: 12,
+                      //     color: Color(0xFF6B7280),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -526,10 +534,10 @@ class _SplitCard extends StatelessWidget {
                     ),
                     child: Text(
                       '${s.user?.name ?? 'User'} • ₹${s.amount.toStringAsFixed(0)}',
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF6B7280),
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryColor,
                       ),
                     ),
                   );

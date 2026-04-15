@@ -17,6 +17,7 @@ import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 import '../../repository/transactions_repository.dart';
 import '../ManuallyTransactions/collections_manualtransactions.dart';
+import 'CollectionsSplitBottomSheet.dart';
 
 RxMap<String, String> redioButton = <String, String>{}.obs;
 RxMap<String, int> redioButtonIndex = <String, int>{}.obs;
@@ -56,7 +57,7 @@ class HistoryTransactions extends StatelessWidget {
     final isManual = transaction.manualTransaction;
     final isSplit = transaction.isSplit;
     final formattedDate = date != null
-        ? formatWhatsAppDateWithoutTime(convertStringToDateTime(date!))
+        ? formatWhatsAppDate(convertStringToDateTime(date!))
         : 'Date';
     final formattedDateManual = date != null
         ? formatWhatsAppDate(convertStringToDateTime(date!))
@@ -236,21 +237,11 @@ Future<dynamic> showCustomFriendsModalTransactionHistory(BuildContext context,
       borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
     ),
     builder: (BuildContext context) {
-      return CollectionsManualtransactions(
+      return CollectionsSplitBottomSheet(
         amount: amount,
         transactionId: transactionid,
       );
-      // return NewFriendsUi(
-      //   totalAmount: amount.toDouble(),
-      //   userId: userController.userId.value,
-      //   userName: userController.userName.value,
-      //   userAvatar: userController.avatar.value,
-      //   isLendMode: isLendMode,
-      //   category: category,
-      //   subcategory: subcategory,
-      //   flag: true,
-      //   ismanual: false,
-      // );
+
     },
   );
 }

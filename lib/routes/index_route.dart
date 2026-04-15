@@ -11,6 +11,7 @@ class API {
 
   static final String urlWithLocallHost3 =!apis_flag ? Credentials.FINVU_LIVE : Credentials.FINVU_TEST; // bank api
   
+  static final String mainBackendUrlLive = "${Credentials.LIVE_API}api/v1";
   static final String mainBackendUrl = "${urlWithLocallHost}api/v1";
   static final String EmailUrl = "${urlWithLocallHost}api/v1/email";
   static final String BankApiUrl = "${urlWithLocallHost}api/v1/bank";

@@ -55,7 +55,7 @@ class CardData {
     final List<String> occuranceDates = (json['recentMostTwoOccurrences']
                 as List<dynamic>?)
             ?.map((date) =>
-                formatWhatsAppDateWithoutTime(convertStringToDateTime(date)))
+                formatWhatsAppDate(convertStringToDateTime(date)))
             .toList() ??
         [];
     return CardData(

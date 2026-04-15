@@ -704,7 +704,7 @@ class CardWidget extends StatelessWidget {
                               ),
                               child: Text(
                                 card.nextReminderAt != null
-                                    ? "Upcoming reminder: ${formatWhatsAppDateWithoutTime(card.nextReminderAt!)}"
+                                    ? "Upcoming reminder: ${formatWhatsAppDate(card.nextReminderAt!)}"
                                     : "Set Reminder",
                                 style: FontManager().getTextStyle(
                                   context,

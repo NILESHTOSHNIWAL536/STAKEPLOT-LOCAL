@@ -367,7 +367,6 @@ Future<void> hideTransaction(
   final apiUrl = BankTransactionRoutes.updateTransaction(transactionId: id);
   try {
     final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
-    // Debug print
     if (getFlagOfResponse(response)) {
       if (hidden) {
         hiddenTransactions.add(transaction);

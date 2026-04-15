@@ -11,6 +11,7 @@ import '../Utils/durations_range.dart';
 import '../Utils/navigateTo.dart';
 import '../Utils/socket_connect.dart';
 import '../backed_connections/apiAutomations/curd.dart';
+import '../components/shared_utils.dart';
 import '../model/TransactionModel.dart';
 import '../model/collections_model.dart';
 import '../routes/route_collections.dart';
@@ -79,7 +80,6 @@ class CollectionsController extends GetxController {
   Future<void> getCollections({bool forceRefresh = false}) async {
     /// Skip if already loading or has data and not forced
     if (_isFetchingCollections) return;
-    if (!forceRefresh && collectionsList.isNotEmpty) return;
 
     _isFetchingCollections = true;
     try {
@@ -353,6 +353,27 @@ class CollectionsController extends GetxController {
     }
   }
 
+  Future<void> reopenCollections(String id, BuildContext context) async {
+    try {
+      String url = CollectionsRoute.reopenCollection(id);
+
+      final response = await updateDataApiCall(url);
+
+      if (getFlagOfResponse(response)) {
+        /// Batch clear
+        collectionDetails.value = null;
+        selectedCollection.value = null;
+        splitsList.clear();
+        balancesListPay.clear();
+        balancesListReceive.clear();
+        collectionsList.removeWhere((e) => e.id == id);
+        AppNavigator.pushReplacement(context, TransactionHistoryScreen());
+      }
+    } catch (e) {
+      debugPrint("deleteCollection error: $e");
+    }
+  }
+
   // =========================
   // GET SPLITS
   // =========================
@@ -523,7 +544,7 @@ class CollectionsController extends GetxController {
           await getDataApiCall(CollectionsRoute.getBalances(collectionId));
 
       if (getFlagOfResponse(response)) {
-        final data = json.decode(response.body)['data'];
+        // final data = json.decode(response.body)['data'];
 
         // List<BalanceModel> tempList = [];
 
@@ -589,11 +610,14 @@ class CollectionsController extends GetxController {
     required String id,
     String? name,
     String? duration,
+    bool active = false,
+    required BuildContext context,
   }) async {
     try {
       final body = <String, dynamic>{
         if (name != null) "name": name,
         if (duration != null) "expiryAt": getIsoDateFromDuration(duration),
+        "active": active
       };
 
       final response =
@@ -615,7 +639,7 @@ class CollectionsController extends GetxController {
             expiryAt: data['expiryAt'] != null
                 ? DateTime.parse(data['expiryAt'])
                 : null,
-            status: old.status,
+            status: active ? "ACTIVE" : old.status,
             totalAmount: collectionDetails.value?.collection.totalAmount ??
                 old.totalAmount ??
                 0,
@@ -637,10 +661,17 @@ class CollectionsController extends GetxController {
             members: collectionDetails.value?.members ?? [],
             transactions: collectionDetails.value?.transactions ?? [],
           );
+          if (active) {
+            collectionsController.collectionDetails.value?.collection.status =
+                "ACTIVE";
+          }
           emitCollectionsOnSocket("collection", {"id": id, "action": "update"});
         }
 
         return true;
+      } else {
+        snackBarCalledfail(
+            context, json.decode(response.body)['error'] ?? "Error");
       }
     } catch (e) {
       debugPrint("updateCollection error: $e");
@@ -781,6 +812,22 @@ class CollectionsController extends GetxController {
     }
   }
 
+  Future<void> updateMemberLimit(
+      {required dynamic body, required BuildContext context}) async {
+    try {
+      String collectionId =
+          collectionsController.collectionDetails.value!.collection.id;
+      final response = await updateDataApiCall2(CollectionsRoute.updateMemberLimit(collectionId),{"limits": body},);
+
+      if (getFlagOfResponse(response)) {
+        await refreshCollectionData(collectionId);
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      debugPrint("updateMemberRole error: $e");
+    }
+  }
+
   void clearAllData() {
     /// 🔥 MAIN DATA
     selectedTab.value = "All";
@@ -849,6 +896,9 @@ class CollectionsController extends GetxController {
     if (type == "splitUpdate") {
       getSplits(collectionDetails.value!.collection.id);
       getBalances(collectionDetails.value!.collection.id);
+      if (data["data"]["collection"]['collectionDetails']['collection'] != null)
+        updateCollectionByIdSocket(
+            data["data"]["collection"]['collectionDetails']);
       return;
     }
 
@@ -890,6 +940,16 @@ class CollectionsController extends GetxController {
 
       default:
         refreshCollectionData(id);
+    }
+  }
+
+  void updateCollectionByIdSocket(collection) {
+    try {
+      final details = CollectionDetailsModel.fromJson(collection);
+      collectionDetails.value = details;
+      selectedCollection.value = details.collection;
+    } catch (e) {
+      appLog(e);
     }
   }
 

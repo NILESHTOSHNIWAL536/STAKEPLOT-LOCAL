@@ -49,7 +49,6 @@
 import 'package:share_plus/share_plus.dart';
 import '../../model/bank_model.dart';
 
-
 void shareBankData(Map<String, dynamic> data) {
   final String bankInfo2 = """
 Bank Details:
@@ -64,8 +63,21 @@ Branch Address:  ${data['branchAddress']}
 
   try {
     Share.share(bankInfo2, subject: "My Bank Account Info");
-  } catch (e) {
-  }
+  } catch (e) {}
+}
+
+void shareStakeplot() {
+  final String shareStakeplot = """
+              Hey! I'm using Stakeplot 🚀  
+              Track expenses & manage money easily 💰  
+
+              Join using my referral 👇  
+              https://staging.stakeplot.in/ABC123
+              """;
+
+  try {
+    Share.share(shareStakeplot, subject: "Stakeplot");
+  } catch (e) {}
 }
 
 // ✅ New helper: directly from model

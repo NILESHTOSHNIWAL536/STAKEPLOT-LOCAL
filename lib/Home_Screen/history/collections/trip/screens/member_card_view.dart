@@ -669,7 +669,7 @@ Widget getTime(context, date) {
       const SizedBox(
         height: 10,
       ),
-      textStyle(context: context, text: formatWhatsAppDate4(date))
+      textStyle(context: context, text: formatWhatsAppDate(date))
     ],
   );
 }

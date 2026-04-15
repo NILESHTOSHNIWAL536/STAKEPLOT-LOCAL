@@ -184,69 +184,78 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
         FocusScope.of(context).unfocus();
         isSearchActive = false;
       },
-      child: Scaffold(
-        backgroundColor: AppColors.newbg,
-        // appBar: isSearchActive?null: historyAppBar(context, widget.fromAutoPay),
-        body: SafeArea(
-          child: Container(
-            color:
-                widget.isFromCollection ? AppColors.border : AppColors.border,
-            child: widget.isFromCollection
-                ? Column(
-                    children: [
-                      _buildSearchFieldForCollection(
-                          context, widget.isFromCollection),
-                      Expanded(
-                          child: _buildTransactionBody(context, screenHeight)),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      Container(
-                        color: AppColors.newbg,
-                        child: Column(
-                          children: [
-                            isSearchActive
-                                ? _buildSearchAndTabsSection(context)
-                                : historyHeader(context, widget.fromAutoPay),
-                            Obx(() {
-                              if (isSearchActive) {
-                                return const SizedBox.shrink();
-                              }
-                              if (widget.fromAutoPay) {
-                                return const SizedBox.shrink();
-                              }
+      child: WillPopScope(
+        onWillPop: () async {
+          clearTransactions(context: context);
+          clearStackHome(context);
+          return true;
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.newbg,
+          // appBar: isSearchActive?null: historyAppBar(context, widget.fromAutoPay),
+          body: SafeArea(
+            child: Container(
+              color:
+                  widget.isFromCollection ? AppColors.border : AppColors.border,
+              child: widget.isFromCollection
+                  ? Column(
+                      children: [
+                        _buildSearchFieldForCollection(
+                            context, widget.isFromCollection),
+                        Expanded(
+                            child:
+                                _buildTransactionBody(context, screenHeight)),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Container(
+                          color: AppColors.newbg,
+                          child: Column(
+                            children: [
+                              isSearchActive
+                                  ? _buildSearchAndTabsSection(context)
+                                  : historyHeader(context, widget.fromAutoPay),
+                              Obx(() {
+                                if (isSearchActive) {
+                                  return const SizedBox.shrink();
+                                }
+                                if (widget.fromAutoPay) {
+                                  return const SizedBox.shrink();
+                                }
 
-                              if (showFilter.value || isDateSummaryView.value) {
-                                return Column(
-                                  children: [
-                                    _buildTabsOrCheckbox(),
-                                    _buildTagHideButtons(),
-                                    _buildFilterSection(),
-                                  ],
-                                );
-                              }
+                                if (showFilter.value ||
+                                    isDateSummaryView.value) {
+                                  return Column(
+                                    children: [
+                                      _buildTabsOrCheckbox(),
+                                      _buildTagHideButtons(),
+                                      _buildFilterSection(),
+                                    ],
+                                  );
+                                }
 
-                              return _buildSearchAndTabsSection(context);
-                            }),
-                          ],
+                                return _buildSearchAndTabsSection(context);
+                              }),
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        color: AppColors.border,
-                        height: isSearchActive
-                            ? AppComponentSizes.h1_14
-                            : isDateSummaryView.value
-                                ? AppComponentSizes.h1_1
-                                : AppComponentSizes.h1_23,
-                        child: Obx(() {
-                          return selectedTab.value == "All"
-                              ? _buildTransactionBody(context, screenHeight)
-                              : buildCollectionsBody(context);
-                        }),
-                      ),
-                    ],
-                  ),
+                        Container(
+                          color: AppColors.border,
+                          height: isSearchActive
+                              ? AppComponentSizes.h1_14
+                              : isDateSummaryView.value
+                                  ? AppComponentSizes.h1_1
+                                  : AppComponentSizes.h1_23,
+                          child: Obx(() {
+                            return selectedTab.value == "All"
+                                ? _buildTransactionBody(context, screenHeight)
+                                : buildCollectionsBody(context);
+                          }),
+                        ),
+                      ],
+                    ),
+            ),
           ),
         ),
       ),
@@ -316,7 +325,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                 InkWell(
                   onTap: () {
                     clearTransactions(context: context);
-                    Navigator.pop(context);
+                    clearStackHome(context);
                   },
                   child: globalbackArrow(),
                 ),

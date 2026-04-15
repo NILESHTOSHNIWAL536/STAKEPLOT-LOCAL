@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_links/app_links.dart';
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,8 +11,10 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'Constants/core/app_component_sizes.dart';
 import 'app_init/AppTheme.dart';
+import 'components/shared_utils.dart';
 import 'controllers/finora_controller.dart';
 import 'controllers/quick_check_controller.dart';
+import 'deep_link_service.dart';
 import 'repository/clearstack.dart';
 import 'controllers/controllerManagement.dart';
 import 'controllers/theme_controller.dart';
@@ -30,6 +33,7 @@ void main() async {
     SystemUiMode.manual,
     overlays: SystemUiOverlay.values, // ⬅️ THIS IS KEY
   );
+
   main_apis_call_init();
   // runZonedGuarded(() {
   //   runApp(const MyApp());
@@ -48,6 +52,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late ThemeController themeController;
+  StreamSubscription<Uri>? _linkSubscription;
+
   @override
   void initState() {
     super.initState();
@@ -55,10 +61,18 @@ class _MyAppState extends State<MyApp> {
 
     initializeOneSignal(context);
     init_widget_main();
+
     themeController = ControllerManagement.themeController;
     loadThemes();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
+  }
+
+  void handleDeepLink(contextp) {
+    appLog("🚀 DeepLink init called");
+    DeepLinkService().init((token) {
+      appLog("🚀 Token: $token");
+    },contextp);
   }
 
   void loadThemes() async {

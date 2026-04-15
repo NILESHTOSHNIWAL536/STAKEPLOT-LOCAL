@@ -345,8 +345,7 @@ class _CreditCardState extends State<CreditCard> {
     
       graphData: [
         {
-          'title':
-              'Principal: ₹${formatMoneyIndian(cardBalance.toStringAsFixed(0))}',
+          'title':'Principal: ₹${formatMoneyIndian(cardBalance.toStringAsFixed(0))}',
           'value': cardBalance,
         },
         {

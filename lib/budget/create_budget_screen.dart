@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../image_service/avatarProfile.dart';
 import 'budget_assets.dart';
 import 'budget_controller.dart';
 
@@ -25,8 +26,7 @@ const _kBg = Color(0xFFF5F0E8);
 const _kCard = Colors.white;
 const _kText = Color(0xFF1E1E3A);
 const _kSubText = Color(0xFF8A8A9A);
-const _kChipDone = Color(0xFF4A4580);
-const _kProgress = Color(0xFF4A4580);
+
 
 // ────────────────────────────────────────────────────────────
 //  Root entry-point widget
@@ -823,9 +823,11 @@ class _Illustration extends StatelessWidget {
     return SizedBox(
       height: height,
       child: path.isNotEmpty
-          ? Image.asset(path,
-              fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => _placeholder(height))
+          ? AvatarProfileImage(
+                        url:path,
+                        height: 5,
+                        width: 5,
+            )
           : _placeholder(height),
     );
   }

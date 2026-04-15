@@ -32,9 +32,6 @@ import '../Home_Screen/history/amount_range.dart';
 import '../controllers/transactions_controller.dart';
 import '../repository/transactions_repository.dart';
 
-
-
-
 List<PredictionEntry> getUniquePredictedCategories(
     List<PredictionEntry> predictions) {
   final Set<String> seenCategories = {};
@@ -65,9 +62,6 @@ String getCategoryForKeyword(String keyword) {
 
   return keyword; // return original if not found
 }
-
-
-
 
 String getPreviousDate(int no, String type) {
   DateTime now = DateTime.now();
@@ -100,7 +94,6 @@ List getLastTenUsers(List allUsers) {
   // Reverse the list
   return lastUsers.reversed.toList();
 }
-
 
 void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
   getPdgLoader.value = false;
@@ -178,6 +171,7 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
     },
   );
 }
+
 Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
@@ -197,8 +191,8 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
                 ),
               ],
             ),
-            margin:
-                const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 6),
+            margin: const EdgeInsets.symmetric(
+                vertical: AppSizes.p4, horizontal: 6),
             child: ListTile(
               leading: SizedBox(
                 width: 40,
@@ -236,10 +230,9 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
                   ),
                 ),
                 child: Checkbox(
-                  value: (fromPdf
-                          ? accountIdPdf.value
-                          : accountSelected.value) ==
-                      account.accountId,
+                  value:
+                      (fromPdf ? accountIdPdf.value : accountSelected.value) ==
+                          account.accountId,
                   onChanged: (isChecked) {
                     if (isChecked == true) {
                       if (fromPdf) {
@@ -442,7 +435,8 @@ Widget getBankAccountList(BuildContext context, [bool fromPdf = true]) {
 //     }).toList(),
 //   );
 // }
-Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) {
+Widget getBankAccountListForFilter(BuildContext context,
+    [bool fromPdf = true]) {
   return Row(
     children: bankAccountLinkedList.map((account) {
       return Obx(() {
@@ -453,12 +447,12 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
 
         // Safely get last 6 characters of maskedAccNumber
         final String masked = account.maskedAccNumber;
-        final String lastSix = masked.length > 6
-            ? masked.substring(masked.length - 6)
-            : masked;
+        final String lastSix =
+            masked.length > 6 ? masked.substring(masked.length - 6) : masked;
 
         Widget content = Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p4),
+          padding:
+              const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -480,9 +474,7 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
                   text: lastSix,
                   fontsize: 12,
                   fontWeight: FontWeight.w600,
-                  c: isSelected
-                      ? AppColors.backgroundColor
-                      : AppColors.bg1,
+                  c: isSelected ? AppColors.backgroundColor : AppColors.bg1,
                 ),
               ),
             ],
@@ -490,49 +482,48 @@ Widget getBankAccountListForFilter(BuildContext context, [bool fromPdf = true]) 
         );
 
         return GestureDetector(
-          onTap: () {
-            String accId = account.accountId;
-            if (isSelected) {
-              if (fromPdf) {
-                accountIdPdf.value = "-";
+            onTap: () {
+              String accId = account.accountId;
+              if (isSelected) {
+                if (fromPdf) {
+                  accountIdPdf.value = "-";
+                } else {
+                  accountSelected.value = "-";
+                }
               } else {
-                accountSelected.value = "-";
+                if (fromPdf) {
+                  accountIdPdf.value = accId;
+                } else {
+                  accountSelected.value = accId;
+                }
               }
-            } else {
-              if (fromPdf) {
-                accountIdPdf.value = accId;
-              } else {
-                accountSelected.value = accId;
-              }
-            }
 
-            // Optional: auto filter on tap
-            onChanedAutoTransactionStatus(context);
-          },
-          child: isSelected
-              ? Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: content,
-                )
-              :  Container(
-                 margin:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
-                decoration: BoxDecoration(
-                  color: AppColors.filterContainer,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: content,
-              )
-        );
+              // Optional: auto filter on tap
+              onChanedAutoTransactionStatus(context);
+            },
+            child: isSelected
+                ? Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 4, vertical: AppSizes.p2),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 6, vertical: AppSizes.p2),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: content,
+                  )
+                : Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 4, vertical: AppSizes.p2),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 6, vertical: AppSizes.p2),
+                    decoration: BoxDecoration(
+                      color: AppColors.filterContainer,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: content,
+                  ));
       });
     }).toList(),
   );
@@ -646,7 +637,8 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
       bool isSelected = accountIdPdf.value == text;
 
       Widget content = Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p4),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.p12, vertical: AppSizes.p4),
         child: textStyleImage(
             context: context,
             text: text,
@@ -656,29 +648,28 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
       );
 
       return GestureDetector(
-        onTap: () {
-          accountIdPdf.value = isSelected ? "-" : text;
-        },
-        child: isSelected
-            ? Container(
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: content,
-              )
-            : Container(
-                 margin:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: AppSizes.p2),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
-                decoration: BoxDecoration(
-                  color: AppColors.border,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: content,
-              )
-      );
+          onTap: () {
+            accountIdPdf.value = isSelected ? "-" : text;
+          },
+          child: isSelected
+              ? Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: content,
+                )
+              : Container(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 4, vertical: AppSizes.p2),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 6, vertical: AppSizes.p2),
+                  decoration: BoxDecoration(
+                    color: AppColors.border,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: content,
+                ));
     }),
   );
 }
@@ -686,7 +677,6 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
 Widget getCheckBoxwithText2(
     BuildContext context, String text, VoidCallback onTap) {
   return Container(
-    
     margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 4),
     child: Obx(() {
       bool isSelected = accountIdPdf.value == text;
@@ -715,7 +705,7 @@ Widget getCheckBoxwithText2(
               accountIdPdf.value == "Cash") {
             searchTextController.value = accountIdPdf.value.toLowerCase();
             tnxSearchController.text = accountIdPdf.value.toLowerCase();
-           
+
             // tx.searchController.text=accountIdPdf.value.toLowerCase();
           } else if (accountIdPdf.value == "-") {
             searchTextController.value = "";
@@ -728,15 +718,17 @@ Widget getCheckBoxwithText2(
         },
         child: isSelected
             ? Container(
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p2),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.p12, vertical: AppSizes.p2),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: content,
               )
-            :  Container(
-                padding:const  EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p2),
+            : Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.p12, vertical: AppSizes.p2),
                 decoration: BoxDecoration(
                   color: AppColors.filterContainer,
                   borderRadius: BorderRadius.circular(8),
@@ -756,11 +748,10 @@ Widget filterTransaction(context) {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height /
             (bankAccountLinkedList.length <= 1 ? 18 : 20),
-            
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
-              SizedBox(width: AppSizes.w12),
+            SizedBox(width: AppSizes.w12),
             getCheckBoxwithText2(context, "Credit", () {
               onChanedAutoTransactionStatus(context);
               // Navigator.pop(context);
@@ -775,8 +766,9 @@ Widget filterTransaction(context) {
             }),
             bankAccountLinkedList.length >= 2
                 ? Container(
-                  margin: const EdgeInsets.symmetric(vertical: AppSizes.p4, horizontal: 2),
-                  child: getBankAccountListForFilter(context, false))
+                    margin: const EdgeInsets.symmetric(
+                        vertical: AppSizes.p4, horizontal: 2),
+                    child: getBankAccountListForFilter(context, false))
                 : const SizedBox.shrink(),
 
             Obx(
@@ -785,7 +777,8 @@ Widget filterTransaction(context) {
                 child: Container(
                   child: showAmountFilter.value
                       ? Container(
-                        margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: AppSizes.p6, horizontal: 0),
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppSizes.p12, vertical: AppSizes.p4),
                           decoration: BoxDecoration(
@@ -810,33 +803,33 @@ Widget filterTransaction(context) {
                           ),
                         )
                       : Container(
-               margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
-              decoration: BoxDecoration(
-                color: AppColors.filterContainer,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child:  Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (showAmountFilter.value)
-                                  const Icon(Icons.check,
-                                      size: 18, color: Colors.green),
-                                SizedBox(width: AppSizes.w4),
-                                Text(
-                                  "Filter by Amount",
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    color: AppColors.accentColor,
-                                  ),
-                                ),
-                              ],
-                            ),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: AppSizes.p6, horizontal: 0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: AppSizes.p2),
+                          decoration: BoxDecoration(
+                            color: AppColors.filterContainer,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (showAmountFilter.value)
+                                const Icon(Icons.check,
+                                    size: 18, color: Colors.green),
+                              SizedBox(width: AppSizes.w4),
+                              Text(
+                                "Filter by Amount",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: AppColors.accentColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                 ),
               ),
             ),
@@ -848,9 +841,10 @@ Widget filterTransaction(context) {
                 child: Container(
                   child: showDateFilter.value
                       ? Container(
-                         margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: AppSizes.p6, horizontal: 0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: AppSizes.p2),
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(8),
@@ -876,31 +870,31 @@ Widget filterTransaction(context) {
                           ),
                         )
                       : Container(
-               margin: const EdgeInsets.symmetric(vertical: AppSizes.p6, horizontal: 0),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: AppSizes.p2),
-              decoration: BoxDecoration(
-                color: AppColors.filterContainer,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child:  Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "Filter by Date",
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    color: AppColors.accentColor,
-                                  ),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: AppSizes.p6, horizontal: 0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: AppSizes.p2),
+                          decoration: BoxDecoration(
+                            color: AppColors.filterContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Filter by Date",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: AppColors.accentColor,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                 ),
-              
+              ),
             ),
           ],
         ),
@@ -908,8 +902,9 @@ Widget filterTransaction(context) {
       Obx(() => showAmountFilter.value
           ? const AmountRangeField()
           : const SizedBox.shrink()),
-      Obx(() =>
-          showDateFilter.value ? const DateRangeField() : const SizedBox.shrink()),
+      Obx(() => showDateFilter.value
+          ? const DateRangeField()
+          : const SizedBox.shrink()),
       // AmountRangeField(),
       // DateRangeField()
     ],
@@ -936,7 +931,6 @@ String getBankLogo() {
 
   return bankImage; // default if no match
 }
-
 
 String getDaysLeftInMonth() {
   final now = DateTime.now();
@@ -971,8 +965,6 @@ List<Map<String, dynamic>> getthelistAll() {
       .cast<Map<String, dynamic>>();
 }
 
-
-
 const List<Map<String, dynamic>> reportOptions = [
   {
     'title': 'Helps us to understand the issue and look into it',
@@ -986,7 +978,6 @@ const List<Map<String, dynamic>> reportOptions = [
   {'title': 'False information or misleading', 'subtitle': ''},
   {'title': 'Spam', 'subtitle': ''},
 ];
-
 
 getErrorBankLogo() => (context, error, stackTrace) => const Icon(
       Icons.account_balance,
@@ -1044,8 +1035,6 @@ bool checkRangeofDate(BuildContext context, [bool f = true]) {
   }
 }
 
-
-
 String getCurrentMonth() {
   DateTime now = DateTime.now();
   String year = now.year.toString();
@@ -1066,7 +1055,6 @@ String getCurrentWeekoverall() {
   String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
   return s;
 }
-
 
 String getFormattedDateoverall() {
   final now = DateTime.now();
@@ -1110,8 +1098,6 @@ String formatDateTime(String dateString) {
   return formattedDate;
 }
 
-
-
 String getNextDay(String endDate) {
   // Parse the input date string
   DateTime date = DateTime.parse(endDate);
@@ -1149,7 +1135,7 @@ String getCurrentFormattedDate() {
   return formattedDate;
 }
 
-Widget manualTransactionButton( BuildContext context) {
+Widget manualTransactionButton(BuildContext context) {
   return InkWell(
     onTap: () {
       Navigator.push(
@@ -1159,23 +1145,22 @@ Widget manualTransactionButton( BuildContext context) {
     },
     borderRadius: BorderRadius.circular(10),
     child: Container(
-      width: MediaQuery.sizeOf(context).width/2.4,
-      height: MediaQuery.sizeOf(context).height/21,
+      width: MediaQuery.sizeOf(context).width / 2.4,
+      height: MediaQuery.sizeOf(context).height / 21,
       padding: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
         // base white fill
         color: AppColors.backgroundColor,
         // semi-opaque white overlay (matches your linear-gradient with same stops)
-        
-        borderRadius: BorderRadius.circular(10), // nice rounded corners similar to SVG
+
+        borderRadius:
+            BorderRadius.circular(10), // nice rounded corners similar to SVG
         border: Border.all(
           color: AppColors.primaryColor, // stroke color from SVG
           width: 1,
         ),
         // subtle elevation feel — optional, remove if you don't want it
-        boxShadow: [
-          AppShadows.soft
-        ],
+        boxShadow: [AppShadows.soft],
       ),
       child: Center(
         child: Row(
@@ -1188,9 +1173,8 @@ Widget manualTransactionButton( BuildContext context) {
               width: 5,
               height: 32,
             ),
-        SizedBox(width: AppSizes.w8),
-        
-        
+            SizedBox(width: AppSizes.w8),
+
             // Text label
             Text(
               'Cash transactions',
@@ -1209,21 +1193,19 @@ Widget manualTransactionButton( BuildContext context) {
   );
 }
 
-Widget globalbackArrow(){
-  return  const CustomStyledContainer(
-                    radius: 20,
-                    child: Padding(
-                      padding:  EdgeInsets.all(AppSizes.p8),
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: AppColors.accentColor,
-                        size: 24,
-                      ),
-                    ),
-                  );
+Widget globalbackArrow() {
+  return const CustomStyledContainer(
+    radius: 20,
+    child: Padding(
+      padding: EdgeInsets.all(AppSizes.p8),
+      child: Icon(
+        Icons.arrow_back,
+        color: AppColors.accentColor,
+        size: 24,
+      ),
+    ),
+  );
 }
-
-
 
 class RotatingStopwatchIcon extends StatefulWidget {
   final double size;
@@ -1236,8 +1218,7 @@ class RotatingStopwatchIcon extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<RotatingStopwatchIcon> createState() =>
-      _RotatingStopwatchIconState();
+  State<RotatingStopwatchIcon> createState() => _RotatingStopwatchIconState();
 }
 
 class _RotatingStopwatchIconState extends State<RotatingStopwatchIcon>

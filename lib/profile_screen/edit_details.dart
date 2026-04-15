@@ -100,7 +100,7 @@ class _EditDetailsState extends State<EditDetails> {
             ),
           ),
           IconButton(
-            icon:  Icon(Icons.delete, color:  AppColors.redColor),
+            icon: Icon(Icons.delete, color: AppColors.redColor),
             onPressed: () {
               Navigator.push(
                 context,
@@ -112,7 +112,7 @@ class _EditDetailsState extends State<EditDetails> {
               ? SizedBox.shrink()
               : IconButton(
                   icon: Icon(Icons.remember_me_outlined,
-                      color:  AppColors.redColor, size: 25),
+                      color: AppColors.redColor, size: 25),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -122,9 +122,8 @@ class _EditDetailsState extends State<EditDetails> {
                   },
                 ),
         ],
-      
       ),
-      
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSizes.p16),
         child: Column(
@@ -133,16 +132,21 @@ class _EditDetailsState extends State<EditDetails> {
             // Profile Picture
             Column(
               children: [
-                Obx(() => AvatarProfile(
-                      name: userController.userName.value,
-                      width: 5,
-                      height: 10,
-                      background: userController.avatarBackGround.value,
-                      flag: true,
+                Obx(() => InkWell(
+                      onTap: () {
+                        shareStakeplot();
+                      },
+                      child: AvatarProfile(
+                        name: userController.userName.value,
+                        width: 5,
+                        height: 10,
+                        background: userController.avatarBackGround.value,
+                        flag: true,
+                      ),
                     )),
               ],
             ),
-             SizedBox(height: AppSizes.h20),
+            SizedBox(height: AppSizes.h20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -182,7 +186,7 @@ class _EditDetailsState extends State<EditDetails> {
                       )),
               ],
             ),
-             SizedBox(height: AppSizes.h20),
+            SizedBox(height: AppSizes.h20),
             Container(
               decoration: BoxDecoration(
                 color: AppColors.mt,
@@ -196,7 +200,7 @@ class _EditDetailsState extends State<EditDetails> {
                         userController.email.value,
                       )),
                   const Divider(),
-                 
+
                   _buildNonEditableField(
                       Icons.person,
                       ProfileScreenStrings().nameLabel,
@@ -224,10 +228,10 @@ class _EditDetailsState extends State<EditDetails> {
                 ],
               ),
             ),
-           
-             SizedBox(height: AppSizes.h20),
+
+            SizedBox(height: AppSizes.h20),
             const Divider(),
-             SizedBox(height: AppSizes.h10),
+            SizedBox(height: AppSizes.h10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -263,42 +267,42 @@ class _EditDetailsState extends State<EditDetails> {
                 ),
               ],
             ),
-             SizedBox(height: AppSizes.h20),
+            SizedBox(height: AppSizes.h20),
             ElevatedButton(
-                    child: Text("Change App Icon"),
-                    onPressed: () => IconPickerModal.show(context),
+              child: Text("Change App Icon"),
+              onPressed: () => IconPickerModal.show(context),
             ),
             getListOfBankConnected(),
-             SizedBox(height: AppSizes.h20),
+            SizedBox(height: AppSizes.h20),
           ],
         ),
       ),
     );
   }
 
-Widget getListOfBankConnected() {
-  return Container(
-    child: Obx(
-      () => Column(
-        children: bankAccountLinkedList.map((e) {
-          return _buildAccountDetails(
-            e.bankName,
-            e.maskedAccNumber,
-            e,           // pass the whole model instead of Map
-            e.bankLogo,
-          );
-        }).toList(),
+  Widget getListOfBankConnected() {
+    return Container(
+      child: Obx(
+        () => Column(
+          children: bankAccountLinkedList.map((e) {
+            return _buildAccountDetails(
+              e.bankName,
+              e.maskedAccNumber,
+              e, // pass the whole model instead of Map
+              e.bankLogo,
+            );
+          }).toList(),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   // Widget getListOfBankConnected() {
-  
+
   //   return Container(
   //     child: Obx(() => Column(
   //           children: bankAccountLinkedList.map((e) {
-             
+
   //             return _buildAccountDetails(
   //               e['bankName'],
   //               e['maskedAccNumber'],
@@ -524,7 +528,7 @@ Widget getListOfBankConnected() {
     } catch (e) {
       Navigator.pop(context); // Close loading dialog
       snackBarCalledfail(
-          context, "Failed to send OTP. Please try again.",  AppColors.redColor);
+          context, "Failed to send OTP. Please try again.", AppColors.redColor);
     }
   }
 
@@ -534,7 +538,10 @@ Widget getListOfBankConnected() {
       'name': name,
     });
     if (getFlagOfResponse(response)) {
-      snackBarCalled(context, SnackbarData().sentOtpToEmail, );
+      snackBarCalled(
+        context,
+        SnackbarData().sentOtpToEmail,
+      );
 
       Navigator.push(
         context,
@@ -553,12 +560,16 @@ Widget getListOfBankConnected() {
     } else {
       var body = jsonDecode(response.body);
       snackBarCalledfail(
-          showSnackBarContext, body['error'] ?? "error",  AppColors.redColor);
+          showSnackBarContext, body['error'] ?? "error", AppColors.redColor);
     }
   }
 
   Widget _buildAccountDetails(
-      String bankName, String accountNumber, BankAccountModel data, String logo, ) {
+    String bankName,
+    String accountNumber,
+    BankAccountModel data,
+    String logo,
+  ) {
     return InkWell(
       onTap: () {
         // shareBankData(bankAccountLinkedList[index]);

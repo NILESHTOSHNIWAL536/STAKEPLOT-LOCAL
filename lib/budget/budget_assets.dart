@@ -6,10 +6,10 @@
 
 // ---------- Illustration images used on creation steps ----------
 const Map<String, String> budgetStepImages = {
-  'addName':     'assets/images/budget/add_name.png',     // woman writing on board
-  'addAmount':   'assets/images/budget/add_amount.png',   // man with calculator
-  'selectDuration': 'assets/images/budget/duration.png',  // woman with hourglass
-  'addCategories':  'assets/images/budget/categories.png',// man arranging cards
+  'addName':     'assets/budget/name.svg',     // woman writing on board
+  'addAmount':   'assets/budget/amount.svg',   // man with calculator
+  'selectDuration': 'assets/budget/durations.svg',  // woman with hourglass
+  'addCategories':  'assets/budget/categorie.svgpub',// man arranging cards
 };
 
 // ---------- Illustration images used on list / detail screens ----------
