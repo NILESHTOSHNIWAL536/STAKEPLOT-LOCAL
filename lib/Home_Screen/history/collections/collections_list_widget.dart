@@ -6,6 +6,7 @@ import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../backed_connections/apis_connect.dart';
+import '../../../controllers/limit-reachedBottomSheet.dart';
 import '../../../image_service/avatarProfile.dart';
 import '../../../model/collections_model.dart';
 import 'create_collection_data.dart';
@@ -472,6 +473,10 @@ class _CreateCollectionButton extends StatelessWidget {
           ),
         ),
         onPressed: () {
+          if (collectionsController.collectionsList.length >= 4) {
+            LimitReachedBottomSheet.show(context);
+            return;
+          }
           collectionDraft.name = null;
           collectionDraft.type = null;
           collectionDraft.members = [];
