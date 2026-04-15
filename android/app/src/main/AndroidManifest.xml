@@ -8,6 +8,35 @@
 
         <!-- MAIN ACTIVITY (NO LAUNCHER intent-filter here) -->
         <activity
+    android:name=".MainActivity"
+    android:exported="true"
+    android:launchMode="singleTop"
+    android:theme="@style/Theme.AppCompat.NoActionBar"
+    android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+    android:hardwareAccelerated="true"
+    android:windowSoftInputMode="adjustResize">
+
+    <!-- ✅ APP LINK (MAIN PART) -->
+    <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW"/>
+
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+
+        <data
+            android:scheme="https"
+            android:host="staging.stakeplot.in"/>
+    </intent-filter>
+
+    <!-- ✅ LAUNCHER (ONLY ONE) -->
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+    </intent-filter>
+
+</activity>
+
+        <!-- <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
@@ -30,7 +59,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             
-        </activity>
+        </activity> -->
 
        
         <activity-alias

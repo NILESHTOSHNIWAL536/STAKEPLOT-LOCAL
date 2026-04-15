@@ -10,7 +10,8 @@ final Map<String, dynamic> permissionJson = {
     "close": true,
     "delete": true,
     "exit": false,
-    "reopen": true
+    "reopen": true,
+    "editlimit": true
   },
   "SHARED": {
     "VIEW": {
@@ -22,7 +23,8 @@ final Map<String, dynamic> permissionJson = {
       "close": false,
       "delete": false,
       "exit": true,
-      "reopen": false
+      "reopen": false,
+      "editlimit": false
     },
     "CONTRIBUTE": {
       "accessPermission": true,
@@ -33,7 +35,8 @@ final Map<String, dynamic> permissionJson = {
       "close": true,
       "delete": true,
       "exit": true,
-      "reopen": true
+      "reopen": true,
+      "editlimit": true
     }
   }
 };
@@ -74,9 +77,7 @@ bool hasPermission({
 
     bool allowed = permissionJson["SHARED"]?[role]?[action] ?? false;
 
-    if (action == "close" ||
-        action == "delete" ||
-        action == "accessPermission") {
+    if (["close", "delete", "accessPermission", "editlimit"].contains(action)) {
       return allowed && isOwner;
     }
 

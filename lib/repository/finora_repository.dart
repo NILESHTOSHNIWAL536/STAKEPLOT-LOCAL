@@ -49,7 +49,6 @@
 //     var res = await getDataApiCall(BankTransactionRoutes.categorizeTransactions);
 
 //     if (getFlagOfResponse(res)) {
-//       print("response finora ${res.body}");
     
 //       var data = jsonDecode(res.body);
       

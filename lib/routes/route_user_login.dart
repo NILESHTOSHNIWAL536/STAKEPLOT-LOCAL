@@ -41,6 +41,7 @@ class UserRoutes {
   static String update = "$_urlPath/";
   static String deleteUser = "$_urlPath/";
   static String getInfo = "${API.mainBackendUrlLive}/user/info";
+  // static String getInfo = "${_urlPath}/info";
   static String updateFetchStatus = "$_urlPath/updateFetchStatus";
   static String logout = "$_urlPath/logout";
   static String addFriend = "$_urlPath/friend/add";

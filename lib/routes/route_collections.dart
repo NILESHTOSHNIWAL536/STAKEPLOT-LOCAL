@@ -92,6 +92,9 @@ class CollectionsRoute {
   static String updateMemberRole(String collectionId, String userId) =>
       "$_urlPath/$collectionId/members/$userId";
 
+  static String updateMemberLimit(String collectionId) =>
+      "$_urlPath/$collectionId/members/limits";
+
   /// Invite members (bulk)
   static String inviteMember(String collectionId) =>
       "$_urlPath/$collectionId/invitations";

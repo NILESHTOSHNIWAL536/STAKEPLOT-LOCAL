@@ -13,6 +13,7 @@ import '../../../backed_connections/apis_connect.dart';
 import '../../../backed_connections/bankServices/collection_pdf_export.dart';
 import '../../../controllers/collections_controller.dart';
 import '../../../model/collections_model.dart';
+import 'colletion_personal_limit.dart';
 import 'create_collection_pages/create_collection_flow.dart';
 
 // ── Local design tokens ───────────────────────────────────────────────────────
@@ -109,6 +110,12 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                 // ── SETTINGS GROUP
                 _buildSectionLabel("Actions"),
                 const SizedBox(height: 8),
+                if (can("editlimit"))
+                  _settingsTile(context,
+                      icon: Icons.account_circle_outlined,
+                      title: "Set Persons Limit",
+                      subtitle: "Change personal limit of All",
+                      onTap: () => PersonLimitPopup.show(context)),
                 if (can("rename"))
                   _settingsTile(context,
                       icon: Icons.edit_outlined,

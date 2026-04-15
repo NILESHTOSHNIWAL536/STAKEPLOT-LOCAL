@@ -11,6 +11,7 @@ import '../Utils/durations_range.dart';
 import '../Utils/navigateTo.dart';
 import '../Utils/socket_connect.dart';
 import '../backed_connections/apiAutomations/curd.dart';
+import '../components/shared_utils.dart';
 import '../model/TransactionModel.dart';
 import '../model/collections_model.dart';
 import '../routes/route_collections.dart';
@@ -811,6 +812,22 @@ class CollectionsController extends GetxController {
     }
   }
 
+  Future<void> updateMemberLimit(
+      {required dynamic body, required BuildContext context}) async {
+    try {
+      String collectionId =
+          collectionsController.collectionDetails.value!.collection.id;
+      final response = await updateDataApiCall2(CollectionsRoute.updateMemberLimit(collectionId),{"limits": body},);
+
+      if (getFlagOfResponse(response)) {
+        await refreshCollectionData(collectionId);
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      debugPrint("updateMemberRole error: $e");
+    }
+  }
+
   void clearAllData() {
     /// 🔥 MAIN DATA
     selectedTab.value = "All";
@@ -928,16 +945,11 @@ class CollectionsController extends GetxController {
 
   void updateCollectionByIdSocket(collection) {
     try {
-      print("collectopnd");
-      print(collection);
       final details = CollectionDetailsModel.fromJson(collection);
-      print("details");
-      print(details.collection.totalAmount);
       collectionDetails.value = details;
       selectedCollection.value = details.collection;
     } catch (e) {
-      print("error");
-      print(e);
+      appLog(e);
     }
   }
 

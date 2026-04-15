@@ -1,5 +1,7 @@
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../components/shared_utils.dart';
+
 class SocketService {
   static final SocketService _instance = SocketService._internal();
 
@@ -20,7 +22,7 @@ class SocketService {
 
     socket.connect();
     socket.onDisconnect((_) {
-      print("❌ Socket Disconnected");
+      consolelog("❌ Socket Disconnected");
     });
     
   }

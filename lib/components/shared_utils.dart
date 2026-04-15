@@ -16,6 +16,13 @@ void appLog(message) {
       print(message); // Only prints in debug
   }
 }
+
+void consolelog(message) {
+  if (!kReleaseMode) {
+      print(message); // Only prints in debug
+  }
+}
+
 bool isZeroAmount(String amount) {
   try {
     double parsed = double.parse(amount.trim().toString());
