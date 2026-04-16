@@ -377,6 +377,7 @@ export const setMemberLimits = async (req: Request, res: Response, next: NextFun
     const { id: collectionId } = req.params;
     const { limits } = req.body;
 
+
     if (!Array.isArray(limits) || limits.length === 0) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: 'limits must be a non-empty array' });
     }
