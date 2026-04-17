@@ -1,4 +1,5 @@
 import { Types, Model, PipelineStage } from 'mongoose';
+import moment from 'moment-timezone';
 
 import { IBankTransaction, IRecurringPayment } from '@/types/bank';
 import { ITransactionRule } from '@/models/transactions-automation/transactionRule';
@@ -26,12 +27,16 @@ import { getMatchedKeywords } from '@/utils/helpers/transactionSearchFilter';
 
 type GroupBy = 'day' | 'week' | 'month';
 
-function toUtcDayStart(date: Date): Date {
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0));
+const DEFAULT_TZ = 'Asia/Kolkata';
+
+// IST-aligned helpers: date boundaries expressed as UTC so that
+// queries against UserDailyMetrics.date (which stores IST midnight in UTC) are correct.
+function toIstDayStart(date: Date): Date {
+  return moment(date).tz(DEFAULT_TZ).startOf('day').utc().toDate();
 }
 
-function toUtcDayEnd(date: Date): Date {
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 23, 59, 59, 999));
+function toIstDayEnd(date: Date): Date {
+  return moment(date).tz(DEFAULT_TZ).endOf('day').utc().toDate();
 }
 
 /**
@@ -57,7 +62,8 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
     transactions: Partial<IBankTransaction>[],
     accountId: string | Types.ObjectId | null,
     userId: string | Types.ObjectId,
-    bankId: string | Types.ObjectId | null
+    bankId: string | Types.ObjectId | null,
+    bankKey: string = 'UNKNOWN',
   ) {
     try {
       const txArray = Array.isArray(transactions) ? transactions : [transactions as any];
@@ -66,6 +72,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
         accountId,
         userId,
         bankId,
+        bankKey,
         Transaction: this.TransactionModel,
         TransactionRule: this.RuleModel,
       });
@@ -343,8 +350,8 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   async categorizeTransactions(userId: string | Types.ObjectId, startDate: Date, endDate: Date) {
     const userObjectId = new Types.ObjectId(userId as string);
-    const rangeStart = toUtcDayStart(startDate);
-    const rangeEnd = toUtcDayEnd(endDate);
+    const rangeStart = toIstDayStart(startDate);
+    const rangeEnd = toIstDayEnd(endDate);
 
     const currentData = await UserDailyMetrics.aggregate([
       {
@@ -376,8 +383,8 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
     const prevEndDate = new Date(endDate);
     prevEndDate.setUTCMonth(prevEndDate.getUTCMonth() - 1);
 
-    const prevRangeStart = toUtcDayStart(prevStartDate);
-    const prevRangeEnd = toUtcDayEnd(prevEndDate);
+    const prevRangeStart = toIstDayStart(prevStartDate);
+    const prevRangeEnd = toIstDayEnd(prevEndDate);
 
     const prevData = await UserDailyMetrics.aggregate([
       {
@@ -534,7 +541,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       {
         $match: {
           userId: userObjectId,
-          date: { $gte: toUtcDayStart(weekStart), $lte: toUtcDayEnd(weekEnd) },
+          date: { $gte: toIstDayStart(weekStart), $lte: toIstDayEnd(weekEnd) },
         },
       },
       { $group: { _id: null, totalSpend: { $sum: '$totalDebit' } } },
@@ -545,7 +552,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
       {
         $match: {
           userId: userObjectId,
-          date: { $gte: toUtcDayStart(lastWeekStart), $lte: toUtcDayEnd(lastWeekEnd) },
+          date: { $gte: toIstDayStart(lastWeekStart), $lte: toIstDayEnd(lastWeekEnd) },
         },
       },
       { $group: { _id: null, totalSpend: { $sum: '$totalDebit' } } },

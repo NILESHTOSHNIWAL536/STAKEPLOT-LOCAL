@@ -1,6 +1,9 @@
 import type { PipelineStage } from 'mongoose';
 import type { AggregationPipeline } from '@/types/bank/pipeline.types';
 import { Types } from 'mongoose';
+import moment from 'moment-timezone';
+
+const DEFAULT_TZ = 'Asia/Kolkata';
 
 /**
  * Frequency analysis pipeline:
@@ -134,6 +137,7 @@ export const buildMostSpentDayPipeline = (
             $dateToString: {
               format: '%Y-%m-%d',
               date: '$transactionTimestamp',
+              timezone: 'Asia/Kolkata',
             },
           },
         },
@@ -293,56 +297,22 @@ export const buildWeeklyTotalSpendPipeline = (
   ];
 
 export function getCurrentWeekRangeUTC() {
-  const now = new Date();
-  const day = now.getUTCDay(); // 0 = Sunday
+  const now = moment().tz(DEFAULT_TZ);
+  const fullWeekEnd = now.clone().endOf('isoWeek').utc().toDate();
+  const nowUtc = now.utc().toDate();
 
-  // Sunday 00:00:00
-  const weekStart = new Date(
-    Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate() - day,
-      0, 0, 0, 0
-    )
-  );
-
-  // Saturday 23:59:59.999
-  const fullWeekEnd = new Date(
-    Date.UTC(
-      weekStart.getUTCFullYear(),
-      weekStart.getUTCMonth(),
-      weekStart.getUTCDate() + 6,
-      23, 59, 59, 999
-    )
-  );
-
-  // 🔥 IMPORTANT PART
-  // If week is still running → take NOW
-  // If week completed → take Saturday end
-  const weekEnd = now < fullWeekEnd ? now : fullWeekEnd;
-
-  return { weekStart, weekEnd };
+  return {
+    weekStart: now.clone().startOf('isoWeek').utc().toDate(),
+    // If the week is still in progress, cap at now so we don't
+    // show zeroed-out future days in analytics.
+    weekEnd: nowUtc < fullWeekEnd ? nowUtc : fullWeekEnd,
+  };
 }
+
 export function getLastWeekRangeUTC() {
-  const { weekStart } = getCurrentWeekRangeUTC();
-
-  const lastWeekStart = new Date(
-    Date.UTC(
-      weekStart.getUTCFullYear(),
-      weekStart.getUTCMonth(),
-      weekStart.getUTCDate() - 7,
-      0, 0, 0, 0
-    )
-  );
-
-  const lastWeekEnd = new Date(
-    Date.UTC(
-      lastWeekStart.getUTCFullYear(),
-      lastWeekStart.getUTCMonth(),
-      lastWeekStart.getUTCDate() + 6,
-      23, 59, 59, 999
-    )
-  );
-
-  return { lastWeekStart, lastWeekEnd };
+  const now = moment().tz(DEFAULT_TZ);
+  return {
+    lastWeekStart: now.clone().subtract(1, 'week').startOf('isoWeek').utc().toDate(),
+    lastWeekEnd:   now.clone().subtract(1, 'week').endOf('isoWeek').utc().toDate(),
+  };
 }

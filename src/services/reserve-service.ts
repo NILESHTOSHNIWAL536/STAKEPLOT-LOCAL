@@ -12,10 +12,17 @@ export class ReserveService {
   }
 
   static async getReserveById(userId: string, rid: string) {
-    return await reserveRepo.getReserveById(rid);
+    return await reserveRepo.getReserveById(rid, userId);
   }
 
   static async deleteReserve(userId: string, rid: string) {
-    return await reserveRepo.deleteOne({ _id: rid });
+    return await reserveRepo.deleteOne({ _id: rid, userId });
+  }
+
+  static async updateShareFlag(userId: string, rid: string, shareWithCommunity: boolean) {
+    return await reserveRepo.updateOne(
+      { _id: rid, userId },
+      { share_with_community: shareWithCommunity }
+    );
   }
 }

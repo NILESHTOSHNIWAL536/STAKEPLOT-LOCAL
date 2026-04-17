@@ -6,6 +6,7 @@ import { ServerConfig } from './config';
 import logger from './utils/common/logger';
 import { initCloudWatchLogs } from './utils/cloud-watch';
 import redisClient from './config/redis-config';
+import reserveEngine from './services/reserve-engine';
 
 
 const startServer = async (): Promise<void> => {
@@ -18,6 +19,7 @@ const startServer = async (): Promise<void> => {
     await mongoose.connect(ServerConfig.MONGO_URI!);
     await initCloudWatchLogs();
     await redisClient.connect();
+    await reserveEngine.scheduleExistingReserves();
     // await import('./utils/cron-jobs');
   } catch (error) {
     console.error('Server Start Error:', error);
