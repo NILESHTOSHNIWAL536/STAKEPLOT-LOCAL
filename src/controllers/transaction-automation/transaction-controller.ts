@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as Common from '@/utils/common';
+import { toISTArray } from '@/utils/time/formatResponse';
 import * as BankService from '../../services/bank-service';
 import monthNames from '@/config/monthNames';
 import { Transaction } from '@/models';
@@ -148,7 +149,7 @@ export const getMonthlyTransactionsHistory = async (req: Request, res: Response)
     const { type, page } = req.params;
     const pageNum = page ? Number(page) : 1;
     const response = await BankService.getMonthlyTransactionsHistory(userId, type, pageNum);
-    SuccessResponse.data = response;
+    SuccessResponse.data = toISTArray(response);
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     ErrorResponse.error = error;
@@ -161,7 +162,7 @@ export const getAllTransactionsOfUser = async (req: Request, res: Response): Pro
   try {
     const userId = req.user!._id;
     const response = await BankService.getAllTransactionsOfUser(userId);
-    return res.status(StatusCodes.OK).json(response);
+    return res.status(StatusCodes.OK).json(toISTArray(response));
   } catch (error: any) {
     ErrorResponse.error = error;
     const statusCode = error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
@@ -356,7 +357,11 @@ export const getPreviousTransactions = async (req: Request, res: Response): Prom
 
     const accountId = req.params.accountId;
     const response = await BankService.getPreviousTransactions(userId, modifiedDate, accountId);
-    SuccessResponse.data = response;
+    // response = { transactions: [...], profile, summary, account, ... }
+    SuccessResponse.data = {
+      ...response,
+      transactions: toISTArray(response?.transactions),
+    };
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     return res.status(500).json({ success: false, error: (error as Error).message });
@@ -371,7 +376,7 @@ export const getGroupedTransactions = async (req: Request, res: Response): Promi
     const userId = req.user!._id;
     const response = await BankService.getGroupedTransactions(userId);
 
-    SuccessResponse.data = response;
+    SuccessResponse.data = toISTArray(response);
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     logger.error(`error from getGroupedTransactions, transaction-controller ${error}`);
@@ -408,7 +413,7 @@ export const getPendingForReviewTransactions = async (req: Request, res: Respons
     const userId = req.user!._id;
     const response = await BankService.getPendingForReviewTransactions(userId);
 
-    SuccessResponse.data = response;
+    SuccessResponse.data = toISTArray(response);
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     ErrorResponse.error = error;
@@ -602,7 +607,12 @@ export const getSearchedTransactions = async (req: Request, res: Response) => {
       endDate: endDate ? new Date(endDate as string) : undefined,
     });
 
-    return res.json({ data: response });
+    return res.json({
+      data: {
+        ...response,
+        transactions: toISTArray(response?.transactions),
+      },
+    });
   } catch (e) {
     console.error(e);
     return res.status(500).json({ error: e });
@@ -629,7 +639,7 @@ export const getTransactionsByDate = async (req: Request, res: Response): Promis
 
     const response = await BankService.getTransactionsByDate(userId, date);
 
-    SuccessResponse.data = response;
+    SuccessResponse.data = toISTArray(response);
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error: any) {
     ErrorResponse.error = error;

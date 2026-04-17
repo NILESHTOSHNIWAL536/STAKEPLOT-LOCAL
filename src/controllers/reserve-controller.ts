@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import moment from 'moment-timezone';
 import AppError from '../utils/errors/app-error';
 import logger from '../utils/common/logger';
 import { ReserveService } from '../services/reserve-service';
 import reserveEngine from '../services/reserve-engine';
 import { scheduleReserveReminder, removeReserveReminder } from '../services/bull-queue-service/reserve-reminder-queue';
+import { getStartOfDay, getEndOfDay } from '../utils/time';
 const categoryMapping: Record<string, string> = {
   Transport: 'travel',
   'Dining out': 'food',
@@ -41,11 +41,13 @@ export class ReserveController {
         throw new AppError('Start and End dates required', 400);
       }
 
-      // VALIDATE RANGE
-      const start = new Date(startDate);
-      const end = new Date(endDate);
+      // Normalize to IST-midnight-UTC so stored dates align with snapshot dates and sweep queries.
+      // e.g. frontend "2026-04-16" → 2026-04-16T00:00Z (UTC midnight = IST 5:30 AM) becomes
+      //      2026-04-15T18:30:00Z (IST midnight), matching getStartOfDay used everywhere else.
+      const start = getStartOfDay(new Date(startDate));
+      const end = getStartOfDay(new Date(endDate));
 
-      const diff = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24) + 1;
+      const diff = Math.round((end.getTime() - start.getTime()) / (24 * 60 * 60 * 1000)) + 1;
 
       if (diff > 7) {
         throw new AppError('Max 7 days allowed', 400);
@@ -63,7 +65,7 @@ export class ReserveController {
         durationDays: diff,
       });
 
-      // CREATE RESERVE s
+      // CREATE RESERVE
       const reserve = await ReserveService.createReserve({
         ...req.body,
         categories: transformedCategories,
@@ -74,12 +76,20 @@ export class ReserveController {
         ...suggestion,
       });
 
-      // Immediately evaluate to set correct status/snapshots instead of leaving default UPCOMING
-      await reserveEngine.evaluateReserve(reserve as any);
-      // ensure status reflects current day even if creation happens on startDate
-      const today = moment().startOf('day');
-      if (today.isBetween(moment(start).startOf('day'), moment(end).endOf('day'), 'day', '[]')) {
+      // Build flat initial snapshots based on the user's chosen amount, then set status.
+      // We do NOT call evaluateReserve here — that runs recomputeReserveProgress which
+      // produces inflated future-day recommendedDaily values when there is no spend yet.
+      // The full recompute happens naturally on the first getReserveById call.
+      const snapshots = await reserveEngine.buildSnapshots(reserve as any);
+      reserve.set('snapshots', snapshots as any);
+
+      const todayDate = getStartOfDay(new Date());
+      const startOfStart = getStartOfDay(start);
+      const endOfEnd = getEndOfDay(end);
+      if (todayDate.getTime() >= startOfStart.getTime() && todayDate.getTime() <= endOfEnd.getTime()) {
         reserve.status = 'ACTIVE';
+      } else if (todayDate.getTime() < startOfStart.getTime()) {
+        reserve.status = 'UPCOMING';
       }
       await reserve.save();
       await scheduleReserveReminder(reserve.id, userId.toString(), start, end, req.body.reminder_time);

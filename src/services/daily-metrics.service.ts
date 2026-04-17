@@ -1,4 +1,5 @@
 import { Types, PipelineStage } from 'mongoose';
+import moment from 'moment-timezone';
 import type { IBankTransaction, MetricsSourceType } from '@/types/bank';
 import BankTransaction from '@/models/transactions-automation/transaction';
 import UserDailyMetrics from '@/models/transactions-automation/user-daily-metrics';
@@ -6,26 +7,31 @@ import logger from '@/utils/common/logger';
 
 export type UserIdLike = string | Types.ObjectId;
 
+const DEFAULT_TZ = 'Asia/Kolkata';
 const DAY_KEY_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
-function toUtcDayStart(date: Date): Date {
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0));
+// IST-aligned day boundaries stored as UTC.
+// e.g. IST Jan 15 → start = Jan 14 18:30:00 UTC, end = Jan 15 18:29:59.999 UTC
+function toIstDayStart(date: Date): Date {
+  return moment(date).tz(DEFAULT_TZ).startOf('day').utc().toDate();
 }
 
-function toUtcDayEnd(date: Date): Date {
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 23, 59, 59, 999));
+function toIstDayEnd(date: Date): Date {
+  return moment(date).tz(DEFAULT_TZ).endOf('day').utc().toDate();
 }
 
+// Returns the IST calendar date string for a UTC timestamp.
+// e.g. 2024-01-14T20:00:00Z → "2024-01-15" (because it's 01:30 IST on Jan 15)
 function dayKeyFromDate(date: Date): string {
-  return date.toISOString().slice(0, 10);
+  return moment(date).tz(DEFAULT_TZ).format('YYYY-MM-DD');
 }
 
+// Given an IST calendar date string, returns the UTC timestamp for IST midnight of that day.
 function dayStartFromKey(dayKey: string): Date {
   if (!DAY_KEY_REGEX.test(dayKey)) {
     throw new Error(`Invalid day key: ${dayKey}`);
   }
-  const [y, m, d] = dayKey.split('-').map((v) => Number(v));
-  return new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0));
+  return moment.tz(dayKey, DEFAULT_TZ).startOf('day').utc().toDate();
 }
 
 type ScopeKey = {
@@ -40,8 +46,9 @@ function inferScope(tx: Partial<IBankTransaction>): ScopeKey | null {
   const timestamp = new Date(tx.transactionTimestamp);
   if (Number.isNaN(timestamp.getTime())) return null;
 
-  const dayStart = toUtcDayStart(timestamp);
-  const dayKey = dayKeyFromDate(dayStart);
+  // Bucket by IST calendar date so that a transaction at 11:30 PM IST
+  // is grouped under the correct Indian date, not the UTC date.
+  const dayKey = dayKeyFromDate(timestamp);
 
   const sourceType: MetricsSourceType = tx.manualTransaction ? 'MANUAL' : 'BANK';
   const bankId = sourceType === 'BANK' && tx.bankId ? String(tx.bankId) : null;
@@ -183,8 +190,8 @@ export async function recomputeDay(
   accountId: string | Types.ObjectId | null = null
 ) {
   try {
-    const dayStart = toUtcDayStart(date);
-    const dayEnd = toUtcDayEnd(date);
+    const dayStart = toIstDayStart(date);
+    const dayEnd = toIstDayEnd(date);
     const bankIdStr = bankId ? String(bankId) : null;
     const accountIdStr = accountId ? String(accountId) : null;
     const userObjectId = new Types.ObjectId(userId as string);
@@ -321,6 +328,6 @@ export async function updateDailyMetrics(transactions: Partial<IBankTransaction>
 }
 
 export const dailyMetricsHelpers = {
-  toUtcDayStart,
-  toUtcDayEnd,
+  toIstDayStart,
+  toIstDayEnd,
 };

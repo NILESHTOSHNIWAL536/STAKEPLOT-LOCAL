@@ -1,17 +1,17 @@
-import express from "express";
-import { AuthMiddlewares } from "../middlewares";
-import { ReserveController } from "../controllers/reserve-controller";
+import express from 'express';
+import { AuthMiddlewares } from '../middlewares';
+import { ReserveController } from '../controllers/reserve-controller';
 import reserveMatchService from '../services/reserve-match.service';
 
 const router = express.Router();
 
-router.post("/suggest", AuthMiddlewares.protect, ReserveController.suggest);
+router.post('/suggest', AuthMiddlewares.protect, ReserveController.suggest);
 
-router.post("/", AuthMiddlewares.protect, ReserveController.createReserve);
+router.post('/', AuthMiddlewares.protect, ReserveController.createReserve);
 
-router.get("/", AuthMiddlewares.protect, ReserveController.getReserves);
+router.get('/', AuthMiddlewares.protect, ReserveController.getReserves);
 
-router.patch("/:rid/share", AuthMiddlewares.protect, ReserveController.toggleShare);
+router.patch('/:rid/share', AuthMiddlewares.protect, ReserveController.toggleShare);
 
 router.get('/share/feed', AuthMiddlewares.protect, async (req, res) => {
   try {
@@ -24,8 +24,8 @@ router.get('/share/feed', AuthMiddlewares.protect, async (req, res) => {
   }
 });
 
-router.get("/:rid", AuthMiddlewares.protect, ReserveController.getReserveById);
+router.get('/:rid', AuthMiddlewares.protect, ReserveController.getReserveById);
 
-router.delete("/:rid", AuthMiddlewares.protect, ReserveController.deleteReserve);
+router.delete('/:rid', AuthMiddlewares.protect, ReserveController.deleteReserve);
 
 export default router;

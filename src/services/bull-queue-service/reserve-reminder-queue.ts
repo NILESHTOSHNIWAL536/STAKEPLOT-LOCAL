@@ -37,7 +37,6 @@ reserveReminderQueue.process(async (job: Job<ReminderJob>) => {
 export async function scheduleReserveReminder(reserveId: string, userId: string, startDate: Date, endDate: Date, reminderTime: string) {
   const [hours, minutes] = reminderTime.split(':').map((v) => Number(v));
   const tz = 'Asia/Kolkata';
-  const start = moment(startDate).tz(tz).hours(hours).minutes(minutes).seconds(0).milliseconds(0);
   const end = moment(endDate).tz(tz).hours(hours).minutes(minutes).seconds(0).milliseconds(0);
 
   await reserveReminderQueue.add(
@@ -46,7 +45,7 @@ export async function scheduleReserveReminder(reserveId: string, userId: string,
       jobId: `${reserveId}:${hours}:${minutes}`,
       repeat: {
         cron: `${minutes} ${hours} * * *`,
-        startDate: start.toDate(),
+        startDate: startDate,
         endDate: end.toDate(),
         tz,
       },

@@ -8,6 +8,8 @@ import BankTransaction from '../models/transactions-automation/transaction';
 import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
 import UserService from './user-service';
+import { enrichTransactionWithBankDetails } from '@/helpers/enrich-bank.helper';
+import FipRepository from '@/repositories/autoTransactions-repository/bank';
 
 const MAX_COLLECTIONS_PER_USER = 5;
 
@@ -188,7 +190,7 @@ export const getUserCollections = async (userId: string) => {
   const collections = members.map((m) => m.collectionId as unknown as ICollection).filter((c) => c && c.ownerId);
 
   // Hydrate ownerIds
-  const ownerIds = collections.map((c) =>  c.ownerId.toString());
+  const ownerIds = collections.map((c) => c.ownerId.toString());
   const userData = await UserService.hydrateUsers(ownerIds);
   const userMap = new Map();
   userData.forEach((u) => userMap.set(u._id.toString(), u));
@@ -196,7 +198,7 @@ export const getUserCollections = async (userId: string) => {
   // Fetch members for each collection
   const collectionsWithMembers = await Promise.all(
     collections.map(async (c) => {
-      const collectionMembers = await CollectionMember.find({ collectionId: c._id }).lean()
+      const collectionMembers = await CollectionMember.find({ collectionId: c._id }).lean();
       // Hydrate member user data
       const memberUserIds = collectionMembers.map((m) => m.userId.toString());
       const memberUserData = await UserService.hydrateUsers(memberUserIds);
@@ -228,7 +230,8 @@ export const getCollectionById = async (collectionId: string, userId: string) =>
 
   const collection = await Collection.findById(collectionId);
   const members = await CollectionMember.find({ collectionId }).lean();
-  const transactions = await CollectionTransaction.find({ collectionId }).populate('transactionId').select('-_id -__v');
+  const transactions = await CollectionTransaction.find({ collectionId }).populate('transactionId').select('-_id -__v').lean();
+  const flattenedTransactions = transactions.map((t) => t.transactionId).filter(Boolean);
   const splits = await Split.find({ collectionId }).lean();
 
   // Hydrate user IDs
@@ -286,11 +289,22 @@ export const getCollectionById = async (collectionId: string, userId: string) =>
   });
 
   const outStandingAmount = totalDebit - totalCredit;
+  const banks = await new FipRepository().getBank(userId);
+  const enrichedTransactions = await enrichTransactionWithBankDetails(flattenedTransactions, banks);
+  const enrichedMap = new Map(enrichedTransactions.map((tx: any) => [tx._id.toString(), tx]));
+  const finalTransactions = transactions.reduce((acc: any[], t: any) => {
+    const enriched = enrichedMap.get(t.transactionId?._id.toString());
+    acc.push({
+      ...t,
+      transactionId: enriched || t.transactionId,
+    });
+    return acc;
+  }, []);
 
   return {
     collection: hydratedCollection,
     members: hydratedMembers,
-    transactions,
+    transactions: finalTransactions,
     splits: hydratedSplits,
     totalCredit,
     totalDebit,
@@ -538,8 +552,11 @@ export const getAvailableTransactions = async (userId: string, collectionId: str
     .limit(limit)
     .lean();
 
+  const banks = await new FipRepository().getBank(userId);
+  const enrichedTransactions = await enrichTransactionWithBankDetails(transactions, banks);
+
   return {
-    transactions,
+    transactions: enrichedTransactions,
     pagination: {
       total,
       page,
@@ -915,7 +932,7 @@ export const closeCollection = async (collectionId: string, userId: string) => {
   return collection.toObject();
 };
 
-export const getAllTransactions = async (collectionId: string, userId: string, page: number = 1, limit: number = 20) => {
+export const getAllTransactions = async (collectionId: string, userId: string, page: number = 1, limit: number = 20) => { 
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member) {
     throw new AppError('User is not a member of this collection', StatusCodes.FORBIDDEN);

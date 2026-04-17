@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import categories from '../../config/categories';
 import { IBankTransaction } from '@/types/bank';
+import { normalizeTransactionTimestamp } from '@/utils/time/normalize';
 
 export interface TransactionInput {
   narration: string;
@@ -27,7 +28,8 @@ function categorizeTransactions(
   accountId: string | Types.ObjectId | null,
   userId: string | Types.ObjectId,
   bankId: string | Types.ObjectId | null,
-  ruleMap: RuleMap
+  ruleMap: RuleMap,
+  bankKey: string = 'UNKNOWN',
 ): Partial<IBankTransaction>[] {
   return transactionsData.map((transaction) => {
     const narration = transaction.narration ? transaction.narration.toLowerCase() : '';
@@ -111,8 +113,8 @@ function categorizeTransactions(
     return {
       ...transaction,
       currentBalance,
-      transactionTimestamp: transaction.transactionTimestamp ? new Date(transaction.transactionTimestamp) : undefined,
-      valueDate: transaction.valueDate ? new Date(transaction.valueDate) : undefined,
+      transactionTimestamp: normalizeTransactionTimestamp(transaction.transactionTimestamp, bankKey),
+      valueDate: normalizeTransactionTimestamp(transaction.valueDate, bankKey),
       category: matchedCategory,
       subcategory: transaction.subcategory || matchedSubcategory,
       manualTransaction: transaction.manualTransaction !== undefined ? transaction.manualTransaction : false,

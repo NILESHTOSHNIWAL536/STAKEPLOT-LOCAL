@@ -93,7 +93,7 @@ export async function buildSnapshots(reserve: ReserveDocument, now = new Date())
     const dayUtc = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
     const remainingDays = Math.max(0, Math.floor((endDate.getTime() - dayUtc.getTime()) / (24 * 60 * 60 * 1000))) + 1;
     const remaining = round2(reserve.amount);
-    const daily = round2(reserve.planned_daily || reserve.amount / duration);
+    const daily = round2(reserve.amount / duration);
     days.push({
       date: dayUtc,
       spend: 0,
@@ -149,15 +149,34 @@ export async function recomputeReserveProgress(reserve: ReserveDocument) {
     reserve.status = 'UPCOMING';
   }
 
+  // Pre-compute the frozen rate for future days.
+  // Future snapshots all use the same rate: remaining-as-of-today / remaining-days-from-today.
+  // This prevents per-future-day recalculation from inflating recommendedDaily as remainingDays
+  // shrinks while cumulative stays frozen (no actual spend data for future dates).
+  const cumulativeUpToToday = rows
+    .filter((r) => getStartOfDay(r._id).getTime() <= today.getTime())
+    .reduce((sum, r) => sum + (r.debit || 0), 0);
+  const remainingAsOfToday = Math.max(reserve.amount - cumulativeUpToToday, 0);
+  const remainingDaysFromToday = Math.max(
+    Math.floor((endDate.getTime() - today.getTime()) / (24 * 60 * 60 * 1000)) + 1,
+    0,
+  );
+  const futureRecommendedDaily = remainingDaysFromToday > 0
+    ? round2(remainingAsOfToday / remainingDaysFromToday)
+    : 0;
+
   for (let i = 0; i < duration; i++) {
     const dayUtc = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+    const isFutureDay = dayUtc.getTime() > today.getTime();
     const row = rows.find((r) => getStartOfDay(r._id).getTime() === dayUtc.getTime());
     const spend = row?.debit || 0;
     cumulative += spend;
     const percentUsed = (cumulative / reserve.amount) * 100;
     const remaining = round2(Math.max(reserve.amount - cumulative, 0));
     const remainingDays = Math.max(Math.floor((endDate.getTime() - dayUtc.getTime()) / (24 * 60 * 60 * 1000)) + 1, 0);
-    const recommendedDaily = remainingDays > 0 ? round2(remaining / remainingDays) : 0;
+    const recommendedDaily = isFutureDay
+      ? futureRecommendedDaily
+      : (remainingDays > 0 ? round2(remaining / remainingDays) : 0);
     const overspend = Math.max(cumulative - reserve.amount, 0);
     const recoveryTarget = remainingDays > 0 ? round2(overspend / remainingDays) : 0;
 
