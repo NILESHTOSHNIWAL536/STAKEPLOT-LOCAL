@@ -30,6 +30,27 @@ Future postDataApiCall(String urlPath, Map body) async {
 
   return response;
 }
+Future postDataApiCallWithoutBody(String urlPath) async {
+  var accessToken = await SecureStorageService().read("accessToken");
+
+  final response = await http
+      .post(
+    Uri.parse(urlPath),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+    
+  )
+      .timeout(
+    const Duration(seconds: 30), // ⏳ timeout added here
+    onTimeout: () {
+      throw TimeoutException("Request timed out");
+    },
+  );
+
+  return response;
+}
 
 Future postDataApiCallwithOutSharedPref(String urlPath, Map body) async {
   final response = await http

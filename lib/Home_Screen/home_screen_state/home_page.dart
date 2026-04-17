@@ -49,6 +49,7 @@ class _HomePageState extends State<HomePage> {
     });
     storeBankDataApi();
     requestNotificationPermissionOncePerDay();
+    
   }
 
   void _scrollToTop() {

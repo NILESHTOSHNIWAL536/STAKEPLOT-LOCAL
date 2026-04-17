@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/controllers/access-permissions.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
+import '../../../Constants/colors.dart';
 import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../Home_Screen/history/collections/create_collection_data.dart';
@@ -89,8 +90,8 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.9,
-      decoration: const BoxDecoration(
-        color: _T.bg,
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: Column(
@@ -231,7 +232,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
           width: 40,
           height: 4,
           decoration: BoxDecoration(
-            color: Colors.grey.shade300,
+            color: AppColors.backgroundColor,
             borderRadius: BorderRadius.circular(100),
           ),
         ),
@@ -244,23 +245,23 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       decoration: BoxDecoration(
-        color: _T.bg,
-        border: Border(bottom: BorderSide(color: _T.border.withOpacity(0.6))),
+        color: AppColors.backgroundColor,
+        // border: Border(bottom: BorderSide(color: _T.border.withOpacity(0.6))),
       ),
       child: Row(
         children: [
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
-              width: 36,
-              height: 36,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
                 color: _T.surface,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(color: _T.border),
               ),
-              child: const Icon(Icons.keyboard_arrow_down_rounded,
-                  size: 20, color: _T.textDark),
+              child: const Icon(Icons.arrow_downward_outlined,
+                  size: 22, color: _T.textDark),
             ),
           ),
           Expanded(
@@ -282,16 +283,6 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
                 ),
               ],
             ),
-          ),
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: _T.navyBg,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child:
-                const Icon(Icons.settings_outlined, size: 18, color: _T.navy),
           ),
         ],
       ),
@@ -321,7 +312,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
         color: _T.surface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: _alertEnabled ? _T.navy.withOpacity(0.25) : _T.border,
           width: _alertEnabled ? 1.5 : 1,
@@ -485,7 +476,7 @@ class _CollectionSettingsModalState extends State<CollectionSettingsModal>
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
           decoration: BoxDecoration(
             color: _T.surface,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(color: _T.border),
             boxShadow: [
               BoxShadow(

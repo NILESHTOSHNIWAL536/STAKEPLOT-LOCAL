@@ -135,6 +135,8 @@ Widget CollectionsBody(BuildContext context) {
   /// Call once — controller skips if data already loaded
 
   return Obx(() {
+
+
     if (collectionsController.isLoading.value &&
         collectionsController.collectionsList.isEmpty) {
       return const _LoadingShimmer();

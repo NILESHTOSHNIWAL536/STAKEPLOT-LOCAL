@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:get/get.dart';
 
 import '../../../Constants/app_styles.dart';
@@ -163,22 +164,8 @@ class _CollectionSummarySectionState extends State<CollectionSummarySection> {
               children: [
                 // Back button
                 GestureDetector(
-                  onTap: () => {navToHistoryReplacment(context)},
-                  child: Container(
-                    width: 38,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      color: _C.surface,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: _C.border),
-                    ),
-                    child: const Icon(
-                      Icons.arrow_back_rounded,
-                      size: 18,
-                      color: _C.textDark,
-                    ),
-                  ),
-                ),
+                    onTap: () => {navToHistoryReplacment(context)},
+                    child: globalbackArrow()),
 
                 const Spacer(),
 

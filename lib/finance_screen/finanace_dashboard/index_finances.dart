@@ -24,6 +24,7 @@ import '../../backed_connections/apis_connect.dart';
 import '../../components/bottomNavigations.dart';
 import '../../controllers/credit_card_controller.dart';
 import '../../image_service/avatarProfile.dart';
+import '../../repository/reserve_repository.dart';
 import 'reserve.dart';
 import 'reserve_flow.dart';
 import 'slider_addding_finances.dart';
@@ -54,7 +55,8 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   late AnimationController _hintController;
   late Animation<double> _hintOpacity;
   bool _showHint = true;
-
+  List<Map<String, dynamic>> reserveList = [];
+  bool isReserveLoading = true;
   @override
   void initState() {
     super.initState();
@@ -109,6 +111,22 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   Future<void> _loadData() async {
     try {
       final cardController = Get.find<CardDueController>();
+      // final reserveResult = await ReserveApiService.getReserve(ReserveState());
+      // print("Reserve result: $reserveResult");
+
+      final reserveResult = await ReserveApiService.getReserve(ReserveState());
+
+      switch (reserveResult) {
+        case ApiSuccess(:final data):
+          final list = data['data'] as List?;
+         
+
+          if (list != null) {
+            reserveList = list.cast<Map<String, dynamic>>(); // ✅ all reserves
+          }
+        case ApiFailure(:final message):
+          print("Reserve error: $message");
+      }
       await Future.wait([
         cardController.fetchCardData(),
         cardController.getBanksListCrediCard(),
@@ -118,7 +136,10 @@ class _FinanceDashboardState extends State<FinanceDashboard>
       // log error if needed
     } finally {
       if (mounted) {
-        setState(() => isLoading = false);
+        setState(() {
+          isLoading = false;
+          isReserveLoading = false;
+        });
       }
     }
   }
@@ -375,10 +396,10 @@ class _FinanceDashboardState extends State<FinanceDashboard>
           _buildDueCardsRow(context),
           SizedBox(height: AppSizes.h12),
 
-          _buildBudgetCard(context),
+          // _buildBudgetCard(context),
           SizedBox(height: AppSizes.h12),
-
-          _buildSavingsRow(context),
+          _buildReserveRow(context),
+          // _buildSavingsRow(context),
         ],
       ),
     );
@@ -577,6 +598,144 @@ class _FinanceDashboardState extends State<FinanceDashboard>
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildReserveRow(BuildContext context) {
+
+    if (isReserveLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (reserveList.isEmpty) {
+      return const Text("No reserves yet");
+    }
+
+    return SizedBox(
+      height: 120,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: reserveList.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (_, index) {
+          final item = reserveList[index];
+
+          final amount = (item['amount'] as num?)?.toDouble() ?? 0;
+          final suggested = (item['suggested_limit'] as num?)?.toDouble() ?? 0;
+          final days = (item['duration_days'] as num?)?.toInt() ?? 0;
+          final status = item['status'] ?? "";
+
+          return _reserveCard(
+            context,
+            amount: amount,
+            suggested: suggested,
+            days: days,
+            status: status,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _reserveCard(
+    BuildContext context, {
+    required double amount,
+    required double suggested,
+    required int days,
+    required String status,
+  }) {
+    final percent = amount == 0 ? 0.0 : (suggested / amount).clamp(0, 1);
+
+    return Container(
+      width: 220,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [AppShadows.soft],
+      ),
+      child: Row(
+        children: [
+          // LEFT
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Reserve",
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 13,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "₹ ${amount.toStringAsFixed(0)}",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 12,
+                    color: AppColors.grey,
+                  ),
+                ),
+                Text(
+                  "$days days",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 11,
+                    color: AppColors.grey,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Suggested ₹ ${suggested.toStringAsFixed(0)}",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 11,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                Text(
+                  status,
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 10,
+                    color: status == "ACTIVE" ? Colors.green : Colors.red,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // RIGHT (progress)
+          SizedBox(
+            height: 40,
+            width: 40,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CircularProgressIndicator(
+                  value: percent.toDouble(),
+                  strokeWidth: 4,
+                  backgroundColor: const Color(0xFFE5E7EB),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppColors.primaryColor,
+                  ),
+                ),
+                Text(
+                  "${(percent * 100).toInt()}%",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 10,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
