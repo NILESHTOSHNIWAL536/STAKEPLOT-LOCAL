@@ -15,6 +15,7 @@ import '../components/shared_utils.dart';
 import '../model/TransactionModel.dart';
 import '../model/collections_model.dart';
 import '../routes/route_collections.dart';
+import 'limit-reachedBottomSheet.dart';
 
 class CollectionsController extends GetxController {
   // =========================
@@ -751,21 +752,29 @@ class CollectionsController extends GetxController {
 
   Future<void> acceptInvitation(
       String invitationId, BuildContext context) async {
+    var response;
     try {
-      final response = await postDataApiCall(
+      response = await postDataApiCall(
         CollectionsRoute.acceptInvitation(invitationId),
         {},
       );
-
       if (getFlagOfResponse(response)) {
         invitationsList.removeWhere((e) => e.id == invitationId);
 
         /// Refresh collections also
         await getCollections(forceRefresh: true);
-
         // AppNavigator.pushReplacementNamed(context, '/Collections');
+      } else if (response.statusCode == 400) {
+        final resData = json.decode(response.body);
+        snackBarCalledfail(
+            context,
+            resData["error"] ??
+                "Failed to Accept collection Request. Please try again.");
+        LimitReachedBottomSheet.show(context);
       }
     } catch (e) {
+      snackBarCalledfail(
+          context, "Failed to Accept collection Request. Please try again.");
       debugPrint("acceptInvitation error: $e");
     }
   }
@@ -817,7 +826,10 @@ class CollectionsController extends GetxController {
     try {
       String collectionId =
           collectionsController.collectionDetails.value!.collection.id;
-      final response = await updateDataApiCall2(CollectionsRoute.updateMemberLimit(collectionId),{"limits": body},);
+      final response = await updateDataApiCall2(
+        CollectionsRoute.updateMemberLimit(collectionId),
+        {"limits": body},
+      );
 
       if (getFlagOfResponse(response)) {
         await refreshCollectionData(collectionId);
@@ -1035,7 +1047,7 @@ class CollectionsController extends GetxController {
         getBalances(id);
       }
     } catch (e) {
-      debugPrint("rejectInvitation error: $e");
+      appLog("clearSplitAmountComplete error: $e");
     }
   }
 
@@ -1108,41 +1120,5 @@ class CollectionsController extends GetxController {
         clearn: false);
 
     controllersList.clear();
-  }
-
-  Future<void> fetchCollectionMembers(String collectionId) async {
-    //   try {
-    //     setState(() => isCollectionLoading = true);
-
-    //     var response = await getDataApiCall(
-    //       CollectionsRoute.getCollectionById(collectionId),
-    //     );
-
-    //     if (getFlagOfResponse(response)) {
-    //       var data = json.decode(response.body);
-
-    //       setState(() {
-    //         collectionMembers = data['data']['members'] ?? [];
-
-    //         // ✅ ADD THIS
-    //         memberAmounts.clear();
-
-    //         double total =
-    //             double.tryParse(_amountController.text.toString()) ?? 0;
-
-    //         if (collectionMembers.isNotEmpty && total > 0) {
-    //           double split = total / collectionMembers.length;
-
-    //           for (var m in collectionMembers) {
-    //             memberAmounts[m['user']['id']] = split;
-    //           }
-    //         }
-    //       });
-    //     }
-    //   } catch (e) {
-    //     debugPrint("fetchCollectionMembers error: $e");
-    //   } finally {
-    //     setState(() => isCollectionLoading = false);
-    //   }
   }
 }

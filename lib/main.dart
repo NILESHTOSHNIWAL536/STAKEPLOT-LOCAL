@@ -12,9 +12,8 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'Constants/core/app_component_sizes.dart';
 import 'app_init/AppTheme.dart';
 import 'components/shared_utils.dart';
-import 'controllers/finora_controller.dart';
-import 'controllers/quick_check_controller.dart';
 import 'deep_link_service.dart';
+import 'repository/app_share_link/appsflyer_service.dart';
 import 'repository/clearstack.dart';
 import 'controllers/controllerManagement.dart';
 import 'controllers/theme_controller.dart';
@@ -35,12 +34,7 @@ void main() async {
   );
 
   main_apis_call_init();
-  // runZonedGuarded(() {
-  //   runApp(const MyApp());
-  // }, (Object error, StackTrace stack) {
-  //   // Handle uncaught async errors here
-  //   handleError(error, stack);
-  // });
+  await AppsflyerService.init();
 }
 
 class MyApp extends StatefulWidget {
@@ -72,7 +66,7 @@ class _MyAppState extends State<MyApp> {
     appLog("🚀 DeepLink init called");
     DeepLinkService().init((token) {
       appLog("🚀 Token: $token");
-    },contextp);
+    }, contextp);
   }
 
   void loadThemes() async {
@@ -83,6 +77,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    handleDeepLink(context);
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
       child: Obx(() => MaterialApp(

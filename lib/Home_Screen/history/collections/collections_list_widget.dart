@@ -7,6 +7,7 @@ import '../../../Constants/core/app_padding_sizes.dart';
 import '../../../Constants/core/container_border.dart';
 import '../../../Constants/font_manager.dart';
 import '../../../backed_connections/apis_connect.dart';
+import '../../../controllers/limit-reachedBottomSheet.dart';
 import '../../../image_service/avatarProfile.dart';
 import '../../../model/collections_model.dart';
 import 'create_collection_data.dart';
@@ -160,10 +161,10 @@ Widget CollectionsBody(BuildContext context) {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          // SliverPadding(
-          //   padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-          //   sliver: SliverToBoxAdapter(child: CreateCollectionButton(context)),
-          // ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+            sliver: SliverToBoxAdapter(child: CreateCollectionButton(context)),
+          ),
           if (allCollections.isNotEmpty) ...[
             const SliverPadding(
               padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
@@ -340,8 +341,6 @@ class _CollectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("all items");
-    print(item.members);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
@@ -561,6 +560,10 @@ class CreateCollectionButton extends StatelessWidget {
           ),
         ),
         onPressed: () {
+          if (collectionsController.collectionsList.length >= 4) {
+            LimitReachedBottomSheet.show(context);
+            return;
+          }
           collectionDraft.name = null;
           collectionDraft.type = null;
           collectionDraft.members = [];

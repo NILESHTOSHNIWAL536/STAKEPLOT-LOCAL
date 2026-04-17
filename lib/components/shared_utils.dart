@@ -9,17 +9,26 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-void appLog(message) {
+void appLog(dynamic message,
+    [dynamic message2, dynamic message3, dynamic message4]) {
   if (!kReleaseMode) {
-      print(message); // Only prints in debug
+      final logs = [message, message2, message3, message4]
+        .where((e) => e != null)
+        .map((e) => e.toString())
+        .join(" | ");
+       print(logs);
   }
 }
 
+// void appLog(message) {
+//   if (!kReleaseMode) {
+//       print(message); // Only prints in debug
+//   }
+// }
+
 void consolelog(message) {
   if (!kReleaseMode) {
-      print(message); // Only prints in debug
+    print(message); // Only prints in debug
   }
 }
 
@@ -76,7 +85,6 @@ int getDaysInCurrentMonth() {
   return DateTime(now.year, now.month + 1, 0).day;
 }
 
-
 String getMonthlyRange() {
   final now = DateTime.now();
   final startOfMonth = DateTime(now.year, now.month, 1);
@@ -88,6 +96,7 @@ String getMonthlyRange() {
 String _formatDateDonut(DateTime date) {
   return '${date.day.toString().padLeft(2, '0')} ${getMonthName(date.month)} ${date.year}';
 }
+
 String getMonthName(int month) {
   const months = [
     'Jan',
@@ -105,7 +114,6 @@ String getMonthName(int month) {
   ];
   return months[month - 1];
 }
-
 
 String formatDate(String dateString) {
   DateTime date = DateTime.parse(dateString);
@@ -168,7 +176,6 @@ int getRandomValue(list) {
   return Random().nextInt(list.length);
 }
 
-
 String getTimeBasedGreeting() {
   final hour = DateTime.now().hour;
   if (hour < 12) {
@@ -179,7 +186,6 @@ String getTimeBasedGreeting() {
     return "Good evening,";
   }
 }
-
 
 DateTime convertStringToDateTime(String dateString) {
   return DateTime.parse(dateString);
@@ -477,22 +483,22 @@ bool isCurrentMonth(String date, int m) {
 
 Future<String?> getToken() async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  var accessToken =await SecureStorageService().read("accessToken");
+  var accessToken = await SecureStorageService().read("accessToken");
   if (accessToken == null) {
     return null;
   } else {
     return accessToken;
   }
 }
- String formatNumber(double v) {
-    if (v >= 10000000) return '${(v / 10000000).toStringAsFixed(1)}Cr';
-    if (v >= 100000) return '${(v / 100000).toStringAsFixed(1)}L';
-    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}K';
-    return v.toStringAsFixed(0);
-  }
 
+String formatNumber(double v) {
+  if (v >= 10000000) return '${(v / 10000000).toStringAsFixed(1)}Cr';
+  if (v >= 100000) return '${(v / 100000).toStringAsFixed(1)}L';
+  if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}K';
+  return v.toStringAsFixed(0);
+}
 
-  class VerticalDashDivider extends StatelessWidget {
+class VerticalDashDivider extends StatelessWidget {
   final double height;
   final double dashHeight;
   final double dashGap;
