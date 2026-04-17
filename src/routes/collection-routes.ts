@@ -6,6 +6,7 @@ const router = Router();
 
 router.use(protect);
 
+router.patch('/:id/updateCollections', CollectionController.updateCollection);
 router.post('/', CollectionController.createCollection);
 
 router.get('/', CollectionController.getUserCollections);
@@ -56,7 +57,6 @@ router.post('/:id/splits/:splitId/clear', CollectionController.clearPayment);
 
 router.get('/:id/balances', CollectionController.getBalances);
 
-router.patch('/:id/updateCollections', CollectionController.updateCollection);
 
 router.patch('/:id/closeCollection', CollectionController.closeCollection);
 

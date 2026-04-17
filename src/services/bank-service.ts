@@ -120,7 +120,7 @@ export async function createBankDetails(data: any, consentHandleId: string, user
 
       // Transactions
       if (fiObject.Transactions?.Transaction) {
-        await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, accountId, userId, bank._id);
+        await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, accountId, userId, bank._id, data.fipId);
 
         // grouping and downstream jobs
         await saveGroupedTransactions(userId);
@@ -237,7 +237,7 @@ export async function updateBankDetails(data: any, consentHandleId: string, user
       }
 
       if (fiObject.Transactions?.Transaction) {
-        await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, accountId, userId, bank!._id);
+        await new AutoTransactionRepository().createTransaction(fiObject.Transactions.Transaction, accountId, userId, bank!._id, data.fipId);
         await saveGroupedTransactions(userId);
       }
     }

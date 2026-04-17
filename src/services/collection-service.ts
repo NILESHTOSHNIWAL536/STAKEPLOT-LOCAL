@@ -8,6 +8,8 @@ import BankTransaction from '../models/transactions-automation/transaction';
 import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
 import UserService from './user-service';
+import { enrichTransactionWithBankDetails } from '@/helpers/enrich-bank.helper';
+import FipRepository from '@/repositories/autoTransactions-repository/bank';
 
 const MAX_COLLECTIONS_PER_USER = 5;
 
@@ -184,7 +186,8 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
 
 export const getUserCollections = async (userId: string) => {
   const members = await CollectionMember.find({ userId }).populate('collectionId');
-  const collections = members.map((m) => m.collectionId as unknown as ICollection);
+  // const collections = members.map((m) => m.collectionId as unknown as ICollection);
+  const collections = members.map((m) => m.collectionId as unknown as ICollection).filter((c) => c && c.ownerId);
 
   // Hydrate ownerIds
   const ownerIds = collections.map((c) => c.ownerId.toString());
@@ -196,7 +199,6 @@ export const getUserCollections = async (userId: string) => {
   const collectionsWithMembers = await Promise.all(
     collections.map(async (c) => {
       const collectionMembers = await CollectionMember.find({ collectionId: c._id }).lean();
-      
       // Hydrate member user data
       const memberUserIds = collectionMembers.map((m) => m.userId.toString());
       const memberUserData = await UserService.hydrateUsers(memberUserIds);
@@ -228,7 +230,8 @@ export const getCollectionById = async (collectionId: string, userId: string) =>
 
   const collection = await Collection.findById(collectionId);
   const members = await CollectionMember.find({ collectionId }).lean();
-  const transactions = await CollectionTransaction.find({ collectionId }).populate('transactionId').select('-_id -__v');
+  const transactions = await CollectionTransaction.find({ collectionId }).populate('transactionId').select('-_id -__v').lean();
+  const flattenedTransactions = transactions.map((t) => t.transactionId).filter(Boolean);
   const splits = await Split.find({ collectionId }).lean();
 
   // Hydrate user IDs
@@ -286,11 +289,22 @@ export const getCollectionById = async (collectionId: string, userId: string) =>
   });
 
   const outStandingAmount = totalDebit - totalCredit;
+  const banks = await new FipRepository().getBank(userId);
+  const enrichedTransactions = await enrichTransactionWithBankDetails(flattenedTransactions, banks);
+  const enrichedMap = new Map(enrichedTransactions.map((tx: any) => [tx._id.toString(), tx]));
+  const finalTransactions = transactions.reduce((acc: any[], t: any) => {
+    const enriched = enrichedMap.get(t.transactionId?._id.toString());
+    acc.push({
+      ...t,
+      transactionId: enriched || t.transactionId,
+    });
+    return acc;
+  }, []);
 
   return {
     collection: hydratedCollection,
     members: hydratedMembers,
-    transactions,
+    transactions: finalTransactions,
     splits: hydratedSplits,
     totalCredit,
     totalDebit,
@@ -407,8 +421,6 @@ export const addTransactions = async (collectionId: string, userId: string, tran
     collection.totalAmount = (collection.totalAmount || 0) + totalAmount;
     await collection.save({ session });
 
-    console.log('collection: ', collection);
-
     // ── PERSONAL collection: no splits, return early ──
     if (collection.type === 'PERSONAL') {
       return { colTxs, splitDoc: null };
@@ -431,9 +443,9 @@ export const addTransactions = async (collectionId: string, userId: string, tran
       if (!customSplits || customSplits.length === 0) {
         throw new AppError('Custom splits must be provided', StatusCodes.BAD_REQUEST);
       }
-      const totalSplit = customSplits.reduce((acc, s) => acc + s.amount, 0);
+      const totalSplit = customSplits.reduce((acc, s) => acc + parseInt(s.amount?.toString() || '0'), 0);
       // allows small floating precision diffs
-      if (Math.abs(totalSplit - totalAmount) > 0.01) {
+      if (Math.abs(Math.round(totalSplit) - Math.round(totalAmount)) !== 0) {
         throw new AppError('Custom splits total must equal total transaction amount', StatusCodes.BAD_REQUEST);
       }
       splits = customSplits;
@@ -540,8 +552,11 @@ export const getAvailableTransactions = async (userId: string, collectionId: str
     .limit(limit)
     .lean();
 
+  const banks = await new FipRepository().getBank(userId);
+  const enrichedTransactions = await enrichTransactionWithBankDetails(transactions, banks);
+
   return {
-    transactions,
+    transactions: enrichedTransactions,
     pagination: {
       total,
       page,
@@ -620,9 +635,7 @@ export const getBalances = async (collectionId: string, userId: string) => {
       const paidAmount = paymentTotals.get(payKey) || 0;
       const remainingAmount = Math.max(0, originalAmount - paidAmount);
 
-      const status =
-        paidAmount === 0 ? 'PENDING' :
-        remainingAmount === 0 ? 'SETTLED' : 'PARTIAL';
+      const status = paidAmount === 0 ? 'PENDING' : remainingAmount === 0 ? 'SETTLED' : 'PARTIAL';
 
       if (splitUserId === userId) {
         // Logged-in user owes the paidBy person
@@ -651,13 +664,9 @@ export const getBalances = async (collectionId: string, userId: string) => {
   }
 
   // Calculate totals (only unsettled items)
-  const totalToPay = toPayItems
-    .filter((i) => i.status !== 'SETTLED')
-    .reduce((sum, i) => sum + i.remainingAmount, 0);
+  const totalToPay = toPayItems.filter((i) => i.status !== 'SETTLED').reduce((sum, i) => sum + i.remainingAmount, 0);
 
-  const totalToReceive = toReceiveItems
-    .filter((i) => i.status !== 'SETTLED')
-    .reduce((sum, i) => sum + i.pendingAmount, 0);
+  const totalToReceive = toReceiveItems.filter((i) => i.status !== 'SETTLED').reduce((sum, i) => sum + i.pendingAmount, 0);
 
   // Hydrate user IDs
   const userIdsSet = new Set<string>();
@@ -688,10 +697,10 @@ export const getBalances = async (collectionId: string, userId: string) => {
  */
 export const recordPayment = async (
   collectionId: string,
-  userId: string,   // payer / debtor
+  userId: string, // payer / debtor
   splitId: string,
   amount: number,
-  note?: string,
+  note?: string
 ) => {
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member) {
@@ -757,11 +766,11 @@ export const recordPayment = async (
  */
 export const clearPayment = async (
   collectionId: string,
-  userId: string,   // receiver / creditor (Y)
+  userId: string, // receiver / creditor (Y)
   splitId: string,
-  payerId: string,  // the debtor (X) whose debt is being cleared
+  payerId: string, // the debtor (X) whose debt is being cleared
   amount: number,
-  note?: string,
+  note?: string
 ) => {
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member) {
@@ -829,8 +838,8 @@ export const clearPayment = async (
  */
 export const setMemberLimits = async (
   collectionId: string,
-  userId: string,   // must be owner
-  limits: Array<{ userId: string; limitAmount: string }>,
+  userId: string, // must be owner
+  limits: Array<{ userId: string; limitAmount: string }>
 ) => {
   const collection = await Collection.findById(collectionId);
   if (!collection) {
@@ -923,7 +932,7 @@ export const closeCollection = async (collectionId: string, userId: string) => {
   return collection.toObject();
 };
 
-export const getAllTransactions = async (collectionId: string, userId: string, page: number = 1, limit: number = 20) => {
+export const getAllTransactions = async (collectionId: string, userId: string, page: number = 1, limit: number = 20) => { 
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member) {
     throw new AppError('User is not a member of this collection', StatusCodes.FORBIDDEN);
@@ -940,7 +949,7 @@ export const getAllTransactions = async (collectionId: string, userId: string, p
   let totalCredit = 0;
   let totalDebit = 0;
 
-  // Compute totals across ALL transactions (not just this page)
+  // pute totals across ALL transactions (not just this page)
   const allColTxs = await CollectionTransaction.find({ collectionId }).populate('transactionId').lean();
   allColTxs.forEach((ct: any) => {
     const tx = ct.transactionId;

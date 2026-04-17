@@ -14,11 +14,12 @@ interface CreateTxInput {
   accountId: string | Types.ObjectId | null;
   userId: string | Types.ObjectId;
   bankId: string | Types.ObjectId | null;
+  bankKey?: string;
   Transaction: Model<IBankTransaction>;
   TransactionRule: Model<ITransactionRule>;
 }
 
-export const createTransactionsBulk = async ({ transactions, accountId, userId, bankId, Transaction, TransactionRule }: CreateTxInput) => {
+export const createTransactionsBulk = async ({ transactions, accountId, userId, bankId, bankKey = 'UNKNOWN', Transaction, TransactionRule }: CreateTxInput) => {
   // 1. Manual transaction (shortcut path)
   if (transactions[0]?.manualTransaction) {
     const created = await Transaction.create(transactions[0]);
@@ -33,7 +34,7 @@ export const createTransactionsBulk = async ({ transactions, accountId, userId, 
   const uniqueTransactions = deduplicateTransactions(transactions);
 
   // 4. Categorize using your helper
-  const categorized = categorizeTransactions(uniqueTransactions, accountId, userId, bankId, ruleMap);
+  const categorized = categorizeTransactions(uniqueTransactions, accountId, userId, bankId, ruleMap, bankKey);
 
   // 5. Insert
   try {
