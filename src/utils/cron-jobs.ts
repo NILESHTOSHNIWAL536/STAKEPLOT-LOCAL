@@ -28,6 +28,7 @@ import pLimit from 'p-limit';
 import axios from 'axios';
 import { ServerConfig } from '@/config';
 import jwt from 'jsonwebtoken';
+import Collection from '@/models/collections/collection.model';
 
 async function fetchUserFromGateway(id: string): Promise<any> {
   const internalToken = jwt.sign(
@@ -345,6 +346,25 @@ cron.schedule(
       await retryFailedTransactions(false);
     } catch (err: any) {
       console.error('Cron job error:', err.message);
+    }
+  },
+  { scheduled: true, timezone: 'Asia/Kolkata' }
+);
+
+/** Daily at midnight IST: close collections whose expiryAt has passed */
+cron.schedule(
+  '0 0 * * *',
+  async () => {
+    try {
+      const result = await Collection.updateMany(
+        { status: 'ACTIVE', expiryAt: { $lte: new Date() } },
+        { $set: { status: 'CLOSED' } }
+      );
+      if (result.modifiedCount > 0) {
+        logger.debug(`Closed ${result.modifiedCount} expired collection(s)`);
+      }
+    } catch (err: any) {
+      logger.error(`Collection expiry sweep error: ${err.message}`);
     }
   },
   { scheduled: true, timezone: 'Asia/Kolkata' }

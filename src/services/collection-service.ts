@@ -11,6 +11,7 @@ import UserService from './user-service';
 import { AppLimits } from '@/utils/helpers/collections_envs';
 import { enrichTransactionWithBankDetails } from '@/helpers/enrich-bank.helper';
 import FipRepository from '@/repositories/autoTransactions-repository/bank';
+import { getEndOfDay } from '@/utils/time';
 
 
 const transactionOptions: mongoose.mongo.TransactionOptions = {
@@ -146,6 +147,11 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
   }
   // Remove friends from data to avoid persisting arbitrary fields[]
   const { friends: _ignoredFriends, ...collectionData } = data || {};
+
+  // Normalize expiryAt to IST end-of-day UTC so the expiry sweep closes it at the right time
+  if (collectionData.expiryAt) {
+    collectionData.expiryAt = getEndOfDay(new Date(collectionData.expiryAt));
+  }
 
   return runInTransaction(async (session) => {
     const collection = new Collection({
@@ -895,7 +901,7 @@ export const updateCollection = async (collectionId: string, userId: string, dat
 
   if (data.name !== undefined) collection.name = data.name;
   if (data.description !== undefined) collection.description = data.description;
-  if (data.expiryAt !== undefined) collection.expiryAt = data.expiryAt;
+  if (data.expiryAt !== undefined) collection.expiryAt = getEndOfDay(new Date(data.expiryAt));
   if(data.active){
     //  const activeCount = await getUserCollectionsCount(userId);
     //  if(AppLimits.MAX_COLLECTIONS_PER_USER<activeCount){
