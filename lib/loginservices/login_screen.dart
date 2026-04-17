@@ -67,15 +67,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: AppSizes.h100),
                       // Welcome Text
                       _buildWelcomeText(),
-
-                      // const SizedBox(height: 360),
-                      //                 Image.asset(
-                      //   'assets/splashScreen/login.gif',
-                      //   width: MediaQuery.sizeOf(context).width,
-                      //   height: 260,
-                      //   fit: BoxFit.contain,
-                      //   gaplessPlayback: true, // prevents flicker
-                      // ),
                       Lottie.asset(
                         "assets/splashScreen/loginScreen.json",
                         fit: BoxFit.cover,

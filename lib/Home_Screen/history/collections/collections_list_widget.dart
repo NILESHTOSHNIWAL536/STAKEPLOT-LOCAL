@@ -159,10 +159,10 @@ Widget CollectionsBody(BuildContext context) {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          // SliverPadding(
-          //   padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-          //   sliver: SliverToBoxAdapter(child: CreateCollectionButton(context)),
-          // ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+            sliver: SliverToBoxAdapter(child: CreateCollectionButton(context)),
+          ),
           if (allCollections.isNotEmpty) ...[
             const SliverPadding(
               padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
@@ -339,8 +339,6 @@ class _CollectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("all items");
-    print(item.members);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),

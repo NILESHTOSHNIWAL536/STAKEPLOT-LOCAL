@@ -319,7 +319,6 @@ Future<void> _addThisDeviceToBackend(deviceData, context) async {
 }
 
 Future<Widget> checkAuthAndNavigate() async {
-  final bool isLoggedIn =
-      await SecureStorageService().containsKey("accessToken");
+  final bool isLoggedIn = await SecureStorageService().containsKey("accessToken");
   return isLoggedIn ? HomePage() : LoginScreen();
 }

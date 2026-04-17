@@ -97,7 +97,7 @@ class LimitReachedBottomSheet {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-                  _shareReferral();
+                  shareReferral("AX9L023");
                 },
                 child: Container(
                   width: double.infinity,
@@ -139,11 +139,27 @@ class LimitReachedBottomSheet {
     );
   }
 
-  static void _shareReferral() {
-    const message = "Hey! I'm using Stakeplot 🚀\n\n"
-        "Join using my referral:\n"
-        "https://staging.stakeplot.in/ABC123";
+  static Future<void> shareReferral(String refCode) async {
+    final link = generateReferralLinkLocal(refCode);
 
-    Share.share(message);
+    final message = """
+        Hey! I'm using Stakeplot 🚀
+
+        Join using my referral:
+        $link
+        """;
+    await Share.share(message);
+  }
+
+  static String generateReferralLink(String refCode) {
+    return "https://stagingstakeplot.onelink.me/vf5p/8m41djpj"
+        "?pid=User_invite"
+        "&c=referral"
+        "&deep_link_value=signup"
+        "&deep_link_sub1=$refCode";
+  }
+
+  static String generateReferralLinkLocal(String refCode) {
+    return "https://unexhilarating-vihaan-nosogeographical.ngrok-free.dev/invite?ref=AX9L023&path=home";
   }
 }
