@@ -8,10 +8,10 @@ import BankTransaction from '../models/transactions-automation/transaction';
 import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
 import UserService from './user-service';
+import { AppLimits } from '@/utils/helpers/collections_envs';
 import { enrichTransactionWithBankDetails } from '@/helpers/enrich-bank.helper';
 import FipRepository from '@/repositories/autoTransactions-repository/bank';
 
-const MAX_COLLECTIONS_PER_USER = 5;
 
 const transactionOptions: mongoose.mongo.TransactionOptions = {
   readPreference: 'primary',
@@ -105,23 +105,9 @@ const formatSplitsWithMemberDetails = (splits: any[], userId: string, userMap: M
 };
 
 export const createCollection = async (userId: string, data: any, friends: IFriendInput[] = []) => {
-  const counts = await CollectionMember.aggregate([
-    { $match: { userId } },
-    {
-      $lookup: {
-        from: 'collections',
-        localField: 'collectionId',
-        foreignField: '_id',
-        as: 'collectionData',
-      },
-    },
-    { $unwind: '$collectionData' },
-    { $match: { 'collectionData.status': 'ACTIVE' } },
-    { $count: 'count' },
-  ]);
+  const memberCount = await getUserCollectionsCount(userId);
 
-  const memberCount = counts.length > 0 ? counts[0].count : 0;
-  if (memberCount >= MAX_COLLECTIONS_PER_USER) {
+  if (memberCount >= AppLimits.MAX_COLLECTIONS_PER_USER) {
     throw new AppError('User has reached the maximum allowed collections (2)', StatusCodes.BAD_REQUEST);
   }
 
@@ -146,7 +132,7 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
 
   const countMap = new Map(friendCounts.map((c) => [c._id.toString(), c.count]));
 
-  const invalidFriendIds = friendIds.filter((id) => (countMap.get(id) || 0) >= MAX_COLLECTIONS_PER_USER);
+  const invalidFriendIds = friendIds.filter((id) => (countMap.get(id) || 0) >= AppLimits.MAX_COLLECTIONS_PER_USER);
 
   if (invalidFriendIds.length > 0) {
     const usersData = await UserService.hydrateUsers(invalidFriendIds);
@@ -156,7 +142,7 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
       .filter(Boolean)
       .join(', ');
 
-    throw new AppError(`${names} ${invalidFriendIds.length > 1 ? 'have' : 'has'} reached the maximum allowed collections (${MAX_COLLECTIONS_PER_USER})`, StatusCodes.BAD_REQUEST);
+    throw new AppError(`${names} ${invalidFriendIds.length > 1 ? 'have' : 'has'} reached the maximum allowed collections (${AppLimits.MAX_COLLECTIONS_PER_USER})`, StatusCodes.BAD_REQUEST);
   }
   // Remove friends from data to avoid persisting arbitrary fields[]
   const { friends: _ignoredFriends, ...collectionData } = data || {};
@@ -344,7 +330,7 @@ export const addMembers = async (collectionId: string, authorId: string, friends
       ]).session(session);
 
       const friendCollectionCount = counts.length > 0 ? counts[0].count : 0;
-      if (friendCollectionCount >= MAX_COLLECTIONS_PER_USER) {
+      if (friendCollectionCount >= AppLimits.MAX_COLLECTIONS_PER_USER) {
         throw new AppError(`User ${friendId} has already reached the maximum allowed collections (2)`, StatusCodes.BAD_REQUEST);
       }
 
@@ -846,7 +832,7 @@ export const setMemberLimits = async (
     throw new AppError('Collection not found', StatusCodes.NOT_FOUND);
   }
   if (collection.ownerId.toString() !== userId) {
-    throw new AppError('Only the collection owner can set member limits', StatusCodes.FORBIDDEN);
+     throw new AppError('Only the collection owner can set member limits', StatusCodes.FORBIDDEN);
   }
   if (!limits || limits.length === 0) {
     throw new AppError('limits array must not be empty', StatusCodes.BAD_REQUEST);
@@ -893,7 +879,7 @@ export const deleteCollection = async (collectionId: string, userId: string) => 
   });
 };
 
-export const updateCollection = async (collectionId: string, userId: string, data: { name?: string; description?: string; expiryAt?: Date }) => {
+export const updateCollection = async (collectionId: string, userId: string, data: { name?: string; description?: string; expiryAt?: Date,active }) => {
   const member = await CollectionMember.findOne({ collectionId, userId });
   if (!member || member.role !== 'CONTRIBUTE') {
     throw new AppError('You do not have permission to update this collection', StatusCodes.FORBIDDEN);
@@ -903,16 +889,80 @@ export const updateCollection = async (collectionId: string, userId: string, dat
   if (!collection) {
     throw new AppError('Collection not found', StatusCodes.NOT_FOUND);
   }
-  if (collection.status === 'CLOSED') {
+  if (collection.status === 'CLOSED' && !data.active) {
     throw new AppError('Cannot update a closed collection', StatusCodes.BAD_REQUEST);
   }
 
   if (data.name !== undefined) collection.name = data.name;
   if (data.description !== undefined) collection.description = data.description;
   if (data.expiryAt !== undefined) collection.expiryAt = data.expiryAt;
-
+  if(data.active){
+    //  const activeCount = await getUserCollectionsCount(userId);
+    //  if(AppLimits.MAX_COLLECTIONS_PER_USER<activeCount){
+       collection.status='ACTIVE';
+      // }else{
+      //   throw new AppError('You have reached the maximum number of active collections.', StatusCodes.BAD_REQUEST);
+      // }
+  }
   await collection.save();
   return collection.toObject();
+};
+
+export const getUserCollectionsCount = async (userId: string) => {
+  const result = await CollectionMember.aggregate([
+    {
+      $match: {
+        userId: new mongoose.Types.ObjectId(userId), // ✅ FIX
+      },
+    },
+    {
+      $lookup: {
+        from: "collections",
+        localField: "collectionId",
+        foreignField: "_id",
+        as: "collectionData",
+      },
+    },
+    {
+      $unwind: "$collectionData",
+    },
+    {
+      $count: "count",
+    },
+  ]);
+
+  return result[0]?.count || 0; // ✅ always return number
+};
+
+export const getActiveCollectionsCountByUser = async (userId: string) => {
+  const result = await CollectionMember.aggregate([
+    {
+      $match: {
+        userId: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $lookup: {
+        from: "collections", // MongoDB collection name
+        localField: "collectionId",
+        foreignField: "_id",
+        as: "collection",
+      },
+    },
+    {
+      $unwind: "$collection",
+    },
+    {
+      $match: {
+        "collection.status": "ACTIVE",
+      },
+    },
+    {
+      $count: "count",
+    },
+  ]);
+
+  return result[0]?.count || 0;
 };
 
 export const closeCollection = async (collectionId: string, userId: string) => {
@@ -1040,4 +1090,5 @@ export default {
   recordPayment,
   clearPayment,
   setMemberLimits,
+  getUserCollectionsCount
 };

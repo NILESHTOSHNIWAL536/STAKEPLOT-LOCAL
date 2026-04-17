@@ -8,8 +8,9 @@ import { StatusCodes } from 'http-status-codes';
 import UserService from './user-service';
 import { redisClient } from '../config';
 import { Types } from 'mongoose';
+import { getUserCollectionsCount } from './collection-service';
+import { AppLimits } from '@/utils/helpers/collections_envs';
 
-const MAX_COLLECTIONS_PER_USER = 10;
 
 /**
  * Send invitations to multiple friends for a collection
@@ -68,7 +69,7 @@ export const sendInvitations = async (
 
     const memberCount = friendCollectionCount.length > 0 ? friendCollectionCount[0].count : 0;
 
-    if (memberCount >= MAX_COLLECTIONS_PER_USER) {
+    if (memberCount >= AppLimits.MAX_COLLECTIONS_PER_USER) {
       throw new AppError(`User ${friendId} has reached the maximum allowed collections (2)`, StatusCodes.BAD_REQUEST);
     }
 
@@ -210,12 +211,21 @@ export const acceptInvitation = async (invitationId: string, userId: string): Pr
     collectionId: invitation.collectionId,
     userId,
   });
+
   if (existingMember) {
     throw new AppError('You are already a member of this collection', StatusCodes.BAD_REQUEST);
   }
 
+  const memberCount = await getUserCollectionsCount(userId);
+  
+  if (memberCount+1 >= AppLimits.MAX_COLLECTIONS_PER_USER) {
+    throw new AppError('User has reached the maximum allowed collections (2)', StatusCodes.BAD_REQUEST);
+  }
+
   const session = await mongoose.startSession();
   session.startTransaction();
+
+
 
   try {
     // Update invitation status
