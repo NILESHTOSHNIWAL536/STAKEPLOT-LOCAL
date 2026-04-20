@@ -66,6 +66,11 @@ class CollectionsController extends GetxController {
 
   final RxList<InvitationModel> invitationsList = <InvitationModel>[].obs;
   final RxBool isInvitationLoading = false.obs;
+  final RxInt collectionBaseLimit = 0.obs;
+  final RxInt collectionReferralBonus = 0.obs;
+  final RxInt collectionTotalLimit = 4.obs;
+  final RxInt remainingCollectionLimit = 4.obs;
+  final RxInt usedCollectionCount = 0.obs;
 
   MemberModel? currentUser;
 
@@ -106,6 +111,8 @@ class CollectionsController extends GetxController {
           collectionsList.assignAll(parsed);
         }
       }
+
+      await fetchCollectionLimitSummary();
     } catch (e) {
       debugPrint("getCollections error: $e");
     } finally {
@@ -113,6 +120,29 @@ class CollectionsController extends GetxController {
       _isFetchingCollections = false;
     }
   }
+
+  Future<void> fetchCollectionLimitSummary() async {
+    try {
+      final response =
+          await getDataApiCall(CollectionsRoute.getCollectionLimitSummary);
+
+      if (!getFlagOfResponse(response)) return;
+
+      final decoded = json.decode(response.body);
+      final data = decoded['data'] ?? {};
+
+      collectionBaseLimit.value = data['baseLimit'] ?? 0;
+      collectionReferralBonus.value = data['referralBonus'] ?? 0;
+      collectionTotalLimit.value = data['totalLimit'] ?? 4;
+      usedCollectionCount.value = data['usedCollections'] ?? 0;
+      remainingCollectionLimit.value = data['remainingCollections'] ??
+          (collectionTotalLimit.value - usedCollectionCount.value);
+    } catch (e) {
+      debugPrint("fetchCollectionLimitSummary error: $e");
+    }
+  }
+
+  bool get hasReachedCollectionLimit => remainingCollectionLimit.value <= 0;
 
   // =========================
   // GET COLLECTION BY ID
@@ -763,6 +793,7 @@ class CollectionsController extends GetxController {
 
         /// Refresh collections also
         await getCollections(forceRefresh: true);
+        await fetchCollectionLimitSummary();
         // AppNavigator.pushReplacementNamed(context, '/Collections');
       } else if (response.statusCode == 400) {
         final resData = json.decode(response.body);

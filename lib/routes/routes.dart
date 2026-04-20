@@ -21,6 +21,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/login_screen.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/onboarding_user.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/referral_code_screen.dart';
 import '../Home_Screen/home_screen_state/home_page.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import '../budget/budget_detail_screen.dart';
@@ -49,6 +50,7 @@ var routes = {
   '/emi': (context) => const Emi(),
   '/rent_buy': (context) => const RentBuy(),
   '/user_onboarding': (context) => const UserOnboarding(),
+  '/referral_code': (context) => const ReferralCodeScreen(),
   '/VegNonveg': (context) => const VegNonVegCalculator(),
   '/FetchTransaction': (context) => const FetchTransaction(),
   '/OnboardingScreen': (context) => OnboardingScreen(),

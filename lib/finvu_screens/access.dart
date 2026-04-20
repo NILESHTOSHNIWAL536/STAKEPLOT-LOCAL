@@ -22,6 +22,7 @@ import 'package:intl/intl.dart';
 import '../Constants/app_styles.dart';
 import '../loginservices/login.dart';
 import '../onboarding_screens/onboarding_screen.dart';
+import '../repository/referral_repository.dart';
 import 'LinkingAccount.dart';
 
 class Access extends StatefulWidget {
@@ -475,6 +476,10 @@ class _AccessState extends State<Access> {
     try {
       final info = await finvuManager.getConsentRequestDetails(handleId.value);
       await finvuManager.approveConsentRequest(info, seletedAccountInfomations);
+
+      await ReferralRepository.applySavedReferralCodeIfAvailable();
+      if (!mounted) return;
+
       snackBarCalled(context, SnackbarData().consentApproved);
       FetchTransactionFromFinvuApi(context);
     } catch (e) {

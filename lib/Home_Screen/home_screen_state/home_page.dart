@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/bankServic
 import 'package:flutter_application_code_stakeplot/app_init/rewardsplashscreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/repository/referral_repository.dart';
 import 'package:get/get.dart';
 
 
@@ -49,6 +50,18 @@ class _HomePageState extends State<HomePage> {
     });
     storeBankDataApi();
     requestNotificationPermissionOncePerDay();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _persistReferralCodeFromArguments();
+    });
+  }
+
+  Future<void> _persistReferralCodeFromArguments() async {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map && args['refCode'] != null) {
+      await ReferralRepository.saveIncomingReferralCode(
+        args['refCode'].toString(),
+      );
+    }
   }
 
   void _scrollToTop() {

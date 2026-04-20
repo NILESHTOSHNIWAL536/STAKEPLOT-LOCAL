@@ -1,6 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/Home/init_Api_Calls.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../main.dart';
+import '../repository/clearstack.dart';
 
 class ScreenTimeTracker with WidgetsBindingObserver {
   static final ScreenTimeTracker _instance = ScreenTimeTracker._internal();
@@ -38,19 +43,15 @@ class ScreenTimeTracker with WidgetsBindingObserver {
     }
   }
 
-  Future<void> setUser(String userId,[flag=false]) async
-   {
-    if (_userId != userId || flag)
-    {
+  Future<void> setUser(String userId, [flag = false]) async {
+    if (_userId != userId || flag) {
       await clearUserData(); // Clear previous user data
       _userId = userId;
       await _loadUserData();
-      
     }
   }
 
-  Future<void> clearUserData() async
-  {
+  Future<void> clearUserData() async {
     _totalScreenTimeSeconds = 0;
     _dailyAppOpenCount = 0;
     _appOpenHistory = [];
@@ -63,7 +64,8 @@ class ScreenTimeTracker with WidgetsBindingObserver {
     final pref = await SharedPreferences.getInstance();
     if (_userId != null) {
       await pref.remove('total_screen_time_$_userId');
-      await pref.remove('app_open_count_${DateTime.now().toIso8601String().substring(0, 10)}_$_userId');
+      await pref.remove(
+          'app_open_count_${DateTime.now().toIso8601String().substring(0, 10)}_$_userId');
       await pref.remove('app_open_history_$_userId');
       await pref.remove('app_event_log_$_userId');
       await pref.remove('tab_time_home_$_userId');
@@ -71,7 +73,7 @@ class ScreenTimeTracker with WidgetsBindingObserver {
       await pref.remove('tab_time_community_$_userId');
       await pref.remove('tab_time_profile_$_userId');
     }
-   
+
     _userId = null;
   }
 
@@ -98,7 +100,8 @@ class ScreenTimeTracker with WidgetsBindingObserver {
 
   Future<void> _loadAppOpenData() async {
     final pref = await SharedPreferences.getInstance();
-    final todayKey = 'app_open_count_${DateTime.now().toIso8601String().substring(0, 10)}_$_userId';
+    final todayKey =
+        'app_open_count_${DateTime.now().toIso8601String().substring(0, 10)}_$_userId';
     _dailyAppOpenCount = pref.getInt(todayKey) ?? 0;
     _appOpenHistory = pref.getStringList('app_open_history_$_userId') ?? [];
   }
@@ -106,7 +109,8 @@ class ScreenTimeTracker with WidgetsBindingObserver {
   Future<void> _saveAppOpenData() async {
     if (_userId == null) return;
     final pref = await SharedPreferences.getInstance();
-    final todayKey = 'app_open_count_${DateTime.now().toIso8601String().substring(0, 10)}_$_userId';
+    final todayKey =
+        'app_open_count_${DateTime.now().toIso8601String().substring(0, 10)}_$_userId';
     await pref.setInt(todayKey, _dailyAppOpenCount);
     if (_appOpenHistory.any((entry) => entry.startsWith(todayKey))) {
       _appOpenHistory.removeWhere((entry) => entry.startsWith(todayKey));
@@ -130,7 +134,8 @@ class ScreenTimeTracker with WidgetsBindingObserver {
     final pref = await SharedPreferences.getInstance();
     _tabScreenTime['Home'] = pref.getInt('tab_time_home_$_userId') ?? 0;
     _tabScreenTime['Finance'] = pref.getInt('tab_time_finance_$_userId') ?? 0;
-    _tabScreenTime['Community'] = pref.getInt('tab_time_community_$_userId') ?? 0;
+    _tabScreenTime['Community'] =
+        pref.getInt('tab_time_community_$_userId') ?? 0;
     _tabScreenTime['Profile'] = pref.getInt('tab_time_profile_$_userId') ?? 0;
   }
 
@@ -139,7 +144,8 @@ class ScreenTimeTracker with WidgetsBindingObserver {
     final pref = await SharedPreferences.getInstance();
     await pref.setInt('tab_time_home_$_userId', _tabScreenTime['Home']!);
     await pref.setInt('tab_time_finance_$_userId', _tabScreenTime['Finance']!);
-    await pref.setInt('tab_time_community_$_userId', _tabScreenTime['Community']!);
+    await pref.setInt(
+        'tab_time_community_$_userId', _tabScreenTime['Community']!);
     await pref.setInt('tab_time_profile_$_userId', _tabScreenTime['Profile']!);
   }
 
@@ -172,15 +178,18 @@ class ScreenTimeTracker with WidgetsBindingObserver {
     if (_tabScreenTime.containsKey(tab)) {
       _currentTab = tab;
       _tabStartTime = DateTime.now();
-    } else {
-    }
+    } else {}
   }
 
   void _updateCurrentTabTime() {
-    if (_isLoggedIn && _currentTab != null && _tabStartTime != null && _userId != null) {
+    if (_isLoggedIn &&
+        _currentTab != null &&
+        _tabStartTime != null &&
+        _userId != null) {
       final duration = DateTime.now().difference(_tabStartTime!).inSeconds;
       if (duration > 0) {
-        _tabScreenTime[_currentTab!] = (_tabScreenTime[_currentTab!] ?? 0) + duration;
+        _tabScreenTime[_currentTab!] =
+            (_tabScreenTime[_currentTab!] ?? 0) + duration;
       }
       _tabStartTime = DateTime.now(); // Reset to prevent overlap
     }
@@ -190,7 +199,8 @@ class ScreenTimeTracker with WidgetsBindingObserver {
     _stopTimer();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_isLoggedIn && _sessionStartTime != null) {
-        final currentDuration = DateTime.now().difference(_sessionStartTime!).inSeconds;
+        final currentDuration =
+            DateTime.now().difference(_sessionStartTime!).inSeconds;
         final total = _totalScreenTimeSeconds + currentDuration;
         screenTimeNotifier.value = total;
       } else {
@@ -210,7 +220,8 @@ class ScreenTimeTracker with WidgetsBindingObserver {
     final today = now.toIso8601String().substring(0, 10);
     final todayKey = 'app_open_count_${today}_$_userId';
 
-    if (_appOpenHistory.isEmpty || !_appOpenHistory.any((entry) => entry.startsWith(todayKey))) {
+    if (_appOpenHistory.isEmpty ||
+        !_appOpenHistory.any((entry) => entry.startsWith(todayKey))) {
       _dailyAppOpenCount = 0;
     }
 
@@ -263,8 +274,12 @@ class ScreenTimeTracker with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       final now = DateTime.now();
-      if (_lastResumeTime == null || now.difference(_lastResumeTime!).inSeconds > 2) {
+      callApi(navigatorKey.currentState!.context);
+      if (_lastResumeTime == null ||
+          now.difference(_lastResumeTime!).inSeconds > 2) {
         incrementAppOpenCount();
+        initGetControllersIfisRegistered();
+        // callApi(Get.context);
         _lastResumeTime = now;
       }
       if (_isLoggedIn && _sessionStartTime == null && _userId != null) {
@@ -275,7 +290,8 @@ class ScreenTimeTracker with WidgetsBindingObserver {
       logAppClose();
       _updateCurrentTabTime();
       if (_isLoggedIn && _sessionStartTime != null) {
-        final duration = DateTime.now().difference(_sessionStartTime!).inSeconds;
+        final duration =
+            DateTime.now().difference(_sessionStartTime!).inSeconds;
         _totalScreenTimeSeconds += duration;
         _sessionStartTime = null;
         _tabStartTime = null;

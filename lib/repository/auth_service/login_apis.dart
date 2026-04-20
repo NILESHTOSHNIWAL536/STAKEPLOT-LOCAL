@@ -17,16 +17,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Utils/snackBar.dart';
 import '../../Home_Screen/Home/init_Api_Calls.dart';
 import '../../Home_Screen/home_screen_state/home_page.dart';
+import '../../finance_screen/Budgets/Budget.dart';
+import '../../finance_screen/Calculators/veg_nonveg.dart';
 import '../../services/secure_storage.dart';
 import '../../loginservices/screenTime.dart';
 import '../../loginservices/login_screen.dart';
 import '../../backed_connections/googlesignin/credentials.dart';
+import '../../signInOut/referral_code_screen.dart';
 import '../bankinfo.dart';
 import '../../routes/route_user_login.dart';
 import '../../signInOut/userName.dart';
 
 class LoginService {
-  
   static Future<void> signUp(
       context, Map<String, dynamic> data, String avatarUrl) async {
     String name = data['name'];
@@ -318,7 +320,39 @@ Future<void> _addThisDeviceToBackend(deviceData, context) async {
   } catch (e) {}
 }
 
+// Future<Widget> checkAuthAndNavigate() async {
+//   final bool isLoggedIn = await SecureStorageService().containsKey("accessToken");
+//   String navigate =  SecureStorageService().read("Screen") ?? "";
+//   return isLoggedIn ? navigate.isEmpty? HomePage():  VegNonVegCalculator() : LoginScreen();
+// }
+
 Future<Widget> checkAuthAndNavigate() async {
-  final bool isLoggedIn = await SecureStorageService().containsKey("accessToken");
-  return isLoggedIn ? HomePage() : LoginScreen();
+  final bool isLoggedIn =
+      await SecureStorageService().containsKey("accessToken");
+
+  final String navigate = await SecureStorageService().read("Screen") ?? "";
+
+  if (navigate.isNotEmpty) {
+    await SecureStorageService().delete("Screen");
+  }
+
+  return isLoggedIn
+      ? navigate.isEmpty
+          ? HomePage()
+          : navigatePath(navigate)
+      : LoginScreen();
+}
+
+Widget navigatePath(String navigate) 
+{
+  if (navigate == "home" || navigate == "/home" || navigate == "signup") {
+    return HomePage();
+  } else if (navigate == "budget") {
+    return Budget();
+  } else if (navigate == "calculator" || navigate == "veg_nonveg") {
+    return VegNonVegCalculator();
+  } else if (navigate == "code") {
+    return ReferralCodeScreen();
+  }
+  return HomePage();
 }

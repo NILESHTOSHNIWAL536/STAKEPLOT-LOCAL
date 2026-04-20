@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/repository/referral_repository.dart';
 import 'package:share_plus/share_plus.dart';
 
 class LimitReachedBottomSheet {
@@ -6,7 +7,7 @@ class LimitReachedBottomSheet {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent, // 👈 important for gradient
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(20),
@@ -21,7 +22,6 @@ class LimitReachedBottomSheet {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              /// 🔘 Top Drag Handle
               Container(
                 height: 5,
                 width: 50,
@@ -30,13 +30,10 @@ class LimitReachedBottomSheet {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              /// 🔒 Icon with Circle Glow
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
                     colors: [Colors.redAccent, Colors.orangeAccent],
@@ -44,32 +41,22 @@ class LimitReachedBottomSheet {
                 ),
                 child: const Icon(Icons.lock, size: 40, color: Colors.white),
               ),
-
               const SizedBox(height: 16),
-
-              /// 🧠 Title
               const Text(
-                "Limit Reached 😬",
+                "Limit Reached",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-
               const SizedBox(height: 10),
-
-              /// 📄 Subtitle
               const Text(
-                "You've reached your collection limit.\n"
-                "Invite friends & unlock more collections 🚀",
+                "You've reached your collection limit.\nInvite friends and unlock more collections.",
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white70, height: 1.4),
               ),
-
               const SizedBox(height: 20),
-
-              /// 🎁 Reward Card
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
@@ -77,27 +64,24 @@ class LimitReachedBottomSheet {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.white10),
                 ),
-                child: Row(
-                  children: const [
+                child: const Row(
+                  children: [
                     Icon(Icons.card_giftcard, color: Colors.amber),
                     SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        "Invite 3 friends & get +2 collection limit 🎉",
+                        "Invite 3 friends and get +2 collection limit",
                         style: TextStyle(color: Colors.white70),
                       ),
                     ),
                   ],
                 ),
               ),
-
               const SizedBox(height: 25),
-
-              /// 🚀 Invite Button (Gradient)
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
-                  shareReferral("AX9L023");
+                  await shareReferral();
                 },
                 child: Container(
                   width: double.infinity,
@@ -110,7 +94,7 @@ class LimitReachedBottomSheet {
                   ),
                   child: const Center(
                     child: Text(
-                      "Invite Friends 🚀",
+                      "Invite Friends",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -119,10 +103,7 @@ class LimitReachedBottomSheet {
                   ),
                 ),
               ),
-
               const SizedBox(height: 10),
-
-              /// ❌ Cancel
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text(
@@ -130,7 +111,6 @@ class LimitReachedBottomSheet {
                   style: TextStyle(color: Colors.white54),
                 ),
               ),
-
               const SizedBox(height: 10),
             ],
           ),
@@ -139,15 +119,26 @@ class LimitReachedBottomSheet {
     );
   }
 
-  static Future<void> shareReferral(String refCode) async {
-    final link = generateReferralLinkLocal(refCode);
+  static Future<void> shareReferral([String? refCode]) async {
+    String finalCode = refCode ?? '';
 
+    if (finalCode.trim().isEmpty) {
+      final response = await ReferralRepository.getShareReferralCode();
+      finalCode = response['code']?.toString() ?? '';
+    }
+
+    if (finalCode.trim().isEmpty) {
+      throw Exception('Referral code not available');
+    }
+
+    final link = generateReferralLinkLocal(finalCode);
     final message = """
-        Hey! I'm using Stakeplot 🚀
+Hey! I'm using Stakeplot.
 
-        Join using my referral:
-        $link
-        """;
+Join using my referral:
+$link
+""";
+
     await Share.share(message);
   }
 
@@ -160,6 +151,6 @@ class LimitReachedBottomSheet {
   }
 
   static String generateReferralLinkLocal(String refCode) {
-    return "https://unexhilarating-vihaan-nosogeographical.ngrok-free.dev/invite?ref=AX9L023&path=home";
+    return "https://unexhilarating-vihaan-nosogeographical.ngrok-free.dev/invite?ref=$refCode&path=home";
   }
 }

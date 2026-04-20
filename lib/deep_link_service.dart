@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
+import 'Home_Screen/Home/init_Api_Calls.dart';
 import 'budget/create_budget_screen.dart';
 import 'main.dart';
 
@@ -18,12 +19,12 @@ class DeepLinkService {
 
     if (initialUri != null) {
       appLog("🔥 Initial Link: $initialUri");
-      // _handle(initialUri, onReferral, context);
+      _handle(initialUri, onReferral, context);
     }
 
     _sub = _appLinks.uriLinkStream.listen((uri) {
       appLog("🔥 Stream Link: $uri");
-      // _handle(uri, onReferral, context);
+      _handle(uri, onReferral, context);
     });
   }
 
@@ -72,44 +73,43 @@ class DeepLinkService {
   // }
 
   void _handle(
-    Uri uri, Function(String token) onReferral, BuildContext context) {
+      Uri uri, Function(String token) onReferral, BuildContext context) {
+    consolelog("🌐 Full URL: ${uri.toString()}");
+    callApi(context);
+    final segments = uri.pathSegments;
 
-  consolelog("🌐 Full URL: ${uri.toString()}");
+    appLog("📂 Segments: $segments");
 
-  final segments = uri.pathSegments;
+    if (segments.length < 2) {
+      appLog("❌ Invalid path");
+      return;
+    }
 
-  appLog("📂 Segments: $segments");
+    // 🔥 FIXED
+    String route = segments[1];
+    String token = segments.length > 2 ? segments[2] : "";
 
-  if (segments.length < 2) {
-    appLog("❌ Invalid path");
-    return;
+    appLog("🧭 Route: $route");
+    appLog("🎯 Token: $token");
+
+    // switch (route) {
+    //   case "home":
+    //     AppNavigator.pushReplacementNamed("/home");
+    //     break;
+
+    //   case "ref":
+    //     onReferral(token);
+    //     break;
+
+    //   default:
+    //     appLog("⚠️ Unknown route");
+    // }
+
+    appLog("🔗 Scheme: ${uri.scheme}");
+    appLog("🌍 Host: ${uri.host}");
+    appLog("📍 Path: ${uri.path}");
+    appLog("❓ Query Params: ${uri.queryParameters}");
   }
-
-  // 🔥 FIXED
-  String route = segments[1];
-  String token = segments.length > 2 ? segments[2] : "";
-
-  appLog("🧭 Route: $route");
-  appLog("🎯 Token: $token");
-
-  switch (route) {
-    case "home":
-      AppNavigator.pushReplacementNamed("/home");
-      break;
-
-    case "ref":
-      onReferral(token);
-      break;
-
-    default:
-      appLog("⚠️ Unknown route");
-  }
-
-  appLog("🔗 Scheme: ${uri.scheme}");
-  appLog("🌍 Host: ${uri.host}");
-  appLog("📍 Path: ${uri.path}");
-  appLog("❓ Query Params: ${uri.queryParameters}");
-}
 
   void dispose() {
     _sub?.cancel();

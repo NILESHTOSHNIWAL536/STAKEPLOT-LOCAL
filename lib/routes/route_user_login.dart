@@ -36,6 +36,15 @@ class AuthApiRoutes {
   static String getCreditCardList = "$_emailPath/";
 }
 
+class ReferralRoutes {
+  static final String _urlPath = "${API.BankApiUrl}/referral";
+
+  static String shareCode = "$_urlPath/share-code";
+  static String validate = "$_urlPath/validate";
+  static String apply = "$_urlPath/apply";
+  static String create = "$_urlPath/create";
+}
+
 class UserRoutes {
   static final String _urlPath = API.mainBackendUrl + "/user";
   static String update = "$_urlPath/";

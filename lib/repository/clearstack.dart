@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/bankServic
 import 'package:flutter_application_code_stakeplot/controllers/finora_controller.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
+import 'package:flutter_application_code_stakeplot/repository/referral_repository.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/post-controller.dart';
@@ -241,6 +242,10 @@ void logoutUserFromDevice(context2) async {
     Navigator.pushReplacementNamed(context, '/');
     await _pref.remove("token");
     await _pref.remove("accessToken");
+    await SecureStorageService().delete("token");
+    await SecureStorageService().delete("accessToken");
+    await ReferralRepository.clearAllReferralCodes();
+    await ReferralRepository.clearMyShareReferralCode();
     await SecureStorageService().deleteAll();
   } catch (e) {}
 }

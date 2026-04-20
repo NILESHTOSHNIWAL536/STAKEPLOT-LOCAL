@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/repository/referral_repository.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/onboarding_user.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
@@ -24,6 +25,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../repository/auth_service/login_apis.dart';
+import '../services/secure_storage.dart';
 import 'googl_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -37,12 +39,28 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController =
       TextEditingController(text: "nileshtoshniwal743@gmail.com");
   final AuthService authService = AuthService();
+  RxString isLoggedIn = "".obs;
 
   @override
   void initState() {
     super.initState();
     acceptReset.value = false;
     googleSignInBool.value = false;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      isLoggedIn.value =
+          await SecureStorageService().read("Screen") ?? "Not found";
+      _persistReferralCodeFromArguments();
+    });
+  }
+
+  Future<void> _persistReferralCodeFromArguments() async {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map && args['refCode'] != null) {
+      await ReferralRepository.saveIncomingReferralCode(
+        args['refCode'].toString(),
+      );
+    }
   }
 
   @override
@@ -73,6 +91,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       SizedBox(height: AppSizes.h30),
+                      Obx(() => Text(isLoggedIn.value)),
+                      SizedBox(height: AppSizes.h30),
                       // Email Field
 
                       _buildEmailField(),
@@ -93,8 +113,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          containerIconSiginWith(
-                              FontAwesomeIcons.google, AppColors.backgroundColor, context),
+                          containerIconSiginWith(FontAwesomeIcons.google,
+                              AppColors.backgroundColor, context),
                           // buildGoogleSignIn(),
                           SizedBox(width: AppSizes.w20),
                           !Platform.isAndroid

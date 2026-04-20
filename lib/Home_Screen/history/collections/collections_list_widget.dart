@@ -156,12 +156,21 @@ Widget CollectionsBody(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 2,
       // color: AppColors.redColor,
-      child: CustomScrollView(
+            child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            sliver: SliverToBoxAdapter(child: CreateCollectionButton(context)),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _CollectionLimitInfo(),
+                  const SizedBox(height: 12),
+                  CreateCollectionButton(context),
+                ],
+              ),
+            ),
           ),
           if (allCollections.isNotEmpty) ...[
             const SliverPadding(
@@ -215,6 +224,55 @@ class _SectionTitle extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _CollectionLimitInfo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final remaining = collectionsController.remainingCollectionLimit.value;
+      final total = collectionsController.collectionTotalLimit.value;
+      final used = collectionsController.usedCollectionCount.value;
+
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.grey.withOpacity(0.2)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                remaining > 0
+                    ? 'You can create $remaining more collection${remaining == 1 ? '' : 's'}'
+                    : 'You have reached your collection limit',
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 13,
+                  lWeight: FontWeight.w600,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              '$used / $total',
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 12,
+                lWeight: FontWeight.w600,
+                color: remaining > 0 ? AppColors.accentColor : AppColors.redColor,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -558,7 +616,7 @@ class CreateCollectionButton extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          if (collectionsController.collectionsList.length >= 4) {
+          if (collectionsController.hasReachedCollectionLimit) {
             LimitReachedBottomSheet.show(context);
             return;
           }
@@ -598,6 +656,10 @@ class CreateCollectionButtonInRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        if (collectionsController.hasReachedCollectionLimit) {
+          LimitReachedBottomSheet.show(context);
+          return;
+        }
         collectionDraft.name = null;
         collectionDraft.type = null;
         collectionDraft.members = [];
