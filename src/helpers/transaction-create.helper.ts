@@ -1,6 +1,6 @@
 // src2/helpers/transaction-create.helper.ts
 
-import type { Model } from 'mongoose';
+import type { Model, ClientSession } from 'mongoose';
 import { Types } from 'mongoose';
 import type { IBankTransaction } from '@/types/bank';
 import type { ITransactionRule } from '@/models/transactions-automation/transactionRule';
@@ -17,12 +17,15 @@ interface CreateTxInput {
   bankKey?: string;
   Transaction: Model<IBankTransaction>;
   TransactionRule: Model<ITransactionRule>;
+  session?: ClientSession;
 }
 
-export const createTransactionsBulk = async ({ transactions, accountId, userId, bankId, bankKey = 'UNKNOWN', Transaction, TransactionRule }: CreateTxInput) => {
+export const createTransactionsBulk = async ({ transactions, accountId, userId, bankId, bankKey = 'UNKNOWN', Transaction, TransactionRule, session }: CreateTxInput) => {
   // 1. Manual transaction (shortcut path)
   if (transactions[0]?.manualTransaction) {
-    const created = await Transaction.create(transactions[0]);
+    const created = session
+      ? (await Transaction.create([transactions[0]], { session }))[0]
+      : await Transaction.create(transactions[0]);
     return { data: created, categorizedTransactions: [created] };
   }
 
@@ -40,10 +43,13 @@ export const createTransactionsBulk = async ({ transactions, accountId, userId, 
   try {
     const insertResult = await Transaction.insertMany(categorized, {
       ordered: false,
+      ...(session ? { session } : {}),
     });
 
-    // 6. Cleanup DB-level duplicates
-    await deduplicateAllTransactions(userId);
+    // 6. Cleanup DB-level duplicates — skip inside a transaction (run after commit)
+    if (!session) {
+      await deduplicateAllTransactions(userId);
+    }
 
     return {
       insertedCount: insertResult.length,

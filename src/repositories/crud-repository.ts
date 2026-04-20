@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, ClientSession } from 'mongoose';
 import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
 import { Types } from 'mongoose';
@@ -10,16 +10,20 @@ class CrudRepository<T extends Model<any>> {
     this.model = model;
   }
 
-  async create(data: any) {
+  async create(data: any, session?: ClientSession) {
+    if (session) {
+      const result = await this.model.create([data], { session });
+      return result[0];
+    }
     return this.model.create(data);
   }
 
-  async deleteOne(query: any) {
-    return this.model.deleteOne(query);
+  async deleteOne(query: any, session?: ClientSession) {
+    return this.model.deleteOne(query).session(session ?? null);
   }
 
-  async deleteMany(query: any) {
-    return this.model.deleteMany(query);
+  async deleteMany(query: any, session?: ClientSession) {
+    return this.model.deleteMany(query).session(session ?? null);
   }
 
   async get(query: any, options: any = {}) {

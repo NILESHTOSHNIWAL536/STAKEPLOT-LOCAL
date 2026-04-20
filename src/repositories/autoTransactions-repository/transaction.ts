@@ -1,4 +1,4 @@
-import { Types, Model, PipelineStage } from 'mongoose';
+import { Types, Model, PipelineStage, ClientSession } from 'mongoose';
 import moment from 'moment-timezone';
 
 import { IBankTransaction, IRecurringPayment } from '@/types/bank';
@@ -64,6 +64,7 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
     userId: string | Types.ObjectId,
     bankId: string | Types.ObjectId | null,
     bankKey: string = 'UNKNOWN',
+    session?: ClientSession,
   ) {
     try {
       const txArray = Array.isArray(transactions) ? transactions : [transactions as any];
@@ -75,9 +76,14 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
         bankKey,
         Transaction: this.TransactionModel,
         TransactionRule: this.RuleModel,
+        session,
       });
-      const metricsInput = result?.categorizedTransactions || txArray;
-      await updateDailyMetrics(metricsInput, userId);
+      // When a session is provided the caller (bank-service) owns the
+      // transaction boundary and will call updateDailyMetrics after commit.
+      if (!session) {
+        const metricsInput = result?.categorizedTransactions || txArray;
+        await updateDailyMetrics(metricsInput, userId);
+      }
       return result;
     } catch (error: any) {
       logger.error('Error creating transactions:', error);
@@ -1008,12 +1014,12 @@ export default class AutoTransactionRepository extends CrudRepository<typeof Tra
   // -------------------------
   // 30. Delete transactions
   // -------------------------
-  async deleteTransactions(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId) {
+  async deleteTransactions(userId: string | Types.ObjectId, accountId?: string | Types.ObjectId, session?: ClientSession) {
     try {
       const criteria: any = { userId };
       if (accountId) criteria.accountId = accountId;
 
-      const result = await this.TransactionModel.deleteMany(criteria);
+      const result = await this.TransactionModel.deleteMany(criteria).session(session ?? null);
       return result.deletedCount ?? 0;
     } catch (error) {
       logger.error(`Error deleting transactions: ${error}`);

@@ -12,27 +12,7 @@ import { AppLimits } from '@/utils/helpers/collections_envs';
 import { enrichTransactionWithBankDetails } from '@/helpers/enrich-bank.helper';
 import FipRepository from '@/repositories/autoTransactions-repository/bank';
 import { getEndOfDay } from '@/utils/time';
-
-
-const transactionOptions: mongoose.mongo.TransactionOptions = {
-  readPreference: 'primary',
-  readConcern: { level: 'snapshot' },
-  writeConcern: { w: 'majority' },
-};
-
-const runInTransaction = async <T>(fn: (session: mongoose.ClientSession) => Promise<T>): Promise<T> => {
-  const session = await mongoose.startSession();
-  try {
-    let result: T;
-    await session.withTransaction(async () => {
-      result = await fn(session);
-    }, transactionOptions);
-    // `result` is definitely assigned inside the transaction callback
-    return result!;
-  } finally {
-    await session.endSession();
-  }
-};
+import { runInTransaction } from '@/utils/run-in-transaction';
 
 // Helper function to calculate member spending metrics
 const calculateMemberSpending = (userId: string, splits: any[]) => {
@@ -846,15 +826,17 @@ export const setMemberLimits = async (
 
   const updatedMembers: any[] = [];
 
-  for (const limit of limits) {
-    const targetMember = await CollectionMember.findOne({ collectionId, userId: limit.userId });
-    if (!targetMember) {
-      throw new AppError(`Member with userId ${limit.userId} not found in this collection`, StatusCodes.NOT_FOUND);
+  await runInTransaction(async (session) => {
+    for (const limit of limits) {
+      const targetMember = await CollectionMember.findOne({ collectionId, userId: limit.userId }).session(session);
+      if (!targetMember) {
+        throw new AppError(`Member with userId ${limit.userId} not found in this collection`, StatusCodes.NOT_FOUND);
+      }
+      targetMember.limitAmount = limit.limitAmount;
+      await targetMember.save({ session });
+      updatedMembers.push(targetMember.toObject());
     }
-    targetMember.limitAmount = limit.limitAmount;
-    await targetMember.save();
-    updatedMembers.push(targetMember.toObject());
-  }
+  });
 
   // Hydrate user data
   const userIds = limits.map((l) => l.userId);
