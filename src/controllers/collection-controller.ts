@@ -30,6 +30,18 @@ export const getUserCollections = async (req: Request, res: Response, next: Next
   }
 };
 
+export const getCollectionLimitSummary = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user._id;
+    const summary = await CollectionService.getUserCollectionLimitSummary(userId);
+    SuccessResponse.data = summary;
+    SuccessResponse.message = 'Collection limit summary fetched successfully';
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getCollectionById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user._id;
@@ -394,6 +406,7 @@ export const setMemberLimits = async (req: Request, res: Response, next: NextFun
 export default {
   createCollection,
   getUserCollections,
+  getCollectionLimitSummary,
   getCollectionById,
   addMembers,
   addTransaction,
