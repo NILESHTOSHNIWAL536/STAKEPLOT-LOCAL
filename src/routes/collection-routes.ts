@@ -10,6 +10,7 @@ router.patch('/:id/updateCollections', CollectionController.updateCollection);
 router.post('/', CollectionController.createCollection);
 
 router.get('/', CollectionController.getUserCollections);
+router.get('/limit-summary', CollectionController.getCollectionLimitSummary);
 
 // ====================================
 // INVITATION ENDPOINTS (User routes)

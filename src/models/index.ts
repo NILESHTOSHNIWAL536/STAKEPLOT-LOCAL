@@ -36,6 +36,9 @@ import WealthscapeAccountData from "./wealthscape-account-data";
 
 // Collection models
 import CollectionInvitation from "./collections/collection-invitation.model";
+import ReferralCode from "./referral-code.model";
+import ReferralUsage from "./referral-usage.model";
+import UserConfig from "./user-config.model";
 
 export {
   // Models related to storing user's profile, fipRecords, summaries, transactions
@@ -75,4 +78,9 @@ export {
 
   // Collection models
   CollectionInvitation,
+
+  // Referral models
+  ReferralCode,
+  ReferralUsage,
+  UserConfig,
 };

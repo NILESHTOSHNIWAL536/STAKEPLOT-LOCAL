@@ -8,9 +8,9 @@ import BankTransaction from '../models/transactions-automation/transaction';
 import AppError from '../utils/errors/app-error';
 import { StatusCodes } from 'http-status-codes';
 import UserService from './user-service';
-import { AppLimits } from '@/utils/helpers/collections_envs';
 import { enrichTransactionWithBankDetails } from '@/helpers/enrich-bank.helper';
 import FipRepository from '@/repositories/autoTransactions-repository/bank';
+import UserConfigService from './user-config-service';
 
 
 const transactionOptions: mongoose.mongo.TransactionOptions = {
@@ -106,9 +106,10 @@ const formatSplitsWithMemberDetails = (splits: any[], userId: string, userMap: M
 
 export const createCollection = async (userId: string, data: any, friends: IFriendInput[] = []) => {
   const memberCount = await getUserCollectionsCount(userId);
+  const requesterLimit = await UserConfigService.getUserCollectionLimit(userId);
 
-  if (memberCount >= AppLimits.MAX_COLLECTIONS_PER_USER) {
-    throw new AppError('User has reached the maximum allowed collections (2)', StatusCodes.BAD_REQUEST);
+  if (memberCount >= requesterLimit.totalLimit) {
+    throw new AppError(`User has reached the maximum allowed collections (${requesterLimit.totalLimit})`, StatusCodes.BAD_REQUEST);
   }
 
   // Validate potential members' limits up front
@@ -131,8 +132,8 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
   ]);
 
   const countMap = new Map(friendCounts.map((c) => [c._id.toString(), c.count]));
-
-  const invalidFriendIds = friendIds.filter((id) => (countMap.get(id) || 0) >= AppLimits.MAX_COLLECTIONS_PER_USER);
+  const friendLimitMap = await UserConfigService.getUserCollectionLimitMap(friendIds);
+  const invalidFriendIds = friendIds.filter((id) => (countMap.get(id) || 0) >= (friendLimitMap.get(id)?.totalLimit ?? 0));
 
   if (invalidFriendIds.length > 0) {
     const usersData = await UserService.hydrateUsers(invalidFriendIds);
@@ -142,7 +143,14 @@ export const createCollection = async (userId: string, data: any, friends: IFrie
       .filter(Boolean)
       .join(', ');
 
-    throw new AppError(`${names} ${invalidFriendIds.length > 1 ? 'have' : 'has'} reached the maximum allowed collections (${AppLimits.MAX_COLLECTIONS_PER_USER})`, StatusCodes.BAD_REQUEST);
+    const limitDetails = invalidFriendIds
+      .map((id) => `${id}:${friendLimitMap.get(id)?.totalLimit ?? 0}`)
+      .join(', ');
+
+    throw new AppError(
+      `${names || 'One or more users'} ${invalidFriendIds.length > 1 ? 'have' : 'has'} reached the maximum allowed collections (${limitDetails})`,
+      StatusCodes.BAD_REQUEST
+    );
   }
   // Remove friends from data to avoid persisting arbitrary fields[]
   const { friends: _ignoredFriends, ...collectionData } = data || {};
@@ -330,8 +338,9 @@ export const addMembers = async (collectionId: string, authorId: string, friends
       ]).session(session);
 
       const friendCollectionCount = counts.length > 0 ? counts[0].count : 0;
-      if (friendCollectionCount >= AppLimits.MAX_COLLECTIONS_PER_USER) {
-        throw new AppError(`User ${friendId} has already reached the maximum allowed collections (2)`, StatusCodes.BAD_REQUEST);
+      const friendLimit = await UserConfigService.getUserCollectionLimit(friendId);
+      if (friendCollectionCount >= friendLimit.totalLimit) {
+        throw new AppError(`User ${friendId} has already reached the maximum allowed collections (${friendLimit.totalLimit})`, StatusCodes.BAD_REQUEST);
       }
 
       const existingMember = await CollectionMember.findOne({ collectionId, userId: friendId }).session(session);
@@ -965,6 +974,17 @@ export const getActiveCollectionsCountByUser = async (userId: string) => {
   return result[0]?.count || 0;
 };
 
+export const getUserCollectionLimitSummary = async (userId: string) => {
+  const limit = await UserConfigService.getUserCollectionLimit(userId);
+  const usedCollections = await getActiveCollectionsCountByUser(userId);
+
+  return {
+    ...limit,
+    usedCollections,
+    remainingCollections: Math.max(limit.totalLimit - usedCollections, 0),
+  };
+};
+
 export const closeCollection = async (collectionId: string, userId: string) => {
   const collection = await Collection.findById(collectionId);
   if (!collection) {
@@ -1090,5 +1110,6 @@ export default {
   recordPayment,
   clearPayment,
   setMemberLimits,
-  getUserCollectionsCount
+  getUserCollectionsCount,
+  getUserCollectionLimitSummary
 };

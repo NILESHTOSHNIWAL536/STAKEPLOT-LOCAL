@@ -9,7 +9,7 @@ import UserService from './user-service';
 import { redisClient } from '../config';
 import { Types } from 'mongoose';
 import { getUserCollectionsCount } from './collection-service';
-import { AppLimits } from '@/utils/helpers/collections_envs';
+import UserConfigService from './user-config-service';
 
 
 /**
@@ -68,9 +68,10 @@ export const sendInvitations = async (
     ]);
 
     const memberCount = friendCollectionCount.length > 0 ? friendCollectionCount[0].count : 0;
+    const friendLimit = await UserConfigService.getUserCollectionLimit(friendId);
 
-    if (memberCount >= AppLimits.MAX_COLLECTIONS_PER_USER) {
-      throw new AppError(`User ${friendId} has reached the maximum allowed collections (2)`, StatusCodes.BAD_REQUEST);
+    if (memberCount >= friendLimit.totalLimit) {
+      throw new AppError(`User ${friendId} has reached the maximum allowed collections (${friendLimit.totalLimit})`, StatusCodes.BAD_REQUEST);
     }
 
     // Check if user is already a member
@@ -217,9 +218,10 @@ export const acceptInvitation = async (invitationId: string, userId: string): Pr
   }
 
   const memberCount = await getUserCollectionsCount(userId);
+  const userLimit = await UserConfigService.getUserCollectionLimit(userId);
   
-  if (memberCount+1 >= AppLimits.MAX_COLLECTIONS_PER_USER) {
-    throw new AppError('User has reached the maximum allowed collections (2)', StatusCodes.BAD_REQUEST);
+  if (memberCount >= userLimit.totalLimit) {
+    throw new AppError(`User has reached the maximum allowed collections (${userLimit.totalLimit})`, StatusCodes.BAD_REQUEST);
   }
 
   const session = await mongoose.startSession();
