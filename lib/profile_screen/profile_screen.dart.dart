@@ -320,7 +320,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       children: [
         InkWell(
           onTap: () async {
-            await storeDeviceInfo(context);
+            // await storeDeviceInfo(context);
             logoutUserFromDevice(context);
           },
           child: Container(

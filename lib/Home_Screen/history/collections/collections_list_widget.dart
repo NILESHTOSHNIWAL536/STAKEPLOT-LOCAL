@@ -156,7 +156,7 @@ Widget CollectionsBody(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 2,
       // color: AppColors.redColor,
-            child: CustomScrollView(
+      child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverPadding(
@@ -266,7 +266,8 @@ class _CollectionLimitInfo extends StatelessWidget {
                 context,
                 fontSize: 12,
                 lWeight: FontWeight.w600,
-                color: remaining > 0 ? AppColors.accentColor : AppColors.redColor,
+                color:
+                    remaining > 0 ? AppColors.accentColor : AppColors.redColor,
               ),
             ),
           ],
@@ -598,9 +599,114 @@ class _MemberCircle extends StatelessWidget {
 /// ------------------------------
 /// CREATE COLLECTION BUTTON
 /// ------------------------------
+///
+///
 class CreateCollectionButton extends StatelessWidget {
   final BuildContext parentContext;
-  const CreateCollectionButton(this.parentContext);
+
+  const CreateCollectionButton(this.parentContext, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height * 0.06;
+
+    return Row(
+      children: [
+        /// ➕ Create Collection
+        Expanded(
+          child: SizedBox(
+            height: height,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () {
+                if (collectionsController.hasReachedCollectionLimit) {
+                  LimitReachedBottomSheet.show(parentContext);
+                  return;
+                }
+
+                collectionDraft
+                  ..name = null
+                  ..type = null
+                  ..members = []
+                  ..roles = {}
+                  ..duration = null
+                  ..description = null;
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CreateCollectionFlow(),
+                  ),
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.add, size: 18, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text(
+                    "Create",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(width: 12),
+
+        /// 👥 Invite Button
+        Expanded(
+          child: SizedBox(
+            height: height,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppColors.primaryColor),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () {
+                  LimitReachedBottomSheet.show(parentContext);
+              },
+              child:const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:  [
+                  Icon(Icons.person_add,
+                      size: 18, color: AppColors.primaryColor),
+                  SizedBox(width: 8),
+                  Text(
+                    "Invite",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CreateCollectionButton2 extends StatelessWidget {
+  final BuildContext parentContext;
+  const CreateCollectionButton2(this.parentContext);
 
   @override
   Widget build(BuildContext context) {

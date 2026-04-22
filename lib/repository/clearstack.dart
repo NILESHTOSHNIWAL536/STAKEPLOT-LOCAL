@@ -228,18 +228,17 @@ void getAllContstant(context) async {
 }
 
 void logoutUserFromDevice(context2) async {
-  BuildContext context = navigatorKey.currentContext ?? context2;
-
+  BuildContext context =  context2 ?? navigatorKey.currentState!.context;
   try {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    clearGetX();
-    // added this for logout to prevent red screen
-    if (!Get.isRegistered<UserController>()) {
+     if (!Get.isRegistered<UserController>()) {
       Get.lazyPut(() => UserController());
     }
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     Navigator.pushReplacementNamed(context, '/');
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+   
+    await storeDeviceInfo(context);
+    clearGetX();
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
     await _pref.remove("token");
     await _pref.remove("accessToken");
     await SecureStorageService().delete("token");

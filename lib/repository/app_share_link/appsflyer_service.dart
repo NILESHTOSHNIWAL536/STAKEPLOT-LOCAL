@@ -57,20 +57,66 @@ class AppsflyerService {
       appLog("Install data: $data");
 
       final payload = data["payload"] ?? data;
-      final refCode = data["deep_link_sub1"]?.toString();
-      final screen = data["deep_link_value"]?.toString();
-      final status = payload["af_status"];
 
+      final status = payload["af_status"];
       appLog("Install status: $status");
 
-      if (refCode != null && refCode.trim().isNotEmpty) {
-        await _handleReferralNavigation(
-          refCode: refCode,
-          screen: screen ?? "signup",
+      // Direct values
+      final directReferralCode = payload["deep_link_sub1"]?.toString();
+      final directScreen = payload["deep_link_value"]?.toString();
+
+      // Fallback values
+      final fallbackReferralCode = payload["ref"]?.toString();
+      final fallbackScreen = payload["path"]?.toString();
+
+      // Link parsing (same as deep link)
+      final link = payload["link"];
+
+      String? queryReferralCode;
+      String? queryScreen;
+
+      if (link is String && link.isNotEmpty) {
+        final uri = Uri.tryParse(link);
+
+        queryReferralCode = uri?.queryParameters['deep_link_sub1'] ??
+            uri?.queryParameters['ref'];
+
+        queryScreen = uri?.queryParameters['deep_link_value'] ??
+            uri?.queryParameters['path'];
+      }
+
+      // Final resolved values (priority order)
+      final referralCode =
+          queryReferralCode ?? directReferralCode ?? fallbackReferralCode;
+
+      final screen = queryScreen ?? directScreen ?? fallbackScreen ?? "signup";
+
+      // Navigate if valid
+      if (referralCode != null && referralCode.trim().isNotEmpty) {
+        await handleReferralNavigation(
+          refCode: referralCode,
+          screen: screen,
           source: 'install',
         );
       }
     });
+
+    // _appsflyerSdk.onInstallConversionData((data) async {
+    //   appLog("Install data: $data");
+
+    //   final payload = data["payload"] ?? data;
+    //   final refCode = data["deep_link_sub1"]?.toString();
+    //   final screen = data["deep_link_value"]?.toString();
+    //   final status = payload["af_status"];
+
+    //   appLog("Install status: $status");
+
+    //   await handleReferralNavigation(
+    //     refCode: refCode ?? "Stakeplot",
+    //     screen: screen ?? "signup",
+    //     source: 'install',
+    //   );
+    // });
 
     _appsflyerSdk.onAppOpenAttribution((data) {
       appLog("App open data: $data");
@@ -104,7 +150,7 @@ class AppsflyerService {
       final screen = queryScreen ?? directScreen ?? fallbackScreen ?? "signup";
 
       if (referralCode != null && referralCode.trim().isNotEmpty) {
-        await _handleReferralNavigation(
+        await handleReferralNavigation(
           refCode: referralCode,
           screen: screen,
           source: 'deep_link',
@@ -113,7 +159,7 @@ class AppsflyerService {
     });
   }
 
-  static Future<void> _handleReferralNavigation({
+  static Future<void> handleReferralNavigation({
     required String refCode,
     required String screen,
     required String source,
@@ -133,11 +179,13 @@ class AppsflyerService {
     // }
 
     await ReferralRepository.saveIncomingReferralCode(normalizedCode);
+    print(await SecureStorageService().read("incoming_referral_code"));
 
     if (isLoggedIn) {
       try {
         callApi(navigatorKey.currentState!.context);
       } catch (e) {}
+
       AppNavigator.pushReplacementNamed("/home");
       AppNavigator.push(navigatePath(screen));
       return;
