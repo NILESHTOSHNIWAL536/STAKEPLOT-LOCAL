@@ -17,7 +17,7 @@ class CreditCardScreenStrings {
    RxBool showCreditCard=false.obs;
    RxBool showRevokeScreen=false.obs;
 
-   void fetchConstants() async {
+   Future<void> fetchConstants() async {
     try {
       final response = await getDataApiCall(ConstantRoutes.creditCard);
      

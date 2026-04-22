@@ -28,7 +28,7 @@ class RewardScreenStrings {
           .obs;
   RxList rewardIntroList = [].obs;
 
-  void fetchConstants() async {
+  Future<void> fetchConstants() async {
     try {
       final response = await getDataApiCall(ConstantRoutes.rewardIntro);
       String key = "ShowReward";

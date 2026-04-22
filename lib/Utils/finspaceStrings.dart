@@ -47,7 +47,7 @@ class FinspaceStrings
 
   bool liveIntegration=true;
   
-  void fetchConstants() async {
+  Future<void> fetchConstants() async {
     try {
       final response = await getDataApiCall(ConstantRoutes.finvuCommunity);
       if (getFlagOfResponse(response)) {

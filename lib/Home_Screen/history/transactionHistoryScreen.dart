@@ -133,7 +133,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
     });
 
     scrollController.addListener(_onScroll);
-    CollectionsController().getCollections();
+    collectionsController.getCollections();
   }
 
   void _openSearch() {

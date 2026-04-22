@@ -20,7 +20,7 @@ class PdfStrings {
    int  secoundPage = 18;
    int  thirdPage = 16;
 
-    void fetchConstants() async {
+    Future<void> fetchConstants() async {
     try {
       final response = await getDataApiCall(ConstantRoutes.pdf);
       if (response.statusCode == 200)

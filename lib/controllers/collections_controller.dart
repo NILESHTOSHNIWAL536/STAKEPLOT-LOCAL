@@ -138,7 +138,7 @@ class CollectionsController extends GetxController {
       remainingCollectionLimit.value = data['remainingCollections'] ??
           (collectionTotalLimit.value - usedCollectionCount.value);
     } catch (e) {
-      debugPrint("fetchCollectionLimitSummary error: $e");
+      appLog("fetchCollectionLimitSummary error: $e");
     }
   }
 
@@ -793,7 +793,6 @@ class CollectionsController extends GetxController {
 
         /// Refresh collections also
         await getCollections(forceRefresh: true);
-        await fetchCollectionLimitSummary();
         // AppNavigator.pushReplacementNamed(context, '/Collections');
       } else if (response.statusCode == 400) {
         final resData = json.decode(response.body);

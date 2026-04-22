@@ -218,7 +218,7 @@ void clearGetX() {
 
 RxMap<String, String> ListOfBankImages = RxMap();
 
-void getAllContstant(context) async {
+Future<void> getAllContstant(context) async {
   var responce = await getDataApiCall(ConstantRoutes.weekMonth);
   expire(responce, context);
   if (getFlagOfResponse(responce)) {

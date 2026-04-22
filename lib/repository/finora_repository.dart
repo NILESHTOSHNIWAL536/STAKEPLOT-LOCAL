@@ -191,7 +191,7 @@ import '../controllers/finora_controller.dart';
 //   }
 
 
-void getCategoryData() async {
+Future<void> getCategoryData() async {
   //  FinoraController finoraController = ControllerManagement.finoraController;
   final controller = Get.find<FinoraController>();
 

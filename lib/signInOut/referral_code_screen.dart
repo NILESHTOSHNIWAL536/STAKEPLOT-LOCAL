@@ -39,20 +39,27 @@ class _ReferralCodeScreenState extends State<ReferralCodeScreen> {
     super.dispose();
   }
 
+  // ✅ Save deep link referral (if any)
   Future<void> _persistReferralCodeFromArguments() async {
     final args = ModalRoute.of(context)?.settings.arguments;
+
     if (args is Map && args['refCode'] != null) {
       await ReferralRepository.saveIncomingReferralCode(
         args['refCode'].toString(),
       );
-      if (!mounted) return;
-      await _loadReferralCode();
     }
   }
 
+  // 🚀 FAST LOAD (parallel + non-blocking)
   Future<void> _loadReferralCode() async {
-    final validatedCode = await ReferralRepository.getValidatedReferralCode();
-    final incomingCode = await ReferralRepository.getIncomingReferralCode();
+    final results = await Future.wait([
+      ReferralRepository.getValidatedReferralCode(),
+      ReferralRepository.getIncomingReferralCode(),
+    ]);
+
+    final validatedCode = results[0] as String?;
+    final incomingCode = results[1] as String?;
+
     final codeToUse = validatedCode ?? incomingCode;
 
     if (codeToUse == null || codeToUse.isEmpty || !mounted) return;
@@ -65,17 +72,18 @@ class _ReferralCodeScreenState extends State<ReferralCodeScreen> {
           validatedCode != null ? 'Referral code already validated.' : '';
     });
 
+    // ⚡ background validation
     if (validatedCode == null && !_didAutoValidate) {
       _didAutoValidate = true;
-      await _validateCode(showSuccessMessage: false);
+      Future(() => _validateCode(showSuccessMessage: false));
     }
   }
 
   void _resetValidationState() {
-    final normalizedText = ReferralRepository.normalizeCode(_referralController.text);
-    if (_validatedCode != null && normalizedText == _validatedCode) {
-      return;
-    }
+    final normalized =
+        ReferralRepository.normalizeCode(_referralController.text);
+
+    if (_validatedCode != null && normalized == _validatedCode) return;
 
     if (_isValidated || _statusMessage.isNotEmpty) {
       setState(() {
@@ -86,75 +94,80 @@ class _ReferralCodeScreenState extends State<ReferralCodeScreen> {
     }
   }
 
+  // 🚀 NON-BLOCKING VALIDATION
   Future<void> _validateCode({bool showSuccessMessage = true}) async {
     final code = ReferralRepository.normalizeCode(_referralController.text);
 
     if (code.isEmpty) {
-      snackBarCalledfail(context, 'Enter a referral code to validate');
+      snackBarCalledfail(context, 'Enter referral code');
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    final cached = await ReferralRepository.getValidatedReferralCode();
+    if (cached == code) return;
 
-    try {
-      final response = await ReferralRepository.validateReferralCode(code);
-      final bool isValid = response['isValid'] == true;
-      final String message =
-          (response['reason'] ?? 'Referral validation completed').toString();
+    setState(() => _isLoading = true);
 
-      if (!mounted) return;
+    Future(() async {
+      try {
+        final response = await ReferralRepository.validateReferralCode(code);
 
-      if (!isValid) {
-        await ReferralRepository.clearValidatedReferralCode();
         if (!mounted) return;
+
+        final isValid = response['isValid'] == true;
+        final message = (response['reason'] ?? 'Validation done').toString();
+
+        if (!isValid) {
+          await ReferralRepository.clearValidatedReferralCode();
+
+          setState(() {
+            _isValidated = false;
+            _validatedCode = null;
+            _statusMessage = message;
+          });
+
+          snackBarCalledfail(context, message);
+          return;
+        }
+
+        await ReferralRepository.saveIncomingReferralCode(code);
+        await ReferralRepository.saveValidatedReferralCode(code);
+
+        setState(() {
+          _referralController.text = code;
+          _isValidated = true;
+          _validatedCode = code;
+          _statusMessage = message;
+        });
+
+        if (showSuccessMessage) {
+          snackBarCalled(context, message);
+        }
+      } catch (e) {
+        if (!mounted) return;
+
+        final msg = e.toString().replaceFirst('Exception: ', '');
+
         setState(() {
           _isValidated = false;
           _validatedCode = null;
-          _statusMessage = message;
+          _statusMessage = msg;
         });
-        snackBarCalledfail(context, message);
-        return;
-      }
 
-      await ReferralRepository.saveIncomingReferralCode(code);
-      await ReferralRepository.saveValidatedReferralCode(code);
-      if (!mounted) return;
-
-      setState(() {
-        _referralController.text = code;
-        _isValidated = true;
-        _validatedCode = code;
-        _statusMessage = message;
-      });
-
-      if (showSuccessMessage) {
-        snackBarCalled(context, message);
+        snackBarCalledfail(context, msg);
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
       }
-    } catch (error) {
-      if (!mounted) return;
-      final message = error.toString().replaceFirst('Exception: ', '');
-      setState(() {
-        _isValidated = false;
-        _validatedCode = null;
-        _statusMessage = message;
-      });
-      snackBarCalledfail(context, message);
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    });
   }
 
   Future<void> _continue() async {
     final code = ReferralRepository.normalizeCode(_referralController.text);
 
     if (code.isNotEmpty && !_isValidated) {
-      snackBarCalledfail(context, 'Validate the referral code first or skip for now');
+      snackBarCalledfail(context, 'Validate the code first');
       return;
     }
 
@@ -227,7 +240,8 @@ class _ReferralCodeScreenState extends State<ReferralCodeScreen> {
                       textCapitalization: TextCapitalization.characters,
                       inputFormatters: [
                         UpperCaseTextFormatter(),
-                        FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9]')),
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'[A-Za-z0-9]')),
                       ],
                       decoration: InputDecoration(
                         hintText: 'Enter referral code',
@@ -247,7 +261,9 @@ class _ReferralCodeScreenState extends State<ReferralCodeScreen> {
                           context,
                           fontSize: 13,
                           lWeight: FontWeight.w500,
-                          color: _isValidated ? Colors.green.shade700 : AppColors.redColor,
+                          color: _isValidated
+                              ? Colors.green.shade700
+                              : AppColors.redColor,
                         ),
                       ),
                     ],
@@ -297,8 +313,9 @@ class _ReferralCodeScreenState extends State<ReferralCodeScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     side: BorderSide(
-                      color:
-                          hasCode && !_isValidated ? AppColors.grey : AppColors.primaryColor,
+                      color: hasCode && !_isValidated
+                          ? AppColors.grey
+                          : AppColors.primaryColor,
                     ),
                   ),
                   child: Text(
@@ -307,7 +324,9 @@ class _ReferralCodeScreenState extends State<ReferralCodeScreen> {
                       context,
                       fontSize: 16,
                       lWeight: FontWeight.w600,
-                      color: hasCode && !_isValidated ? AppColors.grey : AppColors.primaryColor,
+                      color: hasCode && !_isValidated
+                          ? AppColors.grey
+                          : AppColors.primaryColor,
                     ),
                   ),
                 ),
