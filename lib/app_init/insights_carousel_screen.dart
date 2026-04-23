@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/Constants/core/app_padding_sizes.dart';
 import '../controllers/highest_spent_insight.dart';
-import 'font_manager.dart';
+import '../Constants/font_manager.dart';
 
 
 class InsightsCarouselScreen extends StatefulWidget { 

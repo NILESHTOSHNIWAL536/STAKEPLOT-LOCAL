@@ -8,7 +8,7 @@ import '../../Constants/app_styles.dart';
 import '../../Constants/core/app_padding_sizes.dart';
 import '../../components/shared_utils.dart';
 import '../history/recent_transactions.dart';
-import '../../Constants/insights_carousel_screen.dart';
+import '../../app_init/insights_carousel_screen.dart';
 
 // PreferredSizeWidget getAppBar(context) {
 //   final userController = ControllerManagement.userController;

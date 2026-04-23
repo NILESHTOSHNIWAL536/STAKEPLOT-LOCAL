@@ -202,9 +202,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                       children: [
                         _buildSearchFieldForCollection(
                             context, widget.isFromCollection),
-                        Expanded(
-                            child:
-                                _buildTransactionBody(context, screenHeight)),
+                        Expanded(child: _buildTransactionBody(context)),
                       ],
                     )
                   : Column(
@@ -240,19 +238,31 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                             ],
                           ),
                         ),
-                        Container(
-                          color: AppColors.border,
-                          height: isSearchActive
-                              ? AppComponentSizes.h1_14
-                              : isDateSummaryView.value
-                                  ? AppComponentSizes.h1_1
-                                  : AppComponentSizes.h1_23,
-                          child: Obx(() {
-                            return selectedTab.value == "All"
-                                ? _buildTransactionBody(context, screenHeight)
-                                : buildCollectionsBody(context);
-                          }),
-                        ),
+
+                        ///used before expanded 21.04.2026
+                        // Container(
+                        //   color: AppColors.border,
+                        //   height: isSearchActive
+                        //       ? AppComponentSizes.h1_14
+                        //       : isDateSummaryView.value
+                        //           ? AppComponentSizes.h1_1
+                        //           : AppComponentSizes.h1_23,
+                        //   child: Obx(() {
+                        //     return selectedTab.value == "All"
+                        //         ? _buildTransactionBody(context, screenHeight)
+                        //         : buildCollectionsBody(context);
+                        //   }),
+                        // ),
+                        Expanded(
+                          child: Container(
+                            color: AppColors.border,
+                            child: Obx(() {
+                              return selectedTab.value == "All"
+                                  ? _buildTransactionBody(context)
+                                  : buildCollectionsBody(context);
+                            }),
+                          ),
+                        )
                       ],
                     ),
             ),
@@ -432,7 +442,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                 ] else ...[
                   _buildTabChip(HomepageStringsDart().allTnx),
                   _buildTabChip(HomepageStringsDart().collectionscreate),
-                  SizedBox(width: AppSizes.w6),
+                  SizedBox(width: AppSizes.w10),
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 400),
                     transitionBuilder: (child, animation) {
@@ -451,13 +461,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
                         ? _buildSearchField(context, widget.fromAutoPay)
                         : _buildSearchIcon(),
                   ),
-                  SizedBox(width: AppSizes.w2),
+                  SizedBox(width: AppSizes.w8),
                   if (isCollectionsTab) CreateCollectionButtonInRow(context),
                   if (!widget.fromAutoPay &&
                       !isSearchActive &&
                       !isCollectionsTab)
                     _buildToggleDateSummaryBtn(),
-                  SizedBox(width: AppSizes.w10),
+                  SizedBox(width: AppSizes.w14),
                   if (!widget.fromAutoPay &&
                       !isSearchActive &&
                       !isCollectionsTab)
@@ -676,7 +686,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen>
         ));
   }
 
-  Widget _buildTransactionBody(BuildContext context, double screenHeight) {
+  Widget _buildTransactionBody(BuildContext context) {
     return Obx(() {
       return IndexedStack(
         index: isDateSummaryView.value ? 0 : 1,

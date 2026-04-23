@@ -15,16 +15,16 @@ import 'create_collection_pages/create_collection_flow.dart';
 import 'invitations_list.dart';
 
 Widget buildCollectionsBody(BuildContext context) {
-  return Obx(() {
-    final hasInvitations = collectionsController.invitationsList.isNotEmpty;
 
+  return Obx(() {
+
+    final hasInvitations = collectionsController.invitationsList.isNotEmpty;
     final invitationCount = collectionsController.invitationsList.length;
 
     return DefaultTabController(
       length: hasInvitations ? 2 : 1,
       child: Column(
         children: [
-          /// 🔥 CUSTOM TAB DESIGN
           if (hasInvitations)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
