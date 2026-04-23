@@ -47,6 +47,8 @@ Future<void> callApi(context) async {
       await Future.wait([
         getBankAccounts(),
         getAck(),
+        cardController.fetchCardData(),
+        cardController.getBanksListCrediCard(),
         budgetController.getBudget(),
         getHiddenTransactions(context),
         insightsController.getHomePageInsights(context),
