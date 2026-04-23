@@ -72,7 +72,7 @@ class LimitReachedBottomSheet {
                     SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        "Invite 3 friends and get +2 collection limit",
+                        "Earn +1 collection for every friend you invite.",
                         style: TextStyle(color: Colors.white70),
                       ),
                     ),

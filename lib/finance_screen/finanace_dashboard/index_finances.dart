@@ -23,6 +23,7 @@ import '../../Utils/plotFinanceStringsPage.dart';
 import '../../backed_connections/apis_connect.dart';
 import '../../components/bottomNavigations.dart';
 import '../../controllers/credit_card_controller.dart';
+import '../../email_sync/display_credit_card.dart';
 import '../../image_service/avatarProfile.dart';
 import 'reserve.dart';
 import 'reserve_flow.dart';
@@ -108,7 +109,6 @@ class _FinanceDashboardState extends State<FinanceDashboard>
 
   Future<void> _loadData() async {
     try {
-      final cardController = Get.find<CardDueController>();
       await Future.wait([
         cardController.fetchCardData(),
         cardController.getBanksListCrediCard(),
@@ -799,8 +799,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (_) => AddCreditCardBankScreen()),
+                      MaterialPageRoute(builder: (_) => DisplayCreditCard()),
                     );
                   },
                   child: Stack(

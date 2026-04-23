@@ -96,10 +96,9 @@ class CreditCardTransactionCard extends StatelessWidget {
             child: Column(
               children: [
                 buildRow("Date", txn.date, context),
-                buildRow("Transaction ID", txn.transactionId, context),
+                buildRow("Transaction ID",txn.transactionId == "" ? "XXXXXX" : txn.transactionId,context),
                 buildRow("Amount", parseAmount(txn.amount), context),
-                buildRow(
-                    "Card Number", "************${txn.cardNumber}", context),
+                buildRow("Card Number", "******${txn.cardNumber}", context),
               ],
             ),
           )
@@ -286,7 +285,8 @@ class CreditCardTransactionCard2 extends StatelessWidget {
           ),
           // Compact Transaction Details
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: AppSizes.p4),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 18, vertical: AppSizes.p4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

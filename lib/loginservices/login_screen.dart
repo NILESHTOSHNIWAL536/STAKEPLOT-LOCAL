@@ -9,15 +9,12 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Constants/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/repository/referral_repository.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/onboarding_user.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
-import 'package:flutter_application_code_stakeplot/loginservices/wave.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -90,16 +87,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         fit: BoxFit.cover,
                       ),
 
-                      SizedBox(height: AppSizes.h30),
-                      Obx(() => Text(isLoggedIn.value)),
-                      SizedBox(height: AppSizes.h30),
-                      // Email Field
+                      SizedBox(height: AppSizes.h30), // Email Field
 
                       _buildEmailField(),
 
                       SizedBox(height: AppSizes.h20),
-
-                      SizedBox(height: AppSizes.h10),
 
                       // Sign In Button
                       _buildSignInButton(),
