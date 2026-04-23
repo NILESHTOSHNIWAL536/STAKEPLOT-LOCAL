@@ -20,7 +20,7 @@ import '../backed_connections/apis_connect.dart';
 import '../routes/index_route.dart';
 import '../widget_services/widget_bridge.dart';
 
-void main_apis_call_init()async{
+Future<void> main_apis_call_init()async{
   securityCheck();
   checkFirebaseAndValidUser();
   loadEnvs();

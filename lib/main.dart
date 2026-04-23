@@ -33,8 +33,8 @@ void main() async {
     overlays: SystemUiOverlay.values, // ⬅️ THIS IS KEY
   );
 
-  main_apis_call_init();
   await AppsflyerService.init();
+  await main_apis_call_init();
 }
 
 class MyApp extends StatefulWidget {

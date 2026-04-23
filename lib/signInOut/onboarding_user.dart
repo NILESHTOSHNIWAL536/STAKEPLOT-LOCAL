@@ -90,7 +90,8 @@ class _UserOnboardingState extends State<UserOnboarding> {
                           curve: Curves.easeInOut,
                         );
                       } else {
-                        AppNavigator.pushReplacementNamed(context, "/home");
+                        AppNavigator.popUntil(context, "/");
+                        AppNavigator.pushNamed(context, "/ShareAccountLogin");
                       }
                     },
                     style: ElevatedButton.styleFrom(

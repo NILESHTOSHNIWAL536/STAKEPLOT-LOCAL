@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/bankServic
 import 'package:flutter_application_code_stakeplot/controllers/finora_controller.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/repository/post.dart';
+import 'package:flutter_application_code_stakeplot/repository/referral_repository.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controllers/post-controller.dart';
@@ -217,7 +218,7 @@ void clearGetX() {
 
 RxMap<String, String> ListOfBankImages = RxMap();
 
-void getAllContstant(context) async {
+Future<void> getAllContstant(context) async {
   var responce = await getDataApiCall(ConstantRoutes.weekMonth);
   expire(responce, context);
   if (getFlagOfResponse(responce)) {
@@ -227,20 +228,23 @@ void getAllContstant(context) async {
 }
 
 void logoutUserFromDevice(context2) async {
-  BuildContext context = navigatorKey.currentContext ?? context2;
-
+  BuildContext context =  context2 ?? navigatorKey.currentState!.context;
   try {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    clearGetX();
-    // added this for logout to prevent red screen
-    if (!Get.isRegistered<UserController>()) {
+     if (!Get.isRegistered<UserController>()) {
       Get.lazyPut(() => UserController());
     }
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     Navigator.pushReplacementNamed(context, '/');
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+   
+    await storeDeviceInfo(context);
+    clearGetX();
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
     await _pref.remove("token");
     await _pref.remove("accessToken");
+    await SecureStorageService().delete("token");
+    await SecureStorageService().delete("accessToken");
+    await ReferralRepository.clearAllReferralCodes();
+    await ReferralRepository.clearMyShareReferralCode();
     await SecureStorageService().deleteAll();
   } catch (e) {}
 }

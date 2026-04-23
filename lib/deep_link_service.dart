@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
+import 'Home_Screen/Home/init_Api_Calls.dart';
 import 'budget/create_budget_screen.dart';
 import 'main.dart';
+import 'repository/app_share_link/appsflyer_service.dart';
 
 class DeepLinkService {
   late AppLinks _appLinks;
@@ -18,12 +20,12 @@ class DeepLinkService {
 
     if (initialUri != null) {
       appLog("🔥 Initial Link: $initialUri");
-      // _handle(initialUri, onReferral, context);
+      _handle(initialUri, onReferral, context);
     }
 
     _sub = _appLinks.uriLinkStream.listen((uri) {
       appLog("🔥 Stream Link: $uri");
-      // _handle(uri, onReferral, context);
+      _handle(uri, onReferral, context);
     });
   }
 
@@ -72,44 +74,78 @@ class DeepLinkService {
   // }
 
   void _handle(
-    Uri uri, Function(String token) onReferral, BuildContext context) {
+    Uri uri,
+    Function(String token) onReferral,
+    BuildContext context,
+  ) async {
+    consolelog("🌐 Full URL: ${uri.toString()}");
 
-  consolelog("🌐 Full URL: ${uri.toString()}");
+    appLog("🔗 Scheme: ${uri.scheme}");
+    appLog("🌍 Host: ${uri.host}");
+    appLog("📍 Path: ${uri.path}");
+    appLog("❓ Query Params: ${uri.queryParameters}");
 
-  final segments = uri.pathSegments;
+    // ✅ Extract from query params
+    final refCode =
+        uri.queryParameters['ref'] ?? uri.queryParameters['deep_link_sub1'];
 
-  appLog("📂 Segments: $segments");
+    final screen = uri.queryParameters['path'] ??
+        uri.queryParameters['deep_link_value'] ??
+        "signup";
 
-  if (segments.length < 2) {
-    appLog("❌ Invalid path");
-    return;
+    appLog("🎯 RefCode: $refCode");
+    appLog("🧭 Screen: $screen");
+
+    // if (refCode != null && refCode.trim().isNotEmpty) {
+    //   await AppsflyerService.handleReferralNavigation(
+    //     refCode: refCode,
+    //     screen: screen,
+    //     source: 'app_link',
+    //   );
+      // callApi(context);
+    // } else {
+    //   appLog("❌ No referral found");
+    // }
   }
 
-  // 🔥 FIXED
-  String route = segments[1];
-  String token = segments.length > 2 ? segments[2] : "";
+  void _handle2(
+      Uri uri, Function(String token) onReferral, BuildContext context) {
+    consolelog("🌐 Full URL: ${uri.toString()}");
+    callApi(context);
+    final segments = uri.pathSegments;
 
-  appLog("🧭 Route: $route");
-  appLog("🎯 Token: $token");
+    appLog("📂 Segments: $segments");
 
-  switch (route) {
-    case "home":
-      AppNavigator.pushReplacementNamed("/home");
-      break;
+    if (segments.length < 2) {
+      appLog("❌ Invalid path");
+      return;
+    }
 
-    case "ref":
-      onReferral(token);
-      break;
+    // 🔥 FIXED
+    String route = segments[1];
+    String token = segments.length > 2 ? segments[2] : "";
 
-    default:
-      appLog("⚠️ Unknown route");
+    appLog("🧭 Route: $route");
+    appLog("🎯 Token: $token");
+
+    // switch (route) {
+    //   case "home":
+    //     AppNavigator.pushReplacementNamed("/home");
+    //     break;
+
+    //   case "ref":
+    //     onReferral(token);
+    //     break;
+
+    //   default:
+    //     appLog("⚠️ Unknown route");
+    // }
+
+    appLog("🔗 Scheme: ${uri.scheme}");
+    appLog("🌍 Host: ${uri.host}");
+    appLog("📍 Path: ${uri.path}");
+    appLog("❓ Query Params: ${uri.queryParameters}");
   }
-
-  appLog("🔗 Scheme: ${uri.scheme}");
-  appLog("🌍 Host: ${uri.host}");
-  appLog("📍 Path: ${uri.path}");
-  appLog("❓ Query Params: ${uri.queryParameters}");
-}
 
   void dispose() {
     _sub?.cancel();

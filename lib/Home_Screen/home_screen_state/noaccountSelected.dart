@@ -25,6 +25,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
   @override
   void initState() {
     super.initState();
+    callApi(context);
     getAllContstant(context);
   }
 
@@ -49,9 +50,9 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             SizedBox(height: AppSizes.h14),
+            SizedBox(height: AppSizes.h14),
             _buildHeader(screenHeight),
-             SizedBox(height: AppSizes.h20),
+            SizedBox(height: AppSizes.h20),
             _buildBottomNavigation(screenWidth),
           ],
         ),
@@ -70,9 +71,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
           height: 4,
           width: 3,
         ),
-
         SizedBox(height: AppSizes.h12),
-
         Text(
           'No account Linked',
           style: FontManager().getTextStyle(
@@ -82,9 +81,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
             color: AppColors.accentColor,
           ),
         ),
-
         SizedBox(height: AppSizes.h8),
-
         Padding(
           padding: const EdgeInsets.all(AppSizes.p14),
           child: Text(
@@ -98,9 +95,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
             textAlign: TextAlign.center,
           ),
         ),
-
         SizedBox(height: screenHeight * 0.01),
-
         SizedBox(
           width: MediaQuery.sizeOf(context).width / 1.8,
           height: 30,
@@ -139,7 +134,8 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
   // ---------------------------------------------------
   Widget _buildBottomNavigation(double screenWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p20),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p12, vertical: AppSizes.p20),
       child: Container(
         width: MediaQuery.sizeOf(context).width,
         decoration: BoxDecoration(
@@ -156,15 +152,10 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             manualTransactionButton(context),
-           
-           historyButton(context),
-           
+            historyButton(context),
           ],
         ),
       ),
     );
   }
-
- 
-  
 }

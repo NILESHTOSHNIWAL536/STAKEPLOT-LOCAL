@@ -155,46 +155,58 @@ Widget CollectionsBody(BuildContext context) {
         .where((e) => e.status.toLowerCase() == "closed")
         .toList(growable: false);
 
-    return Container(
-      height: MediaQuery.of(context).size.height / 2,
-      // color: AppColors.redColor,
-      child: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            sliver: SliverToBoxAdapter(child: CreateCollectionButton(context)),
-          ),
-          if (allCollections.isNotEmpty) ...[
-            const SliverPadding(
-              padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
-              sliver: SliverToBoxAdapter(
-                child: _SectionTitle(title: "All Collections"),
-              ),
-            ),
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
-              sliver: _CollectionSliverList(
-                collections: allCollections,
-              ),
-            ),
-          ],
-          if (closedCollections.isNotEmpty) ...[
-            const SliverPadding(
-              padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
               sliver: SliverToBoxAdapter(
-                child: _SectionTitle(title: "Closed Collections"),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _CollectionLimitInfo(),
+                    const SizedBox(height: 12),
+                    CreateCollectionButton(context),
+                  ],
+                ),
               ),
             ),
+            if (allCollections.isNotEmpty) ...[
+              const SliverPadding(
+                padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
+                sliver: SliverToBoxAdapter(
+                  child: _SectionTitle(title: "All Collections"),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                sliver: _CollectionSliverList(
+                  collections: allCollections,
+                ),
+              ),
+            ],
+            if (closedCollections.isNotEmpty) ...[
+              const SliverPadding(
+                padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
+                sliver: SliverToBoxAdapter(
+                  child: _SectionTitle(title: "Closed Collections"),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                sliver: _CollectionSliverList(
+                  collections: closedCollections,
+                ),
+              ),
+            ],
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-              sliver: _CollectionSliverList(
-                collections: closedCollections,
-              ),
-            ),
+                padding: EdgeInsets.only(
+                    bottom: allCollections.length > 5 ? 204 : 24)),
           ],
-          const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
-        ],
+        ),
       ),
     );
   });
@@ -217,6 +229,56 @@ class _SectionTitle extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _CollectionLimitInfo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final remaining = collectionsController.remainingCollectionLimit.value;
+      final total = collectionsController.collectionTotalLimit.value;
+      final used = collectionsController.usedCollectionCount.value;
+
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.grey.withOpacity(0.2)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                remaining > 0
+                    ? 'You can create $remaining more collection${remaining == 1 ? '' : 's'}'
+                    : 'You have reached your collection limit',
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 13,
+                  lWeight: FontWeight.w600,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              '$used / $total',
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 12,
+                lWeight: FontWeight.w600,
+                color:
+                    remaining > 0 ? AppColors.accentColor : AppColors.redColor,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -378,12 +440,20 @@ class _CollectionCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
-                item.expiryAt != null ? formatWhatsAppDate(item.expiryAt!) : "",
-                style: FontManager().getTextStyle(
-                  context,
-                  fontSize: 12,
-                  color: AppColors.accentColor,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  item.type,
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 11,
+                    color: AppColors.primaryColor,
+                    lWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -392,15 +462,41 @@ class _CollectionCard extends StatelessWidget {
           const SizedBox(height: 5),
 
           /// DESCRIPTION
-          Text(
-            item.description,
-            style: FontManager().getTextStyle(
-              context,
-              fontSize: 12,
-              color: AppColors.grey,
+          Padding(
+            padding: const EdgeInsets.only(top: 3, bottom: 1),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  item.description,
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 12,
+                    color: AppColors.grey,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                item.totalAmount <= 0
+                    ? SizedBox.shrink()
+                    : Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.border,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          " Contributed : ₹${item.totalAmount.toStringAsFixed(0)}",
+                          style: FontManager().getTextStyle(
+                            context,
+                            fontSize: 11,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ),
+              ],
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
 
           const SizedBox(height: 10),
@@ -431,45 +527,16 @@ class _CollectionCard extends StatelessWidget {
                     ),
                   ],
                   SizedBox(
-                    width: 30,
+                    width: item.type.toLowerCase() == "shared" ? 30 : 0,
                   ),
-                  // ...item.members.map((member) => _MemberCircle(
-                  //     label: member.substring(0, 2).toUpperCase())),
-                  if (item.totalAmount > 0) ...[
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.border,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        " Contributed : ₹${item.totalAmount.toStringAsFixed(0)}",
-                        style: FontManager().getTextStyle(
-                          context,
-                          fontSize: 11,
-                          color: AppColors.primaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
                 ],
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  item.type,
-                  style: FontManager().getTextStyle(
-                    context,
-                    fontSize: 11,
-                    color: AppColors.primaryColor,
-                    lWeight: FontWeight.w500,
-                  ),
+              Text(
+                item.expiryAt != null ? formatWhatsAppDate(item.expiryAt!) : "",
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 12,
+                  color: AppColors.accentColor,
                 ),
               ),
             ],
@@ -480,35 +547,6 @@ class _CollectionCard extends StatelessWidget {
   }
 }
 
-/// ------------------------------
-/// MEMBER CHIP (const-safe)
-/// ------------------------------
-// class _MemberCircle extends StatelessWidget {
-//   final String label;
-//   const _MemberCircle({required this.label});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       margin: const EdgeInsets.only(right: 4),
-//       width: 28,
-//       height: 28,
-//       decoration: const BoxDecoration(
-//         color: AppColors.primaryColor,
-//         shape: BoxShape.circle,
-//       ),
-//       alignment: Alignment.center,
-//       child: Text(
-//         label,
-//         style: const TextStyle(
-//           color: Colors.white,
-//           fontSize: 12,
-//           fontWeight: FontWeight.w600,
-//         ),
-//       ),
-//     );
-//   }
-// }
 class _MemberCircle extends StatelessWidget {
   final String label;
   const _MemberCircle({required this.label});
@@ -542,9 +580,114 @@ class _MemberCircle extends StatelessWidget {
 /// ------------------------------
 /// CREATE COLLECTION BUTTON
 /// ------------------------------
+///
+///
 class CreateCollectionButton extends StatelessWidget {
   final BuildContext parentContext;
-  const CreateCollectionButton(this.parentContext);
+
+  const CreateCollectionButton(this.parentContext, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height * 0.06;
+
+    return Row(
+      children: [
+        /// ➕ Create Collection
+        Expanded(
+          child: SizedBox(
+            height: height,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () {
+                if (collectionsController.hasReachedCollectionLimit) {
+                  LimitReachedBottomSheet.show(parentContext);
+                  return;
+                }
+
+                collectionDraft
+                  ..name = null
+                  ..type = null
+                  ..members = []
+                  ..roles = {}
+                  ..duration = null
+                  ..description = null;
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CreateCollectionFlow(),
+                  ),
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.add, size: 18, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text(
+                    "Create",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(width: 12),
+
+        /// 👥 Invite Button
+        Expanded(
+          child: SizedBox(
+            height: height,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppColors.primaryColor),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () {
+                LimitReachedBottomSheet.show(parentContext);
+              },
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.person_add,
+                      size: 18, color: AppColors.primaryColor),
+                  SizedBox(width: 8),
+                  Text(
+                    "Invite",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CreateCollectionButton2 extends StatelessWidget {
+  final BuildContext parentContext;
+  const CreateCollectionButton2(this.parentContext);
 
   @override
   Widget build(BuildContext context) {
@@ -560,7 +703,7 @@ class CreateCollectionButton extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          if (collectionsController.collectionsList.length >= 4) {
+          if (collectionsController.hasReachedCollectionLimit) {
             LimitReachedBottomSheet.show(context);
             return;
           }
@@ -600,6 +743,10 @@ class CreateCollectionButtonInRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        if (collectionsController.hasReachedCollectionLimit) {
+          LimitReachedBottomSheet.show(context);
+          return;
+        }
         collectionDraft.name = null;
         collectionDraft.type = null;
         collectionDraft.members = [];

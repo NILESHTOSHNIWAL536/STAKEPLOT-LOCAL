@@ -9,6 +9,7 @@ class CollectionsRoute {
 
   // Get All Collections
   static String getCollections = _urlPath;
+  static String getCollectionLimitSummary = "$_urlPath/limit-summary";
 
   // Get Collection By ID
   static String getCollectionById(String collectionId) =>

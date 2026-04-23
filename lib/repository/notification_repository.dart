@@ -11,7 +11,7 @@ import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart'
 
 import '../Profile/notifications.dart';
 
-void getAck() async {
+Future<void> getAck() async {
   var response = await getDataApiCall(UserRoutes.newNotifications);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
@@ -98,7 +98,7 @@ Future<PostModel?> fetchPostById(String postId, BuildContext context) async {
 //   } else {}
 // }
 
-void getNotifications(BuildContext context) async {
+Future<void> getNotifications(BuildContext context) async {
   final response = await getDataApiCall(UserRoutes.myNotifications);
 
   if (getFlagOfResponse(response)) {

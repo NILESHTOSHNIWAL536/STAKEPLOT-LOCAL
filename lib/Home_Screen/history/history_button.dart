@@ -40,41 +40,6 @@ void navToHistoryReplacment(context) {
   );
 }
 
-// Widget historyButton(double fontSizeFactor,BuildContext context) {
-//     return InkWell(
-//       onTap: (){
-//                     navToHistory(context);
-//       },
-//       child:Container(
-//          width: MediaQuery.of(context).size.width / 4,
-//                     height: MediaQuery.of(context).size.height / 30,
-//                     decoration: BoxDecoration(
-//                       color: AppColors.button,
-//                       borderRadius: BorderRadius.circular(10)
-//                     ),
-//         child: Row(
-//           mainAxisSize: MainAxisSize.min,
-//           mainAxisAlignment: MainAxisAlignment.start,
-//           children: [
-//           AvatarProfileImage(
-//                     url: HomePageIcons.history,
-//                     width: 36,
-//                     height: 36,),
-//                     Text(
-//                             'History',
-//                             style: FontManager().getTextStyle(context,
-//                                 lWeight: FontWeight.w500,
-//                                 fontSize: fontSizeFactor * 3.3,
-//                                 color:
-//                                     AppColors.accentColor), // Set text color based on value
-//                           ),
-
-//         ],),
-//       )
-//     );
-
-//   }
-
 Widget historyButton(BuildContext context) {
   return InkWell(
     onTap: () {
@@ -127,3 +92,5 @@ Widget historyButton(BuildContext context) {
     ),
   );
 }
+
+      

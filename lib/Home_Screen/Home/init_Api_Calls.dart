@@ -30,42 +30,99 @@ import '../../controllers/collections_controller.dart';
 import '../../controllers/user-controller.dart';
 import '../insightsController.dart';
 
+
 Future<void> callApi(context) async {
-  await Get.find<UserController>().fetchUserInfo();
-  final InsightsController _controller = Get.put(InsightsController());
-  final budgetController = Get.find<BudgetControllerScreenModel>();
-  getBankAccounts();
-  getAck();
   contextGlobal = context;
-  // getUserLend(context);
-  unawaited(budgetController.getBudget());
-  getHiddenTransactions(context);
-  _controller.getHomePageInsights(context);
-  _controller.getHomePageMoneyMapInsights(context);
-  getNotifications(context);
-  getAllAutoTransactions();
-  getAllContstant(context);
-  unawaited(getGroupTransactions());
-  unawaited(getCustomCategory(context));
-  unawaited(getAutoPayInfo());
-  unawaited(
-      getAllTransactionHistory(context, false, false, isRefreshing: true));
-  unawaited(getAllTransactionHistory(context, true, false, isRefreshing: true));
-  getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,
-      isSplashScreen: true);
+
+  final userController = Get.find<UserController>();
+  final insightsController = Get.put(InsightsController());
+  final budgetController = Get.find<BudgetControllerScreenModel>();
+
+  // ✅ STEP 1: Only CRITICAL (block minimal)
+  await userController.fetchUserInfo();
+
+  // ⚡ STEP 2: Fire everything in parallel (NON-BLOCKING)
+  Future(() async {
+    try {
+      await Future.wait([
+        getBankAccounts(),
+        getAck(),
+        budgetController.getBudget(),
+        getHiddenTransactions(context),
+        insightsController.getHomePageInsights(context),
+        insightsController.getHomePageMoneyMapInsights(context),
+        getNotifications(context),
+        getAllAutoTransactions(),
+        getAllContstant(context),
+        getGroupTransactions(),
+        getCustomCategory(context),
+        getAutoPayInfo(),
+        getAllTransactionHistory(context, false, false, isRefreshing: true),
+        getAllTransactionHistory(context, true, false, isRefreshing: true),
+        getWeeklyGraphAndCustomDateGraph(
+          getFormattedDate(),
+          context,
+          isSplashScreen: true,
+        ),
+        getPost(context),
+        getTranding(context),
+        getRemainders(context),
+        updateWidget(),
+        getCategoryData(),
+        collectionsController.getCollections(),
+        collectionsController.fetchCollectionLimitSummary()
+      ]);
+    } catch (e) {
+      appLog("Background API error: $e");
+    }
+  });
+
+  // ✅ STEP 3: Instant UI setup (no waiting)
   custom = getthelist();
   allOrGroupTransactionsName.value = StringConstant.allTransactions;
   clearAllFlags();
-  unawaited(getPost(context));
-  unawaited(getTranding(context));
-  await getRemainders(context);
-  unawaited(updateWidget());
-  getCategoryData();
+
   lifecycleHandler = AppLifecycleHandler(userController.userId.value);
   WidgetsBinding.instance.addObserver(lifecycleHandler);
+
   setUpSocketListenerMainPage(context);
-  CollectionsController().getCollections();
 }
+
+// Future<void> callApi(context) async {
+//   await Get.find<UserController>().fetchUserInfo();
+//   final InsightsController _controller = Get.put(InsightsController());
+//   final budgetController = Get.find<BudgetControllerScreenModel>();
+//   getBankAccounts();
+//   getAck();
+//   contextGlobal = context;
+//   unawaited(budgetController.getBudget());
+//   getHiddenTransactions(context);
+//   _controller.getHomePageInsights(context);
+//   _controller.getHomePageMoneyMapInsights(context);
+//   getNotifications(context);
+//   getAllAutoTransactions();
+//   getAllContstant(context);
+//   unawaited(getGroupTransactions());
+//   unawaited(getCustomCategory(context));
+//   unawaited(getAutoPayInfo());
+//   unawaited(getAllTransactionHistory(context, false, false, isRefreshing: true));
+//   unawaited(getAllTransactionHistory(context, true, false, isRefreshing: true));
+//   getWeeklyGraphAndCustomDateGraph(getFormattedDate(), context,
+//       isSplashScreen: true);
+//   custom = getthelist();
+//   allOrGroupTransactionsName.value = StringConstant.allTransactions;
+//   clearAllFlags();
+//   unawaited(getPost(context));
+//   unawaited(getTranding(context));
+//   await getRemainders(context);
+//   unawaited(updateWidget());
+//   getCategoryData();
+//   lifecycleHandler = AppLifecycleHandler(userController.userId.value);
+//   WidgetsBinding.instance.addObserver(lifecycleHandler);
+//   setUpSocketListenerMainPage(context);
+//   CollectionsController().getCollections();
+//   CollectionsController().fetchCollectionLimitSummary();
+// }
 
 void initializeData(context, mounted) {
   isLoginAlreadLogin(context, mounted);

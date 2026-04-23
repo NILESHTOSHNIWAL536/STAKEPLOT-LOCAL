@@ -18,6 +18,7 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../Constants/core/app_padding_sizes.dart';
 import '../controllers/controllerManagement.dart';
+import '../controllers/credit_card_controller.dart';
 import 'googlesignin/credentials.dart';
 part '../Constants/snackBars.dart';
 
@@ -31,8 +32,10 @@ part '../Constants/snackBars.dart';
 
 UserController get userController => Get.find<UserController>();
 PostController get postController => Get.find<PostController>();
-CollectionsController get collectionsController =>
-    Get.find<CollectionsController>();
+CardDueController get cardController => Get.find<CardDueController>();
+CollectionsController get collectionsController =>Get.find<CollectionsController>();
+// CardDueController cardController = Get.find<CardDueController>();
+
 RxMap deviceData = {}.obs;
 RxBool isBankAccountLink = false.obs;
 RxInt scrollBankPage = 0.obs;

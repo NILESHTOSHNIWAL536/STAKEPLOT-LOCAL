@@ -85,7 +85,7 @@ void getAllTransaction(context) async {
 
 
 
-void getHiddenTransactions(context) async {
+Future<void> getHiddenTransactions(context) async {
   var response =
       await getDataApiCall(BankTransactionRoutes.getHideTransactions);
   if (response.statusCode == 200) {
@@ -401,7 +401,7 @@ Future<void> excludeCashFlowTransaction(
 
 
 
-void getAllAutoTransactions() async {
+Future<void> getAllAutoTransactions() async {
   var res = await getDataApiCall(BankTransactionRoutes.getPendingForReviewTransactions);
   if (getFlagOfResponse(res))
    {

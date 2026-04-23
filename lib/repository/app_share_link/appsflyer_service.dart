@@ -1,17 +1,32 @@
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
-import 'package:get/get.dart';
+import 'package:flutter_application_code_stakeplot/repository/auth_service/login_apis.dart';
+import 'package:flutter_application_code_stakeplot/repository/referral_repository.dart';
+import 'package:flutter_application_code_stakeplot/services/secure_storage.dart';
 
+import '../../Home_Screen/Home/init_Api_Calls.dart';
+import '../../Home_Screen/history/transactionHistoryScreen.dart';
+import '../../Home_Screen/home_screen_state/home_page.dart';
+import '../../finance_screen/Budgets/Budget.dart';
+import '../../finance_screen/Calculators/veg_nonveg.dart';
 import '../../main.dart';
+import '../../signInOut/referral_code_screen.dart';
 
 class AppsflyerService {
   static late AppsflyerSdk _appsflyerSdk;
 
-  /// 🔥 INIT SDK
+  /// True once a cold-start deep link has stored the target screen.
+  /// `checkAuthAndNavigate` (splash) reads this flag to know it should
+  /// skip its own default navigation.
+  static bool coldStartHandled = false;
+
+  // ─── Init ────────────────────────────────────────────────────────────────
+
   static Future<void> init() async {
     final AppsFlyerOptions options = AppsFlyerOptions(
       afDevKey: "aweZpvW8Js8ax3agtaTTvD",
-      appId: "", // iOS only
+      appId: "",
       showDebug: true,
       timeToWaitForATTUserAuthorization: 10,
     );
@@ -24,149 +39,270 @@ class AppsflyerService {
       registerOnDeepLinkingCallback: true,
     );
 
-    /// 🔥 MUST START SDK
     _appsflyerSdk.startSDK(
-      onSuccess: () {
-        appLog("✅ AppsFlyer SDK Started");
-      },
+      onSuccess: () => appLog("AppsFlyer SDK started"),
     );
 
-    String? uid = await _appsflyerSdk.getAppsFlyerUID();
-    appLog("📱 AppsFlyer UID: $uid");
-
+    appLog("AppsFlyer UID: ${await _appsflyerSdk.getAppsFlyerUID()}");
     _listenToCallbacks();
   }
 
-  /// 🔥 GENERATE REFERRAL LINK
-  static String generateReferralLink(String refCode) {
-    return "https://stagingstakeplot.onelink.me/vf5p/8m41djpj"
-        "?pid=User_invite"
-        "&c=referral"
-        "&deep_link_value=signup"
-        "&deep_link_sub1=$refCode";
+  // ─── Link generator ──────────────────────────────────────────────────────
+
+  static String generateReferralLink(String refCode) =>
+      "https://stagingstakeplot.onelink.me/vf5p/8m41djpj"
+      "?pid=User_invite&c=referral&deep_link_value=signup&deep_link_sub1=$refCode";
+
+  // ─── Payload extractor (shared logic) ───────────────────────────────────
+
+  static _DeepLinkPayload _extractPayload(Map<dynamic, dynamic> raw) {
+    String? queryCode, queryScreen;
+    final link = raw["link"];
+    if (link is String && link.isNotEmpty) {
+      final uri = Uri.tryParse(link);
+      queryCode =
+          uri?.queryParameters['deep_link_sub1'] ?? uri?.queryParameters['ref'];
+      queryScreen = uri?.queryParameters['deep_link_value'] ??
+          uri?.queryParameters['path'];
+    }
+
+    return _DeepLinkPayload(
+      referralCode: queryCode ??
+          raw["deep_link_sub1"]?.toString() ??
+          raw["ref"]?.toString(),
+      screen: queryScreen ??
+          raw["deep_link_value"]?.toString() ??
+          raw["path"]?.toString() ??
+          "signup",
+    );
   }
 
-  /// 🔥 CALLBACKS
+  // ─── Callbacks ───────────────────────────────────────────────────────────
+
   static void _listenToCallbacks() {
-    /// ✅ INSTALL (First time app install)
-    _appsflyerSdk.onInstallConversionData((data) {
-      appLog("📦 Install Data: $data");
+    _appsflyerSdk.onInstallConversionData((data) async {
+      appLog("onInstallConversionData: $data");
+      final p =
+          _extractPayload((data["payload"] ?? data) as Map<dynamic, dynamic>);
+      appLog("Install → code=${p.referralCode} screen=${p.screen}");
 
-      final payload = data["payload"] ?? data;
-      final refCode = data["deep_link_sub1"];
-      final screen = data["deep_link_value"];
-      final status = payload["af_status"];
-
-      //  if (status == "Non-organic") {
-      //   DeepLinkManager.setData(screen, refCode);
-      // }
-      appLog("status----------------------------");
-      appLog(status);
-
-      if (refCode != null && status == "Organic") {
-        appLog("🎯 Install Referral Code: $refCode");
-        // _navigate(screen, refCode);
-        // refCode
+      if (p.referralCode?.trim().isNotEmpty == true) {
+        await handleReferralNavigation(
+            refCode: p.referralCode!, screen: p.screen, source: 'install');
       }
     });
 
-    /// ✅ APP OPEN (when app already installed)
     _appsflyerSdk.onAppOpenAttribution((data) {
-      appLog("🔁 App Open Data: $data");
+      appLog("onAppOpenAttribution: $data");
     });
 
-    /// ✅ DEEP LINK (BEST CASE)
-    _appsflyerSdk.onDeepLinking((deepLinkResult) {
-      final deepLink = deepLinkResult.deepLink;
-      appLog("🔗 Deep Link Data: ${deepLink?.clickEvent}");
+    _appsflyerSdk.onDeepLinking((result) async {
+      final click = result.deepLink?.clickEvent ?? <String, dynamic>{};
+      appLog("onDeepLinking: $click");
+      final p = _extractPayload(click);
+      appLog("DeepLink → code=${p.referralCode} screen=${p.screen}");
 
-      final refCode = deepLink?.clickEvent["ref"];
-      final screen = deepLink?.clickEvent["path"];
-      final link = deepLink?.clickEvent["link"];
-
-      appLog("refCode", refCode, "screen", screen);
-      appLog("link", link);
-
-      String? refCode2;
-      String screen2 = "";
-
-      if (link != null && link is String) {
-        final uri = Uri.parse(link);
-
-        refCode2 = uri.queryParameters['ref'];
-        screen2 = uri.queryParameters['path'] ?? "home";
-      }
-
-      appLog("refCode", refCode, "screen", screen);
-      appLog("link", link);
-      // final refCode = deepLink?.clickEvent["deep_link_sub1"];
-      // final screen = deepLink?.clickEvent["deep_link_value"];
-
-      if (refCode2 != null) {
-        appLog("🎯 DeepLink Referral Code: $refCode");
-        _navigate(screen2, refCode2);
+      if (p.referralCode?.trim().isNotEmpty == true) {
+        await handleReferralNavigation(
+            refCode: p.referralCode!, screen: p.screen, source: 'deep_link');
       }
     });
   }
 
-  /// 🔥 NAVIGATION HANDLER
-  static void _navigate(String screen, String refCode) {
-    appLog("📍 Navigating to: $screen with ref: $refCode");
+  // ─── Core navigation handler ─────────────────────────────────────────────
+  //
+  // Two scenarios:
+  //   • Cold start  – navigator not mounted yet.
+  //                   Write "Screen" to storage; let checkAuthAndNavigate (splash)
+  //                   read it. This kills the race condition that caused the
+  //                   login-page redirect.
+  //   • Warm start  – app already running; navigate directly and fire callApi
+  //                   in the background so it never blocks the transition.
 
-    switch (screen) {
-      case "signup":
-        AppNavigator.pushNamed(
-          "/signup",
-          arguments: {"refCode": refCode},
-        );
-        break;
+  static Future<void> handleReferralNavigation({
+    required String refCode,
+    required String screen,
+    required String source,
+  }) async {
+    final normalizedCode = ReferralRepository.normalizeCode(refCode);
+    final bool isLoggedIn =
+        await SecureStorageService().containsKey("accessToken");
 
-      case "home" || "/home":
-        AppNavigator.pushNamed(
-          "/VegNonveg",
-          arguments: {"refCode": refCode},
-        );
-        break;
+    appLog("handleReferral source=$source screen=$screen "
+        "code=$normalizedCode loggedIn=$isLoggedIn");
 
-      default:
-        appLog("⚠️ Unknown screen: $screen");
+    // Persist incoming code regardless of auth state.
+    await ReferralRepository.saveIncomingReferralCode(normalizedCode);
+
+    if (!isLoggedIn) {
+      // Save screen so checkAuthAndNavigate can route after login.
+      await SecureStorageService().setString("Screen", screen);
+      return;
     }
+
+    final navigator = navigatorKey.currentState;
+
+    if (navigator == null) {
+      // ── Cold start ──────────────────────────────────────────────────────
+      // The widget tree is not mounted yet. Write the target screen into
+      // storage; checkAuthAndNavigate (splash screenFunction) will pick it up
+      // and navigate correctly — no race condition, no login redirect.
+      await SecureStorageService().setString("Screen", screen);
+      coldStartHandled = true;
+      return;
+    }
+
+    // ── Warm start ──────────────────────────────────────────────────────────
+    // App is already running. Navigate immediately.
+    navigator.pushReplacementNamed("/home");
+
+    final target = navigatePath(screen);
+    if (target is! HomePage) {
+      await Future.delayed(const Duration(milliseconds: 200));
+      AppNavigator.push(target);
+    }
+
+    // ⚡ callApi fires in background — never blocks navigation.
+    Future(() {
+      try {
+        callApi(navigatorKey.currentState!.context);
+      } catch (e) {
+        appLog("callApi background error: $e");
+      }
+    });
   }
 
-  static void _navigatew(String? screen, String? refCode) {
-    appLog("📍 Navigating to: $screen with ref: $refCode");
+  // ─── Route helper ────────────────────────────────────────────────────────
 
-    switch (screen) {
-      case "signup":
-        Get.toNamed("/signup", arguments: {"refCode": refCode});
-        break;
-
+  static Widget navigatePath(String navigate) {
+    switch (navigate) {
       case "home":
-        Get.toNamed("/home", arguments: {"refCode": refCode});
-        break;
-
+      case "signup":
+        return HomePage();
+      case "budget":
+        return Budget();
+      case "calculator":
+      case "veg_nonveg":
+        return VegNonVegCalculator();
+      case "code":
+        return ReferralCodeScreen();
+      case "coll":
+        selectedTab.value = "Collections";
+        return TransactionHistoryScreen();
       default:
-        appLog("⚠️ Unknown screen: $screen");
+        return HomePage();
     }
+  }
+
+  // ─── Own-code dialog ─────────────────────────────────────────────────────
+
+  static void showSelfReferralDialogIfNeeded(String refCode) {
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+    showDialog(
+      context: context,
+      builder: (_) => _OwnReferralCodeDialog(refCode: refCode),
+    );
   }
 }
 
+// ─── Internal payload model ───────────────────────────────────────────────
+
+class _DeepLinkPayload {
+  final String? referralCode;
+  final String screen;
+  const _DeepLinkPayload({required this.referralCode, required this.screen});
+}
+
+// ─── Navigator helper ──────────────────────────────────────────────────────
+
 class AppNavigator {
-  static Future pushNamed(String routeName, {Object? arguments}) {
-    return navigatorKey.currentState!.pushNamed(
-      routeName,
-      arguments: arguments,
-    );
-  }
+  static Future pushNamed(String routeName, {Object? arguments}) =>
+      navigatorKey.currentState!.pushNamed(routeName, arguments: arguments);
 
-  static Future pushReplacementNamed(String routeName, {Object? arguments}) {
-    return navigatorKey.currentState!.pushReplacementNamed(
-      routeName,
-      arguments: arguments,
-    );
-  }
+  static Future pushReplacementNamed(String routeName, {Object? arguments}) =>
+      navigatorKey.currentState!
+          .pushReplacementNamed(routeName, arguments: arguments);
 
-  static void pop() {
-    navigatorKey.currentState!.pop();
+  static Future push(Widget page) =>
+      navigatorKey.currentState!.push(MaterialPageRoute(builder: (_) => page));
+
+  static void pop() => navigatorKey.currentState!.pop();
+}
+
+// ─── Own-referral dialog ───────────────────────────────────────────────────
+
+class _OwnReferralCodeDialog extends StatelessWidget {
+  final String refCode;
+  const _OwnReferralCodeDialog({required this.refCode});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            colors: [Color(0xFFF8F3EA), Color(0xFFFFFFFF)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: const Color(0xFF4B4D73).withOpacity(0.08),
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: const Icon(Icons.link_off_rounded,
+                  size: 30, color: Color(0xFF4B4D73)),
+            ),
+            const SizedBox(height: 18),
+            const Text(
+              'This is your own referral link',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1F2230)),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'You opened the app using your own code $refCode. '
+              'Share it with a friend to unlock rewards, but it '
+              'cannot be applied on your own account.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontSize: 14, height: 1.5, color: Color(0xFF63697A)),
+            ),
+            const SizedBox(height: 22),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4B4D73),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  elevation: 0,
+                ),
+                child: const Text('Continue',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
