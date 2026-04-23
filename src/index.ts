@@ -1,3 +1,4 @@
+import './instrument'; // Sentry MUST be initialized before any other imports
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();

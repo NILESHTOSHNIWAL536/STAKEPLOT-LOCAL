@@ -20,6 +20,7 @@
     "@aws-sdk/client-ses": "^3.882.0",
     "@aws-sdk/lib-storage": "^3.879.0",
     "@aws-sdk/s3-request-presigner": "^3.716.0",
+    "@sentry/node": "^10.49.0",
     "amqplib": "^0.10.3",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",

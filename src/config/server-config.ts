@@ -10,4 +10,5 @@ export const ServerConfig = {
   MOBILE_BACKEND_URL: process.env.MOBILE_BACKEND_URL || 'http://localhost:5000',
   RATE_LIMIT_MAX: parseInt(process.env.RATE_LIMIT_MAX || '200', 10),
   RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS || `${15 * 60 * 1000}`, 10),
+  SENTRY_DSN: process.env.SENTRY_DSN,
 };

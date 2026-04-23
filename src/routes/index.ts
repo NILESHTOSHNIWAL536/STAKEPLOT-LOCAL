@@ -9,6 +9,7 @@ import collectionRoutes from './collection-routes';
 import reserveRoutes from './reserve-routes';
 import referralRoutes from './referral-routes';
 import webHook from '@/utils/webHook';
+import finvuQueueTestRoutes from './finvu-queue-test-routes'; // staging test only
 
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router.use('/wealthscape', wealthscapeRoutes);
 router.use('/collections', collectionRoutes);
 router.use('/reserve', reserveRoutes);
 router.use('/referral', referralRoutes);
+router.use('/finvu-queue', finvuQueueTestRoutes); // staging test only
 
 export default router;
