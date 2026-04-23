@@ -95,7 +95,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
       _hintController.stop();
     });
 
-    _loadData();
+    loadData();
     getRemainders(context);
   }
 
@@ -107,7 +107,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     super.dispose();
   }
 
-  Future<void> _loadData() async {
+  Future<void> loadData() async {
     try {
       await Future.wait([
         cardController.fetchCardData(),
