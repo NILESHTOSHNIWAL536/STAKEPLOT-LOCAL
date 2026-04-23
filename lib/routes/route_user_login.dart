@@ -47,7 +47,9 @@ class ReferralRoutes {
 
 class UserRoutes {
   static final String _urlPath = API.mainBackendUrl + "/user";
+  static final String install = API.mainBackendUrl + "/install";
   static String update = "$_urlPath/";
+  static String addInstallUser = "${install}/attribute";
   static String deleteUser = "$_urlPath/";
   static String getInfo = "$_urlPath/info";
   // static String getInfo = "${_urlPath}/info";

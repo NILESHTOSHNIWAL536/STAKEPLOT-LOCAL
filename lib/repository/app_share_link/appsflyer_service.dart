@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
@@ -8,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/services/secure_storage.dart'
 import '../../Home_Screen/Home/init_Api_Calls.dart';
 import '../../Home_Screen/history/transactionHistoryScreen.dart';
 import '../../Home_Screen/home_screen_state/home_page.dart';
+import '../../backed_connections/apiAutomations/install_apk_api.dart';
 import '../../finance_screen/Budgets/Budget.dart';
 import '../../finance_screen/Calculators/veg_nonveg.dart';
 import '../../main.dart';
@@ -26,7 +30,7 @@ class AppsflyerService {
   static Future<void> init() async {
     final AppsFlyerOptions options = AppsFlyerOptions(
       afDevKey: "aweZpvW8Js8ax3agtaTTvD",
-      appId: "",
+      appId: Platform.isIOS ? "1234567890" : "",
       showDebug: true,
       timeToWaitForATTUserAuthorization: 10,
     );
@@ -79,9 +83,52 @@ class AppsflyerService {
 
   // ─── Callbacks ───────────────────────────────────────────────────────────
 
+  static Future<void> handleInstallAttribution(
+    Map<dynamic, dynamic> data,
+  ) async {
+    try {
+      final payload = (data["payload"] ?? data) as Map<dynamic, dynamic>;
+
+      final isOrganic = payload["af_status"] == "Organic";
+      final mediaSource = payload["media_source"];
+      final campaign = payload["campaign"];
+
+      final installData = {
+        "installType": isOrganic ? "organic" : "non-organic",
+        "mediaSource": mediaSource ?? "unknown",
+        "campaign": campaign ?? "unknown",
+        "appsFlyerId": await _appsflyerSdk.getAppsFlyerUID(),
+        "raw": payload, // optional
+      };
+
+      appLog("📦 Install Attribution → $installData");
+
+      // ✅ store locally (safe)
+      await SecureStorageService()
+          .setString("installData", jsonEncode(installData));
+
+      // ✅ send if logged in
+      final isLoggedIn =
+          await SecureStorageService().containsKey("accessToken");
+
+       await sendPendingInstallData();
+  
+    } catch (e) {
+      appLog("❌ Attribution error: $e");
+    }
+  }
+
   static void _listenToCallbacks() {
     _appsflyerSdk.onInstallConversionData((data) async {
       appLog("onInstallConversionData: $data");
+
+      try {
+        // ✅ NEW METHOD (plugged in)
+        await handleInstallAttribution(data);
+      } catch (e) {
+        appLog(e);
+      }
+
       final p =
           _extractPayload((data["payload"] ?? data) as Map<dynamic, dynamic>);
       appLog("Install → code=${p.referralCode} screen=${p.screen}");

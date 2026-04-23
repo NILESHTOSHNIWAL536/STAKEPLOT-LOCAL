@@ -21,6 +21,7 @@ import 'package:lottie/lottie.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../Constants/app_styles.dart';
 import '../Constants/core/app_padding_sizes.dart';
+import '../backed_connections/apiAutomations/install_apk_api.dart';
 import '../repository/auth_service/login_apis.dart';
 import '../services/secure_storage.dart';
 import 'googl_button.dart';
