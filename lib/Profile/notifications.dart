@@ -160,7 +160,7 @@ class _NotificationsState extends State<Notifications> {
     final Map<String, List<Map<String, dynamic>>> grouped = {};
 
     for (var n in notificationList) {
-      if (n['notificationMessage']['type'] != "COLLECTION_INVITATION") {
+      if (n['type'] != "COLLECTION_INVITATION") {
         final String key = n['dateGroup'] ?? "Others";
         grouped.putIfAbsent(key, () => []);
         grouped[key]!.add(n);
