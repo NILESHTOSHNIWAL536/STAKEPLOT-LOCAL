@@ -6,6 +6,7 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+    id 'com.google.firebase.crashlytics'
 }
 
 def keystoreProperties = new Properties()
@@ -106,4 +107,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:21.1.0' // Google Sign-In
     implementation 'androidx.multidex:multidex:2.0.1' // MultiDex Support
     implementation "androidx.work:work-runtime-ktx:2.8.1"
+    implementation 'com.google.firebase:firebase-crashlytics'
 }

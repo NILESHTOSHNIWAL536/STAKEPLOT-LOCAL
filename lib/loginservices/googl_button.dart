@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:get/get.dart';

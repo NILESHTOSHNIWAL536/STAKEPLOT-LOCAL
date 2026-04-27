@@ -104,7 +104,7 @@ dependencies:
   flutter_staggered_grid_view: ^0.7.0
   app_links: ^6.3.2
   appsflyer_sdk: ^6.17.3
- 
+  firebase_crashlytics: ^4.3.3
   
   
 
