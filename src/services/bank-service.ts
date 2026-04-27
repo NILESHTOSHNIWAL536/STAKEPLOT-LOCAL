@@ -28,6 +28,7 @@ import { updateDailyMetrics } from '@/services/daily-metrics.service';
 import { runInTransaction } from '@/utils/run-in-transaction';
 import CollectionTransaction from '@/models/collections/collection-transaction.model';
 import Collection from '@/models/collections/collection.model';
+import CollectionMember from '@/models/collections/collection-member.model';
 import Split from '@/models/collections/split.model';
 import SplitPayment from '@/models/collections/split-payment.model';
 
@@ -1042,14 +1043,94 @@ export async function deleteBankAccount(userId: UserIdLike, bankId: string | Typ
 
 export async function deleteWholeBankData(userId: UserIdLike): Promise<any> {
   try {
-    const deleteBank = await new FipRepository().deleteBank(userId);
-    const deleteAccount = await new AccountRepository().deleteAccount(userId);
-    const deleteProfile = await new ProfileRepository().deleteProfile(userId);
-    const deleteSummary = await new SummaryRepository().deleteSummary(userId);
-    const deleteTransactions = await new AutoTransactionRepository().deleteTransactions(userId);
+    const objectUserId = new mongoose.Types.ObjectId(String(userId));
 
-    return { deleteBank, deleteAccount, deleteProfile, deleteSummary, deleteTransactions };
+    // --- Snapshot reads (outside transaction) ---
+
+    // All transactions belonging to this user
+    const userTransactionIds = await BankTransaction.find({ userId: objectUserId }, { _id: 1 }).lean().then((docs) => docs.map((d) => d._id));
+
+    // Collections owned by this user — delete entirely
+    const ownedCollectionIds = await Collection.find({ ownerId: objectUserId }, { _id: 1 }).lean().then((docs) => docs.map((d) => d._id));
+
+    // CollectionTransactions in non-owned collections that reference this user's transactions
+    const externalCollectionTxns = userTransactionIds.length > 0
+      ? await CollectionTransaction.find({
+          transactionId: { $in: userTransactionIds },
+          collectionId: { $nin: ownedCollectionIds },
+        }).lean()
+      : [];
+
+    const externalCollectionDeductMap = new Map<string, number>();
+    for (const ct of externalCollectionTxns) {
+      const key = ct.collectionId.toString();
+      externalCollectionDeductMap.set(key, (externalCollectionDeductMap.get(key) ?? 0) + ct.amount);
+    }
+
+    // Splits in external collections that reference this user's transactions
+    const externalSplitIds = userTransactionIds.length > 0
+      ? await Split.find({
+          transactionIds: { $in: userTransactionIds },
+          collectionId: { $nin: ownedCollectionIds },
+        }).distinct('_id')
+      : [];
+
+    // --- Atomic cleanup ---
+    await runInTransaction(async (session) => {
+      // 1. Delete owned collections and all their related data
+      if (ownedCollectionIds.length > 0) {
+        await SplitPayment.deleteMany({ collectionId: { $in: ownedCollectionIds } }).session(session);
+        await Split.deleteMany({ collectionId: { $in: ownedCollectionIds } }).session(session);
+        await CollectionTransaction.deleteMany({ collectionId: { $in: ownedCollectionIds } }).session(session);
+        await CollectionMember.deleteMany({ collectionId: { $in: ownedCollectionIds } }).session(session);
+        await Collection.deleteMany({ _id: { $in: ownedCollectionIds } }).session(session);
+      }
+
+      // 2. Clean up user's footprint in external collections
+      //    Adjust totalAmount for each external collection that loses transactions
+      for (const [colId, amount] of externalCollectionDeductMap) {
+        await Collection.findByIdAndUpdate(colId, { $inc: { totalAmount: -amount } }, { session });
+      }
+
+      if (externalSplitIds.length > 0) {
+        await SplitPayment.deleteMany({ splitId: { $in: externalSplitIds } }).session(session);
+        await Split.deleteMany({ _id: { $in: externalSplitIds } }).session(session);
+      }
+
+      if (userTransactionIds.length > 0) {
+        await CollectionTransaction.deleteMany({
+          transactionId: { $in: userTransactionIds },
+          collectionId: { $nin: ownedCollectionIds },
+        }).session(session);
+      }
+
+      // 3. Remove any remaining split-payment records the user is party to
+      await SplitPayment.deleteMany({ $or: [{ payerId: objectUserId }, { receiverId: objectUserId }] }).session(session);
+
+      // 4. Remove user from splits in external collections (splits where user is paidBy or listed as debtor)
+      await Split.deleteMany({
+        collectionId: { $nin: ownedCollectionIds },
+        $or: [{ paidBy: objectUserId }, { 'splits.userId': objectUserId }],
+      }).session(session);
+
+      // 5. Remove user's collection memberships (as non-owner)
+      await CollectionMember.deleteMany({ userId: objectUserId }).session(session);
+
+      // 6. Delete core bank data
+      await new FipRepository().deleteBank(userId, undefined, session);
+      await new AccountRepository().deleteAccount(userId, undefined, session);
+      await new ProfileRepository().deleteProfile(userId, undefined, session);
+      await new SummaryRepository().deleteSummary(userId, undefined, session);
+      await new AutoTransactionRepository().deleteTransactions(userId, undefined, session);
+    });
+
+    // Post-commit cleanup
+    await GroupedTransaction.deleteMany({ userId: objectUserId });
+    await redisClient.del(`banksWithAccountDetails:${userId}`);
+
+    return { success: true };
   } catch (error: any) {
+    logger.error(`Error deleting whole bank data: ${error}`);
     return error;
   }
 }

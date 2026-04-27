@@ -869,10 +869,11 @@ export const deleteCollection = async (collectionId: string, userId: string) => 
   }
 
   await runInTransaction(async (session) => {
-    await Collection.findByIdAndDelete(collectionId).session(session);
-    await CollectionMember.deleteMany({ collectionId }).session(session);
-    await CollectionTransaction.deleteMany({ collectionId }).session(session);
+    await SplitPayment.deleteMany({ collectionId }).session(session);
     await Split.deleteMany({ collectionId }).session(session);
+    await CollectionTransaction.deleteMany({ collectionId }).session(session);
+    await CollectionMember.deleteMany({ collectionId }).session(session);
+    await Collection.findByIdAndDelete(collectionId).session(session);
   });
 };
 
