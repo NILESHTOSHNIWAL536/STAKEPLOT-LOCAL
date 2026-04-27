@@ -192,35 +192,250 @@ class InvitationsList extends StatelessWidget {
       BuildContext context, String invitationId, bool isAccept) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_context) {
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text(isAccept ? "Accept Invitation?" : "Reject Invitation?"),
-          content: Text(
-            isAccept
-                ? "Do you want to accept this invite?"
-                : "Do you want to delete this invite?",
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (isAccept) {
-                  await collectionsController.acceptInvitation(invitationId, context);
-                } else {
-                  await collectionsController.rejectInvitation(invitationId);
-                }
-                  Navigator.pop(_context);
-              },
-              child: Text(isAccept ? "Accept" : "Delete"),
-            ),
-          ],
+        bool isLoading = false;
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Icon
+                    Icon(
+                      isAccept ? Icons.check_circle : Icons.delete_outline,
+                      color: isAccept ? Colors.green : Colors.red,
+                      size: 40,
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    Text(
+                      isAccept ? "Accept Invitation?" : "Delete Invitation?",
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    Text(
+                      isAccept
+                          ? "Do you want to accept this invite?"
+                          : "This action will remove the invite permanently.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: isLoading
+                                ? null
+                                : () => Navigator.pop(_context),
+                            child: const Text("Cancel"),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: isLoading
+                                ? null
+                                : () async {
+                                    setState(() => isLoading = true);
+
+                                    try {
+                                      if (isAccept) {
+                                        await collectionsController
+                                            .acceptInvitation(
+                                                invitationId, context);
+                                      } else {
+                                        await collectionsController
+                                            .rejectInvitation(invitationId);
+                                      }
+
+                                      Navigator.pop(_context);
+                                    } catch (e) {
+                                      setState(() => isLoading = false);
+                                    }
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  isAccept ? Colors.green : Colors.red,
+                            ),
+                            child: isLoading
+                                ? const SizedBox(
+                                    height: 18,
+                                    width: 18,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(isAccept ? "Accept" : "Delete"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
   }
+
+  void _showConfirmDialog2(
+      BuildContext context, String invitationId, bool isAccept) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isAccept
+                        ? Colors.green.withOpacity(0.1)
+                        : Colors.red.withOpacity(0.1),
+                  ),
+                  child: Icon(
+                    isAccept ? Icons.check_circle : Icons.delete_outline,
+                    color: isAccept ? Colors.green : Colors.red,
+                    size: 32,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Title
+                Text(
+                  isAccept ? "Accept Invitation?" : "Delete Invitation?",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                const SizedBox(height: 10),
+
+                // Description
+                Text(
+                  isAccept
+                      ? "Do you want to accept this invite?"
+                      : "This action will remove the invite permanently.",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                const SizedBox(height: 24),
+
+                // Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(_context),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text("Cancel"),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (isAccept) {
+                            await collectionsController.acceptInvitation(
+                                invitationId, context);
+                          } else {
+                            await collectionsController
+                                .rejectInvitation(invitationId);
+                          }
+                          Navigator.pop(_context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isAccept ? Colors.green : Colors.red,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(isAccept ? "Accept" : "Delete"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // void _showConfirmDialog(
+  //     BuildContext context, String invitationId, bool isAccept) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (_context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+  //         title: Text(isAccept ? "Accept Invitation?" : "Reject Invitation?"),
+  //         content: Text(
+  //           isAccept
+  //               ? "Do you want to accept this invite?"
+  //               : "Do you want to delete this invite?",
+  //         ),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text("Cancel"),
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: () async {
+  //               if (isAccept) {
+  //                 await collectionsController.acceptInvitation(invitationId, context);
+  //               } else {
+  //                 await collectionsController.rejectInvitation(invitationId);
+  //               }
+  //                 Navigator.pop(_context);
+  //             },
+  //             child: Text(isAccept ? "Accept" : "Delete"),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }

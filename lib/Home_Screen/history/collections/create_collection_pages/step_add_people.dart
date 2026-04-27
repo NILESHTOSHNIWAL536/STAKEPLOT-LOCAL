@@ -23,6 +23,13 @@ class StepAddPeople extends StatefulWidget {
 
 class _StepAddPeopleState extends State<StepAddPeople> {
   @override
+  void initState() {
+    super.initState();
+    // Ensure the current user is included in the members list
+    userController.fetchUserInfo();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return wrapperCollection(
       context,
@@ -44,7 +51,8 @@ class _StepAddPeopleState extends State<StepAddPeople> {
               text: "Proceed",
               onTap: widget.members.isNotEmpty
                   ? () {
-                      widget.onNext(List<Map<String, dynamic>>.from(widget.members));
+                      widget.onNext(
+                          List<Map<String, dynamic>>.from(widget.members));
                     }
                   : null,
             ),

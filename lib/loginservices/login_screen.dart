@@ -34,8 +34,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController =
-      TextEditingController(text: "nileshtoshniwal743@gmail.com");
+  final TextEditingController emailController = TextEditingController(text: "");
   final AuthService authService = AuthService();
   RxString isLoggedIn = "".obs;
 
@@ -110,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               AppColors.backgroundColor, context),
                           // buildGoogleSignIn(),
                           SizedBox(width: AppSizes.w20),
-                          !Platform.isAndroid
+                          Platform.isAndroid
                               ? Text('')
                               : Container(
                                   width: MediaQuery.sizeOf(context).width / 2.5,
