@@ -95,7 +95,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       'name': username,
       'email': widget.data['data']['email'] ?? '',
       'authorizationKey': Credentials.Sign_Up_Key,
-      'deviceInfo': deviceData,
+      'deviceInfo':  deviceData.value.toJson(),
       if (widget.isAppleUser) ...{
         'isAppleUser': true,
         'appleUserId': widget.data['data']['appleUserId'],

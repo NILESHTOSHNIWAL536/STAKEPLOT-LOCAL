@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';

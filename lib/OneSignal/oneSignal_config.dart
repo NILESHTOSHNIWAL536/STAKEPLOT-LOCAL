@@ -10,33 +10,77 @@ import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../model/device_model.dart';
 import '../repository/auth_service/login_apis.dart';
+
+// Future<void> initializeOneSignal(BuildContext context) async {
+//   final SharedPreferences pref = await SharedPreferences.getInstance();
+//   String key = "deviceInfo";
+//   var json;
+//   if (pref.containsKey(key)) {
+//     json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
+//   }
+//   if (!pref.containsKey(key) ||
+//       json["deviceId"] == "deviceData.value" ||
+//       json["deviceId"] == "") {
+//     await oneSignalInit();
+//     await Future.delayed(Duration(seconds: 3)); // Small delay
+//     String userDeviceId =
+//         await OneSignal.User.pushSubscription.id ?? "deviceData.value";
+//     getDeviceLocalDetails(userDeviceId, context);
+//     var deviceDataLocal = {
+//       ...deviceData,
+//       'deviceId': userDeviceId,
+//     };
+//     deviceData.clear();
+//     deviceData.addAll(deviceDataLocal);
+//     pref.setString(key, jsonEncode(deviceData));
+//   } else {
+//     deviceData['deviceId'] = json["deviceId"];
+//   }
+//   addThisDeviceToBackendDevice(pref, context);
+// }
 
 Future<void> initializeOneSignal(BuildContext context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  String key = "deviceInfo";
-  var json;
+  const key = "deviceInfo";
+
+  Map<String, dynamic> storedJson = {};
+
+  /// 🔹 Load existing data
   if (pref.containsKey(key)) {
-    json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
+    storedJson = jsonDecode(pref.getString(key) ?? "{}");
   }
-   if(!pref.containsKey(key) ||
-      json["deviceId"] == "deviceData.value" ||
-      json["deviceId"] == "") {
+
+  bool needNewDeviceId = !pref.containsKey(key) ||
+      (storedJson["deviceId"] ?? "").toString().isEmpty ||
+      storedJson["deviceId"] == "deviceData.value";
+
+  if (needNewDeviceId) {
     await oneSignalInit();
-    await Future.delayed(Duration(seconds: 3)); // Small delay
-    String userDeviceId = await OneSignal.User.pushSubscription.id ?? "deviceData.value";
-    getDeviceLocalDetails(userDeviceId, context);
-    var deviceDataLocal = {
-      ...deviceData,
-      'deviceId': userDeviceId,
-    };
-    deviceData.clear();
-    deviceData.addAll(deviceDataLocal);
-    pref.setString(key, jsonEncode(deviceData));
-  } 
-  else {
-    deviceData['deviceId'] = json["deviceId"];
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    String userDeviceId = OneSignal.User.pushSubscription.id ?? "unknownDevice";
+
+    /// 🔥 Get device details (this sets deviceData.value)
+    await getDeviceLocalDetails(userDeviceId, context);
+
+    /// 🔥 Ensure deviceId is updated in model
+    deviceData.update((val) {
+      val?.deviceId = userDeviceId;
+    });
+
+    /// 🔥 Save properly
+    await pref.setString(
+      key,
+      jsonEncode(deviceData.value.toJson()),
+    );
+  } else {
+    /// 🔹 Load existing into model
+    deviceData.value = DeviceModel.fromJson(storedJson);
   }
+
   addThisDeviceToBackendDevice(pref, context);
 }
 
@@ -85,71 +129,171 @@ Future<void> oneSignalInit() async {
   } catch (e) {}
 }
 
-Future<void>  getDeviceInfo(
-    String playerId,
-    context,
-    TextEditingController emailController,
-    ) async {
-  deviceData.value = {};
+Future<void> getDeviceInfo(
+  String playerId,
+  context,
+  TextEditingController emailController,
+) async {
+  deviceData.value = DeviceModel(
+    deviceId: "",
+    brand: "",
+    device: "",
+    model: "",
+    os: "",
+  );
+
   final SharedPreferences pref = await SharedPreferences.getInstance();
+  // String key = "deviceInfo";
+
+  // if (!pref.containsKey(key)) {
+  //   getDeviceLocalDetails(playerId, context);
+  // }
+  // deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
   String key = "deviceInfo";
 
-  if (!pref.containsKey(key))
-  {
-    getDeviceLocalDetails(playerId, context);
+  if (!pref.containsKey(key)) {
+    await getDeviceLocalDetails(playerId, context);
   }
-  deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
+
+  /// 🔥 Convert JSON → Model
+  final stored = pref.getString(key);
+
+  if (stored != null && stored.isNotEmpty) {
+    final jsonMap = jsonDecode(stored);
+    deviceData.value = DeviceModel.fromJson(jsonMap);
+  } else {
+    deviceData.value = DeviceModel.empty(); // optional fallback
+  }
   LoginService.userVerification(emailController, context);
 }
 
-void getDeviceLocalDetails(String playerId, context) async {
+Future<void> getDeviceLocalDetails(String playerId, context) async {
+  /// 🔥 Clean for Joi rules
+  String cleanCommon(String value) {
+    return value.replaceAll(RegExp(r'[^a-zA-Z0-9 ]'), '').trim();
+  }
+
+  String cleanDeviceId(String value) {
+    return value.replaceAll(RegExp(r'[^a-zA-Z0-9-_]'), '').trim();
+  }
+
   try {
-    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    final deviceInfo = DeviceInfoPlugin();
+
     if (Platform.isAndroid) {
-      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      deviceData.value = {
-        'deviceId': playerId,
-        'brand': androidInfo.brand,
-        'device': androidInfo.device,
-        'model': androidInfo.model,
-        'os': 'Android',
-      };
+      final android = await deviceInfo.androidInfo;
+
+      deviceData.value = DeviceModel(
+        deviceId: playerId.isNotEmpty ? playerId : "unknownDevice",
+        brand: cleanCommon(
+          android.brand.isNotEmpty
+              ? android.brand
+              : (android.manufacturer ?? "Unknown"),
+        ),
+        device: cleanCommon(
+          android.device.isNotEmpty
+              ? android.device
+              : (android.product ?? "Unknown"),
+        ),
+        model: cleanCommon(
+          android.model.isNotEmpty ? android.model : "Unknown",
+        ),
+        os: "Android",
+      );
     } else if (Platform.isIOS) {
-      final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceData.value = {
-        'deviceId': playerId,
-        'device': iosInfo.name,
-        'brand': iosInfo.model ?? 'Apple',
-        'model': iosInfo.model ?? 'iPhone',
-        'os': 'iOS',
-      };
+      final ios = await deviceInfo.iosInfo;
+
+      deviceData.value = DeviceModel(
+        deviceId:
+            playerId.isNotEmpty ? cleanDeviceId(playerId) : "unknownDevice",
+        brand: "Apple",
+        device: cleanCommon(ios.name.isNotEmpty ? ios.name : "iPhone"),
+        model: cleanCommon(ios.model.isNotEmpty ? ios.model : "iPhone"),
+        os: "iOS",
+      );
     } else {
-      deviceData.value = {
-        'deviceId': (playerId == "") ? "" : playerId,
-        'device': 'Unknown',
-        'os': 'Unknown',
-        'brand': '',
-        'model': '',
-      };
+      deviceData.value = DeviceModel(
+        deviceId:
+            playerId.isNotEmpty ? cleanDeviceId(playerId) : "unknownDevice",
+        brand: "Unknown",
+        device: "Unknown",
+        model: "Unknown",
+        os: "Unknown",
+      );
     }
   } catch (e) {
-    deviceData.value = {
-      'deviceId': (playerId == "") ? "" : playerId,
-      'device': 'Unknown',
-      'os': 'Unknown',
-      'brand': 'Unknown',
-      'osVersion': 'Unknown',
-    };
+    deviceData.value = DeviceModel(
+      deviceId: playerId.isNotEmpty ? cleanDeviceId(playerId) : "unknownDevice",
+      brand: "Unknown",
+      device: "Unknown",
+      model: "Unknown",
+      os: "Unknown",
+    );
   }
-  final SharedPreferences pref = await SharedPreferences.getInstance();
-  pref.setString('deviceInfo', jsonEncode(deviceData));
+
+  /// ✅ Save correctly
+  final pref = await SharedPreferences.getInstance();
+  await pref.setString(
+    'deviceInfo',
+    jsonEncode(deviceData.value.toJson()),
+  );
 }
+
+// void getDeviceLocalDetails(String playerId, context) async {
+//   try {
+//     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+//     if (Platform.isAndroid) {
+//       final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+//       deviceData.value = {
+//         'deviceId': playerId.isNotEmpty ? playerId : "",
+//         'brand': (androidInfo.brand.isNotEmpty)
+//             ? androidInfo.brand
+//             : (androidInfo.manufacturer ?? "Unknown"),
+//         'device': (androidInfo.device.isNotEmpty)
+//             ? androidInfo.device
+//             : (androidInfo.product ?? "Unknown"),
+//         'model': (androidInfo.model.isNotEmpty)
+//             ? androidInfo.model
+//             : "Unknown",
+//         'os': 'Android',
+//       };
+
+//     } else if (Platform.isIOS) {
+//       final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+//        deviceData.value = {
+//         'deviceId': playerId.isNotEmpty ? playerId : "",
+//         'brand': 'Apple',
+//         'device': iosInfo.name.isNotEmpty ? iosInfo.name : "iPhone",
+//         'model': iosInfo.model.isNotEmpty ? iosInfo.model : "iPhone",
+//         'os': 'iOS',
+//       };
+
+//     } else {
+//       deviceData.value = {
+//         'deviceId': playerId.isNotEmpty ? playerId : "",
+//         'device': 'Unknown',
+//         'os': 'Unknown',
+//         'brand': '',
+//         'model': '',
+//       };
+//     }
+//   } catch (e) {
+//     deviceData.value = {
+//       'deviceId': playerId.isNotEmpty ? playerId : "",
+//       'device': 'Unknown',
+//       'os': 'Unknown',
+//       'brand': 'Unknown',
+//       'osVersion': 'Unknown',
+//     };
+//   }
+//   final SharedPreferences pref = await SharedPreferences.getInstance();
+//   pref.setString('deviceInfo', jsonEncode(deviceData));
+// }
 
 void oneSignalAddClickListener(context) {
   try {
     OneSignal.Notifications.addClickListener((event) {
-      _handleNotificationClick(event, Get.context ?? context,false);
-
+      _handleNotificationClick(event, Get.context ?? context, false);
     });
 
     OneSignal.Notifications.addForegroundWillDisplayListener((event) {
@@ -159,8 +303,7 @@ void oneSignalAddClickListener(context) {
       }
       if (s.contains("problem") ||
           s.contains("try again later") ||
-          s.contains("successfully fetched"))
-      {
+          s.contains("successfully fetched")) {
         isFected.value = false;
         getBankAccounts();
       }

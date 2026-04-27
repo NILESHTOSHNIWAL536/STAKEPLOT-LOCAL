@@ -116,20 +116,39 @@ Future<bool> check(context, String flag) async {
 }
 
 Future<void> storeDeviceInfo(context) async {
-  var json = await getUserStats();
-  await postDataApiCall("${SendNotificationsRoutes.deviceScreenTime}", json);
   try {
-    await postDataApiCall(AuthApiRoutes.logout, {});
+    final json = await getUserStats();
+
+    await Future.wait([
+      postDataApiCallwithOutSharedPref(
+        SendNotificationsRoutes.deviceScreenTime,
+        json,
+      ),
+      postDataApiCall(
+        AuthApiRoutes.logout,
+        {},
+      ),
+    ]);
   } catch (e) {
-    logoutUserFromDevice(context);
+    print("Store Device Info Error: $e");
   }
 }
 
 Future<void> storeDeviceInfoLocalBackState() async {
-  var json = await getUserStats();
-  var responce = await postDataApiCall(
-      "${SendNotificationsRoutes.deviceScreenTime}", json);
-  if (getFlagOfResponse(responce)) {}
+  try {
+    final json = await getUserStats();
+
+    final response = await postDataApiCall(
+      SendNotificationsRoutes.deviceScreenTime,
+      json,
+    );
+
+    if (getFlagOfResponse(response)) {
+      // success
+    }
+  } catch (e) {
+    print("Background Device Info Error: $e");
+  }
 }
 
 void clearTransactions({required BuildContext context, bool f = false}) {
@@ -227,26 +246,73 @@ Future<void> getAllContstant(context) async {
   }
 }
 
-void logoutUserFromDevice(context2) async {
-  BuildContext context =  context2 ?? navigatorKey.currentState!.context;
+// void logoutUserFromDevice(context2) async {
+//   BuildContext context =  context2 ?? navigatorKey.currentState!.context;
+//   try {
+//     Navigator.pushReplacementNamed(context, '/');
+//     Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+//     await storeDeviceInfo(context);
+//     clearGetX();
+//     final SharedPreferences _pref = await SharedPreferences.getInstance();
+//     await _pref.remove("token");
+//     await _pref.remove("accessToken");
+//     await SecureStorageService().delete("token");
+//     await SecureStorageService().delete("accessToken");
+//     await ReferralRepository.clearAllReferralCodes();
+//     await ReferralRepository.clearMyShareReferralCode();
+//     await SecureStorageService().deleteAll();
+//   } catch (e) {}
+// }
+
+Future<void> logoutUserFromDevice(BuildContext? context2) async {
+  final context = context2 ?? navigatorKey.currentState!.context;
+
   try {
-     if (!Get.isRegistered<UserController>()) {
-      Get.lazyPut(() => UserController());
-    }
-    Navigator.pushReplacementNamed(context, '/');
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-   
-    await storeDeviceInfo(context);
-    clearGetX();
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    await _pref.remove("token");
-    await _pref.remove("accessToken");
-    await SecureStorageService().delete("token");
-    await SecureStorageService().delete("accessToken");
-    await ReferralRepository.clearAllReferralCodes();
-    await ReferralRepository.clearMyShareReferralCode();
-    await SecureStorageService().deleteAll();
-  } catch (e) {}
+ 
+    /// ✅ 1. Send logout API safely
+    storeDeviceInfo(context);
+
+    /// ✅ 2. Clear local data
+    final pref = await SharedPreferences.getInstance();
+
+    // await pref.remove("token");
+    // await pref.remove("accessToken");
+
+    // await SecureStorageService().delete("token");
+    // await SecureStorageService().delete("accessToken");
+    // await SecureStorageService().deleteAll();
+
+    // await ReferralRepository.clearAllReferralCodes();
+    // await ReferralRepository.clearMyShareReferralCode();
+    Future.wait([
+      pref.remove("token"),
+      pref.remove("accessToken"),
+      SecureStorageService().delete("token"),
+      SecureStorageService().delete("accessToken"),
+      SecureStorageService().deleteAll(),
+      ReferralRepository.clearAllReferralCodes(),
+      ReferralRepository.clearMyShareReferralCode(),
+    ]);
+
+    /// ✅ 3. Navigate ONLY ONCE
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/',
+      (Route<dynamic> route) => false,
+    );
+
+    Future.microtask(() {
+      deleteGetControllers();
+      clearGetX();
+    });
+  } catch (e) {
+    print("Logout Error: $e");
+
+    /// 🔥 Even if error → still force logout locally
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/',
+      (Route<dynamic> route) => false,
+    );
+  }
 }
 
 void clearStackLocalInfo() {

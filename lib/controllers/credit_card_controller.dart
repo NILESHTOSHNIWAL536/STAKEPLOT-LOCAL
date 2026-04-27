@@ -6,7 +6,7 @@ import '../Utils/credit_card.dart';
 import '../backed_connections/apiAutomations/curd.dart';
 import '../backed_connections/apis_connect.dart';
 import '../email_sync/add_credit_card_bank.dart';
-import '../email_sync/data_loading.dart';
+import '../email_sync/email_loading_screen.dart';
 import '../finance_screen/finanace_dashboard/creditCard_slider.dart';
 import '../model/credit-card-bank.dart';
 import '../model/credit_card_model.dart';
@@ -28,12 +28,6 @@ class CardDueController extends GetxController {
         cardList.clear();
         cardList.addAll(
             (data as List).map((e) => CardDueModel.fromJson(e)).toList());
-        //  if(!getCreditCardBudgetDebts.value)getCreditCardBudgetDebts.value= cardList.isNotEmpty;
-        // } else {
-        //   cardList.clear();
-        appLog("cardList");
-        appLog(cardList);
-        
       }
     } catch (e) {
       cardList.clear();
@@ -64,6 +58,7 @@ class CardDueController extends GetxController {
     } catch (e) {
       cardList.clear();
     }
+    loadingBankdetails.value = true;
   }
 
   Future<void> getBanksListCrediCard() async {

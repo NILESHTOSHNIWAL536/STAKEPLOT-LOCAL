@@ -22,175 +22,337 @@ class AddCreditCardBankScreen extends StatefulWidget {
 
 class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
   RxList<CreditCardBank> filteredBanks = <CreditCardBank>[].obs;
-
-  TextEditingController controller = TextEditingController(text: "");
+  final TextEditingController controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    filteredBanks.clear();
-    filteredBanks.addAll(creditCardBankList);
-    // controller.text = selectedBankName.value;
+    filteredBanks
+      ..clear()
+      ..addAll(creditCardBankList);
+    selectedBankName.value = "";
+    selectedBankId.value = "";
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _onSearch(String v) {
+    final query = v.toLowerCase();
+    setState(() {
+      filteredBanks
+        ..clear()
+        ..addAll(
+          creditCardBankList.where(
+            (e) => e.name.toLowerCase().contains(query),
+          ),
+        );
+    });
+  }
+
+  void _selectBank(CreditCardBank bank) {
+    controller.text = bank.name;
+    selectedBankName.value = bank.name;
+    selectedBankId.value = bank.id;
+    _focusNode.unfocus();
+    // Scroll feedback — keep selection visible
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(40),
+        preferredSize: const Size.fromHeight(40),
         child: AppBar(
           elevation: 0,
           backgroundColor: AppColors.backgroundColor,
           leading: leadIcon(context),
           title: textStyle(
-              context: context,
-              text: "Add Credit Card Bank Name",
-              c: AppColors.primaryColor,
-              fontWeight: FontWeight.bold,
-              fontsize: 18),
-          //  Text(
-          //   "Add Credit Card Bank Name",
-          //   style: TextStyle(
-          //       color: Color(0xFF37344F),
-          //       fontWeight: FontWeight.w600,
-          //       fontSize: 18),
-          // ),
+            context: context,
+            text: "Select Your Bank",
+            c: AppColors.primaryColor,
+            fontWeight: FontWeight.bold,
+            fontsize: 18,
+          ),
           centerTitle: false,
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: w * 0.06),
+        padding: EdgeInsets.symmetric(horizontal: w * 0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomStepper(activeStep: 0),
+            SizedBox(height: AppSizes.h10),
+
+            // ── Subtitle ──────────────────────────────────────────────────
+            Text(
+              "Which bank issued your credit card?",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade600,
+              ),
+            ),
+            SizedBox(height: AppSizes.h12),
+
+            // ── Search field ──────────────────────────────────────────────
             TextField(
               controller: controller,
-              onChanged: (v) {
-                RxList<CreditCardBank> filteredBanksList =
-                    <CreditCardBank>[].obs;
-                creditCardBankList.forEach((element) {
-                  if (element.name.toLowerCase().contains(v.toLowerCase()))
-                    filteredBanksList.add(element);
-                });
-
-                setState(() {
-                  filteredBanks.clear();
-                  filteredBanks.addAll(filteredBanksList);
-                });
-              },
+              focusNode: _focusNode,
+              onChanged: _onSearch,
+              style: TextStyle(
+                color: AppColors.primaryColor,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
               decoration: InputDecoration(
+                prefixIcon: Icon(Icons.search_rounded,
+                    color: Colors.grey.shade400, size: 20),
+                suffixIcon: controller.text.isNotEmpty
+                    ? GestureDetector(
+                        onTap: () {
+                          controller.clear();
+                          _onSearch('');
+                        },
+                        child: Icon(Icons.clear_rounded,
+                            color: Colors.grey.shade400, size: 18),
+                      )
+                    : null,
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: AppSizes.p12, vertical: AppSizes.p16),
-                hintText: 'Select bank',
-                hintStyle: TextStyle(
-                  color: AppColors.primaryColor,
-                  fontSize: 16,
-                ),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                hintText: 'Search your bank…',
+                hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+                filled: true,
+                fillColor: Colors.grey.shade100,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                      color: AppColors.primaryColor.withOpacity(0.4)),
+                      color: AppColors.primaryColor.withOpacity(0.4),
+                      width: 1.5),
                 ),
               ),
             ),
-            SizedBox(height: AppSizes.h5),
-            Expanded(
-              child: ListView.separated(
-                separatorBuilder: (context, index) => Divider(
-                  color: Colors.grey.withOpacity(0.5), // Set your divider color
-                  height: 1, // Space the divider consumes
-                  thickness: 1, // Divider line thickness    // End margin
-                ),
-                itemCount: filteredBanks.length,
-                itemBuilder: (_, i) => Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
-                      borderRadius: BorderRadius.only(
-                        topLeft: i == 0 ? Radius.circular(10) : Radius.zero,
-                        topRight: i == 0 ? Radius.circular(10) : Radius.zero,
-                        bottomLeft: i == filteredBanks.length - 1
-                            ? Radius.circular(10)
-                            : Radius.zero,
-                        bottomRight: i == filteredBanks.length - 1
-                            ? Radius.circular(10)
-                            : Radius.zero,
-                      )),
-                  child: ListTile(
-                    dense: true,
 
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                    leading: Image.network(
-                      filteredBanks[i].logo,
-                      width: 30,
-                      height: 30,
-                      fit: BoxFit.fitWidth,
-                      errorBuilder: getErrorBankLogo(),
+            SizedBox(height: AppSizes.h10),
+
+            // ── Selected badge ────────────────────────────────────────────
+            Obx(() => selectedBankName.value.isNotEmpty
+                ? Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: AppColors.primaryColor.withOpacity(0.25)),
                     ),
-                    title: textStyle(
-                        context: context,
-                        text: filteredBanks[i].name,
-                        c: AppColors.primaryColor,
-                        fontWeight: FontWeight.w500,
-                        fontsize: 18),
-                    onTap: () {
-                      controller.text = filteredBanks[i].name;
-                      selectedBankName.value = filteredBanks[i].name;
-                      selectedBankId.value = filteredBanks[i].id;
-                    },
-                  ),
-                ),
-              ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.check_circle_rounded,
+                            color: AppColors.primaryColor, size: 16),
+                        const SizedBox(width: 8),
+                        Text(
+                          selectedBankName.value,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : const SizedBox.shrink()),
+
+            // ── Bank list ─────────────────────────────────────────────────
+            Expanded(
+              child: filteredBanks.isEmpty
+                  ? _buildEmptyState()
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        separatorBuilder: (_, __) => Divider(
+                          color: Colors.grey.shade200,
+                          height: 1,
+                          thickness: 1,
+                        ),
+                        itemCount: filteredBanks.length,
+                        itemBuilder: (_, i) {
+                          final bank = filteredBanks[i];
+                          final isSelected = selectedBankId.value == bank.id;
+                          return Obx(() => _BankTile(
+                                bank: bank,
+                                isFirst: i == 0,
+                                isLast: i == filteredBanks.length - 1,
+                                isSelected: selectedBankId.value == bank.id,
+                                onTap: () => _selectBank(bank),
+                              ));
+                        },
+                      ),
+                    ),
             ),
+
             SizedBox(height: AppSizes.h14),
-            Center(
-              child: SizedBox(
-                width: w * .45,
-                height: 44,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (selectedBankName.value.isEmpty ||
-                        selectedBankId.value.isEmpty) {
-                      snackBarCalledfail(context, "Please select bank name");
-                    } else {
-                      googleSignInBool.value = false; // Set loading state
-                      pushnameToRoute(context, SignInScreen());
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF37344F),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+
+            // ── CTA ───────────────────────────────────────────────────────
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (selectedBankName.value.isEmpty ||
+                      selectedBankId.value.isEmpty) {
+                    snackBarCalledfail(context, "Please select your bank");
+                  } else {
+                    googleSignInBool.value = false;
+                    pushnameToRoute(context, SignInScreen());
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF37344F),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: textStyleImage(
-                      context: context,
-                      text: "Done",
-                      c: AppColors.backgroundColor,
-                      fontWeight: FontWeight.w500,
-                      fontsize: 18),
+                  elevation: 2,
+                ),
+                child: const Text(
+                  "Continue",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    letterSpacing: 0.4,
+                  ),
                 ),
               ),
             ),
-            SizedBox(height: AppSizes.h40),
+
+            SizedBox(height: AppSizes.h30),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.search_off_rounded, size: 52, color: Colors.grey.shade300),
+          const SizedBox(height: 12),
+          Text(
+            "No banks found",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade400,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            "Try a different search term",
+            style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BankTile extends StatelessWidget {
+  final CreditCardBank bank;
+  final bool isFirst;
+  final bool isLast;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _BankTile({
+    required this.bank,
+    required this.isFirst,
+    required this.isLast,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: isSelected
+          ? const Color(0xFF37344F).withOpacity(0.06)
+          : Colors.grey.shade50,
+      borderRadius: BorderRadius.vertical(
+        top: isFirst ? const Radius.circular(14) : Radius.zero,
+        bottom: isLast ? const Radius.circular(14) : Radius.zero,
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.vertical(
+          top: isFirst ? const Radius.circular(14) : Radius.zero,
+          bottom: isLast ? const Radius.circular(14) : Radius.zero,
+        ),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            children: [
+              // Logo
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  bank.logo,
+                  width: 36,
+                  height: 36,
+                  fit: BoxFit.contain,
+                  errorBuilder: getErrorBankLogo(),
+                ),
+              ),
+              const SizedBox(width: 14),
+              // Name
+              Expanded(
+                child: Text(
+                  bank.name,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    color: const Color(0xFF37344F),
+                  ),
+                ),
+              ),
+              // Checkmark
+              if (isSelected)
+                const Icon(Icons.check_circle_rounded,
+                    color: Color(0xFF37344F), size: 20),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-void pushnameToRoute(BuildContext context, Widget CreditCardsScreen,
+void pushnameToRoute(BuildContext context, Widget screen,
     [bool replace = true]) {
-  if (replace)
+  if (replace) {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => CreditCardsScreen));
-  else
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CreditCardsScreen));
+        context, MaterialPageRoute(builder: (_) => screen));
+  } else {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+  }
 }

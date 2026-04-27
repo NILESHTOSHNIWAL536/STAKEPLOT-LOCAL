@@ -112,7 +112,7 @@ Future<void> registerNewUser(String email, String name, String otp) async {
       'name': name,
       'email': email,
       'authorizationKey': Credentials.Sign_Up_Key,
-      'deviceInfo': deviceData
+      'deviceInfo':  deviceData.value.toJson()
     });
 
     if (getFlagOfResponse(response)) {
@@ -134,7 +134,7 @@ Future<void> forceLogoutUser(
     "sessionId": loginResponse["error"]?['existingSessionId'],
     "email": email,
     "otp": otp,
-    "deviceInfo": deviceData,
+    "deviceInfo":  deviceData.value.toJson(),
   });
 
   if (getFlagOfResponse(response)) {
@@ -148,7 +148,7 @@ Future<void> normalLogin(String email, String otp) async {
   appLog('--- Step 4: Normal Login ---');
   var response = await postDataApiCallwithOutSharedPref(AuthApiRoutes.login, {
     'email': email,
-    'deviceInfo': deviceData,
+    'deviceInfo':  deviceData.value.toJson(),
     'otp': otp,
   });
 

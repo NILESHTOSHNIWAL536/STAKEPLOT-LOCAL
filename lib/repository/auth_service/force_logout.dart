@@ -9,8 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 
 class ForceLogout {
-  static void forceLoginShowModal(
-      context, response, emailController) {
+  static void forceLoginShowModal(context, response, emailController) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -19,25 +18,24 @@ class ForceLogout {
       ),
       builder: (context) {
         return UserLoginedAlready(
-            data: response['error'],
-            email: emailController,
-          );
+          data: response['error'],
+          email: emailController,
+        );
       },
     );
   }
 
   static Future<void> forceLogoutUser(
-      {
-       required String sessionId,
-       required String email,
-       required BuildContext context,
-       required String existingDeviceName,
-       required String otp
-      }
-    ) async {
+      {required String sessionId,
+      required String email,
+      required BuildContext context,
+      required String existingDeviceName,
+      required String otp}) async {
     try {
-      if(deviceData['deviceId']==""){
-         deviceData['deviceId']="Niklewnknwk";
+      if (deviceData.value.deviceId.isEmpty) {
+        deviceData.update((val) {
+          val?.deviceId = "Niklewnknwk";
+        });
       }
       updateDeviceData(deviceData);
       var response =
@@ -45,29 +43,35 @@ class ForceLogout {
         "sessionId": sessionId,
         "email": email,
         "otp": otp.toString(),
-        "deviceInfo": deviceData,
+        "deviceInfo": deviceData.value.toJson(),
       });
       if (getFlagOfResponse(response)) {
         final body = jsonDecode(response.body);
         // Notify the logged-out device (if applicable)
-        if (body['data']?['_id'] != null)
-          {
-              sendNotificationsToDevice(
-                body['data']['_id'],
-                context,
-                "You have been logged out from StakePlot!",
-              );
+        if (body['data']?['_id'] != null) {
+          sendNotificationsToDevice(
+            body['data']['_id'],
+            context,
+            "You have been logged out from StakePlot!",
+          );
         }
         LoginService.loginCalledData(response, context);
         await screenDataLocalStorage();
-        snackBarCalled(context, 'Existing session logged out.',);
-      } 
-      else {
-        snackBarCalledfail(context, 'Failed to log out existing session.',  );
+        snackBarCalled(
+          context,
+          'Existing session logged out.',
+        );
+      } else {
+        snackBarCalledfail(
+          context,
+          'Failed to log out existing session.',
+        );
       }
-    } catch (e)
-    {
-      snackBarCalledfail(context, 'Error during forced logout. Please try again.',  );
+    } catch (e) {
+      snackBarCalledfail(
+        context,
+        'Error during forced logout. Please try again.',
+      );
     }
   }
 }
