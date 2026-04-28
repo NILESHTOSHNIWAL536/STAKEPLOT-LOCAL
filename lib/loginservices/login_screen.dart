@@ -245,6 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
             context,
             emailController,
           );
+          
         },
         child: Container(
           height: MediaQuery.of(context).size.height * 0.06,

@@ -19,6 +19,7 @@ import '../../Home_Screen/Home/init_Api_Calls.dart';
 import '../../Home_Screen/home_screen_state/home_page.dart';
 import '../../finance_screen/Budgets/Budget.dart';
 import '../../finance_screen/Calculators/veg_nonveg.dart';
+import '../../model/device_model.dart';
 import '../../services/secure_storage.dart';
 import '../../loginservices/screenTime.dart';
 import '../../loginservices/login_screen.dart';
@@ -38,7 +39,7 @@ class LoginService {
       'name': name,
       'email': email,
       'authorizationKey': Credentials.Sign_Up_Key,
-      'deviceInfo': deviceData
+      'deviceInfo':  deviceData.value.toJson()
     });
 
     try {
@@ -78,7 +79,7 @@ class LoginService {
       var response =
           await postDataApiCallwithOutSharedPref(AuthApiRoutes.login, {
         'email': emailController.text.toString(),
-        'deviceInfo': deviceData,
+        'deviceInfo':  deviceData.value.toJson(),
         "otp": otp.toString(),
       });
       appLog("response ${response.body}");
@@ -259,30 +260,30 @@ class LoginService {
   }
 }
 
-void updateDeviceData(RxMap deviceData) {
-  deviceData['deviceId'] =
-      (deviceData['deviceId']?.toString().trim().isNotEmpty ?? false)
-          ? "992e8d70-05e5-4ab3-8ecd-3c2baf9fd129"
-          : 'UNKNOWN_DEVICE_ID';
+void updateDeviceData(Rx<DeviceModel> deviceData) {
+  deviceData.update((val) {
+    if (val == null) return;
 
-  deviceData['brand'] =
-      (deviceData['brand']?.toString().trim().isNotEmpty ?? false)
-          ? deviceData['brand'].toString()
-          : 'UNKNOWN_BRAND';
+    val.deviceId = val.deviceId.trim().isNotEmpty
+        ? val.deviceId
+        : 'UNKNOWN_DEVICE_ID';
 
-  deviceData['device'] =
-      (deviceData['device']?.toString().trim().isNotEmpty ?? false)
-          ? deviceData['device'].toString()
-          : 'UNKNOWN_DEVICE';
+    val.brand = val.brand.trim().isNotEmpty
+        ? val.brand
+        : 'UNKNOWN_BRAND';
 
-  deviceData['model'] =
-      (deviceData['model']?.toString().trim().isNotEmpty ?? false)
-          ? deviceData['model'].toString()
-          : 'UNKNOWN_MODEL';
+    val.device = val.device.trim().isNotEmpty
+        ? val.device
+        : 'UNKNOWN_DEVICE';
 
-  deviceData['os'] = (deviceData['os']?.toString().trim().isNotEmpty ?? false)
-      ? deviceData['os'].toString()
-      : 'UNKNOWN_OS';
+    val.model = val.model.trim().isNotEmpty
+        ? val.model
+        : 'UNKNOWN_MODEL';
+
+    val.os = val.os.trim().isNotEmpty
+        ? val.os
+        : 'UNKNOWN_OS';
+  });
 }
 
 Future<void> screenDataLocalStorage() async {

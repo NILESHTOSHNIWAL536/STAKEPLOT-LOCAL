@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_application_code_stakeplot/Hive_localstorage/apisCall/insights_apis.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/loginservices/screenTime.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,9 @@ class InsightsController extends GetxController {
     // 2️⃣ Try API fetch in background
     Future(() async {
       try {
-        final response =
-            await getDataApiCall( BankTransactionRoutes.getHeadsUpMessages,);
+        final response = await getDataApiCall(
+          BankTransactionRoutes.getHeadsUpMessages,
+        );
         if (response.statusCode == 200) {
           final his = jsonDecode(response.body);
           final obj = his['data'] as List;
@@ -68,7 +70,8 @@ class InsightsController extends GetxController {
     // 2️⃣ Try API fetch in background
     Future(() async {
       try {
-        final response = await getDataApiCall(BankTransactionRoutes.getMoneyMapMessages);
+        final response =
+            await getDataApiCall(BankTransactionRoutes.getMoneyMapMessages);
         if (response.statusCode == 200) {
           final his = jsonDecode(response.body);
           final obj = his['data'] as List;
@@ -95,13 +98,11 @@ class InsightsController extends GetxController {
       }
     });
   }
-
 }
-
 
 Future<Map<String, dynamic>> getUserStats() async {
   final pref = await SharedPreferences.getInstance();
-  final userId =SecureStorageService().read("accessToken");
+  final userId = SecureStorageService().read("accessToken");
   final todayKey =
       'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId';
 
@@ -119,12 +120,13 @@ Future<Map<String, dynamic>> getUserStats() async {
   }
 
   return {
+    "_id": userController.userId.value,
     'loginCount': pref.getInt(todayKey) ?? 0, // previously 'daily_login_count'
     'loginHistory': extractValues(pref
         .getStringList('login_history_$userId')), // previously 'login_history'
     'appOpenCount':
         tracker.getDailyAppOpenCount(), // previously 'daily_app_open_count'
-    'appOpenHistory': extractValues(
+    'appOpenHistory': extractValues(  
         tracker.getAppOpenHistory()), // previously 'app_open_history'
     'appEventLog': tracker.getAppEventLog(), // optional: only if needed
     'tabScreenTime': tracker.getTabScreenTime(), // previously 'tab_screen_time'
@@ -135,7 +137,7 @@ Future<Map<String, dynamic>> getUserStats() async {
 
 Future<void> setUserStats(Map<String, dynamic> data) async {
   final pref = await SharedPreferences.getInstance();
-  final userId =await SecureStorageService().read("accessToken");
+  final userId = await SecureStorageService().read("accessToken");
   final todayDate = DateTime.now().toIso8601String().substring(0, 10);
   final todayLoginKey = 'login_count_${todayDate}_$userId';
 
