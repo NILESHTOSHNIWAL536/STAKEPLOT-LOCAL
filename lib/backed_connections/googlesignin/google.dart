@@ -88,7 +88,9 @@
 // }
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/components/shared_utils.dart';
+import 'package:flutter_application_code_stakeplot/repository/auth_service/login_apis.dart';
 import 'package:flutter_application_code_stakeplot/routes/route_user_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -149,10 +151,15 @@ class AuthService {
           return {};
         }
 
+        updateDeviceData(deviceData);
+
         // For the main flow, fire both calls in parallel
         final results = await Future.wait([
           tokenFuture,
-          postDataApiCall(AuthApiRoutes.googleAuth, {'idToken': idToken}),
+          postDataApiCall(AuthApiRoutes.googleAuth, {
+            'idToken': idToken,
+            'deviceInfo': deviceData.value.toJson(),
+          }),
         ]);
 
         final authResponse = results[1];
@@ -164,10 +171,10 @@ class AuthService {
 
       // No serverAuthCode — single call path
       if (!flag) return {};
-      final response = await postDataApiCall(
-        AuthApiRoutes.googleAuth,
-        {'idToken': idToken},
-      );
+
+      final response =
+          await postDataApiCall(AuthApiRoutes.googleAuth, {'idToken': idToken});
+
       if (getFlagOfResponse(response)) return json.decode(response.body);
     } catch (e) {
       // Log in production; keep UI unblocked
