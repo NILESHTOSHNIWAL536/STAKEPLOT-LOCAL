@@ -83,7 +83,7 @@ class SignInScreen extends StatelessWidget {
                   } finally {
                     googleSignInBool.value = false;
                   }
-                  pushnameToRoute(context, GettingDataScreen());
+                  // pushnameToRoute(context, GettingDataScreen());
                 },
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: const Color(0xFF37344F), width: 1.5),

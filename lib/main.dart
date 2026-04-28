@@ -36,21 +36,17 @@ void main() async {
     SystemUiMode.manual,
     overlays: SystemUiOverlay.values, // ⬅️ THIS IS KEY
   );
-// ✅ ADD THIS
+  if (!kIsWeb) {
   await Firebase.initializeApp();
-
-  // ✅ ADD THIS
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-
-  // ✅ ADD THIS (VERY IMPORTANT)
+  FlutterError.onError =
+      FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-  if (!kIsWeb) {
-    await AppsflyerService.init();
-  }
-  await main_apis_call_init();
+     await AppsflyerService.init();
+   }
+  await main_apis_call_init();  
 }
 
 class MyApp extends StatefulWidget {
