@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_links/app_links.dart';
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
@@ -33,7 +34,9 @@ void main() async {
     overlays: SystemUiOverlay.values, // ⬅️ THIS IS KEY
   );
 
-  await AppsflyerService.init();
+  if (!kIsWeb) {
+    await AppsflyerService.init();
+  }
   await main_apis_call_init();
 }
 

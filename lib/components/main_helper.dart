@@ -1,9 +1,8 @@
-
-
 import 'dart:async';
 import 'dart:io';
 
 import 'package:app_version_update/app_version_update.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/widget_services/widget_service.dart';
@@ -20,14 +19,15 @@ import '../backed_connections/apis_connect.dart';
 import '../routes/index_route.dart';
 import '../widget_services/widget_bridge.dart';
 
-Future<void> main_apis_call_init()async{
+Future<void> main_apis_call_init() async {
   securityCheck();
   checkFirebaseAndValidUser();
   loadEnvs();
   // Store full API URL (with /api/v1) in SharedPreferences for background access (after loadEnvs)
   final prefs = await SharedPreferences.getInstance();
   // Full URL is already built as "${urlWithLocallHost}api/v1" in apis_connect.dart after loadEnvs
-  await prefs.setString('full_api_url',API.mainBackendUrl); // 'url' is the global full path from apis_connect.dart
+  await prefs.setString('full_api_url',
+      API.mainBackendUrl); // 'url' is the global full path from apis_connect.dart
 
   // Store accountId if available (adjust key/source as needed, e.g., from login service)
   String? accountId = prefs
@@ -46,9 +46,7 @@ Future<void> main_apis_call_init()async{
     // Handle uncaught async errors here
     handleError(error, stack);
   });
-
 }
-
 
 /// Method to initialize Flutter error handling
 void initializeGlobalErrorHandling() {
@@ -65,8 +63,11 @@ void handleError(Object error, StackTrace? stack) {
   if (stack != null) {}
 }
 
-
 Future<void> checkForUpdate() async {
+  if (kIsWeb) {
+    return;
+  }
+
   if (Platform.isAndroid) {
     try {
       final updateInfo = await InAppUpdate.checkForUpdate();
@@ -102,4 +103,3 @@ Future<void> checkForUpdate() async {
     } else {}
   }
 }
-

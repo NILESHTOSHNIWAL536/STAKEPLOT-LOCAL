@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/finanace_dashboard/pending_users.dart';
 import 'package:flutter_application_code_stakeplot/repository/bankinfo.dart';
@@ -179,6 +180,17 @@ Future<void> getDeviceLocalDetails(String playerId, context) async {
 
   try {
     final deviceInfo = DeviceInfoPlugin();
+    if (kIsWeb) {
+      deviceData.value = DeviceModel(
+        deviceId:
+            playerId.isNotEmpty ? cleanDeviceId(playerId) : "unknownDevice",
+        brand: "Unknown",
+        device: "Unknown",
+        model: "Unknown",
+        os: "Unknown",
+      );
+      return;
+    }
 
     if (Platform.isAndroid) {
       final android = await deviceInfo.androidInfo;

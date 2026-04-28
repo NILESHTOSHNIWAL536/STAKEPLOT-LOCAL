@@ -29,6 +29,102 @@ import 'reserve.dart';
 import 'reserve_flow.dart';
 import 'slider_addding_finances.dart';
 
+// ─── Skeleton shimmer widget ───────────────────────────────────────────────
+class _Shimmer extends StatefulWidget {
+  final double width;
+  final double height;
+  final double radius;
+  const _Shimmer(
+      {required this.width, required this.height, this.radius = 12});
+
+  @override
+  State<_Shimmer> createState() => _ShimmerState();
+}
+
+class _ShimmerState extends State<_Shimmer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1200))
+      ..repeat();
+    _anim = Tween<double>(begin: -1, end: 2).animate(
+        CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _anim,
+      builder: (_, __) => Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.radius),
+          gradient: LinearGradient(
+            begin: Alignment(_anim.value - 1, 0),
+            end: Alignment(_anim.value, 0),
+            colors: const [
+              Color(0xFFEEEEEE),
+              Color(0xFFF8F8F8),
+              Color(0xFFEEEEEE),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Skeleton for tools grid ───────────────────────────────────────────────
+class _SkeletonGrid extends StatelessWidget {
+  const _SkeletonGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    final w = MediaQuery.of(context).size.width;
+    final half = (w - 54) / 2;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 8, 18, 0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              _Shimmer(width: half, height: w * 0.44),
+              const SizedBox(height: 14),
+              _Shimmer(width: half, height: w * 0.34),
+              const SizedBox(height: 14),
+              _Shimmer(width: half, height: w * 0.34),
+            ],
+          ),
+          const SizedBox(width: 14),
+          Column(
+            children: [
+              _Shimmer(width: half, height: w * 0.32),
+              const SizedBox(height: 14),
+              _Shimmer(width: half, height: w * 0.28),
+              const SizedBox(height: 14),
+              _Shimmer(width: half, height: w * 0.34),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 class FinanceDashboard extends StatefulWidget {
   const FinanceDashboard({super.key});
 
@@ -40,18 +136,15 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     with TickerProviderStateMixin {
   bool isLoading = true;
 
-  /// 0.0 = top screen fully hidden
-  /// 1.0 = top screen fully visible
   double _panelProgress = 0.0;
   late AnimationController _panelController;
 
-  // Scroll controller for main content
   final ScrollController _scrollController = ScrollController();
 
-  // Height of the "top screen" area
-  static const double _maxPanelHeight = 600.0;
+  // Pull‑to‑reveal panel max height (responsive)
+  double get _maxPanelHeight => MediaQuery.of(context).size.height * 0.72;
 
-  // 🔥 Hint animation
+  // Hint animation
   late AnimationController _hintController;
   late Animation<double> _hintOpacity;
   bool _showHint = true;
@@ -59,43 +152,30 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   @override
   void initState() {
     super.initState();
-
     Get.put(CardDueController());
 
     _panelController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 280),
     )..addListener(() {
-        setState(() {
-          _panelProgress = _panelController.value;
-        });
+        setState(() => _panelProgress = _panelController.value);
       });
 
-    // 🔥 Hint flicker animation setup
     _hintController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-
     _hintOpacity = Tween<double>(begin: 0.3, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _hintController,
-        curve: Curves.easeInOut,
-      ),
-    );
-
+        CurvedAnimation(parent: _hintController, curve: Curves.easeInOut));
     _hintController.repeat(reverse: true);
 
-    // Auto-hide hint after a few seconds
     Future.delayed(const Duration(seconds: 4), () {
       if (!mounted) return;
-      setState(() {
-        _showHint = false;
-      });
+      setState(() => _showHint = false);
       _hintController.stop();
     });
 
-    loadData();
+    _loadData();
     getRemainders(context);
   }
 
@@ -107,137 +187,94 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     super.dispose();
   }
 
-  Future<void> loadData() async {
+  Future<void> _loadData() async {
     try {
       await Future.wait([
         cardController.fetchCardData(),
         cardController.getBanksListCrediCard(),
         DebtService.fetchDebts(),
       ]);
-    } catch (e) {
-      // log error if needed
+    } catch (_) {
     } finally {
-      if (mounted) {
-        setState(() => isLoading = false);
-      }
+      if (mounted) setState(() => isLoading = false);
     }
-  }
-
-  bool _hasFinancialData() {
-    final hasBudgets = budgetList.isNotEmpty;
-    final hasDebts = debts.isNotEmpty;
-    return hasBudgets ||
-        hasDebts ||
-        (CreditCardScreenStrings().showCreditCard.value
-            ? creditCardBankList.isNotEmpty
-            : false);
   }
 
   void _navigateToDebtDetailsScreen(Debt debt) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => DebtDetailsScreen(debt: debt)),
+      MaterialPageRoute(builder: (_) => DebtDetailsScreen(debt: debt)),
     );
   }
 
   void _closeTopPanel() {
-    _panelController.animateTo(
-      0.0,
-      curve: Curves.easeOutCubic,
-    );
+    _panelController.animateTo(0.0, curve: Curves.easeOutCubic);
   }
 
   bool _onScrollNotification(ScrollNotification notification) {
-    // 1️⃣ If panel is OPEN and user scrolls UP, close panel and block list scroll
+    final ph = _maxPanelHeight;
+
     if (_panelProgress > 0.0 &&
         notification is ScrollUpdateNotification &&
         (notification.scrollDelta ?? 0) > 0) {
-      final double delta = notification.scrollDelta ?? 0;
-
       if (_scrollController.hasClients) {
-        final current = _scrollController.position.pixels;
-        final newOffset = (current - delta).clamp(
+        final cur = _scrollController.position.pixels;
+        final next = (cur - (notification.scrollDelta ?? 0)).clamp(
           _scrollController.position.minScrollExtent,
           _scrollController.position.maxScrollExtent,
         );
-        if (newOffset != current) {
-          _scrollController.jumpTo(newOffset);
-        }
+        if (next != cur) _scrollController.jumpTo(next);
       }
-
       if (_panelProgress != 0.0) {
-        _panelController.animateTo(
-          0.0,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeOutCubic,
-        );
+        _panelController.animateTo(0.0,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeOutCubic);
       }
       return true;
     }
 
-    // 2️⃣ Handle PULL DOWN at top (overscroll) to open panel
     if (notification.metrics.pixels <= 0 &&
         notification is OverscrollNotification &&
         notification.overscroll < 0) {
-      final double drag = -notification.overscroll;
-      final double deltaProgress = drag / _maxPanelHeight;
-
-      final double newProgress =
-          (_panelProgress + deltaProgress).clamp(0.0, 1.0);
-
-      _panelController.value = newProgress;
+      final delta = -notification.overscroll;
+      final next = (_panelProgress + delta / ph).clamp(0.0, 1.0);
+      _panelController.value = next;
       return true;
     }
 
-    // 3️⃣ When finger lifts and panel is partially open, decide open/close
     if (notification is ScrollEndNotification && _panelProgress > 0.0) {
-      if (_panelProgress > 0.5) {
-        _panelController.animateTo(
-          1.0,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
-        );
-      } else {
-        _panelController.animateTo(
-          0.0,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
-        );
-      }
+      _panelController.animateTo(
+        _panelProgress > 0.4 ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+      );
     }
-
     return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
-    final double panelTopOffset =
-        -_maxPanelHeight * (1 - _panelProgress); // from -height → 0
-    final double mainTopOffset =
-        _panelProgress * _maxPanelHeight; // from 0 → height
+    final size = MediaQuery.of(context).size;
+    final ph = _maxPanelHeight;
+    final panelTopOffset = -ph * (1 - _panelProgress);
+    final mainTopOffset = _panelProgress * ph;
 
     return Scaffold(
       backgroundColor: AppColors.newbg,
-      bottomNavigationBar: SafeArea(
-        child: BottomNavigations(
-          data: 1,
-        ),
-      ),
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 1)),
       body: SafeArea(
         child: Stack(
           children: [
-            // 🔹 TOP SCREEN
+            // ── TOP OVERVIEW PANEL ────────────────────────────────────────
             Positioned(
               top: panelTopOffset,
               left: 0,
               right: 0,
-              height: _maxPanelHeight,
-              child: _buildTopPanel(context),
+              height: ph,
+              child: _buildTopPanel(context, size),
             ),
 
-            // 🔹 MAIN SCREEN
+            // ── MAIN SCROLLABLE CONTENT ───────────────────────────────────
             Positioned.fill(
               top: mainTopOffset,
               child: NotificationListener<ScrollNotification>(
@@ -248,15 +285,18 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(child: _buildTopSection(context, size)),
-                      Container(child: _buildBottomSection(context)),
+                      _buildTopSection(context, size),
+                      isLoading
+                          ? const _SkeletonGrid()
+                          : _buildBottomSection(context),
+                      SizedBox(height: size.height * 0.04),
                     ],
                   ),
                 ),
               ),
             ),
 
-            // 🔥 Hint
+            // ── PULL HINT ─────────────────────────────────────────────────
             if (_showHint && _panelProgress == 0.0)
               Positioned(
                 top: AppSizes.p8,
@@ -268,9 +308,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                       opacity: _hintOpacity,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.p12,
-                          vertical: AppSizes.p6,
-                        ),
+                            horizontal: AppSizes.p12, vertical: AppSizes.p6),
                         decoration: BoxDecoration(
                           color: AppColors.accentColor.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(20),
@@ -278,20 +316,15 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: AppColors.backgroundColor,
-                              size: 18,
-                            ),
+                            const Icon(Icons.keyboard_arrow_down,
+                                color: AppColors.backgroundColor, size: 18),
                             SizedBox(width: AppSizes.w6),
                             Text(
                               PlotFinanceStaticData().pullDownHint,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w500,
-                                fontSize: 12,
-                                color: AppColors.backgroundColor,
-                              ),
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: AppColors.backgroundColor),
                             ),
                           ],
                         ),
@@ -306,89 +339,110 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     );
   }
 
-  // ===================== TOP PANEL (OVERVIEW) =====================
-
-  Widget _buildTopPanel(BuildContext context) {
+  // ══════════════════════════════════════════════════════════════════════════
+  //  TOP PANEL — Overview (pull‑to‑reveal)
+  // ══════════════════════════════════════════════════════════════════════════
+  Widget _buildTopPanel(BuildContext context, Size size) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
-        borderRadius: const BorderRadius.vertical(
-          bottom: Radius.circular(24),
-        ),
+        borderRadius:
+            const BorderRadius.vertical(bottom: Radius.circular(28)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.bg1.withOpacity(0.12),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
+              color: Colors.black.withOpacity(0.10),
+              blurRadius: 20,
+              offset: const Offset(0, 6)),
         ],
       ),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top row: title + close
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                PlotFinanceStaticData().overviewTitle,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w600,
-                  fontSize: 22,
-                  color: AppColors.primaryColor,
+          // ── Header ──────────────────────────────────────────────────────
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, size.height * 0.02, 8, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        PlotFinanceStaticData().overviewTitle,
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w700,
+                            fontSize: 22,
+                            color: AppColors.primaryColor),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        PlotFinanceStaticData().overviewSubtitle,
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 13,
+                            color: AppColors.grey),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: _closeTopPanel,
-              ),
-            ],
-          ),
-          Text(
-            PlotFinanceStaticData().overviewSubtitle,
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w400,
-              fontSize: 13,
-              color: AppColors.grey,
-            ),
-          ),
-          SizedBox(height: AppSizes.h8),
-
-          // Blue underline bar
-          Container(
-            height: 3,
-            width: 120,
-            decoration: BoxDecoration(
-              color: Colors.blueAccent,
-              borderRadius: BorderRadius.circular(10),
+                IconButton(
+                  icon: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColors.newbg,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.keyboard_arrow_up_rounded,
+                        size: 20, color: Colors.black54),
+                  ),
+                  onPressed: _closeTopPanel,
+                ),
+              ],
             ),
           ),
 
-          SizedBox(height: AppSizes.h16),
+          // ── Blue accent bar ──────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+            child: Row(
+              children: [
+                Container(
+                    height: 3,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: Colors.blueAccent,
+                        borderRadius: BorderRadius.circular(10))),
+              ],
+            ),
+          ),
 
-          _buildCreditCardsConnectedCard(context),
-          SizedBox(height: AppSizes.h12),
+          const SizedBox(height: 14),
 
-          _buildDueCardsRow(context),
-          SizedBox(height: AppSizes.h12),
-
-          _buildBudgetCard(context),
-          SizedBox(height: AppSizes.h12),
-
-          _buildSavingsRow(context),
+          // ── Scrollable content ───────────────────────────────────────────
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                children: [
+                  _buildCCConnectedCard(context),
+                  const SizedBox(height: 12),
+                  _buildDueCardsRow(context, size),
+                  const SizedBox(height: 12),
+                  _buildBudgetCard(context),
+                  const SizedBox(height: 12),
+                  _buildSavingsRow(context, size),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildCreditCardsConnectedCard(BuildContext context) {
+  Widget _buildCCConnectedCard(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p14),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
@@ -397,63 +451,73 @@ class _FinanceDashboardState extends State<FinanceDashboard>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            PlotFinanceStaticData().creditCardsConnected,
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w500,
-              fontSize: 14,
-              color: AppColors.primaryColor,
-            ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEEF2FF),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.credit_card_rounded,
+                    size: 20, color: Color(0xFF3B5BDB)),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                PlotFinanceStaticData().creditCardsConnected,
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.primaryColor),
+              ),
+            ],
           ),
-          Text(
-            '5',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w600,
-              fontSize: 20,
-              color: AppColors.primaryColor,
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF37344F),
+              borderRadius: BorderRadius.circular(20),
             ),
+            child: Text('5',
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Colors.white)),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDueCardsRow(BuildContext context) {
+  Widget _buildDueCardsRow(BuildContext context, Size size) {
     return SizedBox(
-      height: 82,
+      height: 88,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          _buildDueCard(
-            context,
-            dueText: 'Due Date 10 Dec',
-            bank: 'From ICICI Bank',
-            showTodayChip: true,
-          ),
+          _buildDueCard(context, size,
+              dueText: 'Due Date 10 Dec',
+              bank: 'From ICICI Bank',
+              showTodayChip: true),
           SizedBox(width: AppSizes.w12),
-          _buildDueCard(
-            context,
-            dueText: 'Due Date 15 Dec',
-            bank: 'From HDFC Bank',
-            showTodayChip: false,
-          ),
+          _buildDueCard(context, size,
+              dueText: 'Due Date 15 Dec',
+              bank: 'From HDFC Bank',
+              showTodayChip: false),
         ],
       ),
     );
   }
 
-  Widget _buildDueCard(
-    BuildContext context, {
-    required String dueText,
-    required String bank,
-    required bool showTodayChip,
-  }) {
+  Widget _buildDueCard(BuildContext context, Size size,
+      {required String dueText,
+      required String bank,
+      required bool showTodayChip}) {
+    final cardW = size.width * 0.56;
     return Container(
-      width: 230,
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.p14, vertical: AppSizes.p10),
+      width: cardW,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
@@ -465,71 +529,52 @@ class _FinanceDashboardState extends State<FinanceDashboard>
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: PlotFinanceStaticData().dueDateLabel,
-                        style: FontManager().getTextStyle(
-                          context,
+                  text: TextSpan(children: [
+                    TextSpan(
+                      text: PlotFinanceStaticData().dueDateLabel,
+                      style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: AppColors.grey,
-                        ),
-                      ),
-                      TextSpan(
-                        text: dueText.split(' ').last,
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: AppColors.primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
+                          fontSize: 11,
+                          color: AppColors.grey),
+                    ),
+                    TextSpan(
+                      text: dueText.split(' ').last,
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w700,
+                          fontSize: 11,
+                          color: AppColors.primaryColor),
+                    ),
+                  ]),
                 ),
-                SizedBox(height: AppSizes.h4),
-                Text(
-                  bank,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w500,
-                    fontSize: 13,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                SizedBox(height: AppSizes.h6),
+                Text(bank,
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: AppColors.primaryColor)),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.close,
-                size: 16,
-                color: AppColors.grey,
-              ),
-              const Spacer(),
+              Icon(Icons.close, size: 15, color: AppColors.grey),
               if (showTodayChip)
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: AppSizes.p4),
+                      horizontal: 10, vertical: 3),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFE4E4),
                     borderRadius: BorderRadius.circular(999),
                   ),
-                  child: Text(
-                    PlotFinanceStaticData().todayLabel,
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 11,
-                      color: AppColors.redColor,
-                    ),
-                  ),
+                  child: Text(PlotFinanceStaticData().todayLabel,
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 10,
+                          color: AppColors.redColor)),
                 ),
             ],
           ),
@@ -541,8 +586,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   Widget _buildBudgetCard(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: AppSizes.p16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
@@ -554,45 +598,33 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     );
   }
 
-  Widget _buildSavingsRow(BuildContext context) {
+  Widget _buildSavingsRow(BuildContext context, Size size) {
+    final cardW = (size.width - 54) / 2;
     return Row(
       children: [
-        Expanded(
-          child: _buildSavingsCard(
-            context,
+        _buildSavingsCard(context, cardW,
             title: 'Gadget Savings',
             current: 6000,
             target: 20000,
-            percent: 0.64,
-          ),
-        ),
+            percent: 0.64),
         SizedBox(width: AppSizes.w12),
-        Expanded(
-          child: _buildSavingsCard(
-            context,
+        _buildSavingsCard(context, cardW,
             title: 'Vacation Savings',
             current: 6000,
             target: 20000,
-            percent: 0.3,
-          ),
-        ),
+            percent: 0.30),
       ],
     );
   }
 
-  Widget _buildSavingsCard(
-    BuildContext context, {
-    required String title,
-    required double current,
-    required double target,
-    required double percent,
-  }) {
-    final String amountText =
-        '₹ ${current.toStringAsFixed(0)} / ₹ ${target.toStringAsFixed(0)}';
-
+  Widget _buildSavingsCard(BuildContext context, double width,
+      {required String title,
+      required double current,
+      required double target,
+      required double percent}) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.p14, vertical: AppSizes.p12),
+      width: width,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(18),
@@ -604,26 +636,20 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: AppColors.primaryColor)),
+                const SizedBox(height: 4),
                 Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w500,
-                    fontSize: 13,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                SizedBox(height: AppSizes.h4),
-                Text(
-                  amountText,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w400,
-                    fontSize: 12,
-                    color: AppColors.grey,
-                  ),
+                  '₹${current.toInt()} / ₹${target.toInt()}',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 11,
+                      color: AppColors.grey),
                 ),
               ],
             ),
@@ -636,8 +662,6 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   }
 
   Widget _buildCircularPercent(BuildContext context, double value) {
-    final int percent = (value * 100).round();
-
     return SizedBox(
       height: 44,
       width: 44,
@@ -649,23 +673,21 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             strokeWidth: 4,
             backgroundColor: const Color(0xFFE5E7EB),
             valueColor: AlwaysStoppedAnimation<Color>(
-              AppColors.primaryColor.withOpacity(0.9),
-            ),
+                AppColors.primaryColor.withOpacity(0.9)),
           ),
-          Text(
-            '$percent%',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w500,
-              fontSize: 11,
-              color: AppColors.primaryColor,
-            ),
-          ),
+          Text('${(value * 100).round()}%',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.w600,
+                  fontSize: 10,
+                  color: AppColors.primaryColor)),
         ],
       ),
     );
   }
 
+  // ══════════════════════════════════════════════════════════════════════════
+  //  MAIN CONTENT
+  // ══════════════════════════════════════════════════════════════════════════
   Widget _buildTopSection(BuildContext context, Size size) {
     return Container(
       color: AppColors.newbg,
@@ -674,53 +696,40 @@ class _FinanceDashboardState extends State<FinanceDashboard>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 0),
+            padding: EdgeInsets.fromLTRB(22, size.height * 0.03, 22, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height / 34,
-                ),
                 Text(
                   PlotFinanceStaticData().moneyConsoleTitle,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w500,
-                    fontSize: 20,
-                    lineHeight: 28 / 16,
-                    color: AppColors.accentColor,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 20,
+                      lineHeight: 28 / 16,
+                      color: AppColors.accentColor),
                 ),
                 SizedBox(height: AppSizes.h4),
                 Text(
                   PlotFinanceStaticData().moneyConsoleSubtitle,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w400,
-                    fontSize: 14,
-                    lineHeight: 20 / 14,
-                    color: AppColors.grey,
-                  ),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 14,
+                      lineHeight: 20 / 14,
+                      color: AppColors.grey),
                 ),
               ],
             ),
           ),
           SizedBox(height: AppSizes.h16),
-
-          // Comics & Community banner
           InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Community()),
-              );
-            },
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const Community())),
             child: AspectRatio(
               aspectRatio: 16 / 7,
               child: SvgPicture.asset(
                 PlotFinanceIcons.comics,
                 fit: BoxFit.contain,
-                width: MediaQuery.sizeOf(context).width,
+                width: size.width,
               ),
             ),
           ),
@@ -738,80 +747,65 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   }
 
   Widget _buildToolsGrid(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return IntrinsicHeight(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ── LEFT COLUMN ──────────────────────────────────────────────────
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
+                onTap: () => Navigator.push(context,
                     MaterialPageRoute(
-                        builder: (_) => const CurrencyConverterScreen()),
-                  );
-                },
+                        builder: (_) => const CurrencyConverterScreen())),
                 child: AvatarProfileImageZero(
-                  url: PlotFinanceIcons.currencyConverter,
-                  height: 7.6,
-                  width: 4,
-                ),
+                    url: PlotFinanceIcons.currencyConverter,
+                    height: 7.6,
+                    width: 4),
               ),
               SizedBox(height: AppSizes.h20),
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const Budget()),
-                  );
-                },
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const Budget())),
                 child: AvatarProfileImageZero(
-                  url: PlotFinanceIcons.budgetPlanner,
-                  height: 6,
-                  width: 4,
-                ),
+                    url: PlotFinanceIcons.budgetPlanner,
+                    height: 6,
+                    width: 4),
               ),
               SizedBox(height: AppSizes.h20),
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const ReserveFlow()),
-                  );
-                },
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const ReserveFlow())),
                 child: AvatarProfileImageZero(
-                  url: PlotFinanceIcons.reserve,
-                  height: 6,
-                  width: 4,
-                ),
-              )
+                    url: PlotFinanceIcons.reserve, height: 6, width: 4),
+              ),
             ],
           ),
+
+          // ── RIGHT COLUMN ─────────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.only(top: 5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                // Credit Card tile
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => DisplayCreditCard()),
-                    );
-                  },
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => DisplayCreditCard())),
                   child: Stack(
                     children: [
                       AvatarProfileImageZero(
-                        url: PlotFinanceIcons.crediCardBg,
-                        height: 5.7,
-                        width: 6,
-                      ),
+                          url: PlotFinanceIcons.crediCardBg,
+                          height: 5.7,
+                          width: 6),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: AppSizes.p12, horizontal: AppSizes.p12),
+                            vertical: AppSizes.p12,
+                            horizontal: AppSizes.p12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -820,13 +814,15 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                                 Container(
                                   padding: const EdgeInsets.all(AppSizes.p4),
                                   decoration: BoxDecoration(
-                                      color: AppColors.creditCardComponentColor,
-                                      borderRadius: BorderRadius.circular(13)),
+                                      color: AppColors
+                                          .creditCardComponentColor,
+                                      borderRadius:
+                                          BorderRadius.circular(13)),
                                   child: AvatarProfileImageZero(
-                                    url: PlotFinanceIcons.creditcardcomponent,
-                                    height: 50,
-                                    width: 6,
-                                  ),
+                                      url: PlotFinanceIcons
+                                          .creditcardcomponent,
+                                      height: 50,
+                                      width: 6),
                                 ),
                                 SizedBox(width: AppSizes.w6),
                                 Text(
@@ -839,22 +835,21 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                                 ),
                                 SizedBox(width: AppSizes.w16),
                                 Container(
-                                  padding: const EdgeInsets.all(AppSizes.p4),
+                                  padding:
+                                      const EdgeInsets.all(AppSizes.p4),
                                   decoration: BoxDecoration(
                                       color: const Color.fromRGBO(
                                           255, 255, 255, 0.08),
-                                      borderRadius: BorderRadius.circular(20)),
+                                      borderRadius:
+                                          BorderRadius.circular(20)),
                                   child: Container(
                                     padding: const EdgeInsets.all(AppSizes.p2),
                                     decoration: const BoxDecoration(
-                                      color: AppColors.backgroundColor,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.add,
-                                      color: AppColors.addCreditCardIcon,
-                                      size: 20,
-                                    ),
+                                        color: AppColors.backgroundColor,
+                                        shape: BoxShape.circle),
+                                    child: const Icon(Icons.add,
+                                        color: AppColors.addCreditCardIcon,
+                                        size: 20),
                                   ),
                                 ),
                               ],
@@ -872,29 +867,25 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                     ],
                   ),
                 ),
-                //     SvgPicture.asset(
-                //   PlotFinanceIcons.crediCardBg,
-                //   fit: BoxFit.contain,
-                // ),
+
                 SizedBox(height: AppSizes.h16),
-                _FinanceToolsCard(
-                  height: 100,
-                  onTapC: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const VegNonVegCalculator()),
-                  ),
-                  onTapD: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => AllCalculatorScreen()),
-                  ),
+
+                // ── Finance Fusion card ─────────────────────────────────
+                _FinanceFusionCard(
+                  onTapCalculator: () => Navigator.push(context,
+                      MaterialPageRoute(
+                          builder: (_) => AllCalculatorScreen())),
+                  onTapFoodie: () => Navigator.push(context,
+                      MaterialPageRoute(
+                          builder: (_) => const VegNonVegCalculator())),
                 ),
+
                 SizedBox(height: AppSizes.h24),
+
                 AvatarProfileImageZero(
-                  url: PlotFinanceIcons.goalCreation,
-                  height: 6,
-                  width: 4,
-                )
+                    url: PlotFinanceIcons.goalCreation,
+                    height: 6,
+                    width: 4),
               ],
             ),
           ),
@@ -904,128 +895,189 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   }
 }
 
-class _FinanceToolsCard extends StatefulWidget {
-  final double height;
-  final VoidCallback? onTapC;
-  final VoidCallback? onTapD;
+// ═══════════════════════════════════════════════════════════════════════════
+//  FINANCE FUSION CARD
+//  Default: two icon buttons side-by-side
+//  On tap: expands to show labelled rows (same as before) — then tap again
+//          to collapse back to icon view
+// ═══════════════════════════════════════════════════════════════════════════
+class _FinanceFusionCard extends StatefulWidget {
+  final VoidCallback onTapCalculator;
+  final VoidCallback onTapFoodie;
 
-  const _FinanceToolsCard({
-    super.key,
-    required this.height,
-    this.onTapC,
-    this.onTapD,
+  const _FinanceFusionCard({
+    required this.onTapCalculator,
+    required this.onTapFoodie,
   });
 
   @override
-  State<_FinanceToolsCard> createState() => _FinanceToolsCardState();
+  State<_FinanceFusionCard> createState() => _FinanceFusionCardState();
 }
 
-class _FinanceToolsCardState extends State<_FinanceToolsCard> {
-  bool expanded = false;
+class _FinanceFusionCardState extends State<_FinanceFusionCard>
+    with SingleTickerProviderStateMixin {
+  bool _expanded = false;
+  late AnimationController _ctrl;
+  late Animation<double> _fade;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 220));
+    _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  void _toggle() {
+    setState(() => _expanded = !_expanded);
+    _expanded ? _ctrl.forward() : _ctrl.reverse();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      height: expanded ? widget.height + 60 : widget.height,
-      width: MediaQuery.sizeOf(context).width / 2.4,
-      curve: Curves.easeOutCubic,
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.p14, vertical: AppSizes.p16),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: [AppShadows.soft],
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: () => setState(() => expanded = !expanded),
+    final cardW = MediaQuery.of(context).size.width / 2.4;
+
+    return GestureDetector(
+      onTap: _toggle,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic,
+        width: cardW,
+        // collapsed = icons only (~100px), expanded = labelled rows (~168px)
+        height: _expanded ? 168 : 100,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(22),
+          boxShadow: [AppShadows.soft],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              PlotFinanceStaticData().financeFusionTitle,
-              style: FontManager().getTextStyle(context,
-                  color: AppColors.primaryColor,
-                  fontSize: 12,
-                  lWeight: FontWeight.w400),
+            // Title row with expand chevron
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  PlotFinanceStaticData().financeFusionTitle,
+                  style: FontManager().getTextStyle(context,
+                      color: AppColors.primaryColor,
+                      fontSize: 12,
+                      lWeight: FontWeight.w500),
+                ),
+                AnimatedRotation(
+                  turns: _expanded ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 220),
+                  child: Icon(Icons.keyboard_arrow_down_rounded,
+                      size: 16, color: AppColors.grey),
+                ),
+              ],
             ),
-            SizedBox(height: AppSizes.h12),
-            if (!expanded)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18, vertical: AppSizes.p8),
-                      decoration: const BoxDecoration(
-                          color: AppColors.border,
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: AvatarProfileImageZero(
-                          url: PlotFinanceIcons.calculator,
-                          width: 20,
-                          height: 32)),
-                  Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18, vertical: AppSizes.p8),
-                      decoration: const BoxDecoration(
-                          color: AppColors.border,
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: AvatarProfileImageZero(
-                          url: PlotFinanceIcons.foodie, width: 20, height: 32)),
-                ],
-              ),
-            if (expanded)
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: widget.onTapD,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.p12, vertical: AppSizes.p8),
-                      decoration: const BoxDecoration(
-                          color: AppColors.border,
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(PlotFinanceIcons.calculator,
-                              height: 24),
-                          SizedBox(width: AppSizes.w10),
-                          Text(
-                            PlotFinanceStaticData().calculatorsTitle,
-                            style: FontManager().getTextStyle(context,
-                                color: AppColors.foodieFundsTitle,
-                                fontSize: 12,
-                                lWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
+            SizedBox(height: AppSizes.h10),
+
+            // ── COLLAPSED: icon buttons ──────────────────────────────────
+            if (!_expanded)
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _IconBtn(
+                      icon: PlotFinanceIcons.calculator,
+                      onTap: widget.onTapCalculator,
                     ),
-                  ),
-                  SizedBox(height: AppSizes.h12),
-                  GestureDetector(
-                    onTap: widget.onTapC,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.p12, vertical: AppSizes.p8),
-                      decoration: const BoxDecoration(
-                          color: AppColors.border,
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(PlotFinanceIcons.foodie, height: 24),
-                          SizedBox(width: AppSizes.w10),
-                          Text(PlotFinanceStaticData().foodieFundsTitle,
-                              style: FontManager().getTextStyle(context,
-                                  color: AppColors.foodieFundsTitle,
-                                  lWeight: FontWeight.w500,
-                                  fontSize: 12)),
-                        ],
-                      ),
+                    _IconBtn(
+                      icon: PlotFinanceIcons.foodie,
+                      onTap: widget.onTapFoodie,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+
+            // ── EXPANDED: labelled rows ──────────────────────────────────
+            if (_expanded)
+              FadeTransition(
+                opacity: _fade,
+                child: Column(
+                  children: [
+                    _LabelledRow(
+                      icon: PlotFinanceIcons.calculator,
+                      label: PlotFinanceStaticData().calculatorsTitle,
+                      onTap: widget.onTapCalculator,
+                    ),
+                    SizedBox(height: AppSizes.h10),
+                    _LabelledRow(
+                      icon: PlotFinanceIcons.foodie,
+                      label: PlotFinanceStaticData().foodieFundsTitle,
+                      onTap: widget.onTapFoodie,
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Small icon-only button ──────────────────────────────────────────────────
+class _IconBtn extends StatelessWidget {
+  final String icon;
+  final VoidCallback onTap;
+  const _IconBtn({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: const BoxDecoration(
+          color: AppColors.border,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        child: SvgPicture.asset(icon, height: 28, width: 20),
+      ),
+    );
+  }
+}
+
+// ── Labelled row (expanded state) ───────────────────────────────────────────
+class _LabelledRow extends StatelessWidget {
+  final String icon;
+  final String label;
+  final VoidCallback onTap;
+  const _LabelledRow(
+      {required this.icon, required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        decoration: const BoxDecoration(
+          color: AppColors.border,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        child: Row(
+          children: [
+            SvgPicture.asset(icon, height: 22),
+            SizedBox(width: AppSizes.w10),
+            Flexible(
+              child: Text(label,
+                  style: FontManager().getTextStyle(context,
+                      color: AppColors.foodieFundsTitle,
+                      fontSize: 12,
+                      lWeight: FontWeight.w500)),
+            ),
           ],
         ),
       ),

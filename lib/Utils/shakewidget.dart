@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/services.dart';
@@ -52,9 +53,13 @@ class _ShakeWidgetState extends State<ShakeWidget>
     );
   }
 }
+
 Future<void> vibrateForSnack() async {
   try {
     HapticFeedback.mediumImpact();
+    if (kIsWeb) {
+      return;
+    }
 
     if (Platform.isAndroid && (await Vibration.hasVibrator() ?? false)) {
       try {

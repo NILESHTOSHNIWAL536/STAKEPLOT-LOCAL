@@ -226,6 +226,9 @@ Future<void> checkIsUserValid() async {
 
 class InstallationChecker {
   static Future<bool> isInstalledFromPlayStore() async {
+    if (kIsWeb) {
+        return false;
+    }
     if (!Platform.isAndroid) {
       return true; // iOS apps are generally from App Store
     }
