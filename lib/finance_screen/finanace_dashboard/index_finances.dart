@@ -35,8 +35,7 @@ class _Shimmer extends StatefulWidget {
   final double width;
   final double height;
   final double radius;
-  const _Shimmer(
-      {required this.width, required this.height, this.radius = 12});
+  const _Shimmer({required this.width, required this.height, this.radius = 12});
 
   @override
   State<_Shimmer> createState() => _ShimmerState();
@@ -53,8 +52,8 @@ class _ShimmerState extends State<_Shimmer>
     _ctrl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1200))
       ..repeat();
-    _anim = Tween<double>(begin: -1, end: 2).animate(
-        CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+    _anim = Tween<double>(begin: -1, end: 2)
+        .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
   }
 
   @override
@@ -353,8 +352,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     return Container(
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
-        borderRadius:
-            const BorderRadius.vertical(bottom: Radius.circular(28)),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
         boxShadow: [
           BoxShadow(
               color: Colors.black.withOpacity(0.10),
@@ -438,7 +436,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                   const SizedBox(height: 12),
                   _buildSavingsRow(context, size),
                   const SizedBox(height: 12),
-                   _buildReserveRow(context),
+                  _buildReserveRow(context),
                 ],
               ),
             ),
@@ -482,8 +480,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             ],
           ),
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
               color: const Color(0xFF37344F),
               borderRadius: BorderRadius.circular(20),
@@ -573,8 +570,8 @@ class _FinanceDashboardState extends State<FinanceDashboard>
               Icon(Icons.close, size: 15, color: AppColors.grey),
               if (showTodayChip)
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFE4E4),
                     borderRadius: BorderRadius.circular(999),
@@ -764,7 +761,8 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   }
 
   Widget _buildSavingsCard(
-    BuildContext context,double width, {
+    BuildContext context,
+    double width, {
     required String title,
     required double current,
     required double target,
@@ -872,8 +870,8 @@ class _FinanceDashboardState extends State<FinanceDashboard>
           ),
           SizedBox(height: AppSizes.h16),
           InkWell(
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const Community())),
+            onTap: () => Navigator.push(
+                context, MaterialPageRoute(builder: (_) => const Community())),
             child: AspectRatio(
               aspectRatio: 16 / 7,
               child: SvgPicture.asset(
@@ -909,7 +907,8 @@ class _FinanceDashboardState extends State<FinanceDashboard>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: () => Navigator.push(context,
+                onTap: () => Navigator.push(
+                    context,
                     MaterialPageRoute(
                         builder: (_) => const CurrencyConverterScreen())),
                 child: AvatarProfileImageZero(
@@ -919,12 +918,10 @@ class _FinanceDashboardState extends State<FinanceDashboard>
               ),
               SizedBox(height: AppSizes.h20),
               GestureDetector(
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const Budget())),
+                onTap: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => const Budget())),
                 child: AvatarProfileImageZero(
-                    url: PlotFinanceIcons.budgetPlanner,
-                    height: 6,
-                    width: 4),
+                    url: PlotFinanceIcons.budgetPlanner, height: 6, width: 4),
               ),
               SizedBox(height: AppSizes.h20),
               GestureDetector(
@@ -954,8 +951,7 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                           width: 6),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: AppSizes.p12,
-                            horizontal: AppSizes.p12),
+                            vertical: AppSizes.p12, horizontal: AppSizes.p12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -964,13 +960,10 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                                 Container(
                                   padding: const EdgeInsets.all(AppSizes.p4),
                                   decoration: BoxDecoration(
-                                      color: AppColors
-                                          .creditCardComponentColor,
-                                      borderRadius:
-                                          BorderRadius.circular(13)),
+                                      color: AppColors.creditCardComponentColor,
+                                      borderRadius: BorderRadius.circular(13)),
                                   child: AvatarProfileImageZero(
-                                      url: PlotFinanceIcons
-                                          .creditcardcomponent,
+                                      url: PlotFinanceIcons.creditcardcomponent,
                                       height: 50,
                                       width: 6),
                                 ),
@@ -985,13 +978,11 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                                 ),
                                 SizedBox(width: AppSizes.w16),
                                 Container(
-                                  padding:
-                                      const EdgeInsets.all(AppSizes.p4),
+                                  padding: const EdgeInsets.all(AppSizes.p4),
                                   decoration: BoxDecoration(
                                       color: const Color.fromRGBO(
                                           255, 255, 255, 0.08),
-                                      borderRadius:
-                                          BorderRadius.circular(20)),
+                                      borderRadius: BorderRadius.circular(20)),
                                   child: Container(
                                     padding: const EdgeInsets.all(AppSizes.p2),
                                     decoration: const BoxDecoration(
@@ -1023,9 +1014,9 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                 // ── Finance Fusion card ─────────────────────────────────
                 _FinanceFusionCard(
                   onTapCalculator: () => Navigator.push(context,
-                      MaterialPageRoute(
-                          builder: (_) => AllCalculatorScreen())),
-                  onTapFoodie: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => AllCalculatorScreen())),
+                  onTapFoodie: () => Navigator.push(
+                      context,
                       MaterialPageRoute(
                           builder: (_) => const VegNonVegCalculator())),
                 ),
