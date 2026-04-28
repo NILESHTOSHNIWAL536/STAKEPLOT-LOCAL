@@ -46,7 +46,7 @@ class AppsflyerService {
       onSuccess: () => appLog("AppsFlyer SDK started"),
     );
 
-    appLog("AppsFlyer UID: ${await _appsflyerSdk.getAppsFlyerUID()}");
+    // appLog("AppsFlyer UID: ${await _appsflyerSdk.getAppsFlyerUID()}");
     _listenToCallbacks();
   }
 
@@ -100,7 +100,7 @@ class AppsflyerService {
         "raw": payload, // optional
       };
 
-      appLog("📦 Install Attribution → $installData");
+      // appLog("📦 Install Attribution → $installData");
 
       // ✅ store locally (safe)
       await SecureStorageService()
@@ -110,27 +110,26 @@ class AppsflyerService {
       final isLoggedIn =
           await SecureStorageService().containsKey("accessToken");
 
-       await sendPendingInstallData();
-  
+      await sendPendingInstallData();
     } catch (e) {
-      appLog("❌ Attribution error: $e");
+      // appLog("❌ Attribution error: $e");
     }
   }
 
   static void _listenToCallbacks() {
     _appsflyerSdk.onInstallConversionData((data) async {
-      appLog("onInstallConversionData: $data");
+      // appLog("onInstallConversionData: $data");
 
       try {
         // ✅ NEW METHOD (plugged in)
         await handleInstallAttribution(data);
       } catch (e) {
-        appLog(e);
+        // appLog(e);
       }
 
       final p =
           _extractPayload((data["payload"] ?? data) as Map<dynamic, dynamic>);
-      appLog("Install → code=${p.referralCode} screen=${p.screen}");
+      // appLog("Install → code=${p.referralCode} screen=${p.screen}");
 
       if (p.referralCode?.trim().isNotEmpty == true) {
         await handleReferralNavigation(
@@ -139,14 +138,14 @@ class AppsflyerService {
     });
 
     _appsflyerSdk.onAppOpenAttribution((data) {
-      appLog("onAppOpenAttribution: $data");
+      // appLog("onAppOpenAttribution: $data");
     });
 
     _appsflyerSdk.onDeepLinking((result) async {
       final click = result.deepLink?.clickEvent ?? <String, dynamic>{};
-      appLog("onDeepLinking: $click");
+      // appLog("onDeepLinking: $click");
       final p = _extractPayload(click);
-      appLog("DeepLink → code=${p.referralCode} screen=${p.screen}");
+      // appLog("DeepLink → code=${p.referralCode} screen=${p.screen}");
 
       if (p.referralCode?.trim().isNotEmpty == true) {
         await handleReferralNavigation(

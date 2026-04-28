@@ -414,7 +414,7 @@ class Screen2 extends StatefulWidget {
   final ReserveState state;
   final VoidCallback onNext, onBack, onChange;
 
-  const Screen2({
+  Screen2({
     super.key,
     required this.state,
     required this.onNext,
@@ -428,6 +428,8 @@ class Screen2 extends StatefulWidget {
 
 class _Screen2State extends State<Screen2> {
   late final TextEditingController _amountCtrl;
+  double? suggestedAmount;
+  bool isLoadingSuggestion = false;
 
   @override
   void initState() {
@@ -467,6 +469,33 @@ class _Screen2State extends State<Screen2> {
     return months[m - 1];
   }
 
+  Future<void> _fetchSuggestion() async {
+    if (widget.state.selectedDays == 0) return;
+
+    setState(() => isLoadingSuggestion = true);
+
+    final result = await ReserveApiService.getSuggestedReserve(
+      widget.state,
+      widget.state.selectedDays,
+    );
+
+    if (!mounted) return;
+
+    setState(() => isLoadingSuggestion = false);
+
+    switch (result) {
+      case ApiSuccess(:final data):
+        final inner = data['data']; // 👈 go inside "data"
+
+        suggestedAmount = (inner?['suggested_limit'] as num?)?.toDouble();
+
+      case ApiFailure():
+        suggestedAmount = null;
+    }
+
+    setState(() {});
+  }
+
   @override
   void dispose() {
     _amountCtrl.dispose();
@@ -487,7 +516,10 @@ class _Screen2State extends State<Screen2> {
             'Stakeplot suggests a limit based on your\nactual spending history.',
           ),
           const SizedBox(height: 28),
-          _SuggestedChip(),
+          _SuggestedChip(
+            amount: suggestedAmount,
+            loading: isLoadingSuggestion,
+          ),
           const SizedBox(height: 14),
           _AmountInput(controller: _amountCtrl),
           const SizedBox(height: 24),
@@ -535,30 +567,63 @@ class _Screen2State extends State<Screen2> {
                     widget.state.startDate,
                     widget.state.endDate,
                   ],
-                  onValueChanged: (dates) {
+                  onValueChanged: (dates) async {
                     if (dates.isEmpty) return;
 
                     final start = dates.first;
                     final end = dates.length > 1 ? dates.last : null;
 
-                    if (start != null && end != null) {
-                      final diff = end.difference(start).inDays + 1;
+                    // ❌ don't call API if range incomplete
+                    if (start == null || end == null) return;
 
-                      if (diff > 7) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Max 7 days allowed")),
-                        );
-                        return;
-                      }
+                    final diff = end.difference(start).inDays + 1;
+
+                    // ❌ limit validation
+                    if (diff > 7) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Max 7 days allowed")),
+                      );
+                      return;
                     }
 
+                    // ✅ update state
                     setState(() {
                       widget.state.startDate = start;
                       widget.state.endDate = end;
                     });
 
                     widget.onChange();
+
+                    // ✅ DEBUG (very important)
+                    print("Duration days = ${widget.state.selectedDays}");
+
+                    // ✅ CALL API (only duration goes)
+                    await _fetchSuggestion();
                   },
+                  // onValueChanged: (dates) {
+                  //   if (dates.isEmpty) return;
+
+                  //   final start = dates.first;
+                  //   final end = dates.length > 1 ? dates.last : null;
+
+                  //   if (start != null && end != null) {
+                  //     final diff = end.difference(start).inDays + 1;
+
+                  //     if (diff > 7) {
+                  //       ScaffoldMessenger.of(context).showSnackBar(
+                  //         const SnackBar(content: Text("Max 7 days allowed")),
+                  //       );
+                  //       return;
+                  //     }
+                  //   }
+
+                  //   setState(() {
+                  //     widget.state.startDate = start;
+                  //     widget.state.endDate = end;
+                  //   });
+
+                  //   widget.onChange();
+                  // },
                 ),
 
                 const SizedBox(height: 12),
@@ -614,6 +679,14 @@ class _Screen2State extends State<Screen2> {
 }
 
 class _SuggestedChip extends StatelessWidget {
+  final double? amount;
+  final bool loading;
+
+  const _SuggestedChip({
+    required this.amount,
+    required this.loading,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -623,10 +696,21 @@ class _SuggestedChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors2.inputBorder),
       ),
-      child: const Text(
-        'Suggested Amount ₹ 6700.34',
-        style: TextStyle(fontSize: 13, color: AppColors2.textMid),
-      ),
+      child: loading
+          ? const SizedBox(
+              height: 14,
+              width: 14,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : Text(
+              amount != null
+                  ? 'Suggested Amount ₹ ${amount!.toStringAsFixed(2)}'
+                  : 'Suggested Amount --',
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors2.textMid,
+              ),
+            ),
     );
   }
 }

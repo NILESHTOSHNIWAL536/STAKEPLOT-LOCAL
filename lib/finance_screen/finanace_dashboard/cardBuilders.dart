@@ -816,7 +816,7 @@ static Widget budgetCard(BuildContext context, dynamic data) {
                               context,
                               lWeight: FontWeight.w700,
                               fontSize: MediaQuery.sizeOf(context).height / 56,
-                              overflow: TextOverflow.ellipsis,
+                              // overflow: TextOverflow.ellipsis,
                               color: AppColors.bg1,
                             ),
                           ),

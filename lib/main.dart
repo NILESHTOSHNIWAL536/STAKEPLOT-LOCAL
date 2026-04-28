@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:app_links/app_links.dart';
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/foundation.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
@@ -33,7 +36,17 @@ void main() async {
     SystemUiMode.manual,
     overlays: SystemUiOverlay.values, // ⬅️ THIS IS KEY
   );
+// ✅ ADD THIS
+  await Firebase.initializeApp();
 
+  // ✅ ADD THIS
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+  // ✅ ADD THIS (VERY IMPORTANT)
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
   if (!kIsWeb) {
     await AppsflyerService.init();
   }

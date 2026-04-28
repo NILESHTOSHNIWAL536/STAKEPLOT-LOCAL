@@ -25,6 +25,7 @@ import '../../components/bottomNavigations.dart';
 import '../../controllers/credit_card_controller.dart';
 import '../../email_sync/display_credit_card.dart';
 import '../../image_service/avatarProfile.dart';
+import '../../repository/reserve_repository.dart';
 import 'reserve.dart';
 import 'reserve_flow.dart';
 import 'slider_addding_finances.dart';
@@ -148,7 +149,8 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   late AnimationController _hintController;
   late Animation<double> _hintOpacity;
   bool _showHint = true;
-
+  List<Map<String, dynamic>> reserveList = [];
+  bool isReserveLoading = true;
   @override
   void initState() {
     super.initState();
@@ -196,7 +198,12 @@ class _FinanceDashboardState extends State<FinanceDashboard>
       ]);
     } catch (_) {
     } finally {
-      if (mounted) setState(() => isLoading = false);
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          isReserveLoading = false;
+        });
+      }
     }
   }
 
@@ -430,6 +437,8 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                   _buildBudgetCard(context),
                   const SizedBox(height: 12),
                   _buildSavingsRow(context, size),
+                  const SizedBox(height: 12),
+                   _buildReserveRow(context),
                 ],
               ),
             ),
@@ -617,11 +626,152 @@ class _FinanceDashboardState extends State<FinanceDashboard>
     );
   }
 
-  Widget _buildSavingsCard(BuildContext context, double width,
-      {required String title,
-      required double current,
-      required double target,
-      required double percent}) {
+  Widget _buildReserveRow(BuildContext context) {
+    if (isReserveLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (reserveList.isEmpty) {
+      return const Text("No reserves yet");
+    }
+
+    return SizedBox(
+      height: 120,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: reserveList.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (_, index) {
+          final item = reserveList[index];
+
+          final amount = (item['amount'] as num?)?.toDouble() ?? 0;
+          final suggested = (item['suggested_limit'] as num?)?.toDouble() ?? 0;
+          final days = (item['duration_days'] as num?)?.toInt() ?? 0;
+          final status = item['status'] ?? "";
+
+          return _reserveCard(
+            context,
+            amount: amount,
+            suggested: suggested,
+            days: days,
+            status: status,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _reserveCard(
+    BuildContext context, {
+    required double amount,
+    required double suggested,
+    required int days,
+    required String status,
+  }) {
+    final percent = amount == 0 ? 0.0 : (suggested / amount).clamp(0, 1);
+
+    return Container(
+      width: 220,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [AppShadows.soft],
+      ),
+      child: Row(
+        children: [
+          // LEFT
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Reserve",
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 13,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "₹ ${amount.toStringAsFixed(0)}",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 12,
+                    color: AppColors.grey,
+                  ),
+                ),
+                Text(
+                  "$days days",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 11,
+                    color: AppColors.grey,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Suggested ₹ ${suggested.toStringAsFixed(0)}",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 11,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                Text(
+                  status,
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 10,
+                    color: status == "ACTIVE" ? Colors.green : Colors.red,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // RIGHT (progress)
+          SizedBox(
+            height: 40,
+            width: 40,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CircularProgressIndicator(
+                  value: percent.toDouble(),
+                  strokeWidth: 4,
+                  backgroundColor: const Color(0xFFE5E7EB),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppColors.primaryColor,
+                  ),
+                ),
+                Text(
+                  "${(percent * 100).toInt()}%",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 10,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSavingsCard(
+    BuildContext context,double width, {
+    required String title,
+    required double current,
+    required double target,
+    required double percent,
+  }) {
+    final String amountText =
+        '₹ ${current.toStringAsFixed(0)} / ₹ ${target.toStringAsFixed(0)}';
     return Container(
       width: width,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -881,11 +1031,19 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                 ),
 
                 SizedBox(height: AppSizes.h24),
-
-                AvatarProfileImageZero(
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => CreateDebtScreen()),
+                    );
+                  },
+                  child: AvatarProfileImageZero(
                     url: PlotFinanceIcons.goalCreation,
                     height: 6,
-                    width: 4),
+                    width: 4,
+                  ),
+                )
               ],
             ),
           ),

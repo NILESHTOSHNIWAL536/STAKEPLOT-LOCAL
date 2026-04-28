@@ -177,7 +177,7 @@ class _ShowCompleteInfoState extends State<ShowCompleteInfo> {
                       context,
                       lWeight: FontWeight.w500,
                       fontSize: 14,
-                      overflow: TextOverflow.ellipsis,
+                      // overflow: TextOverflow.ellipsis,
                       color: selectedIndex == i
                           ? AppColors.backgroundColor
                           : AppColors.primaryColor,

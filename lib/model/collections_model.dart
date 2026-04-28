@@ -199,7 +199,7 @@ class CollectionDetailsModel {
     // required this.splits,
   });
 
-  factory CollectionDetailsModel.fromJson(Map<String, dynamic> json) {
+ factory CollectionDetailsModel.fromJson(Map<String, dynamic> json) {
     try {
       return CollectionDetailsModel(
         collection: CollectionModel.fromJson(json['collection'] ?? {}, json),

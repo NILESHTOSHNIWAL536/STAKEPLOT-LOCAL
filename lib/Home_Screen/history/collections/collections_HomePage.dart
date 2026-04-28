@@ -52,7 +52,7 @@ class CollectionDetailsPage extends StatelessWidget {
           return true;
         },
         child: Scaffold(
-          backgroundColor: AppColors.border,
+          backgroundColor: AppColors.newbg,
           body: SafeArea(
             child: Column(
               children: [
