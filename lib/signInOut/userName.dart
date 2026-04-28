@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,7 +48,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
     isValidUser.value = false;
 
-    usernameController.text = (widget.data['data']?['name'] ?? '').replaceAll(' ', '').trim();
+    usernameController.text =
+        (widget.data['data']?['name'] ?? '').replaceAll(' ', '').trim();
 
     usernameController.addListener(validateUsername);
   }
@@ -96,6 +95,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       'email': widget.data['data']['email'] ?? '',
       'authorizationKey': Credentials.Sign_Up_Key,
       'deviceInfo': deviceData,
+      'isGoogleUser': widget.data['data']['isGoogleUser'] ?? '',
       if (widget.isAppleUser) ...{
         'isAppleUser': true,
         'appleUserId': widget.data['data']['appleUserId'],
@@ -175,7 +175,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                   ),
                   SizedBox(height: AppSizes.h75),
 
-                  
                   TextFeildWidget(
                     textEditingController: usernameController,
                     heading: SignupData().usernameLabel,

@@ -586,7 +586,6 @@ class _FinanceDashboardState extends State<FinanceDashboard>
   }
 
   Widget _buildReserveRow(BuildContext context) {
-
     if (isReserveLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -1033,10 +1032,18 @@ class _FinanceDashboardState extends State<FinanceDashboard>
                   ),
                 ),
                 SizedBox(height: AppSizes.h24),
-                AvatarProfileImageZero(
-                  url: PlotFinanceIcons.goalCreation,
-                  height: 6,
-                  width: 4,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => CreateDebtScreen()),
+                    );
+                  },
+                  child: AvatarProfileImageZero(
+                    url: PlotFinanceIcons.goalCreation,
+                    height: 6,
+                    width: 4,
+                  ),
                 )
               ],
             ),

@@ -1,7 +1,7 @@
 import '../backed_connections/googlesignin/credentials.dart';
 
 class API {
-  static final bool apis_flag = true;
+  static final bool apis_flag = false;
 
   static final String urlWithLocallHost = apis_flag
       ? Credentials.LIVE_API
