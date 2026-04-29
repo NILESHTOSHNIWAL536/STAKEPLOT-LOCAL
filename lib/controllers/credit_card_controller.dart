@@ -14,6 +14,10 @@ import '../model/credit_card_model.dart';
 class CardDueController extends GetxController {
   RxList<CardDueModel> cardList = <CardDueModel>[].obs;
   RxBool loading = false.obs;
+  RxBool forceLogin = false.obs;
+  RxString selectedBankId = "".obs;
+  RxString selectedEmail = "".obs;
+  RxString selectedBankName = "".obs;
 
   Future<void> fetchCardData() async {
     try {
@@ -40,11 +44,15 @@ class CardDueController extends GetxController {
       // API call (replace url with your actual base url)
       if (selectedBankId.value.isEmpty) {
         snackBarCalledfail(context, "Invalid Bank Id");
-        pushnameToRoute(context, AddCreditCardBankScreen());
+        Future.delayed(const Duration(seconds: 2), () {
+          pushnameToRoute(context, AddCreditCardBankScreen());
+        });
         return;
       }
+
       var response = await postDataApiCall("${AuthApiRoutes.scrape}/", {
-        "bankIds": [selectedBankId.value]
+        "bankIds": [selectedBankId.value],
+        "email": selectedEmail.value,
       });
 
       if (getFlagOfResponse(response)) {

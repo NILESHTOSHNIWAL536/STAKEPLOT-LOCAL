@@ -10,8 +10,6 @@ import '../model/credit-card-bank.dart';
 import 'custom_steps.dart';
 import 'email_signin.dart';
 
-RxString selectedBankName = "".obs;
-RxString selectedBankId = "".obs;
 RxList<CreditCardBank> creditCardBankList = <CreditCardBank>[].obs;
 
 class AddCreditCardBankScreen extends StatefulWidget {
@@ -31,8 +29,8 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
     filteredBanks
       ..clear()
       ..addAll(creditCardBankList);
-    selectedBankName.value = "";
-    selectedBankId.value = "";
+     cardController.selectedBankName.value = "";
+     cardController.selectedBankId.value = "";
   }
 
   @override
@@ -57,11 +55,11 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
 
   void _selectBank(CreditCardBank bank) {
     controller.text = bank.name;
-    selectedBankName.value = bank.name;
-    selectedBankId.value = bank.id;
+     cardController.selectedBankName.value = bank.name;
+     cardController.selectedBankId.value = bank.id;
     _focusNode.unfocus();
     // Scroll feedback — keep selection visible
-    setState(() {});
+    // setState(() {});
   }
 
   @override
@@ -150,7 +148,7 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
             SizedBox(height: AppSizes.h10),
 
             // ── Selected badge ────────────────────────────────────────────
-            Obx(() => selectedBankName.value.isNotEmpty
+            Obx(() =>  cardController.selectedBankName.value.isNotEmpty
                 ? Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     padding:
@@ -168,7 +166,7 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                             color: AppColors.primaryColor, size: 16),
                         const SizedBox(width: 8),
                         Text(
-                          selectedBankName.value,
+                           cardController.selectedBankName.value,
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -196,12 +194,12 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
                         itemCount: filteredBanks.length,
                         itemBuilder: (_, i) {
                           final bank = filteredBanks[i];
-                          final isSelected = selectedBankId.value == bank.id;
+                          final isSelected =  cardController.selectedBankId.value == bank.id;
                           return Obx(() => _BankTile(
                                 bank: bank,
                                 isFirst: i == 0,
                                 isLast: i == filteredBanks.length - 1,
-                                isSelected: selectedBankId.value == bank.id,
+                                isSelected:  cardController.selectedBankId.value == bank.id,
                                 onTap: () => _selectBank(bank),
                               ));
                         },
@@ -217,8 +215,8 @@ class _AddCreditCardBankScreenState extends State<AddCreditCardBankScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  if (selectedBankName.value.isEmpty ||
-                      selectedBankId.value.isEmpty) {
+                  if ( cardController.selectedBankName.value.isEmpty ||
+                       cardController.selectedBankId.value.isEmpty) {
                     snackBarCalledfail(context, "Please select your bank");
                   } else {
                     googleSignInBool.value = false;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/loader.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/collections/create_collection_pages/create_collection_flow.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/email_sync/custom_steps.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -100,7 +102,7 @@ class _GettingDataScreenState extends State<GettingDataScreen>
     _startStepCycle();
 
     loadingBankdetails.value = false;
-    CardDueController().LinkBankData(context);
+    cardController.LinkBankData(context);
 
     // Watch for completion
     ever(loadingBankdetails, (bool done) {
