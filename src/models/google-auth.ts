@@ -1,25 +1,4 @@
-// const { required } = require('joi');
-// const mongoose = require('mongoose');
-
-// const googleAuthSchema = new mongoose.Schema(
-//   {
-//     userId: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       required: true,
-//     },
-//     refreshToken: {
-//       encryptedData: { type: String, required: true },
-//       iv: { type: String, required: true },
-//       authTag: { type: String, required: true },
-//     },
-//   },
-//   { timestamps: true }
-// );
-
-// googleAuthSchema.index({ userId: 1 }, { unique: true });
-// const GoogleAuth = mongoose.model('googleAuth', googleAuthSchema);
-// module.exports={GoogleAuth,googleAuthSchema};
-import { Schema, model, Types, Document } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
 export interface IEncryptedToken {
   encryptedData: string;
@@ -28,15 +7,18 @@ export interface IEncryptedToken {
 }
 
 export interface IGoogleAuth extends Document {
-  userId: Types.ObjectId;
+  email: string;
   refreshToken: IEncryptedToken;
 }
 
-const googleAuthSchema = new Schema<IGoogleAuth>(
+export const googleAuthSchema = new Schema<IGoogleAuth>(
   {
-    userId: {
-      type: Schema.Types.ObjectId,
+    email: {
+      type: String,
       required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
     refreshToken: {
       encryptedData: { type: String, required: true },
@@ -46,9 +28,3 @@ const googleAuthSchema = new Schema<IGoogleAuth>(
   },
   { timestamps: true }
 );
-
-googleAuthSchema.index({ userId: 1 }, { unique: true });
-
-const GoogleAuth = model<IGoogleAuth>('googleAuth', googleAuthSchema);
-
-export { GoogleAuth, googleAuthSchema };

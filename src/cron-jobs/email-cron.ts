@@ -1,66 +1,79 @@
-// const cron = require('node-cron');
-// const CreditCardQueue=require("../services/bull-queue-service/credit-card-transaction-queue");
 
-// cron.schedule('0 0 */12 * * *', async () => {
-// // cron.schedule('* * * * * *', async () => {
-
-//   try {
-//     // Step 1: Find users having at least one linked credit card bank
-//     const users = await mainDB.model('User').find({
-//       CreditCardLinkedBanks: { $exists: true, $ne: [] },
-//     });
-
-
-//     // Step 2: Loop through users and find GoogleAuth record
-//     for (const user of users) {
-//       const googleAuth = await emailDB.model('googleAuth').findOne({ userId: user._id });
-//       if (!googleAuth) {
-//         continue;
-//       }
-//       // Step 3: Add job to queue
-//       await CreditCardQueue.add({
-//         userId: user._id,
-//         bankIds: user.CreditCardLinkedBanks,
-//       });
-//     }
-//   } catch (error) {
-//     console.error("❌ Cron job error:", error);
-//   }
-// });
 
 import cron from 'node-cron';
-import CreditCardQueue from '../services/bull-queue-service/credit-card-transaction-queue';
-
+import { getModels } from '../models/index-model';
+import CreditCardQueue from '../services/bull-queue-service/queue';
+    // const EmailScrapingService = require('../services/email-service');
+import EmailScrapingService from '../services/email-service';
 // Cron: Runs every 12 hours
-cron.schedule('0 0 */12 * * *', async () => {
+// cron.schedule('0 0 */12 * * *', async () => {
+
+// cron.schedule('*/10 * * * * *', async () => {
+cron.schedule('0 40 17 * * *', async () => {
   try {
-    const mainDB = (global as any).mainDB;
-    const emailDB = (global as any).emailDB;
+    console.log('⏳ Cron triggered at', new Date().toISOString());
 
-    // 1. Fetch all users with linked credit card banks
-    const users = await mainDB
-      .model('User')
-      .find({ CreditCardLinkedBanks: { $exists: true, $ne: [] } })
-      .lean();
+    const { UserBankMap } = await getModels();
 
-    // 2. Loop through users
+    const users = await UserBankMap.find().lean();
+
     for (const user of users) {
-      const googleAuth = await emailDB
-        .model('googleAuth')
-        .findOne({ userId: user._id });
+      const userId = user.userId;
 
-      if (!googleAuth) continue;
+      const emailBankMap: { email: string; bankIds: string[] }[] = [];
 
-      // 3. Add job to queue
-      await CreditCardQueue.add({
-        userId: user._id,
-        bankIds: user.CreditCardLinkedBanks,
-      });
+      console.log('👉 Processing user:', userId);
+
+      for (const mapping of user.mappings || []) {
+        if (!mapping.email) continue;
+
+        console.log(`   📧 ${mapping.email}`, mapping.creditCardIds);
+
+        emailBankMap.push({
+          email: mapping.email,
+          bankIds: mapping.creditCardIds || [],
+        });
+      }
+
+      if (emailBankMap.length === 0) continue;
+
+      console.log(`🚀 Adding job for user ${userId}`);
+      console.log('Email-Bank Map:', emailBankMap);
+
+      for (const item of emailBankMap) {
+            const { email, bankIds } = item;
+
+            console.log(`📩 Scraping ${email}`, bankIds);
+
+            await EmailScrapingService.scrapeEmailsByBankId(
+              userId.toString(),
+              bankIds,
+              email
+            );
+          }
+
+      // await CreditCardQueue.add(
+      //   {
+      //     userId,
+      //     emailBankMap, // 🔥 multiple emails inside one job
+      //   },
+      //   {
+      //     jobId: userId.toString(), // ✅ prevent duplicate job per user
+      //     removeOnComplete: true,
+      //     removeOnFail: true,
+      //   }
+      // );
+
     }
+
+    console.log('✅ Cron executed\n');
+    console.log('-----------------------------------');
+
   } catch (error) {
     console.error('❌ Cron job error:', error);
   }
 });
+
 
 // 👇 This empty export forces TS to treat this file as a module
 export {};

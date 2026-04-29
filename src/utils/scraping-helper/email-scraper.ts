@@ -11,7 +11,7 @@ export default async function emailScraperHelper(
 ): Promise<{ results: any[]; bankConfig: any[] }> {
   const startTime = performance.now();
   const gmail = gmailClient;
-  const afterDate = mode !== 'initial' ? getNinetyDaysAgo(45) : getNHoursAgo(78);
+  const afterDate = mode !== 'initial' ? getNinetyDaysAgo(2) : getNHoursAgo(3);
 
   const bankConfig = creditCard;
   const bankFilters: string[] = [];
@@ -26,6 +26,8 @@ export default async function emailScraperHelper(
 
   do {
     pageCount++;
+    console.log("pageCount");
+    console.log(pageCount);
     const pageStart = performance.now();
     const listRes = await EmailServiceHelper.listEmails(
       gmail,
@@ -59,14 +61,15 @@ export default async function emailScraperHelper(
           const matches2 = bankFilters.some(
             (f) => f && subjectLower.includes(f.toLowerCase())
           );
-          // console.log(matches2);
-         // if (!matches && !matches2) return null;
-
+          // console.log("subjectLower",subjectLower);
+          // if (!matches && !matches2) return null;
+          
           const { body, attachments } = await EmailServiceHelper.extractEmailBody(
             gmail,
             msg,
             meta.data.payload
           );
+          // console.log(body);
 
           const preparedAttachments = (
   await Promise.allSettled(
