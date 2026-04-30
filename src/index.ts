@@ -31,7 +31,7 @@ import dotenv from 'dotenv';
 import app from './app';
 import connectDatabases from './dbConnections';
 import { ServerConfig, RedisClient, Logger } from './config';
- import'./cron-jobs';
+import './cron-jobs';
 // If you really need this later:
 // import { getModels } from './models/index-model';
 
