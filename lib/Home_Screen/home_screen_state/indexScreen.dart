@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/theme_helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardStack.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finora_analytics/finora_last2months_dashboard.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_analytics/finance_chart.dart';
@@ -32,12 +33,13 @@ class IndexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    final colors = context.appColors;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSizes.p4),
         child: RefreshIndicator(
-          color: AppColors.primaryColor,
-          backgroundColor: AppColors.backgroundColor,
+          color: colors.primary,
+          backgroundColor: colors.background,
           strokeWidth: 2.5,
           displacement: 40, // spinner position from top
           edgeOffset: 0, // start right at the top
@@ -91,7 +93,7 @@ class IndexScreen extends StatelessWidget {
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w500,
                                 fontSize: 16,
-                                color: AppColors.primaryColor)),
+                                color: colors.primary)),
                       ),
                     ],
                   ),
