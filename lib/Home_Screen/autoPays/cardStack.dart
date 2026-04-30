@@ -609,7 +609,7 @@ class _AutoPayCarouselState extends State<AutoPayCarousel> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AllCardsScreen(
+        builder: (context) => PayCyclesScreen(
           cards: allCards,
           toggleStates: toggleStates,
           onToggleChanged: (id, value) => toggleStates[id] = value,
@@ -628,102 +628,97 @@ class _AutoPayCarouselState extends State<AutoPayCarousel> {
     final cardHeight = screenSize.height * 0.22;
 
     final colors = context.appColors;
-    return Scaffold(
-      backgroundColor: colors.background,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-          child: Obx(() {
-            if (isLoading.value) {
-              return Center(child: Spinner());
-            }
+    return Obx(() {
+      if (isLoading.value) {
+        return SizedBox(
+          height: cardHeight,
+          child: Center(child: Spinner()),
+        );
+      }
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Top title row with View All button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "AutoPay",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w700,
-                        fontSize: 18 * fontScale,
-                        color: colors.onBackground,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => _onViewAll(context),
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: AppSizes.p12 * fontScale, vertical: AppSizes.p8 * fontScale),
-                        backgroundColor: colors.surface,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8 * fontScale),
-                        ),
-                      ),
-                      child: Text(
-                        "View All",
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w600,
-                          fontSize: 14 * fontScale,
-                          color: colors.primary,
-                        ),
-                      ),
-                    ),
-                  ],
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "AutoPay",
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w700,
+                  fontSize: 18 * fontScale,
+                  color: colors.onBackground,
                 ),
-                SizedBox(height: AppSizes.h12),
-                // Horizontal scroll row showing up to 2 cards
-                Container(
-                 
-                  height: cardHeight,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: cards.length,
-                    separatorBuilder: (context, index) =>
-                        SizedBox(width: AppSizes.w12),
-                    itemBuilder: (context, index) {
-                      final card = cards[index];
-                      return SizedBox(
-                        width: cardWidth,
-                        child: CardWidget(
-                          card: card,
-                          toggleStates: toggleStates,
-                          onToggleChanged: (id, value) =>
-                              toggleStates[id] = value,
-                          onSetReminder: (cardId) =>
-                              _showCustomCalendarPopup(context, cardId),
-                          parentContext: context,
-                          onDataChanged: _fetchAutoPayData,
-                          index: index,
-                        ),
-                      );
-                    },
+              ),
+              TextButton(
+                onPressed: () => _onViewAll(context),
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSizes.p12 * fontScale,
+                    vertical: AppSizes.p4 * fontScale,
+                  ),
+                  backgroundColor: colors.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8 * fontScale),
+                    side: BorderSide(color: colors.border, width: 1),
                   ),
                 ),
-                // If no cards to preview, show message
-                if (cards.isEmpty)
-                  Padding(
-                    padding: EdgeInsets.only(top:AppSizes.p16),
-                    child: Text(
-                      "No autopay cards available.",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 14 * fontScale,
-                        color: colors.secondaryText,
-                      ),
-                    ),
+                child: Text(
+                  "View All",
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 13 * fontScale,
+                    color: colors.primary,
                   ),
-              ],
-            );
-          }),
-        ),
-      ),
-    );
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSizes.h10),
+          // Horizontal card scroll
+          if (cards.isEmpty)
+            Padding(
+              padding: EdgeInsets.only(top: AppSizes.p8),
+              child: Text(
+                "No autopay cards available.",
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w500,
+                  fontSize: 14 * fontScale,
+                  color: colors.secondaryText,
+                ),
+              ),
+            )
+          else
+            SizedBox(
+              height: cardHeight,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: cards.length,
+                separatorBuilder: (_, __) => SizedBox(width: AppSizes.w12),
+                itemBuilder: (context, index) {
+                  return SizedBox(
+                    width: cardWidth,
+                    child: CardWidget(
+                      card: cards[index],
+                      toggleStates: toggleStates,
+                      onToggleChanged: (id, value) =>
+                          toggleStates[id] = value,
+                      onSetReminder: (cardId) =>
+                          _showCustomCalendarPopup(context, cardId),
+                      parentContext: context,
+                      onDataChanged: _fetchAutoPayData,
+                      index: index,
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
+      );
+    });
   }
 }

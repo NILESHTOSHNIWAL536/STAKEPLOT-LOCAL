@@ -545,18 +545,20 @@ class _SpendingCategoryChartState extends State<SpendingCategoryChart> {
   }
 
   Widget buildCategoryCards() {
-    // Take top 4 categories
     final topCategories = controller.spendingsOnCategories.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final topFour = topCategories.take(6).toList();
+    // Responsive aspect ratio: shorter on small screens, taller on large
+    final screenWidth = MediaQuery.of(context).size.width;
+    final childAspectRatio = (screenWidth / 2 - 24) / 130.0;
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-        childAspectRatio: 1.5,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: childAspectRatio.clamp(1.1, 1.6),
       ),
       itemCount: topFour.length,
       itemBuilder: (context, index) {
@@ -792,12 +794,16 @@ class AllCategoriesPage extends StatelessWidget {
                     ),
                   ),
                 )
-              : GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              : LayoutBuilder(
+                  builder: (context, constraints) {
+                    final childAspectRatio =
+                        (constraints.maxWidth / 2 - 20) / 130.0;
+                    return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 14,
                     mainAxisSpacing: 14,
-                    childAspectRatio: 1.4,
+                    childAspectRatio: childAspectRatio.clamp(1.1, 1.6),
                   ),
                   itemCount: sortedData.length,
                   itemBuilder: (context, index) {
@@ -811,6 +817,8 @@ class AllCategoriesPage extends StatelessWidget {
                       percentage: percentage,
                       color: color,
                     );
+                  },
+                );
                   },
                 );
         }),

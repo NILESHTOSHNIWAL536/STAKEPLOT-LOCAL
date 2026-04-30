@@ -94,13 +94,15 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   );
 
   // ── Dark theme tokens ────────────────────────────────────────────────────
+  // Uses ~12-15% HSL lightness (vs pure black ~7%) — industry standard
+  // reference: VS Code (#1E1E1E), Notion (#191919), Discord (#313338 surface)
   static const dark = AppThemeColors(
-    background: Color(0xFF121212),
-    surface: Color(0xFF1E1E1E),
-    surfaceVariant: Color(0xFF252525),
-    appBarBackground: Color(0xFF161616),
-    bottomBarBackground: Color(0xFF161616),
-    dialogBackground: Color(0xFF1F1F1F),
+    background: Color(0xFF1E1E1E),
+    surface: Color(0xFF272727),
+    surfaceVariant: Color(0xFF303030),
+    appBarBackground: Color(0xFF1E1E1E),
+    bottomBarBackground: Color(0xFF1A1A1A),
+    dialogBackground: Color(0xFF272727),
 
     onBackground: Color(0xFFF0F0F0),
     onSurface: Color(0xFFE8E8E8),
@@ -108,13 +110,13 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     hintText: Color(0xFF6B6B6B),
     labelText: Color(0xFFB0B0B0),
 
-    border: Color(0xFF2C2C2C),
-    divider: Color(0xFF2C2C2C),
+    border: Color(0xFF3A3A3A),
+    divider: Color(0xFF3A3A3A),
 
-    inputBackground: Color(0xFF2A2A2A),
-    iconBackground: Color(0xFF2C2C2C),
+    inputBackground: Color(0xFF303030),
+    iconBackground: Color(0xFF3A3A3A),
     selectedChip: Color(0xFF8E91D9),
-    unselectedChip: Color(0xFF2C2C2C),
+    unselectedChip: Color(0xFF303030),
 
     primary: Color(0xFF8E91D9),
     primaryLight: Color(0xFFB0B3E8),
