@@ -482,7 +482,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/autoPays/cardWidget.dart';
 import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';

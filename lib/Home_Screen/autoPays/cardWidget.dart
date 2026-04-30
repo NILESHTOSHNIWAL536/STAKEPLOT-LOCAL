@@ -1,524 +1,4 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
-// import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-// import 'package:flutter_application_code_stakeplot/components/helper.dart';
-// import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-// import 'package:flutter_application_code_stakeplot/model/autopay_model.dart';
-// import 'package:flutter_application_code_stakeplot/repository/autopay_repository.dart';
-// import 'package:flutter_svg/svg.dart';
-// import 'package:get/get.dart';
-
-// import '../../components/shared_utils.dart';
-
-// // Reusable Card Widget
-// class CardWidget extends StatelessWidget {
-//   final CardData card;
-//   final RxMap<String, bool> toggleStates;
-//   final Function(String, bool)? onToggleChanged;
-//   final Function(String)? onSetReminder;
-//   final BuildContext parentContext;
-//   final Function() onDataChanged;
-//   final int index;
-//   const CardWidget({
-//     required this.card,
-//     required this.toggleStates,
-//     required this.parentContext,
-//     required this.onDataChanged,
-//     this.onToggleChanged,
-//     this.onSetReminder,
-//     Key? key,
-//     required this.index,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final screenSize = MediaQuery.of(context).size;
-//     final cardHeight = screenSize.height * 0.2; // Responsive card height
-//     final fontScale = screenSize.width / 375; // Base font scaling
-//     final padding = screenSize.width * 0.03; // Responsive padding
-//     const List<Color> _autoPayColors = [
-//       AppColors.autoPay1,
-//       AppColors.autoPay2,
-//       AppColors.autoPay3,
-//       AppColors.autoPay4,
-//       AppColors.autoPay5,
-//     ];
-//     Color _getColorForIndex() {
-//       return _autoPayColors[index % _autoPayColors.length];
-//     }
-
-//     return Container(
-//       height: cardHeight,
-//       decoration: BoxDecoration(
-//         color: _getColorForIndex(),
-//         borderRadius: BorderRadius.circular(16 * fontScale),
-//       ),
-//       child: Padding(
-//         padding: EdgeInsets.all(padding),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Expanded(
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                         card.title,
-//                         style: FontManager().getTextStyle(
-//                           context,
-//                           lWeight: FontWeight.w600,
-//                           fontSize: 14 * fontScale,
-//                           color: AppColors.accentColor,
-//                         ),
-//                       ),
-//                       SizedBox(height: 4 * fontScale),
-//                       Text(
-//                         card.date,
-//                         style: FontManager().getTextStyle(
-//                           context,
-//                           lWeight: FontWeight.w600,
-//                           fontSize: 10 * fontScale,
-//                           color: AppColors.accentColor,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//                 Text(
-//                   card.amount.toString(),
-//                   style: FontManager().getTextStyle(
-//                     context,
-//                     lWeight: FontWeight.w600,
-//                     fontSize: 16 * fontScale,
-//                     color: AppColors.accentColor,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             SizedBox(height: 4 * fontScale),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 Row(
-//                   children: [
-//                     Container(
-//                       padding: EdgeInsets.symmetric(
-//                           horizontal: 8 * fontScale, vertical: AppSizes.p4 * fontScale),
-//                       decoration: BoxDecoration(
-//                         color: AppColors.backgroundColor.withOpacity(0.4),
-//                         borderRadius: BorderRadius.circular(2 * fontScale),
-//                       ),
-//                       child: Row(
-//                         mainAxisSize: MainAxisSize.min,
-//                         children: [
-//                           chatAvatartImage(
-//                             url: 'assets/icons/Home-page/frequency.svg',
-//                             height: 50 * fontScale,
-//                             width: 50 * fontScale,
-//                           ),
-//                           SizedBox(width: 2 * fontScale),
-//                           Text(
-//                             card.frequency,
-//                             style: FontManager().getTextStyle(
-//                               context,
-//                               lWeight: FontWeight.w500,
-//                               fontSize: 12 * fontScale,
-//                               color: AppColors.primaryColor,
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                     if (card.frequency.toLowerCase() == 'daily') ...[
-//                       SizedBox(width: 8 * fontScale),
-//                       Obx(() => Switch(
-//                             value: toggleStates[card.id] ?? card.isActive,
-//                             onChanged: (value) async {
-//                               toggleStates[card.id] = value;
-//                               onToggleChanged?.call(card.id, value);
-//                               final success =
-//                                   await addRecurringPayment(card.id, value);
-//                               if (success) {
-//                                 snackBarCalled(parentContext,
-//                                     "Autopay status updated successfully");
-//                               } else {
-//                                 toggleStates[card.id] = !value;
-//                                 onToggleChanged?.call(card.id, !value);
-//                                 snackBarCalled(parentContext,
-//                                     "Failed to update autopay status");
-//                               }
-//                             },
-//                             activeColor: AppColors.primaryColor,
-//                             inactiveThumbColor: Colors.white70,
-//                             inactiveTrackColor: AppColors.backgroundColor.withOpacity(0.3),
-//                             materialTapTargetSize:
-//                                 MaterialTapTargetSize.shrinkWrap,
-//                           )),
-//                     ],
-//                   ],
-//                 ),
-//                 Column(mainAxisSize: MainAxisSize.min, children: [
-//                   if (card.isActive || card.isDaily)
-//                     GestureDetector(
-//                       onTap: () async {
-//                         final confirm = await showDialog<bool>(
-//                           context: parentContext,
-//                           useRootNavigator: false,
-//                           builder: (context) => AlertDialog(
-//                             title: Text(
-//                               "Remove Payment",
-//                               style: FontManager().getTextStyle(
-//                                 context,
-//                                 lWeight: FontWeight.w600,
-//                                 fontSize: 18 * fontScale,
-//                                 color: AppColors.primaryColor,
-//                               ),
-//                             ),
-//                             content: Text(
-//                               "Do you want to remove this recurring payment?",
-//                               style: FontManager().getTextStyle(
-//                                 context,
-//                                 lWeight: FontWeight.w500,
-//                                 fontSize: 16 * fontScale,
-//                                 color: AppColors.accentColor,
-//                               ),
-//                             ),
-//                             actions: [
-//                               TextButton(
-//                                 onPressed: () => Navigator.pop(context, false),
-//                                 child: Text(
-//                                   "Cancel",
-//                                   style: FontManager().getTextStyle(
-//                                     context,
-//                                     lWeight: FontWeight.w500,
-//                                     fontSize: 14 * fontScale,
-//                                     color: AppColors.accentColor,
-//                                   ),
-//                                 ),
-//                               ),
-//                               TextButton(
-//                                 onPressed: () => Navigator.pop(context, true),
-//                                 child: Text(
-//                                   "Remove",
-//                                   style: FontManager().getTextStyle(
-//                                     context,
-//                                     lWeight: FontWeight.w500,
-//                                     fontSize: 14 * fontScale,
-//                                     color: AppColors.primaryColor,
-//                                   ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         );
-//                         if (confirm == true) {
-//                           final success = card.isDaily
-//                               ? await addRecurringPaymentForDaily(
-//                                   card.id, false)
-//                               : await addRecurringPayment(card.id, false);
-//                           snackBarCalled(
-//                             parentContext,
-//                             success
-//                                 ? "Removed successfully"
-//                                 : "Failed to remove",
-//                           );
-//                           if (success) onDataChanged();
-//                         }
-//                       },
-//                       child: Container(
-//                         padding: EdgeInsets.symmetric(
-//                             horizontal: 8 * fontScale, vertical: AppSizes.p4 * fontScale),
-//                         decoration: BoxDecoration(
-//                           color: AppColors.backgroundColor.withOpacity(0.2),
-//                           borderRadius: BorderRadius.circular(10 * fontScale),
-//                         ),
-//                         child: Text(
-//                           "Added",
-//                           style: TextStyle(
-//                               fontSize: 14 * fontScale, color: AppColors.backgroundColor),
-//                         ),
-//                       ),
-//                     )
-//                   else ...[
-//                     GestureDetector(
-//                       onTap: () async {
-//                         final confirm = await showDialog<bool>(
-//                           context: parentContext,
-//                           builder: (context) => AlertDialog(
-//                             backgroundColor: AppColors.backgroundColor,
-//                             title: Text(
-//                               "Add Payment",
-//                               style: FontManager().getTextStyle(
-//                                 context,
-//                                 lWeight: FontWeight.w600,
-//                                 fontSize: 18 * fontScale,
-//                                 color: AppColors.primaryColor,
-//                               ),
-//                             ),
-//                             content: Text(
-//                               "Are you sure you want to add this recurring payment?",
-//                               style: FontManager().getTextStyle(
-//                                 context,
-//                                 lWeight: FontWeight.w500,
-//                                 fontSize: 16 * fontScale,
-//                                 color: AppColors.accentColor,
-//                               ),
-//                             ),
-//                             actions: [
-//                               TextButton(
-//                                 onPressed: () => Navigator.pop(context, false),
-//                                 child: Text(
-//                                   "Cancel",
-//                                   style: FontManager().getTextStyle(
-//                                     context,
-//                                     lWeight: FontWeight.w500,
-//                                     fontSize: 14 * fontScale,
-//                                     color: AppColors.accentColor,
-//                                   ),
-//                                 ),
-//                               ),
-//                               TextButton(
-//                                 onPressed: () => Navigator.pop(context, true),
-//                                 child: Text(
-//                                   "Add",
-//                                   style: FontManager().getTextStyle(
-//                                     context,
-//                                     lWeight: FontWeight.w600,
-//                                     fontSize: 14 * fontScale,
-//                                     color: AppColors.primaryColor,
-//                                   ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         );
-//                         if (confirm == true) {
-//                           if (card.frequency.toLowerCase() == 'daily') {
-//                             final success = await addRecurringPaymentForDaily(
-//                                 card.id, true);
-//                             snackBarCalled(
-//                               parentContext,
-//                               success ? "Added successfully" : "Failed to add ",
-//                             );
-//                             if (success) onDataChanged();
-//                           } else {
-//                             onSetReminder?.call(card.id);
-//                           }
-//                         }
-//                       },
-//                       child: Container(
-//                         padding: EdgeInsets.symmetric(
-//                             horizontal: AppSizes.p12 * fontScale,
-//                             vertical: AppSizes.p4 * fontScale),
-//                         decoration: BoxDecoration(
-//                           color: AppColors.backgroundColor.withOpacity(0.2),
-//                           borderRadius: BorderRadius.only(
-//                             topLeft: Radius.circular(20 * fontScale),
-//                             topRight: Radius.circular(20 * fontScale),
-//                           ),
-//                         ),
-//                         child: Text(
-//                           "+",
-//                           style: TextStyle(
-//                               fontSize: 18 * fontScale, color: AppColors.backgroundColor),
-//                         ),
-//                       ),
-//                     ),
-//                     SizedBox(height: 2 * fontScale),
-//                     GestureDetector(
-//                       onTap: () async {
-//                         final confirm = await showDialog<bool>(
-//                           context: parentContext,
-//                           builder: (context) => AlertDialog(
-//                             backgroundColor: AppColors.backgroundColor,
-//                             title: Text(
-//                               "Ignore Payment",
-//                               style: FontManager().getTextStyle(
-//                                 context,
-//                                 lWeight: FontWeight.w600,
-//                                 fontSize: 18 * fontScale,
-//                                 color: AppColors.primaryColor,
-//                               ),
-//                             ),
-//                             content: Text(
-//                               "Are you sure you want to delete this recurring payment?",
-//                               style: FontManager().getTextStyle(
-//                                 context,
-//                                 lWeight: FontWeight.w500,
-//                                 fontSize: 16 * fontScale,
-//                                 color: AppColors.accentColor,
-//                               ),
-//                             ),
-//                             actions: [
-//                               TextButton(
-//                                 onPressed: () => Navigator.pop(context, false),
-//                                 child: Text(
-//                                   "Cancel",
-//                                   style: FontManager().getTextStyle(
-//                                     context,
-//                                     lWeight: FontWeight.w500,
-//                                     fontSize: 14 * fontScale,
-//                                     color: AppColors.accentColor,
-//                                   ),
-//                                 ),
-//                               ),
-//                               TextButton(
-//                                 onPressed: () => Navigator.pop(context, true),
-//                                 child: Text(
-//                                   "delete",
-//                                   style: FontManager().getTextStyle(
-//                                     context,
-//                                     lWeight: FontWeight.w600,
-//                                     fontSize: 14 * fontScale,
-//                                     color: AppColors.primaryColor,
-//                                   ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         );
-//                         if (confirm == true) {
-//                           final success = await ignoreRecurringPayment(card.id);
-//                           snackBarCalled(
-//                             parentContext,
-//                             success
-//                                 ? "Deleted successfully"
-//                                 : "Failed to delete autopay",
-//                           );
-//                           if (success) onDataChanged();
-//                         }
-//                       },
-//                       child: Container(
-//                         padding: EdgeInsets.symmetric(
-//                             horizontal: AppSizes.p12.5 * fontScale,
-//                             vertical: AppSizes.p4 * fontScale),
-//                         decoration: BoxDecoration(
-//                           color: AppColors.backgroundColor.withOpacity(0.2),
-//                           borderRadius: BorderRadius.only(
-//                             bottomLeft: Radius.circular(20 * fontScale),
-//                             bottomRight: Radius.circular(20 * fontScale),
-//                           ),
-//                         ),
-//                         child: Text(
-//                           "x",
-//                           style: TextStyle(
-//                               fontSize: 18 * fontScale, color: AppColors.backgroundColor),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ])
-//               ],
-//             ),
-//             SizedBox(height: 4 * fontScale),
-//             Text(
-//               "Occurrences",
-//               style: FontManager().getTextStyle(
-//                 context,
-//                 lWeight: FontWeight.w500,
-//                 fontSize: 14 * fontScale,
-//                 color: AppColors.bg1,
-//               ),
-//             ),
-//             SizedBox(height: 4 * fontScale),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 Expanded(
-//                   child: Wrap(
-//                     spacing: 4.0 * fontScale,
-//                     runSpacing: 4.0 * fontScale,
-//                     children: card.occuranceDate.isEmpty
-//                         ? [
-//                             Container(
-//                               padding: EdgeInsets.symmetric(
-//                                   horizontal: 8 * fontScale,
-//                                   vertical: AppSizes.p4 * fontScale),
-//                               decoration: BoxDecoration(
-//                                 color: AppColors.backgroundColor.withOpacity(0.2),
-//                                 borderRadius:
-//                                     BorderRadius.circular(4 * fontScale),
-//                               ),
-//                               child: Text(
-//                                 "No occurrences",
-//                                 style: FontManager().getTextStyle(
-//                                   context,
-//                                   lWeight: FontWeight.w400,
-//                                   fontSize: 10 * fontScale,
-//                                   color: AppColors.backgroundColor,
-//                                 ),
-//                               ),
-//                             ),
-//                           ]
-//                         : card.occuranceDate
-//                             .map((date) => Container(
-//                                   padding: EdgeInsets.symmetric(
-//                                       horizontal: 8 * fontScale,
-//                                       vertical: AppSizes.p4 * fontScale),
-//                                   decoration: BoxDecoration(
-//                                     color: AppColors.backgroundColor.withOpacity(0.2),
-//                                     borderRadius:
-//                                         BorderRadius.circular(8 * fontScale),
-//                                   ),
-//                                   child: Text(
-//                                     date,
-//                                     style: FontManager().getTextStyle(
-//                                       context,
-//                                       lWeight: FontWeight.w400,
-//                                       fontSize: 10 * fontScale,
-//                                       color: AppColors.backgroundColor,
-//                                     ),
-//                                     overflow: TextOverflow.ellipsis,
-//                                   ),
-//                                 ))
-//                             .toList(),
-//                   ),
-//                 ),
-//                 card.frequency.toLowerCase() == 'daily'
-//                     ? SizedBox.shrink()
-//                     : !card.isActive
-//                         ? SizedBox.shrink()
-//                         : GestureDetector(
-//                             onTap: () => onSetReminder?.call(card.id),
-//                             child: Container(
-//                               padding: EdgeInsets.symmetric(
-//                                   horizontal: 8 * fontScale,
-//                                   vertical: AppSizes.p6 * fontScale),
-//                               decoration: BoxDecoration(
-//                                 color: AppColors.backgroundColor.withOpacity(0.2),
-//                                 borderRadius:
-//                                     BorderRadius.circular(10 * fontScale),
-//                               ),
-//                               child: Text(
-//                                 card.nextReminderAt != null
-//                                     ? "Upcoming reminder: ${formatWhatsAppDateWithoutTime(card.nextReminderAt!)}"
-//                                     : "Set Reminder",
-//                                 style: FontManager().getTextStyle(
-//                                   context,
-//                                   lWeight: FontWeight.w400,
-//                                   fontSize: 12 * fontScale,
-//                                   color: AppColors.backgroundColor,
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/components/helper.dart';
 import 'package:flutter_application_code_stakeplot/image_service/avatarProfile.dart';
@@ -530,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/repository/autopay_repository
 import 'package:get/get.dart';
 
 import '../../Constants/core/app_padding_sizes.dart';
+import '../../Constants/theme_helper.dart';
 import '../../components/shared_utils.dart';
 
 // Reusable Card Widget
@@ -554,23 +35,24 @@ class CardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     final screenSize = MediaQuery.of(context).size;
-    final cardHeight = screenSize.height * 0.2; // Responsive card height
-    final fontScale = screenSize.width / 375; // Base font scaling
-    final padding = screenSize.width * 0.03; // Responsive padding
+    final cardHeight = screenSize.height * 0.2;
+    final fontScale = screenSize.width / 375;
+    final padding = screenSize.width * 0.03;
 
     return Container(
       height: cardHeight,
       decoration: BoxDecoration(
-        color: AppColors.backgroundColor, // background: #FFF
-        borderRadius: BorderRadius.circular(10.0), // border-radius: 10px
-        border: Border.all(color: AppColors.mt),
-        boxShadow: const [
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(color: colors.border),
+        boxShadow: [
           BoxShadow(
-            color: AppColors.transactionCardShadow, // rgba(142,142,142,0.25)
-            blurRadius: 4.0, // blur of 4px
+            color: colors.onBackground.withOpacity(0.06),
+            blurRadius: 8.0,
             spreadRadius: 0.0,
-            offset: Offset(0, 0), // 0 0 (no offset)
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -579,6 +61,7 @@ class CardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ── Title / Date / Amount row ──────────────────────────────────
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -593,17 +76,18 @@ class CardWidget extends StatelessWidget {
                           context,
                           lWeight: FontWeight.w600,
                           fontSize: 16 * fontScale,
-                          color: AppColors.accentColor,
+                          color: colors.onBackground,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 12 * fontScale),
+                      SizedBox(height: 6 * fontScale),
                       Text(
                         card.date,
                         style: FontManager().getTextStyle(
                           context,
-                          lWeight: FontWeight.w600,
+                          lWeight: FontWeight.w500,
                           fontSize: 12 * fontScale,
-                          color: AppColors.accentColor,
+                          color: colors.secondaryText,
                         ),
                       ),
                     ],
@@ -613,14 +97,17 @@ class CardWidget extends StatelessWidget {
                   card.amount.toString(),
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.w600,
+                    lWeight: FontWeight.w700,
                     fontSize: 16 * fontScale,
-                    color: AppColors.accentColor,
+                    color: colors.primary,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 12 * fontScale),
+
+            SizedBox(height: 10 * fontScale),
+
+            // ── Frequency badge + Switch / Reminder ───────────────────────
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -628,11 +115,12 @@ class CardWidget extends StatelessWidget {
                   children: [
                     Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 8 * fontScale,
-                          vertical: AppSizes.p4 * fontScale),
+                        horizontal: 8 * fontScale,
+                        vertical: AppSizes.p4 * fontScale,
+                      ),
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundColor.withOpacity(0.4),
-                        borderRadius: BorderRadius.circular(2 * fontScale),
+                        color: colors.primary.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(6 * fontScale),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -642,14 +130,14 @@ class CardWidget extends StatelessWidget {
                             height: 50 * fontScale,
                             width: 50 * fontScale,
                           ),
-                          SizedBox(width: 2 * fontScale),
+                          SizedBox(width: 4 * fontScale),
                           Text(
                             card.frequency,
                             style: FontManager().getTextStyle(
                               context,
                               lWeight: FontWeight.w500,
                               fontSize: 12 * fontScale,
-                              color: AppColors.primaryColor,
+                              color: colors.primary,
                             ),
                           ),
                         ],
@@ -674,60 +162,62 @@ class CardWidget extends StatelessWidget {
                                     "Failed to update autopay status");
                               }
                             },
-                            activeColor: AppColors.primaryColor,
-                            inactiveThumbColor: Colors.white70,
-                            inactiveTrackColor:
-                                AppColors.backgroundColor.withOpacity(0.3),
+                            activeColor: colors.primary,
+                            inactiveThumbColor: colors.secondaryText,
+                            inactiveTrackColor: colors.border,
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                           )),
                     ],
                   ],
                 ),
-                card.frequency.toLowerCase() == 'daily'
-                    ? SizedBox.shrink()
-                    : !card.isActive
-                        ? SizedBox.shrink()
-                        : GestureDetector(
-                            onTap: () => onSetReminder?.call(card.id),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8 * fontScale,
-                                  vertical: AppSizes.p6 * fontScale),
-                              decoration: BoxDecoration(
-                                color:
-                                    AppColors.backgroundColor.withOpacity(0.2),
-                                borderRadius:
-                                    BorderRadius.circular(10 * fontScale),
-                              ),
-                              child: Text(
-                                card.nextReminderAt != null
-                                    ? "Upcoming reminder: ${formatWhatsAppDate(card.nextReminderAt!)}"
-                                    : "Set Reminder",
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 12 * fontScale,
-                                  color: AppColors.backgroundColor,
-                                ),
-                              ),
-                            ),
-                          ),
+                if (card.frequency.toLowerCase() != 'daily' && card.isActive)
+                  GestureDetector(
+                    onTap: () => onSetReminder?.call(card.id),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8 * fontScale,
+                        vertical: AppSizes.p4 * fontScale,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colors.surfaceVariant,
+                        borderRadius: BorderRadius.circular(8 * fontScale),
+                        border: Border.all(color: colors.border),
+                      ),
+                      child: Text(
+                        card.nextReminderAt != null
+                            ? "Reminder: ${formatWhatsAppDate(card.nextReminderAt!)}"
+                            : "Set Reminder",
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 11 * fontScale,
+                          color: colors.secondaryText,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
-            SizedBox(height: 12 * fontScale),
+
+            SizedBox(height: 10 * fontScale),
+
+            // ── Occurrences label ─────────────────────────────────────────
             Text(
               "Occurrences",
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.w500,
-                fontSize: 14 * fontScale,
-                color: AppColors.bg1,
+                fontSize: 13 * fontScale,
+                color: colors.secondaryText,
               ),
             ),
-            SizedBox(height: 12 * fontScale),
+            SizedBox(height: 6 * fontScale),
+
+            // ── Occurrence chips + Action buttons ─────────────────────────
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Wrap(
@@ -737,13 +227,13 @@ class CardWidget extends StatelessWidget {
                         ? [
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 8 * fontScale,
-                                  vertical: AppSizes.p4 * fontScale),
+                                horizontal: 8 * fontScale,
+                                vertical: AppSizes.p4 * fontScale,
+                              ),
                               decoration: BoxDecoration(
-                                color:
-                                    AppColors.backgroundColor.withOpacity(0.2),
+                                color: colors.surfaceVariant,
                                 borderRadius:
-                                    BorderRadius.circular(4 * fontScale),
+                                    BorderRadius.circular(6 * fontScale),
                               ),
                               child: Text(
                                 "No occurrences",
@@ -751,282 +241,325 @@ class CardWidget extends StatelessWidget {
                                   context,
                                   lWeight: FontWeight.w400,
                                   fontSize: 10 * fontScale,
-                                  color: AppColors.backgroundColor,
+                                  color: colors.hintText,
                                 ),
                               ),
                             ),
                           ]
                         : card.occuranceDate
-                            .map((date) => Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 8 * fontScale,
-                                      vertical: AppSizes.p4 * fontScale),
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromRGBO(75, 77, 115,
-                                        0.20), // rgba(75,77,115,0.20)
-                                    borderRadius: BorderRadius.circular(10),
+                            .map(
+                              (date) => Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8 * fontScale,
+                                  vertical: AppSizes.p4 * fontScale,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: colors.primary.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  date,
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 10 * fontScale,
+                                    color: colors.primary,
                                   ),
-                                  child: Text(
-                                    date,
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w400,
-                                      fontSize: 10 * fontScale,
-                                      color: AppColors.primaryColor,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ))
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            )
                             .toList(),
                   ),
                 ),
-                Row(mainAxisSize: MainAxisSize.min, children: [
-                  if (card.isActive || card.isDaily)
-                    GestureDetector(
-                      onTap: () async {
-                        final confirm = await showDialog<bool>(
-                          context: parentContext,
-                          useRootNavigator: false,
-                          builder: (context) => AlertDialog(
-                            title: Text(
-                              "Remove Payment",
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 18 * fontScale,
-                                color: AppColors.primaryColor,
+                SizedBox(width: 8 * fontScale),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (card.isActive || card.isDaily)
+                      // ── "Added" chip → tap to remove ──────────────────
+                      GestureDetector(
+                        onTap: () async {
+                          final confirm = await showDialog<bool>(
+                            context: parentContext,
+                            useRootNavigator: false,
+                            builder: (ctx) => AlertDialog(
+                              backgroundColor: colors.dialogBackground,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                            ),
-                            content: Text(
-                              "Do you want to remove this recurring payment?",
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w500,
-                                fontSize: 16 * fontScale,
-                                color: AppColors.accentColor,
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                child: Text(
-                                  "Cancel",
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w500,
-                                    fontSize: 14 * fontScale,
-                                    color: AppColors.accentColor,
-                                  ),
+                              title: Text(
+                                "Remove Payment",
+                                style: FontManager().getTextStyle(
+                                  ctx,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 17 * fontScale,
+                                  color: colors.onBackground,
                                 ),
                               ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                child: Text(
-                                  "Remove",
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w500,
-                                    fontSize: 14 * fontScale,
-                                    color: AppColors.primaryColor,
-                                  ),
+                              content: Text(
+                                "Do you want to remove this recurring payment?",
+                                style: FontManager().getTextStyle(
+                                  ctx,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 14 * fontScale,
+                                  color: colors.secondaryText,
                                 ),
                               ),
-                            ],
-                          ),
-                        );
-                        if (confirm == true) {
-                          final success = card.isDaily
-                              ? await addRecurringPaymentForDaily(
-                                  card.id, false)
-                              : await addRecurringPayment(card.id, false);
-                          snackBarCalled(
-                            parentContext,
-                            success
-                                ? "Removed successfully"
-                                : "Failed to remove",
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(ctx, false),
+                                  child: Text(
+                                    "Cancel",
+                                    style: FontManager().getTextStyle(
+                                      ctx,
+                                      lWeight: FontWeight.w500,
+                                      fontSize: 14 * fontScale,
+                                      color: colors.secondaryText,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(ctx, true),
+                                  child: Text(
+                                    "Remove",
+                                    style: FontManager().getTextStyle(
+                                      ctx,
+                                      lWeight: FontWeight.w600,
+                                      fontSize: 14 * fontScale,
+                                      color: colors.error,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
-                          if (success) onDataChanged();
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 8 * fontScale,
-                            vertical: AppSizes.p4 * fontScale),
-                        decoration: BoxDecoration(
-                          color: AppColors.backgroundColor.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(10 * fontScale),
-                        ),
-                        child: Text(
-                          "Added",
-                          style: FontManager().getTextStyle(context,
-                              fontSize: 14 * fontScale,
-                              color: AppColors.backgroundColor),
-                        ),
-                      ),
-                    )
-                  else ...[
-                    GestureDetector(
-                      onTap: () async {
-                        final confirm = await showDialog<bool>(
-                          context: parentContext,
-                          builder: (context) => AlertDialog(
-                            backgroundColor: AppColors.backgroundColor,
-                            title: Text(
-                              "Add Payment",
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 18 * fontScale,
-                                color: AppColors.primaryColor,
-                              ),
-                            ),
-                            content: Text(
-                              "Are you sure you want to add this recurring payment?",
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w500,
-                                fontSize: 16 * fontScale,
-                                color: AppColors.accentColor,
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                child: Text(
-                                  "Cancel",
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w500,
-                                    fontSize: 14 * fontScale,
-                                    color: AppColors.accentColor,
-                                  ),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                child: Text(
-                                  "Add",
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w600,
-                                    fontSize: 14 * fontScale,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                        if (confirm == true) {
-                          if (card.frequency.toLowerCase() == 'daily') {
-                            final success = await addRecurringPaymentForDaily(
-                                card.id, true);
+                          if (confirm == true) {
+                            final success = card.isDaily
+                                ? await addRecurringPaymentForDaily(
+                                    card.id, false)
+                                : await addRecurringPayment(card.id, false);
                             snackBarCalled(
                               parentContext,
-                              success ? "Added successfully" : "Failed to add ",
+                              success
+                                  ? "Removed successfully"
+                                  : "Failed to remove",
                             );
                             if (success) onDataChanged();
-                          } else {
-                            onSetReminder?.call(card.id);
                           }
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: AppSizes.p12,
-                            vertical: AppSizes.p4 * fontScale),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor,
-                          borderRadius: BorderRadius.all(Radius.circular(6)),
-                        ),
-                        child: Text(
-                          "+ Add",
-                          style: FontManager().getTextStyle(context,
-                              fontSize: 14 * fontScale,
-                              color: AppColors.backgroundColor),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 4 * fontScale),
-                    GestureDetector(
-                      onTap: () async {
-                        final confirm = await showDialog<bool>(
-                          context: parentContext,
-                          builder: (context) => AlertDialog(
-                            backgroundColor: AppColors.backgroundColor,
-                            title: Text(
-                              "Ignore Payment",
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 18 * fontScale,
-                                color: AppColors.primaryColor,
-                              ),
-                            ),
-                            content: Text(
-                              "Are you sure you want to delete this recurring payment?",
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w500,
-                                fontSize: 16 * fontScale,
-                                color: AppColors.accentColor,
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                child: Text(
-                                  "Cancel",
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w500,
-                                    fontSize: 14 * fontScale,
-                                    color: AppColors.accentColor,
-                                  ),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                child: Text(
-                                  "delete",
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w600,
-                                    fontSize: 14 * fontScale,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                ),
-                              ),
-                            ],
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10 * fontScale,
+                            vertical: AppSizes.p4 * fontScale,
                           ),
-                        );
-                        if (confirm == true) {
-                          final success = await ignoreRecurringPayment(card.id);
-                          snackBarCalled(
-                            parentContext,
-                            success
-                                ? "Deleted successfully"
-                                : "Failed to delete autopay",
-                          );
-                          if (success) onDataChanged();
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: AppSizes.p12,
-                            vertical: AppSizes.p4 * fontScale),
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(75, 77, 115, 0.20),
-                          borderRadius: BorderRadius.all(Radius.circular(6)),
+                          decoration: BoxDecoration(
+                            color: colors.credit.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(8 * fontScale),
+                          ),
+                          child: Text(
+                            "Added",
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 13 * fontScale,
+                              lWeight: FontWeight.w600,
+                              color: colors.credit,
+                            ),
+                          ),
                         ),
-                        child: Text("x Ignore",
-                            style: FontManager().getTextStyle(context,
-                                fontSize: 14 * fontScale,
-                                color: AppColors.primaryColor)),
+                      )
+                    else ...[
+                      // ── "+ Add" button ─────────────────────────────────
+                      GestureDetector(
+                        onTap: () async {
+                          final confirm = await showDialog<bool>(
+                            context: parentContext,
+                            builder: (ctx) => AlertDialog(
+                              backgroundColor: colors.dialogBackground,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              title: Text(
+                                "Add Payment",
+                                style: FontManager().getTextStyle(
+                                  ctx,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 17 * fontScale,
+                                  color: colors.onBackground,
+                                ),
+                              ),
+                              content: Text(
+                                "Are you sure you want to add this recurring payment?",
+                                style: FontManager().getTextStyle(
+                                  ctx,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 14 * fontScale,
+                                  color: colors.secondaryText,
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(ctx, false),
+                                  child: Text(
+                                    "Cancel",
+                                    style: FontManager().getTextStyle(
+                                      ctx,
+                                      lWeight: FontWeight.w500,
+                                      fontSize: 14 * fontScale,
+                                      color: colors.secondaryText,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(ctx, true),
+                                  child: Text(
+                                    "Add",
+                                    style: FontManager().getTextStyle(
+                                      ctx,
+                                      lWeight: FontWeight.w600,
+                                      fontSize: 14 * fontScale,
+                                      color: colors.primary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirm == true) {
+                            if (card.frequency.toLowerCase() == 'daily') {
+                              final success =
+                                  await addRecurringPaymentForDaily(
+                                      card.id, true);
+                              snackBarCalled(
+                                parentContext,
+                                success
+                                    ? "Added successfully"
+                                    : "Failed to add",
+                              );
+                              if (success) onDataChanged();
+                            } else {
+                              onSetReminder?.call(card.id);
+                            }
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSizes.p12,
+                            vertical: AppSizes.p4 * fontScale,
+                          ),
+                          decoration: BoxDecoration(
+                            color: colors.primary,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            "+ Add",
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 13 * fontScale,
+                              lWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(width: 6 * fontScale),
+                      // ── "Ignore" button ────────────────────────────────
+                      GestureDetector(
+                        onTap: () async {
+                          final confirm = await showDialog<bool>(
+                            context: parentContext,
+                            builder: (ctx) => AlertDialog(
+                              backgroundColor: colors.dialogBackground,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              title: Text(
+                                "Ignore Payment",
+                                style: FontManager().getTextStyle(
+                                  ctx,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 17 * fontScale,
+                                  color: colors.onBackground,
+                                ),
+                              ),
+                              content: Text(
+                                "Are you sure you want to delete this recurring payment?",
+                                style: FontManager().getTextStyle(
+                                  ctx,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 14 * fontScale,
+                                  color: colors.secondaryText,
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(ctx, false),
+                                  child: Text(
+                                    "Cancel",
+                                    style: FontManager().getTextStyle(
+                                      ctx,
+                                      lWeight: FontWeight.w500,
+                                      fontSize: 14 * fontScale,
+                                      color: colors.secondaryText,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(ctx, true),
+                                  child: Text(
+                                    "Delete",
+                                    style: FontManager().getTextStyle(
+                                      ctx,
+                                      lWeight: FontWeight.w600,
+                                      fontSize: 14 * fontScale,
+                                      color: colors.error,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirm == true) {
+                            final success =
+                                await ignoreRecurringPayment(card.id);
+                            snackBarCalled(
+                              parentContext,
+                              success
+                                  ? "Deleted successfully"
+                                  : "Failed to delete autopay",
+                            );
+                            if (success) onDataChanged();
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSizes.p12,
+                            vertical: AppSizes.p4 * fontScale,
+                          ),
+                          decoration: BoxDecoration(
+                            color: colors.primary.withOpacity(0.10),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            "Ignore",
+                            style: FontManager().getTextStyle(
+                              context,
+                              fontSize: 13 * fontScale,
+                              lWeight: FontWeight.w500,
+                              color: colors.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
-                ])
+                ),
               ],
             ),
           ],
