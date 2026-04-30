@@ -35,10 +35,9 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    final colors = context.appColors;
     return RefreshIndicator(
-      color: colors.primary,
-      backgroundColor: colors.background,
+      color: context.appColors.primary,
+      backgroundColor: context.appColors.background,
       strokeWidth: 2.5,
 
       // WORKING REFRESH
@@ -66,6 +65,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
   // HEADER UI
   // ---------------------------------------------------
   Widget _buildHeader(double screenHeight) {
+    final colors = context.appColors;
     return Column(
       children: [
         AvatarProfileImage(
@@ -135,6 +135,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
   // BOTTOM NAV
   // ---------------------------------------------------
   Widget _buildBottomNavigation(double screenWidth) {
+    final colors = context.appColors;
     return Padding(
       padding: const EdgeInsets.symmetric(
           horizontal: AppSizes.p12, vertical: AppSizes.p20),
