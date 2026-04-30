@@ -66,6 +66,7 @@ import mongoose, { Connection } from 'mongoose';
 import { ServerConfig } from './config';
 import { scrapeResultSchema } from './models/scrape-result';
 import { googleAuthSchema } from './models/google-auth';
+import { userSchema } from './models/user-model';
 import Logger from './logger';
 
 export interface IDatabaseConnections {
@@ -88,6 +89,7 @@ function connectDatabases(): Promise<IDatabaseConnections> {
 
     mainDB.once('open', () => {
       (global as any).mainDB = mainDB;
+      mainDB.model('User', userSchema);
       Logger.info('✅ Connected to mainDB');
     });
 

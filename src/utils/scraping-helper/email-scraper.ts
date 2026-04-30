@@ -11,8 +11,7 @@ export default async function emailScraperHelper(
 ): Promise<{ results: any[]; bankConfig: any[] }> {
   const startTime = performance.now();
   const gmail = gmailClient;
-  const afterDate = mode !== 'initial' ? getNinetyDaysAgo(45) : getNHoursAgo(78);
-
+  const afterDate = mode === 'initial' ? getNinetyDaysAgo(10) : getNHoursAgo(12);
   const bankConfig = creditCard;
   const bankFilters: string[] = [];
 
@@ -52,14 +51,12 @@ export default async function emailScraperHelper(
 
           const fromLower = fromHeader.toLowerCase();
           const subjectLower = subjectHeader.toLowerCase();
-
           const matches = bankFilters.some(
             (f) => f && fromLower.includes(f.toLowerCase())
           );
           const matches2 = bankFilters.some(
             (f) => f && subjectLower.includes(f.toLowerCase())
           );
-          // console.log(matches2);
          // if (!matches && !matches2) return null;
 
           const { body, attachments } = await EmailServiceHelper.extractEmailBody(
@@ -149,7 +146,14 @@ export default async function emailScraperHelper(
     }
   }
 
-  fs.writeFileSync('output.txt', output, 'utf-8');
+  // Write output to file if environment variable is set
+  const outputDir = process.env.OUTPUT_DIR || '/app/output';
+  try {
+    fs.writeFileSync(`${outputDir}/output.txt`, output, 'utf-8');
+  } catch (err) {
+    console.error('Error writing output file:', err);
+  }
+  console.log("mailsToProcess2",mailsToProcess2.length);
 
   for (const [index, mail] of mailsToProcess2.entries()) {
     const extracted = await extractWithPython(mail, bankFilters);

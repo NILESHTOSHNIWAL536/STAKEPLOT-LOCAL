@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import * as Sentry from '@sentry/node';
 import { StatusCodes } from 'http-status-codes';
 import AppError from '../utils/app-error';
 import { ErrorResponse } from '../utils/api-response';
@@ -51,6 +52,10 @@ export const protect = async (
 
 
       (req as any).user = { _id: decoded.sub, token };
+
+      // Set Sentry user context for this request scope
+      Sentry.setUser({ id: decoded.sub, ip_address: req.ip });
+
       return next();
     } catch (err: any) {
       if (err.name === 'TokenExpiredError') {

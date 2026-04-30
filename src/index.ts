@@ -26,6 +26,7 @@
 
 // startServer();
 
+import './instrument'; // Sentry MUST be initialized before any other imports
 import dotenv from 'dotenv';
 import app from './app';
 import connectDatabases from './dbConnections';

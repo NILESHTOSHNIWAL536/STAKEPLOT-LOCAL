@@ -46,6 +46,7 @@ export interface IServerConfig {
   GOOGLE_APP_CLIENTID: string;
   REVOKE_URI: string;
   MOBILE_BACKEND_URL: string;
+  SENTRY_DSN: string | undefined;
 }
 
 const ServerConfig: IServerConfig = {
@@ -69,6 +70,7 @@ const ServerConfig: IServerConfig = {
   GOOGLE_APP_CLIENTID: process.env.GOOGLE_APP_CLIENTID ?? '',
   REVOKE_URI: process.env.REVOKE_URI ?? '',
   MOBILE_BACKEND_URL: process.env.MOBILE_BACKEND_URL ?? 'http://localhost:5000',
+  SENTRY_DSN: process.env.SENTRY_DSN,
 };
 
 export default ServerConfig;
